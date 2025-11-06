@@ -7,7 +7,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
-public class CTIAController : IDisposable
+public class CTIAController : IDisposable, IDeviceInfoProvider
 {
     public GetCommands? Get { get; private set; }
 
