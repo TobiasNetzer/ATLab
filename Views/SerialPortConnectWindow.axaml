@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ATLab.ViewModels"
+        x:Class="ATLab.Views.SerialPortConnectWindow"
+        x:DataType="vm:SerialPortConnectWindowViewModel"
+        Title="Serial Port Selector"
+        Width="500" Height="180"
+        RequestedThemeVariant="Default"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+
+    <StackPanel Margin="15" Spacing="10">
+
+        <!-- Header -->
+        <TextBlock Text="Select Test Interface Adapter" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+
+        <!-- COM Port selector -->
+        <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+            <TextBlock Text="Port:" VerticalAlignment="Center"/>
+            <ComboBox Width="120" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort}"/>
+            <Button Command="{Binding RefreshPortsCommand}" Width="30" Height="30">
+                <Button.Content>
+                    <TextBlock 
+                        Text="&#xE72C;" 
+                        FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                        FontSize="12"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                </Button.Content>
+            </Button>
+
+        </StackPanel>
+
+        <!-- Connect / Exit / Simulation buttons -->
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+            <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
+            <Button Content="Simulation Mode" Width="150" HorizontalContentAlignment="Center" Command="{Binding SimulationCommand}"/>
+            <Button Content="Exit" Width="120" HorizontalContentAlignment="Center" Command="{Binding ExitCommand}"/>
+        </StackPanel>
+
+        <!-- Status -->
+        <TextBlock Text="{Binding StatusText}"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
+        
+    </StackPanel>
+</Window>
