@@ -28,7 +28,6 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     public IRelayCommand ConnectCommand { get; }
     public IRelayCommand RefreshPortsCommand { get; }
     public IRelayCommand SimulationCommand { get; }
-    public IRelayCommand ExitCommand { get; }
 
     public event Action? RequestClose;
 
@@ -40,8 +39,6 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         ConnectCommand = new AsyncRelayCommand(async () => await Connect(), CanConnect);
 
         SimulationCommand = new RelayCommand(OnSimulationModeRequested);
-
-        ExitCommand = new RelayCommand(OnExitRequested);
 
         LoadAvailablePorts();
     }
@@ -105,7 +102,8 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         Connected?.Invoke(false);
     }
 
-    private void OnExitRequested()
+    [RelayCommand]
+    private void Close()
     {
         RequestClose?.Invoke();
     }
