@@ -19,7 +19,7 @@
         <!-- COM Port selector -->
         <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
             <TextBlock Text="Port:" VerticalAlignment="Center"/>
-            <ComboBox Width="120" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort}"/>
+            <ComboBox Width="150" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort}"/>
             <Button Command="{Binding RefreshPortsCommand}" Width="30" Height="30">
                 <Button.Content>
                     <TextBlock 

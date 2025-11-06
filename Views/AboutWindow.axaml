@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ATLab.ViewModels"
+        x:Class="ATLab.Views.AboutWindow"
+        x:DataType="vm:AboutWindowViewModel"
+        Title="About"
+        Width="500" Height="340"
+        RequestedThemeVariant="Default"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+
+        
+
+        <StackPanel Margin="20" Spacing="8">
+                <TextBlock Text="ATLab" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Text="Automated Testing Toolkit" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+
+                <Separator/>
+
+                <!-- Standard information -->
+                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}" />
+                <TextBlock Text="{Binding Author, StringFormat=Author: {0}}" />
+
+                <Separator/>
+
+                <!-- Device Information -->
+                <TextBlock Text="Connected Hardware:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}" />
+                <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}" />
+                <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}" />
+                <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}" />
+
+                <Button Content="OK" Width="80" HorizontalAlignment="Right" Margin="0,10,0,0" HorizontalContentAlignment="Center"
+                        Command="{Binding CloseCommand}" />
+        </StackPanel>
+
+</Window>

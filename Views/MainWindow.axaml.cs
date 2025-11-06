@@ -1,7 +1,6 @@
 using System;
 using Avalonia.Controls;
 using Avalonia;
-using ATLab.ViewModels;
 
 namespace ATLab.Views;
 
