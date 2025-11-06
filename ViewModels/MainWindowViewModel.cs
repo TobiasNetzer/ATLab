@@ -1,14 +1,16 @@
-﻿using ATLab.Models;
+﻿using ATLab.Services;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
 using ATLab.Views;
 using System.Threading.Tasks;
+using ATLab.Interfaces;
+using System;
 
 namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private CTIAController? _cTIA;
+    private CTIAController _cTIA;
 
     public IRelayCommand OpenAboutWindowCommand { get; }
 
@@ -20,13 +22,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task OpenAboutWindow()
     {
-        var aboutVM = new AboutWindowViewModel(_cTIA!);
+        var deviceInfoProvider = (_cTIA as IDeviceInfoProvider) ?? new EmptyDeviceInfoProvider();
+        var aboutVM = new AboutWindowViewModel(deviceInfoProvider);
         var aboutWindow = new AboutWindow
         {
             DataContext = aboutVM
         };
 
-        var desktop = Avalonia.Application.Current?.ApplicationLifetime 
+        var desktop = Avalonia.Application.Current?.ApplicationLifetime
             as IClassicDesktopStyleApplicationLifetime;
 
         if (desktop?.MainWindow != null)

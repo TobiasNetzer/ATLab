@@ -1,9 +1,8 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ATLab.Models;
 
-namespace ATLab.Services;
+namespace ATLab.Interfaces;
+
 public interface ICommunicationInterface
 {
     Task<byte[]> SendAsync(byte[] data, int timeoutMs = 1000);

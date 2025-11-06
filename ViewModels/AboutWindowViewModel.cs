@@ -1,26 +1,27 @@
 using System;
-using ATLab.Models;
+using System.Reflection;
+using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
 public partial class AboutWindowViewModel : ViewModelBase
 {
-    private readonly CTIAController _cTIA;
+    private readonly IDeviceInfoProvider _device;
 
-    public string? FirmwareVersion => _cTIA.FirmwareVersion;
-    public string? DeviceName => _cTIA.DeviceName;
-    public string? BuildDate => _cTIA.BuildDate;
-    public string? BuildTime => _cTIA.BuildTime;
+    public string? FirmwareVersion => _device.FirmwareVersion;
+    public string? DeviceName => _device.DeviceName;
+    public string? BuildDate => _device.BuildDate;
+    public string? BuildTime => _device.BuildTime;
 
-    public string AppVersion => "0.0.1";
+    public string AppVersion => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
     public string Author => "Tobias Netzer";
 
     public event Action? RequestClose;
 
-    public AboutWindowViewModel(CTIAController cTIA)
+    public AboutWindowViewModel(IDeviceInfoProvider device)
     {
-        _cTIA = cTIA;
+        _device = device;
     }
 
     [RelayCommand]

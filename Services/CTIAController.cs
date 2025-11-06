@@ -2,18 +2,19 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ATLab.Services;
+using ATLab.Models;
+using ATLab.Interfaces;
 
-namespace ATLab.Models;
+namespace ATLab.Services;
 
 public class CTIAController : IDisposable
 {
     public GetCommands? Get { get; private set; }
 
-    public string? FirmwareVersion { get; private set; }
-    public string? DeviceName { get; private set; }
-    public string? BuildDate { get; private set; }
-    public string? BuildTime { get; private set; }
+    public string FirmwareVersion { get; private set; } = string.Empty;
+    public string DeviceName { get; private set; } = string.Empty;
+    public string BuildDate { get; private set; } = string.Empty;
+    public string BuildTime { get; private set; } = string.Empty;
 
     private RelayState? _Meas_H { get; set; }
     private RelayState? _Meas_L { get; set; }

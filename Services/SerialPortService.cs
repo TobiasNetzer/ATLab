@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Interfaces;
 
 namespace ATLab.Services
 {
