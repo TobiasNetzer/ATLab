@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using ATLab.Views;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using System;
+using ATLab.Models;
 
 namespace ATLab.ViewModels;
 

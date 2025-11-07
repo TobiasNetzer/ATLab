@@ -6,8 +6,8 @@ using Avalonia.Markup.Xaml;
 using ATLab.ViewModels;
 using ATLab.Views;
 using ATLab.Services;
-using ATLab.Models;
 using System.Threading.Tasks;
+using ATLab.Models;
 
 namespace ATLab;
 
@@ -35,12 +35,14 @@ public partial class App : Application
 
             try
             {
-                _cTIA = new CTIAController(App.SettingsService.Settings.LastComPort!);
+                using var service = new SerialPortService(SettingsService.Settings.LastComPort!);
+                _cTIA = new CTIAController(service);
                 await _cTIA.InitializeAsync();
                 initSuccess = true;
             }
             catch
             {
+                _cTIA = null;
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
 

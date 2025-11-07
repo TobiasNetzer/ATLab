@@ -53,7 +53,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
 
         private bool CanConnect()
     {
-        return !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || _cTIA.ConnectedSerialPort != SelectedPort);
+        return !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || App.SettingsService.Settings.LastComPort != SelectedPort);
     }
 
     [RelayCommand(CanExecute = nameof(CanConnect))]
@@ -63,7 +63,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
 
         try
         {
-            _cTIA = new CTIAController(SelectedPort!);
+            _cTIA = new CTIAController(new SerialPortService(SelectedPort!));
             await _cTIA.InitializeAsync();
             StatusText = $"Connected to {SelectedPort}";
             Status = ConnectionStatus.Connected;
