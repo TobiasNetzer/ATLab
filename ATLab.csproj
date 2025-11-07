@@ -6,7 +6,12 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>0.0.1.1</Version>
+
+    <Company>Tobias Netzer</Company>
+    <Product>ATLab</Product>
+    <Description>Automated Testing Toolkit for the Test Interface Adapter Hardware</Description>
+    <FileVersion>0.0.1</FileVersion>
+    <InformationalVersion>0.0.1</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,8 +14,8 @@ public partial class AboutWindowViewModel : ViewModelBase
     public string? BuildDate => _device.BuildDate;
     public string? BuildTime => _device.BuildTime;
 
-    public string AppVersion => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
-    public string Author => "Tobias Netzer";
+    public string AppVersion => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
+    public string Author => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "Unknown";
 
     public event Action? RequestClose;
 

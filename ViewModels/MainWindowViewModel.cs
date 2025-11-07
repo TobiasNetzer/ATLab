@@ -12,14 +12,12 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private CTIAController _cTIA;
 
-    public IRelayCommand OpenAboutWindowCommand { get; }
-
     public MainWindowViewModel(CTIAController cTIA)
     {
         _cTIA = cTIA;
-        OpenAboutWindowCommand = new AsyncRelayCommand(OpenAboutWindow);
     }
 
+    [RelayCommand]
     public async Task OpenAboutWindow()
     {
         var deviceInfoProvider = (_cTIA as IDeviceInfoProvider) ?? new EmptyDeviceInfoProvider();
