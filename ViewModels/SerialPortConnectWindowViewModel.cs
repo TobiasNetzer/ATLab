@@ -26,25 +26,15 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
 
     public event Action<bool>? Connected;
 
-    public IRelayCommand ConnectCommand { get; }
-    public IRelayCommand RefreshPortsCommand { get; }
-    public IRelayCommand SimulationCommand { get; }
-
     public event Action? RequestClose;
 
     public SerialPortConnectWindowViewModel()
     {
-
-        RefreshPortsCommand = new RelayCommand(LoadAvailablePorts);
-
-        ConnectCommand = new AsyncRelayCommand(async () => await Connect(), CanConnect);
-
-        SimulationCommand = new RelayCommand(OnSimulationModeRequested);
-
-        LoadAvailablePorts();
+        RefreshPorts();
     }
 
-    private void LoadAvailablePorts()
+    [RelayCommand]
+    private void RefreshPorts()
     {
         AvailablePorts.Clear();
 
@@ -66,6 +56,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         return !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || _cTIA.ConnectedSerialPort != SelectedPort);
     }
 
+    [RelayCommand(CanExecute = nameof(CanConnect))]
     private async Task<bool> Connect()
     {
         if (!CanConnect()) return false;
@@ -98,7 +89,8 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
     }
 
-    private void OnSimulationModeRequested()
+    [RelayCommand]
+    private void SimulationMode()
     {
         Connected?.Invoke(false);
     }

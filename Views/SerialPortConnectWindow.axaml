@@ -37,7 +37,7 @@
         <!-- Connect / Exit / Simulation buttons -->
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
-            <Button Content="Simulation Mode" Width="150" HorizontalContentAlignment="Center" Command="{Binding SimulationCommand}"/>
+            <Button Content="Simulation Mode" Width="150" HorizontalContentAlignment="Center" Command="{Binding SimulationModeCommand}"/>
             <Button Content="Exit" Width="120" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"/>
         </StackPanel>
 
