@@ -20,6 +20,9 @@ public class CTIACommandFrame
         if (Payload.Length > MaxPayloadSize)
             throw new InvalidOperationException("Payload too large");
 
+        if (Payload.Length != PayloadSize)
+            throw new InvalidOperationException("Parameter PayloadSize does not match actual payload length");
+
         int frameLength = MinFrameSize + Payload.Length;
         byte[] bytes = new byte[frameLength];
 

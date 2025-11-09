@@ -9,6 +9,7 @@ namespace ATLab.Models;
 public class CTIAController : IDeviceInfoProvider
 {
     public GetCommands Get { get; private set; }
+    public SetCommands Set { get; private set; }
 
     public string FirmwareVersion { get; private set; } = string.Empty;
     public string DeviceName { get; private set; } = string.Empty;
@@ -22,7 +23,9 @@ public class CTIAController : IDeviceInfoProvider
 
     public CTIAController(ICommunicationInterface communicationInterface)
     {
+        Set = new SetCommands(new CTIACommunication(communicationInterface));
         Get = new GetCommands(new CTIACommunication(communicationInterface));
+        
     }
 
     public async Task InitializeAsync()

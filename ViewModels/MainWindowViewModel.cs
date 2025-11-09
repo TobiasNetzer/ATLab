@@ -36,4 +36,9 @@ public partial class MainWindowViewModel : ViewModelBase
             aboutWindow.Show();
     }
 
+    [RelayCommand]
+    public async Task SetStim()
+    {
+        await _cTIA.Set.SetExtStimCh(2);
+    }
 }

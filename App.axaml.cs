@@ -32,16 +32,18 @@ public partial class App : Application
         {
 
             bool initSuccess = false;
+            SerialPortService? service = null;
 
             try
             {
-                using var service = new SerialPortService(SettingsService.Settings.LastComPort!);
+                service =  new SerialPortService(SettingsService.Settings.LastComPort!);
                 _cTIA = new CTIAController(service);
                 await _cTIA.InitializeAsync();
                 initSuccess = true;
             }
             catch
             {
+                service?.Dispose();
                 _cTIA = null;
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
