@@ -51,15 +51,13 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         ConnectCommand.NotifyCanExecuteChanged();
     }
 
-        private bool CanConnect()
-    {
-        return !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || App.SettingsService.Settings.LastComPort != SelectedPort);
-    }
+    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || App.SettingsService.Settings.LastComPort != SelectedPort);
+    
 
     [RelayCommand(CanExecute = nameof(CanConnect))]
     private async Task<bool> Connect()
     {
-        if (!CanConnect()) return false;
+        if (!CanConnect) return false;
 
         try
         {
