@@ -2,11 +2,11 @@ using System;
 
 namespace ATLab.Models;
 
-public class CmdFrameParser
+public class CommandFrameParser
 {
-    public static CTIACommandFrame Parse(byte[] data, ushort expectedHeader = 0xAA55)
+    public static CommandFrame Parse(byte[] data, ushort expectedHeader = 0xAA55)
     {
-        if (data == null || data.Length < CTIACommandFrame.MinFrameSize)
+        if (data == null || data.Length < CommandFrame.MinFrameSize)
             throw new ArgumentException("Data too short to be a valid frame", nameof(data));
 
         ushort header = (ushort)(data[0] | (data[1] << 8));
@@ -33,7 +33,7 @@ public class CmdFrameParser
         if (payloadSize > 0)
             Array.Copy(data, 6, payload, 0, payloadSize);
 
-        CTIACommandFrame frame = new CTIACommandFrame();
+        CommandFrame frame = new CommandFrame();
         frame.Command = command;
         frame.ControlByte = control;
         frame.PayloadSize = payloadSize;

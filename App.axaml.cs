@@ -32,19 +32,31 @@ public partial class App : Application
         {
 
             bool initSuccess = false;
+            bool openConnectWindow = false;
             SerialPortService? service = null;
 
-            try
+            service = new SerialPortService(SettingsService.Settings.LastComPort!);
+            var openResult = service.TryOpen();
+            if (!openResult.IsSuccess)
             {
-                service =  new SerialPortService(SettingsService.Settings.LastComPort!);
-                _cTIA = new CTIAController(service);
-                await _cTIA.InitializeAsync();
-                initSuccess = true;
+                openConnectWindow = true;
+                //await ShowInitErrorAndPromptUser(openResult.ErrorMessage, desktop);
             }
-            catch
+            else
+            {
+                _cTIA = new CTIAController(service);
+                var initResult = await _cTIA.InitializeAsync();
+                if (!initResult.IsSuccess)
+                {
+                    openConnectWindow = true;
+                    //await ShowInitErrorAndPromptUser(initResult.ErrorMessage, desktop);
+                }
+                else initSuccess = true;
+            }
+
+            if (openConnectWindow)
             {
                 service?.Dispose();
-                _cTIA = null;
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
 

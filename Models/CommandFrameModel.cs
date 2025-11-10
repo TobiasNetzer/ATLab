@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ATLab.Models;
 
-public class CTIACommandFrame
+public class CommandFrame
 {
     public ushort Header { get; } = 0xAA55;
     public ushort Command { get; set; } = 0x00;

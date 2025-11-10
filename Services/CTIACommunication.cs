@@ -14,16 +14,16 @@ namespace ATLab.Services
             _communicationInterface = communicationInterface;
         }
         
-        public async Task<CTIACommandFrame> SendCommandAsync(CTIACommandFrame frame, int timeoutMs = 1000)
+        public async Task<CommandFrame> SendCommandAsync(CommandFrame frame, int timeoutMs = 1000)
         {
             byte[] responseBytes = await _communicationInterface.SendAsync(frame.ToByteArray(), timeoutMs);
-            return CmdFrameParser.Parse(responseBytes);
+            return CommandFrameParser.Parse(responseBytes);
         }
 
-        public async Task<CTIACommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
+        public async Task<CommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
         {
             byte[] receivedData = await _communicationInterface.ReceiveAsync(cancellationToken);
-            return CmdFrameParser.Parse(receivedData);
+            return CommandFrameParser.Parse(receivedData);
         }
 
         public void Dispose()

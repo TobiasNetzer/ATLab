@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 
 namespace ATLab.Services
 {
@@ -32,7 +33,31 @@ namespace ATLab.Services
             };
 
             _port.DataReceived += SerialPort_DataReceived;
-            _port.Open();
+        }
+
+        public OperationResult TryOpen()
+        {
+            try
+            {
+                _port.Open();
+                return OperationResult.Success();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Failure($"Access denied: {ex.Message}");
+            }
+            catch (System.IO.IOException ex)
+            {
+                return OperationResult.Failure($"I/O error: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return OperationResult.Failure($"Invalid argument: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure($"Unexpected error: {ex.Message}");
+            }
         }
 
         private void SerialPort_DataReceived(object? sender, SerialDataReceivedEventArgs e)

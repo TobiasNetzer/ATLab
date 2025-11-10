@@ -59,31 +59,34 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     {
         if (!CanConnect) return false;
 
-        try
-        {
-            _cTIA = new CTIAController(new SerialPortService(SelectedPort!));
-            await _cTIA.InitializeAsync();
-            StatusText = $"Connected to {SelectedPort}";
-            Status = ConnectionStatus.Connected;
-            App.SettingsService.Settings.LastComPort = SelectedPort;
-            Connected?.Invoke(true);
-            return true;
-        }
-        catch (InvalidOperationException)
-        {
-            StatusText = $"Hardware not supported";
-            Status = ConnectionStatus.Failed;
-            return false;
-        }
-        catch
+        var service = new SerialPortService(SelectedPort!);
+        var openResult = service.TryOpen();
+        if (!openResult.IsSuccess)
         {
             StatusText = $"Failed to connect to {SelectedPort}";
             Status = ConnectionStatus.Failed;
+            ConnectCommand.NotifyCanExecuteChanged();
             return false;
         }
-        finally
+        else
         {
-            ConnectCommand.NotifyCanExecuteChanged();
+            _cTIA = new CTIAController(service);
+            var initResult = await _cTIA.InitializeAsync();
+            if (!initResult.IsSuccess)
+            {
+                StatusText = $"Initialization failed: {initResult.ErrorMessage}";
+                Status = ConnectionStatus.Failed;
+                ConnectCommand.NotifyCanExecuteChanged();
+                return false;
+            }
+            else{
+                StatusText = $"Connected to {SelectedPort}";
+                Status = ConnectionStatus.Connected;
+                App.SettingsService.Settings.LastComPort = SelectedPort;
+                Connected?.Invoke(true);
+                ConnectCommand.NotifyCanExecuteChanged();
+                return true;
+            }
         }
     }
 

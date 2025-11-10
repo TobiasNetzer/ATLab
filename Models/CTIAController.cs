@@ -23,26 +23,47 @@ public class CTIAController : IDeviceInfoProvider
 
     public CTIAController(ICommunicationInterface communicationInterface)
     {
-        Set = new SetCommands(new CTIACommunication(communicationInterface));
-        Get = new GetCommands(new CTIACommunication(communicationInterface));
+        var communication = new CTIACommunication(communicationInterface);
+        Set = new SetCommands(communication);
+        Get = new GetCommands(communication);
         
     }
 
-    public async Task InitializeAsync()
+    public async Task<OperationResult> InitializeAsync()
     {
-        var DeviceId = await Get.GetDeviceID();
-        if (DeviceId != 0xA101)
-        {
-            throw new InvalidOperationException("Device ID invalid");
-        }
-        FirmwareVersion = await Get.GetFirmwareVersion();
-        DeviceName = await Get.GetDeviceName();
-        BuildDate = await Get.GetFirmwareBuildDate();
-        BuildTime = await Get.GetFirmwareBuildTime();
+        var deviceIdResult = await Get.GetDeviceID();
+        if (!deviceIdResult.IsSuccess)
+            return OperationResult.Failure(deviceIdResult.ErrorMessage);
+
+        if (deviceIdResult.Value != 0xA101)
+            return OperationResult.Failure("Device ID invalid");
+
+        var firmwareVersion = await Get.GetFirmwareVersion();
+        if (!firmwareVersion.IsSuccess)
+            return OperationResult.Failure(firmwareVersion.ErrorMessage);
+        FirmwareVersion = firmwareVersion.Value ?? string.Empty;
+
+        var deviceName = await Get.GetDeviceName();
+        if (!deviceName.IsSuccess)
+            return OperationResult.Failure(deviceName.ErrorMessage);
+        DeviceName = deviceName.Value ?? string.Empty;
+
+        var buildDate = await Get.GetFirmwareBuildDate();
+        if (!buildDate.IsSuccess)
+            return OperationResult.Failure(buildDate.ErrorMessage);
+        BuildDate = buildDate.Value ?? string.Empty;
+
+        var buildTime = await Get.GetFirmwareBuildTime();
+        if (!buildTime.IsSuccess)
+            return OperationResult.Failure(buildTime.ErrorMessage);
+        BuildTime = buildTime.Value ?? string.Empty;
+        
         // Initialize relay states
         _Meas_H = new RelayState(32);
         _Meas_L = new RelayState(32);
         _Stim = new RelayState(16);
         _Ext_Stim = new RelayState(4);
+
+        return OperationResult.Success();
     }
 }
