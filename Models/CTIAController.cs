@@ -10,6 +10,7 @@ public class CTIAController : IDeviceInfoProvider
 {
     public GetCommands Get { get; private set; }
     public SetCommands Set { get; private set; }
+    public ClrCommands Clr { get; private set; }
 
     public string FirmwareVersion { get; private set; } = string.Empty;
     public string DeviceName { get; private set; } = string.Empty;
@@ -26,7 +27,7 @@ public class CTIAController : IDeviceInfoProvider
         var communication = new CTIACommunication(communicationInterface);
         Set = new SetCommands(communication);
         Get = new GetCommands(communication);
-        
+        Clr = new ClrCommands(communication);
     }
 
     public async Task<OperationResult> InitializeAsync()

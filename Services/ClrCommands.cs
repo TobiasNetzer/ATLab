@@ -3,15 +3,15 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class SetCommands
+public class ClrCommands
 {
     private readonly CTIACommunication _CTIA;
-    public SetCommands(CTIACommunication cTIA) => _CTIA = cTIA;
-    public async Task<OperationResult<bool>> SetExtStimCh(byte channel)
+    public ClrCommands(CTIACommunication cTIA) => _CTIA = cTIA;
+    public async Task<OperationResult<bool>> ClearExtStimCh(byte channel)
     {
         CommandFrame frame = new CommandFrame
         {
-            Command = (ushort)SetCmd.SET_EXT_STIM_CH,
+            Command = (ushort)ClrCmd.CLR_EXT_STIM_CH,
             PayloadSize = 1,
             Payload = [channel]
         };

@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
+        xmlns:views="clr-namespace:ATLab.Views"
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -29,17 +30,21 @@
             </MenuItem>
         </Menu>
 
-        <TabControl Margin="5">
-            <TabItem Header="Testing">
-                <TextBlock Margin="5">This is tab 1 content</TextBlock>
-            </TabItem>
-            <TabItem Header="Lab">
-                <!--TextBlock Margin="5">This is tab 2 content</TextBlock-->
-                <Button Content="Set EXT STIM" Command="{Binding SetStimCommand}" Margin="5"/>
-            </TabItem>
-            <TabItem Header="Config">
-                <TextBlock Margin="5">This is tab 3 content</TextBlock>
-            </TabItem>
-        </TabControl>
+
+
+<TabControl SelectedItem="{Binding SelectedTab}">
+      <TabControl.DataTemplates>
+         <DataTemplate DataType="vm:TestingTabViewModel">
+            <views:TestingTab/>
+         </DataTemplate>
+         <DataTemplate DataType="vm:LabTabViewModel">
+            <views:LabTab/>
+         </DataTemplate>
+      </TabControl.DataTemplates>
+      <TabItem Header="Testing" Content="{Binding TestingTab}" />
+      <TabItem Header="Lab" Content="{Binding LabTab}" />
+   </TabControl>
+
+
     </DockPanel>
 </Window>
