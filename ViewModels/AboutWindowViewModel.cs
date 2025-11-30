@@ -7,16 +7,14 @@ namespace ATLab.ViewModels;
 
 public partial class AboutWindowViewModel : ViewModelBase
 {
-    private readonly IHardwareInfoProvider _hardware;
+    public string FirmwareVersion { get; }
+    public string DeviceName { get; }
+    public string BuildDate { get; }
+    public string BuildTime { get; set; }
 
-    public string? FirmwareVersion => _hardware.FirmwareVersion;
-    public string? DeviceName => _hardware.DeviceName;
-    public string? BuildDate => _hardware.BuildDate;
-    public string? BuildTime => _hardware.BuildTime;
-
-    public string? MeasChannelCount => _hardware.MeasChannelCount.ToString();
-    public string? StimChannelCount => _hardware.StimChannelCount.ToString();
-    public string? ExtStimChannelCount => _hardware.ExtStimChannelCount.ToString();
+    public string MeasChannelCount { get; }
+    public string StimChannelCount { get; }
+    public string ExtStimChannelCount { get; }
 
     public string AppVersion => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
     public string Author => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "Unknown";
@@ -25,7 +23,13 @@ public partial class AboutWindowViewModel : ViewModelBase
 
     public AboutWindowViewModel(IHardwareInfoProvider hardware)
     {
-        _hardware = hardware;
+        FirmwareVersion = hardware.FirmwareVersion;
+        DeviceName  = hardware.DeviceName;
+        BuildDate = hardware.BuildDate;
+        BuildTime = hardware.BuildTime;
+        MeasChannelCount = hardware.MeasChannelCount.ToString();
+        StimChannelCount = hardware.StimChannelCount.ToString();
+        ExtStimChannelCount = hardware.ExtStimChannelCount.ToString();
     }
 
     [RelayCommand]
