@@ -7,21 +7,25 @@ namespace ATLab.ViewModels;
 
 public partial class AboutWindowViewModel : ViewModelBase
 {
-    private readonly IDeviceInfoProvider _device;
+    private readonly IHardwareInfoProvider _hardware;
 
-    public string? FirmwareVersion => _device.FirmwareVersion;
-    public string? DeviceName => _device.DeviceName;
-    public string? BuildDate => _device.BuildDate;
-    public string? BuildTime => _device.BuildTime;
+    public string? FirmwareVersion => _hardware.FirmwareVersion;
+    public string? DeviceName => _hardware.DeviceName;
+    public string? BuildDate => _hardware.BuildDate;
+    public string? BuildTime => _hardware.BuildTime;
+
+    public string? MeasChannelCount => _hardware.MeasChannelCount.ToString();
+    public string? StimChannelCount => _hardware.StimChannelCount.ToString();
+    public string? ExtStimChannelCount => _hardware.ExtStimChannelCount.ToString();
 
     public string AppVersion => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
     public string Author => Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "Unknown";
 
     public event Action? RequestClose;
 
-    public AboutWindowViewModel(IDeviceInfoProvider device)
+    public AboutWindowViewModel(IHardwareInfoProvider hardware)
     {
-        _device = device;
+        _hardware = hardware;
     }
 
     [RelayCommand]

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ATLab.Models;
 using ATLab.Services;
+using ATLab.CTIA;
+using ATLab.Interfaces;
 
 namespace ATLab.ViewModels;
 
 public partial class SerialPortConnectWindowViewModel : ViewModelBase
 {
-    public CTIAController? _cTIA;
+    public IUniversalTestHardwareInterface? _device;
 
     [ObservableProperty]
     private string _selectedPort = "";
@@ -22,7 +24,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     private string _statusText = "";
 
     [ObservableProperty]
-    private ConnectionStatus _status = ConnectionStatus.Disconnected;
+    private ConnectionStatus _status = ConnectionStatus.DISCONNECTED;
 
     public event Action<bool>? Connected;
 
@@ -51,7 +53,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         ConnectCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (_cTIA == null || App.SettingsService.Settings.LastComPort != SelectedPort);
+    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (_device == null || App.SettingsService.Settings.LastComPort != SelectedPort);
     
 
     [RelayCommand(CanExecute = nameof(CanConnect))]
@@ -64,24 +66,24 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         if (!openResult.IsSuccess)
         {
             StatusText = $"Failed to connect to {SelectedPort}";
-            Status = ConnectionStatus.Failed;
+            Status = ConnectionStatus.FAILED;
             ConnectCommand.NotifyCanExecuteChanged();
             return false;
         }
         else
         {
-            _cTIA = new CTIAController(service);
-            var initResult = await _cTIA.InitializeAsync();
+            _device = new CTIAController(service);
+            var initResult = await _device.InitializeAsync();
             if (!initResult.IsSuccess)
             {
                 StatusText = $"Initialization failed: {initResult.ErrorMessage}";
-                Status = ConnectionStatus.Failed;
+                Status = ConnectionStatus.FAILED;
                 ConnectCommand.NotifyCanExecuteChanged();
                 return false;
             }
             else{
                 StatusText = $"Connected to {SelectedPort}";
-                Status = ConnectionStatus.Connected;
+                Status = ConnectionStatus.CONNECTED;
                 App.SettingsService.Settings.LastComPort = SelectedPort;
                 Connected?.Invoke(true);
                 ConnectCommand.NotifyCanExecuteChanged();

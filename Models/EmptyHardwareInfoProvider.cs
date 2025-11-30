@@ -1,0 +1,14 @@
+using ATLab.Interfaces;
+
+namespace ATLab.Models;
+
+public class EmptyHardwareInfoProvider : IHardwareInfoProvider
+{
+    public string FirmwareVersion { get; set; } = "N/A";
+    public string DeviceName { get; set; } = "No Device";
+    public string BuildDate { get; set; } = "N/A";
+    public string BuildTime { get; set; } = "N/A";
+    public int MeasChannelCount { get; set; } = 0;
+    public int StimChannelCount { get; set; } = 16;
+    public int ExtStimChannelCount { get; set; } = 0;
+}

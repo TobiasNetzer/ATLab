@@ -2,9 +2,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Models;
 
-namespace ATLab.Services
+namespace ATLab.CTIA
 {
     public class CTIACommunication: IDisposable
     {
@@ -14,16 +13,16 @@ namespace ATLab.Services
             _communicationInterface = communicationInterface;
         }
         
-        public async Task<CommandFrame> SendCommandAsync(CommandFrame frame, int timeoutMs = 1000)
+        public async Task<CTIACommandFrame> SendCommandAsync(CTIACommandFrame frame, int timeoutMs = 1000)
         {
             byte[] responseBytes = await _communicationInterface.SendAsync(frame.ToByteArray(), timeoutMs);
-            return CommandFrameParser.Parse(responseBytes);
+            return CTIACommandFrame.Parse(responseBytes);
         }
 
-        public async Task<CommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
+        public async Task<CTIACommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
         {
             byte[] receivedData = await _communicationInterface.ReceiveAsync(cancellationToken);
-            return CommandFrameParser.Parse(receivedData);
+            return CTIACommandFrame.Parse(receivedData);
         }
 
         public void Dispose()

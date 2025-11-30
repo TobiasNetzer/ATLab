@@ -7,6 +7,8 @@ using ATLab.ViewModels;
 using ATLab.Views;
 using ATLab.Services;
 using System.Threading.Tasks;
+using ATLab.CTIA;
+using ATLab.Interfaces;
 using ATLab.Models;
 
 namespace ATLab;
@@ -17,7 +19,7 @@ public partial class App : Application
 
     public static bool SimulationMode { get; set; }
 
-    private CTIAController? _cTIA;
+    private IUniversalTestHardwareInterface? _testHardware;
 
     public override void Initialize()
     {
@@ -44,8 +46,8 @@ public partial class App : Application
             }
             else
             {
-                _cTIA = new CTIAController(service);
-                var initResult = await _cTIA.InitializeAsync();
+                _testHardware = new CTIAController(service);
+                var initResult = await _testHardware.InitializeAsync();
                 if (!initResult.IsSuccess)
                 {
                     openConnectWindow = true;
@@ -80,10 +82,14 @@ public partial class App : Application
 
                         if (result == true)
                         {
-                            _cTIA = vm._cTIA;
+                            _testHardware = vm._device;
                             SimulationMode = false;
                         }
-                        else SimulationMode = true;
+                        else
+                        {
+                            _testHardware = new CTIAController(new SimulationService());
+                            SimulationMode = true;
+                        }
                     }
 
                 }
@@ -101,7 +107,7 @@ public partial class App : Application
 
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(_cTIA!),
+                DataContext = new MainWindowViewModel(_testHardware!),
             };
             desktop.MainWindow.Show();
         }

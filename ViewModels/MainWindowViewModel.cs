@@ -9,14 +9,13 @@ using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ATLab.CTIA;
 
 namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private CTIAController _cTIA;
-
-    public ObservableCollection<ViewModelBase> Tabs { get; set; }
+    private IUniversalTestHardwareInterface _testHardware;
 
     [ObservableProperty]
     private ViewModelBase? selectedTab;
@@ -24,38 +23,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private TestingTabViewModel? testingTab;
 
-        [ObservableProperty]
-    private LabTabViewModel? labTab;
-
-    public event EventHandler<bool>? StateChanged;
-
     [ObservableProperty]
-    private bool state;
+    private DeviceViewModel? labTab;
 
-    partial void OnStateChanged(bool value)
+    public MainWindowViewModel(IUniversalTestHardwareInterface testHardware)
     {
-        StateChanged?.Invoke(this, value);
-        _ = SetStim();
-    }
-
-    public MainWindowViewModel(CTIAController cTIA)
-    {
-        _cTIA = cTIA;
-        Tabs = new ObservableCollection<ViewModelBase>
-        {
-            new TestingTabViewModel { Title = "Testing" },
-            new LabTabViewModel { Title = "Lab" }
-        };
-        SelectedTab = Tabs.FirstOrDefault();
+        _testHardware = testHardware;
 
         testingTab = new TestingTabViewModel();
-        labTab = new LabTabViewModel();
+        labTab = new DeviceViewModel(_testHardware);
     }
 
     [RelayCommand]
     public async Task OpenAboutWindow()
     {
-        var deviceInfoProvider = (_cTIA as IDeviceInfoProvider) ?? new EmptyDeviceInfoProvider();
+        var deviceInfoProvider = _testHardware.HardwareInfoProvider;
         var aboutVM = new AboutWindowViewModel(deviceInfoProvider);
         var aboutWindow = new AboutWindow
         {
@@ -69,13 +51,5 @@ public partial class MainWindowViewModel : ViewModelBase
             await aboutWindow.ShowDialog(desktop.MainWindow);
         else
             aboutWindow.Show();
-    }
-
-    [RelayCommand]
-    public async Task SetStim()
-    {
-        if(State)
-            await _cTIA.Set.SetExtStimCh(1);
-        else await _cTIA.Clr.ClearExtStimCh(1);
     }
 }

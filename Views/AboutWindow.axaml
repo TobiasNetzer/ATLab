@@ -6,7 +6,7 @@
         x:Class="ATLab.Views.AboutWindow"
         x:DataType="vm:AboutWindowViewModel"
         Title="About"
-        Width="500" Height="340"
+        Width="500" Height="450"
         RequestedThemeVariant="Default"
         WindowStartupLocation="CenterScreen"
         CanResize="False">
@@ -31,6 +31,10 @@
                 <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}" />
                 <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}" />
                 <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}" />
+                <TextBlock Text="Available Channels:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding MeasChannelCount, StringFormat=MEAS CH: {0}}" />
+                <TextBlock Text="{Binding StimChannelCount, StringFormat=STIM CH: {0}}" />
+                <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=EXT STIM CH: {0}}" />
 
                 <Button Content="OK" Width="80" HorizontalAlignment="Right" Margin="0,10,0,0" HorizontalContentAlignment="Center"
                         Command="{Binding CloseCommand}" />

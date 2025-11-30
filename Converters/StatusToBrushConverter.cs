@@ -14,8 +14,8 @@ public class StatusToBrushConverter : IValueConverter
         {
             return status switch
             {
-                ConnectionStatus.Connected => Brushes.LightGreen,
-                ConnectionStatus.Failed => Brushes.Red,
+                ConnectionStatus.CONNECTED => Brushes.LightGreen,
+                ConnectionStatus.FAILED => Brushes.Red,
                 _ => Brushes.Gray,
             };
         }

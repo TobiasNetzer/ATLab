@@ -1,8 +1,22 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="ATLab.Views.LabTab">
+             x:Class="ATLab.Views.LabTab"
+            x:DataType="vm:DeviceViewModel"
+             xmlns:vm="clr-namespace:ATLab.ViewModels">
 
-    <StackPanel>
-        <TextBlock Margin="5">This is LabTab content</TextBlock>
-    </StackPanel>
+
+        <ItemsControl ItemsSource="{Binding StimChannels}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                    <CheckBox Content="{Binding ChannelName}" IsChecked="{Binding IsEnabled, Mode=TwoWay}" Margin="5" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 </UserControl>
