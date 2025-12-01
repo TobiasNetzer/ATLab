@@ -12,7 +12,7 @@ namespace ATLab.Services
     /// Generic serial port service for sending/receiving raw bytes.
     /// Device-specific frame parsing should be handled by the controller class.
     /// </summary>
-    public class SerialPortService : ICommunicationInterface, IDisposable
+    public class SerialPortService : ITestHardwareCommunication, IDisposable
     {
         private readonly SerialPort _port;
         private readonly object _lock = new();

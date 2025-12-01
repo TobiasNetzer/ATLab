@@ -5,22 +5,22 @@ using ATLab.Models;
 
 namespace ATLab.CTIA;
 
-public class CTIAController : IUniversalTestHardwareInterface
+public class CtiaHardware : ITestHardware
 {
     private readonly CtiaCommand _command;
-    public IHardwareInfoProvider HardwareInfoProvider { get; }
+    public IHardwareInfo HardwareInfo { get; }
     
     public bool[] StimChannelStates {get; set;}
     public bool[] ExtStimChannelStates { get; set; }
     public bool[] MeasChannelStatesH { get; set; }
     public bool[] MeasChannelStatesL { get; set; }
 
-    public CTIAController(ICommunicationInterface communicationInterface)
+    public CtiaHardware(ITestHardwareCommunication testHardwareCommunication)
     {
-        HardwareInfoProvider = new EmptyHardwareInfoProvider();
+        HardwareInfo = new DummyHardwareInfo();
         StimChannelStates = new bool[16];
         
-        var communication = new CTIACommunication(communicationInterface);
+        var communication = new CtiaCommunication(testHardwareCommunication);
         _command = new CtiaCommand(communication);
     }
 
@@ -36,26 +36,26 @@ public class CTIAController : IUniversalTestHardwareInterface
         var firmwareVersion = await _command.GetFirmwareVersion();
         if (!firmwareVersion.IsSuccess)
             return OperationResult.Failure(firmwareVersion.ErrorMessage);
-        HardwareInfoProvider.FirmwareVersion = firmwareVersion.Value ?? string.Empty;
+        HardwareInfo.FirmwareVersion = firmwareVersion.Value ?? string.Empty;
 
         var deviceName = await _command.GetDeviceName();
         if (!deviceName.IsSuccess)
             return OperationResult.Failure(deviceName.ErrorMessage);
-        HardwareInfoProvider.DeviceName = deviceName.Value ?? string.Empty;
+        HardwareInfo.DeviceName = deviceName.Value ?? string.Empty;
 
         var buildDate = await _command.GetFirmwareBuildDate();
         if (!buildDate.IsSuccess)
             return OperationResult.Failure(buildDate.ErrorMessage);
-        HardwareInfoProvider.BuildDate = buildDate.Value ?? string.Empty;
+        HardwareInfo.BuildDate = buildDate.Value ?? string.Empty;
 
         var buildTime = await _command.GetFirmwareBuildTime();
         if (!buildTime.IsSuccess)
             return OperationResult.Failure(buildTime.ErrorMessage);
-        HardwareInfoProvider.BuildTime = buildTime.Value ?? string.Empty;
+        HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
 
-        HardwareInfoProvider.MeasChannelCount = 0; // Replace with GET_MEAS_CH Command
-        HardwareInfoProvider.StimChannelCount = 0;
-        HardwareInfoProvider.ExtStimChannelCount = 0;
+        HardwareInfo.MeasChannelCount = 0; // Replace with GET_MEAS_CH Command
+        HardwareInfo.StimChannelCount = 0;
+        HardwareInfo.ExtStimChannelCount = 0;
 
         return OperationResult.Success();
     }

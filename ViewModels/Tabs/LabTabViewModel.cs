@@ -8,16 +8,16 @@ namespace ATLab.ViewModels;
 public partial class LabTabViewModel : ViewModelBase
 {
 
-    private IUniversalTestHardwareInterface _testHardware;
+    private ITestHardware _testHardware;
 
-    public DeviceViewModel DeviceViewModel { get; }
+    public StimChannelViewModel StimChannelViewModel { get; }
 
     [ObservableProperty]
     private string title = "Lab";
 
-    public LabTabViewModel(IUniversalTestHardwareInterface testHardware)
+    public LabTabViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
-        DeviceViewModel = new DeviceViewModel(_testHardware);
+        StimChannelViewModel = new StimChannelViewModel(_testHardware);
     }
 }

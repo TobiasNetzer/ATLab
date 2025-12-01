@@ -3,13 +3,13 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
-public interface IUniversalTestHardwareInterface
+public interface ITestHardware
 {
     bool[] StimChannelStates {get; set; }
     bool[] ExtStimChannelStates { get; set; }
     bool[] MeasChannelStatesH { get; set; }
     bool[] MeasChannelStatesL { get; set; }
-    IHardwareInfoProvider HardwareInfoProvider { get; }
+    IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> SetStimChannels();
 }

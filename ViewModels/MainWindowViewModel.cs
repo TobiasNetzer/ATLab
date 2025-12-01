@@ -15,29 +15,29 @@ namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private IUniversalTestHardwareInterface _testHardware;
+    private ITestHardware _testHardware;
 
     [ObservableProperty]
     private ViewModelBase? selectedTab;
 
     [ObservableProperty]
-    private TestingTabViewModel? testingTab;
+    private TestingTabViewModel testingTab;
 
     [ObservableProperty]
-    private DeviceViewModel? labTab;
+    private StimChannelViewModel labTab;
 
-    public MainWindowViewModel(IUniversalTestHardwareInterface testHardware)
+    public MainWindowViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
 
         testingTab = new TestingTabViewModel();
-        labTab = new DeviceViewModel(_testHardware);
+        labTab = new StimChannelViewModel(_testHardware);
     }
 
     [RelayCommand]
     public async Task OpenAboutWindow()
     {
-        var deviceInfoProvider = _testHardware.HardwareInfoProvider;
+        var deviceInfoProvider = _testHardware.HardwareInfo;
         var aboutVM = new AboutWindowViewModel(deviceInfoProvider);
         var aboutWindow = new AboutWindow
         {

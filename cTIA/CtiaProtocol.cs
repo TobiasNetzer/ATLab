@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ATLab.CTIA;
 
-public class CTIACommandFrame
+public class CtiaCommandFrame
 {
     private ushort Header { get; } = 0xAA55;
     public ushort Command { get; set; } = 0x00;
@@ -54,9 +54,9 @@ public class CTIACommandFrame
         return $"CMD=0x{Command:X4}, CTRL=0x{ControlByte:X2}, PAYLOAD={asciiString}";
     }
     
-    public static CTIACommandFrame Parse(byte[] data, ushort expectedHeader = 0xAA55)
+    public static CtiaCommandFrame Parse(byte[] data, ushort expectedHeader = 0xAA55)
     {
-        if (data == null || data.Length < CTIACommandFrame.MinFrameSize)
+        if (data == null || data.Length < CtiaCommandFrame.MinFrameSize)
             throw new ArgumentException("Data too short to be a valid frame", nameof(data));
 
         ushort header = (ushort)(data[0] | (data[1] << 8));
@@ -83,7 +83,7 @@ public class CTIACommandFrame
         if (payloadSize > 0)
             Array.Copy(data, 6, payload, 0, payloadSize);
 
-        CTIACommandFrame frame = new CTIACommandFrame();
+        CtiaCommandFrame frame = new CtiaCommandFrame();
         frame.Command = command;
         frame.ControlByte = control;
         frame.PayloadSize = payloadSize;

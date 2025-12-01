@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class AboutWindowViewModel(IHardwareInfoProvider hardwareInfo) : ViewModelBase
+public partial class AboutWindowViewModel(IHardwareInfo hardwareInfo) : ViewModelBase
 {
     public string FirmwareVersion { get; } = hardwareInfo.FirmwareVersion;
     public string DeviceName { get; } = hardwareInfo.DeviceName;

@@ -37,7 +37,7 @@
          <DataTemplate DataType="vm:TestingTabViewModel">
             <views:TestingTab/>
          </DataTemplate>
-         <DataTemplate DataType="vm:DeviceViewModel">
+         <DataTemplate DataType="vm:StimChannelViewModel">
             <views:LabTab/>
          </DataTemplate>
       </TabControl.DataTemplates>

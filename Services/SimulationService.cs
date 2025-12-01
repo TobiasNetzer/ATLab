@@ -5,7 +5,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class SimulationService : ICommunicationInterface
+public class SimulationService : ITestHardwareCommunication
 {
     public Task<byte[]> SendAsync(byte[] data, int timeoutMs = 1000)
     {

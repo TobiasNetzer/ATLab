@@ -1,5 +1,5 @@
 namespace ATLab.Interfaces;
-public interface IHardwareInfoProvider
+public interface IHardwareInfo
 {
     string FirmwareVersion { get; set; }
     string DeviceName { get; set; }

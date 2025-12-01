@@ -13,7 +13,7 @@ namespace ATLab.ViewModels;
 
 public partial class SerialPortConnectWindowViewModel : ViewModelBase
 {
-    public IUniversalTestHardwareInterface? _device;
+    public ITestHardware? _device;
 
     [ObservableProperty]
     private string _selectedPort = "";
@@ -72,7 +72,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         else
         {
-            _device = new CTIAController(service);
+            _device = new CtiaHardware(service);
             var initResult = await _device.InitializeAsync();
             if (!initResult.IsSuccess)
             {

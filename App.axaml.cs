@@ -9,7 +9,6 @@ using ATLab.Services;
 using System.Threading.Tasks;
 using ATLab.CTIA;
 using ATLab.Interfaces;
-using ATLab.Models;
 
 namespace ATLab;
 
@@ -19,7 +18,7 @@ public partial class App : Application
 
     public static bool SimulationMode { get; set; }
 
-    private IUniversalTestHardwareInterface? _testHardware;
+    private ITestHardware? _testHardware;
 
     public override void Initialize()
     {
@@ -28,6 +27,7 @@ public partial class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
+        
         SettingsService = new SettingsService();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -46,7 +46,7 @@ public partial class App : Application
             }
             else
             {
-                _testHardware = new CTIAController(service);
+                _testHardware = new CtiaHardware(service);
                 var initResult = await _testHardware.InitializeAsync();
                 if (!initResult.IsSuccess)
                 {
@@ -87,7 +87,7 @@ public partial class App : Application
                         }
                         else
                         {
-                            _testHardware = new CTIAController(new SimulationService());
+                            _testHardware = new CtiaHardware(new SimulationService());
                             SimulationMode = true;
                         }
                     }

@@ -138,19 +138,19 @@ public enum DbgCmd : ushort
 
 public class CtiaCommand
 {
-    private readonly CTIACommunication _CTIA;
-    public CtiaCommand(CTIACommunication cTIA) => _CTIA = cTIA;
+    private readonly CtiaCommunication _CTIA;
+    public CtiaCommand(CtiaCommunication cTIA) => _CTIA = cTIA;
     
     public async Task<OperationResult<bool>> SetExtStimCh(byte channel)
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_EXT_STIM_CH,
             PayloadSize = 1,
             Payload = [channel]
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -176,14 +176,14 @@ public class CtiaCommand
             }
         }
         
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_BITFIELD_STIM_CH,
             PayloadSize = Convert.ToByte(array.Length / 8),
         };
         frame.Payload = array;
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -193,12 +193,12 @@ public class CtiaCommand
 
     public async Task<OperationResult<ushort>> GetDeviceID()
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_DEVICE_ID
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_ID)
             return OperationResult<ushort>.Success(BitConverter.ToUInt16(responseFrame.Payload, 0));
@@ -208,12 +208,12 @@ public class CtiaCommand
 
     public async Task<OperationResult<string>> GetFirmwareVersion()
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_VESION
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_VERSION)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -223,12 +223,12 @@ public class CtiaCommand
 
     public async Task<OperationResult<string>> GetFirmwareBuildDate()
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_BUILD_DATE
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_DATE)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -238,12 +238,12 @@ public class CtiaCommand
 
     public async Task<OperationResult<string>> GetFirmwareBuildTime()
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_BUILD_TIME
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_TIME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -253,12 +253,12 @@ public class CtiaCommand
 
     public async Task<OperationResult<string>> GetDeviceName()
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_DEVICE_NAME
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -268,14 +268,14 @@ public class CtiaCommand
     
     public async Task<OperationResult<bool>> ClearExtStimCh(byte channel)
     {
-        CTIACommandFrame frame = new CTIACommandFrame
+        CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)ClrCmd.CLR_EXT_STIM_CH,
             PayloadSize = 1,
             Payload = [channel]
         };
 
-        CTIACommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
