@@ -1,13 +1,20 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:design="clr-namespace:ATLab.DesignViewModels"
              x:Class="ATLab.Views.LabTab">
 
+    <Design.DataContext>
+        <design:StimChannelDesignViewModel />
+    </Design.DataContext>
 
     <StackPanel>
         <TextBlock Text="Main Window" FontSize="20" Margin="10"/>
         
         <!-- Show your StimSelector -->
-        <controls:StimSelector HorizontalAlignment="Left"/>
+        <controls:StimSelector
+            HorizontalAlignment="Left"
+            GridRows="8"
+            GridColumns="2"/>
     </StackPanel>
 </UserControl>

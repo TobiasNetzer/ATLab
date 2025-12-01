@@ -11,7 +11,7 @@ public class StimChannelDesignViewModel : StimChannelViewModel
     {
         for (int i = 0; i < 16; i++)
         {
-            StimChannels.Add(new RelayChannelViewModel(null, i, $"STIM CH {i + 1}"));
+            StimChannels.Add(new RelayChannelViewModel(new CtiaHardware(new SimulationService()), i, $"STIM CH {i + 1}"));
         }
     }
 }

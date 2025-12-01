@@ -20,8 +20,7 @@ public partial class RelayChannelViewModel : ViewModelBase
         _testHardware = testHardware;
         _channelIndex = channelIndex;
         ChannelName = channelName;
-        //IsEnabled = _testHardware.StimChannelStates[channelIndex];
-        IsEnabled = false;
+        IsEnabled = _testHardware.StimChannelStates[channelIndex];
     }
 
     partial void OnIsEnabledChanged(bool value)
