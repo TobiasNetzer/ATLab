@@ -13,7 +13,7 @@ namespace ATLab.ViewModels;
 
 public partial class SerialPortConnectWindowViewModel : ViewModelBase
 {
-    public ITestHardware? _device;
+    public ITestHardware? TestHardware;
 
     [ObservableProperty]
     private string _selectedPort = "";
@@ -53,7 +53,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         ConnectCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (_device == null || App.SettingsService.Settings.LastComPort != SelectedPort);
+    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (TestHardware == null || App.SettingsService.Settings.LastComPort != SelectedPort);
     
 
     [RelayCommand(CanExecute = nameof(CanConnect))]
@@ -72,8 +72,8 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         else
         {
-            _device = new CtiaHardware(service);
-            var initResult = await _device.InitializeAsync();
+            TestHardware = new CtiaHardware(service);
+            var initResult = await TestHardware.InitializeAsync();
             if (!initResult.IsSuccess)
             {
                 StatusText = $"Initialization failed: {initResult.ErrorMessage}";

@@ -5,7 +5,7 @@ namespace ATLab.ViewModels;
 
 public partial class RelayChannelViewModel : ViewModelBase
 {
-    private readonly ITestHardware? _testHardware;
+    private readonly ITestHardware _testHardware;
 
     private readonly int _channelIndex;
 
@@ -25,10 +25,7 @@ public partial class RelayChannelViewModel : ViewModelBase
 
     partial void OnIsEnabledChanged(bool value)
     {
-        if (_testHardware != null)
-        {
-            _testHardware.StimChannelStates[_channelIndex] = value;
-            _testHardware.SetStimChannels();
-        }
+        _testHardware.StimChannelStates[_channelIndex] = value;
+        _testHardware.SetStimChannels();
     }
 }

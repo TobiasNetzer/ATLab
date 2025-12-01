@@ -82,7 +82,7 @@ public partial class App : Application
 
                         if (result == true)
                         {
-                            _testHardware = vm._device;
+                            _testHardware = vm.TestHardware;
                             SimulationMode = false;
                         }
                         else
