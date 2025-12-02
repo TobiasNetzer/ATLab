@@ -37,9 +37,15 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:RelayChannelViewModel">
-                        <CheckBox Content="{Binding ChannelName}"
-                                  IsChecked="{Binding IsEnabled, Mode=TwoWay}"
-                                  Margin="5"/>
+                        <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                  Margin="5">
+                            <CheckBox.Content>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="ChannelIndex"/>
+                                    <Binding Path="ChannelName"/>
+                                </MultiBinding>
+                            </CheckBox.Content>
+                        </CheckBox>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

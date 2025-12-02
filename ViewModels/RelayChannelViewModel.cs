@@ -5,27 +5,28 @@ namespace ATLab.ViewModels;
 
 public partial class RelayChannelViewModel : ViewModelBase
 {
-    private readonly ITestHardware _testHardware;
-
-    private readonly int _channelIndex;
+    private readonly IChannelGroup _channelGroup;
+    
+    [ObservableProperty]
+    private int _channelIndex;
 
     [ObservableProperty]
     private string _channelName = "";
 
     [ObservableProperty]
-    private bool _isEnabled = false;
+    private bool _isEnabled;
 
-    public RelayChannelViewModel(ITestHardware testHardware, int channelIndex, string channelName)
+    public RelayChannelViewModel(IChannelGroup channelGroup, int channelIndex, string channelName)
     {
-        _testHardware = testHardware;
-        _channelIndex = channelIndex;
+        _channelGroup = channelGroup;
+        ChannelIndex = channelIndex + 1; // Index for UI not 0-based
         ChannelName = channelName;
-        IsEnabled = _testHardware.StimChannelStates[channelIndex];
+        IsEnabled = _channelGroup[channelIndex];
     }
 
     partial void OnIsEnabledChanged(bool value)
     {
-        _testHardware.StimChannelStates[_channelIndex] = value;
-        _testHardware.SetStimChannels();
+        _channelGroup[ChannelIndex - 1] = value; // Index here 0-based
+        _channelGroup.CommitChanges();
     }
 }
