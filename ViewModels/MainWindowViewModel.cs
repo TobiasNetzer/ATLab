@@ -18,20 +18,20 @@ public partial class MainWindowViewModel : ViewModelBase
     private ITestHardware _testHardware;
 
     [ObservableProperty]
-    private ViewModelBase? selectedTab;
+    public ViewModelBase? _selectedTab;
 
     [ObservableProperty]
-    private TestingTabViewModel testingTab;
+    public TestingTabViewModel _testingTab;
 
     [ObservableProperty]
-    private StimChannelViewModel labTab;
+    public LabTabViewModel _labTab;
 
     public MainWindowViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
 
-        testingTab = new TestingTabViewModel();
-        labTab = new StimChannelViewModel(_testHardware);
+        TestingTab = new TestingTabViewModel();
+        LabTab = new LabTabViewModel(_testHardware);
     }
 
     [RelayCommand]

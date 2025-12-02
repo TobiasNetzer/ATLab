@@ -1,7 +1,5 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
         xmlns:views="clr-namespace:ATLab.Views"
         x:Class="ATLab.Views.MainWindow"
@@ -37,7 +35,7 @@
          <DataTemplate DataType="vm:TestingTabViewModel">
             <views:TestingTab/>
          </DataTemplate>
-         <DataTemplate DataType="vm:StimChannelViewModel">
+         <DataTemplate DataType="vm:LabTabViewModel">
             <views:LabTab/>
          </DataTemplate>
       </TabControl.DataTemplates>

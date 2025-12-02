@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.ExtStimSelector"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:design="clr-namespace:ATLab.DesignViewModels"
+             x:DataType="vm:ExtStimChannelViewModel">
+    
+    <Design.DataContext>
+        <design:ExtStimChannelDesignViewModel />
+    </Design.DataContext>
+    
+    <!-- Root element is a Border -->
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15"
+            Padding="20 10 20 10"
+            Margin="10">
+
+        <!-- Inside the border, use your layout -->
+        <StackPanel>
+            <TextBlock Text="External Stimulation Channels"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+            
+            <ItemsControl ItemsSource="{Binding ExtStimChannels}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <!-- Force 2 columns and 8 rows -->
+                        <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:ExtStimSelector}}"
+                                     Rows="{Binding GridRows, RelativeSource={RelativeSource AncestorType=controls:ExtStimSelector}}"
+                                     HorizontalAlignment="Center"
+                                     ColumnSpacing="30"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                        <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                  Margin="5">
+                            <CheckBox.Content>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="ChannelIndex"/>
+                                    <Binding Path="ChannelName"/>
+                                </MultiBinding>
+                            </CheckBox.Content>
+                        </CheckBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -12,4 +12,5 @@ public interface ITestHardware
     IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> SetStimChannels();
+    Task<OperationResult> SetExtStimChannels();
 }

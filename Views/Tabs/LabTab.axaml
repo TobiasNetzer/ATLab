@@ -1,8 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:design="clr-namespace:ATLab.DesignViewModels"
-             x:Class="ATLab.Views.LabTab">
+             x:Class="ATLab.Views.LabTab"
+             x:DataType="vm:LabTabViewModel">
 
     <Design.DataContext>
         <design:StimChannelDesignViewModel />
@@ -12,9 +14,15 @@
         <TextBlock Text="Main Window" FontSize="20" Margin="10"/>
         
         <!-- Show your StimSelector -->
-        <controls:StimSelector
+        <controls:StimSelector DataContext="{Binding StimChannelViewModel}"
             HorizontalAlignment="Left"
             GridRows="8"
             GridColumns="2"/>
+        
+        <controls:ExtStimSelector DataContext="{Binding ExtStimChannelViewModel}"
+                                  HorizontalAlignment="Left"
+                                  GridRows="1"
+                                  GridColumns="4"/>
+            
     </StackPanel>
 </UserControl>

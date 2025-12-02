@@ -190,6 +190,37 @@ public class CtiaCommand
         else
             return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
     }
+    
+    public async Task<OperationResult<bool>> SetExtStimChBiftield(bool[] states)
+    {
+
+        int bytes = 1 + (states.Length / 8);
+        byte[] array = new byte[bytes];
+
+        for (int i = 0; i < states.Length; i++)
+        {
+            if (states[i])
+            {
+                int byteIndex = i / 8;       // which byte
+                int bitIndex = i % 8;        // which bit inside that byte
+                array[byteIndex] |= (byte)(1 << bitIndex);
+            }
+        }
+        
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)SetCmd.SET_BITFIELD_EXT_STIM_CH,
+            PayloadSize = Convert.ToByte(1 + (array.Length / 8)),
+        };
+        frame.Payload = array;
+
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        else
+            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+    }
 
     public async Task<OperationResult<ushort>> GetDeviceID()
     {

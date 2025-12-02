@@ -18,7 +18,11 @@ public class CtiaHardware : ITestHardware
     public CtiaHardware(ITestHardwareCommunication testHardwareCommunication)
     {
         HardwareInfo = new DummyHardwareInfo();
-        StimChannelStates = new bool[16];
+        
+        MeasChannelStatesH = new  bool[HardwareInfo.MeasChannelCount];
+        MeasChannelStatesL = new  bool[HardwareInfo.MeasChannelCount];
+        StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
+        ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         
         var communication = new CtiaCommunication(testHardwareCommunication);
         _command = new CtiaCommand(communication);
@@ -54,15 +58,26 @@ public class CtiaHardware : ITestHardware
         HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
 
         HardwareInfo.MeasChannelCount = 0; // Replace with GET_MEAS_CH Command
-        HardwareInfo.StimChannelCount = 0;
-        HardwareInfo.ExtStimChannelCount = 0;
-
+        HardwareInfo.StimChannelCount = 16;
+        HardwareInfo.ExtStimChannelCount = 4;
+        
+        MeasChannelStatesH = new  bool[HardwareInfo.MeasChannelCount];
+        MeasChannelStatesL = new  bool[HardwareInfo.MeasChannelCount];
+        StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
+        ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
+        
         return OperationResult.Success();
     }
 
     public async Task<OperationResult> SetStimChannels()
     {
         await _command.SetStimChBiftield(StimChannelStates);
+        return OperationResult.Success();
+    }
+    
+    public async Task<OperationResult> SetExtStimChannels()
+    {
+        await _command.SetExtStimChBiftield(ExtStimChannelStates);
         return OperationResult.Success();
     }
 }
