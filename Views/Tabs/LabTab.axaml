@@ -2,27 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             xmlns:design="clr-namespace:ATLab.DesignViewModels"
+             xmlns:design="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.LabTab"
              x:DataType="vm:LabTabViewModel">
 
     <Design.DataContext>
-        <design:StimChannelDesignViewModel />
+        <design:LabTabViewModel />
     </Design.DataContext>
 
     <StackPanel>
-        <TextBlock Text="Main Window" FontSize="20" Margin="10"/>
         
-        <!-- Show your StimSelector -->
-        <controls:StimSelector DataContext="{Binding StimChannelViewModel}"
+        <controls:StimSelector 
+            DataContext="{Binding StimChannelViewModel}"
             HorizontalAlignment="Left"
             GridRows="8"
             GridColumns="2"/>
         
-        <controls:ExtStimSelector DataContext="{Binding ExtStimChannelViewModel}"
-                                  HorizontalAlignment="Left"
-                                  GridRows="1"
-                                  GridColumns="4"/>
+        <controls:ExtStimSelector 
+            DataContext="{Binding ExtStimChannelViewModel}"
+            HorizontalAlignment="Left"
+            GridRows="1"
+            GridColumns="4"/>
             
     </StackPanel>
 </UserControl>

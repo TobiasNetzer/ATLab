@@ -1,6 +1,5 @@
+using ATLab.DesignViewModels;
 using ATLab.Interfaces;
-using ATLab.Models;
-using ATLab.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -17,5 +16,11 @@ public partial class LabTabViewModel : ViewModelBase
     {
         StimChannelViewModel = new StimChannelViewModel(testHardware);
         ExtStimChannelViewModel = new  ExtStimChannelViewModel(testHardware);
+    }
+    
+    public LabTabViewModel()
+    {
+        StimChannelViewModel = new StimChannelDesignViewModel();
+        ExtStimChannelViewModel = new  ExtStimChannelDesignViewModel();
     }
 }
