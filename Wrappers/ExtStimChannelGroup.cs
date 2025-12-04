@@ -13,5 +13,8 @@ public class ExtStimChannelGroup : IChannelGroup
         set => _hardware.ExtStimChannelStates[index] = value;
     }
 
-    public void CommitChanges() => _hardware.SetExtStimChannels();
+    public void CommitChanges()
+    { 
+        
+    }
 }

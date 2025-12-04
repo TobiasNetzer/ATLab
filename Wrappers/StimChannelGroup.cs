@@ -13,5 +13,8 @@ public class StimChannelGroup : IChannelGroup
         set => _hardware.StimChannelStates[index] = value;
     }
 
-    public void CommitChanges() => _hardware.SetStimChannels();
+    public void CommitChanges()
+    {
+        
+    }
 }

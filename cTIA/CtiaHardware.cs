@@ -57,7 +57,7 @@ public class CtiaHardware : ITestHardware
             return OperationResult.Failure(buildTime.ErrorMessage);
         HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
 
-        HardwareInfo.MeasChannelCount = 0; // Replace with GET_MEAS_CH Command
+        HardwareInfo.MeasChannelCount = 32; // Replace with GET_MEAS_CH Command
         HardwareInfo.StimChannelCount = 16;
         HardwareInfo.ExtStimChannelCount = 4;
         

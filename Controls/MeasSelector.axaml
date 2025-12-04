@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.MeasSelector"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:design="clr-namespace:ATLab.DesignViewModels"
+             x:DataType="vm:MeasChannelViewModel">
+    
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15"
+            Padding="20 10 20 10"
+            Margin="10">
+        
+        <StackPanel>
+            <TextBlock Text="Matrix Channels"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+                
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
+                    <StackPanel>
+                        <TextBlock Text="Meas H:"
+                                   FontSize="16"/>
+                        
+                        <ComboBox ItemsSource="{Binding MeasHChannels}"
+                                  SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="ChannelIndex"/>
+                                                <Binding Path="ChannelName"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    
+                    <StackPanel>
+                        <TextBlock Text="Meas L:"
+                                   FontSize="16"/>
+                    
+                        <ComboBox ItemsSource="{Binding MeasLChannels}"
+                                  SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="ChannelIndex"/>
+                                                <Binding Path="ChannelName"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>
