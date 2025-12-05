@@ -10,10 +10,10 @@ public partial class MeasChannelViewModel : ViewModelBase
     public ObservableCollection<string> MeasChannels { get; } = new();
 
     [ObservableProperty]
-    private int _isSelectedH;
+    private byte _isSelectedH;
     
     [ObservableProperty]
-    private int _isSelectedL;
+    private byte _isSelectedL;
 
     public MeasChannelViewModel(ITestHardware testHardware)
     {

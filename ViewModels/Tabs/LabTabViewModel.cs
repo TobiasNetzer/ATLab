@@ -40,5 +40,7 @@ public partial class LabTabViewModel : ViewModelBase
     {
         _testHardware.SetStimChannels();
         _testHardware.SetExtStimChannels();
+        _testHardware.SetMeasChannelH(MeasChannelViewModel.IsSelectedH);
+        _testHardware.SetMeasChannelL(MeasChannelViewModel.IsSelectedL);
     }
 }

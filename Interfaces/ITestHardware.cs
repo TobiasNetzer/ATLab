@@ -13,4 +13,6 @@ public interface ITestHardware
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> SetStimChannels();
     Task<OperationResult> SetExtStimChannels();
+    Task<OperationResult> SetMeasChannelH(byte channel);
+    Task<OperationResult> SetMeasChannelL(byte channel);
 }

@@ -69,13 +69,41 @@ public class CtiaHardware : ITestHardware
 
     public async Task<OperationResult> SetStimChannels()
     {
-        await _command.SetStimChBiftield(StimChannelStates);
+        var commandResponse = await _command.SetStimChBiftield(StimChannelStates);
+        
+        if (!commandResponse.IsSuccess)
+            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
         return OperationResult.Success();
     }
     
     public async Task<OperationResult> SetExtStimChannels()
     {
-        await _command.SetExtStimChBiftield(ExtStimChannelStates);
+        var commandResponse = await _command.SetExtStimChBiftield(ExtStimChannelStates);
+        
+        if (!commandResponse.IsSuccess)
+            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
+        return OperationResult.Success();
+    }
+
+    public async Task<OperationResult> SetMeasChannelH(byte channel)
+    {
+        var commandResponse = await _command.SetExclusiveMeasChH(channel);
+        
+        if (!commandResponse.IsSuccess)
+            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
+        return OperationResult.Success();
+    }
+    
+    public async Task<OperationResult> SetMeasChannelL(byte channel)
+    {
+        var commandResponse = await _command.SetExclusiveMeasChL(channel);
+        
+        if (!commandResponse.IsSuccess)
+            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
         return OperationResult.Success();
     }
 }

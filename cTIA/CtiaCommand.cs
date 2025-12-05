@@ -141,6 +141,40 @@ public class CtiaCommand
     private readonly CtiaCommunication _CTIA;
     public CtiaCommand(CtiaCommunication cTIA) => _CTIA = cTIA;
     
+    public async Task<OperationResult<bool>> SetExclusiveMeasChH(byte channel)
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)SetCmd.SET_EXCLUSIVE_MEAS_H_CH,
+            PayloadSize = 1,
+            Payload = [channel]
+        };
+
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        else
+            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+    }
+    
+    public async Task<OperationResult<bool>> SetExclusiveMeasChL(byte channel)
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)SetCmd.SET_EXCLUSIVE_MEAS_L_CH,
+            PayloadSize = 1,
+            Payload = [channel]
+        };
+
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        else
+            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+    }
+    
     public async Task<OperationResult<bool>> SetExtStimCh(byte channel)
     {
         CtiaCommandFrame frame = new CtiaCommandFrame
