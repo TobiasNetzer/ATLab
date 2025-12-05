@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
+        xmlns:vmTabs="clr-namespace:ATLab.ViewModels.Tabs"
         xmlns:views="clr-namespace:ATLab.Views"
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -32,10 +33,10 @@
 
 <TabControl SelectedItem="{Binding SelectedTab}">
       <TabControl.DataTemplates>
-         <DataTemplate DataType="vm:TestingTabViewModel">
+         <DataTemplate DataType="vmTabs:TestingTabViewModel">
             <views:TestingTab/>
          </DataTemplate>
-         <DataTemplate DataType="vm:LabTabViewModel">
+         <DataTemplate DataType="vmTabs:LabTabViewModel">
             <views:LabTab/>
          </DataTemplate>
       </TabControl.DataTemplates>

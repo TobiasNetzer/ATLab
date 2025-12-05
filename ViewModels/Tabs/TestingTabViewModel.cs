@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ATLab.ViewModels;
+namespace ATLab.ViewModels.Tabs;
 
 public partial class TestingTabViewModel : ViewModelBase
 {

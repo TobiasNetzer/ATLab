@@ -3,11 +3,11 @@ using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace ATLab.ViewModels;
+namespace ATLab.ViewModels.Tabs;
 
 public partial class LabTabViewModel : ViewModelBase
 {
-    private ITestHardware _testHardware;
+    private readonly ITestHardware _testHardware;
     public StimChannelViewModel StimChannelViewModel { get; }
     public ExtStimChannelViewModel ExtStimChannelViewModel { get; }
     public MeasChannelViewModel MeasChannelViewModel { get; }
@@ -29,14 +29,12 @@ public partial class LabTabViewModel : ViewModelBase
     {
         StimChannelViewModel = new StimChannelDesignViewModel();
         ExtStimChannelViewModel = new ExtStimChannelDesignViewModel();
-
-        UpdateTestHardwareRelayStatesCommand.NotifyCanExecuteChanged();
     }
     
-    private bool CanUpdateRelayStates() => !App.SimulationMode;
+    private static bool CanUpdateRelayStates() => !App.SimulationMode;
 
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
-    public void UpdateTestHardwareRelayStates()
+    private void UpdateTestHardwareRelayStates()
     {
         _testHardware.SetStimChannels();
         _testHardware.SetExtStimChannels();

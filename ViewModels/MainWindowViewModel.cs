@@ -21,17 +21,17 @@ public partial class MainWindowViewModel : ViewModelBase
     public ViewModelBase? _selectedTab;
 
     [ObservableProperty]
-    public TestingTabViewModel _testingTab;
+    public Tabs.TestingTabViewModel _testingTab;
 
     [ObservableProperty]
-    public LabTabViewModel _labTab;
+    public Tabs.LabTabViewModel _labTab;
 
     public MainWindowViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
 
-        TestingTab = new TestingTabViewModel();
-        LabTab = new LabTabViewModel(_testHardware);
+        TestingTab = new Tabs.TestingTabViewModel();
+        LabTab = new Tabs.LabTabViewModel(_testHardware);
     }
 
     [RelayCommand]
