@@ -12,15 +12,15 @@ public class CtiaHardware : ITestHardware
     
     public bool[] StimChannelStates {get; set;}
     public bool[] ExtStimChannelStates { get; set; }
-    public bool[] MeasChannelStatesH { get; set; }
-    public bool[] MeasChannelStatesL { get; set; }
+    public uint ActiveMeasChannelH { get; set; }
+    public uint ActiveMeasChannelL { get; set; }
 
     public CtiaHardware(ITestHardwareCommunication testHardwareCommunication)
     {
         HardwareInfo = new DummyHardwareInfo();
         
-        MeasChannelStatesH = new  bool[HardwareInfo.MeasChannelCount];
-        MeasChannelStatesL = new  bool[HardwareInfo.MeasChannelCount];
+        ActiveMeasChannelH = 0;
+        ActiveMeasChannelL = 0;
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         
@@ -61,8 +61,6 @@ public class CtiaHardware : ITestHardware
         HardwareInfo.StimChannelCount = 16;
         HardwareInfo.ExtStimChannelCount = 4;
         
-        MeasChannelStatesH = new  bool[HardwareInfo.MeasChannelCount];
-        MeasChannelStatesL = new  bool[HardwareInfo.MeasChannelCount];
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         

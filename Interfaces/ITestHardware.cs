@@ -7,8 +7,8 @@ public interface ITestHardware
 {
     bool[] StimChannelStates {get; set; }
     bool[] ExtStimChannelStates { get; set; }
-    bool[] MeasChannelStatesH { get; set; }
-    bool[] MeasChannelStatesL { get; set; }
+    uint ActiveMeasChannelH { get; set; }
+    uint ActiveMeasChannelL { get; set; }
     IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> SetStimChannels();

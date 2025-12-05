@@ -7,8 +7,7 @@ namespace ATLab.ViewModels;
 
 public partial class MeasChannelViewModel : ViewModelBase
 {
-    public ObservableCollection<RelayChannelViewModel> MeasHChannels { get; } = new();
-    public ObservableCollection<RelayChannelViewModel> MeasLChannels { get; } = new();
+    public ObservableCollection<string> MeasChannels { get; } = new();
 
     [ObservableProperty]
     private int _isSelectedH;
@@ -21,13 +20,11 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsSelectedH = 0;
         IsSelectedL = 0;
         
-        var measHGroup = new MeasHChannelGroup(testHardware);
-        var measLGroup = new MeasLChannelGroup(testHardware);
+        MeasChannels.Add("Off");
 
-        for (int i = 0; i < testHardware.HardwareInfo.MeasChannelCount; i++)
+        for (int i = 1; i <= testHardware.HardwareInfo.MeasChannelCount; i++)
         {
-            MeasHChannels.Add(new RelayChannelViewModel(measHGroup, i, $"MEAS"));
-            MeasLChannels.Add(new RelayChannelViewModel(measLGroup, i, $"MEAS"));
+            MeasChannels.Add(i.ToString());
         }
     }
 }

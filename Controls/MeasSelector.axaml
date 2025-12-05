@@ -23,7 +23,7 @@
                         <TextBlock Text="Meas H:"
                                    FontSize="16"/>
                         
-                        <ComboBox ItemsSource="{Binding MeasHChannels}"
+                        <ComboBox ItemsSource="{Binding MeasChannels}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RelayChannelViewModel">
@@ -44,7 +44,7 @@
                         <TextBlock Text="Meas L:"
                                    FontSize="16"/>
                     
-                        <ComboBox ItemsSource="{Binding MeasLChannels}"
+                        <ComboBox ItemsSource="{Binding MeasChannels}"
                                   SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RelayChannelViewModel">
