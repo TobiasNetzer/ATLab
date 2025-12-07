@@ -213,7 +213,7 @@ public class CtiaCommand
         CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_BITFIELD_STIM_CH,
-            PayloadSize = Convert.ToByte(array.Length / 8),
+            PayloadSize = Convert.ToByte(array.Length),
         };
         frame.Payload = array;
 
