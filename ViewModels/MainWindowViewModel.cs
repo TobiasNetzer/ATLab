@@ -16,6 +16,9 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private ITestHardware _testHardware;
+    
+    [ObservableProperty]
+    private string _statusMessage;
 
     [ObservableProperty]
     public ViewModelBase? _selectedTab;

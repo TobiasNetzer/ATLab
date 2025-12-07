@@ -7,6 +7,7 @@ namespace ATLab.ViewModels;
 
 public partial class MeasChannelViewModel : ViewModelBase
 {
+    ITestHardware _testHardware;
     public ObservableCollection<string> MeasChannels { get; } = new();
 
     [ObservableProperty]
@@ -17,6 +18,7 @@ public partial class MeasChannelViewModel : ViewModelBase
 
     public MeasChannelViewModel(ITestHardware testHardware)
     {
+        _testHardware = testHardware;
         IsSelectedH = 0;
         IsSelectedL = 0;
         
@@ -26,5 +28,15 @@ public partial class MeasChannelViewModel : ViewModelBase
         {
             MeasChannels.Add(i.ToString());
         }
+    }
+
+    partial void OnIsSelectedHChanged(byte value)
+    {
+        _testHardware.ActiveMeasChannelH = value;
+    }
+
+    partial void OnIsSelectedLChanged(byte value)
+    {
+        _testHardware.ActiveMeasChannelL = value;
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ATLab.DesignViewModels;
 using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,14 +32,27 @@ public partial class LabTabViewModel : ViewModelBase
         ExtStimChannelViewModel = new ExtStimChannelDesignViewModel();
     }
     
-    private static bool CanUpdateRelayStates() => !App.SimulationMode;
+    [ObservableProperty]
+    private bool _isBusy;
+
+    private bool CanUpdateRelayStates() => !App.SimulationMode && !IsBusy;
 
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
-    private void UpdateTestHardwareRelayStates()
+    private async Task UpdateTestHardwareRelayStates()
     {
-        _testHardware.SetStimChannels();
-        _testHardware.SetExtStimChannels();
-        _testHardware.SetMeasChannelH(MeasChannelViewModel.IsSelectedH);
-        _testHardware.SetMeasChannelL(MeasChannelViewModel.IsSelectedL);
+        try
+        {
+            IsBusy = true;
+            var result = await _testHardware.UpdateRelayStates();
+
+            if (!result.IsSuccess)
+            {
+                // show error
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

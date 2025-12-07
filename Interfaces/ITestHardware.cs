@@ -7,12 +7,9 @@ public interface ITestHardware
 {
     bool[] StimChannelStates {get; set; }
     bool[] ExtStimChannelStates { get; set; }
-    uint ActiveMeasChannelH { get; set; }
-    uint ActiveMeasChannelL { get; set; }
+    byte ActiveMeasChannelH { get; set; }
+    byte ActiveMeasChannelL { get; set; }
     IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
-    Task<OperationResult> SetStimChannels();
-    Task<OperationResult> SetExtStimChannels();
-    Task<OperationResult> SetMeasChannelH(byte channel);
-    Task<OperationResult> SetMeasChannelL(byte channel);
+    Task<OperationResult> UpdateRelayStates();
 }

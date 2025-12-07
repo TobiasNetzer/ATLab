@@ -1,6 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Services;
 using ATLab.Models;
 
 namespace ATLab.CTIA;
@@ -12,8 +13,8 @@ public class CtiaHardware : ITestHardware
     
     public bool[] StimChannelStates {get; set;}
     public bool[] ExtStimChannelStates { get; set; }
-    public uint ActiveMeasChannelH { get; set; }
-    public uint ActiveMeasChannelL { get; set; }
+    public byte ActiveMeasChannelH { get; set; }
+    public byte ActiveMeasChannelL { get; set; }
 
     public CtiaHardware(ITestHardwareCommunication testHardwareCommunication)
     {
@@ -67,7 +68,27 @@ public class CtiaHardware : ITestHardware
         return OperationResult.Success();
     }
 
-    public async Task<OperationResult> SetStimChannels()
+    public async Task<OperationResult> UpdateRelayStates()
+    {
+        var steps = new List<Func<Task<OperationResult>>>
+        {
+            () => SetStimChannels(),
+            () => SetMeasChannelH(ActiveMeasChannelH),
+            () => SetMeasChannelL(ActiveMeasChannelL),
+            () => SetExtStimChannels()
+        };
+
+        foreach (var step in steps)
+        {
+            var result = await step();
+            if (!result.IsSuccess)
+                return result;
+        }
+
+        return OperationResult.Success();
+    }
+
+    private async Task<OperationResult> SetStimChannels()
     {
         var commandResponse = await _command.SetStimChBiftield(StimChannelStates);
         
@@ -77,7 +98,7 @@ public class CtiaHardware : ITestHardware
         return OperationResult.Success();
     }
     
-    public async Task<OperationResult> SetExtStimChannels()
+    private async Task<OperationResult> SetExtStimChannels()
     {
         var commandResponse = await _command.SetExtStimChBiftield(ExtStimChannelStates);
         
@@ -87,22 +108,40 @@ public class CtiaHardware : ITestHardware
         return OperationResult.Success();
     }
 
-    public async Task<OperationResult> SetMeasChannelH(byte channel)
+    private async Task<OperationResult> SetMeasChannelH(byte channel)
     {
-        var commandResponse = await _command.SetExclusiveMeasChH(channel);
+        if (channel == 0)
+        {
+            // clear MeasH
+        }
+        else
+        {
+            var commandResponse = await _command.SetExclusiveMeasChH(channel);
+            if (!commandResponse.IsSuccess)
+                return OperationResult.Failure(commandResponse.ErrorMessage);
+        }
+            
         
-        if (!commandResponse.IsSuccess)
-            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
         
         return OperationResult.Success();
     }
     
-    public async Task<OperationResult> SetMeasChannelL(byte channel)
+    private async Task<OperationResult> SetMeasChannelL(byte channel)
     {
-        var commandResponse = await _command.SetExclusiveMeasChL(channel);
+        if (channel == 0)
+        {
+            
+        }
+        else
+        {
+            var commandResponse = await _command.SetExclusiveMeasChL(channel);
+            if (!commandResponse.IsSuccess)
+                return OperationResult.Failure(commandResponse.ErrorMessage);
+        }
         
-        if (!commandResponse.IsSuccess)
-            return OperationResult.Failure(commandResponse.ErrorMessage);
+        
+        
         
         return OperationResult.Success();
     }
