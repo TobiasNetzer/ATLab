@@ -88,6 +88,7 @@ public class CtiaCommandFrame
         frame.ControlByte = control;
         frame.PayloadSize = payloadSize;
         frame.Payload = payload;
+        frame.Crc = receivedCrc;
 
         return frame;
     }
