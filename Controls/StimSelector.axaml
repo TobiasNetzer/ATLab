@@ -4,19 +4,18 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:design="clr-namespace:ATLab.DesignViewModels"
-             x:DataType="vm:StimChannelViewModel">
+             x:DataType="vm:StimChannelViewModel"
+             Width="400">
     
     <Design.DataContext>
         <design:StimChannelDesignViewModel />
     </Design.DataContext>
     
-    <!-- Root element is a Border -->
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15"
             Padding="20 10 20 10"
             Margin="10">
-
-        <!-- Inside the border, use your layout -->
+        
         <StackPanel>
             <TextBlock Text="Stimulation Channels"
                        FontSize="18"
@@ -27,7 +26,6 @@
             <ItemsControl ItemsSource="{Binding StimChannels}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!-- Force 2 columns and 8 rows -->
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
                                      Rows="{Binding GridRows, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
                                      HorizontalAlignment="Center"

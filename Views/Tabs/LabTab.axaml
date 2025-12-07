@@ -24,8 +24,8 @@
         <controls:ExtStimSelector 
             DataContext="{Binding ExtStimChannelViewModel}"
             HorizontalAlignment="Left"
-            GridRows="1"
-            GridColumns="4"/>
+            GridRows="2"
+            GridColumns="2"/>
         
         <Button 
             Content="Set Relay State"

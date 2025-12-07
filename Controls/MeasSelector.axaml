@@ -4,7 +4,8 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:design="clr-namespace:ATLab.DesignViewModels"
-             x:DataType="vm:MeasChannelViewModel">
+             x:DataType="vm:MeasChannelViewModel"
+             Width="400">
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15"
@@ -18,13 +19,15 @@
                        HorizontalAlignment="Center"
                        Margin="0,0,0,10"/>
                 
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="10">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="80">
                     <StackPanel>
                         <TextBlock Text="Meas H:"
                                    FontSize="16"/>
                         
                         <ComboBox ItemsSource="{Binding MeasChannels}"
-                                  SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}">
+                                  SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
+                                  Width="100"
+                                  MaxWidth="120">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RelayChannelViewModel">
                                     <TextBlock>
@@ -45,7 +48,9 @@
                                    FontSize="16"/>
                     
                         <ComboBox ItemsSource="{Binding MeasChannels}"
-                                  SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}">
+                                  SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
+                                  Width="100"
+                                  MaxWidth="120">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:RelayChannelViewModel">
                                     <TextBlock>
