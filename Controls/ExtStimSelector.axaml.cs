@@ -7,10 +7,10 @@ namespace ATLab.Controls;
 public partial class ExtStimSelector : UserControl
 {
     public static readonly StyledProperty<int> GridColumnsProperty =
-        AvaloniaProperty.Register<StimSelector, int>(nameof(GridColumns), 4);
+        AvaloniaProperty.Register<StimSelector, int>(nameof(GridColumns), 2);
 
     public static readonly StyledProperty<int> GridRowsProperty =
-        AvaloniaProperty.Register<StimSelector, int>(nameof(GridRows), 1);
+        AvaloniaProperty.Register<StimSelector, int>(nameof(GridRows), 2);
 
     public int GridColumns
     {
