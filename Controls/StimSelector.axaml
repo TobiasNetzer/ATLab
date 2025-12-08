@@ -13,7 +13,6 @@
 
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15"
-            Padding="0"
             Margin="10">
         
         <StackPanel>

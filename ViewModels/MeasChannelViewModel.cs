@@ -7,8 +7,11 @@ namespace ATLab.ViewModels;
 
 public partial class MeasChannelViewModel : ViewModelBase
 {
-    ITestHardware _testHardware;
-    public ObservableCollection<string> MeasChannels { get; } = new();
+    private readonly ITestHardware _testHardware;
+    public ObservableCollection<string> MeasChannels { get; }
+
+    [ObservableProperty]
+    private bool _isExpanded;
 
     [ObservableProperty]
     private byte _isSelectedH;
@@ -21,10 +24,27 @@ public partial class MeasChannelViewModel : ViewModelBase
         _testHardware = testHardware;
         IsSelectedH = 0;
         IsSelectedL = 0;
+
+        MeasChannels = new ObservableCollection<string>();
         
         MeasChannels.Add("Off");
 
         for (int i = 1; i <= testHardware.HardwareInfo.MeasChannelCount; i++)
+        {
+            MeasChannels.Add(i.ToString());
+        }
+    }
+    
+    public MeasChannelViewModel()
+    {
+        IsSelectedH = 0;
+        IsSelectedL = 0;
+
+        MeasChannels = new ObservableCollection<string>();
+        
+        MeasChannels.Add("Off");
+
+        for (int i = 1; i <= 32; i++)
         {
             MeasChannels.Add(i.ToString());
         }

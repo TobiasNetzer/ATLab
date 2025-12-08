@@ -1,27 +1,59 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.MeasSelector"
-             xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             xmlns:design="clr-namespace:ATLab.DesignViewModels"
              x:DataType="vm:MeasChannelViewModel"
              Width="400">
     
+    <Design.DataContext>
+        <vm:MeasChannelViewModel />
+    </Design.DataContext>
+    
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15"
-            Padding="20 10 20 10"
             Margin="10">
         
         <StackPanel>
-            <TextBlock Text="Matrix Channels"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+            
+            <Border Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15"
+                    Padding="10"
+                    Margin="0">
+                <DockPanel>
+                    <TextBlock Text="Matrix Channels"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+
+                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                  DockPanel.Dock="Right"
+                                  HorizontalAlignment="Right">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </DockPanel>
+            </Border>
                 
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="80">
+                <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="80"
+                            IsVisible="{Binding IsExpanded}"
+                            Margin="10">
                     <StackPanel>
-                        <TextBlock Text="Meas H:"
+                        <TextBlock Text="Matrix H:"
                                    FontSize="16"/>
                         
                         <ComboBox ItemsSource="{Binding MeasChannels}"
@@ -44,7 +76,7 @@
                     </StackPanel>
                     
                     <StackPanel>
-                        <TextBlock Text="Meas L:"
+                        <TextBlock Text="Matrix L:"
                                    FontSize="16"/>
                     
                         <ComboBox ItemsSource="{Binding MeasChannels}"
