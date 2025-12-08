@@ -192,7 +192,7 @@ public class CtiaCommand
             return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
     }
     
-    public async Task<OperationResult<bool>> SetStimChBiftield(bool[] states)
+    public async Task<OperationResult<bool>> SetStimChBitfield(bool[] states)
     {
         if (states.Length % 8 != 0)
             throw new ArgumentException("Length must be a multiple of 8");
@@ -225,7 +225,7 @@ public class CtiaCommand
             return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
     }
     
-    public async Task<OperationResult<bool>> SetExtStimChBiftield(bool[] states)
+    public async Task<OperationResult<bool>> SetExtStimChBitfield(bool[] states)
     {
 
         int bytes = 1 + (states.Length / 8);

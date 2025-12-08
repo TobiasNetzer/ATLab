@@ -90,7 +90,7 @@ public class CtiaHardware : ITestHardware
 
     private async Task<OperationResult> SetStimChannels()
     {
-        var commandResponse = await _command.SetStimChBiftield(StimChannelStates);
+        var commandResponse = await _command.SetStimChBitfield(StimChannelStates);
         
         if (!commandResponse.IsSuccess)
             return OperationResult.Failure(commandResponse.ErrorMessage);
@@ -100,7 +100,7 @@ public class CtiaHardware : ITestHardware
     
     private async Task<OperationResult> SetExtStimChannels()
     {
-        var commandResponse = await _command.SetExtStimChBiftield(ExtStimChannelStates);
+        var commandResponse = await _command.SetExtStimChBitfield(ExtStimChannelStates);
         
         if (!commandResponse.IsSuccess)
             return OperationResult.Failure(commandResponse.ErrorMessage);
