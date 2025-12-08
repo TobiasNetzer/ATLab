@@ -50,6 +50,10 @@ public partial class LabTabViewModel : ViewModelBase
                 // show error
             }
         }
+        catch
+        {
+            //
+        }
         finally
         {
             IsBusy = false;

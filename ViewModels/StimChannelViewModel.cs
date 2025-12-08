@@ -1,16 +1,22 @@
 using System.Collections.ObjectModel;
 using ATLab.Interfaces;
 using ATLab.Wrappers;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
-public class StimChannelViewModel : ViewModelBase
+public partial class StimChannelViewModel : ViewModelBase
 {
-    public ObservableCollection<RelayChannelViewModel> StimChannels { get; } = new();
+    public ObservableCollection<RelayChannelViewModel> StimChannels { get; }
+    
+    [ObservableProperty]
+    private bool _isExpanded;
 
     public StimChannelViewModel(ITestHardware testHardware)
     {
         var stimGroup = new StimChannelGroup(testHardware);
+
+        StimChannels = new ObservableCollection<RelayChannelViewModel>();
 
         for (int i = 0; i < testHardware.HardwareInfo.StimChannelCount; i++)
         {
