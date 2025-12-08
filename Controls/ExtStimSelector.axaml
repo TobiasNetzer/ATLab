@@ -13,17 +13,43 @@
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15"
-            Padding="20 10 20 10"
             Margin="10">
         
         <StackPanel>
-            <TextBlock Text="External Stimulation Channels"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+            <Border Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15"
+                    Padding="10"
+                    Margin="0">
+                <DockPanel>
+                    <TextBlock Text="External Stimulation Channels"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+
+                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                  DockPanel.Dock="Right"
+                                  HorizontalAlignment="Right">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </DockPanel>
+            </Border>
             
-            <ItemsControl ItemsSource="{Binding ExtStimChannels}">
+            <ItemsControl ItemsSource="{Binding ExtStimChannels}"
+                          IsVisible="{Binding IsExpanded}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:ExtStimSelector}}"
