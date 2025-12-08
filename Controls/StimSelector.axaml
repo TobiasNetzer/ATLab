@@ -34,11 +34,11 @@
                     <ToggleButton.Template>
                         <ControlTemplate>
                             <Grid>
-                                <TextBlock Text="&#xE96E;" 
+                                <TextBlock Text="&#xE70D;" 
                                            FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
                                            FontSize="24"
                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                <TextBlock Text="&#xE96D;" 
+                                <TextBlock Text="&#xE70E;" 
                                            FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
                                            FontSize="24"
                                            IsVisible="{Binding IsExpanded}"/>
