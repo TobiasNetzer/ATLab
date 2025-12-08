@@ -11,8 +11,6 @@ namespace ATLab.Converters
 
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            ArgumentNullException.ThrowIfNull(value);
-            ArgumentNullException.ThrowIfNull(parameter);
             if (value is bool b)
                 return !b;
             return AvaloniaProperty.UnsetValue;
@@ -20,8 +18,6 @@ namespace ATLab.Converters
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            ArgumentNullException.ThrowIfNull(value);
-            ArgumentNullException.ThrowIfNull(parameter);
             if (value is bool b)
                 return !b;
             return AvaloniaProperty.UnsetValue;
