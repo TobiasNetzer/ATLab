@@ -3,7 +3,8 @@
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:TestHardwareRelayChannelsViewModel"
-             MaxHeight="500">
+             MaxHeight="500"
+             MinWidth="600">
 
     <Design.DataContext>
         <vm:TestHardwareRelayChannelsViewModel />
@@ -13,68 +14,127 @@
             CornerRadius="15"
             Margin="10">
         
-        <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Set Custom Channel Names"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Margin="10"
+                       Grid.Row="0"/>
         
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1">
+                
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Matrix Channels"
+                               HorizontalAlignment="Center"
+                               FontSize="16"
+                               Grid.Row="0"/>
+                    
+                    <ScrollViewer Grid.Row="1" Margin="10">
+                        <ItemsControl ItemsSource="{Binding MeasChannelViewModel.MeasChannels}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0"
+                                                   HorizontalAlignment="Right" Margin="0,0,10,0"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding ChannelName, Mode=TwoWay}"
+                                                 Grid.Column="1"
+                                                 Width="150"
+                                                 MaxLength="15"
+                                                 Margin="0 0 20 0 "/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
             
-                <StackPanel Margin="10">
-                    <ItemsControl ItemsSource="{Binding StimChannelViewModel.StimChannels}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0" 
-                                               HorizontalAlignment="Right" Margin="0,0,10,0"
-                                               VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding ChannelName, Mode=TwoWay}" Grid.Column="1"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Stim Channels"
+                               HorizontalAlignment="Center"
+                               FontSize="16"
+                               Grid.Row="0"/>
+                    
+                    <ScrollViewer Grid.Row="1" Margin="10">
+                        <ItemsControl ItemsSource="{Binding StimChannelViewModel.StimChannels}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0"
+                                                   HorizontalAlignment="Right" Margin="0,0,10,0"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding ChannelName, Mode=TwoWay}"
+                                                 Grid.Column="1"
+                                                 Width="150"
+                                                 MaxLength="15"
+                                                 Margin="0 0 20 0 "/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
                 
-                <StackPanel Margin="10">
-                    <ItemsControl ItemsSource="{Binding ExtStimChannelViewModel.ExtStimChannels}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0" 
-                                               HorizontalAlignment="Right" Margin="0,0,10,0"
-                                               VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding ChannelName, Mode=TwoWay}" Grid.Column="1"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-                
-                <StackPanel Margin="10">
-
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="1" Grid.Column="0" 
-                                               HorizontalAlignment="Right" Margin="0,0,10,0"
-                                               VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding MeasChannelViewModel, Mode=TwoWay}" Grid.Column="1"/>
-                                </Grid>
-      
-                </StackPanel>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Ext Stim Channels"
+                               HorizontalAlignment="Center"
+                               FontSize="16"
+                               Grid.Row="0"/>
+                    
+                    <ScrollViewer Grid.Row="1" Margin="10">
+                        <ItemsControl ItemsSource="{Binding ExtStimChannelViewModel.ExtStimChannels}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0"
+                                                   HorizontalAlignment="Right" Margin="0,0,10,0"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding ChannelName, Mode=TwoWay}"
+                                                 Grid.Column="1"
+                                                 Width="150"
+                                                 MaxLength="15"
+                                                 Margin="0 0 20 0 "/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
                 
             </StackPanel>
-            
-        </ScrollViewer>
+        </Grid>
     </Border>
 </UserControl>

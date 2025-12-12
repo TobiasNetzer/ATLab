@@ -5,5 +5,5 @@ namespace ATLab.ViewModels.Tabs;
 public partial class TestingTabViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string title = "Testing";
+    private string _title = "Testing";
 }

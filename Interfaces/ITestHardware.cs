@@ -7,6 +7,7 @@ public interface ITestHardware
 {
     bool[] StimChannelStates {get; set; }
     bool[] ExtStimChannelStates { get; set; }
+    bool[] MeasChannelStates { get; set; }
     byte ActiveMeasChannelH { get; set; }
     byte ActiveMeasChannelL { get; set; }
     IHardwareInfo HardwareInfo { get; }

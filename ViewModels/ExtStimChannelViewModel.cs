@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using ATLab.CTIA;
 using ATLab.Interfaces;
+using ATLab.Services;
 using ATLab.Wrappers;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -20,7 +22,18 @@ public partial class ExtStimChannelViewModel : ViewModelBase
 
         for (int i = 0; i < testHardware.HardwareInfo.ExtStimChannelCount; i++)
         {
-            ExtStimChannels.Add(new RelayChannelViewModel(extStimGroup, i, $"EXT STIM CH"));
+            ExtStimChannels.Add(new RelayChannelViewModel(extStimGroup, i, ""));
+        }
+    }
+
+    public ExtStimChannelViewModel()
+    {
+        ExtStimChannels = new ObservableCollection<RelayChannelViewModel>();
+        var extStimGroup = new ExtStimChannelGroup(new CtiaHardware(new SimulationService()));
+        
+        for (int i = 0; i < 4; i++)
+        {
+            ExtStimChannels.Add(new RelayChannelViewModel(extStimGroup, i, $""));
         }
     }
 }

@@ -9,9 +9,6 @@
        
         <controls:CustomChannelNameSetter
             DataContext="{Binding TestHardwareRelayChannels}"
-            HorizontalAlignment="Left"/>
-        
-        <Button Content="Update Names"
-                Command="{Binding UpdateChannelNamesCommand}"/>
+            HorizontalAlignment="Center"/>
     </StackPanel>
 </UserControl>

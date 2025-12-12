@@ -3,7 +3,7 @@
              x:Class="ATLab.Controls.MeasSelector"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:MeasChannelViewModel"
-             Width="400">
+             Width="500">
     
     <Design.DataContext>
         <vm:MeasChannelViewModel />
@@ -58,10 +58,11 @@
                         
                         <ComboBox ItemsSource="{Binding MeasChannels}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
-                                  Width="100"
-                                  MaxWidth="120">
+                                  PlaceholderText="Select a channel..."
+                                  Width="120"
+                                  MaxWidth="150">
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                                <DataTemplate>
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} {1}">
@@ -81,10 +82,10 @@
                     
                         <ComboBox ItemsSource="{Binding MeasChannels}"
                                   SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
-                                  Width="100"
-                                  MaxWidth="120">
+                                  Width="120"
+                                  MaxWidth="150">
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                                <DataTemplate>
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} {1}">

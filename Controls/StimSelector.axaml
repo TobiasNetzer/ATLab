@@ -3,12 +3,11 @@
              x:Class="ATLab.Controls.StimSelector"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             xmlns:design="clr-namespace:ATLab.DesignViewModels"
              x:DataType="vm:StimChannelViewModel"
-             Width="400">
+             Width="500">
 
     <Design.DataContext>
-        <design:StimChannelDesignViewModel />
+        <vm:StimChannelViewModel />
     </Design.DataContext>
 
     <Border Background="{DynamicResource SystemChromeLowColor}"
@@ -47,8 +46,7 @@
                 </ToggleButton>
             </DockPanel>
             </Border>
-
-            <!-- Collapsible content -->
+            
             <ItemsControl ItemsSource="{Binding StimChannels}"
                           IsVisible="{Binding IsExpanded}">
                 <ItemsControl.ItemsPanel>
@@ -56,14 +54,15 @@
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
                                      Rows="{Binding GridRows, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
                                      HorizontalAlignment="Center"
-                                     ColumnSpacing="30"/>
+                                     ColumnSpacing="10"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:RelayChannelViewModel">
+                    <DataTemplate>
                         <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
-                                  Margin="5">
+                                  Margin="5"
+                                  MinWidth="100">
                             <CheckBox.Content>
                                 <MultiBinding StringFormat="{}{0} {1}">
                                     <Binding Path="ChannelIndex"/>

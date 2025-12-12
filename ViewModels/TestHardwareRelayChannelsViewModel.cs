@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Linq;
-using ATLab.DesignViewModels;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,8 +21,9 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
 
     public TestHardwareRelayChannelsViewModel()
     {
-        StimChannelViewModel = new StimChannelDesignViewModel();
-        ExtStimChannelViewModel = new ExtStimChannelDesignViewModel();
+        StimChannelViewModel = new StimChannelViewModel();
+        ExtStimChannelViewModel = new ExtStimChannelViewModel();
+        MeasChannelViewModel = new MeasChannelViewModel();
     }
     
 }

@@ -13,6 +13,7 @@ public class CtiaHardware : ITestHardware
     
     public bool[] StimChannelStates {get; set;}
     public bool[] ExtStimChannelStates { get; set; }
+    public bool[] MeasChannelStates { get; set; }
     public byte ActiveMeasChannelH { get; set; }
     public byte ActiveMeasChannelL { get; set; }
 
@@ -24,6 +25,7 @@ public class CtiaHardware : ITestHardware
         ActiveMeasChannelL = 0;
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
+        MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];
         
         var communication = new CtiaCommunication(testHardwareCommunication);
         _command = new CtiaCommand(communication);
@@ -64,6 +66,7 @@ public class CtiaHardware : ITestHardware
         
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
+        MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];
         
         return OperationResult.Success();
     }
@@ -110,38 +113,18 @@ public class CtiaHardware : ITestHardware
 
     private async Task<OperationResult> SetMeasChannelH(byte channel)
     {
-        if (channel == 0)
-        {
-            // clear MeasH
-        }
-        else
-        {
-            var commandResponse = await _command.SetExclusiveMeasChH(channel);
-            if (!commandResponse.IsSuccess)
+        var commandResponse = await _command.SetExclusiveMeasChH(channel);
+        if (!commandResponse.IsSuccess)
                 return OperationResult.Failure(commandResponse.ErrorMessage);
-        }
-            
-        
-        
         
         return OperationResult.Success();
     }
     
     private async Task<OperationResult> SetMeasChannelL(byte channel)
     {
-        if (channel == 0)
-        {
-            
-        }
-        else
-        {
-            var commandResponse = await _command.SetExclusiveMeasChL(channel);
-            if (!commandResponse.IsSuccess)
+        var commandResponse = await _command.SetExclusiveMeasChL(channel);
+        if (!commandResponse.IsSuccess)
                 return OperationResult.Failure(commandResponse.ErrorMessage);
-        }
-        
-        
-        
         
         return OperationResult.Success();
     }

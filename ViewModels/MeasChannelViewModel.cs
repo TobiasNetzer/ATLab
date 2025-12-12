@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using ATLab.CTIA;
 using ATLab.Interfaces;
+using ATLab.Services;
 using ATLab.Wrappers;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -8,16 +10,18 @@ namespace ATLab.ViewModels;
 public partial class MeasChannelViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;
-    public ObservableCollection<string> MeasChannels { get; }
+    //public ObservableCollection<string> MeasChannels { get; }
+    
+    public ObservableCollection<RelayChannelViewModel> MeasChannels { get; }
 
     [ObservableProperty]
     private bool _isExpanded;
 
     [ObservableProperty]
-    private byte _isSelectedH;
+    private int _isSelectedH;
     
     [ObservableProperty]
-    private byte _isSelectedL;
+    private int _isSelectedL;
 
     public MeasChannelViewModel(ITestHardware testHardware)
     {
@@ -25,13 +29,12 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsSelectedH = 0;
         IsSelectedL = 0;
 
-        MeasChannels = new ObservableCollection<string>();
-        
-        MeasChannels.Add("Off");
+        MeasChannels = new ObservableCollection<RelayChannelViewModel>();
+        var measGroup = new MeasChannelGroup(testHardware);
 
-        for (int i = 1; i <= testHardware.HardwareInfo.MeasChannelCount; i++)
+        for (int i = 0; i < testHardware.HardwareInfo.MeasChannelCount; i++)
         {
-            MeasChannels.Add(i.ToString());
+            MeasChannels.Add(new RelayChannelViewModel(measGroup, i, ""));
         }
     }
     
@@ -40,23 +43,22 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsSelectedH = 0;
         IsSelectedL = 0;
 
-        MeasChannels = new ObservableCollection<string>();
-        
-        MeasChannels.Add("Off");
+        MeasChannels = new ObservableCollection<RelayChannelViewModel>();
+        var measGroup = new MeasChannelGroup(new CtiaHardware(new SimulationService()));
 
-        for (int i = 1; i <= 32; i++)
+        for (int i = 0; i < 32; i++)
         {
-            MeasChannels.Add(i.ToString());
+            MeasChannels.Add(new RelayChannelViewModel(measGroup, i, ""));
         }
     }
 
-    partial void OnIsSelectedHChanged(byte value)
+    partial void OnIsSelectedHChanged(int value)
     {
-        _testHardware.ActiveMeasChannelH = value;
+        _testHardware.ActiveMeasChannelH = (byte)(value + 1); // index 1 based
     }
 
-    partial void OnIsSelectedLChanged(byte value)
+    partial void OnIsSelectedLChanged(int value)
     {
-        _testHardware.ActiveMeasChannelL = value;
+        _testHardware.ActiveMeasChannelL = (byte)(value + 1); // index 1 based
     }
 }

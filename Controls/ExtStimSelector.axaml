@@ -3,12 +3,11 @@
              x:Class="ATLab.Controls.ExtStimSelector"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             xmlns:design="clr-namespace:ATLab.DesignViewModels"
              x:DataType="vm:ExtStimChannelViewModel"
-             Width="400">
+             Width="500">
     
     <Design.DataContext>
-        <design:ExtStimChannelDesignViewModel />
+        <vm:ExtStimChannelViewModel />
     </Design.DataContext>
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
