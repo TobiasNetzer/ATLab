@@ -22,7 +22,7 @@ public partial class LabTabViewModel : ViewModelBase
     
     public LabTabViewModel()
     {
-
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel();
     }
     
     [ObservableProperty]

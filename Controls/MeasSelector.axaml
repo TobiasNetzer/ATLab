@@ -58,7 +58,6 @@
                         
                         <ComboBox ItemsSource="{Binding MeasChannels}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
-                                  PlaceholderText="Select a channel..."
                                   Width="120"
                                   MaxWidth="150">
                             <ComboBox.ItemTemplate>
