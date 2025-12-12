@@ -12,22 +12,22 @@
     <StackPanel>
         
         <controls:MeasSelector
-            DataContext="{Binding MeasChannelViewModel}"
+            DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}"
             HorizontalAlignment="Left"/>
         
         <controls:StimSelector 
-            DataContext="{Binding StimChannelViewModel}"
+            DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
             HorizontalAlignment="Left"
             GridRows="8"
             GridColumns="2"/>
         
         <controls:ExtStimSelector 
-            DataContext="{Binding ExtStimChannelViewModel}"
+            DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
             HorizontalAlignment="Left"
             GridRows="2"
             GridColumns="2"/>
         
-        <Button 
+        <Button
             Content="Set Relay State"
             Command="{Binding UpdateTestHardwareRelayStatesCommand}"/>
             

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels.Tabs"
+             x:Class="ATLab.Views.ConfigTab"
+             x:DataType="vm:ConfigTabViewModel">
+
+    <StackPanel>
+       
+        <controls:CustomChannelNameSetter
+            DataContext="{Binding TestHardwareRelayChannels}"
+            HorizontalAlignment="Left"/>
+        
+        <Button Content="Update Names"
+                Command="{Binding UpdateChannelNamesCommand}"/>
+    </StackPanel>
+</UserControl>

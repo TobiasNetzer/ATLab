@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.CustomChannelNameSetter"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:DataType="vm:TestHardwareRelayChannelsViewModel"
+             MaxHeight="500">
+
+    <Design.DataContext>
+        <vm:TestHardwareRelayChannelsViewModel />
+    </Design.DataContext>
+
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15"
+            Margin="10">
+        
+        <ScrollViewer>
+        
+            <StackPanel Orientation="Horizontal">
+            
+                <StackPanel Margin="10">
+                    <ItemsControl ItemsSource="{Binding StimChannelViewModel.StimChannels}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0" 
+                                               HorizontalAlignment="Right" Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Text="{Binding ChannelName, Mode=TwoWay}" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                
+                <StackPanel Margin="10">
+                    <ItemsControl ItemsSource="{Binding ExtStimChannelViewModel.ExtStimChannels}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0" 
+                                               HorizontalAlignment="Right" Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Text="{Binding ChannelName, Mode=TwoWay}" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                
+                <StackPanel Margin="10">
+
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="1" Grid.Column="0" 
+                                               HorizontalAlignment="Right" Margin="0,0,10,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Text="{Binding MeasChannelViewModel, Mode=TwoWay}" Grid.Column="1"/>
+                                </Grid>
+      
+                </StackPanel>
+                
+            </StackPanel>
+            
+        </ScrollViewer>
+    </Border>
+</UserControl>

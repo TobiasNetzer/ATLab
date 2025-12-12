@@ -9,27 +9,21 @@ namespace ATLab.ViewModels.Tabs;
 public partial class LabTabViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;
-    public StimChannelViewModel StimChannelViewModel { get; }
-    public ExtStimChannelViewModel ExtStimChannelViewModel { get; }
-    public MeasChannelViewModel MeasChannelViewModel { get; }
+    
+    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
 
     [ObservableProperty]
     private string _title = "Lab";
 
-    public LabTabViewModel(ITestHardware testHardware)
+    public LabTabViewModel(ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
     {
         _testHardware = testHardware;
-        StimChannelViewModel = new StimChannelViewModel(testHardware);
-        ExtStimChannelViewModel = new  ExtStimChannelViewModel(testHardware);
-        MeasChannelViewModel = new  MeasChannelViewModel(testHardware);
-        
-        
+        TestHardwareRelayChannels = testHardwareRelayChannels;
     }
     
     public LabTabViewModel()
     {
-        StimChannelViewModel = new StimChannelDesignViewModel();
-        ExtStimChannelViewModel = new ExtStimChannelDesignViewModel();
+
     }
     
     [ObservableProperty]

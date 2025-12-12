@@ -1,40 +1,41 @@
-﻿using ATLab.Services;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
 using ATLab.Views;
-using System;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Linq;
-using ATLab.CTIA;
 
 namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private ITestHardware _testHardware;
+    private readonly ITestHardware _testHardware;
+    
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
     
     [ObservableProperty]
     private string _statusMessage;
 
     [ObservableProperty]
-    public ViewModelBase? _selectedTab;
+    private ViewModelBase? _selectedTab;
 
     [ObservableProperty]
-    public Tabs.TestingTabViewModel _testingTab;
+    private Tabs.TestingTabViewModel _testingTab;
 
     [ObservableProperty]
-    public Tabs.LabTabViewModel _labTab;
+    private Tabs.LabTabViewModel _labTab;
+    
+    [ObservableProperty]
+    private Tabs.ConfigTabViewModel _configTab;
 
     public MainWindowViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
+        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware);
 
         TestingTab = new Tabs.TestingTabViewModel();
-        LabTab = new Tabs.LabTabViewModel(_testHardware);
+        LabTab = new Tabs.LabTabViewModel(_testHardware, _testHardwareRelayChannelsViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
     }
 
     [RelayCommand]

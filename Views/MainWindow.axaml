@@ -39,9 +39,13 @@
          <DataTemplate DataType="vmTabs:LabTabViewModel">
             <views:LabTab/>
          </DataTemplate>
+          <DataTemplate DataType="vmTabs:ConfigTabViewModel">
+              <views:ConfigTab/>
+          </DataTemplate>
       </TabControl.DataTemplates>
       <TabItem Header="Testing" Content="{Binding TestingTab}" />
       <TabItem Header="Lab" Content="{Binding LabTab}" />
+      <TabItem Header="Config" Content="{Binding ConfigTab}" />
    </TabControl>
 
 
