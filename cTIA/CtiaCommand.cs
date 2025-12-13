@@ -10,7 +10,7 @@ namespace ATLab.CTIA;
 // -------------------------
 // Status codes
 // -------------------------
-public enum CTIAStatus : ushort
+public enum CTIAStatus : byte
 {
     CTIA_SUCCESS,
     CTIA_FAIL,
@@ -154,8 +154,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
     
     public async Task<OperationResult<bool>> SetExclusiveMeasChL(byte channel)
@@ -171,25 +172,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
-    }
-    
-    public async Task<OperationResult<bool>> SetExtStimCh(byte channel)
-    {
-        CtiaCommandFrame frame = new CtiaCommandFrame
-        {
-            Command = (ushort)SetCmd.SET_EXT_STIM_CH,
-            PayloadSize = 1,
-            Payload = [channel]
-        };
-
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
-
-        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
-            return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
     
     public async Task<OperationResult<bool>> SetStimChBitfield(bool[] states)
@@ -221,8 +206,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
     
     public async Task<OperationResult<bool>> SetExtStimChBitfield(bool[] states)
@@ -252,8 +238,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 
     public async Task<OperationResult<ushort>> GetDeviceID()
@@ -267,8 +254,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_ID)
             return OperationResult<ushort>.Success(BitConverter.ToUInt16(responseFrame.Payload, 0));
-        else
-            return OperationResult<ushort>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<ushort>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareVersion()
@@ -282,8 +270,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_VERSION)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
-        else
-            return OperationResult<string>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<string>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareBuildDate()
@@ -297,8 +286,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_DATE)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
-        else
-            return OperationResult<string>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<string>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareBuildTime()
@@ -312,8 +302,9 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_TIME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
-        else
-            return OperationResult<string>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<string>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 
     public async Task<OperationResult<string>> GetDeviceName()
@@ -327,24 +318,8 @@ public class CtiaCommand
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
-        else
-            return OperationResult<string>.Failure($"Unexpected response: {responseFrame.Command}");
-    }
-    
-    public async Task<OperationResult<bool>> ClearExtStimCh(byte channel)
-    {
-        CtiaCommandFrame frame = new CtiaCommandFrame
-        {
-            Command = (ushort)ClrCmd.CLR_EXT_STIM_CH,
-            PayloadSize = 1,
-            Payload = [channel]
-        };
-
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
-
-        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
-            return OperationResult<bool>.Success(true);
-        else
-            return OperationResult<bool>.Failure($"Unexpected response: {responseFrame.Command}");
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<string>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
 }
