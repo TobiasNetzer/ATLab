@@ -62,11 +62,11 @@
                     <DataTemplate>
                         <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
                                   Margin="5"
-                                  MinWidth="100">
+                                  MinWidth="200">
                             <CheckBox.Content>
                                 <MultiBinding StringFormat="{}{0} {1}">
                                     <Binding Path="ChannelIndex"/>
-                                    <Binding Path="ChannelName"/>
+                                    <Binding Path="CustomName.ChannelName"/>
                                 </MultiBinding>
                             </CheckBox.Content>
                         </CheckBox>

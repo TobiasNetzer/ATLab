@@ -56,7 +56,7 @@
                         <TextBlock Text="Matrix H:"
                                    FontSize="16"/>
                         
-                        <ComboBox ItemsSource="{Binding MeasChannels}"
+                        <ComboBox ItemsSource="{Binding CustomChannelNames}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
                                   Width="120"
                                   MaxWidth="150">
@@ -79,7 +79,7 @@
                         <TextBlock Text="Matrix L:"
                                    FontSize="16"/>
                     
-                        <ComboBox ItemsSource="{Binding MeasChannels}"
+                        <ComboBox ItemsSource="{Binding CustomChannelNames}"
                                   SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
                                   Width="120"
                                   MaxWidth="150">

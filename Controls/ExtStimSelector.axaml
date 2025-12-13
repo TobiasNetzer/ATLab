@@ -65,7 +65,7 @@
                             <CheckBox.Content>
                                 <MultiBinding StringFormat="{}{0} {1}">
                                     <Binding Path="ChannelIndex"/>
-                                    <Binding Path="ChannelName"/>
+                                    <Binding Path="CustomName.ChannelName"/>
                                 </MultiBinding>
                             </CheckBox.Content>
                         </CheckBox>

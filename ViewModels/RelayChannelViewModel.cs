@@ -1,43 +1,35 @@
-using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ATLab.Models;
 
 namespace ATLab.ViewModels;
 
 public partial class RelayChannelViewModel : ViewModelBase
 {
-    private readonly IChannelGroup? _channelGroup;
-    
+    private readonly RelayChannelState _state;
+
+    [ObservableProperty]
+    private CustomRelayChannelName _customName;
+
     [ObservableProperty]
     private int _channelIndex;
 
-    [ObservableProperty]
-    private string _channelName = "";
-
-    [ObservableProperty]
-    private bool _isEnabled;
-
-    public RelayChannelViewModel(IChannelGroup? channelGroup, int channelIndex, string channelName)
+    public bool IsEnabled
     {
-        _channelGroup = channelGroup;
-        ChannelIndex = channelIndex + 1; // Index for UI not 0-based
-        ChannelName = channelName;
-        
-        if (_channelGroup != null && channelIndex >= 0)
+        get => _state.IsEnabled;
+        set
         {
-            IsEnabled = _channelGroup[channelIndex];
-        }
-        else
-        {
-            IsEnabled = false;
+            if (_state.IsEnabled != value)
+            {
+                _state.IsEnabled = value;
+                OnPropertyChanged();
+            }
         }
     }
 
-    partial void OnIsEnabledChanged(bool value)
+    public RelayChannelViewModel(RelayChannelState state, CustomRelayChannelName channelName)
     {
-        if (_channelGroup != null && ChannelIndex > 0)
-        {
-            _channelGroup[ChannelIndex - 1] = value; // Index here 0-based
-            _channelGroup.CommitChanges();
-        }
+        _state = state;
+        ChannelIndex = state.ChannelIndex;
+        CustomName = channelName;
     }
 }

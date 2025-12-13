@@ -1,18 +1,12 @@
 using System.Collections.ObjectModel;
-using ATLab.CTIA;
-using ATLab.Interfaces;
-using ATLab.Services;
-using ATLab.Wrappers;
+using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
 public partial class MeasChannelViewModel : ViewModelBase
 {
-    private readonly ITestHardware _testHardware;
-    //public ObservableCollection<string> MeasChannels { get; }
-    
-    public ObservableCollection<RelayChannelViewModel> MeasChannels { get; }
+    public ObservableCollection<CustomRelayChannelName> CustomChannelNames { get; set; }
 
     [ObservableProperty]
     private bool _isExpanded;
@@ -23,19 +17,12 @@ public partial class MeasChannelViewModel : ViewModelBase
     [ObservableProperty]
     private int _isSelectedL;
 
-    public MeasChannelViewModel(ITestHardware testHardware)
+    public MeasChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
     {
-        _testHardware = testHardware;
+        CustomChannelNames = customChannelNames;
         IsSelectedH = 0;
         IsSelectedL = 0;
 
-        MeasChannels = new ObservableCollection<RelayChannelViewModel>();
-        var measGroup = new MeasChannelGroup(testHardware);
-
-        for (int i = 0; i < testHardware.HardwareInfo.MeasChannelCount; i++)
-        {
-            MeasChannels.Add(new RelayChannelViewModel(measGroup, i, ""));
-        }
     }
     
     public MeasChannelViewModel()
@@ -43,22 +30,16 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsSelectedH = 0;
         IsSelectedL = 0;
 
-        MeasChannels = new ObservableCollection<RelayChannelViewModel>();
-        var measGroup = new MeasChannelGroup(new CtiaHardware(new SimulationService()));
-
+        CustomChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < 32; i++)
         {
-            MeasChannels.Add(new RelayChannelViewModel(measGroup, i, ""));
+            CustomChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
     }
 
-    partial void OnIsSelectedHChanged(int value)
+    public void LoadActiveMeasChannels(int activeH, int activeL)
     {
-        _testHardware.ActiveMeasChannelH = (byte)(value + 1); // index 1 based
-    }
-
-    partial void OnIsSelectedLChanged(int value)
-    {
-        _testHardware.ActiveMeasChannelL = (byte)(value + 1); // index 1 based
+        IsSelectedH = activeH;
+        IsSelectedL = activeL;
     }
 }

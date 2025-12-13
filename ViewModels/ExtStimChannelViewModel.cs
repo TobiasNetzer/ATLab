@@ -1,39 +1,41 @@
 using System.Collections.ObjectModel;
-using ATLab.CTIA;
-using ATLab.Interfaces;
-using ATLab.Services;
-using ATLab.Wrappers;
+using System.Linq;
+using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
 public partial class ExtStimChannelViewModel : ViewModelBase
 {
-    public ObservableCollection<RelayChannelViewModel> ExtStimChannels { get; }
+    public ObservableCollection<RelayChannelViewModel> ExtStimChannels { get; set; }
+    
+    private readonly ObservableCollection<CustomRelayChannelName> _customChannelNames;
     
     [ObservableProperty]
     private bool _isExpanded;
 
-    public ExtStimChannelViewModel(ITestHardware testHardware)
+    public ExtStimChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
     {
-        var extStimGroup = new ExtStimChannelGroup(testHardware);
-
         ExtStimChannels = new ObservableCollection<RelayChannelViewModel>();
-
-        for (int i = 0; i < testHardware.HardwareInfo.ExtStimChannelCount; i++)
-        {
-            ExtStimChannels.Add(new RelayChannelViewModel(extStimGroup, i, ""));
-        }
+        _customChannelNames = customChannelNames;
     }
 
     public ExtStimChannelViewModel()
     {
         ExtStimChannels = new ObservableCollection<RelayChannelViewModel>();
-        var extStimGroup = new ExtStimChannelGroup(new CtiaHardware(new SimulationService()));
-        
+
+        _customChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < 4; i++)
         {
-            ExtStimChannels.Add(new RelayChannelViewModel(extStimGroup, i, $""));
+            _customChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
+        var testStimState = new RelayGroup(4);
+        LoadRelayStates(testStimState);
+    }
+    
+    public void LoadRelayStates(RelayGroup relayGroup)
+    {
+        ExtStimChannels = new ObservableCollection<RelayChannelViewModel>(
+            relayGroup.Channels.Select(c => new RelayChannelViewModel(c, _customChannelNames[c.ChannelIndex - 1])));
     }
 }
