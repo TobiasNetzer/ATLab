@@ -31,16 +31,18 @@
                               HorizontalAlignment="Right">
                     <ToggleButton.Template>
                         <ControlTemplate>
-                            <Grid>
-                                <TextBlock Text="&#xE70D;" 
-                                           FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
-                                           FontSize="24"
-                                           IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                <TextBlock Text="&#xE70E;" 
-                                           FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
-                                           FontSize="24"
-                                           IsVisible="{Binding IsExpanded}"/>
-                            </Grid>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                               FontSize="24"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </Border>
                         </ControlTemplate>
                     </ToggleButton.Template>
                 </ToggleButton>
@@ -62,7 +64,7 @@
                     <DataTemplate>
                         <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
                                   Margin="5"
-                                  MinWidth="200">
+                                  Width="200">
                             <CheckBox.Content>
                                 <MultiBinding StringFormat="{}{0} {1}">
                                     <Binding Path="ChannelIndex"/>

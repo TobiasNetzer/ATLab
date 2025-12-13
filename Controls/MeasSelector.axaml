@@ -31,16 +31,18 @@
                                   HorizontalAlignment="Right">
                         <ToggleButton.Template>
                             <ControlTemplate>
-                                <Grid>
-                                    <TextBlock Text="&#xE70D;" 
-                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
-                                               FontSize="24"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
-                                               FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
-                                               FontSize="24"
-                                               IsVisible="{Binding IsExpanded}"/>
-                                </Grid>
+                                <Border Background="Transparent" Padding="5">
+                                    <Grid>
+                                        <TextBlock Text="&#xE70D;" 
+                                                   FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                                   FontSize="24"
+                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                        <TextBlock Text="&#xE70E;" 
+                                                   FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                                   FontSize="24"
+                                                   IsVisible="{Binding IsExpanded}"/>
+                                    </Grid>
+                                </Border>
                             </ControlTemplate>
                         </ToggleButton.Template>
                     </ToggleButton>
@@ -58,8 +60,7 @@
                         
                         <ComboBox ItemsSource="{Binding CustomChannelNames}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
-                                  Width="120"
-                                  MaxWidth="150">
+                                  Width="150">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock>
@@ -81,8 +82,7 @@
                     
                         <ComboBox ItemsSource="{Binding CustomChannelNames}"
                                   SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
-                                  Width="120"
-                                  MaxWidth="150">
+                                  Width="150">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock>
