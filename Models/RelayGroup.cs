@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ATLab.Models;
 
@@ -16,5 +17,10 @@ public class RelayGroup
                 IsEnabled = false       // default state
             });
         }
+    }
+    
+    public bool[] ToBoolArray()
+    {
+        return Channels.Select(c => c.IsEnabled).ToArray();
     }
 }

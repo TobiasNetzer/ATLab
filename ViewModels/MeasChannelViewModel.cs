@@ -16,6 +16,8 @@ public partial class MeasChannelViewModel : ViewModelBase
     
     [ObservableProperty]
     private int _isSelectedL;
+    
+    private RelayMatrix? _relayMatrixState;
 
     public MeasChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
     {
@@ -36,10 +38,23 @@ public partial class MeasChannelViewModel : ViewModelBase
             CustomChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
     }
-
-    public void LoadActiveMeasChannels(int activeH, int activeL)
+    
+    partial void OnIsSelectedHChanged(int value)
     {
-        IsSelectedH = activeH;
-        IsSelectedL = activeL;
+        if (_relayMatrixState != null)
+            _relayMatrixState.ActiveChannelHigh = value;
+    }
+
+    partial void OnIsSelectedLChanged(int value)
+    {
+        if (_relayMatrixState != null)
+            _relayMatrixState.ActiveChannelLow = value;
+    }
+
+    public void LoadActiveMeasChannels(RelayMatrix relayMatrixState)
+    {
+        _relayMatrixState = relayMatrixState;
+        IsSelectedH = relayMatrixState.ActiveChannelHigh;
+        IsSelectedL = relayMatrixState.ActiveChannelLow;
     }
 }

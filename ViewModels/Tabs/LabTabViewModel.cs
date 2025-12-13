@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,6 +11,10 @@ public partial class LabTabViewModel : ViewModelBase
     private readonly ITestHardware _testHardware;
     
     public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
+    
+    private RelayGroup _testStimState;
+    private RelayGroup _testExtStimState;
+    private RelayMatrix _testMatrixState;
 
     [ObservableProperty]
     private string _title = "Lab";
@@ -18,6 +23,13 @@ public partial class LabTabViewModel : ViewModelBase
     {
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
+        
+        _testStimState = new RelayGroup(16);
+        TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(_testStimState);
+        _testExtStimState = new RelayGroup(4);
+        TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
+        _testMatrixState = new RelayMatrix(0,0);
+        TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
     }
     
     public LabTabViewModel()
@@ -33,6 +45,11 @@ public partial class LabTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
     private async Task UpdateTestHardwareRelayStates()
     {
+        _testHardware.StimChannelStates = _testStimState.ToBoolArray();
+        _testHardware.ExtStimChannelStates = _testExtStimState.ToBoolArray();
+        _testHardware.ActiveMeasChannelH = (byte)(_testMatrixState.ActiveChannelHigh + 1);
+        _testHardware.ActiveMeasChannelL = (byte)(_testMatrixState.ActiveChannelLow + 1);
+        
         try
         {
             IsBusy = true;

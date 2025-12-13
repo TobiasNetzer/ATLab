@@ -31,7 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(ITestHardware testHardware)
     {
         _testHardware = testHardware;
-        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware);
+        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
 
         TestingTab = new Tabs.TestingTabViewModel();
         LabTab = new Tabs.LabTabViewModel(_testHardware, _testHardwareRelayChannelsViewModel);
