@@ -322,4 +322,36 @@ public class CtiaCommand
         var status = (CTIAStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
     }
+    
+    public async Task<OperationResult<bool>> ClrMeasH()
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)ClrCmd.CLR_MEAS_H
+        };
+
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
+    }
+    
+    public async Task<OperationResult<bool>> ClrMeasL()
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)ClrCmd.CLR_MEAS_L
+        };
+
+        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: 0x{responseFrame.Command:X4} {status}");
+    }
 }
