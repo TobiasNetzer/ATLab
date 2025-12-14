@@ -1,13 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
         x:Class="ATLab.Views.SerialPortConnectWindow"
         x:DataType="vm:SerialPortConnectWindowViewModel"
         Title="Serial Port Selector"
         Width="500" Height="180"
-        RequestedThemeVariant="Default"
         WindowStartupLocation="CenterScreen"
         CanResize="False">
 
@@ -44,6 +41,7 @@
         <!-- Status -->
         <TextBlock Text="{Binding StatusText}"
                 HorizontalAlignment="Center"
+                TextWrapping="Wrap"
                 FontWeight="Bold"
                 Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
         

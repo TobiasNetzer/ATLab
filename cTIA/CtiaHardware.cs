@@ -20,12 +20,12 @@ public class CtiaHardware : ITestHardware
     public CtiaHardware(ITestHardwareCommunication testHardwareCommunication)
     {
         HardwareInfo = new DummyHardwareInfo();
-        
-        ActiveMeasChannelH = 0;
-        ActiveMeasChannelL = 0;
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];
+        
+        ActiveMeasChannelH = 0;
+        ActiveMeasChannelL = 0;
         
         var communication = new CtiaCommunication(testHardwareCommunication);
         _command = new CtiaCommand(communication);
@@ -60,9 +60,20 @@ public class CtiaHardware : ITestHardware
             return OperationResult.Failure(buildTime.ErrorMessage);
         HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
 
-        HardwareInfo.MeasChannelCount = 32; // Replace with GET_MEAS_CH Command
-        HardwareInfo.StimChannelCount = 16;
-        HardwareInfo.ExtStimChannelCount = 4;
+        var measChannelCount = await _command.GetMeasChannelCount();
+        if (!measChannelCount.IsSuccess)
+            return OperationResult.Failure(measChannelCount.ErrorMessage);
+        HardwareInfo.MeasChannelCount =  measChannelCount.Value;
+        
+        var stimChannelCount = await _command.GetStimChannelCount();
+        if (!stimChannelCount.IsSuccess)
+            return OperationResult.Failure(stimChannelCount.ErrorMessage);
+        HardwareInfo.StimChannelCount = stimChannelCount.Value;
+        
+        var extStimChannelCount = await _command.GetExtStimChannelCount();
+        if (!extStimChannelCount.IsSuccess)
+            return OperationResult.Failure(extStimChannelCount.ErrorMessage);
+        HardwareInfo.ExtStimChannelCount =  extStimChannelCount.Value;
         
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
