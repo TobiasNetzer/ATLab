@@ -10,7 +10,8 @@ public class ErrorService : IErrorService
 
     public void AddError(string message)
     {
-        Errors.Add(message);
+        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        Errors.Add($"[{timestamp}] {message}");
         ErrorsChanged?.Invoke(this, EventArgs.Empty);
     }
 

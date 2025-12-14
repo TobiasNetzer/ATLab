@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
@@ -8,6 +9,7 @@ namespace ATLab.ViewModels.Tabs;
 
 public partial class LabTabViewModel : ViewModelBase
 {
+    private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
     
     public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
@@ -19,8 +21,9 @@ public partial class LabTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Lab";
 
-    public LabTabViewModel(ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
+    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
     {
+        _errorService = errorService;
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
         
@@ -57,12 +60,12 @@ public partial class LabTabViewModel : ViewModelBase
 
             if (!result.IsSuccess)
             {
-                // show error
+                _errorService.AddError("Relay update failed: " + result.ErrorMessage);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            //
+            _errorService.AddError("Exception: " + ex.Message);
         }
         finally
         {

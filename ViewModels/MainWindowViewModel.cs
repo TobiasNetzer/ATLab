@@ -47,39 +47,31 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
 
         TestingTab = new Tabs.TestingTabViewModel();
-        LabTab = new Tabs.LabTabViewModel(_testHardware, _testHardwareRelayChannelsViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
-            ErrorCount = _errorService.Errors.Count;
+            ErrorCount += 1; // Only show number of new errors
             HasErrors = ErrorCount > 0;
         };
-
-        for (int i = 0; i < 15; i++)
-        {
-            _errorService.AddError($"Error {i}");
-        }
+        
     }
     
     public MainWindowViewModel()
     {
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
-
+        _errorService = new ErrorService();
+        
         TestingTab = new Tabs.TestingTabViewModel();
-        LabTab = new Tabs.LabTabViewModel(new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         
-        _errorService = new ErrorService();
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
-            ErrorCount = _errorService.Errors.Count;
+            ErrorCount += 1; // Only show number of new errors
             HasErrors = ErrorCount > 0;
         };
-        for (int i = 0; i < 15; i++)
-        {
-            _errorService.AddError($"Error {i}");
-        }
     }
 
     [RelayCommand]
