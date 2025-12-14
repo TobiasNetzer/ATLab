@@ -7,47 +7,75 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ATLab"
-        RequestedThemeVariant="Default">
+        RequestedThemeVariant="Dark">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
 
-    <DockPanel>
-        <!-- Menu bar -->
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="New"/>
-                <MenuItem Header="Open"/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Exit"/>
-            </MenuItem>
+    <Grid RowDefinitions="*,Auto">
 
-            <MenuItem Header="_Edit">
-                <MenuItem Header="Undo"/>
-                <MenuItem Header="Redo"/>
-            </MenuItem>
+        <DockPanel Grid.Row="0">
+
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="New"/>
+                    <MenuItem Header="Open"/>
+                    <MenuItem Header="Save"/>
+                    <MenuItem Header="Exit"/>
+                </MenuItem>
+
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Undo"/>
+                    <MenuItem Header="Redo"/>
+                </MenuItem>
+                
+                <MenuItem Header="_Help">
+                    <MenuItem Header="About" Command="{Binding OpenAboutWindowCommand}"/>
+                </MenuItem>
+            </Menu>
             
-            <MenuItem Header="_Help">
-                <MenuItem Header="About" Command="{Binding OpenAboutWindowCommand}"/>
-            </MenuItem>
-        </Menu>
-
-
-
-<TabControl SelectedItem="{Binding SelectedTab}">
-      <TabControl.DataTemplates>
-         <DataTemplate DataType="vmTabs:TestingTabViewModel">
-            <views:TestingTab/>
-         </DataTemplate>
-         <DataTemplate DataType="vmTabs:LabTabViewModel">
-            <views:LabTab/>
-         </DataTemplate>
-          <DataTemplate DataType="vmTabs:ConfigTabViewModel">
-              <views:ConfigTab/>
-          </DataTemplate>
-      </TabControl.DataTemplates>
-      <TabItem Header="{Binding TestingTab.Title}" Content="{Binding TestingTab}" />
-      <TabItem Header="{Binding LabTab.Title}" Content="{Binding LabTab}" />
-      <TabItem Header="{Binding ConfigTab.Title}" Content="{Binding ConfigTab}" />
-   </TabControl>
-
-
-    </DockPanel>
+            <TabControl SelectedItem="{Binding SelectedTab}">
+                <TabControl.DataTemplates>
+                    <DataTemplate DataType="vmTabs:TestingTabViewModel">
+                        <views:TestingTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vmTabs:LabTabViewModel">
+                        <views:LabTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vmTabs:ConfigTabViewModel">
+                        <views:ConfigTab/>
+                    </DataTemplate>
+                </TabControl.DataTemplates>
+                <TabItem Header="{Binding TestingTab.Title}" Content="{Binding TestingTab}" />
+                <TabItem Header="{Binding LabTab.Title}" Content="{Binding LabTab}" />
+                <TabItem Header="{Binding ConfigTab.Title}" Content="{Binding ConfigTab}" />
+            </TabControl>
+        </DockPanel>
+        
+        <DockPanel Grid.Row="1" 
+                   Background="{DynamicResource SystemChromeLowColor}"
+                   Height="40">
+            <Button DockPanel.Dock="Left"
+                    
+                    Background="{Binding HasErrors, Converter={StaticResource BoolToBrushConverter}}"
+                    Height="30"
+                    Margin="5">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="&#xE783;" FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                                   FontSize="18"/>
+                        <TextBlock Text="{Binding ErrorCount}"
+                                   FontSize="14"/>
+                    </StackPanel>
+                </Button.Content>
+                <Button.Flyout>
+                    <Flyout Placement="Bottom"
+                            IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}">
+                        <ListBox ItemsSource="{Binding Errors}" Width="300" Height="200"/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </DockPanel>
+    </Grid>
 </Window>

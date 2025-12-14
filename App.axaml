@@ -13,6 +13,9 @@
     <Application.Resources>
         <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
+                                         TrueBrush="Red"
+                                         FalseBrush="Gray"/>
     </Application.Resources>
     
     <Application.Styles>

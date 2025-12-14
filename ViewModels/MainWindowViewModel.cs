@@ -1,20 +1,21 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+﻿using System.Collections.ObjectModel;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
 using ATLab.Views;
 using System.Threading.Tasks;
+using ATLab.CTIA;
 using ATLab.Interfaces;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
     
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
-    
-    [ObservableProperty]
-    private string _statusMessage;
 
     [ObservableProperty]
     private ViewModelBase? _selectedTab;
@@ -27,15 +28,58 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private Tabs.ConfigTabViewModel _configTab;
+    
+    public ObservableCollection<string> Errors => _errorService.Errors;
 
-    public MainWindowViewModel(ITestHardware testHardware)
+    [ObservableProperty]
+    private int _errorCount;
+
+    [ObservableProperty]
+    private bool _hasErrors;
+    
+    [ObservableProperty]
+    private bool _isErrorFlyoutOpen;
+
+    public MainWindowViewModel(IErrorService errorService, ITestHardware testHardware)
     {
+        _errorService = errorService;
         _testHardware = testHardware;
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
 
         TestingTab = new Tabs.TestingTabViewModel();
         LabTab = new Tabs.LabTabViewModel(_testHardware, _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
+        
+        _errorService.Errors.CollectionChanged += (_, __) =>
+        {
+            ErrorCount = _errorService.Errors.Count;
+            HasErrors = ErrorCount > 0;
+        };
+
+        for (int i = 0; i < 15; i++)
+        {
+            _errorService.AddError($"Error {i}");
+        }
+    }
+    
+    public MainWindowViewModel()
+    {
+        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
+
+        TestingTab = new Tabs.TestingTabViewModel();
+        LabTab = new Tabs.LabTabViewModel(new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
+        
+        _errorService = new ErrorService();
+        _errorService.Errors.CollectionChanged += (_, __) =>
+        {
+            ErrorCount = _errorService.Errors.Count;
+            HasErrors = ErrorCount > 0;
+        };
+        for (int i = 0; i < 15; i++)
+        {
+            _errorService.AddError($"Error {i}");
+        }
     }
 
     [RelayCommand]
@@ -55,5 +99,14 @@ public partial class MainWindowViewModel : ViewModelBase
             await aboutWindow.ShowDialog(desktop.MainWindow);
         else
             aboutWindow.Show();
+    }
+    
+    partial void OnIsErrorFlyoutOpenChanged(bool value)
+    {
+        if (value)
+        {
+            ErrorCount = 0;
+            HasErrors = false;
+        }
     }
 }

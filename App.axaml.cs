@@ -15,6 +15,8 @@ namespace ATLab;
 public partial class App : Application
 {
     public static SettingsService SettingsService { get; private set; } = null!;
+    
+    private IErrorService _errorService = null!;
 
     public static bool SimulationMode { get; set; }
 
@@ -29,10 +31,11 @@ public partial class App : Application
     {
         
         SettingsService = new SettingsService();
+        _errorService = new ErrorService();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-
+            
             bool initSuccess = false;
             bool openConnectWindow = false;
             SerialPortService? service = null;
@@ -107,7 +110,7 @@ public partial class App : Application
 
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(_testHardware!),
+                DataContext = new MainWindowViewModel(_errorService, _testHardware!),
             };
             desktop.MainWindow.Show();
         }
