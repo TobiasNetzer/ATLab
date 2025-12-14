@@ -113,20 +113,36 @@ public class CtiaHardware : ITestHardware
 
     private async Task<OperationResult> SetMeasChannelH(byte channel)
     {
-        if ( channel == 0) return OperationResult.Success();
-        var commandResponse = await _command.SetExclusiveMeasChH(channel);
-        if (!commandResponse.IsSuccess)
+        if (channel == 0)
+        {
+            var commandResponse = await _command.ClrMeasH();
+            if (!commandResponse.IsSuccess)
                 return OperationResult.Failure(commandResponse.ErrorMessage);
+        }
+        else
+        {
+            var commandResponse = await _command.SetExclusiveMeasChH(channel);
+            if (!commandResponse.IsSuccess)
+                    return OperationResult.Failure(commandResponse.ErrorMessage);
+        }
         
         return OperationResult.Success();
     }
     
     private async Task<OperationResult> SetMeasChannelL(byte channel)
     {
-        if ( channel == 0) return OperationResult.Success();
-        var commandResponse = await _command.SetExclusiveMeasChL(channel);
-        if (!commandResponse.IsSuccess)
+        if ( channel == 0)
+        {
+            var commandResponse = await _command.ClrMeasL();
+            if (!commandResponse.IsSuccess)
                 return OperationResult.Failure(commandResponse.ErrorMessage);
+        }
+        else
+        {
+           var commandResponse = await _command.SetExclusiveMeasChL(channel);
+           if (!commandResponse.IsSuccess)
+                   return OperationResult.Failure(commandResponse.ErrorMessage); 
+        }
         
         return OperationResult.Success();
     }

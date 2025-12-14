@@ -58,7 +58,7 @@
                         <TextBlock Text="Matrix H:"
                                    FontSize="16"/>
                         
-                        <ComboBox ItemsSource="{Binding CustomChannelNames}"
+                        <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
                                   SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
                                   Width="150">
                             <ComboBox.ItemTemplate>
@@ -66,7 +66,7 @@
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} {1}">
-                                                <Binding Path="ChannelIndex"/>
+                                                <Binding Path="ChannelIndex" FallbackValue=""/>
                                                 <Binding Path="ChannelName"/>
                                             </MultiBinding>
                                         </TextBlock.Text>
@@ -80,7 +80,7 @@
                         <TextBlock Text="Matrix L:"
                                    FontSize="16"/>
                     
-                        <ComboBox ItemsSource="{Binding CustomChannelNames}"
+                        <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
                                   SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
                                   Width="150">
                             <ComboBox.ItemTemplate>
@@ -88,7 +88,7 @@
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} {1}">
-                                                <Binding Path="ChannelIndex"/>
+                                                <Binding Path="ChannelIndex" FallbackValue=""/>
                                                 <Binding Path="ChannelName"/>
                                             </MultiBinding>
                                         </TextBlock.Text>

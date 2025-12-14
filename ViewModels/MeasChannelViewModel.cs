@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,13 +19,12 @@ public partial class MeasChannelViewModel : ViewModelBase
     private int _isSelectedL;
     
     private RelayMatrix? _relayMatrixState;
-
+    
     public MeasChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
     {
         CustomChannelNames = customChannelNames;
         IsSelectedH = 0;
         IsSelectedL = 0;
-
     }
     
     public MeasChannelViewModel()
@@ -39,6 +39,16 @@ public partial class MeasChannelViewModel : ViewModelBase
         }
     }
     
+    public IEnumerable<CustomRelayChannelName> CustomChannelNamesWithOffMember
+    {
+        get
+        {
+            yield return new MeasChannelOff();
+            foreach (var channel in CustomChannelNames)
+                yield return channel;
+        }
+    }
+
     partial void OnIsSelectedHChanged(int value)
     {
         if (_relayMatrixState != null)
@@ -57,4 +67,9 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsSelectedH = relayMatrixState.ActiveChannelHigh;
         IsSelectedL = relayMatrixState.ActiveChannelLow;
     }
+}
+
+public class MeasChannelOff : CustomRelayChannelName
+{
+    public MeasChannelOff() : base("Off", null) { }
 }

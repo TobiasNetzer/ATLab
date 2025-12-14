@@ -47,8 +47,8 @@ public partial class LabTabViewModel : ViewModelBase
     {
         _testHardware.StimChannelStates = _testStimState.ToBoolArray();
         _testHardware.ExtStimChannelStates = _testExtStimState.ToBoolArray();
-        _testHardware.ActiveMeasChannelH = (byte)(_testMatrixState.ActiveChannelHigh + 1);
-        _testHardware.ActiveMeasChannelL = (byte)(_testMatrixState.ActiveChannelLow + 1);
+        _testHardware.ActiveMeasChannelH = (byte)(_testMatrixState.ActiveChannelHigh);
+        _testHardware.ActiveMeasChannelL = (byte)(_testMatrixState.ActiveChannelLow);
         
         try
         {
