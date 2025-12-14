@@ -11,7 +11,7 @@ public class ErrorService : IErrorService
     public void AddError(string message)
     {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        Errors.Add($"[{timestamp}] {message}");
+        Errors.Insert(0, $"[{timestamp}] {message}");
         ErrorsChanged?.Invoke(this, EventArgs.Empty);
     }
 
