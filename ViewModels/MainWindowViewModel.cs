@@ -46,7 +46,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardware = testHardware;
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
 
-        TestingTab = new Tabs.TestingTabViewModel();
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
         LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         
@@ -63,7 +63,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel();
         _errorService = new ErrorService();
         
-        TestingTab = new Tabs.TestingTabViewModel();
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
         LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         

@@ -1,8 +1,49 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="ATLab.Views.TestingTab">
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels.Tabs"
+             x:Class="ATLab.Views.TestingTab"
+             x:DataType="vm:TestingTabViewModel">
 
-    <StackPanel>
-        <TextBlock Margin="5">This is Testing Tab content</TextBlock>
-    </StackPanel>
+    <Design.DataContext>
+        <vm:TestingTabViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,Auto">
+
+        <DataGrid Grid.Column="0"
+                  ItemsSource="{Binding TestSteps}"
+                  Margin="10"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="False"
+                  GridLinesVisibility="All"
+                  BorderThickness="1" BorderBrush="Gray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nr." Binding="{Binding Number}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Lower Limit" Binding="{Binding LowerLimit}"/>
+                <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}"/>
+                <DataGridTextColumn Header="Result" Binding="{Binding Result}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <StackPanel Grid.Column="1"
+                    HorizontalAlignment="Right">
+            <controls:MeasSelector
+                DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}"/>
+
+            <controls:StimSelector 
+                DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+                GridRows="8"
+                GridColumns="2"/>
+
+            <controls:ExtStimSelector 
+                DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+                GridRows="2"
+                GridColumns="2"/>
+        </StackPanel>
+    </Grid>
 </UserControl>
