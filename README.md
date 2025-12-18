@@ -1,1 +1,1 @@
-# ATLab
+![image](docs/UI_mockup.png)
