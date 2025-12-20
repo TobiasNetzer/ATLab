@@ -11,6 +11,11 @@
     </Application.DataTemplates>
 
     <Application.Resources>
+        
+        <FontFamily x:Key="FluentIconsFont">
+            avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons
+        </FontFamily>
+        
         <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
@@ -27,6 +32,7 @@
         </FluentTheme.Palettes>
         </FluentTheme>
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        
     </Application.Styles>
 
 </Application>

@@ -21,7 +21,7 @@
                 <Button.Content>
                     <TextBlock 
                         Text="&#xE72C;" 
-                        FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                        FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="12"
                         FontWeight="Bold"
                         HorizontalAlignment="Center"
