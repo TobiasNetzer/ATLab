@@ -9,10 +9,12 @@ public partial class TestingTabViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
-    
-    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
-    
-    public ObservableCollection<TestStep> TestSteps { get; set; }
+
+    [ObservableProperty]
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
+
+    [ObservableProperty]
+    private TestStepPresenterViewModel _testStepPresenter;
     
     [ObservableProperty]
     private string _title = "Testing";
@@ -23,39 +25,61 @@ public partial class TestingTabViewModel : ViewModelBase
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
 
-        TestSteps = new ObservableCollection<TestStep>();
+        TestStepPresenter = new TestStepPresenterViewModel(testHardwareRelayChannels);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 1; i <= 20; i++)
         {
-            TestSteps.Add(new TestStep()
-            {
-                Number = i,
-                Result = i%2 == 0,
-                Value = 2,
-                LowerLimit = 1,
-                UpperLimit = 5,
-                Name =  $"Step {i}"
-            });
+            TestStepPresenter.TestSteps.Add(
+                new TestStepViewModel(
+                    new TestStep
+                    {
+                        Number = i,
+                        Name = "Voltage In",
+                        LowerLimit = 1,
+                        UpperLimit = 1,
+                        Value = 1,
+                        Result = "Success",
+                        Comment = "",
+                        MatrixState = new RelayMatrix(0,0),
+                        StimState = new RelayGroup(16),
+                        ExtStimState = new RelayGroup(4)
+                    }
+                )
+            );
         }
+        
     }
 
     public TestingTabViewModel()
     {
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel();
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
+
+        TestStepPresenter = new TestStepPresenterViewModel(TestHardwareRelayChannels);
         
-        TestSteps = new ObservableCollection<TestStep>();
+        TestStepPresenter.TestSteps.Add(
+            new TestStepViewModel(
+                new TestStep
+                {
+                    Number = 1,
+                    Name = "TestStep",
+                    LowerLimit = 1,
+                    UpperLimit = 1,
+                    Value = 1,
+                    Result = "Success"
+                }
+            )
+        );
         
-        for (int i = 0; i < 100; i++)
+    }
+    
+    [ObservableProperty]
+    private TestStepViewModel? _selectedStep;
+
+    partial void OnSelectedStepChanged(TestStepViewModel? value)
+    {
+        if (value != null)
         {
-            TestSteps.Add(new TestStep()
-            {
-                Number = i,
-                Result = i%2 == 0,
-                Value = 2,
-                LowerLimit = 1,
-                UpperLimit = 5,
-                Name =  $"Step {i}"
-            });
+            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
         }
     }
 }

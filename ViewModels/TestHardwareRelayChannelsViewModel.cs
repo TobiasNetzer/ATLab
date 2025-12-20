@@ -14,10 +14,10 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
     public ExtStimChannelViewModel ExtStimChannelViewModel { get; }
     public MeasChannelViewModel MeasChannelViewModel { get; }
     
-    public TestHardwareRelayChannelsViewModel()
+    public TestHardwareRelayChannelsViewModel(IHardwareInfo hardwareInfo)
     {
         StimChannelNames = new ObservableCollection<CustomRelayChannelName>();
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < hardwareInfo.StimChannelCount; i++)
         {
             StimChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
@@ -25,23 +25,18 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         StimChannelViewModel = new StimChannelViewModel(StimChannelNames);
         
         ExtStimChannelNames = new ObservableCollection<CustomRelayChannelName>();
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < hardwareInfo.ExtStimChannelCount; i++)
         {
             ExtStimChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
         ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames);
         
         MeasChannelNames = new ObservableCollection<CustomRelayChannelName>();
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < hardwareInfo.MeasChannelCount; i++)
         {
             MeasChannelNames.Add(new CustomRelayChannelName("Channel", i));
         }
         MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
-    }
-
-    public void LoadRelayStatesForTestStep()
-    {
-        
     }
     
 }

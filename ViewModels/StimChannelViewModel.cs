@@ -7,7 +7,8 @@ namespace ATLab.ViewModels;
 
 public partial class StimChannelViewModel : ViewModelBase
 {
-    public ObservableCollection<RelayChannelViewModel> StimChannels { get; set; }
+    [ObservableProperty]
+    private ObservableCollection<RelayChannelViewModel> _stimChannels;
 
     private readonly ObservableCollection<CustomRelayChannelName> _customChannelNames;
     

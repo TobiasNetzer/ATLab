@@ -12,7 +12,8 @@
     <Grid ColumnDefinitions="*,Auto">
 
         <DataGrid Grid.Column="0"
-                  ItemsSource="{Binding TestSteps}"
+                  ItemsSource="{Binding TestStepPresenter.TestSteps}"
+                  SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
                   Margin="10"
                   IsReadOnly="True"
                   CanUserReorderColumns="True"
@@ -27,6 +28,7 @@
                 <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                 <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}"/>
                 <DataGridTextColumn Header="Result" Binding="{Binding Result}"/>
+                <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
             </DataGrid.Columns>
         </DataGrid>
         

@@ -27,9 +27,9 @@ public partial class LabTabViewModel : ViewModelBase
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
         
-        _testStimState = new RelayGroup(16);
+        _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
         TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(_testStimState);
-        _testExtStimState = new RelayGroup(4);
+        _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);
         TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
         _testMatrixState = new RelayMatrix(0,0);
         TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
@@ -37,7 +37,7 @@ public partial class LabTabViewModel : ViewModelBase
     
     public LabTabViewModel()
     {
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel();
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
     }
     
     [ObservableProperty]

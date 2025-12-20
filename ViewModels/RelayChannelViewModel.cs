@@ -13,23 +13,19 @@ public partial class RelayChannelViewModel : ViewModelBase
     [ObservableProperty]
     private int _channelIndex;
 
-    public bool IsEnabled
-    {
-        get => _state.IsEnabled;
-        set
-        {
-            if (_state.IsEnabled != value)
-            {
-                _state.IsEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
+    [ObservableProperty]
+    private bool _isEnabled;
+    
     public RelayChannelViewModel(RelayChannelState state, CustomRelayChannelName channelName)
     {
         _state = state;
         ChannelIndex = state.ChannelIndex;
         CustomName = channelName;
+        IsEnabled = state.IsEnabled;
+    }
+
+    partial void OnIsEnabledChanged(bool value)
+    {
+        _state.IsEnabled = value;
     }
 }
