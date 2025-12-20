@@ -10,5 +10,6 @@ public class AppSettings
     public double WindowX { get; set; } = -1;
     public double WindowY { get; set; } = -1;
     public WindowState WindowState { get; set; } = WindowState.Normal;
+    public string LastOpenedFile { get; set; } = "";
 
 }

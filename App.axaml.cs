@@ -38,9 +38,8 @@ public partial class App : Application
             
             bool initSuccess = false;
             bool openConnectWindow = false;
-            SerialPortService? service = null;
 
-            service = new SerialPortService(SettingsService.Settings.LastComPort!);
+            var service = new SerialPortService(SettingsService.Settings.LastComPort!);
             var openResult = service.TryOpen();
             if (!openResult.IsSuccess)
             {
