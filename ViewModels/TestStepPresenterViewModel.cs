@@ -30,7 +30,9 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     {
         if (value != null)
         {
+            TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
             TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
+            TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
         }
     }
 
