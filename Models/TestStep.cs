@@ -7,7 +7,8 @@ public partial class TestStep
     public double Value { get; set; }
     public double LowerLimit { get; set; }
     public double UpperLimit { get; set; }
-    public bool Result { get; set; }
+    public string Result { get; set; }
+    public string Comment { get; set; }
 
     public RelayGroup StimState = new (16);
     public RelayGroup ExtStimState = new (4);

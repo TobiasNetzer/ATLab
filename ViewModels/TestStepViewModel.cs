@@ -17,7 +17,9 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private double _upperLimit;
     [ObservableProperty]
-    private bool _result;
+    private string _result;
+    [ObservableProperty]
+    private string _comment;
     
     [ObservableProperty]
     private RelayGroup _stimState;
@@ -36,6 +38,7 @@ public partial class TestStepViewModel : ViewModelBase
         LowerLimit = model.LowerLimit;
         UpperLimit = model.UpperLimit;
         Result = model.Result;
+        Comment = model.Comment;
         StimState = model.StimState;
         ExtStimState = model.ExtStimState;
         MatrixState = model.MatrixState;
@@ -49,6 +52,7 @@ public partial class TestStepViewModel : ViewModelBase
         Model.LowerLimit = LowerLimit;
         Model.UpperLimit = UpperLimit;
         Model.Result = Result;
+        Model.Comment = Comment;
         Model.StimState = StimState;
         Model.ExtStimState = ExtStimState;
         Model.MatrixState = MatrixState;
