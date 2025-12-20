@@ -18,6 +18,8 @@ public class RelayGroup
             });
         }
     }
+
+    public RelayGroup() {}
     
     public bool[] ToBoolArray()
     {

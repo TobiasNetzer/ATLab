@@ -26,27 +26,6 @@ public partial class TestingTabViewModel : ViewModelBase
         TestHardwareRelayChannels = testHardwareRelayChannels;
 
         TestStepPresenter = new TestStepPresenterViewModel(testHardwareRelayChannels);
-
-        for (int i = 1; i <= 20; i++)
-        {
-            TestStepPresenter.TestSteps.Add(
-                new TestStepViewModel(
-                    new TestStep
-                    {
-                        Number = i,
-                        Name = "Voltage In",
-                        LowerLimit = 1,
-                        UpperLimit = 1,
-                        Value = 1,
-                        Result = "Success",
-                        Comment = "",
-                        MatrixState = new RelayMatrix(0,0),
-                        StimState = new RelayGroup(16),
-                        ExtStimState = new RelayGroup(4)
-                    }
-                )
-            );
-        }
         
     }
 
@@ -70,16 +49,5 @@ public partial class TestingTabViewModel : ViewModelBase
             )
         );
         
-    }
-    
-    [ObservableProperty]
-    private TestStepViewModel? _selectedStep;
-
-    partial void OnSelectedStepChanged(TestStepViewModel? value)
-    {
-        if (value != null)
-        {
-            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
-        }
     }
 }

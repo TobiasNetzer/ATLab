@@ -10,4 +10,5 @@ public class RelayMatrix
         ActiveChannelHigh = activeChannelHigh;
         ActiveChannelLow = activeChannelLow;
     }
+    public RelayMatrix() {}
 }

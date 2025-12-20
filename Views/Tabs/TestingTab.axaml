@@ -8,44 +8,75 @@
     <Design.DataContext>
         <vm:TestingTabViewModel />
     </Design.DataContext>
-
-    <Grid ColumnDefinitions="*,Auto">
-
-        <DataGrid Grid.Column="0"
-                  ItemsSource="{Binding TestStepPresenter.TestSteps}"
-                  SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
-                  Margin="10"
-                  IsReadOnly="True"
-                  CanUserReorderColumns="True"
-                  CanUserResizeColumns="True"
-                  CanUserSortColumns="False"
-                  GridLinesVisibility="All"
-                  BorderThickness="1" BorderBrush="Gray">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Nr." Binding="{Binding Number}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Lower Limit" Binding="{Binding LowerLimit}"/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
-                <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}"/>
-                <DataGridTextColumn Header="Result" Binding="{Binding Result}"/>
-                <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+    
+    <Grid RowDefinitions="Auto,*">
         
-        <StackPanel Grid.Column="1"
-                    HorizontalAlignment="Right">
-            <controls:MeasSelector
-                DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}"/>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    Margin="10"
+                    Spacing="8">
 
-            <controls:StimSelector 
-                DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
-                GridRows="8"
-                GridColumns="2"/>
+            <Button Content="&#xF8AA;"
+                    FontFamily="{StaticResource FluentIconsFont}"
+                    ToolTip.Tip="Add a new test step"
+                    Command="{Binding TestStepPresenter.AddTestStepCommand}"/>
 
-            <controls:ExtStimSelector 
-                DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
-                GridRows="2"
-                GridColumns="2"/>
+            <Button Content="&#xF8AB;"
+                    FontFamily="{StaticResource FluentIconsFont}"
+                    ToolTip.Tip="Remove selected test step"
+                    Command="{Binding TestStepPresenter.RemoveTestStepCommand}"/>
+            
         </StackPanel>
+        
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
+            
+            <DataGrid Grid.Column="0"
+                      ItemsSource="{Binding TestStepPresenter.TestSteps}"
+                      SelectedItem="{Binding TestStepPresenter.SelectedStep, Mode=TwoWay}"
+                      SelectedIndex="{Binding TestStepPresenter.SelectedStepIndex, Mode=TwoWay}"
+                      Margin="10"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      GridLinesVisibility="All"
+                      BorderThickness="1"
+                      BorderBrush="Gray">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nr." Binding="{Binding Number}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Lower Limit" Binding="{Binding LowerLimit}" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}" />
+                    <DataGridTextColumn Header="Result" Binding="{Binding Result}" />
+                    <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" />
+                </DataGrid.Columns>
+
+            </DataGrid>
+            
+            <StackPanel Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Margin="10"
+                        Spacing="10">
+
+                <controls:MeasSelector
+                    DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
+
+                <controls:StimSelector
+                    DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+                    GridRows="8"
+                    GridColumns="2" />
+
+                <controls:ExtStimSelector
+                    DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+                    GridRows="2"
+                    GridColumns="2" />
+
+            </StackPanel>
+
+        </Grid>
+
     </Grid>
 </UserControl>

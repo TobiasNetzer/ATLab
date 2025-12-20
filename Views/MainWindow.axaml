@@ -12,6 +12,11 @@
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
+    
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
+    </Window.KeyBindings>
 
     <Grid RowDefinitions="*,Auto">
 
@@ -19,10 +24,11 @@
 
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="New"/>
-                    <MenuItem Header="Open"/>
-                    <MenuItem Header="Save"/>
-                    <MenuItem Header="Exit"/>
+                    <MenuItem Header="_New" Command="{Binding NewFileCommand}"/>
+                    <MenuItem Header="_Open" Command="{Binding LoadFileCommand}"/>
+                    <MenuItem Header="_Save" Command="{Binding SaveFileCommand}" />
+                    <MenuItem Header="Save _As" Command="{Binding SaveFileAsCommand}" />
+                    <MenuItem Header="_Exit"/>
                 </MenuItem>
 
                 <MenuItem Header="_Edit">
@@ -63,7 +69,7 @@
                     Margin="5">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <TextBlock Text="&#xE783;" FontFamily="avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons"
+                        <TextBlock Text="&#xE783;" FontFamily="{StaticResource FluentIconsFont}"
                                    FontSize="18"/>
                         <TextBlock Text="{Binding ErrorCount}"
                                    FontSize="14"/>

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -13,23 +14,35 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
     
+    [ObservableProperty]
+    private TestStepViewModel? _selectedStep;
+    
+    [ObservableProperty]
+    private int _selectedStepIndex;
+    
     public TestStepPresenterViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
     {
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestHardwareRelayChannels = testHardwareRelayChannels;
     }
-
-    public void Load(IEnumerable<TestStep> steps)
+    
+    partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
-        TestSteps.Clear();
-        foreach (var step in steps)
-            TestSteps.Add(new TestStepViewModel(step));
+        if (value != null)
+        {
+            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
+        }
     }
 
-    public IEnumerable<TestStep> Save()
+    [RelayCommand]
+    public void AddTestStep()
     {
-        foreach (var vm in TestSteps)
-            vm.SyncBack();
-        return TestSteps.Select(vm => vm.Model).ToList();
+        TestSteps.Add(new TestStepViewModel(new TestStep()));
+    }
+    
+    [RelayCommand]
+    public void RemoveTestStep()
+    {
+        TestSteps.RemoveAt(SelectedStepIndex);
     }
 }
