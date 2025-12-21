@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -20,8 +20,11 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [ObservableProperty]
     private int _selectedStepIndex;
     
-    public TestStepPresenterViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
+    private readonly IErrorService _errorService;
+    
+    public TestStepPresenterViewModel(IErrorService errorService, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
     {
+        _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestHardwareRelayChannels = testHardwareRelayChannels;
     }
@@ -30,16 +33,24 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     {
         if (value != null)
         {
-            TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
-            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
-            TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
+            try
+            {
+                TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
+                TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
+                TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
+            }
+            catch (Exception ex)
+            {
+                _errorService.AddError("Exception: " + ex.Message);
+            }
+            
         }
     }
 
     [RelayCommand]
     public void AddTestStep()
     {
-        TestSteps.Add(new TestStepViewModel(new TestStep()));
+        TestSteps.Add(new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo));
     }
     
     [RelayCommand]

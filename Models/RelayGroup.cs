@@ -18,11 +18,27 @@ public class RelayGroup
             });
         }
     }
-
-    public RelayGroup() {}
     
     public bool[] ToBoolArray()
     {
         return Channels.Select(c => c.IsEnabled).ToArray();
     }
+    
+    public RelayGroupDto ToDto()
+    {
+        return new RelayGroupDto
+        {
+            EnabledChannels = Channels
+                .Where(c => c.IsEnabled)
+                .Select(c => c.ChannelIndex)
+                .ToList()
+        };
+    }
+
+    public void ApplyDto(RelayGroupDto dto)
+    {
+        foreach (var channel in Channels)
+            channel.IsEnabled = dto.EnabledChannels.Contains(channel.ChannelIndex);
+    }
+
 }

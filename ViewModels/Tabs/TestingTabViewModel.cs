@@ -1,15 +1,13 @@
 using System.Collections.ObjectModel;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels.Tabs;
 
 public partial class TestingTabViewModel : ViewModelBase
 {
-    private readonly IErrorService _errorService;
-    private readonly ITestHardware _testHardware;
-
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
 
@@ -19,13 +17,12 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Testing";
 
-    public TestingTabViewModel(IErrorService errorService, ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
+    public TestingTabViewModel(IErrorService errorService, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
     {
-        _errorService = errorService;
-        _testHardware = testHardware;
+
         TestHardwareRelayChannels = testHardwareRelayChannels;
 
-        TestStepPresenter = new TestStepPresenterViewModel(testHardwareRelayChannels);
+         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestHardwareRelayChannels);
         
     }
 
@@ -33,7 +30,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
 
-        TestStepPresenter = new TestStepPresenterViewModel(TestHardwareRelayChannels);
+        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestHardwareRelayChannels);
         
         TestStepPresenter.TestSteps.Add(
             new TestStepViewModel(
@@ -45,7 +42,8 @@ public partial class TestingTabViewModel : ViewModelBase
                     UpperLimit = 1,
                     Value = 1,
                     Result = "Success"
-                }
+                },
+                new DummyHardwareInfo()
             )
         );
         

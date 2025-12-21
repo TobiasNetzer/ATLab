@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,6 @@ using ATLab.CTIA;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Services;
-using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -55,7 +55,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardware = testHardware;
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardwareRelayChannelsViewModel);
         LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         
@@ -67,12 +67,20 @@ public partial class MainWindowViewModel : ViewModelBase
         
         if (File.Exists(App.SettingsService.Settings.LastOpenedFile))
         {
-            var json = File.ReadAllText(App.SettingsService.Settings.LastOpenedFile);
-            var steps = JsonSerializer.Deserialize<List<TestStep>>(json) ?? new List<TestStep>();
-            TestingTab.TestStepPresenter.TestSteps.Clear();
-            foreach (var step in steps)
-                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step));
-            CurrentFilePath = App.SettingsService.Settings.LastOpenedFile;
+            try
+            {
+                var json = File.ReadAllText(App.SettingsService.Settings.LastOpenedFile);
+                var steps = JsonSerializer.Deserialize<List<TestStep>>(json) ?? new List<TestStep>();
+                TestingTab.TestStepPresenter.TestSteps.Clear();
+                foreach (var step in steps)
+                    TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
+                CurrentFilePath = App.SettingsService.Settings.LastOpenedFile;
+            }
+            catch (Exception  ex)
+            {
+                _errorService.Errors.Add(ex.ToString());
+            }
+            
         }
         
     }
@@ -82,7 +90,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
         _errorService = new ErrorService();
         
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardwareRelayChannelsViewModel);
         LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
         ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
         
@@ -209,7 +217,7 @@ public partial class MainWindowViewModel : ViewModelBase
             
             TestingTab.TestStepPresenter.TestSteps.Clear();
             foreach (var step in steps)
-                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step));
+                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
         
             CurrentFilePath = file.Path.LocalPath;
             

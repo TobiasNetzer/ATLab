@@ -6,6 +6,7 @@ namespace ATLab.ViewModels;
 
 public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
 {
+    public readonly IHardwareInfo HardwareInfo;
     private ObservableCollection<CustomRelayChannelName> StimChannelNames { get; }
     private ObservableCollection<CustomRelayChannelName> ExtStimChannelNames { get; }
     private ObservableCollection<CustomRelayChannelName> MeasChannelNames { get; }
@@ -16,6 +17,8 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
     
     public TestHardwareRelayChannelsViewModel(IHardwareInfo hardwareInfo)
     {
+        HardwareInfo = hardwareInfo;
+        
         StimChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < hardwareInfo.StimChannelCount; i++)
         {

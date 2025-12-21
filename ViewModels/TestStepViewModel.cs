@@ -1,3 +1,4 @@
+using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -9,7 +10,7 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private int _number;
     [ObservableProperty]
-    private string _name;
+    private string? _name;
     [ObservableProperty]
     private double _value;
     [ObservableProperty]
@@ -17,9 +18,9 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private double _upperLimit;
     [ObservableProperty]
-    private string _result;
+    private string? _result;
     [ObservableProperty]
-    private string _comment;
+    private string? _comment;
     
     [ObservableProperty]
     private RelayGroup _stimState;
@@ -28,9 +29,13 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private RelayMatrix _matrixState;
 
-    public TestStepViewModel(TestStep model)
+    public TestStepViewModel(TestStep model, IHardwareInfo hardwareInfo)
     {
         Model = model;
+        
+        StimState = new RelayGroup(hardwareInfo.StimChannelCount);
+        ExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
+        MatrixState = new RelayMatrix(0,0);
         
         Number = model.Number;
         Name = model.Name;
@@ -39,9 +44,9 @@ public partial class TestStepViewModel : ViewModelBase
         UpperLimit = model.UpperLimit;
         Result = model.Result;
         Comment = model.Comment;
-        StimState = model.StimState;
-        ExtStimState = model.ExtStimState;
-        MatrixState = model.MatrixState;
+        StimState.ApplyDto(Model.StimState ?? new RelayGroupDto());
+        ExtStimState.ApplyDto(Model.ExtStimState ?? new RelayGroupDto());
+        MatrixState = model.MatrixState ??  new RelayMatrix();
     }
     
     public void SyncBack()
@@ -53,8 +58,8 @@ public partial class TestStepViewModel : ViewModelBase
         Model.UpperLimit = UpperLimit;
         Model.Result = Result;
         Model.Comment = Comment;
-        Model.StimState = StimState;
-        Model.ExtStimState = ExtStimState;
+        Model.StimState = StimState.ToDto();
+        Model.ExtStimState = ExtStimState.ToDto();
         Model.MatrixState = MatrixState;
     }
 }
