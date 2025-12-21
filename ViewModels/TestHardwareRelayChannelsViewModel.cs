@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
@@ -10,9 +13,11 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
     private ObservableCollection<CustomRelayChannelName> StimChannelNames { get; }
     private ObservableCollection<CustomRelayChannelName> ExtStimChannelNames { get; }
     private ObservableCollection<CustomRelayChannelName> MeasChannelNames { get; }
-    
-    public StimChannelViewModel StimChannelViewModel { get; }
-    public ExtStimChannelViewModel ExtStimChannelViewModel { get; }
+
+    [ObservableProperty]
+    private StimChannelViewModel _stimChannelViewModel;
+    [ObservableProperty]
+    private ExtStimChannelViewModel _extStimChannelViewModel;
     public MeasChannelViewModel MeasChannelViewModel { get; }
     
     public TestHardwareRelayChannelsViewModel(IHardwareInfo hardwareInfo)
@@ -22,7 +27,7 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         StimChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < hardwareInfo.StimChannelCount; i++)
         {
-            StimChannelNames.Add(new CustomRelayChannelName("Channel", i));
+            StimChannelNames.Add(new CustomRelayChannelName("", i+1));
         }
         
         StimChannelViewModel = new StimChannelViewModel(StimChannelNames);
@@ -30,16 +35,52 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         ExtStimChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < hardwareInfo.ExtStimChannelCount; i++)
         {
-            ExtStimChannelNames.Add(new CustomRelayChannelName("Channel", i));
+            ExtStimChannelNames.Add(new CustomRelayChannelName("", i+1));
         }
         ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames);
         
         MeasChannelNames = new ObservableCollection<CustomRelayChannelName>();
         for (int i = 0; i < hardwareInfo.MeasChannelCount; i++)
         {
-            MeasChannelNames.Add(new CustomRelayChannelName("Channel", i));
+            MeasChannelNames.Add(new CustomRelayChannelName("", i+1));
         }
         MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
     }
     
+    public List<CustomRelayChannelName> GetStimNames() =>
+        StimChannelNames.ToList();
+
+    public List<CustomRelayChannelName> GetExtStimNames() =>
+        ExtStimChannelNames.ToList();
+
+    public List<CustomRelayChannelName> GetMeasNames() =>
+        MeasChannelNames.ToList();
+
+    public void ApplyChannelNames(
+        List<CustomRelayChannelName>? stim,
+        List<CustomRelayChannelName>? extStim,
+        List<CustomRelayChannelName>? meas)
+    {
+        ApplyList(StimChannelNames, stim);
+        ApplyList(ExtStimChannelNames, extStim);
+        ApplyList(MeasChannelNames, meas);
+    }
+
+    private void ApplyList(
+        ObservableCollection<CustomRelayChannelName> target,
+        List<CustomRelayChannelName>? source)
+    {
+        if (source == null)
+            return;
+
+        foreach (var item in source)
+        {
+            // ChannelIndex is 1-based
+            int index = (item.ChannelIndex ?? 0) - 1;
+
+            if (index >= 0 && index < target.Count)
+                target[index].ChannelName = item.ChannelName;
+        }
+    }
+
 }

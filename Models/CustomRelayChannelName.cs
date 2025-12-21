@@ -25,6 +25,6 @@ public class CustomRelayChannelName : INotifyPropertyChanged
     public CustomRelayChannelName(string channelName, int? channelIndex)
     {
         _channelName = channelName;
-        ChannelIndex = channelIndex + 1; // Index 1-based for UI
+        ChannelIndex = channelIndex;
     }
 }

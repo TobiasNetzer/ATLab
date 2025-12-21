@@ -10,7 +10,8 @@ public partial class StimChannelViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<RelayChannelViewModel> _stimChannels;
 
-    private readonly ObservableCollection<CustomRelayChannelName> _customChannelNames;
+    [ObservableProperty]
+    private ObservableCollection<CustomRelayChannelName> _customChannelNames;
     
     [ObservableProperty]
     private bool _isExpanded;
@@ -37,6 +38,6 @@ public partial class StimChannelViewModel : ViewModelBase
     public void LoadRelayStates(RelayGroup relayGroup)
     {
         StimChannels = new ObservableCollection<RelayChannelViewModel>(
-            relayGroup.Channels.Select(c => new RelayChannelViewModel(c, _customChannelNames[c.ChannelIndex - 1])));
+            relayGroup.Channels.Select(c => new RelayChannelViewModel(c, CustomChannelNames[c.ChannelIndex - 1])));
     }
 }

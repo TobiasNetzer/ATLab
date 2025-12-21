@@ -24,6 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public string? CurrentFilePath { get; private set; }
     
+    [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
 
     [ObservableProperty]
@@ -53,11 +54,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _errorService = errorService;
         _testHardware = testHardware;
-        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardwareRelayChannelsViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, _testHardwareRelayChannelsViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -65,34 +66,16 @@ public partial class MainWindowViewModel : ViewModelBase
             HasErrors = ErrorCount > 0;
         };
         
-        if (File.Exists(App.SettingsService.Settings.LastOpenedFile))
-        {
-            try
-            {
-                var json = File.ReadAllText(App.SettingsService.Settings.LastOpenedFile);
-                var steps = JsonSerializer.Deserialize<List<TestStep>>(json) ?? new List<TestStep>();
-                TestingTab.TestStepPresenter.TestSteps.Clear();
-                foreach (var step in steps)
-                    TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
-                CurrentFilePath = App.SettingsService.Settings.LastOpenedFile;
-            }
-            catch (Exception  ex)
-            {
-                _errorService.Errors.Add(ex.ToString());
-            }
-            
-        }
-        
     }
     
     public MainWindowViewModel()
     {
-        _testHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
         _errorService = new ErrorService();
         
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, _testHardwareRelayChannelsViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), _testHardwareRelayChannelsViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(_testHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestHardwareRelayChannelsViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -103,7 +86,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public async Task OpenAboutWindow()
+    private async Task OpenAboutWindow()
     {
         var deviceInfoProvider = _testHardware.HardwareInfo;
         var aboutVm = new AboutWindowViewModel(deviceInfoProvider);
@@ -134,8 +117,16 @@ public partial class MainWindowViewModel : ViewModelBase
     private void NewFile()
     {
         TestingTab.TestStepPresenter.TestSteps.Clear();
+
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
+
         CurrentFilePath = null;
     }
+
 
     [RelayCommand]
     private async Task SaveFileAs()
@@ -159,10 +150,17 @@ public partial class MainWindowViewModel : ViewModelBase
             var presenter = TestingTab.TestStepPresenter;
             foreach (var vm in presenter.TestSteps)
                 vm.SyncBack();
-            var stepsToSave =  presenter.TestSteps.Select(vm => vm.Model).ToList();
-
+            
+            var dto = new AtlabFileDto
+            {
+                TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
+                StimChannelNames = TestHardwareRelayChannelsViewModel.GetStimNames(),
+                ExtStimChannelNames = TestHardwareRelayChannelsViewModel.GetExtStimNames(),
+                MeasChannelNames = TestHardwareRelayChannelsViewModel.GetMeasNames()
+            };
+            
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(stepsToSave, options);
+            string json = JsonSerializer.Serialize(dto, options);
 
             await File.WriteAllTextAsync(file.Path.LocalPath, json);
 
@@ -179,10 +177,17 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             foreach (var vm in presenter.TestSteps)
                 vm.SyncBack();
-            var stepsToSave =  presenter.TestSteps.Select(vm => vm.Model).ToList();
+            
+            var dto = new AtlabFileDto
+            {
+                TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
+                StimChannelNames = TestHardwareRelayChannelsViewModel.GetStimNames(),
+                ExtStimChannelNames = TestHardwareRelayChannelsViewModel.GetExtStimNames(),
+                MeasChannelNames = TestHardwareRelayChannelsViewModel.GetMeasNames()
+            };
             
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(stepsToSave, options);
+            string json = JsonSerializer.Serialize(dto, options);
 
             await File.WriteAllTextAsync(CurrentFilePath, json);
             return;
@@ -192,7 +197,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private async Task LoadFile()
+    private async Task LoadFileWithDialog()
     {
         var window = (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         if (window is null)
@@ -212,16 +217,49 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             var file = files[0];
             var json = await File.ReadAllTextAsync(file.Path.LocalPath);
-
-            var steps = JsonSerializer.Deserialize<List<TestStep>>(json) ?? new List<TestStep>();
+            
+            var dto = JsonSerializer.Deserialize<AtlabFileDto>(json);
             
             TestingTab.TestStepPresenter.TestSteps.Clear();
-            foreach (var step in steps)
-                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
-        
+            if (dto != null)
+            {
+                foreach (var step in dto.TestSteps)
+                    TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
+
+                TestHardwareRelayChannelsViewModel.ApplyChannelNames(
+                    dto.StimChannelNames,
+                    dto.ExtStimChannelNames,
+                    dto.MeasChannelNames
+                );
+            }
+
             CurrentFilePath = file.Path.LocalPath;
             
             App.SettingsService.Settings.LastOpenedFile = file.Path.LocalPath;
         }
+    }
+    
+    public async Task LoadFile(string fileToLoad)
+    {
+        var json =  await File.ReadAllTextAsync(fileToLoad);
+        
+        var dto = JsonSerializer.Deserialize<AtlabFileDto>(json);
+        
+        TestingTab.TestStepPresenter.TestSteps.Clear();
+        if (dto != null)
+        {
+            foreach (var step in dto.TestSteps)
+                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
+
+            TestHardwareRelayChannelsViewModel.ApplyChannelNames(
+                dto.StimChannelNames,
+                dto.ExtStimChannelNames,
+                dto.MeasChannelNames
+            );
+        }
+
+        CurrentFilePath = fileToLoad;
+        
+        App.SettingsService.Settings.LastOpenedFile = fileToLoad;
     }
 }

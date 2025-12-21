@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
@@ -107,11 +109,30 @@ public partial class App : Application
                 return;
             }
 
-            desktop.MainWindow = new MainWindow
+            var MainVm = new MainWindowViewModel(_errorService, _testHardware!);
+            var window = new MainWindow { DataContext = MainVm };
+
+            desktop.MainWindow = window;
+            window.Show();
+            
+            // Load last open file
+            _ = Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                DataContext = new MainWindowViewModel(_errorService, _testHardware!),
-            };
-            desktop.MainWindow.Show();
+                var lastFile = SettingsService.Settings.LastOpenedFile;
+
+                if (File.Exists(lastFile))
+                {
+                    try
+                    {
+                        await MainVm.LoadFile(lastFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        _errorService.Errors.Add(ex.ToString());
+                    }
+                }
+            });
+            
         }
         
         base.OnFrameworkInitializationCompleted();

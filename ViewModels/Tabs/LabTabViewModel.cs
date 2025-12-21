@@ -11,8 +11,9 @@ public partial class LabTabViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
-    
-    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
+
+    [ObservableProperty]
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
     
     private RelayGroup _testStimState;
     private RelayGroup _testExtStimState;

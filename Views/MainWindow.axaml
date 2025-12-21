@@ -14,7 +14,7 @@
     </Design.DataContext>
     
     <Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileCommand}" />
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileWithDialogCommand}" />
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
     </Window.KeyBindings>
 
@@ -25,7 +25,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Command="{Binding NewFileCommand}"/>
-                    <MenuItem Header="_Open" Command="{Binding LoadFileCommand}"/>
+                    <MenuItem Header="_Open" Command="{Binding LoadFileWithDialogCommand}"/>
                     <MenuItem Header="_Save" Command="{Binding SaveFileCommand}" />
                     <MenuItem Header="Save _As" Command="{Binding SaveFileAsCommand}" />
                     <MenuItem Header="_Exit"/>

@@ -47,15 +47,25 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         }
     }
 
+    private void RenumberTestSteps()
+    {
+        for (int i = 0; i < TestSteps.Count; i++)
+        {
+            TestSteps[i].Number = i + 1; // 1‑based numbering
+        }
+    }
+
     [RelayCommand]
-    public void AddTestStep()
+    private void AddTestStep()
     {
         TestSteps.Add(new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo));
+        RenumberTestSteps();
     }
     
     [RelayCommand]
-    public void RemoveTestStep()
+    private void RemoveTestStep()
     {
         TestSteps.RemoveAt(SelectedStepIndex);
+        RenumberTestSteps();
     }
 }
