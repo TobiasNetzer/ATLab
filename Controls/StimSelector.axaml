@@ -54,7 +54,6 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
-                                     Rows="{Binding GridRows, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
                                      HorizontalAlignment="Center"
                                      ColumnSpacing="10"/>
                     </ItemsPanelTemplate>

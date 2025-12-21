@@ -18,13 +18,11 @@
         <controls:StimSelector 
             DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
             HorizontalAlignment="Left"
-            GridRows="8"
             GridColumns="2"/>
         
         <controls:ExtStimSelector 
             DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
             HorizontalAlignment="Left"
-            GridRows="2"
             GridColumns="2"/>
         
         <Button
