@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
-public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
+public partial class TestConfigurationViewModel : ViewModelBase
 {
     public readonly IHardwareInfo HardwareInfo;
     private ObservableCollection<CustomRelayChannelName> StimChannelNames { get; }
@@ -20,7 +20,10 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
     private ExtStimChannelViewModel _extStimChannelViewModel;
     public MeasChannelViewModel MeasChannelViewModel { get; }
     
-    public TestHardwareRelayChannelsViewModel(IHardwareInfo hardwareInfo)
+    [ObservableProperty]
+    private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
+    
+    public TestConfigurationViewModel(IHardwareInfo hardwareInfo)
     {
         HardwareInfo = hardwareInfo;
         
@@ -45,6 +48,8 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
             MeasChannelNames.Add(new CustomRelayChannelName("", i+1));
         }
         MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
+        
+        TestStepConfiguratorViewModel =  new TestStepConfiguratorViewModel();
     }
     
     public List<CustomRelayChannelName> GetStimNames() =>

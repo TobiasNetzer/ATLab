@@ -25,7 +25,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public string? CurrentFilePath { get; private set; }
     
     [ObservableProperty]
-    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
+    private TestConfigurationViewModel _testConfigurationViewModel;
 
     [ObservableProperty]
     private ViewModelBase? _selectedTab;
@@ -54,11 +54,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _errorService = errorService;
         _testHardware = testHardware;
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -70,12 +70,12 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
+        TestConfigurationViewModel = new TestConfigurationViewModel(new DummyHardwareInfo());
         _errorService = new ErrorService();
         
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestHardwareRelayChannelsViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestConfigurationViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -118,11 +118,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         TestingTab.TestStepPresenter.TestSteps.Clear();
 
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestHardwareRelayChannelsViewModel);
+        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
+        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
 
         CurrentFilePath = null;
     }
@@ -154,9 +154,9 @@ public partial class MainWindowViewModel : ViewModelBase
             var dto = new AtlabFileDto
             {
                 TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
-                StimChannelNames = TestHardwareRelayChannelsViewModel.GetStimNames(),
-                ExtStimChannelNames = TestHardwareRelayChannelsViewModel.GetExtStimNames(),
-                MeasChannelNames = TestHardwareRelayChannelsViewModel.GetMeasNames()
+                StimChannelNames = TestConfigurationViewModel.GetStimNames(),
+                ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
+                MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
             };
             
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -181,9 +181,9 @@ public partial class MainWindowViewModel : ViewModelBase
             var dto = new AtlabFileDto
             {
                 TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
-                StimChannelNames = TestHardwareRelayChannelsViewModel.GetStimNames(),
-                ExtStimChannelNames = TestHardwareRelayChannelsViewModel.GetExtStimNames(),
-                MeasChannelNames = TestHardwareRelayChannelsViewModel.GetMeasNames()
+                StimChannelNames = TestConfigurationViewModel.GetStimNames(),
+                ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
+                MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
             };
             
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -226,7 +226,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 foreach (var step in dto.TestSteps)
                     TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
 
-                TestHardwareRelayChannelsViewModel.ApplyChannelNames(
+                TestConfigurationViewModel.ApplyChannelNames(
                     dto.StimChannelNames,
                     dto.ExtStimChannelNames,
                     dto.MeasChannelNames
@@ -251,7 +251,7 @@ public partial class MainWindowViewModel : ViewModelBase
             foreach (var step in dto.TestSteps)
                 TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
 
-            TestHardwareRelayChannelsViewModel.ApplyChannelNames(
+            TestConfigurationViewModel.ApplyChannelNames(
                 dto.StimChannelNames,
                 dto.ExtStimChannelNames,
                 dto.MeasChannelNames

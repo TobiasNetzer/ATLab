@@ -12,16 +12,16 @@
     <StackPanel>
         
         <controls:MeasSelector
-            DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}"
+            DataContext="{Binding TestConfiguration.MeasChannelViewModel}"
             HorizontalAlignment="Left"/>
         
         <controls:StimSelector 
-            DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+            DataContext="{Binding TestConfiguration.StimChannelViewModel}"
             HorizontalAlignment="Left"
             GridColumns="2"/>
         
         <controls:ExtStimSelector 
-            DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+            DataContext="{Binding TestConfiguration.ExtStimChannelViewModel}"
             HorizontalAlignment="Left"
             GridColumns="2"/>
         

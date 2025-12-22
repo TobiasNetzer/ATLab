@@ -9,7 +9,7 @@ namespace ATLab.ViewModels.Tabs;
 public partial class TestingTabViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
+    private TestConfigurationViewModel _testConfiguration;
 
     [ObservableProperty]
     private TestStepPresenterViewModel _testStepPresenter;
@@ -17,20 +17,20 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Testing";
 
-    public TestingTabViewModel(IErrorService errorService, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
+    public TestingTabViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration)
     {
 
-        TestHardwareRelayChannels = testHardwareRelayChannels;
+        TestConfiguration = testConfiguration;
 
-         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestHardwareRelayChannels);
+         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestConfiguration);
         
     }
 
     public TestingTabViewModel()
     {
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
+        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo());
 
-        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestHardwareRelayChannels);
+        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration);
         
         TestStepPresenter.TestSteps.Add(
             new TestStepViewModel(

@@ -9,10 +9,10 @@ public partial class ConfigTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Config";
     
-    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; set; }
+    public TestConfigurationViewModel TestConfiguration { get; set; }
 
-    public ConfigTabViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel)
+    public ConfigTabViewModel(TestConfigurationViewModel testConfigurationViewModel)
     {
-        TestHardwareRelayChannels = testHardwareRelayChannelsViewModel;
+        TestConfiguration = testConfigurationViewModel;
     }
 }

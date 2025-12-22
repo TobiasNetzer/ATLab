@@ -12,7 +12,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     public ObservableCollection<TestStepViewModel> TestSteps { get; }
 
     [ObservableProperty]
-    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
+    private TestConfigurationViewModel _testConfiguration;
     
     [ObservableProperty]
     private TestStepViewModel? _selectedStep;
@@ -22,11 +22,11 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     
     private readonly IErrorService _errorService;
     
-    public TestStepPresenterViewModel(IErrorService errorService, TestHardwareRelayChannelsViewModel testHardwareRelayChannels)
+    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
-        TestHardwareRelayChannels = testHardwareRelayChannels;
+        TestConfiguration = testConfiguration;
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
@@ -35,9 +35,10 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         {
             try
             {
-                TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
-                TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.StimState);
-                TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
+                TestConfiguration.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
+                TestConfiguration.StimChannelViewModel.LoadRelayStates(value.StimState);
+                TestConfiguration.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
+                TestConfiguration.TestStepConfiguratorViewModel.LoadTestStep(value);
             }
             catch (Exception ex)
             {
@@ -58,7 +59,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     private void AddTestStep()
     {
-        TestSteps.Add(new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo));
+        TestSteps.Add(new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo));
         RenumberTestSteps();
     }
     

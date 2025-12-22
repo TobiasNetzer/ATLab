@@ -8,7 +8,7 @@
     <StackPanel>
        
         <controls:CustomChannelNameSetter
-            DataContext="{Binding TestHardwareRelayChannels}"
+            DataContext="{Binding TestConfiguration}"
             HorizontalAlignment="Center"/>
     </StackPanel>
 </UserControl>

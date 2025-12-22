@@ -1,0 +1,66 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.TestStepConfigurator"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:DataType="vm:TestStepConfiguratorViewModel"
+             Width="500">
+    
+    <Design.DataContext>
+        <vm:TestStepConfiguratorViewModel />
+    </Design.DataContext>
+    
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15"
+            Margin="10">
+        
+        <StackPanel>
+            
+            <Border Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15"
+                    Padding="10"
+                    Margin="0">
+                <DockPanel>
+                    <TextBlock Text="Test Step Configuration"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+
+                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                  DockPanel.Dock="Right"
+                                  HorizontalAlignment="Right">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Border Background="Transparent" Padding="5">
+                                    <Grid>
+                                        <TextBlock Text="&#xE70D;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="24"
+                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                        <TextBlock Text="&#xE70E;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="24"
+                                                   IsVisible="{Binding IsExpanded}"/>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </DockPanel>
+            </Border>
+            
+            <StackPanel HorizontalAlignment="Left"
+                        Orientation="Vertical"
+                        Spacing="5"
+                        IsVisible="{Binding IsExpanded}"
+                        Margin="10">
+                <TextBlock Text="Test Step Name:"/>
+                <TextBox Text="{Binding TestStepName, Mode=TwoWay}"
+                         MaxLength="50"
+                         Width="460"/>
+            </StackPanel>
+            
+            </StackPanel>
+    </Border>
+    
+</UserControl>

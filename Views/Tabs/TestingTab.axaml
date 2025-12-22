@@ -63,16 +63,19 @@
                 <StackPanel HorizontalAlignment="Right"
                             Margin="10"
                             Spacing="10">
+                    
+                    <controls:TestStepConfigurator
+                        DataContext="{Binding TestConfiguration.TestStepConfiguratorViewModel}"/>
 
                     <controls:MeasSelector
-                        DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
+                        DataContext="{Binding TestConfiguration.MeasChannelViewModel}" />
 
                     <controls:StimSelector
-                        DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+                        DataContext="{Binding TestConfiguration.StimChannelViewModel}"
                         GridColumns="2" />
 
                     <controls:ExtStimSelector
-                        DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+                        DataContext="{Binding TestConfiguration.ExtStimChannelViewModel}"
                         GridColumns="2" />
 
                 </StackPanel>
