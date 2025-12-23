@@ -1,4 +1,6 @@
-﻿using ATLab.Models;
+﻿using System;
+using System.Globalization;
+using ATLab.Models;
 using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -15,24 +17,30 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private string? _testStepName;
     
     [ObservableProperty]
-    private double _testStepLowerLimit;
+    private string? _testStepLowerLimit;
     
     [ObservableProperty]
-    private double _testStepNominalValue;
+    private string? _testStepNominalValue;
     
     [ObservableProperty]
-    private double _testStepUpperLimit;
+    private string? _testStepUpperLimit;
     
     [ObservableProperty]
     private string? _testStepCustomUnit;
+    
+    private bool _suppressCallback = false;
 
     public void LoadTestStep(TestStepViewModel testStep)
     {
+        _suppressCallback = true;
+        
         _testStep = testStep;
         TestStepName = _testStep.Name;
-        TestStepLowerLimit = _testStep.LowerLimit;
-        TestStepNominalValue =  _testStep.NominalValue;
-        TestStepUpperLimit = _testStep.UpperLimit;
+        TestStepLowerLimit = _testStep.LowerLimit.ToString(CultureInfo.CurrentCulture);
+        TestStepNominalValue =  _testStep.NominalValue.ToString(CultureInfo.CurrentCulture);
+        TestStepUpperLimit = _testStep.UpperLimit.ToString(CultureInfo.CurrentCulture);
+        
+        _suppressCallback = false;
     }
 
     partial void OnTestStepNameChanged(string? value)
@@ -41,21 +49,34 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             _testStep.Name = value;
     }
 
-    partial void OnTestStepLowerLimitChanged(double value)
+    partial void OnTestStepLowerLimitChanged(string? value)
     {
         if (_testStep != null)
-            _testStep.LowerLimit = value;
+            _testStep.LowerLimit = double.TryParse(value, out var lowerLimit) ? lowerLimit : 0;
     }
 
-    partial void OnTestStepNominalValueChanged(double value)
+    partial void OnTestStepNominalValueChanged(string? value)
     {
-        if (_testStep != null)
-            _testStep.NominalValue = value;
+        if(_suppressCallback)
+            return;
+        
+        if (_testStep != null) 
+        {
+            _testStep.NominalValue = double.TryParse(value, out var nominalValue) ? nominalValue : 0;
+            var upperLimit = Math.Round(_testStep.NominalValue * 1.05, 4);
+            var lowerLimit = Math.Round(_testStep.NominalValue * 0.95, 4);
+            
+            TestStepLowerLimit = lowerLimit.ToString(CultureInfo.CurrentCulture);
+            TestStepUpperLimit = upperLimit.ToString(CultureInfo.CurrentCulture);
+            _testStepLowerLimit = lowerLimit.ToString(CultureInfo.CurrentCulture);
+            _testStepUpperLimit = upperLimit.ToString(CultureInfo.CurrentCulture);
+        }
+        
     }
     
-    partial void OnTestStepUpperLimitChanged(double value)
+    partial void OnTestStepUpperLimitChanged(string? value)
     {
         if (_testStep != null)
-            _testStep.UpperLimit = value;
+            _testStep.UpperLimit = double.TryParse(value, out var upperLimit) ? upperLimit : 0;
     }
 }

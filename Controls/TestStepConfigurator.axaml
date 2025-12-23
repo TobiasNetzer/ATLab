@@ -49,61 +49,69 @@
                 </DockPanel>
             </Border>
             
-            <StackPanel HorizontalAlignment="Left"
-                        Orientation="Vertical"
-                        Spacing="5"
-                        IsVisible="{Binding IsExpanded}"
-                        Margin="10">
-                <TextBlock Text="Test Step Name:"/>
-                <TextBox Text="{Binding TestStepName, Mode=TwoWay}"
-                         MaxLength="50"
-                         Width="460"/>
-            </StackPanel>
+            <StackPanel IsVisible="{Binding IsExpanded}">
             
-            <StackPanel Orientation="Horizontal">
                 <StackPanel HorizontalAlignment="Left"
                             Orientation="Vertical"
                             Spacing="5"
-                            IsVisible="{Binding IsExpanded}"
                             Margin="10">
-                    <TextBlock Text="Lower Limit:"/>
-                    <TextBox Text="{Binding TestStepLowerLimit, Mode=TwoWay}"
-                             MaxLength="20"
-                             Width="100"/>
+                    <TextBlock Text="Test Step Name:"/>
+                    <TextBox Text="{Binding TestStepName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             MaxLength="50"
+                             Width="460"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="10">
+                        <TextBlock Text="Lower Limit:"/>
+                        <TextBox Text="{Binding TestStepLowerLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 MaxLength="20"
+                                 Width="100"/>
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="10">
+                        <TextBlock Text="Nominal:"/>
+                        <TextBox Text="{Binding TestStepNominalValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 MaxLength="20"
+                                 Width="100"/>
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="10">
+                        <TextBlock Text="Upper Limit:"/>
+                        <TextBox Text="{Binding TestStepUpperLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 MaxLength="20"
+                                 Width="100"/>
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="45 10 10 10">
+                        <TextBlock Text="Unit:"/>
+                        <TextBox Text="{Binding TestStepCustomUnit, Mode=TwoWay}"
+                                 MaxLength="10"
+                                 Width="50"/>
+                    </StackPanel>
                 </StackPanel>
                 
                 <StackPanel HorizontalAlignment="Left"
                             Orientation="Vertical"
                             Spacing="5"
-                            IsVisible="{Binding IsExpanded}"
                             Margin="10">
-                    <TextBlock Text="Nominal:"/>
-                    <TextBox Text="{Binding TestStepNominalValue, Mode=TwoWay}"
-                             MaxLength="20"
-                             Width="100"/>
+                    <TextBlock Text="Evaluate:"/>
+                    <RadioButton Content="Script"/>
+                    <RadioButton Content="External Command"/>
                 </StackPanel>
                 
-                <StackPanel HorizontalAlignment="Left"
-                            Orientation="Vertical"
-                            Spacing="5"
-                            IsVisible="{Binding IsExpanded}"
-                            Margin="10">
-                    <TextBlock Text="Upper Limit:"/>
-                    <TextBox Text="{Binding TestStepUpperLimit, Mode=TwoWay}"
-                             MaxLength="20"
-                             Width="100"/>
-                </StackPanel>
-                
-                <StackPanel HorizontalAlignment="Left"
-                            Orientation="Vertical"
-                            Spacing="5"
-                            IsVisible="{Binding IsExpanded}"
-                            Margin="45 10 10 10">
-                    <TextBlock Text="Unit:"/>
-                    <TextBox Text="{Binding TestStepCustomUnit, Mode=TwoWay}"
-                             MaxLength="10"
-                             Width="50"/>
-                </StackPanel>
             </StackPanel>
             
             </StackPanel>
