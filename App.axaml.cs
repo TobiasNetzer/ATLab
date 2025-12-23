@@ -15,14 +15,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab;
 
-public partial class App : Application
+public class App : Application
 {
-    public IServiceProvider Services { get; private set; } = null!;
+    private IServiceProvider Services { get; set; } = null!;
     public static SettingsService SettingsService => ((App)Current!).Services.GetRequiredService<SettingsService>();
     
     private IErrorService _errorService = null!;
 
-    public static bool SimulationMode { get; set; }
+    public static bool SimulationMode { get; private set; }
 
     private ITestHardware? _testHardware;
 
@@ -66,7 +66,7 @@ public partial class App : Application
 
             if (openConnectWindow)
             {
-                service?.Dispose();
+                service.Dispose();
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
 
@@ -113,8 +113,8 @@ public partial class App : Application
                 return;
             }
 
-            var MainVm = Services.GetRequiredService<MainWindowViewModel>();
-            var window = new MainWindow { DataContext = MainVm };
+            var mainVm = Services.GetRequiredService<MainWindowViewModel>();
+            var window = new MainWindow { DataContext = mainVm };
 
             desktop.MainWindow = window;
             window.Show();
@@ -128,7 +128,7 @@ public partial class App : Application
                 {
                     try
                     {
-                        await MainVm.LoadFile(lastFile);
+                        await mainVm.LoadFile(lastFile);
                     }
                     catch (Exception ex)
                     {
@@ -147,6 +147,8 @@ public partial class App : Application
         // Services
         services.AddSingleton<SettingsService>();
         services.AddSingleton<IErrorService, ErrorService>();
+        
+        // Register the runner and executor
         services.AddSingleton<ITestStepRunner, DummyTestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
         
