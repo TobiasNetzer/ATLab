@@ -51,7 +51,7 @@
                     <DataGridTextColumn Header="Nr." Binding="{Binding Number}" />
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                     <DataGridTextColumn Header="Lower Limit" Binding="{Binding LowerLimit}" />
-                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    <DataGridTextColumn Header="Nominal Value" Binding="{Binding NominalValue}" />
                     <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}" />
                     <DataGridTextColumn Header="Result" Binding="{Binding Result}" />
                     <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" />

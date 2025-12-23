@@ -40,7 +40,7 @@ public partial class TestingTabViewModel : ViewModelBase
                     Name = "TestStep",
                     LowerLimit = 1,
                     UpperLimit = 1,
-                    Value = 1,
+                    NominalValue = 1,
                     Result = "Success"
                 },
                 new DummyHardwareInfo()

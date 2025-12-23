@@ -12,7 +12,7 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private string? _name;
     [ObservableProperty]
-    private double _value;
+    private double _nominalValue;
     [ObservableProperty]
     private double _lowerLimit;
     [ObservableProperty]
@@ -21,7 +21,6 @@ public partial class TestStepViewModel : ViewModelBase
     private string? _result;
     [ObservableProperty]
     private string? _comment;
-    
     [ObservableProperty]
     private RelayGroup _stimState;
     [ObservableProperty]
@@ -39,7 +38,7 @@ public partial class TestStepViewModel : ViewModelBase
         
         Number = model.Number;
         Name = model.Name;
-        Value = model.Value;
+        NominalValue = model.NominalValue;
         LowerLimit = model.LowerLimit;
         UpperLimit = model.UpperLimit;
         Result = model.Result;
@@ -53,7 +52,7 @@ public partial class TestStepViewModel : ViewModelBase
     {
         Model.Number = Number;
         Model.Name = Name;
-        Model.Value = Value;
+        Model.NominalValue = NominalValue;
         Model.LowerLimit = LowerLimit;
         Model.UpperLimit = UpperLimit;
         Model.Result = Result;
