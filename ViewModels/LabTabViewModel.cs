@@ -5,7 +5,7 @@ using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace ATLab.ViewModels.Tabs;
+namespace ATLab.ViewModels;
 
 public partial class LabTabViewModel : ViewModelBase
 {

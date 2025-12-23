@@ -1,5 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,6 +11,8 @@ namespace ATLab.ViewModels;
 
 public partial class TestStepPresenterViewModel : ViewModelBase
 {
+
+    private readonly ITestExecutor _testExecutor;
     public ObservableCollection<TestStepViewModel> TestSteps { get; }
 
     [ObservableProperty]
@@ -22,11 +26,14 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     
     private readonly IErrorService _errorService;
     
-    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration)
+    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, ITestExecutor testExecutor)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestConfiguration = testConfiguration;
+        _testExecutor = testExecutor;
+        
+        HookExecutorEvents();
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
@@ -69,4 +76,55 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         TestSteps.RemoveAt(SelectedStepIndex);
         RenumberTestSteps();
     }
+    
+    [ObservableProperty]
+    private bool _isRunning;
+    
+    private bool CanStartTest() => !IsRunning;
+    
+    [RelayCommand(CanExecute = nameof(CanStartTest))]
+    private async Task StartTestAsync()
+    {
+        if (TestSteps.Count == 0)
+        {
+            _errorService.AddError("No test steps configured.");
+            return;
+        }
+
+        IsRunning = true;
+
+        try
+        {
+            await _testExecutor.ExecuteAsync(TestSteps, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Test execution failed: " + ex.Message);
+        }
+        finally
+        {
+            IsRunning = false;
+        }
+    }
+
+    private void HookExecutorEvents()
+    {
+        _testExecutor.StepStarted += (index, step) =>
+        {
+            //SelectedStepIndex = index;
+            //SelectedStep = step;
+        };
+
+        _testExecutor.StepCompleted += (index, step, result) =>
+        {
+            step.Result = result.ToString();
+        };
+
+        _testExecutor.TestCompleted += () =>
+        {
+            IsRunning = false;
+        };
+    }
+
+
 }

@@ -31,13 +31,13 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase? _selectedTab;
 
     [ObservableProperty]
-    private Tabs.TestingTabViewModel _testingTab;
+    private TestingTabViewModel _testingTab;
 
     [ObservableProperty]
-    private Tabs.LabTabViewModel _labTab;
+    private LabTabViewModel _labTab;
     
     [ObservableProperty]
-    private Tabs.ConfigTabViewModel _configTab;
+    private ConfigTabViewModel _configTab;
     
     public ObservableCollection<string> Errors => _errorService.Errors;
 
@@ -56,9 +56,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _testHardware = testHardware;
         TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
+        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
+        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -73,9 +73,9 @@ public partial class MainWindowViewModel : ViewModelBase
         TestConfigurationViewModel = new TestConfigurationViewModel(new DummyHardwareInfo());
         _errorService = new ErrorService();
         
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestConfigurationViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
+        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestConfigurationViewModel);
+        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -120,9 +120,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
         TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
 
-        TestingTab = new Tabs.TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new Tabs.LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
-        ConfigTab = new Tabs.ConfigTabViewModel(TestConfigurationViewModel);
+        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
+        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
+        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
 
         CurrentFilePath = null;
     }

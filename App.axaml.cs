@@ -11,12 +11,14 @@ using ATLab.Services;
 using System.Threading.Tasks;
 using ATLab.CTIA;
 using ATLab.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab;
 
 public partial class App : Application
 {
-    public static SettingsService SettingsService { get; private set; } = null!;
+    public IServiceProvider Services { get; private set; } = null!;
+    public static SettingsService SettingsService => ((App)Current!).Services.GetRequiredService<SettingsService>();
     
     private IErrorService _errorService = null!;
 
@@ -31,9 +33,11 @@ public partial class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        
-        SettingsService = new SettingsService();
-        _errorService = new ErrorService();
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+        Services = serviceCollection.BuildServiceProvider();
+
+        _errorService = Services.GetRequiredService<IErrorService>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -109,7 +113,7 @@ public partial class App : Application
                 return;
             }
 
-            var MainVm = new MainWindowViewModel(_errorService, _testHardware!);
+            var MainVm = Services.GetRequiredService<MainWindowViewModel>();
             var window = new MainWindow { DataContext = MainVm };
 
             desktop.MainWindow = window;
@@ -136,6 +140,28 @@ public partial class App : Application
         }
         
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void ConfigureServices(IServiceCollection services)
+    {
+        // Services
+        services.AddSingleton<SettingsService>();
+        services.AddSingleton<IErrorService, ErrorService>();
+        services.AddSingleton<ITestStepRunner, DummyTestStepRunner>();
+        services.AddSingleton<ITestExecutor, TestExecutor>();
+        
+        // Factory for ITestHardware since it's initialized later
+        services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
+
+        // ViewModels
+        services.AddSingleton<TestConfigurationViewModel>(sp => 
+            new TestConfigurationViewModel(sp.GetRequiredService<ITestHardware>().HardwareInfo));
+            
+        services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<TestingTabViewModel>();
+        services.AddTransient<LabTabViewModel>();
+        services.AddTransient<ConfigTabViewModel>();
+        services.AddTransient<TestStepPresenterViewModel>();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

@@ -4,7 +4,7 @@ using ATLab.Models;
 using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ATLab.ViewModels.Tabs;
+namespace ATLab.ViewModels;
 
 public partial class TestingTabViewModel : ViewModelBase
 {
@@ -22,7 +22,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         TestConfiguration = testConfiguration;
 
-         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestConfiguration);
+         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestConfiguration, new TestExecutor(new DummyTestStepRunner()));
         
     }
 
@@ -30,7 +30,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo());
 
-        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration);
+        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration, new TestExecutor(new DummyTestStepRunner()));
         
         TestStepPresenter.TestSteps.Add(
             new TestStepViewModel(
