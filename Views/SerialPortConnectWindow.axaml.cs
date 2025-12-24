@@ -8,11 +8,13 @@ public partial class SerialPortConnectWindow : Window
     public SerialPortConnectWindow()
     {
         InitializeComponent();
-        DataContext = new SerialPortConnectWindowViewModel();
 
-        if (DataContext is SerialPortConnectWindowViewModel vm)
+        DataContextChanged += (sender, args) =>
         {
-            vm.RequestClose += () => this.Close();
-        }
+            if (DataContext is SerialPortConnectWindowViewModel vm)
+            {
+                vm.RequestClose += () => this.Close();
+            }
+        };
     }
 }

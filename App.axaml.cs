@@ -68,7 +68,7 @@ public class App : Application
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
 
-                if (new SerialPortConnectWindowViewModel(settingsService) is SerialPortConnectWindowViewModel vm)
+                if (new SerialPortConnectWindowViewModel(settingsService) is { } vm)
                 {
                     serialPortWindow.DataContext = vm;
                     vm.Connected += connectionStatus =>
@@ -76,6 +76,8 @@ public class App : Application
                         tcs.TrySetResult(connectionStatus);
                         serialPortWindow.Close();
                     };
+
+                    vm.RequestClose += () => serialPortWindow.Close();
 
                     serialPortWindow.Closed += (_, _) => tcs.TrySetResult(null);
 
