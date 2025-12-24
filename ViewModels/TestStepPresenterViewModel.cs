@@ -30,6 +30,8 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     
     private readonly IErrorService _errorService;
+    
+    private CancellationTokenSource? _cts;
 
     public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, ITestExecutor testExecutor, TestStepConfiguratorViewModel testStepConfiguratorViewModel)
     {
@@ -72,8 +74,10 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     private void AddTestStep()
     {
-        TestSteps.Add(new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo));
+        var indexToInsertNewStep = SelectedStepIndex + 1;
+        TestSteps.Insert(indexToInsertNewStep, new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo));
         RenumberTestSteps();
+        SelectedStepIndex = indexToInsertNewStep;
     }
     
     [RelayCommand]
@@ -101,10 +105,15 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         }
 
         IsRunning = true;
+        _cts = new CancellationTokenSource();
 
         try
         {
-            await _testExecutor.ExecuteAsync(TestSteps, CancellationToken.None);
+            await _testExecutor.ExecuteAsync(TestSteps, _cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            _errorService.AddError("Test was cancelled by user.");
         }
         catch (Exception ex)
         {
@@ -113,7 +122,15 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         finally
         {
             IsRunning = false;
+            _cts.Dispose();
+            _cts = null;
         }
+    }
+
+    [RelayCommand]
+    private void CancelTest()
+    {
+        _cts?.Cancel();
     }
 
     private void HookExecutorEvents()

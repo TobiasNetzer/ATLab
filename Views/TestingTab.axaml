@@ -28,10 +28,15 @@
                         ToolTip.Tip="Remove selected test step"
                         Command="{Binding TestStepPresenter.RemoveTestStepCommand}"/>
                 
-                <Button Content="&#xF8AB;"
+                <Button Content="&#xf5b0;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        ToolTip.Tip="Remove selected test step"
+                        ToolTip.Tip="Start test execution"
                         Command="{Binding TestStepPresenter.StartTestCommand}"/>
+                
+                <Button Content="&#xe978;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        ToolTip.Tip="Stop test execution"
+                        Command="{Binding TestStepPresenter.CancelTestCommand}"/>
                 
             </StackPanel>
         </Border>
