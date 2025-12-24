@@ -33,6 +33,16 @@
                         ToolTip.Tip="Remove selected test step"
                         Command="{Binding TestStepPresenter.RemoveTestStepCommand}"/>
                 
+                <Button Content="&#xeb0f;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        ToolTip.Tip="Move selected test step up"
+                        Command="{Binding TestStepPresenter.MoveStepUpCommand}"/>
+                
+                <Button Content="&#xeb11;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        ToolTip.Tip="Move selected test step down"
+                        Command="{Binding TestStepPresenter.MoveStepDownCommand}"/>
+                
                 <Button Content="&#xf5b0;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Start test execution"

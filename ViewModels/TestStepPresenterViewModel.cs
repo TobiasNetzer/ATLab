@@ -15,7 +15,9 @@ public partial class TestStepPresenterViewModel : ViewModelBase
 {
 
     private readonly ITestExecutor _testExecutor;
-    public ObservableCollection<TestStepViewModel> TestSteps { get; }
+
+    [ObservableProperty]
+    private ObservableCollection<TestStepViewModel> _testSteps;
 
     [ObservableProperty]
     private TestConfigurationViewModel _testConfiguration;
@@ -115,6 +117,38 @@ public partial class TestStepPresenterViewModel : ViewModelBase
             TestSteps.RemoveAt(SelectedStepIndex);
             RenumberTestSteps();
         }
+    }
+    
+    [RelayCommand]
+    private void MoveStepUp()
+    {
+        if (SelectedStep == null || SelectedStepIndex <= 0) return;
+
+        var stepToMove = SelectedStep;
+        int oldIndex = SelectedStepIndex;
+        int newIndex = oldIndex - 1;
+
+        TestSteps.RemoveAt(oldIndex);
+        TestSteps.Insert(newIndex, stepToMove);
+        
+        RenumberTestSteps();
+        SelectedStepIndex = newIndex;
+    }
+
+    [RelayCommand]
+    private void MoveStepDown()
+    {
+        if (SelectedStep == null || SelectedStepIndex < 0 || SelectedStepIndex >= TestSteps.Count - 1) return;
+
+        var stepToMove = SelectedStep;
+        int oldIndex = SelectedStepIndex;
+        int newIndex = oldIndex + 1;
+
+        TestSteps.RemoveAt(oldIndex);
+        TestSteps.Insert(newIndex, stepToMove);
+
+        RenumberTestSteps();
+        SelectedStepIndex = newIndex;
     }
     
     [ObservableProperty]

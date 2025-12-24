@@ -203,6 +203,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             _lastSavedJson = json;
             CurrentFilePath = file.Path.LocalPath;
+            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
             IsDirty = false;
         }
     }
