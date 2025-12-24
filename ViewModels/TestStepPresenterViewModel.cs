@@ -74,7 +74,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     private void AddTestStep()
     {
-        var indexToInsertNewStep = SelectedStepIndex + 1;
+        var indexToInsertNewStep = SelectedStepIndex <= 0 ? 0 : SelectedStepIndex + 1;
         TestSteps.Insert(indexToInsertNewStep, new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo));
         RenumberTestSteps();
         SelectedStepIndex = indexToInsertNewStep;
