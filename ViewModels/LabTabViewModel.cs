@@ -16,12 +16,9 @@ public partial class LabTabViewModel : ViewModelBase
     [ObservableProperty]
     private TestConfigurationViewModel _testConfiguration;
     
-    private RelayGroup _testStimState;
-    private RelayGroup _testExtStimState;
-    private RelayMatrix _testMatrixState;
-
-    [ObservableProperty]
-    private string _title = "Lab";
+    private readonly RelayGroup _testStimState;
+    private readonly RelayGroup _testExtStimState;
+    private readonly RelayMatrix _testMatrixState;
 
     public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestConfigurationViewModel testConfiguration, ISimulationService simulationService)
     {
@@ -30,12 +27,12 @@ public partial class LabTabViewModel : ViewModelBase
         TestConfiguration = testConfiguration;
         _simulationService = simulationService;
         
+        Title = "Lab";
+        
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
-        TestConfiguration.StimChannelViewModel.LoadRelayStates(_testStimState);
         _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);
-        TestConfiguration.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
         _testMatrixState = new RelayMatrix(0,0);
-        TestConfiguration.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
+        LoadLabTabState();
     }
     
     public LabTabViewModel()
@@ -74,5 +71,12 @@ public partial class LabTabViewModel : ViewModelBase
         {
             IsBusy = false;
         }
+    }
+
+    public void LoadLabTabState()
+    {
+        TestConfiguration.StimChannelViewModel.LoadRelayStates(_testStimState);
+        TestConfiguration.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
+        TestConfiguration.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
     }
 }

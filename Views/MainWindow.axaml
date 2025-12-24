@@ -40,7 +40,13 @@
                 </MenuItem>
             </Menu>
             
-            <TabControl SelectedItem="{Binding SelectedTab}">
+            <TabControl ItemsSource="{Binding Tabs}" 
+                        SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
                 <TabControl.DataTemplates>
                     <DataTemplate DataType="vm:TestingTabViewModel">
                         <views:TestingTab/>
@@ -52,9 +58,6 @@
                         <views:ConfigTab/>
                     </DataTemplate>
                 </TabControl.DataTemplates>
-                <TabItem Header="{Binding TestingTab.Title}" Content="{Binding TestingTab}" />
-                <TabItem Header="{Binding LabTab.Title}" Content="{Binding LabTab}" />
-                <TabItem Header="{Binding ConfigTab.Title}" Content="{Binding ConfigTab}" />
             </TabControl>
         </DockPanel>
         

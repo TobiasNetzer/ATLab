@@ -6,13 +6,13 @@ namespace ATLab.ViewModels;
 
 public partial class ConfigTabViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private string _title = "Config";
     
     public TestConfigurationViewModel TestConfiguration { get; set; }
 
     public ConfigTabViewModel(TestConfigurationViewModel testConfigurationViewModel)
     {
         TestConfiguration = testConfigurationViewModel;
+        
+        Title = "Config";
     }
 }

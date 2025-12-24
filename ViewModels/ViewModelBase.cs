@@ -2,6 +2,8 @@
 
 namespace ATLab.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public partial class ViewModelBase : ObservableObject
 {
+    [ObservableProperty]
+    private string _title = string.Empty;
 }

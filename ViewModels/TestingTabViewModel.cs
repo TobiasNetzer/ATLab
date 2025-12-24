@@ -13,14 +13,13 @@ public partial class TestingTabViewModel : ViewModelBase
 
     [ObservableProperty]
     private TestStepPresenterViewModel _testStepPresenter;
-    
-    [ObservableProperty]
-    private string _title = "Testing";
 
     public TestingTabViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, TestStepPresenterViewModel testStepPresenter)
     {
         TestConfiguration = testConfiguration;
         TestStepPresenter = testStepPresenter;
+        
+        Title = "Testing";
     }
 
     public TestingTabViewModel()

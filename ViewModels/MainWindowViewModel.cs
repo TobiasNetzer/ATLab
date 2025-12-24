@@ -39,7 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private TestConfigurationViewModel _testConfigurationViewModel;
 
     [ObservableProperty]
-    private ViewModelBase? _selectedTab;
+    private ViewModelBase _selectedTab;
 
     [ObservableProperty]
     private TestingTabViewModel _testingTab;
@@ -49,7 +49,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private ConfigTabViewModel _configTab;
-    
+
+    public ObservableCollection<ViewModelBase> Tabs { get; } = new();
+
     public ObservableCollection<string> Errors => _errorService.Errors;
 
     [ObservableProperty]
@@ -77,6 +79,10 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab = testingTab;
         LabTab = labTab;
         ConfigTab = configTab;
+
+        Tabs.Add(TestingTab);
+        Tabs.Add(LabTab);
+        Tabs.Add(ConfigTab);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -98,6 +104,10 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel, testStepPresenter);
         LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
+
+        Tabs.Add(TestingTab);
+        Tabs.Add(LabTab);
+        Tabs.Add(ConfigTab);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -266,6 +276,7 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentFilePath = file.Path.LocalPath;
             IsDirty = false;
             _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
+            TestingTab.TestStepPresenter.SelectedStepIndex = 0;
         }
     }
     
@@ -291,5 +302,20 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentFilePath = fileToLoad;
         
         _settingsService.Settings.LastOpenedFile = fileToLoad;
+
+        TestingTab.TestStepPresenter.SelectedStepIndex = 0;
+    }
+
+    partial void OnSelectedTabChanged(ViewModelBase? value)
+    {
+        if (value is LabTabViewModel)
+        {
+            LabTab.LoadLabTabState();
+        }
+
+        if (value is TestingTabViewModel)
+        {
+            TestingTab.TestStepPresenter.SelectedStepIndex = 0;
+        }
     }
 }
