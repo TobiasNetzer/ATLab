@@ -92,7 +92,7 @@ public partial class MainWindowViewModel : ViewModelBase
         
         TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(_errorService, TestConfigurationViewModel, new TestExecutor(new DummyTestStepRunner()), configurator);
         TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel, testStepPresenter);
-        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
+        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>

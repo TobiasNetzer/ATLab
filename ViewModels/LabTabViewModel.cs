@@ -11,6 +11,7 @@ public partial class LabTabViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
+    private readonly ISimulationService _simulationService;
 
     [ObservableProperty]
     private TestConfigurationViewModel _testConfiguration;
@@ -22,11 +23,12 @@ public partial class LabTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Lab";
 
-    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestConfigurationViewModel testConfiguration)
+    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestConfigurationViewModel testConfiguration, ISimulationService simulationService)
     {
         _errorService = errorService;
         _testHardware = testHardware;
         TestConfiguration = testConfiguration;
+        _simulationService = simulationService;
         
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
         TestConfiguration.StimChannelViewModel.LoadRelayStates(_testStimState);
@@ -44,7 +46,7 @@ public partial class LabTabViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isBusy;
 
-    private bool CanUpdateRelayStates() => !App.SimulationMode && !IsBusy;
+    private bool CanUpdateRelayStates() => !_simulationService.IsSimulationMode && !IsBusy;
 
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
     private async Task UpdateTestHardwareRelayStates()

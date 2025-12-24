@@ -22,8 +22,6 @@ public class App : Application
     
     private IErrorService _errorService = null!;
 
-    public static bool SimulationMode { get; private set; }
-
     private ITestHardware? _testHardware;
 
     public override void Initialize()
@@ -90,13 +88,13 @@ public class App : Application
 
                         if (result == true)
                         {
-                            _testHardware = vm.TestHardware;
-                            SimulationMode = false;
+                            _testHardware = vm.TestHardware!;
+                            Services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
                         }
                         else
                         {
                             _testHardware = new CtiaHardware(new SimulationService());
-                            SimulationMode = true;
+                            Services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
                         }
                     }
 
@@ -146,6 +144,7 @@ public class App : Application
     {
         // Services
         services.AddSingleton<SettingsService>();
+        services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         
         // Register the runner and executor
