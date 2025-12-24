@@ -163,7 +163,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var dto = new AtlabFileDto
         {
-            TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
+            TestSteps = presenter.TestSteps.Select(vm => vm.GetModel()).ToList(),
             StimChannelNames = TestConfigurationViewModel.GetStimNames(),
             ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
             MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
@@ -219,7 +219,7 @@ public partial class MainWindowViewModel : ViewModelBase
             
             var dto = new AtlabFileDto
             {
-                TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
+                TestSteps = presenter.TestSteps.Select(vm => vm.GetModel()).ToList(),
                 StimChannelNames = TestConfigurationViewModel.GetStimNames(),
                 ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
                 MeasChannelNames = TestConfigurationViewModel.GetMeasNames()

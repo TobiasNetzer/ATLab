@@ -10,5 +10,12 @@ public class RelayMatrix
         ActiveChannelHigh = activeChannelHigh;
         ActiveChannelLow = activeChannelLow;
     }
+    
+    public RelayMatrix(RelayMatrix other)
+    {
+        ActiveChannelHigh = other.ActiveChannelHigh;
+        ActiveChannelLow = other.ActiveChannelLow;
+    }
+    
     public RelayMatrix() {}
 }

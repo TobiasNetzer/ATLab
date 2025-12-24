@@ -22,6 +22,11 @@
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Add a new test step"
                         Command="{Binding TestStepPresenter.AddTestStepCommand}"/>
+                
+                <Button Content="&#xf413;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        ToolTip.Tip="Duplicate selected test step"
+                        Command="{Binding TestStepPresenter.DuplicateTestStepCommand}"/>
 
                 <Button Content="&#xF8AB;"
                         FontFamily="{StaticResource FluentIconsFont}"

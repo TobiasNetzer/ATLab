@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace ATLab.ViewModels;
 public partial class TestStepViewModel : ViewModelBase
 {
-    public TestStep Model { get; }
+    private readonly TestStep _model;
 
     [ObservableProperty]
     private int _number;
@@ -30,7 +30,7 @@ public partial class TestStepViewModel : ViewModelBase
 
     public TestStepViewModel(TestStep model, IHardwareInfo hardwareInfo)
     {
-        Model = model;
+        _model = model;
         
         StimState = new RelayGroup(hardwareInfo.StimChannelCount);
         ExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
@@ -43,22 +43,28 @@ public partial class TestStepViewModel : ViewModelBase
         UpperLimit = model.UpperLimit;
         Result = model.Result;
         Comment = model.Comment;
-        StimState.ApplyDto(Model.StimState ?? new RelayGroupDto());
-        ExtStimState.ApplyDto(Model.ExtStimState ?? new RelayGroupDto());
+        StimState.ApplyDto(_model.StimState ?? new RelayGroupDto());
+        ExtStimState.ApplyDto(_model.ExtStimState ?? new RelayGroupDto());
         MatrixState = model.MatrixState ??  new RelayMatrix();
     }
     
     public void SyncBack()
     {
-        Model.Number = Number;
-        Model.Name = Name;
-        Model.NominalValue = NominalValue;
-        Model.LowerLimit = LowerLimit;
-        Model.UpperLimit = UpperLimit;
-        Model.Result = Result;
-        Model.Comment = Comment;
-        Model.StimState = StimState.ToDto();
-        Model.ExtStimState = ExtStimState.ToDto();
-        Model.MatrixState = MatrixState;
+        _model.Number = Number;
+        _model.Name = Name;
+        _model.NominalValue = NominalValue;
+        _model.LowerLimit = LowerLimit;
+        _model.UpperLimit = UpperLimit;
+        _model.Result = Result;
+        _model.Comment = Comment;
+        _model.StimState = StimState.ToDto();
+        _model.ExtStimState = ExtStimState.ToDto();
+        _model.MatrixState = MatrixState;
+    }
+    
+    public TestStep GetModel() 
+    {
+        SyncBack();
+        return _model;
     }
 }

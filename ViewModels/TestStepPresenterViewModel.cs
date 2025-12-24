@@ -81,6 +81,33 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     }
     
     [RelayCommand]
+    private void DuplicateTestStep()
+    {
+        if (SelectedStep == null) return;
+        
+        var currentModel = SelectedStep.GetModel();
+        var modelCopy = new TestStep
+        {
+            Name = currentModel.Name,
+            LowerLimit = currentModel.LowerLimit,
+            UpperLimit = currentModel.UpperLimit,
+            NominalValue = currentModel.NominalValue,
+            Comment = currentModel.Comment,
+            StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
+            ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
+            MatrixState = currentModel.MatrixState != null ? new RelayMatrix(currentModel.MatrixState) : null
+        };
+
+        var duplicatedStep = new TestStepViewModel(modelCopy, TestConfiguration.HardwareInfo);
+
+        var indexToInsert = SelectedStepIndex + 1;
+        TestSteps.Insert(indexToInsert, duplicatedStep);
+
+        RenumberTestSteps();
+        SelectedStepIndex = indexToInsert;
+    }
+    
+    [RelayCommand]
     private void RemoveTestStep()
     {
         if (SelectedStepIndex >= 0 && SelectedStepIndex < TestSteps.Count)
