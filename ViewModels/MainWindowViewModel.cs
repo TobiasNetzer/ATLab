@@ -22,7 +22,17 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
     
-    public string? CurrentFilePath { get; private set; }
+    private string? _lastSavedJson;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(WindowTitle))]
+    private string? _currentFilePath;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(WindowTitle))]
+    private bool _isDirty;
+
+    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(CurrentFilePath))}{(IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestConfigurationViewModel _testConfigurationViewModel;
@@ -50,15 +60,20 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isErrorFlyoutOpen;
 
-    public MainWindowViewModel(IErrorService errorService, ITestHardware testHardware)
+    public MainWindowViewModel(IErrorService errorService,
+        ITestHardware testHardware, 
+        TestConfigurationViewModel testConfigurationViewModel, 
+        TestingTabViewModel testingTab, 
+        LabTabViewModel labTab, 
+        ConfigTabViewModel configTab)
     {
         _errorService = errorService;
         _testHardware = testHardware;
-        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
+        TestConfigurationViewModel = testConfigurationViewModel;
 
-        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
-        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
+        TestingTab = testingTab;
+        LabTab = labTab;
+        ConfigTab = configTab;
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -70,11 +85,14 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
-        TestConfigurationViewModel = new TestConfigurationViewModel(new DummyHardwareInfo());
+        _testHardware = new CtiaHardware(new SimulationService());
         _errorService = new ErrorService();
+        var configurator = new TestStepConfiguratorViewModel();
+        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo, configurator);
         
-        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new LabTabViewModel(_errorService, new CtiaHardware(new SimulationService()), TestConfigurationViewModel);
+        TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(_errorService, TestConfigurationViewModel, new TestExecutor(new DummyTestStepRunner()), configurator);
+        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel, testStepPresenter);
+        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
         ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
@@ -117,16 +135,35 @@ public partial class MainWindowViewModel : ViewModelBase
     private void NewFile()
     {
         TestingTab.TestStepPresenter.TestSteps.Clear();
-
-        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo);
-
-        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel);
-        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel);
-        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
-
+        TestConfigurationViewModel.ResetToDefault();
         CurrentFilePath = null;
+        _lastSavedJson = null;
+        IsDirty = false;
     }
 
+    private string CaptureCurrentStateJson()
+    {
+        var presenter = TestingTab.TestStepPresenter;
+        foreach (var vm in presenter.TestSteps)
+            vm.SyncBack();
+
+        var dto = new AtlabFileDto
+        {
+            TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
+            StimChannelNames = TestConfigurationViewModel.GetStimNames(),
+            ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
+            MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
+        };
+
+        return JsonSerializer.Serialize(dto);
+    }
+
+    public void CheckForChanges()
+    {
+        if (_lastSavedJson == null) return;
+        var currentJson = CaptureCurrentStateJson();
+        IsDirty = currentJson != _lastSavedJson;
+    }
 
     [RelayCommand]
     private async Task SaveFileAs()
@@ -147,24 +184,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (file is not null)
         {
-            var presenter = TestingTab.TestStepPresenter;
-            foreach (var vm in presenter.TestSteps)
-                vm.SyncBack();
-            
-            var dto = new AtlabFileDto
-            {
-                TestSteps = presenter.TestSteps.Select(vm => vm.Model).ToList(),
-                StimChannelNames = TestConfigurationViewModel.GetStimNames(),
-                ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
-                MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
-            };
-            
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(dto, options);
-
+            var json = CaptureCurrentStateJson();
             await File.WriteAllTextAsync(file.Path.LocalPath, json);
 
+            _lastSavedJson = json;
             CurrentFilePath = file.Path.LocalPath;
+            IsDirty = false;
         }
     }
     
@@ -233,8 +258,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 );
             }
 
+            _lastSavedJson = json;
             CurrentFilePath = file.Path.LocalPath;
-            
+            IsDirty = false;
             App.SettingsService.Settings.LastOpenedFile = file.Path.LocalPath;
         }
     }

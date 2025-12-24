@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Services;
+using ATLab.CTIA;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,14 +26,18 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [ObservableProperty]
     private int _selectedStepIndex;
     
-    private readonly IErrorService _errorService;
+    [ObservableProperty]
+    private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     
-    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, ITestExecutor testExecutor)
+    private readonly IErrorService _errorService;
+
+    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, ITestExecutor testExecutor, TestStepConfiguratorViewModel testStepConfiguratorViewModel)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestConfiguration = testConfiguration;
         _testExecutor = testExecutor;
+        TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
         
         HookExecutorEvents();
     }
@@ -73,8 +79,11 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveTestStep()
     {
-        TestSteps.RemoveAt(SelectedStepIndex);
-        RenumberTestSteps();
+        if (SelectedStepIndex >= 0 && SelectedStepIndex < TestSteps.Count)
+        {
+            TestSteps.RemoveAt(SelectedStepIndex);
+            RenumberTestSteps();
+        }
     }
     
     [ObservableProperty]
@@ -127,4 +136,12 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     }
 
 
+    public TestStepPresenterViewModel()
+    {
+        _errorService = new ErrorService();
+        TestSteps = new ObservableCollection<TestStepViewModel>();
+        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo(), new TestStepConfiguratorViewModel());
+        _testExecutor = new TestExecutor(new DummyTestStepRunner());
+        TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel();
+    }
 }

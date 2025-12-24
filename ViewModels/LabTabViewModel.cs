@@ -38,7 +38,7 @@ public partial class LabTabViewModel : ViewModelBase
     
     public LabTabViewModel()
     {
-        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo());
+        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo(), new TestStepConfiguratorViewModel());
     }
     
     [ObservableProperty]

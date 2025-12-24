@@ -154,16 +154,17 @@ public class App : Application
         
         // Factory for ITestHardware since it's initialized later
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
+        services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
 
         // ViewModels
-        services.AddSingleton<TestConfigurationViewModel>(sp => 
-            new TestConfigurationViewModel(sp.GetRequiredService<ITestHardware>().HardwareInfo));
+        services.AddSingleton<TestConfigurationViewModel>();
             
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<TestStepPresenterViewModel>();
+        services.AddTransient<TestStepConfiguratorViewModel>();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

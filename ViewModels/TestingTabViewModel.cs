@@ -17,20 +17,18 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _title = "Testing";
 
-    public TestingTabViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration)
+    public TestingTabViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, TestStepPresenterViewModel testStepPresenter)
     {
-
         TestConfiguration = testConfiguration;
-
-         TestStepPresenter = new TestStepPresenterViewModel(errorService, TestConfiguration, new TestExecutor(new DummyTestStepRunner()));
-        
+        TestStepPresenter = testStepPresenter;
     }
 
     public TestingTabViewModel()
     {
-        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo());
-
-        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration, new TestExecutor(new DummyTestStepRunner()));
+        var dummyHardwareInfo = new DummyHardwareInfo();
+        var configurator = new TestStepConfiguratorViewModel();
+        TestConfiguration = new TestConfigurationViewModel(dummyHardwareInfo, configurator);
+        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration, new TestExecutor(new DummyTestStepRunner()), configurator);
         
         TestStepPresenter.TestSteps.Add(
             new TestStepViewModel(

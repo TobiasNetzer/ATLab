@@ -5,7 +5,7 @@
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ATLab"
+        Title="{Binding WindowTitle}"
         RequestedThemeVariant="Default">
     
     <Design.DataContext>
