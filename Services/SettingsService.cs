@@ -1,11 +1,12 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using ATLab.Interfaces;
 using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class SettingsService
+public class SettingsService : ISettingsService
 {
     private readonly string _filePath;
     public AppSettings Settings { get; private set; }

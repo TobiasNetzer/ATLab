@@ -21,7 +21,8 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
-    
+    private readonly ISettingsService _settingsService;
+
     private string? _lastSavedJson;
 
     [ObservableProperty]
@@ -65,10 +66,12 @@ public partial class MainWindowViewModel : ViewModelBase
         TestConfigurationViewModel testConfigurationViewModel, 
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
-        ConfigTabViewModel configTab)
+        ConfigTabViewModel configTab,
+        ISettingsService settingsService)
     {
         _errorService = errorService;
         _testHardware = testHardware;
+        _settingsService = settingsService;
         TestConfigurationViewModel = testConfigurationViewModel;
 
         TestingTab = testingTab;
@@ -87,6 +90,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _testHardware = new CtiaHardware(new SimulationService());
         _errorService = new ErrorService();
+        _settingsService = new SettingsService();
         var configurator = new TestStepConfiguratorViewModel();
         TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo, configurator);
         
@@ -261,7 +265,7 @@ public partial class MainWindowViewModel : ViewModelBase
             _lastSavedJson = json;
             CurrentFilePath = file.Path.LocalPath;
             IsDirty = false;
-            App.SettingsService.Settings.LastOpenedFile = file.Path.LocalPath;
+            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
         }
     }
     
@@ -286,6 +290,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
         CurrentFilePath = fileToLoad;
         
-        App.SettingsService.Settings.LastOpenedFile = fileToLoad;
+        _settingsService.Settings.LastOpenedFile = fileToLoad;
     }
 }

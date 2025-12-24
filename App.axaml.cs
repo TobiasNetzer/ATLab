@@ -18,7 +18,6 @@ namespace ATLab;
 public class App : Application
 {
     private IServiceProvider Services { get; set; } = null!;
-    public static SettingsService SettingsService => ((App)Current!).Services.GetRequiredService<SettingsService>();
     
     private IErrorService _errorService = null!;
 
@@ -36,6 +35,7 @@ public class App : Application
         Services = serviceCollection.BuildServiceProvider();
 
         _errorService = Services.GetRequiredService<IErrorService>();
+        var settingsService = Services.GetRequiredService<ISettingsService>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -43,7 +43,7 @@ public class App : Application
             bool initSuccess = false;
             bool openConnectWindow = false;
 
-            var service = new SerialPortService(SettingsService.Settings.LastComPort!);
+            var service = new SerialPortService(settingsService.Settings.LastComPort!);
             var openResult = service.TryOpen();
             if (!openResult.IsSuccess)
             {
@@ -68,8 +68,9 @@ public class App : Application
                 var serialPortWindow = new SerialPortConnectWindow();
                 var tcs = new TaskCompletionSource<bool?>();
 
-                if (serialPortWindow.DataContext is SerialPortConnectWindowViewModel vm)
+                if (new SerialPortConnectWindowViewModel(settingsService) is SerialPortConnectWindowViewModel vm)
                 {
+                    serialPortWindow.DataContext = vm;
                     vm.Connected += connectionStatus =>
                     {
                         tcs.TrySetResult(connectionStatus);
@@ -112,7 +113,7 @@ public class App : Application
             }
 
             var mainVm = Services.GetRequiredService<MainWindowViewModel>();
-            var window = new MainWindow { DataContext = mainVm };
+            var window = new MainWindow(settingsService) { DataContext = mainVm };
 
             desktop.MainWindow = window;
             window.Show();
@@ -120,7 +121,7 @@ public class App : Application
             // Load last open file
             _ = Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                var lastFile = SettingsService.Settings.LastOpenedFile;
+                var lastFile = settingsService.Settings.LastOpenedFile;
 
                 if (File.Exists(lastFile))
                 {
@@ -143,7 +144,7 @@ public class App : Application
     private void ConfigureServices(IServiceCollection services)
     {
         // Services
-        services.AddSingleton<SettingsService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         

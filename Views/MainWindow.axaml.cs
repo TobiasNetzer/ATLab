@@ -2,16 +2,25 @@ using System;
 using Avalonia.Controls;
 using Avalonia;
 
+using ATLab.Interfaces;
+
 namespace ATLab.Views;
 
 public partial class MainWindow : Window
 {
+    private readonly ISettingsService? _settingsService;
+
     public MainWindow()
     {
         InitializeComponent();
         this.Closing += MainWindow_Closing;
+    }
 
-        var s = App.SettingsService?.Settings;
+    public MainWindow(ISettingsService settingsService) : this()
+    {
+        _settingsService = settingsService;
+
+        var s = _settingsService.Settings;
 
         var screens = Screens.Primary;
         double screenWidth = screens?.Bounds.Width ?? 800;
@@ -37,12 +46,10 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        var settingsService = App.SettingsService;
-
-        if (settingsService == null || settingsService.Settings == null)
+        if (_settingsService == null || _settingsService.Settings == null)
             return;
 
-        var settings = settingsService.Settings;
+        var settings = _settingsService.Settings;
         if (WindowState == WindowState.Maximized)
         {
             settings.WindowState = WindowState.Maximized;
@@ -55,6 +62,6 @@ public partial class MainWindow : Window
             settings.WindowX = Position.X;
             settings.WindowY = Position.Y;
         }
-        settingsService.Save();
+        _settingsService.Save();
     }
 }

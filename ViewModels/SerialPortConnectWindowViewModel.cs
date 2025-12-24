@@ -30,8 +30,17 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
 
     public event Action? RequestClose;
 
+    private readonly ISettingsService _settingsService;
+
+    public SerialPortConnectWindowViewModel(ISettingsService settingsService)
+    {
+        _settingsService = settingsService;
+        RefreshPorts();
+    }
+
     public SerialPortConnectWindowViewModel()
     {
+        _settingsService = new SettingsService();
         RefreshPorts();
     }
 
@@ -53,7 +62,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         ConnectCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (TestHardware == null || App.SettingsService.Settings.LastComPort != SelectedPort);
+    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (TestHardware == null || _settingsService.Settings.LastComPort != SelectedPort);
     
 
     [RelayCommand(CanExecute = nameof(CanConnect))]
@@ -84,7 +93,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
             else{
                 StatusText = $"Connected to {SelectedPort}";
                 Status = ConnectionStatus.CONNECTED;
-                App.SettingsService.Settings.LastComPort = SelectedPort;
+                _settingsService.Settings.LastComPort = SelectedPort;
                 Connected?.Invoke(true);
                 ConnectCommand.NotifyCanExecuteChanged();
                 return true;
