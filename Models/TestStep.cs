@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ATLab.Models;
 
 public class TestStep
@@ -7,8 +9,10 @@ public class TestStep
     public double NominalValue { get; set; }
     public double LowerLimit { get; set; }
     public double UpperLimit { get; set; }
-    public string? Result { get; set; }
     public string? Comment { get; set; }
+    
+    [JsonIgnore]
+    public string? Result { get; set; }
 
     public RelayGroupDto? StimState { get; set; }
     public RelayGroupDto? ExtStimState { get; set; }
