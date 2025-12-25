@@ -37,7 +37,14 @@ public partial class LabTabViewModel : ViewModelBase
     
     public LabTabViewModel()
     {
-        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo(), new TestStepConfiguratorViewModel());
+        _errorService = new Services.ErrorService();
+        _testHardware = new CTIA.CtiaHardware(new Services.SimulationService());
+        TestConfiguration = new TestConfigurationViewModel(_testHardware.HardwareInfo, new TestStepConfiguratorViewModel());
+        _simulationService = new Services.SimulationStateService { IsSimulationMode = true };
+        
+        _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
+        _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);
+        _testMatrixState = new RelayMatrix(0,0);
     }
     
     [ObservableProperty]

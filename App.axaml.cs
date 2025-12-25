@@ -115,7 +115,7 @@ public class App : Application
             }
 
             var mainVm = Services.GetRequiredService<MainWindowViewModel>();
-            var window = new MainWindow(settingsService) { DataContext = mainVm };
+            var window = new MainWindow(settingsService, Services.GetRequiredService<IMessageBoxService>()) { DataContext = mainVm };
 
             desktop.MainWindow = window;
             window.Show();
@@ -147,8 +147,11 @@ public class App : Application
     {
         // Services
         services.AddSingleton<ISettingsService, SettingsService>();
+        services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<IMessageBoxService, MessageBoxService>();
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
+        services.AddSingleton<IFileDialogService, FileDialogService>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, DummyTestStepRunner>();

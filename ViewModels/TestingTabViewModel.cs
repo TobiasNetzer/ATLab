@@ -27,7 +27,15 @@ public partial class TestingTabViewModel : ViewModelBase
         var dummyHardwareInfo = new DummyHardwareInfo();
         var configurator = new TestStepConfiguratorViewModel();
         TestConfiguration = new TestConfigurationViewModel(dummyHardwareInfo, configurator);
-        TestStepPresenter = new TestStepPresenterViewModel(new ErrorService(), TestConfiguration, new TestExecutor(new DummyTestStepRunner()), configurator);
+        TestStepPresenter = new TestStepPresenterViewModel(
+            new ErrorService(), 
+            TestConfiguration, 
+            new TestExecutor(new DummyTestStepRunner()), 
+            configurator,
+            new FileDialogService(),
+            new SettingsService(),
+            new FileService(),
+            new MessageBoxService());
         
         TestStepPresenter.TestSteps.Add(
             new TestStepViewModel(

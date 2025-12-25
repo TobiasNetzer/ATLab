@@ -1,10 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Services;
-using ATLab.CTIA;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -32,18 +33,47 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     
     private readonly IErrorService _errorService;
+    private readonly IFileDialogService _fileDialogService;
+    private readonly ISettingsService _settingsService;
+    private readonly IFileService _fileService;
+    private readonly IMessageBoxService _messageBoxService;
     
     private CancellationTokenSource? _cts;
 
-    public TestStepPresenterViewModel(IErrorService errorService, TestConfigurationViewModel testConfiguration, ITestExecutor testExecutor, TestStepConfiguratorViewModel testStepConfiguratorViewModel)
+    [ObservableProperty]
+    private string? _currentFilePath;
+
+    [ObservableProperty]
+    private bool _isDirty;
+
+    private string? _lastSavedJson;
+
+    public TestStepPresenterViewModel(
+        IErrorService errorService, 
+        TestConfigurationViewModel testConfiguration, 
+        ITestExecutor testExecutor, 
+        TestStepConfiguratorViewModel testStepConfiguratorViewModel,
+        IFileDialogService fileDialogService,
+        ISettingsService settingsService,
+        IFileService fileService,
+        IMessageBoxService messageBoxService)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestConfiguration = testConfiguration;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
+        _fileDialogService = fileDialogService;
+        _settingsService = settingsService;
+        _fileService = fileService;
+        _messageBoxService = messageBoxService;
         
         HookExecutorEvents();
+        
+        TestSteps.CollectionChanged += (_, _) => CheckForChanges();
+        TestConfiguration.ConfigurationChanged += () => CheckForChanges();
+
+        _lastSavedJson = CaptureCurrentStateJson();
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
@@ -76,8 +106,10 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     private void AddTestStep()
     {
-        var indexToInsertNewStep = SelectedStepIndex <= 0 ? 0 : SelectedStepIndex + 1;
-        TestSteps.Insert(indexToInsertNewStep, new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo));
+        var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
+        var newStep = new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo);
+        newStep.PropertyChanged += (_, _) => CheckForChanges();
+        TestSteps.Insert(indexToInsertNewStep, newStep);
         RenumberTestSteps();
         SelectedStepIndex = indexToInsertNewStep;
     }
@@ -101,6 +133,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         };
 
         var duplicatedStep = new TestStepViewModel(modelCopy, TestConfiguration.HardwareInfo);
+        duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
 
         var indexToInsert = SelectedStepIndex + 1;
         TestSteps.Insert(indexToInsert, duplicatedStep);
@@ -213,6 +246,124 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         };
     }
 
+    [RelayCommand]
+    public async Task NewFile()
+    {
+        if (IsDirty)
+        {
+            var confirm = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Do you want to continue and lose your changes?");
+            if (!confirm) return;
+        }
+
+        TestSteps.Clear();
+        TestConfiguration.ResetToDefault();
+        CurrentFilePath = null;
+        _lastSavedJson = CaptureCurrentStateJson();
+        IsDirty = false;
+    }
+
+    private string CaptureCurrentStateJson()
+    {
+        foreach (var vm in TestSteps)
+            vm.SyncBack();
+
+        var dto = new AtlabFileDto
+        {
+            TestSteps = TestSteps.Select(vm => vm.GetModel()).ToList(),
+            StimChannelNames = TestConfiguration.GetStimNames(),
+            ExtStimChannelNames = TestConfiguration.GetExtStimNames(),
+            MeasChannelNames = TestConfiguration.GetMeasNames()
+        };
+
+        return _fileService.Serialize(dto);
+    }
+
+    public void CheckForChanges()
+    {
+        if (_lastSavedJson == null) return;
+        var currentJson = CaptureCurrentStateJson();
+        IsDirty = currentJson != _lastSavedJson;
+    }
+
+    [RelayCommand]
+    public async Task SaveFileAs()
+    {
+        var file = await _fileDialogService.SaveFileAsync("ATLab files", "Test.atlab", "atlab", new[] { "atlab" });
+
+        if (file is not null)
+        {
+            var json = CaptureCurrentStateJson();
+            await File.WriteAllTextAsync(file.Path.LocalPath, json);
+
+            _lastSavedJson = json;
+            CurrentFilePath = file.Path.LocalPath;
+            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
+            IsDirty = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task SaveFile()
+    {
+        if (!string.IsNullOrWhiteSpace(CurrentFilePath))
+        {
+            var json = CaptureCurrentStateJson();
+            await File.WriteAllTextAsync(CurrentFilePath, json);
+            _lastSavedJson = json;
+            IsDirty = false;
+            return;
+        }
+
+        await SaveFileAs();
+    }
+
+    [RelayCommand]
+    public async Task LoadFileWithDialog()
+    {
+        if (IsDirty)
+        {
+            var result = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Do you want to continue and lose your changes?");
+            if (!result) return;
+        }
+
+        var file = await _fileDialogService.OpenFileAsync("ATLab files", new[] { "atlab" });
+
+        if (file is not null)
+        {
+            await LoadFile(file.Path.LocalPath);
+        }
+    }
+
+    public async Task LoadFile(string fileToLoad)
+    {
+        try
+        {
+            var json = await File.ReadAllTextAsync(fileToLoad);
+            var dto = _fileService.Deserialize(json);
+
+            if (dto != null)
+            {
+                TestSteps.Clear();
+                foreach (var step in dto.TestSteps)
+                {
+                    var stepVm = new TestStepViewModel(step, TestConfiguration.HardwareInfo);
+                    stepVm.PropertyChanged += (_, _) => CheckForChanges();
+                    TestSteps.Add(stepVm);
+                }
+
+                TestConfiguration.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
+
+                CurrentFilePath = fileToLoad;
+                _lastSavedJson = json;
+                _settingsService.Settings.LastOpenedFile = fileToLoad;
+                IsDirty = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Failed to load file: " + ex.Message);
+        }
+    }
 
     public TestStepPresenterViewModel()
     {
@@ -221,5 +372,9 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo(), new TestStepConfiguratorViewModel());
         _testExecutor = new TestExecutor(new DummyTestStepRunner());
         TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel();
+        _fileDialogService = new FileDialogService();
+        _settingsService = new SettingsService();
+        _fileService = new FileService();
+        _messageBoxService = new MessageBoxService();
     }
 }

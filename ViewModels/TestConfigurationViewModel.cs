@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -43,8 +44,19 @@ public partial class TestConfigurationViewModel : ViewModelBase
         StimChannelViewModel = new StimChannelViewModel(StimChannelNames);
         ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames);
         MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
-        
+
+        foreach (var c in StimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
+        foreach (var c in ExtStimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
+        foreach (var c in MeasChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
+
         ResetToDefault();
+    }
+
+    public event Action? ConfigurationChanged;
+
+    private void OnChannelNameChanged()
+    {
+        ConfigurationChanged?.Invoke();
     }
     
     public List<CustomRelayChannelName> GetStimNames() => StimChannelNames.ToList();

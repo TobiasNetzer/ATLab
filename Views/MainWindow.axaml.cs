@@ -10,6 +10,8 @@ public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;
 
+    private readonly IMessageBoxService? _messageBoxService;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -24,9 +26,10 @@ public partial class MainWindow : Window
         };
     }
 
-    public MainWindow(ISettingsService settingsService) : this()
+    public MainWindow(ISettingsService settingsService, IMessageBoxService messageBoxService) : this()
     {
         _settingsService = settingsService;
+        _messageBoxService = messageBoxService;
 
         var s = _settingsService.Settings;
 
@@ -52,9 +55,32 @@ public partial class MainWindow : Window
 
     }
 
-    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (_settingsService == null || _settingsService.Settings == null)
+        if (DataContext is MainWindowViewModel vm)
+        {
+            if (vm.TestingTab.TestStepPresenter.IsDirty)
+            {
+                e.Cancel = true;
+
+                if (_messageBoxService != null)
+                {
+                    var result = await _messageBoxService.ShowConfirmationAsync(
+                        "Unsaved Changes",
+                        "You have unsaved changes. Do you want to continue and lose your changes?");
+
+                    if (result)
+                    {
+                        vm.TestingTab.TestStepPresenter.IsDirty = false;
+                        Close();
+                    }
+                }
+
+                return;
+            }
+        }
+
+        if (_settingsService == null)
             return;
 
         var settings = _settingsService.Settings;

@@ -23,17 +23,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ITestHardware _testHardware;
     private readonly ISettingsService _settingsService;
 
-    private string? _lastSavedJson;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(WindowTitle))]
-    private string? _currentFilePath;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(WindowTitle))]
-    private bool _isDirty;
-
-    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(CurrentFilePath))}{(IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.TestStepPresenter.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.TestStepPresenter.CurrentFilePath))}{(TestingTab.TestStepPresenter.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestConfigurationViewModel _testConfigurationViewModel;
@@ -80,6 +70,8 @@ public partial class MainWindowViewModel : ViewModelBase
         LabTab = labTab;
         ConfigTab = configTab;
 
+        _selectedTab = TestingTab;
+        
         Tabs.Add(TestingTab);
         Tabs.Add(LabTab);
         Tabs.Add(ConfigTab);
@@ -89,7 +81,14 @@ public partial class MainWindowViewModel : ViewModelBase
             ErrorCount += 1; // Only show number of new errors
             HasErrors = ErrorCount > 0;
         };
-        
+
+        TestingTab.TestStepPresenter.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName is nameof(TestStepPresenterViewModel.CurrentFilePath) or nameof(TestStepPresenterViewModel.IsDirty))
+            {
+                OnPropertyChanged(nameof(WindowTitle));
+            }
+        };
     }
     
     public MainWindowViewModel()
@@ -100,11 +99,22 @@ public partial class MainWindowViewModel : ViewModelBase
         var configurator = new TestStepConfiguratorViewModel();
         TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo, configurator);
         
-        TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(_errorService, TestConfigurationViewModel, new TestExecutor(new DummyTestStepRunner()), configurator);
+        TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(
+            _errorService, 
+            TestConfigurationViewModel, 
+            new TestExecutor(new DummyTestStepRunner()), 
+            configurator,
+            new FileDialogService(),
+            _settingsService,
+            new FileService(),
+            new MessageBoxService());
+            
         TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel, testStepPresenter);
         LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
 
+        _selectedTab = TestingTab;
+        
         Tabs.Add(TestingTab);
         Tabs.Add(LabTab);
         Tabs.Add(ConfigTab);
@@ -146,166 +156,18 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NewFile()
-    {
-        TestingTab.TestStepPresenter.TestSteps.Clear();
-        TestConfigurationViewModel.ResetToDefault();
-        CurrentFilePath = null;
-        _lastSavedJson = null;
-        IsDirty = false;
-    }
-
-    private string CaptureCurrentStateJson()
-    {
-        var presenter = TestingTab.TestStepPresenter;
-        foreach (var vm in presenter.TestSteps)
-            vm.SyncBack();
-
-        var dto = new AtlabFileDto
-        {
-            TestSteps = presenter.TestSteps.Select(vm => vm.GetModel()).ToList(),
-            StimChannelNames = TestConfigurationViewModel.GetStimNames(),
-            ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
-            MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
-        };
-
-        return JsonSerializer.Serialize(dto);
-    }
-
-    public void CheckForChanges()
-    {
-        if (_lastSavedJson == null) return;
-        var currentJson = CaptureCurrentStateJson();
-        IsDirty = currentJson != _lastSavedJson;
-    }
+    private void NewFile() => TestingTab.TestStepPresenter.NewFile();
 
     [RelayCommand]
-    private async Task SaveFileAs()
-    {
-        var window = (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-        if (window is null)
-            return;
-
-        var file = await window.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            DefaultExtension = "atlab",
-            SuggestedFileName = "Test.atlab",
-            FileTypeChoices = new List<FilePickerFileType>
-            {
-                new FilePickerFileType("ATLab files") { Patterns = new[] { "*.atlab" } }
-            }
-        });
-
-        if (file is not null)
-        {
-            var json = CaptureCurrentStateJson();
-            await File.WriteAllTextAsync(file.Path.LocalPath, json);
-
-            _lastSavedJson = json;
-            CurrentFilePath = file.Path.LocalPath;
-            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
-            IsDirty = false;
-        }
-    }
+    private async Task SaveFileAs() => await TestingTab.TestStepPresenter.SaveFileAs();
     
     [RelayCommand]
-    private async Task SaveFile()
-    {
-        var presenter = TestingTab.TestStepPresenter;
-        
-        if (!string.IsNullOrWhiteSpace(CurrentFilePath))
-        {
-            foreach (var vm in presenter.TestSteps)
-                vm.SyncBack();
-            
-            var dto = new AtlabFileDto
-            {
-                TestSteps = presenter.TestSteps.Select(vm => vm.GetModel()).ToList(),
-                StimChannelNames = TestConfigurationViewModel.GetStimNames(),
-                ExtStimChannelNames = TestConfigurationViewModel.GetExtStimNames(),
-                MeasChannelNames = TestConfigurationViewModel.GetMeasNames()
-            };
-            
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(dto, options);
-
-            await File.WriteAllTextAsync(CurrentFilePath, json);
-            return;
-        }
-        
-        await SaveFileAs();
-    }
+    private async Task SaveFile() => await TestingTab.TestStepPresenter.SaveFile();
     
     [RelayCommand]
-    private async Task LoadFileWithDialog()
-    {
-        var window = (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-        if (window is null)
-            return;
-
-        var files = await window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            AllowMultiple = false,
-            FileTypeFilter = new List<FilePickerFileType>
-            {
-                new FilePickerFileType("ATLab files") { Patterns = new[] { "*.atlab" } }
-            }
-        });
-
-
-        if (files.Count > 0)
-        {
-            var file = files[0];
-            var json = await File.ReadAllTextAsync(file.Path.LocalPath);
-            
-            var dto = JsonSerializer.Deserialize<AtlabFileDto>(json);
-            
-            TestingTab.TestStepPresenter.TestSteps.Clear();
-            if (dto != null)
-            {
-                foreach (var step in dto.TestSteps)
-                    TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
-
-                TestConfigurationViewModel.ApplyChannelNames(
-                    dto.StimChannelNames,
-                    dto.ExtStimChannelNames,
-                    dto.MeasChannelNames
-                );
-            }
-
-            _lastSavedJson = json;
-            CurrentFilePath = file.Path.LocalPath;
-            IsDirty = false;
-            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
-            TestingTab.TestStepPresenter.SelectedStepIndex = 0;
-        }
-    }
+    private async Task LoadFileWithDialog() => await TestingTab.TestStepPresenter.LoadFileWithDialog();
     
-    public async Task LoadFile(string fileToLoad)
-    {
-        var json =  await File.ReadAllTextAsync(fileToLoad);
-        
-        var dto = JsonSerializer.Deserialize<AtlabFileDto>(json);
-        
-        TestingTab.TestStepPresenter.TestSteps.Clear();
-        if (dto != null)
-        {
-            foreach (var step in dto.TestSteps)
-                TestingTab.TestStepPresenter.TestSteps.Add(new TestStepViewModel(step, _testHardware.HardwareInfo));
-
-            TestConfigurationViewModel.ApplyChannelNames(
-                dto.StimChannelNames,
-                dto.ExtStimChannelNames,
-                dto.MeasChannelNames
-            );
-        }
-
-        CurrentFilePath = fileToLoad;
-        
-        _settingsService.Settings.LastOpenedFile = fileToLoad;
-
-        TestingTab.TestStepPresenter.SelectedStepIndex = 0;
-    }
+    public async Task LoadFile(string fileToLoad) => await TestingTab.TestStepPresenter.LoadFile(fileToLoad);
     
     public event Action? RequestClose;
     
@@ -315,16 +177,16 @@ public partial class MainWindowViewModel : ViewModelBase
         RequestClose?.Invoke();
     }
 
-    partial void OnSelectedTabChanged(ViewModelBase? value)
+    partial void OnSelectedTabChanged(ViewModelBase value)
     {
-        if (value is LabTabViewModel)
+        switch (value)
         {
-            LabTab.LoadLabTabState();
-        }
-
-        if (value is TestingTabViewModel)
-        {
-            TestingTab.TestStepPresenter.SelectedStepIndex = 0;
+            case LabTabViewModel:
+                LabTab.LoadLabTabState();
+                break;
+            case TestingTabViewModel:
+                TestingTab.TestStepPresenter.SelectedStepIndex = 0;
+                break;
         }
     }
 }
