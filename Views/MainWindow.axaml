@@ -54,7 +54,7 @@
                     Margin="5">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <TextBlock Text="&#xE783;" FontFamily="{StaticResource FluentIconsFont}"
+                        <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource FluentIconsFont}"
                                    FontSize="18"/>
                         <TextBlock Text="{Binding ErrorCount}"
                                    FontSize="14"/>

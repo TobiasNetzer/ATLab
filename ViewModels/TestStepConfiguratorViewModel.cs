@@ -31,7 +31,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     [ObservableProperty]
     private string? _comment;
     
-    private bool _suppressCallback = false;
+    public double Tolerance = 0.1;
+
+    private bool _suppressCallback;
 
     public void LoadTestStep(TestStepViewModel testStep)
     {
@@ -64,12 +66,12 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if(_suppressCallback)
             return;
         
-        if (_testStep != null) 
+        if (_testStep != null)
         {
             _testStep.NominalValue = double.TryParse(value, out var nominalValue) ? nominalValue : 0;
-            var upperLimit = Math.Round(_testStep.NominalValue * 1.05, 4);
-            var lowerLimit = Math.Round(_testStep.NominalValue * 0.95, 4);
-            
+            var upperLimit = Math.Round(_testStep.NominalValue * (1 + Tolerance), 4);
+            var lowerLimit = Math.Round(_testStep.NominalValue * (1 - Tolerance), 4);
+
             TestStepLowerLimit = lowerLimit.ToString(CultureInfo.CurrentCulture);
             TestStepUpperLimit = upperLimit.ToString(CultureInfo.CurrentCulture);
             _testStepLowerLimit = lowerLimit.ToString(CultureInfo.CurrentCulture);

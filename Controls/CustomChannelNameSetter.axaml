@@ -3,8 +3,7 @@
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:TestConfigurationViewModel"
-             MaxHeight="500"
-             MinWidth="600">
+             MaxHeight="610">
 
     <Design.DataContext>
         <vm:TestConfigurationViewModel />
@@ -19,7 +18,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Set Custom Channel Names"
+            <TextBlock Text="Custom Channel Names"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        FontWeight="Bold"
@@ -69,7 +68,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Text="Stim Channels"
+                    <TextBlock Text="Stimulation Channels"
                                HorizontalAlignment="Center"
                                FontSize="16"
                                Grid.Row="0"/>
@@ -104,7 +103,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Text="Ext Stim Channels"
+                    <TextBlock Text="Ext Stimulation Channels"
                                HorizontalAlignment="Center"
                                FontSize="16"
                                Grid.Row="0"/>
