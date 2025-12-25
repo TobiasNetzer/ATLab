@@ -27,7 +27,7 @@
                     <MenuItem Header="_Open" Command="{Binding LoadFileWithDialogCommand}"/>
                     <MenuItem Header="_Save" Command="{Binding SaveFileCommand}" />
                     <MenuItem Header="Save _As" Command="{Binding SaveFileAsCommand}" />
-                    <MenuItem Header="_Exit"/>
+                    <MenuItem Header="_Exit" Command="{Binding CloseCommand}"/>
                 </MenuItem>
 
                 <MenuItem Header="_Edit">

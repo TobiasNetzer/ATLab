@@ -306,6 +306,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         TestingTab.TestStepPresenter.SelectedStepIndex = 0;
     }
+    
+    public event Action? RequestClose;
+    
+    [RelayCommand]
+    private void Close()
+    {
+        RequestClose?.Invoke();
+    }
 
     partial void OnSelectedTabChanged(ViewModelBase? value)
     {

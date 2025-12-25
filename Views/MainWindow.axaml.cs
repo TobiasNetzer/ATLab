@@ -1,8 +1,8 @@
 using System;
 using Avalonia.Controls;
 using Avalonia;
-
 using ATLab.Interfaces;
+using ATLab.ViewModels;
 
 namespace ATLab.Views;
 
@@ -14,6 +14,14 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         this.Closing += MainWindow_Closing;
+        
+        DataContextChanged += (sender, args) =>
+        {
+            if (DataContext is MainWindowViewModel vm)
+            {
+                vm.RequestClose += () => this.Close();
+            }
+        };
     }
 
     public MainWindow(ISettingsService settingsService) : this()
