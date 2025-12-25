@@ -128,23 +128,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task OpenAboutWindow()
-    {
-        var deviceInfoProvider = _testHardware.HardwareInfo;
-        var aboutVm = new AboutWindowViewModel(deviceInfoProvider);
-        var aboutWindow = new AboutWindow
-        {
-            DataContext = aboutVm
-        };
-
-        var desktop = Avalonia.Application.Current?.ApplicationLifetime
-            as IClassicDesktopStyleApplicationLifetime;
-
-        if (desktop?.MainWindow != null)
-            await aboutWindow.ShowDialog(desktop.MainWindow);
-        else
-            aboutWindow.Show();
-    }
+    private async Task OpenAboutWindow() => await TestingTab.TestStepPresenter.OpenAboutWindow();
     
     partial void OnIsErrorFlyoutOpenChanged(bool value)
     {

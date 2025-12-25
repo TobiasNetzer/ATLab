@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Services;
 using ATLab.Models;
+using ATLab.Views;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -286,6 +288,25 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    public async Task OpenAboutWindow()
+    {
+        var deviceInfoProvider = TestConfiguration.HardwareInfo;
+        var aboutVm = new AboutWindowViewModel(deviceInfoProvider);
+        var aboutWindow = new AboutWindow
+        {
+            DataContext = aboutVm
+        };
+
+        var desktop = Avalonia.Application.Current?.ApplicationLifetime
+            as IClassicDesktopStyleApplicationLifetime;
+
+        if (desktop?.MainWindow != null)
+            await aboutWindow.ShowDialog(desktop.MainWindow);
+        else
+            aboutWindow.Show();
+    }
+
+    [RelayCommand]
     public async Task SaveFileAs()
     {
         var file = await _fileDialogService.SaveFileAsync("ATLab files", "Test.atlab", "atlab", new[] { "atlab" });
@@ -333,6 +354,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
             await LoadFile(file.Path.LocalPath);
         }
     }
+
 
     public async Task LoadFile(string fileToLoad)
     {
