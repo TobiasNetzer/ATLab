@@ -21,12 +21,22 @@ public partial class MessageBox : Window
         {
             if (DataContext is MessageBoxViewModel vm)
             {
-                vm.CloseRequested += (isOk) =>
-                {
-                    Result = isOk ? MessageBoxResult.Ok : MessageBoxResult.Cancel;
-                    Close();
-                };
+                vm.CloseRequested += HandleCloseRequested;
             }
         };
+
+        Unloaded += (s, e) =>
+        {
+            if (DataContext is MessageBoxViewModel vm)
+            {
+                vm.CloseRequested -= HandleCloseRequested;
+            }
+        };
+    }
+
+    private void HandleCloseRequested(bool isOk)
+    {
+        Result = isOk ? MessageBoxResult.Ok : MessageBoxResult.Cancel;
+        Close();
     }
 }
