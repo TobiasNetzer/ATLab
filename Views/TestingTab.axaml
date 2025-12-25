@@ -20,12 +20,12 @@
                         Margin="5"
                         Spacing="5">
                 
-                <Button Content="&#xE710;"
+                <Button Content="&#xE8F4;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="New file"
                         Command="{Binding TestStepPresenter.NewFileCommand}"/>
 
-                <Button Content="&#xE8E5;"
+                <Button Content="&#xE838;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Open file"
                         Command="{Binding TestStepPresenter.LoadFileWithDialogCommand}"/>
@@ -34,6 +34,11 @@
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Save file"
                         Command="{Binding TestStepPresenter.SaveFileCommand}"/>
+                
+                <Button Content="&#xE792;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        ToolTip.Tip="Save file as"
+                        Command="{Binding TestStepPresenter.SaveFileAsCommand}"/>
 
                 <Separator Width="2"
                            Height="25"
@@ -45,7 +50,7 @@
                         ToolTip.Tip="Add a new test step"
                         Command="{Binding TestStepPresenter.AddTestStepCommand}"/>
                 
-                <Button Content="&#xf413;"
+                <Button Content="&#xF413;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Duplicate selected test step"
                         Command="{Binding TestStepPresenter.DuplicateTestStepCommand}"/>
@@ -55,12 +60,12 @@
                         ToolTip.Tip="Remove selected test step"
                         Command="{Binding TestStepPresenter.RemoveTestStepCommand}"/>
                 
-                <Button Content="&#xeb0f;"
+                <Button Content="&#xEB0F;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Move selected test step up"
                         Command="{Binding TestStepPresenter.MoveStepUpCommand}"/>
                 
-                <Button Content="&#xeb11;"
+                <Button Content="&#xEB11;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Move selected test step down"
                         Command="{Binding TestStepPresenter.MoveStepDownCommand}"/>
@@ -70,12 +75,12 @@
                            Margin="5 0 5 0"
                            CornerRadius="1"/>
                 
-                <Button Content="&#xf5b0;"
+                <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Start test execution"
                         Command="{Binding TestStepPresenter.StartTestCommand}"/>
                 
-                <Button Content="&#xe978;"
+                <Button Content="&#xE978;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         ToolTip.Tip="Stop test execution"
                         Command="{Binding TestStepPresenter.CancelTestCommand}"/>
