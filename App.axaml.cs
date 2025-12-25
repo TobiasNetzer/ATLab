@@ -154,7 +154,7 @@ public class App : Application
         services.AddSingleton<IFileDialogService, FileDialogService>();
         
         // Register the runner and executor
-        services.AddSingleton<ITestStepRunner, DummyTestStepRunner>();
+        services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
         
         // Factory for ITestHardware since it's initialized later

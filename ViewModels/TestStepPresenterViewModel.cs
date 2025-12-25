@@ -239,7 +239,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
 
         _testExecutor.StepCompleted += (index, step, result) =>
         {
-            step.Result = result.ToString();
+            step.Result = result.MeasuredValue.ToString("F3");
         };
 
         _testExecutor.TestCompleted += () =>

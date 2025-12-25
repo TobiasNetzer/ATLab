@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Services;
@@ -12,7 +13,7 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepRunner _runner;
 
     public event Action<int, TestStepViewModel>? StepStarted;
-    public event Action<int, TestStepViewModel, bool>? StepCompleted;
+    public event Action<int, TestStepViewModel, TestStepResult>? StepCompleted;
     public event Action? TestCompleted;
 
     public TestExecutor(ITestStepRunner runner)
@@ -30,11 +31,11 @@ public class TestExecutor : ITestExecutor
 
             StepStarted?.Invoke(i, step);
 
-            bool result = await _runner.ExecuteAsync(step, token);
+            var result = await _runner.ExecuteAsync(step, token);
 
             StepCompleted?.Invoke(i, step, result);
 
-            if (!result)
+            if (!result.IsSuccess)
                 break;
         }
 
