@@ -140,7 +140,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NewFile() => TestingTab.TestStepPresenter.NewFile();
+    private async Task NewFile() => await TestingTab.TestStepPresenter.NewFile();
 
     [RelayCommand]
     private async Task SaveFileAs() => await TestingTab.TestStepPresenter.SaveFileAs();

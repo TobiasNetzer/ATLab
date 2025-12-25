@@ -280,7 +280,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         return _fileService.Serialize(dto);
     }
 
-    public void CheckForChanges()
+    private void CheckForChanges()
     {
         if (_lastSavedJson == null) return;
         var currentJson = CaptureCurrentStateJson();
