@@ -11,8 +11,7 @@
     </Design.DataContext>
 
     <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15"
-            Margin="10">
+            CornerRadius="15">
         
         <StackPanel>
             <Border Background="{DynamicResource SystemBaseLowColor}"

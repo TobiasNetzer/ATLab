@@ -81,12 +81,13 @@
                     <Flyout Placement="Bottom"
                             IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}">
                         <ListBox ItemsSource="{Binding Errors}"
-                                 Width="300"
-                                 Height="200">
+                                 Width="400"
+                                 Height="300">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding}" 
-                                               TextWrapping="Wrap"/>
+                                               TextWrapping="Wrap"
+                                               Margin="2"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

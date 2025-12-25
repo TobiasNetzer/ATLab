@@ -10,8 +10,7 @@
     </Design.DataContext>
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15"
-            Margin="10">
+            CornerRadius="15">
         
         <StackPanel>
             
@@ -58,7 +57,7 @@
                     <TextBlock Text="Test Step Name:"/>
                     <TextBox Text="{Binding TestStepName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                              MaxLength="50"
-                             Width="460"/>
+                             Width="480"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
@@ -95,7 +94,7 @@
                     <StackPanel HorizontalAlignment="Left"
                                 Orientation="Vertical"
                                 Spacing="5"
-                                Margin="45 10 10 10">
+                                Margin="65 10 10 10">
                         <TextBlock Text="Unit:"/>
                         <TextBox Text="{Binding TestStepCustomUnit, Mode=TwoWay}"
                                  MaxLength="10"
@@ -110,6 +109,17 @@
                     <TextBlock Text="Evaluate:"/>
                     <RadioButton Content="Script"/>
                     <RadioButton Content="External Command"/>
+                </StackPanel>
+                
+                <StackPanel HorizontalAlignment="Left"
+                            Orientation="Vertical"
+                            Spacing="5"
+                            Margin="10">
+                    <TextBlock Text="Comment:"/>
+                    <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             Width="480"
+                             Height="150"
+                             TextWrapping="Wrap"/>
                 </StackPanel>
                 
             </StackPanel>

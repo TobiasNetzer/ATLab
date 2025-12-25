@@ -28,6 +28,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     [ObservableProperty]
     private string? _testStepCustomUnit;
     
+    [ObservableProperty]
+    private string? _comment;
+    
     private bool _suppressCallback = false;
 
     public void LoadTestStep(TestStepViewModel testStep)
@@ -39,6 +42,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         TestStepLowerLimit = _testStep.LowerLimit.ToString(CultureInfo.CurrentCulture);
         TestStepNominalValue =  _testStep.NominalValue.ToString(CultureInfo.CurrentCulture);
         TestStepUpperLimit = _testStep.UpperLimit.ToString(CultureInfo.CurrentCulture);
+        Comment = _testStep.Comment;
         
         _suppressCallback = false;
     }
@@ -78,5 +82,11 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (_testStep != null)
             _testStep.UpperLimit = double.TryParse(value, out var upperLimit) ? upperLimit : 0;
+    }
+
+    partial void OnCommentChanged(string? value)
+    {
+        if (_testStep != null)
+            _testStep.Comment = value;
     }
 }
