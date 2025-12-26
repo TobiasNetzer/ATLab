@@ -381,6 +381,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
                 _lastSavedJson = json;
                 _settingsService.Settings.LastOpenedFile = fileToLoad;
                 IsDirty = false;
+                SelectedStepIndex = 0;
             }
         }
         catch (Exception ex)
