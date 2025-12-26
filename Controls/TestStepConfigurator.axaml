@@ -55,7 +55,7 @@
                             Spacing="5"
                             Margin="10">
                     <TextBlock Text="Test Step Name:"/>
-                    <TextBox Text="{Binding TestStepName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    <TextBox Text="{Binding TestStep.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                              MaxLength="50"
                              Width="480"/>
                 </StackPanel>
@@ -66,7 +66,7 @@
                                 Spacing="5"
                                 Margin="10">
                         <TextBlock Text="Lower Limit:"/>
-                        <TextBox Text="{Binding TestStepLowerLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding TestStep.TestStep.LowerLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -76,7 +76,7 @@
                                 Spacing="5"
                                 Margin="10">
                         <TextBlock Text="Nominal:"/>
-                        <TextBox Text="{Binding TestStepNominalValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding TestStep.TestStep.NominalValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -86,7 +86,7 @@
                                 Spacing="5"
                                 Margin="10">
                         <TextBlock Text="Upper Limit:"/>
-                        <TextBox Text="{Binding TestStepUpperLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding TestStep.TestStep.UpperLimit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -106,8 +106,8 @@
                             Orientation="Vertical"
                             Spacing="5"
                             Margin="10">
-                    <TextBlock Text="Delay:"/>
-                    <TextBox Text="{Binding TestStepDelay, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    <TextBlock Text="Delay (ms):"/>
+                    <TextBox Text="{Binding TestStep.TestStep.Delay, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                              MaxLength="20"
                              Width="100"/>
                 </StackPanel>
@@ -126,7 +126,7 @@
                             Spacing="5"
                             Margin="10">
                     <TextBlock Text="Comment:"/>
-                    <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    <TextBox Text="{Binding TestStep.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                              Width="480"
                              Height="150"
                              TextWrapping="Wrap"/>

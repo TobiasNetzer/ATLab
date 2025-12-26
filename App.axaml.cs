@@ -162,13 +162,15 @@ public class App : Application
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
 
         // ViewModels
-            
+        services.AddSingleton<TestHardwareRelayChannelsViewModel>();
+        services.AddSingleton<TestStepConfiguratorViewModel>();
+        
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<TestStepPresenterViewModel>();
-        services.AddTransient<TestStepConfiguratorViewModel>();
+        
     }
 
     private void DisableAvaloniaDataAnnotationValidation()
