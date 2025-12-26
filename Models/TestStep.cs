@@ -11,7 +11,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(2)]
-    private string? _name;
+    private string _name = string.Empty;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(3)]
@@ -31,19 +31,19 @@ public partial class TestStep : ObservableObject
 
     [ObservableProperty]
     [property: JsonPropertyOrder(7)]
-    private string? _comment;
+    private string _comment = string.Empty;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(8)]
-    private RelayMatrix? _matrixState;
+    private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
-    [JsonIgnore]
-    private RelayGroup? _liveStimState;
+    [property: JsonIgnore]
+    private RelayGroup _liveStimState = new(0);
 
     [ObservableProperty]
-    [JsonIgnore]
-    private RelayGroup? _liveExtStimState;
+    [property: JsonIgnore]
+    private RelayGroup _liveExtStimState = new(0);
 
     [JsonPropertyOrder(9)]
     public RelayGroupDto? StimState { get; set; }
