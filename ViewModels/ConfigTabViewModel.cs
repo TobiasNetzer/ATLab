@@ -13,7 +13,7 @@ public partial class ConfigTabViewModel : ViewModelBase
     private readonly TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     
     [ObservableProperty]
-    private string _tolerance = "10";
+    private double _toleranceValue = 10.0;
 
     public ConfigTabViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
         TestStepConfiguratorViewModel testStepConfiguratorViewModel)
@@ -24,11 +24,8 @@ public partial class ConfigTabViewModel : ViewModelBase
         Title = "Config";
     }
 
-    partial void OnToleranceChanged(string value)
+    partial void OnToleranceValueChanged(double value)
     {
-        if (double.TryParse(value, out var tolerance))
-        {
-            _testStepConfiguratorViewModel.Tolerance = tolerance / 100.0;
-        }
+        _testStepConfiguratorViewModel.Tolerance = value / 100.0;
     }
 }
