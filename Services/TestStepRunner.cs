@@ -21,17 +21,11 @@ public class TestStepRunner : ITestStepRunner
     
     public async Task<TestStepResult> ExecuteAsync(TestStepViewModel step, CancellationToken token)
     {
-        if (step.TestStep.LiveStimState == null || step.TestStep.LiveExtStimState == null || step.TestStep.MatrixState == null)
-        {
-            _errorService.AddError("Test step state is not initialized.");
-            return new TestStepResult(false, 0.0);
-        }
-
         _testHardware.StimChannelStates = step.TestStep.LiveStimState.ToBoolArray();
         _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
         _testHardware.ActiveMeasChannelH = (byte)(step.TestStep.MatrixState.ActiveChannelHigh);
         _testHardware.ActiveMeasChannelL = (byte)(step.TestStep.MatrixState.ActiveChannelLow);
-        
+    
         bool success = false;
         try
         {
