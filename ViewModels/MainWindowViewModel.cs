@@ -88,12 +88,13 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         var testHardware = new CtiaHardware(new SimulationService());
         _errorService = new ErrorService();
-        var configurator = new TestStepConfiguratorViewModel();
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(testHardware.HardwareInfo);
+        var configurator = new TestStepConfiguratorViewModel(new SettingsService());
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(testHardware.HardwareInfo, new SettingsService());
+        var serialDeviceManager = new SerialDeviceManagerViewModel();
         
-        TestingTab = new TestingTabViewModel();
+        TestingTab = new TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel, new TestExecutor(new DummyTestStepRunner()), configurator, new FileDialogService(), new SettingsService(), new FileService(), new MessageBoxService(), serialDeviceManager);
         LabTab = new LabTabViewModel(_errorService, testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
-        ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator);
+        ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator, serialDeviceManager);
         ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"), new MessageBoxService());
 
         _selectedTab = TestingTab;

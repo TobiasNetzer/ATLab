@@ -39,7 +39,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ISettingsService _settingsService;
     private readonly IFileService _fileService;
     private readonly IMessageBoxService _messageBoxService;
-    
+    private readonly SerialDeviceManagerViewModel _serialDeviceManager;
+
     private CancellationTokenSource? _cts;
 
     [ObservableProperty]
@@ -58,7 +59,8 @@ public partial class TestingTabViewModel : ViewModelBase
         IFileDialogService fileDialogService,
         ISettingsService settingsService,
         IFileService fileService,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        SerialDeviceManagerViewModel serialDeviceManager)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
@@ -69,6 +71,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _settingsService = settingsService;
         _fileService = fileService;
         _messageBoxService = messageBoxService;
+        _serialDeviceManager = serialDeviceManager;
         
         Title = "Testing";
         
@@ -76,6 +79,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
+        _serialDeviceManager.SerialDevices.CollectionChanged += (_, _) => CheckForChanges();
 
         _lastSavedJson = CaptureCurrentStateJson();
     }
@@ -263,6 +267,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         TestSteps.Clear();
         TestHardwareRelayChannels.ResetToDefault();
+        _serialDeviceManager.SerialDevices.Clear();
         CurrentFilePath = null;
         _lastSavedJson = CaptureCurrentStateJson();
         IsDirty = false;
@@ -278,7 +283,8 @@ public partial class TestingTabViewModel : ViewModelBase
             TestSteps = TestSteps.Select(vm => vm.TestStep).ToList(),
             StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
-            MeasChannelNames = TestHardwareRelayChannels.GetMeasNames()
+            MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
+            SerialDevices = _serialDeviceManager.SerialDevices.ToList()
         };
 
         return _fileService.Serialize(dto);
@@ -378,6 +384,15 @@ public partial class TestingTabViewModel : ViewModelBase
                 }
 
                 TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
+                
+                _serialDeviceManager.SerialDevices.Clear();
+                if (dto.SerialDevices != null)
+                {
+                    foreach (var device in dto.SerialDevices)
+                    {
+                        _serialDeviceManager.SerialDevices.Add(device);
+                    }
+                }
 
                 CurrentFilePath = fileToLoad;
                 _lastSavedJson = json;
@@ -396,13 +411,14 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         _errorService = new ErrorService();
         TestSteps = new ObservableCollection<TestStepViewModel>();
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo(), new SettingsService());
         _testExecutor = new TestExecutor(new DummyTestStepRunner());
-        TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel();
+        TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel(new SettingsService());
         _fileDialogService = new FileDialogService();
         _settingsService = new SettingsService();
         _fileService = new FileService();
         _messageBoxService = new MessageBoxService();
+        _serialDeviceManager = new SerialDeviceManagerViewModel();
         
         Title = "Testing";
     }

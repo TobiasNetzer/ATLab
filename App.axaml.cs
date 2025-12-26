@@ -132,6 +132,7 @@ public class App : Application
                     catch (Exception ex)
                     {
                         _errorService.Errors.Add(ex.ToString());
+                        mainVm.NewFileCommand.Execute(null);
                     }
                 }
                 else mainVm.NewFileCommand.Execute(null);
@@ -170,6 +171,7 @@ public class App : Application
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<ScpiScriptsManagerViewModel>();
+        services.AddSingleton<SerialDeviceManagerViewModel>();
         
     }
 
