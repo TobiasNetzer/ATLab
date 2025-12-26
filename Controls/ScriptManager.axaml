@@ -1,0 +1,168 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.ScriptManager"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:DataType="vm:ScpiScriptsManagerViewModel">
+    
+    <Grid ColumnDefinitions="auto, *"
+          RowDefinitions="*, *, auto">
+            
+        <Border Grid.Column="0"
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="10">
+            
+            <StackPanel 
+                Orientation="Horizontal"
+                Margin="5"
+                Spacing="5">
+                
+                <Button Content="&#xE8F4;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="New script"
+                        Command="{Binding NewScriptCommand}"/>
+                
+                <Button Content="&#xE72C;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Reload script repository"
+                        Command="{Binding ReloadScriptsCommand}"/>
+
+                <Button Content="&#xE74E;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Save script"
+                        Command="{Binding SaveScriptCommand}"/>
+                
+                <Button Content="&#xE74D;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Delete script"
+                        Command="{Binding DeleteScriptCommand}"/>
+
+                <Separator Width="2"
+                           Height="25"
+                           Margin="5 0 5 0"
+                           CornerRadius="1"/>
+                
+            </StackPanel>
+        </Border>
+
+        <ListBox Grid.Column="0"
+                 Grid.Row="1"
+                 ItemsSource="{Binding Scripts}"
+                 SelectedItem="{Binding SelectedScript , Mode=TwoWay}"
+                 Margin="0 5 0 5"
+                 Width="500"
+                 Height="300"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 CornerRadius="10"
+                 >
+            
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="1">
+            
+            <Border 
+                    Background="{DynamicResource SystemChromeLowColor}"
+                    HorizontalAlignment="Left"
+                    CornerRadius="10"
+                    Margin="5"
+                    Padding="5"
+                    Width="520">
+                
+                <StackPanel Orientation="Vertical" Spacing="5"
+                            Margin="5"
+                            HorizontalAlignment="Left">
+                    
+                    <TextBlock Text="Script Name:"/>
+                    <TextBox Text="{Binding SelectedScript.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             HorizontalAlignment="Left"
+                             MaxLength="50"
+                             Width="500"/>
+                    
+                    <TextBlock Text="Script Description:"
+                               Margin="0 10 0 0"/>
+                    <TextBox Text="{Binding SelectedScript.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             HorizontalAlignment="Left"
+                             MaxLength="50"
+                             Width="500"/>
+                    
+                    <TextBlock Text="Variables:"
+                               Margin="0 10 0 0"/>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Button Content="&#xF8AA;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Add a new variable"
+                                Command="{Binding SelectedScript.AddVariableCommand}" />
+                        
+                        <Button Content="&#xF8AB;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Remove variable"
+                                Command="{Binding SelectedScript.RemoveVariableCommand}" />
+                    </StackPanel>
+                    
+                    <DataGrid ItemsSource="{Binding SelectedScript.Variables}"
+                              SelectedIndex="{Binding SelectedScript.SelectedVariableIndex}"
+                              AutoGenerateColumns="False"
+                              CanUserReorderColumns="True"
+                              CanUserSortColumns="False"
+                              GridLinesVisibility="All"
+                              BorderThickness="1"
+                              BorderBrush="Gray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Variable Name" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Default Value" Binding="{Binding DefaultValue}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                    <TextBlock Text="Commands:"
+                               Margin="0 10 0 0"/>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Button Content="&#xF8AA;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Add a new command" 
+                                Command="{Binding SelectedScript.AddCommandCommand}" />
+                        
+                        <Button Content="&#xF8AB;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Remove command" 
+                                Command="{Binding SelectedScript.RemoveCommandCommand}" />
+                    </StackPanel>
+                    
+                    <DataGrid ItemsSource="{Binding SelectedScript.Commands}"
+                              SelectedIndex="{Binding SelectedScript.SelectedCommandIndex, Mode=TwoWay}"
+                              AutoGenerateColumns="False"
+                              CanUserReorderColumns="True"
+                              CanUserSortColumns="False"
+                              GridLinesVisibility="All"
+                              BorderThickness="1"
+                              BorderBrush="Gray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
+                            <DataGridTextColumn Header="Return Type" Binding="{Binding Expect}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                </StackPanel>
+                
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
+

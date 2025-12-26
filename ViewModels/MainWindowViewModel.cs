@@ -39,6 +39,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private ConfigTabViewModel _configTab;
+    
+    [ObservableProperty]
+    private ScpiScriptsManagerViewModel _scriptTab;
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
 
@@ -59,7 +62,8 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
         ConfigTabViewModel configTab,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ScpiScriptsManagerViewModel scpiScriptsManagerViewModel)
     {
         _errorService = errorService;
         _testHardware = testHardware;
@@ -69,12 +73,14 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab = testingTab;
         LabTab = labTab;
         ConfigTab = configTab;
+        ScriptTab = scpiScriptsManagerViewModel;
 
         _selectedTab = TestingTab;
         
         Tabs.Add(TestingTab);
         Tabs.Add(LabTab);
         Tabs.Add(ConfigTab);
+        Tabs.Add(ScriptTab);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -109,15 +115,17 @@ public partial class MainWindowViewModel : ViewModelBase
             new FileService(),
             new MessageBoxService());
             
-        TestingTab = new TestingTabViewModel(_errorService, TestConfigurationViewModel, testStepPresenter);
-        LabTab = new LabTabViewModel(_errorService, _testHardware, TestConfigurationViewModel, new SimulationStateService { IsSimulationMode = true });
-        ConfigTab = new ConfigTabViewModel(TestConfigurationViewModel);
+        TestingTab = new TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel, configurator, testStepPresenter);
+        LabTab = new LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
+        ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator);
+        ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
 
         _selectedTab = TestingTab;
         
         Tabs.Add(TestingTab);
         Tabs.Add(LabTab);
         Tabs.Add(ConfigTab);
+        Tabs.Add(ScriptTab);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -171,6 +179,9 @@ public partial class MainWindowViewModel : ViewModelBase
             case TestingTabViewModel:
                 TestingTab.TestStepPresenter.SelectedStepIndex = 0;
                 break;
+            case ScpiScriptsManagerViewModel:
+                 ScriptTab.ReloadScriptsCommand.Execute(null);
+                 break;
         }
     }
 }

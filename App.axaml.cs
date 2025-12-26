@@ -17,9 +17,9 @@ namespace ATLab;
 
 public class App : Application
 {
-    private IServiceProvider Services { get; set; } = null!;
+    private IServiceProvider? _services;
     
-    private IErrorService _errorService = null!;
+    private IErrorService? _errorService;
 
     private ITestHardware? _testHardware;
 
@@ -32,23 +32,22 @@ public class App : Application
     {
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
-        Services = serviceCollection.BuildServiceProvider();
+        _services = serviceCollection.BuildServiceProvider();
 
-        _errorService = Services.GetRequiredService<IErrorService>();
-        var settingsService = Services.GetRequiredService<ISettingsService>();
+        _errorService = _services.GetRequiredService<IErrorService>();
+        var settingsService = _services.GetRequiredService<ISettingsService>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             
-            bool initSuccess = false;
-            bool openConnectWindow = false;
+            var initSuccess = false;
+            var openConnectWindow = false;
 
             var service = new SerialPortService(settingsService.Settings.LastComPort!);
             var openResult = service.TryOpen();
             if (!openResult.IsSuccess)
             {
                 openConnectWindow = true;
-                //await ShowInitErrorAndPromptUser(openResult.ErrorMessage, desktop);
             }
             else
             {
@@ -57,7 +56,6 @@ public class App : Application
                 if (!initResult.IsSuccess)
                 {
                     openConnectWindow = true;
-                    //await ShowInitErrorAndPromptUser(initResult.ErrorMessage, desktop);
                 }
                 else initSuccess = true;
             }
@@ -92,12 +90,12 @@ public class App : Application
                         if (result == true)
                         {
                             _testHardware = vm.TestHardware!;
-                            Services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
+                            _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
                         }
                         else
                         {
                             _testHardware = new CtiaHardware(new SimulationService());
-                            Services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
+                            _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
                         }
                     }
 
@@ -114,8 +112,8 @@ public class App : Application
                 return;
             }
 
-            var mainVm = Services.GetRequiredService<MainWindowViewModel>();
-            var window = new MainWindow(settingsService, Services.GetRequiredService<IMessageBoxService>()) { DataContext = mainVm };
+            var mainVm = _services.GetRequiredService<MainWindowViewModel>();
+            var window = new MainWindow(settingsService, _services.GetRequiredService<IMessageBoxService>()) { DataContext = mainVm };
 
             desktop.MainWindow = window;
             window.Show();
@@ -152,6 +150,7 @@ public class App : Application
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
+        services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>(sp => new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -160,7 +159,7 @@ public class App : Application
         // Factory for ITestHardware since it's initialized later
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
-
+        
         // ViewModels
         services.AddSingleton<TestHardwareRelayChannelsViewModel>();
         services.AddSingleton<TestStepConfiguratorViewModel>();
@@ -169,6 +168,7 @@ public class App : Application
         services.AddTransient<TestingTabViewModel>();
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
+        services.AddTransient<ScpiScriptsManagerViewModel>();
         services.AddTransient<TestStepPresenterViewModel>();
         
     }

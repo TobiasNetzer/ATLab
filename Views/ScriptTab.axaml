@@ -1,0 +1,13 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Views.ScriptTab"
+             x:DataType="vm:ScpiScriptsManagerViewModel">
+
+    <StackPanel>
+        
+        <controls:ScriptManager
+            DataContext="{Binding }"/>
+    </StackPanel>
+</UserControl>

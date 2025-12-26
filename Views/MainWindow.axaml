@@ -40,6 +40,9 @@
                     <DataTemplate DataType="vm:ConfigTabViewModel">
                         <views:ConfigTab/>
                     </DataTemplate>
+                    <DataTemplate DataType="vm:ScpiScriptsManagerViewModel">
+                        <views:ScriptTab/>
+                    </DataTemplate>
                 </TabControl.DataTemplates>
             </TabControl>
         </DockPanel>
