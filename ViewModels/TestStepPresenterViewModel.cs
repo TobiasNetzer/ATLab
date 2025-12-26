@@ -23,7 +23,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private ObservableCollection<TestStepViewModel> _testSteps;
 
     [ObservableProperty]
-    private TestConfigurationViewModel _testConfiguration;
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
     
     [ObservableProperty]
     private TestStepViewModel? _selectedStep;
@@ -52,7 +52,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
 
     public TestStepPresenterViewModel(
         IErrorService errorService, 
-        TestConfigurationViewModel testConfiguration, 
+        TestHardwareRelayChannelsViewModel testHardwareRelayChannels, 
         ITestExecutor testExecutor, 
         TestStepConfiguratorViewModel testStepConfiguratorViewModel,
         IFileDialogService fileDialogService,
@@ -62,7 +62,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
-        TestConfiguration = testConfiguration;
+        TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
         _fileDialogService = fileDialogService;
@@ -73,21 +73,21 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         HookExecutorEvents();
         
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
-        TestConfiguration.ConfigurationChanged += () => CheckForChanges();
+        TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
 
         _lastSavedJson = CaptureCurrentStateJson();
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
-        if (value != null)
+        if (value?.TestStep != null)
         {
             try
             {
-                TestConfiguration.MeasChannelViewModel.LoadActiveMeasChannels(value.MatrixState);
-                TestConfiguration.StimChannelViewModel.LoadRelayStates(value.StimState);
-                TestConfiguration.ExtStimChannelViewModel.LoadRelayStates(value.ExtStimState);
-                TestConfiguration.TestStepConfiguratorViewModel.LoadTestStep(value);
+                TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState!);
+                TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState!);
+                TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState!);
+                TestStepConfiguratorViewModel.LoadTestStep(value);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     {
         for (int i = 0; i < TestSteps.Count; i++)
         {
-            TestSteps[i].Number = i + 1; // 1‑based numbering
+            TestSteps[i].TestStep.Number = i + 1; // 1‑based numbering
         }
     }
 
@@ -109,7 +109,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private void AddTestStep()
     {
         var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
-        var newStep = new TestStepViewModel(new TestStep(), TestConfiguration.HardwareInfo);
+        var newStep = new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo);
         newStep.PropertyChanged += (_, _) => CheckForChanges();
         TestSteps.Insert(indexToInsertNewStep, newStep);
         RenumberTestSteps();
@@ -120,8 +120,9 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private void DuplicateTestStep()
     {
         if (SelectedStep == null) return;
-        
-        var currentModel = SelectedStep.GetModel();
+
+        SelectedStep.TestStep.UpdateDtos();
+        var currentModel = SelectedStep.TestStep;
         var modelCopy = new TestStep
         {
             Name = currentModel.Name,
@@ -129,12 +130,13 @@ public partial class TestStepPresenterViewModel : ViewModelBase
             UpperLimit = currentModel.UpperLimit,
             NominalValue = currentModel.NominalValue,
             Comment = currentModel.Comment,
+            Delay = currentModel.Delay,
             StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
             ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
             MatrixState = currentModel.MatrixState != null ? new RelayMatrix(currentModel.MatrixState) : null
         };
 
-        var duplicatedStep = new TestStepViewModel(modelCopy, TestConfiguration.HardwareInfo);
+        var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
         duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
 
         var indexToInsert = SelectedStepIndex + 1;
@@ -258,7 +260,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
         }
 
         TestSteps.Clear();
-        TestConfiguration.ResetToDefault();
+        TestHardwareRelayChannels.ResetToDefault();
         CurrentFilePath = null;
         _lastSavedJson = CaptureCurrentStateJson();
         IsDirty = false;
@@ -267,14 +269,14 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     private string CaptureCurrentStateJson()
     {
         foreach (var vm in TestSteps)
-            vm.SyncBack();
+            vm.TestStep.UpdateDtos();
 
         var dto = new AtlabFileDto
         {
-            TestSteps = TestSteps.Select(vm => vm.GetModel()).ToList(),
-            StimChannelNames = TestConfiguration.GetStimNames(),
-            ExtStimChannelNames = TestConfiguration.GetExtStimNames(),
-            MeasChannelNames = TestConfiguration.GetMeasNames()
+            TestSteps = TestSteps.Select(vm => vm.TestStep).ToList(),
+            StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
+            ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
+            MeasChannelNames = TestHardwareRelayChannels.GetMeasNames()
         };
 
         return _fileService.Serialize(dto);
@@ -290,7 +292,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     [RelayCommand]
     public async Task OpenAboutWindow()
     {
-        var deviceInfoProvider = TestConfiguration.HardwareInfo;
+        var deviceInfoProvider = TestHardwareRelayChannels.HardwareInfo;
         var aboutVm = new AboutWindowViewModel(deviceInfoProvider);
         var aboutWindow = new AboutWindow
         {
@@ -368,12 +370,12 @@ public partial class TestStepPresenterViewModel : ViewModelBase
                 TestSteps.Clear();
                 foreach (var step in dto.TestSteps)
                 {
-                    var stepVm = new TestStepViewModel(step, TestConfiguration.HardwareInfo);
+                    var stepVm = new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo);
                     stepVm.PropertyChanged += (_, _) => CheckForChanges();
                     TestSteps.Add(stepVm);
                 }
 
-                TestConfiguration.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
+                TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
                 CurrentFilePath = fileToLoad;
                 _lastSavedJson = json;
@@ -391,7 +393,7 @@ public partial class TestStepPresenterViewModel : ViewModelBase
     {
         _errorService = new ErrorService();
         TestSteps = new ObservableCollection<TestStepViewModel>();
-        TestConfiguration = new TestConfigurationViewModel(new DummyHardwareInfo(), new TestStepConfiguratorViewModel());
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo());
         _testExecutor = new TestExecutor(new DummyTestStepRunner());
         TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel();
         _fileDialogService = new FileDialogService();

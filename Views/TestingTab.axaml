@@ -124,13 +124,13 @@
                       BorderBrush="Gray">
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Nr." Binding="{Binding Number}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Lower Limit" Binding="{Binding LowerLimit}" />
-                    <DataGridTextColumn Header="Nominal Value" Binding="{Binding NominalValue}" />
-                    <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}" />
+                    <DataGridTextColumn Header="Nr." Binding="{Binding TestStep.Number}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" />
+                    <DataGridTextColumn Header="Lower Limit" Binding="{Binding TestStep.LowerLimit}" />
+                    <DataGridTextColumn Header="Nominal Value" Binding="{Binding TestStep.NominalValue}" />
+                    <DataGridTextColumn Header="Upper Limit" Binding="{Binding TestStep.UpperLimit}" />
                     <DataGridTextColumn Header="Result" Binding="{Binding Result}" />
-                    <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="*"/>
+                    <DataGridTextColumn Header="Comment" Binding="{Binding TestStep.Comment}" Width="*"/>
                 </DataGrid.Columns>
             
                 <DataGrid.ContextMenu>
@@ -151,17 +151,17 @@
                             Spacing="10">
                     
                     <controls:TestStepConfigurator
-                        DataContext="{Binding TestConfiguration.TestStepConfiguratorViewModel}"/>
+                        DataContext="{Binding TestStepConfiguratorViewModel}"/>
 
                     <controls:MeasSelector
-                        DataContext="{Binding TestConfiguration.MeasChannelViewModel}" />
+                        DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
 
                     <controls:StimSelector
-                        DataContext="{Binding TestConfiguration.StimChannelViewModel}"
+                        DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
                         GridColumns="2" />
 
                     <controls:ExtStimSelector
-                        DataContext="{Binding TestConfiguration.ExtStimChannelViewModel}"
+                        DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
                         GridColumns="2" />
 
                 </StackPanel>

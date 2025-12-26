@@ -5,27 +5,15 @@ namespace ATLab.ViewModels;
 
 public partial class RelayChannelViewModel : ViewModelBase
 {
-    private readonly RelayChannelState _state;
+    [ObservableProperty]
+    private RelayChannelState _state;
 
     [ObservableProperty]
     private CustomRelayChannelName _customName;
 
-    [ObservableProperty]
-    private int _channelIndex;
-
-    [ObservableProperty]
-    private bool _isEnabled;
-    
     public RelayChannelViewModel(RelayChannelState state, CustomRelayChannelName channelName)
     {
-        _state = state;
-        ChannelIndex = state.ChannelIndex;
+        State = state;
         CustomName = channelName;
-        IsEnabled = state.IsEnabled;
-    }
-
-    partial void OnIsEnabledChanged(bool value)
-    {
-        _state.IsEnabled = value;
     }
 }

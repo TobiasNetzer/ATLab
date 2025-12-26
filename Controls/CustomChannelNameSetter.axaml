@@ -82,7 +82,7 @@
                                             <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0"
+                                        <TextBlock Text="{Binding State.ChannelIndex}" Grid.Column="0"
                                                    HorizontalAlignment="Right" Margin="0,0,10,0"
                                                    VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"
@@ -117,7 +117,7 @@
                                             <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding ChannelIndex}" Grid.Column="0"
+                                        <TextBlock Text="{Binding State.ChannelIndex}" Grid.Column="0"
                                                    HorizontalAlignment="Right" Margin="0,0,10,0"
                                                    VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"

@@ -60,12 +60,12 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:RelayChannelViewModel">
-                        <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                        <CheckBox IsChecked="{Binding State.IsEnabled, Mode=TwoWay}"
                                   Margin="5"
                                   Width="200">
                             <CheckBox.Content>
                                 <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="ChannelIndex"/>
+                                    <Binding Path="State.ChannelIndex"/>
                                     <Binding Path="CustomName.ChannelName"/>
                                 </MultiBinding>
                             </CheckBox.Content>

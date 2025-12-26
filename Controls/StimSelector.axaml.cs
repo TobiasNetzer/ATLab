@@ -1,6 +1,6 @@
+using ATLab.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
