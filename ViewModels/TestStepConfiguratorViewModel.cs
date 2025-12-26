@@ -9,28 +9,41 @@ namespace ATLab.ViewModels;
 public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private TestStepViewModel? _testStep;
+    private TestStepViewModel? _testStepViewModel;
     
     [ObservableProperty]
     private bool _isExpanded = true;
 
     [ObservableProperty]
     private string? _testStepCustomUnit;
+
+    [ObservableProperty]
+    private string? _nominalValueText;
+
+    [ObservableProperty]
+    private string? _lowerLimitText;
+
+    [ObservableProperty]
+    private string? _upperLimitText;
+
+    [ObservableProperty]
+    private string? _delayText;
     
     public double Tolerance;
 
     public void LoadTestStep(TestStepViewModel testStep)
     {
-        if (TestStep?.TestStep != null)
+        if (TestStepViewModel?.TestStep != null)
         {
-            TestStep.TestStep.PropertyChanged -= TestStepPropertyChanged;
+            TestStepViewModel.TestStep.PropertyChanged -= TestStepPropertyChanged;
         }
 
-        TestStep = testStep;
+        TestStepViewModel = testStep;
 
-        if (TestStep?.TestStep != null)
+        if (TestStepViewModel?.TestStep != null)
         {
-            TestStep.TestStep.PropertyChanged += TestStepPropertyChanged;
+            TestStepViewModel.TestStep.PropertyChanged += TestStepPropertyChanged;
+            UpdateStringProperties();
         }
     }
 
@@ -72,6 +85,37 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         }
     }
 
+    partial void OnNominalValueTextChanged(string? value)
+    {
+        if (!double.TryParse(value, CultureInfo.CurrentCulture, out var result)) return;
+        if (TestStepViewModel?.TestStep != null)
+            TestStepViewModel.TestStep.NominalValue = result;
+    }
+
+    partial void OnLowerLimitTextChanged(string? value)
+    {
+        if (double.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        {
+            if (TestStepViewModel?.TestStep != null)
+                TestStepViewModel.TestStep.LowerLimit = result;
+        }
+    }
+
+    partial void OnUpperLimitTextChanged(string? value)
+    {
+        if (double.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        {
+            if (TestStepViewModel?.TestStep != null)
+                TestStepViewModel.TestStep.UpperLimit = result;
+        }
+    }
+
+    partial void OnDelayTextChanged(string? value)
+    {
+        if (int.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        {
+            if (TestStepViewModel?.TestStep != null)
+                TestStepViewModel.TestStep.Delay = result;
         }
     }
 
