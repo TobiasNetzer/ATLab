@@ -7,27 +7,48 @@ namespace ATLab.CTIA
 {
     public class CtiaCommunication: IDisposable
     {
-        private readonly ITestHardwareCommunication _testHardwareCommunication;
-        public CtiaCommunication(ITestHardwareCommunication testHardwareCommunication)
+        private readonly ISerialCommunication _serialCommunication;
+        public CtiaCommunication(ISerialCommunication serialCommunication)
         {
-            _testHardwareCommunication = testHardwareCommunication;
+            _serialCommunication = serialCommunication;
         }
         
         public async Task<CtiaCommandFrame> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
         {
-            byte[] responseBytes = await _testHardwareCommunication.SendAsync(frame.ToByteArray(), timeoutMs);
-            return CtiaCommandFrame.Parse(responseBytes);
+            try
+            {
+                byte[] responseBytes = await _serialCommunication.SendAsync(frame.ToByteArray(), timeoutMs);
+                return CtiaCommandFrame.Parse(responseBytes);
+            }
+            catch (TimeoutException)
+            {
+                return new CtiaCommandFrame
+                {
+                    Command = (ushort)RespCmd.RESP_ERROR,
+                    PayloadSize = 1,
+                    Payload = [(byte)CTIAStatus.CTIA_TIMEOUT]
+                };
+            }
+            catch (Exception)
+            {
+                return new CtiaCommandFrame
+                {
+                    Command = (ushort)RespCmd.RESP_ERROR,
+                    PayloadSize = 1,
+                    Payload = [(byte)CTIAStatus.CTIA_FAIL]
+                };
+            }
         }
 
         public async Task<CtiaCommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
         {
-            byte[] receivedData = await _testHardwareCommunication.ReceiveAsync(cancellationToken);
+            byte[] receivedData = await _serialCommunication.ReceiveAsync(cancellationToken);
             return CtiaCommandFrame.Parse(receivedData);
         }
 
         public void Dispose()
         {
-            if (_testHardwareCommunication is IDisposable d) d.Dispose();
+            if (_serialCommunication is IDisposable d) d.Dispose();
         }
     }
 }

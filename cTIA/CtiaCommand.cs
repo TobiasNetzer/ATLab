@@ -155,7 +155,7 @@ public class CtiaCommand
             Payload = [channel]
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -173,7 +173,7 @@ public class CtiaCommand
             Payload = [channel]
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -207,7 +207,7 @@ public class CtiaCommand
         };
         frame.Payload = array;
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -239,7 +239,7 @@ public class CtiaCommand
         };
         frame.Payload = array;
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -259,7 +259,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_DEVICE_ID
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_ID)
             return OperationResult<ushort>.Success(BitConverter.ToUInt16(responseFrame.Payload, 0));
@@ -275,7 +275,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_FW_VERSION
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_VERSION)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -291,7 +291,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_FW_BUILD_DATE
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_DATE)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -307,7 +307,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_FW_BUILD_TIME
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_TIME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -323,7 +323,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_DEVICE_NAME
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -339,7 +339,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_AVAILABLE_MEAS_CH
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_MEAS_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -355,7 +355,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_AVAILABLE_STIM_CH
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -371,7 +371,7 @@ public class CtiaCommand
             Command = (ushort)GetCmd.GET_AVAILABLE_EXT_STIM_CH
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_EXT_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -391,7 +391,7 @@ public class CtiaCommand
             Command = (ushort)ClrCmd.CLR_MEAS_H
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -407,7 +407,7 @@ public class CtiaCommand
             Command = (ushort)ClrCmd.CLR_MEAS_L
         };
 
-        CtiaCommandFrame responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
