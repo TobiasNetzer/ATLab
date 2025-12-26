@@ -1,7 +1,11 @@
-﻿namespace ATLab.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class RelayChannelState
+namespace ATLab.Models;
+
+public partial class RelayChannelState : ObservableObject
 {
-    public bool IsEnabled { get; set; }
+    [ObservableProperty]
+    private bool _isEnabled;
+    
     public int ChannelIndex { get; init; }
 }

@@ -1,9 +1,14 @@
-﻿namespace ATLab.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class RelayMatrix
+namespace ATLab.Models;
+
+public partial class RelayMatrix : ObservableObject
 {
-    public int ActiveChannelHigh {get; set;}
-    public int ActiveChannelLow {get; set;}
+    [ObservableProperty]
+    private int _activeChannelHigh;
+    
+    [ObservableProperty]
+    private int _activeChannelLow;
 
     public RelayMatrix(int activeChannelHigh, int activeChannelLow)
     {

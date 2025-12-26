@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ATLab.Models;
 
-public class RelayGroup
+public partial class RelayGroup : ObservableObject
 {
     public List<RelayChannelState> Channels { get; set; } = new();
 
@@ -11,11 +12,13 @@ public class RelayGroup
     {
         for (int i = 0; i < channelCount; i++)
         {
-            Channels.Add(new RelayChannelState
+            var channel = new RelayChannelState
             {
                 ChannelIndex = i + 1,   // 1-based for UI
                 IsEnabled = false       // default state
-            });
+            };
+            channel.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Channels));
+            Channels.Add(channel);
         }
     }
     
