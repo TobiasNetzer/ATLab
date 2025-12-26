@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -24,7 +25,9 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
     
     public MeasChannelViewModel MeasChannelViewModel { get; }
     
-    public TestHardwareRelayChannelsViewModel(IHardwareInfo hardwareInfo)
+    public TestHardwareRelayChannelsViewModel(
+        IHardwareInfo hardwareInfo,
+        ISettingsService settingsService)
     {
         HardwareInfo = hardwareInfo;
         
@@ -37,9 +40,9 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         MeasChannelNames = new ObservableCollection<CustomRelayChannelName>(
             Enumerable.Range(1, hardwareInfo.MeasChannelCount).Select(i => new CustomRelayChannelName("", i)));
         
-        StimChannelViewModel = new StimChannelViewModel(StimChannelNames);
-        ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames);
-        MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
+        StimChannelViewModel = new StimChannelViewModel(StimChannelNames, settingsService);
+        ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames, settingsService);
+        MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames, settingsService);
 
         foreach (var c in StimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
         foreach (var c in ExtStimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
@@ -105,9 +108,9 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         MeasChannelNames = new ObservableCollection<CustomRelayChannelName>(
             Enumerable.Range(1, HardwareInfo.MeasChannelCount).Select(i => new CustomRelayChannelName("", i)));
         
-        StimChannelViewModel = new StimChannelViewModel(StimChannelNames);
-        ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames);
-        MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames);
+        StimChannelViewModel = new StimChannelViewModel(StimChannelNames, new SettingsService());
+        ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames, new SettingsService());
+        MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames, new SettingsService());
 
         foreach (var c in StimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
         foreach (var c in ExtStimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();

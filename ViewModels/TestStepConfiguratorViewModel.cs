@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,11 +9,13 @@ namespace ATLab.ViewModels;
 
 public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
+    private readonly ISettingsService _settingsService;
+    
     [ObservableProperty]
     private TestStepViewModel? _testStepViewModel;
     
     [ObservableProperty]
-    private bool _isExpanded = true;
+    private bool _isExpanded;
 
     [ObservableProperty]
     private string? _testStepCustomUnit;
@@ -30,6 +33,12 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private string? _delayText;
     
     public double Tolerance;
+
+    public TestStepConfiguratorViewModel(ISettingsService settingsService)
+    {
+        _settingsService = settingsService;
+        IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
+    }
 
     public void LoadTestStep(TestStepViewModel testStep)
     {
@@ -125,5 +134,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         
         TestStepViewModel.TestStep.UpperLimit = Math.Round(TestStepViewModel.TestStep.NominalValue * (1 + Tolerance), 4);
         TestStepViewModel.TestStep.LowerLimit = Math.Round(TestStepViewModel.TestStep.NominalValue * (1 - Tolerance), 4);
+    }
+    
+    partial void OnIsExpandedChanged(bool value)
+    {
+        _settingsService.Settings.IsStepConfiguratorExpanded = value;
     }
 }

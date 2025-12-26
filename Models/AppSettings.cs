@@ -11,5 +11,9 @@ public class AppSettings
     public double WindowY { get; set; } = -1;
     public WindowState WindowState { get; set; } = WindowState.Normal;
     public string LastOpenedFile { get; set; } = "";
+    public bool IsStepConfiguratorExpanded { get; set; } = false;
+    public bool IsMeasSelectorExpanded { get; set; } = false;
+    public bool IsStimSelectorExpanded { get; set; } = false;
+    public bool IsExtStimSelectorExpanded { get; set; } = false;
 
 }

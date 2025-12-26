@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -7,10 +8,13 @@ namespace ATLab.ViewModels;
 
 public partial class MeasChannelViewModel : ViewModelBase
 {
+    
+    private readonly ISettingsService _settingsService;
+    
     public ObservableCollection<CustomRelayChannelName> CustomChannelNames { get; set; }
 
     [ObservableProperty]
-    private bool _isExpanded = true;
+    private bool _isExpanded;
 
     [ObservableProperty]
     private int _isSelectedH;
@@ -20,11 +24,15 @@ public partial class MeasChannelViewModel : ViewModelBase
     
     private RelayMatrix? _relayMatrixState;
     
-    public MeasChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
+    public MeasChannelViewModel(
+        ObservableCollection<CustomRelayChannelName> customChannelNames,
+        ISettingsService settingsService)
     {
         CustomChannelNames = customChannelNames;
         IsSelectedH = 0;
         IsSelectedL = 0;
+        _settingsService = settingsService;
+        IsExpanded = settingsService.Settings.IsMeasSelectorExpanded;
     }
     
     public MeasChannelViewModel()
@@ -66,6 +74,11 @@ public partial class MeasChannelViewModel : ViewModelBase
         _relayMatrixState = relayMatrixState;
         IsSelectedH = relayMatrixState.ActiveChannelHigh;
         IsSelectedL = relayMatrixState.ActiveChannelLow;
+    }
+    
+    partial void OnIsExpandedChanged(bool value)
+    {
+        _settingsService.Settings.IsMeasSelectorExpanded = value;
     }
 }
 

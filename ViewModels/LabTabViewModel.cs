@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -20,7 +21,11 @@ public partial class LabTabViewModel : ViewModelBase
     private readonly RelayGroup _testExtStimState;
     private readonly RelayMatrix _testMatrixState;
 
-    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels, ISimulationService simulationService)
+    public LabTabViewModel(
+        IErrorService errorService,
+        ITestHardware testHardware,
+        TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
+        ISimulationService simulationService)
     {
         _errorService = errorService;
         _testHardware = testHardware;
@@ -39,7 +44,7 @@ public partial class LabTabViewModel : ViewModelBase
     {
         _errorService = new Services.ErrorService();
         _testHardware = new CTIA.CtiaHardware(new Services.SimulationService());
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo, new SettingsService());
         _simulationService = new Services.SimulationStateService { IsSimulationMode = true };
         
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
