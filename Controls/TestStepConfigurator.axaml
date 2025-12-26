@@ -106,6 +106,16 @@
                             Orientation="Vertical"
                             Spacing="5"
                             Margin="10">
+                    <TextBlock Text="Delay:"/>
+                    <TextBox Text="{Binding TestStepDelay, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             MaxLength="20"
+                             Width="100"/>
+                </StackPanel>
+                
+                <StackPanel HorizontalAlignment="Left"
+                            Orientation="Vertical"
+                            Spacing="5"
+                            Margin="10">
                     <TextBlock Text="Evaluate:"/>
                     <RadioButton Content="Script"/>
                     <RadioButton Content="External Command"/>

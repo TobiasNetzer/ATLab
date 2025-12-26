@@ -9,6 +9,7 @@ public class TestStep
     public double NominalValue { get; set; }
     public double LowerLimit { get; set; }
     public double UpperLimit { get; set; }
+    public int Delay { get; set; }
     public string? Comment { get; set; }
     
     [JsonIgnore]

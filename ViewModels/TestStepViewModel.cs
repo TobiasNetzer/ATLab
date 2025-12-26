@@ -18,6 +18,8 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private double _upperLimit;
     [ObservableProperty]
+    private int _delay;
+    [ObservableProperty]
     private string? _result;
     [ObservableProperty]
     private string? _comment;
@@ -42,6 +44,7 @@ public partial class TestStepViewModel : ViewModelBase
         LowerLimit = model.LowerLimit;
         UpperLimit = model.UpperLimit;
         Result = model.Result;
+        Delay = model.Delay;
         Comment = model.Comment;
         StimState.ApplyDto(_model.StimState ?? new RelayGroupDto());
         ExtStimState.ApplyDto(_model.ExtStimState ?? new RelayGroupDto());
@@ -55,6 +58,7 @@ public partial class TestStepViewModel : ViewModelBase
         _model.NominalValue = NominalValue;
         _model.LowerLimit = LowerLimit;
         _model.UpperLimit = UpperLimit;
+        _model.Delay = Delay;
         _model.Result = Result;
         _model.Comment = Comment;
         _model.StimState = StimState.ToDto();

@@ -22,21 +22,25 @@
                 
                 <Button Content="&#xE8F4;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="New file"
                         Command="{Binding TestStepPresenter.NewFileCommand}"/>
 
                 <Button Content="&#xE838;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Open file"
                         Command="{Binding TestStepPresenter.LoadFileWithDialogCommand}"/>
 
                 <Button Content="&#xE74E;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Save file"
                         Command="{Binding TestStepPresenter.SaveFileCommand}"/>
                 
                 <Button Content="&#xE792;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Save file as"
                         Command="{Binding TestStepPresenter.SaveFileAsCommand}"/>
 
@@ -47,26 +51,31 @@
 
                 <Button Content="&#xF8AA;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Add a new test step"
                         Command="{Binding TestStepPresenter.AddTestStepCommand}"/>
                 
                 <Button Content="&#xF413;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Duplicate selected test step"
                         Command="{Binding TestStepPresenter.DuplicateTestStepCommand}"/>
 
                 <Button Content="&#xF8AB;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Remove selected test step"
                         Command="{Binding TestStepPresenter.RemoveTestStepCommand}"/>
                 
                 <Button Content="&#xEB0F;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Move selected test step up"
                         Command="{Binding TestStepPresenter.MoveStepUpCommand}"/>
                 
                 <Button Content="&#xEB11;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Move selected test step down"
                         Command="{Binding TestStepPresenter.MoveStepDownCommand}"/>
                 
@@ -77,11 +86,13 @@
                 
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Start test execution"
                         Command="{Binding TestStepPresenter.StartTestCommand}"/>
                 
                 <Button Content="&#xE978;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="Stop test execution"
                         Command="{Binding TestStepPresenter.CancelTestCommand}"/>
 
@@ -92,6 +103,7 @@
 
                 <Button Content="&#xE946;"
                         FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
                         ToolTip.Tip="About"
                         Command="{Binding TestStepPresenter.OpenAboutWindowCommand}"/>
                 
@@ -118,7 +130,7 @@
                     <DataGridTextColumn Header="Nominal Value" Binding="{Binding NominalValue}" />
                     <DataGridTextColumn Header="Upper Limit" Binding="{Binding UpperLimit}" />
                     <DataGridTextColumn Header="Result" Binding="{Binding Result}" />
-                    <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" />
+                    <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="*"/>
                 </DataGrid.Columns>
             
                 <DataGrid.ContextMenu>

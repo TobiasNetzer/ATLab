@@ -31,6 +31,8 @@ public class TestStepRunner : ITestStepRunner
         {
             var result = await _testHardware.UpdateRelayStates();
             
+            await Task.Delay(step.Delay, token);
+            
             // run script
 
             if (result.IsSuccess)
@@ -47,7 +49,6 @@ public class TestStepRunner : ITestStepRunner
             _errorService.AddError("Exception: " + ex.Message);
         }
         
-        //await Task.Delay(500, token);
         return new TestStepResult(success, 0.0);
     }
 }
