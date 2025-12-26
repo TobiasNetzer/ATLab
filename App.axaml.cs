@@ -134,6 +134,7 @@ public class App : Application
                         _errorService.Errors.Add(ex.ToString());
                     }
                 }
+                else mainVm.NewFileCommand.Execute(null);
             });
             
         }
