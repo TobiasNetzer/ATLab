@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
-using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
-using ATLab.Views;
 using System.Threading.Tasks;
 using ATLab.CTIA;
 using ATLab.Interfaces;
-using ATLab.Models;
 using ATLab.Services;
-using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -55,7 +48,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isErrorFlyoutOpen;
 
     public MainWindowViewModel(IErrorService errorService,
-        ITestHardware testHardware, 
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
@@ -102,7 +94,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab = new TestingTabViewModel();
         LabTab = new LabTabViewModel(_errorService, testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator);
-        ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
+        ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"), new MessageBoxService());
 
         _selectedTab = TestingTab;
         

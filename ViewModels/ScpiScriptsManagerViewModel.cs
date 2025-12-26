@@ -11,15 +11,19 @@ namespace ATLab.ViewModels;
 public partial class ScpiScriptsManagerViewModel : ViewModelBase
 {
     private readonly IScpiScriptRepository _repository;
+    private readonly IMessageBoxService _messageBoxService;
 
     public ObservableCollection<ScpiScriptItemViewModel> Scripts { get; } = new();
 
     [ObservableProperty]
     private ScpiScriptItemViewModel? _selectedScript;
 
-    public ScpiScriptsManagerViewModel(IScpiScriptRepository repository)
+    public ScpiScriptsManagerViewModel(
+        IScpiScriptRepository repository,
+        IMessageBoxService messageBoxService)
     {
         _repository = repository;
+        _messageBoxService = messageBoxService;
         
         Title = "Script Manager";
     }
@@ -67,6 +71,9 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
     private async Task DeleteScript()
     {
         if (SelectedScript is null) return;
+        
+        var confirm = await _messageBoxService.ShowConfirmationAsync("Delete Script", "The selected script will be permanently deleted.");
+        if (!confirm) return;
 
         var id = SelectedScript.Id;
         Scripts.Remove(SelectedScript);
