@@ -135,7 +135,7 @@ public partial class TestingTabViewModel : ViewModelBase
             Delay = currentModel.Delay,
             StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
             ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
-            MatrixState = currentModel.MatrixState != null ? new RelayMatrix(currentModel.MatrixState) : null
+            MatrixState = new RelayMatrix(currentModel.MatrixState)
         };
 
         var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
@@ -403,5 +403,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _settingsService = new SettingsService();
         _fileService = new FileService();
         _messageBoxService = new MessageBoxService();
+        
+        Title = "Testing";
     }
 }

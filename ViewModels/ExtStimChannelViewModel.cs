@@ -13,7 +13,7 @@ public partial class ExtStimChannelViewModel : ViewModelBase
     private readonly ObservableCollection<CustomRelayChannelName> _customChannelNames;
     
     [ObservableProperty]
-    private bool _isExpanded;
+    private bool _isExpanded = true;
 
     public ExtStimChannelViewModel(ObservableCollection<CustomRelayChannelName> customChannelNames)
     {

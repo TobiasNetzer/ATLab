@@ -10,7 +10,7 @@ public partial class MeasChannelViewModel : ViewModelBase
     public ObservableCollection<CustomRelayChannelName> CustomChannelNames { get; set; }
 
     [ObservableProperty]
-    private bool _isExpanded;
+    private bool _isExpanded = true;
 
     [ObservableProperty]
     private int _isSelectedH;
