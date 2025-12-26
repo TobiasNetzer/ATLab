@@ -5,8 +5,11 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class SimulationService : ITestHardwareCommunication
+public class SimulationService : ISerialCommunication
 {
+    public void SendRaw(byte[] data)
+    {
+    }
     public Task<byte[]> SendAsync(byte[] data, int timeoutMs = 1000)
     {
         return Task.FromResult(data);

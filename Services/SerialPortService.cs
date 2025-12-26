@@ -8,11 +8,7 @@ using ATLab.Models;
 
 namespace ATLab.Services
 {
-    /// <summary>
-    /// Generic serial port service for sending/receiving raw bytes.
-    /// Device-specific frame parsing should be handled by the controller class.
-    /// </summary>
-    public class SerialPortService : ITestHardwareCommunication, IDisposable
+    public class SerialPortService : ISerialCommunication, IDisposable
     {
         private readonly SerialPort _port;
         private readonly object _lock = new();
