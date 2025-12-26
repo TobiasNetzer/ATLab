@@ -14,17 +14,17 @@ public partial class LabTabViewModel : ViewModelBase
     private readonly ISimulationService _simulationService;
 
     [ObservableProperty]
-    private TestConfigurationViewModel _testConfiguration;
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
     
     private readonly RelayGroup _testStimState;
     private readonly RelayGroup _testExtStimState;
     private readonly RelayMatrix _testMatrixState;
 
-    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestConfigurationViewModel testConfiguration, ISimulationService simulationService)
+    public LabTabViewModel(IErrorService errorService, ITestHardware testHardware, TestHardwareRelayChannelsViewModel testHardwareRelayChannels, ISimulationService simulationService)
     {
         _errorService = errorService;
         _testHardware = testHardware;
-        TestConfiguration = testConfiguration;
+        TestHardwareRelayChannels = testHardwareRelayChannels;
         _simulationService = simulationService;
         
         Title = "Lab";
@@ -39,7 +39,7 @@ public partial class LabTabViewModel : ViewModelBase
     {
         _errorService = new Services.ErrorService();
         _testHardware = new CTIA.CtiaHardware(new Services.SimulationService());
-        TestConfiguration = new TestConfigurationViewModel(_testHardware.HardwareInfo, new TestStepConfiguratorViewModel());
+        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
         _simulationService = new Services.SimulationStateService { IsSimulationMode = true };
         
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
@@ -82,8 +82,8 @@ public partial class LabTabViewModel : ViewModelBase
 
     public void LoadLabTabState()
     {
-        TestConfiguration.StimChannelViewModel.LoadRelayStates(_testStimState);
-        TestConfiguration.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
-        TestConfiguration.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
+        TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(_testStimState);
+        TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
+        TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
     }
 }

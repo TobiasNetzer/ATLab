@@ -1,4 +1,5 @@
 using ATLab.Interfaces;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,14 +8,18 @@ namespace ATLab.ViewModels;
 public partial class ConfigTabViewModel : ViewModelBase
 {
     
-    public TestConfigurationViewModel TestConfiguration { get; set; }
+    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; set; }
+    
+    private readonly TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     
     [ObservableProperty]
     private string _tolerance = "10";
 
-    public ConfigTabViewModel(TestConfigurationViewModel testConfigurationViewModel)
+    public ConfigTabViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
+        TestStepConfiguratorViewModel testStepConfiguratorViewModel)
     {
-        TestConfiguration = testConfigurationViewModel;
+        TestHardwareRelayChannels = testHardwareRelayChannelsViewModel;
+        _testStepConfiguratorViewModel = testStepConfiguratorViewModel;
 
         Title = "Config";
     }
@@ -23,7 +28,7 @@ public partial class ConfigTabViewModel : ViewModelBase
     {
         if (double.TryParse(value, out var tolerance))
         {
-            TestConfiguration.TestStepConfiguratorViewModel.Tolerance = tolerance / 100.0;
+            _testStepConfiguratorViewModel.Tolerance = tolerance / 100.0;
         }
     }
 }

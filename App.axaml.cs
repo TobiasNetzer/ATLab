@@ -162,7 +162,6 @@ public class App : Application
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
 
         // ViewModels
-        services.AddSingleton<TestConfigurationViewModel>();
             
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();

@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:DataType="vm:TestConfigurationViewModel"
+             x:DataType="vm:TestHardwareRelayChannelsViewModel"
              MaxHeight="610">
 
     <Design.DataContext>
-        <vm:TestConfigurationViewModel />
+        <vm:TestHardwareRelayChannelsViewModel />
     </Design.DataContext>
 
     <Border Background="{DynamicResource SystemChromeLowColor}"

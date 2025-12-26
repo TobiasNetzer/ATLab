@@ -26,7 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.TestStepPresenter.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.TestStepPresenter.CurrentFilePath))}{(TestingTab.TestStepPresenter.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
-    private TestConfigurationViewModel _testConfigurationViewModel;
+    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
 
     [ObservableProperty]
     private ViewModelBase _selectedTab;
@@ -55,7 +55,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(IErrorService errorService,
         ITestHardware testHardware, 
-        TestConfigurationViewModel testConfigurationViewModel, 
+        TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
         ConfigTabViewModel configTab,
@@ -64,7 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _errorService = errorService;
         _testHardware = testHardware;
         _settingsService = settingsService;
-        TestConfigurationViewModel = testConfigurationViewModel;
+        TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
 
         TestingTab = testingTab;
         LabTab = labTab;
@@ -97,11 +97,11 @@ public partial class MainWindowViewModel : ViewModelBase
         _errorService = new ErrorService();
         _settingsService = new SettingsService();
         var configurator = new TestStepConfiguratorViewModel();
-        TestConfigurationViewModel = new TestConfigurationViewModel(_testHardware.HardwareInfo, configurator);
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
         
         TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(
             _errorService, 
-            TestConfigurationViewModel, 
+            TestHardwareRelayChannelsViewModel, 
             new TestExecutor(new DummyTestStepRunner()), 
             configurator,
             new FileDialogService(),
