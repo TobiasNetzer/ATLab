@@ -15,22 +15,13 @@ public partial class TestStepViewModel : ViewModelBase
     {
         TestStep = testStep;
         
-        if (TestStep.LiveStimState == null)
-        {
-            TestStep.LiveStimState = new RelayGroup(hardwareInfo.StimChannelCount);
-            TestStep.LiveStimState.ApplyDto(TestStep.StimState ?? new RelayGroupDto());
-        }
-
-        if (TestStep.LiveExtStimState == null)
-        {
-            TestStep.LiveExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
-            TestStep.LiveExtStimState.ApplyDto(TestStep.ExtStimState ?? new RelayGroupDto());
-        }
-
-        if (TestStep.MatrixState == null)
-        {
-            TestStep.MatrixState = new RelayMatrix(0, 0);
-        }
+        TestStep.LiveStimState = new RelayGroup(hardwareInfo.StimChannelCount);
+        TestStep.LiveStimState.ApplyDto(TestStep.StimState ?? new RelayGroupDto());
+        
+        TestStep.LiveExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
+        TestStep.LiveExtStimState.ApplyDto(TestStep.ExtStimState ?? new RelayGroupDto());
+        
+        TestStep.MatrixState = new RelayMatrix(0, 0);
     }
 
     partial void OnTestStepChanged(TestStep? oldValue, TestStep newValue)
