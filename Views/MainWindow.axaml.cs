@@ -59,7 +59,7 @@ public partial class MainWindow : Window
     {
         if (DataContext is MainWindowViewModel vm)
         {
-            if (vm.TestingTab.TestStepPresenter.IsDirty)
+            if (vm.TestingTab.IsDirty)
             {
                 e.Cancel = true;
 
@@ -71,7 +71,7 @@ public partial class MainWindow : Window
 
                     if (result)
                     {
-                        vm.TestingTab.TestStepPresenter.IsDirty = false;
+                        vm.TestingTab.IsDirty = false;
                         Close();
                     }
                 }

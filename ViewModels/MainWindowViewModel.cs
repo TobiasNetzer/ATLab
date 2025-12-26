@@ -20,10 +20,8 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
-    private readonly ITestHardware _testHardware;
-    private readonly ISettingsService _settingsService;
 
-    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.TestStepPresenter.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.TestStepPresenter.CurrentFilePath))}{(TestingTab.TestStepPresenter.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.CurrentFilePath))}{(TestingTab.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -62,12 +60,9 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
         ConfigTabViewModel configTab,
-        ISettingsService settingsService,
         ScpiScriptsManagerViewModel scpiScriptsManagerViewModel)
     {
         _errorService = errorService;
-        _testHardware = testHardware;
-        _settingsService = settingsService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
 
         TestingTab = testingTab;
@@ -88,9 +83,9 @@ public partial class MainWindowViewModel : ViewModelBase
             HasErrors = ErrorCount > 0;
         };
 
-        TestingTab.TestStepPresenter.PropertyChanged += (s, e) =>
+        TestingTab.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName is nameof(TestStepPresenterViewModel.CurrentFilePath) or nameof(TestStepPresenterViewModel.IsDirty))
+            if (e.PropertyName is nameof(TestingTabViewModel.CurrentFilePath) or nameof(TestingTabViewModel.IsDirty))
             {
                 OnPropertyChanged(nameof(WindowTitle));
             }
@@ -99,24 +94,13 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
-        _testHardware = new CtiaHardware(new SimulationService());
+        var testHardware = new CtiaHardware(new SimulationService());
         _errorService = new ErrorService();
-        _settingsService = new SettingsService();
         var configurator = new TestStepConfiguratorViewModel();
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo);
+        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(testHardware.HardwareInfo);
         
-        TestStepPresenterViewModel testStepPresenter = new TestStepPresenterViewModel(
-            _errorService, 
-            TestHardwareRelayChannelsViewModel, 
-            new TestExecutor(new DummyTestStepRunner()), 
-            configurator,
-            new FileDialogService(),
-            _settingsService,
-            new FileService(),
-            new MessageBoxService());
-            
-        TestingTab = new TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel, configurator, testStepPresenter);
-        LabTab = new LabTabViewModel(_errorService, _testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
+        TestingTab = new TestingTabViewModel();
+        LabTab = new LabTabViewModel(_errorService, testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator);
         ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
 
@@ -136,7 +120,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task OpenAboutWindow() => await TestingTab.TestStepPresenter.OpenAboutWindow();
+    private async Task OpenAboutWindow() => await TestingTab.OpenAboutWindow();
     
     partial void OnIsErrorFlyoutOpenChanged(bool value)
     {
@@ -148,18 +132,18 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task NewFile() => await TestingTab.TestStepPresenter.NewFile();
+    private async Task NewFile() => await TestingTab.NewFile();
 
     [RelayCommand]
-    private async Task SaveFileAs() => await TestingTab.TestStepPresenter.SaveFileAs();
+    private async Task SaveFileAs() => await TestingTab.SaveFileAs();
     
     [RelayCommand]
-    private async Task SaveFile() => await TestingTab.TestStepPresenter.SaveFile();
+    private async Task SaveFile() => await TestingTab.SaveFile();
     
     [RelayCommand]
-    private async Task LoadFileWithDialog() => await TestingTab.TestStepPresenter.LoadFileWithDialog();
+    private async Task LoadFileWithDialog() => await TestingTab.LoadFileWithDialog();
     
-    public async Task LoadFile(string fileToLoad) => await TestingTab.TestStepPresenter.LoadFile(fileToLoad);
+    public async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
     public event Action? RequestClose;
     
@@ -177,7 +161,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 LabTab.LoadLabTabState();
                 break;
             case TestingTabViewModel:
-                TestingTab.TestStepPresenter.SelectedStepIndex = 0;
+                TestingTab.SelectedStepIndex = 0;
                 break;
             case ScpiScriptsManagerViewModel:
                  ScriptTab.ReloadScriptsCommand.Execute(null);

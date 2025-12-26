@@ -170,7 +170,6 @@ public class App : Application
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<ScpiScriptsManagerViewModel>();
-        services.AddTransient<TestStepPresenterViewModel>();
         
     }
 
