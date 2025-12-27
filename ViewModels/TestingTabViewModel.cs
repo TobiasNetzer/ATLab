@@ -18,6 +18,12 @@ public partial class TestingTabViewModel : ViewModelBase
 {
 
     private readonly ITestExecutor _testExecutor;
+    private readonly IErrorService _errorService;
+    private readonly IFileDialogService _fileDialogService;
+    private readonly ISettingsService _settingsService;
+    private readonly IFileService _fileService;
+    private readonly IMessageBoxService _messageBoxService;
+    private readonly SerialDeviceManagerViewModel _serialDeviceManager;
 
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps;
@@ -33,13 +39,12 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
+
+    [ObservableProperty]
+    private ScriptSelectorViewModel _scriptSelector;
     
-    private readonly IErrorService _errorService;
-    private readonly IFileDialogService _fileDialogService;
-    private readonly ISettingsService _settingsService;
-    private readonly IFileService _fileService;
-    private readonly IMessageBoxService _messageBoxService;
-    private readonly SerialDeviceManagerViewModel _serialDeviceManager;
+    [ObservableProperty]
+    private bool _isRunning;
 
     private CancellationTokenSource? _cts;
 
@@ -60,13 +65,15 @@ public partial class TestingTabViewModel : ViewModelBase
         ISettingsService settingsService,
         IFileService fileService,
         IMessageBoxService messageBoxService,
-        SerialDeviceManagerViewModel serialDeviceManager)
+        SerialDeviceManagerViewModel serialDeviceManager,
+        ScriptSelectorViewModel scriptSelector)
     {
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
+        _scriptSelector = scriptSelector;
         _fileDialogService = fileDialogService;
         _settingsService = settingsService;
         _fileService = fileService;
@@ -94,6 +101,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState!);
                 TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState!);
                 TestStepConfiguratorViewModel.LoadTestStep(value);
+                ScriptSelector.SelectedTestStep = value.TestStep;
             }
             catch (Exception ex)
             {
@@ -101,6 +109,20 @@ public partial class TestingTabViewModel : ViewModelBase
             }
             
         }
+    }
+
+    partial void OnIsRunningChanged(bool value)
+    {
+        AddTestStepCommand.NotifyCanExecuteChanged();
+        DuplicateTestStepCommand.NotifyCanExecuteChanged();
+        RemoveTestStepCommand.NotifyCanExecuteChanged();
+        MoveStepUpCommand.NotifyCanExecuteChanged();
+        MoveStepDownCommand.NotifyCanExecuteChanged();
+        NewFileCommand.NotifyCanExecuteChanged();
+        SaveFileCommand.NotifyCanExecuteChanged();
+        OpenAboutWindowCommand.NotifyCanExecuteChanged();
+        LoadFileWithDialogCommand.NotifyCanExecuteChanged();
+        SaveFileAsCommand.NotifyCanExecuteChanged();
     }
 
     private void RenumberTestSteps()
@@ -111,7 +133,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void AddTestStep()
     {
         var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
@@ -123,7 +145,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = indexToInsertNewStep;
     }
     
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void DuplicateTestStep()
     {
         if (SelectedStep == null) return;
@@ -138,6 +160,10 @@ public partial class TestingTabViewModel : ViewModelBase
             NominalValue = currentModel.NominalValue,
             Comment = currentModel.Comment,
             Delay = currentModel.Delay,
+            EvaluationSource = currentModel.EvaluationSource,
+            TargetDevice = currentModel.TargetDevice,
+            ScriptId = currentModel.ScriptId,
+            ScriptVariables = new ObservableCollection<ScpiVariable>(currentModel.ScriptVariables.Select(v => v.Clone())),
             StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
             ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
             MatrixState = new RelayMatrix(currentModel.MatrixState)
@@ -153,7 +179,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = indexToInsert;
     }
     
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void RemoveTestStep()
     {
         if (SelectedStepIndex >= 0 && SelectedStepIndex < TestSteps.Count)
@@ -163,7 +189,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void MoveStepUp()
     {
         if (SelectedStep == null || SelectedStepIndex <= 0) return;
@@ -179,7 +205,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = newIndex;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void MoveStepDown()
     {
         if (SelectedStep == null || SelectedStepIndex < 0 || SelectedStepIndex >= TestSteps.Count - 1) return;
@@ -195,12 +221,9 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = newIndex;
     }
     
-    [ObservableProperty]
-    private bool _isRunning;
+    private bool IsTestRunning() => !IsRunning;
     
-    private bool CanStartTest() => !IsRunning;
-    
-    [RelayCommand(CanExecute = nameof(CanStartTest))]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private async Task StartTestAsync()
     {
         if (TestSteps.Count == 0)
@@ -242,7 +265,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         _testExecutor.StepStarted += (index, step) =>
         {
-            //SelectedStepIndex = index;
+            SelectedStepIndex = index;
             //SelectedStep = step;
         };
 
@@ -257,7 +280,7 @@ public partial class TestingTabViewModel : ViewModelBase
         };
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task NewFile()
     {
         if (IsDirty)
@@ -298,7 +321,7 @@ public partial class TestingTabViewModel : ViewModelBase
         IsDirty = currentJson != _lastSavedJson;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task OpenAboutWindow()
     {
         var deviceInfoProvider = TestHardwareRelayChannels.HardwareInfo;
@@ -317,7 +340,7 @@ public partial class TestingTabViewModel : ViewModelBase
             aboutWindow.Show();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task SaveFileAs()
     {
         var file = await _fileDialogService.SaveFileAsync("ATLab files", "Test.atlab", "atlab", new[] { "atlab" });
@@ -334,7 +357,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task SaveFile()
     {
         if (!string.IsNullOrWhiteSpace(CurrentFilePath))
@@ -349,7 +372,7 @@ public partial class TestingTabViewModel : ViewModelBase
         await SaveFileAs();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task LoadFileWithDialog()
     {
         if (IsDirty)
@@ -387,12 +410,10 @@ public partial class TestingTabViewModel : ViewModelBase
                 TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
                 
                 _serialDeviceManager.SerialDevices.Clear();
-                if (dto.SerialDevices != null)
+
+                foreach (var device in dto.SerialDevices)
                 {
-                    foreach (var device in dto.SerialDevices)
-                    {
-                        _serialDeviceManager.SerialDevices.Add(device);
-                    }
+                    _serialDeviceManager.SerialDevices.Add(device);
                 }
 
                 CurrentFilePath = fileToLoad;
@@ -406,21 +427,5 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             _errorService.AddError("Failed to load file: " + ex.Message);
         }
-    }
-
-    public TestingTabViewModel()
-    {
-        _errorService = new ErrorService();
-        TestSteps = new ObservableCollection<TestStepViewModel>();
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(new DummyHardwareInfo(), new SettingsService());
-        _testExecutor = new TestExecutor(new DummyTestStepRunner());
-        TestStepConfiguratorViewModel = new TestStepConfiguratorViewModel(new SettingsService());
-        _fileDialogService = new FileDialogService();
-        _settingsService = new SettingsService();
-        _fileService = new FileService();
-        _messageBoxService = new MessageBoxService();
-        _serialDeviceManager = new SerialDeviceManagerViewModel();
-        
-        Title = "Testing";
     }
 }

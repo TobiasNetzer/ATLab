@@ -35,18 +35,6 @@ public partial class MeasChannelViewModel : ViewModelBase
         IsExpanded = settingsService.Settings.IsMeasSelectorExpanded;
     }
     
-    public MeasChannelViewModel()
-    {
-        IsSelectedH = 0;
-        IsSelectedL = 0;
-
-        CustomChannelNames = new ObservableCollection<CustomRelayChannelName>();
-        for (int i = 0; i < 32; i++)
-        {
-            CustomChannelNames.Add(new CustomRelayChannelName("Channel", i));
-        }
-    }
-    
     public IEnumerable<CustomRelayChannelName> CustomChannelNamesWithOffMember
     {
         get

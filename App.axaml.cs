@@ -154,6 +154,8 @@ public class App : Application
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<ISerialPortManager, SerialPortManager>();
         services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>();
+        services.AddSingleton<IScpiScriptService, ScpiScriptService>();
+        services.AddSingleton<IScriptRunner, ScriptRunner>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -173,6 +175,7 @@ public class App : Application
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<ScpiScriptsManagerViewModel>();
         services.AddSingleton<SerialDeviceManagerViewModel>();
+        services.AddTransient<ScriptSelectorViewModel>();
         
     }
 

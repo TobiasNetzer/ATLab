@@ -83,34 +83,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         };
     }
-    
-    public MainWindowViewModel()
-    {
-        var testHardware = new CtiaHardware(new SimulationService());
-        _errorService = new ErrorService();
-        var configurator = new TestStepConfiguratorViewModel(new SettingsService());
-        TestHardwareRelayChannelsViewModel = new TestHardwareRelayChannelsViewModel(testHardware.HardwareInfo, new SettingsService());
-        var serialDeviceManager = new SerialDeviceManagerViewModel();
-        
-        TestingTab = new TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel, new TestExecutor(new DummyTestStepRunner()), configurator, new FileDialogService(), new SettingsService(), new FileService(), new MessageBoxService(), serialDeviceManager);
-        LabTab = new LabTabViewModel(_errorService, testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
-        ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator, serialDeviceManager);
-        ScriptTab = new ScpiScriptsManagerViewModel(scriptRepo, new MessageBoxService());
-
-        _selectedTab = TestingTab;
-        
-        Tabs.Add(TestingTab);
-        Tabs.Add(LabTab);
-        Tabs.Add(ConfigTab);
-        Tabs.Add(ScriptTab);
-        
-        _errorService.Errors.CollectionChanged += (_, __) =>
-        {
-            ErrorCount += 1; // Only show number of new errors
-            HasErrors = ErrorCount > 0;
-        };
-
-    }
 
     [RelayCommand]
     private async Task OpenAboutWindow() => await TestingTab.OpenAboutWindow();

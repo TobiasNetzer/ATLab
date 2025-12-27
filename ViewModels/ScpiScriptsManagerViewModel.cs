@@ -10,18 +10,21 @@ namespace ATLab.ViewModels;
 
 public partial class ScpiScriptsManagerViewModel : ViewModelBase
 {
+    private readonly IScpiScriptService _scriptService;
     private readonly IScpiScriptRepository _repository;
     private readonly IMessageBoxService _messageBoxService;
 
-    public ObservableCollection<ScpiScriptItemViewModel> Scripts { get; } = new();
+    public ObservableCollection<ScpiScriptItemViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
     private ScpiScriptItemViewModel? _selectedScript;
 
     public ScpiScriptsManagerViewModel(
+        IScpiScriptService scriptService,
         IScpiScriptRepository repository,
         IMessageBoxService messageBoxService)
     {
+        _scriptService = scriptService;
         _repository = repository;
         _messageBoxService = messageBoxService;
         
@@ -39,32 +42,17 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
     [RelayCommand]
     private async Task ReloadScripts()
     {
-        Scripts.Clear();
-        var scripts = await _repository.LoadAllAsync();
-        foreach (var model in scripts)
-        {
-            var vm = new ScpiScriptItemViewModel(_repository, model);
-            vm.LoadFromModel();
-            Scripts.Add(vm);
-        }
-
-        SelectedScript = Scripts.FirstOrDefault();
+        await _scriptService.LoadAllAsync();
+        if (SelectedScript == null)
+            SelectedScript = Scripts.FirstOrDefault();
     }
 
     [RelayCommand]
     private async Task NewScript()
     {
-        var model = new ScpiScript
-        {
-            Name = "New Script",
-            Description = "",
-        };
-
-        var vm = new ScpiScriptItemViewModel(_repository, model);
-        vm.LoadFromModel();
-        Scripts.Add(vm);
+        var vm = _scriptService.CreateNew();
         SelectedScript = vm;
-        await vm.SaveAsync();
+        await _scriptService.SaveAsync(vm);
     }
 
     [RelayCommand(CanExecute = nameof(CanExecute))]
@@ -75,17 +63,16 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
         var confirm = await _messageBoxService.ShowConfirmationAsync("Delete Script", "The selected script will be permanently deleted.");
         if (!confirm) return;
 
-        var id = SelectedScript.Id;
-        Scripts.Remove(SelectedScript);
-        SelectedScript = Scripts.FirstOrDefault();
-        await _repository.DeleteAsync(id);
+        var vmToRemove = SelectedScript;
+        SelectedScript = Scripts.FirstOrDefault(s => s != vmToRemove);
+        await _scriptService.DeleteAsync(vmToRemove);
     }
     
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task SaveScript()
     {
         if (SelectedScript is null) return;
-        await SelectedScript.SaveAsync();
+        await _scriptService.SaveAsync(SelectedScript);
     }
 
     [RelayCommand]

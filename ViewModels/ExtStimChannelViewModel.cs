@@ -26,19 +26,6 @@ public partial class ExtStimChannelViewModel : ViewModelBase
         _settingsService = settingsService;
         IsExpanded = settingsService.Settings.IsExtStimSelectorExpanded;
     }
-
-    public ExtStimChannelViewModel()
-    {
-        ExtStimChannels = new ObservableCollection<RelayChannelViewModel>();
-
-        _customChannelNames = new ObservableCollection<CustomRelayChannelName>();
-        for (int i = 0; i < 4; i++)
-        {
-            _customChannelNames.Add(new CustomRelayChannelName("Channel", i));
-        }
-        var testStimState = new RelayGroup(4);
-        LoadRelayStates(testStimState);
-    }
     
     public void LoadRelayStates(RelayGroup relayGroup)
     {

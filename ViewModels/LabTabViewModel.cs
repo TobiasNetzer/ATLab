@@ -1,4 +1,6 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
@@ -13,10 +15,23 @@ public partial class LabTabViewModel : ViewModelBase
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
     private readonly ISimulationService _simulationService;
+    private readonly IScriptRunner _scriptRunner;
 
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
+
+    [ObservableProperty]
+    private ScriptSelectorViewModel _scriptSelectorViewModel;
     
+    [ObservableProperty]
+    private SerialDevices? _selectedDevice;
+    
+    [ObservableProperty]
+    private ScpiScriptItemViewModel? _selectedScript;
+    
+    [ObservableProperty]
+    private bool _isBusy;
+        
     private readonly RelayGroup _testStimState;
     private readonly RelayGroup _testExtStimState;
     private readonly RelayMatrix _testMatrixState;
@@ -25,12 +40,25 @@ public partial class LabTabViewModel : ViewModelBase
         IErrorService errorService,
         ITestHardware testHardware,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
-        ISimulationService simulationService)
+        ISimulationService simulationService,
+        IScriptRunner scriptRunner,
+        ScriptSelectorViewModel scriptSelector)
     {
         _errorService = errorService;
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _simulationService = simulationService;
+        _scriptRunner = scriptRunner;
+        ScriptSelectorViewModel = scriptSelector;
+        
+        ScriptSelectorViewModel.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName is nameof(ScriptSelectorViewModel.SelectedDevice) 
+                               or nameof(ScriptSelectorViewModel.SelectedScript))
+            {
+                RunScriptCommand.NotifyCanExecuteChanged();
+            }
+        };
         
         Title = "Lab";
         
@@ -40,21 +68,6 @@ public partial class LabTabViewModel : ViewModelBase
         LoadLabTabState();
     }
     
-    public LabTabViewModel()
-    {
-        _errorService = new Services.ErrorService();
-        _testHardware = new CTIA.CtiaHardware(new Services.SimulationService());
-        TestHardwareRelayChannels = new TestHardwareRelayChannelsViewModel(_testHardware.HardwareInfo, new SettingsService());
-        _simulationService = new Services.SimulationStateService { IsSimulationMode = true };
-        
-        _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
-        _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);
-        _testMatrixState = new RelayMatrix(0,0);
-    }
-    
-    [ObservableProperty]
-    private bool _isBusy;
-
     private bool CanUpdateRelayStates() => !_simulationService.IsSimulationMode && !IsBusy;
 
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
@@ -91,4 +104,34 @@ public partial class LabTabViewModel : ViewModelBase
         TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);
         TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
     }
+    
+    private bool CanRunScript() => 
+        ScriptSelectorViewModel.SelectedDevice != null && 
+        ScriptSelectorViewModel.SelectedScript != null && 
+        !IsBusy;
+    
+    [RelayCommand(CanExecute = nameof(CanRunScript))]
+    private async Task RunScript()
+    {
+        if (ScriptSelectorViewModel.SelectedDevice == null || ScriptSelectorViewModel.SelectedScript == null) return;
+
+        IsBusy = true;
+        try
+        {
+            await _scriptRunner.ExecuteAsync(
+                ScriptSelectorViewModel.SelectedScript.Id, 
+                ScriptSelectorViewModel.SelectedDevice.Name, 
+                ScriptSelectorViewModel.SelectedScript.Variables, 
+                CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError($"Failed to run script: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+    partial void OnIsBusyChanged(bool value) => RunScriptCommand.NotifyCanExecuteChanged();
 }
