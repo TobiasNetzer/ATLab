@@ -1,0 +1,77 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.SerialDeviceManager"
+             x:DataType="vm:SerialDeviceManagerViewModel"
+             Width="800">
+    
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15">
+
+        <Grid RowDefinitions="Auto, *" Margin="15">
+            <StackPanel Grid.Row="0"
+                        Spacing="10"
+                        Margin="0,0,0,10">
+                
+                <TextBlock Text="Device Manager"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Device Name:"/>
+                        <TextBox Width="200" Text="{Binding CustomDeviceName}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="2">
+                        
+                        <TextBlock Text="COM Port:"/>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            
+                            <ComboBox ItemsSource="{Binding AvailablePorts}"
+                                      SelectedItem="{Binding SelectedPort}"
+                                      Width="150"
+                                      Margin="0 0 5 0"/>
+                            
+                            <Button Content="&#xE72C;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                Command="{Binding RefreshPortsCommand}"/>
+                            
+                            <Button Content="&#xF8AA;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                    ToolTip.Tip="Add new device" 
+                                    Command="{Binding AddDeviceCommand}"/>
+                            
+                            <Button Content="&#xF8AB;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                    ToolTip.Tip="Remove device" 
+                                    Command="{Binding RemoveDeviceCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding SerialDevices}"
+                      SelectedItem="{Binding SelectedDevice}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      BorderThickness="1"
+                      BorderBrush="Gray">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Device Name"
+                                        Binding="{Binding Name}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Port"
+                                        Binding="{Binding SerialPort}"
+                                        Width="200"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
+</UserControl>

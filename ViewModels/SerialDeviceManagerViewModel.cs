@@ -10,6 +10,9 @@ public partial class SerialDeviceManagerViewModel : ViewModelBase
 {
     [ObservableProperty]
     private ObservableCollection<SerialDevices> _serialDevices = new();
+    
+    [ObservableProperty]
+    private SerialDevices? _selectedDevice;
 
     [ObservableProperty]
     private string _customDeviceName = string.Empty;
@@ -48,18 +51,16 @@ public partial class SerialDeviceManagerViewModel : ViewModelBase
         SerialDevices.Add(new SerialDevices
         {
             Name = CustomDeviceName,
-            OnSerialPort = SelectedPort
+            SerialPort = SelectedPort
         });
 
         CustomDeviceName = string.Empty;
     }
 
     [RelayCommand]
-    private void RemoveDevice(SerialDevices device)
+    private void RemoveDevice()
     {
-        if (device != null)
-        {
-            SerialDevices.Remove(device);
-        }
+        if (SelectedDevice is null) return;
+        SerialDevices.Remove(SelectedDevice);
     }
 }
