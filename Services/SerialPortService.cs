@@ -18,6 +18,7 @@ namespace ATLab.Services
         private bool _disposed;
 
         public string PortName => _port.PortName;
+        public bool IsOpen => _port.IsOpen;
 
         public SerialPortService(string portName, int baudRate = 115200)
         {

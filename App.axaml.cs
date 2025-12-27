@@ -152,7 +152,7 @@ public class App : Application
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
-        services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>(sp => new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
+        services.AddSingleton<ISerialPortManager, SerialPortManager>();
         services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>();
         
         // Register the runner and executor
