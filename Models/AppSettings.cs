@@ -16,5 +16,6 @@ public class AppSettings
     public bool IsMeasSelectorExpanded { get; set; } = false;
     public bool IsStimSelectorExpanded { get; set; } = false;
     public bool IsExtStimSelectorExpanded { get; set; } = false;
+    public bool IsScriptSelectorExpanded { get; set; } = false;
 
 }

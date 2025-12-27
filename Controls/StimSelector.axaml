@@ -15,10 +15,6 @@
         </Style>
     </UserControl.Styles>
 
-    <Design.DataContext>
-        <vm:StimChannelViewModel />
-    </Design.DataContext>
-
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15">
         

@@ -6,7 +6,7 @@
              x:DataType="vm:ScpiScriptsManagerViewModel">
 
     <ScrollViewer>
-        <StackPanel>
+        <StackPanel Margin="10">
             <controls:ScriptManager
                 DataContext="{Binding }"/>
         </StackPanel>

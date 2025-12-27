@@ -10,10 +10,6 @@
         MinHeight="800"
         RequestedThemeVariant="Default">
     
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-    
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}" />
         <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileWithDialogCommand}" />
@@ -26,7 +22,8 @@
         <DockPanel Grid.Row="0">
             
             <TabControl ItemsSource="{Binding Tabs}" 
-                        SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
+                        SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+                        Padding="0">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}" />

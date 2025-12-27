@@ -14,10 +14,6 @@
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
-
-    <Design.DataContext>
-        <vm:ExtStimChannelViewModel />
-    </Design.DataContext>
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15">

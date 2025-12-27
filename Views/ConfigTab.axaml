@@ -6,7 +6,8 @@
              x:DataType="vm:ConfigTabViewModel">
     
     <ScrollViewer>
-        <StackPanel Spacing="20">
+        <StackPanel Spacing="20"
+                    Margin="10">
             
             <controls:CustomChannelNameSetter
                 DataContext="{Binding TestHardwareRelayChannels}"
