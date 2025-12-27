@@ -57,7 +57,7 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
         var model = new ScpiScript
         {
             Name = "New Script",
-            Description = "Describe this script...",
+            Description = "",
         };
 
         var vm = new ScpiScriptItemViewModel(_repository, model);

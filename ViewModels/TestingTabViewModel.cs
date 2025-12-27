@@ -115,6 +115,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private void AddTestStep()
     {
         var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
+        if (indexToInsertNewStep > TestSteps.Count) indexToInsertNewStep = TestSteps.Count;
         var newStep = new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo);
         newStep.PropertyChanged += (_, _) => CheckForChanges();
         TestSteps.Insert(indexToInsertNewStep, newStep);

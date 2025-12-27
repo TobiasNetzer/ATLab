@@ -110,7 +110,8 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     [RelayCommand]
     private void AddVariable()
     {
-        var indexToInsertNewVariable = SelectedVariableIndex < 0 ? 0 : SelectedVariableIndex + 1;
+        var indexToInsertNewVariable = SelectedVariableIndex <= 0 ? 0 : SelectedVariableIndex + 1;
+        if (indexToInsertNewVariable > Variables.Count) indexToInsertNewVariable = Variables.Count;
         var newVariable = new ScpiVariable
         {
             Name = "",
@@ -128,5 +129,4 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
             Variables.RemoveAt(SelectedVariableIndex);
         }
     }
-
 }

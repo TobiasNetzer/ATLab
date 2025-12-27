@@ -4,7 +4,7 @@
         x:Class="ATLab.Views.SerialPortConnectWindow"
         x:DataType="vm:SerialPortConnectWindowViewModel"
         Title="Serial Port Selector"
-        Width="500" Height="180"
+        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         CanResize="False">
 
@@ -30,20 +30,19 @@
             </Button>
 
         </StackPanel>
-
-        <!-- Connect / Exit / Simulation buttons -->
+        
+        <TextBlock Text="{Binding StatusText}"
+                   HorizontalAlignment="Center"
+                   MaxWidth="400"
+                   TextWrapping="Wrap"
+                   FontWeight="Bold"
+                   Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
+        
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
             <Button Content="Simulation Mode" Width="150" HorizontalContentAlignment="Center" Command="{Binding SimulationModeCommand}"/>
             <Button Content="Exit" Width="120" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"/>
         </StackPanel>
-
-        <!-- Status -->
-        <TextBlock Text="{Binding StatusText}"
-                HorizontalAlignment="Center"
-                TextWrapping="Wrap"
-                FontWeight="Bold"
-                Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
         
     </StackPanel>
 </Window>
