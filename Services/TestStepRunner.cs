@@ -12,11 +12,13 @@ public class TestStepRunner : ITestStepRunner
     
     private readonly ITestHardware _testHardware;
     private readonly IErrorService _errorService;
+    private readonly IScriptRunner _scriptRunner;
 
-    public TestStepRunner(ITestHardware testHardware, IErrorService errorService)
+    public TestStepRunner(ITestHardware testHardware, IErrorService errorService, IScriptRunner scriptRunner)
     {
         _testHardware = testHardware;
         _errorService = errorService;
+        _scriptRunner = scriptRunner;
     }
     
     public async Task<TestStepResult> ExecuteAsync(TestStepViewModel step, CancellationToken token)
@@ -25,30 +27,18 @@ public class TestStepRunner : ITestStepRunner
         _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
         _testHardware.ActiveMeasChannelH = (byte)(step.TestStep.MatrixState.ActiveChannelHigh);
         _testHardware.ActiveMeasChannelL = (byte)(step.TestStep.MatrixState.ActiveChannelLow);
-    
-        bool success = false;
-        try
-        {
-            var result = await _testHardware.UpdateRelayStates();
-            
-            await Task.Delay(step.TestStep.Delay, token);
-            
-            // run script
 
-            if (result.IsSuccess)
-            {
-                success = true;
-            }
-            else
-            {
-                _errorService.AddError("Test Hardware Relay update failed: " + result.ErrorMessage);
-            }
-        }
-        catch (Exception ex)
+        var result = await _testHardware.UpdateRelayStates();
+        
+        if (!result.IsSuccess)
         {
-            _errorService.AddError("Exception: " + ex.Message);
+            throw new InvalidOperationException("Test Hardware Relay update failed: " + result.ErrorMessage);
         }
         
-        return new TestStepResult(success, 0.0);
+        await Task.Delay(step.TestStep.Delay, token);
+        
+        var value = await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice, step.TestStep.ScriptVariables, token);
+        
+        return new TestStepResult(true, value);
     }
 }

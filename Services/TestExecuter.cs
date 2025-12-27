@@ -11,14 +11,16 @@ namespace ATLab.Services;
 public class TestExecutor : ITestExecutor
 {
     private readonly ITestStepRunner _runner;
+    private readonly IErrorService _errorService;
 
     public event Action<int, TestStepViewModel>? StepStarted;
     public event Action<int, TestStepViewModel, TestStepResult>? StepCompleted;
     public event Action? TestCompleted;
 
-    public TestExecutor(ITestStepRunner runner)
+    public TestExecutor(ITestStepRunner runner, IErrorService errorService)
     {
         _runner = runner;
+        _errorService = errorService;
     }
 
     public async Task ExecuteAsync(
@@ -31,7 +33,21 @@ public class TestExecutor : ITestExecutor
 
             StepStarted?.Invoke(i, step);
 
-            var result = await _runner.ExecuteAsync(step, token);
+            TestStepResult result;
+            try
+            {
+                result = await _runner.ExecuteAsync(step, token);
+            }
+            catch (OperationCanceledException)
+            {
+                _errorService.AddError("Test execution cancelled.");
+                result = new TestStepResult(false, 0);
+            }
+            catch (Exception ex)
+            {
+                _errorService.AddError($"Error in step {step.TestStep.Number}: {ex.Message}");
+                result = new TestStepResult(false, 0);
+            }
 
             StepCompleted?.Invoke(i, step, result);
 
