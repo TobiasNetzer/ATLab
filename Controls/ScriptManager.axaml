@@ -162,6 +162,12 @@
                           BorderThickness="1"
                           BorderBrush="Gray"
                           MaxHeight="380">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
+                        <DataGridCheckBoxColumn Header="Expect Response" Binding="{Binding ExpectResponse}"/>
+                        <DataGridTextColumn Header="Delay (ms)" Binding="{Binding DelayMs}"/>
+                        <DataGridTextColumn Header="Timeout (ms)" Binding="{Binding TimeoutMs}"/>
+                    </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
         </Grid>

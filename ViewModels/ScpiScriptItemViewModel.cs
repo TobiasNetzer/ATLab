@@ -14,7 +14,7 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     private readonly IScpiScriptRepository _repository;
     private readonly ScpiScript _model;
     
-    public ObservableCollection<ScpiCommand> Commands { get; } = new();
+    public ObservableCollection<ScpiCommandViewModel> Commands { get; } = new();
 
     [ObservableProperty]
     private int _selectedCommandIndex;
@@ -64,7 +64,7 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     {
         Commands.Clear();
         foreach (var command in _model.Commands)
-            Commands.Add(command);
+            Commands.Add(new ScpiCommandViewModel(command));
 
         Variables.Clear();
         foreach (var p in _model.Variables)
@@ -73,7 +73,7 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
 
     private void ApplyToModel()
     {
-        _model.Commands = Commands.ToList();
+        _model.Commands = Commands.Select(c => c.GetModel()).ToList();
         _model.Variables = Variables.ToList();
     }
 
@@ -89,12 +89,13 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     private void AddCommand()
     {
         var indexToInsertNewCommand = SelectedCommandIndex < 0 ? 0 : SelectedCommandIndex + 1;
+        if (indexToInsertNewCommand > Commands.Count) indexToInsertNewCommand = Commands.Count;
         var newCommand = new ScpiCommand
         {
             Command = "",
-            Expect = "none"
+            ExpectResponse = false
         };
-        Commands.Insert(indexToInsertNewCommand, newCommand);
+        Commands.Insert(indexToInsertNewCommand, new ScpiCommandViewModel(newCommand));
         SelectedCommandIndex = indexToInsertNewCommand;
     }
     
