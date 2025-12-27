@@ -16,6 +16,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
     private readonly IFileDialogService _fileDialogService;
     private string? _folder;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly Dictionary<string, ScpiScript> _cache = new();
 
     public FileScpiScriptRepository(
         ISettingsService settingsService,
@@ -108,11 +109,28 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
                 result.Add(script);
         }
 
-        return result.OrderBy(s => s.Name).ToList();
+        var ordered = result.OrderBy(s => s.Name).ToList();
+        
+        lock (_cache)
+        {
+            _cache.Clear();
+            foreach (var script in ordered)
+            {
+                _cache[script.Id] = script;
+            }
+        }
+
+        return ordered;
     }
 
     public async Task<ScpiScript?> LoadAsync(string id, CancellationToken ct = default)
     {
+        lock (_cache)
+        {
+            if (_cache.TryGetValue(id, out var cached))
+                return cached;
+        }
+
         var folder = await GetFolderAsync();
         var path = GetPath(folder, id);
         if (!File.Exists(path))
@@ -127,7 +145,17 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         };
 
         await using var stream = File.OpenRead(path);
-        return await JsonSerializer.DeserializeAsync<ScpiScript>(stream, options, ct);
+        var script = await JsonSerializer.DeserializeAsync<ScpiScript>(stream, options, ct);
+        
+        if (script != null)
+        {
+            lock (_cache)
+            {
+                _cache[id] = script;
+            }
+        }
+
+        return script;
     }
 
     public async Task SaveAsync(ScpiScript script, CancellationToken ct = default)
@@ -147,6 +175,11 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         var path = GetPath(folder, script.Id);
         await using var stream = File.Create(path);
         await JsonSerializer.SerializeAsync(stream, script, options, ct);
+
+        lock (_cache)
+        {
+            _cache[script.Id] = script;
+        }
     }
 
     public async Task DeleteAsync(string id, CancellationToken ct = default)
@@ -155,6 +188,11 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         var path = GetPath(folder, id);
         if (File.Exists(path))
             File.Delete(path);
+
+        lock (_cache)
+        {
+            _cache.Remove(id);
+        }
     }
 
     public async Task ConfigureRepositoryFolderAsync()
@@ -170,6 +208,11 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
                 _settingsService.Save();
                 Directory.CreateDirectory(folderPath);
                 _folder = folderPath;
+                
+                lock (_cache)
+                {
+                    _cache.Clear();
+                }
             }
         }
         finally
