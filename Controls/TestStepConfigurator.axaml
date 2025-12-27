@@ -127,8 +127,10 @@
                             Spacing="5"
                             Margin="10">
                     <TextBlock Text="Evaluate:"/>
-                    <RadioButton Content="Script"/>
-                    <RadioButton Content="External Command"/>
+                    <ComboBox ItemsSource="{Binding EvaluationSources}"
+                              SelectedValue="{Binding TestStepViewModel.TestStep.EvaluationSource}"
+                              SelectedValueBinding="{Binding Key}"
+                              DisplayMemberBinding="{Binding Value}" />
                 </StackPanel>
                 
                 <StackPanel HorizontalAlignment="Left"

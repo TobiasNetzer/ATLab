@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Data;
@@ -10,6 +12,12 @@ namespace ATLab.ViewModels;
 public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
+
+    public List<KeyValuePair<TestEvaluationSource, string>> EvaluationSources { get; } = new()
+    {
+        new(TestEvaluationSource.SCRIPT, "Internal Script"),
+        new(TestEvaluationSource.COMMAND, "Console Script"),
+    };
     
     [ObservableProperty]
     private TestStepViewModel? _testStepViewModel;

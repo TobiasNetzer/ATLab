@@ -1,0 +1,130 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:models="clr-namespace:ATLab.Models"
+             x:Class="ATLab.Controls.ScriptSelector"
+             x:DataType="vm:ScriptSelectorViewModel"
+             Width="500">
+    
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15">
+        
+        <StackPanel>
+            
+            <Border Classes="WithDynamicCorner"
+                    Classes.expanded="{Binding IsExpanded}"
+                    Background="{DynamicResource SystemBaseLowColor}"
+                    Padding="10"
+                    Margin="0">
+                <DockPanel>
+                    <TextBlock Text="Script Configurator"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+
+                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                  DockPanel.Dock="Right"
+                                  HorizontalAlignment="Right">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Border Background="Transparent" Padding="5">
+                                    <Grid>
+                                        <TextBlock Text="&#xE70D;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="18"
+                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                        <TextBlock Text="&#xE70E;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="18"
+                                                   IsVisible="{Binding IsExpanded}"/>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </DockPanel>
+            </Border>
+                
+                <StackPanel IsVisible="{Binding IsExpanded}"
+                            Margin="10"
+                            Spacing="15">
+                    
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Target Device:"/>
+                        <DockPanel>
+                            <Button Content="&#xF8AB;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                    ToolTip.Tip="Remove selected device"
+                                    DockPanel.Dock="Right"
+                                    Margin=" 5 0 0 0"
+                                    Command="{Binding RemoveDeviceCommand}"/>
+                            <ComboBox ItemsSource="{Binding Devices}" 
+                                      SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SerialDevices">
+                                        <TextBlock>
+                                            <Run Text="{Binding Name}"/>
+                                            <Run Text=" ("/>
+                                            <Run Text="{Binding SerialPort}"/>
+                                            <Run Text=")"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DockPanel>
+                    </StackPanel>
+                    
+                    
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Script:"/>
+                        
+                        <DockPanel>
+                            <Button Content="&#xF8AB;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                    ToolTip.Tip="Remove selected script"
+                                    DockPanel.Dock="Right"
+                                    Margin=" 5 0 0 0"
+                                    Command="{Binding RemoveScriptCommand}"/>
+                            <ComboBox ItemsSource="{Binding Scripts}" 
+                                      SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ScpiScriptItemViewModel">
+                                        <TextBlock Text="{Binding Name}"
+                                                   ToolTip.Tip="{Binding Description}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DockPanel>
+                    </StackPanel>
+                    
+                    
+                    <DataGrid ItemsSource="{Binding SelectedTestStep.ScriptVariables}" 
+                              IsVisible="{Binding SelectedScript, Converter={x:Static ObjectConverters.IsNotNull}}"
+                              AutoGenerateColumns="False"
+                              CanUserSortColumns="False"
+                              CanUserResizeColumns="True"
+                              MaxHeight="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Variable" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding DefaultValue}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                        
+                </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>
