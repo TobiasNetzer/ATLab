@@ -5,6 +5,7 @@
              x:Class="ATLab.Views.ConfigTab"
              x:DataType="vm:ConfigTabViewModel">
     
+    <ScrollViewer>
         <StackPanel Spacing="20">
             
             <controls:CustomChannelNameSetter
@@ -26,4 +27,5 @@
             </StackPanel>
             
         </StackPanel>
+    </ScrollViewer>
 </UserControl>
