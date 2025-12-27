@@ -12,18 +12,84 @@ namespace ATLab.Services;
 
 public sealed class FileScpiScriptRepository : IScpiScriptRepository
 {
-    private readonly string _folder;
+    private readonly ISettingsService _settingsService;
+    private readonly IFileDialogService _fileDialogService;
+    private string? _folder;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public FileScpiScriptRepository(string folder)
+    public FileScpiScriptRepository(
+        ISettingsService settingsService,
+        IFileDialogService fileDialogService)
     {
-        _folder = folder;
-        Directory.CreateDirectory(_folder);
+        _settingsService = settingsService;
+        _fileDialogService = fileDialogService;
     }
 
-    private string GetPath(string id) => Path.Combine(_folder, $"{id}.json");
+    private async Task<string> GetFolderAsync()
+    {
+        if (!string.IsNullOrEmpty(_folder) && Directory.Exists(_folder))
+        {
+            return _folder;
+        }
+
+        await _semaphore.WaitAsync();
+        try
+        {
+            if (!string.IsNullOrEmpty(_folder) && Directory.Exists(_folder))
+            {
+                return _folder;
+            }
+
+            var folderPath = _settingsService.Settings.ScriptRepositoryFolder;
+
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            {
+                if (!string.IsNullOrWhiteSpace(folderPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    catch
+                    {
+                        folderPath = string.Empty;
+                    }
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            {
+                var storageFolder = await _fileDialogService.OpenFolderAsync("Select Script Repository Folder");
+                if (storageFolder != null)
+                {
+                    folderPath = storageFolder.Path.LocalPath;
+                    _settingsService.Settings.ScriptRepositoryFolder = folderPath;
+                    _settingsService.Save();
+                    Directory.CreateDirectory(folderPath);
+                }
+                else
+                {
+                    folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ATLab", "Scripts");
+                    _settingsService.Settings.ScriptRepositoryFolder = folderPath;
+                    _settingsService.Save();
+                    Directory.CreateDirectory(folderPath);
+                }
+            }
+
+            _folder = folderPath;
+            return _folder;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    private string GetPath(string folder, string id) => Path.Combine(folder, $"{id}.json");
 
     public async Task<IReadOnlyList<ScpiScript>> LoadAllAsync(CancellationToken ct = default)
     {
+        var folder = await GetFolderAsync();
         var result = new List<ScpiScript>();
         
         var options = new JsonSerializerOptions()
@@ -34,7 +100,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
             ReadCommentHandling = JsonCommentHandling.Skip
         };
 
-        foreach (var file in Directory.EnumerateFiles(_folder, "*.json"))
+        foreach (var file in Directory.EnumerateFiles(folder, "*.json"))
         {
             await using var stream = File.OpenRead(file);
             var script = await JsonSerializer.DeserializeAsync<ScpiScript>(stream, options, ct);
@@ -47,7 +113,8 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
 
     public async Task<ScpiScript?> LoadAsync(string id, CancellationToken ct = default)
     {
-        var path = GetPath(id);
+        var folder = await GetFolderAsync();
+        var path = GetPath(folder, id);
         if (!File.Exists(path))
             return null;
         
@@ -65,6 +132,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
 
     public async Task SaveAsync(ScpiScript script, CancellationToken ct = default)
     {
+        var folder = await GetFolderAsync();
         if (string.IsNullOrWhiteSpace(script.Id))
             script.Id = Guid.NewGuid().ToString("N");
         
@@ -76,17 +144,37 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
             ReadCommentHandling = JsonCommentHandling.Skip
         };
 
-        var path = GetPath(script.Id);
+        var path = GetPath(folder, script.Id);
         await using var stream = File.Create(path);
         await JsonSerializer.SerializeAsync(stream, script, options, ct);
     }
 
-    public Task DeleteAsync(string id, CancellationToken ct = default)
+    public async Task DeleteAsync(string id, CancellationToken ct = default)
     {
-        var path = GetPath(id);
+        var folder = await GetFolderAsync();
+        var path = GetPath(folder, id);
         if (File.Exists(path))
             File.Delete(path);
+    }
 
-        return Task.CompletedTask;
+    public async Task ConfigureRepositoryFolderAsync()
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            var storageFolder = await _fileDialogService.OpenFolderAsync("Select Script Repository Folder");
+            if (storageFolder != null)
+            {
+                var folderPath = storageFolder.Path.LocalPath;
+                _settingsService.Settings.ScriptRepositoryFolder = folderPath;
+                _settingsService.Save();
+                Directory.CreateDirectory(folderPath);
+                _folder = folderPath;
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 }

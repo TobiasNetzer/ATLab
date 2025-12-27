@@ -95,7 +95,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab = new TestingTabViewModel(_errorService, TestHardwareRelayChannelsViewModel, new TestExecutor(new DummyTestStepRunner()), configurator, new FileDialogService(), new SettingsService(), new FileService(), new MessageBoxService(), serialDeviceManager);
         LabTab = new LabTabViewModel(_errorService, testHardware, TestHardwareRelayChannelsViewModel, new SimulationStateService { IsSimulationMode = true });
         ConfigTab = new ConfigTabViewModel(TestHardwareRelayChannelsViewModel, configurator, serialDeviceManager);
-        ScriptTab = new ScpiScriptsManagerViewModel(new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"), new MessageBoxService());
+        ScriptTab = new ScpiScriptsManagerViewModel(scriptRepo, new MessageBoxService());
 
         _selectedTab = TestingTab;
         

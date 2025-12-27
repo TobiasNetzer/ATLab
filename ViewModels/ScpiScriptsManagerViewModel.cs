@@ -87,4 +87,11 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
         if (SelectedScript is null) return;
         await SelectedScript.SaveAsync();
     }
+
+    [RelayCommand]
+    private async Task ChangeRepository()
+    {
+        await _repository.ConfigureRepositoryFolderAsync();
+        await ReloadScripts();
+    }
 }

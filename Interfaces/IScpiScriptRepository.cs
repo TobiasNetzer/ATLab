@@ -11,4 +11,5 @@ public interface IScpiScriptRepository
     Task<ScpiScript?> LoadAsync(string id, CancellationToken ct = default);
     Task SaveAsync(ScpiScript script, CancellationToken ct = default);
     Task DeleteAsync(string id, CancellationToken ct = default);
+    Task ConfigureRepositoryFolderAsync();
 }

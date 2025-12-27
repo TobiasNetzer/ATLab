@@ -153,6 +153,7 @@ public class App : Application
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>(sp => new FileScpiScriptRepository(@"C:\Users\Tobias\Desktop"));
+        services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();

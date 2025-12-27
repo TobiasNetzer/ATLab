@@ -44,6 +44,10 @@
                             ToolTip.Tip="Reload script repository"
                             Command="{Binding ReloadScriptsCommand}"/>
                     
+                    <Button Content="&#xED0E;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="18"
+                            ToolTip.Tip="New script"
                             Command="{Binding NewScriptCommand}"/>
 
                     <Button Content="&#xE74E;"

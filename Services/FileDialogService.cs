@@ -61,4 +61,19 @@ public class FileDialogService : IFileDialogService
 
         return await storageProvider.SaveFilePickerAsync(options);
     }
+
+    public async Task<IStorageFolder?> OpenFolderAsync(string title)
+    {
+        var storageProvider = GetStorageProvider();
+        if (storageProvider == null) return null;
+
+        var options = new FolderPickerOpenOptions
+        {
+            Title = title,
+            AllowMultiple = false
+        };
+
+        var results = await storageProvider.OpenFolderPickerAsync(options);
+        return results.Count > 0 ? results[0] : null;
+    }
 }
