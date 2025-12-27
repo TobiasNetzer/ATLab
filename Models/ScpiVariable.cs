@@ -1,7 +1,14 @@
-﻿namespace ATLab.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public sealed class ScpiVariable
+namespace ATLab.Models;
+
+public partial class ScpiVariable : ObservableObject
 {
-    public string Name { get; set; } = string.Empty;
-    public string DefaultValue { get; set; } = "1.0";
+    [ObservableProperty]
+    private string _name = string.Empty;
+    
+    [ObservableProperty]
+    private string _defaultValue = "1.0";
+
+    public ScpiVariable Clone() => new() { Name = Name, DefaultValue = DefaultValue };
 }

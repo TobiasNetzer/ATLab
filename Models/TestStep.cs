@@ -1,10 +1,18 @@
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Text.Json.Serialization;
+using ATLab.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
 public partial class TestStep : ObservableObject
 {
+    public TestStep()
+    {
+        _scriptVariables.CollectionChanged += ScriptVariables_CollectionChanged;
+    }
+
     [ObservableProperty]
     [property: JsonPropertyOrder(1)]
     private int _number;
@@ -28,13 +36,29 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(6)]
     private int _delay;
-
+    
     [ObservableProperty]
     [property: JsonPropertyOrder(7)]
-    private string _comment = string.Empty;
+    private TestEvaluationSource _evaluationSource;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(8)]
+    private string _comment = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(9)]
+    private string _targetDevice = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(10)]
+    private string _scriptId = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(11)]
+    private ObservableCollection<ScpiVariable> _scriptVariables = new();
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(12)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -45,28 +69,56 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(9)]
+    [JsonPropertyOrder(14)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(10)]
+    [JsonPropertyOrder(15)]
     public RelayGroupDto? ExtStimState { get; set; }
 
-    partial void OnMatrixStateChanged(RelayMatrix? oldValue, RelayMatrix? newValue)
+    partial void OnMatrixStateChanged(RelayMatrix? oldValue, RelayMatrix newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
-        if (newValue != null) newValue.PropertyChanged += Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
     }
 
-    partial void OnLiveStimStateChanged(RelayGroup? oldValue, RelayGroup? newValue)
+    partial void OnLiveStimStateChanged(RelayGroup? oldValue, RelayGroup newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
-        if (newValue != null) newValue.PropertyChanged += Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
     }
 
-    partial void OnLiveExtStimStateChanged(RelayGroup? oldValue, RelayGroup? newValue)
+    partial void OnLiveExtStimStateChanged(RelayGroup? oldValue, RelayGroup newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
-        if (newValue != null) newValue.PropertyChanged += Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+
+    partial void OnScriptVariablesChanged(ObservableCollection<ScpiVariable>? oldValue, ObservableCollection<ScpiVariable> newValue)
+    {
+        if (oldValue != null)
+        {
+            oldValue.CollectionChanged -= ScriptVariables_CollectionChanged;
+            foreach (var item in oldValue) item.PropertyChanged -= Child_PropertyChanged;
+        }
+        
+        newValue.CollectionChanged += ScriptVariables_CollectionChanged;
+        foreach (var item in newValue) item.PropertyChanged += Child_PropertyChanged;
+        
+    }
+
+    private void ScriptVariables_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (ScpiVariable item in e.OldItems) item.PropertyChanged -= Child_PropertyChanged;
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (ScpiVariable item in e.NewItems) item.PropertyChanged += Child_PropertyChanged;
+        }
+
+        OnPropertyChanged(nameof(ScriptVariables));
     }
 
     private void Child_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -74,6 +126,7 @@ public partial class TestStep : ObservableObject
         OnPropertyChanged(nameof(MatrixState));
         OnPropertyChanged(nameof(LiveStimState));
         OnPropertyChanged(nameof(LiveExtStimState));
+        OnPropertyChanged(nameof(ScriptVariables));
     }
 
     public void UpdateDtos()
