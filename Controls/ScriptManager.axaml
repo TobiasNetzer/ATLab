@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.ScriptManager"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:DataType="vm:ScpiScriptsManagerViewModel">
+             x:DataType="vm:ScpiScriptsManagerViewModel"
+             Width="1200">
     
     <Border 
         Background="{DynamicResource SystemChromeLowColor}"
@@ -92,7 +93,6 @@
                     Grid.Column="1"
                     Orientation="Vertical" 
                     Spacing="5"
-                    Width="600"
                     Margin="0 10 10 10">
                 
                 <TextBlock Text="Script Name:"/>

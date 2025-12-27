@@ -3,7 +3,7 @@
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:TestHardwareRelayChannelsViewModel"
-             MaxHeight="650" Width="800">
+             MaxHeight="620" Width="800">
 
     <Design.DataContext>
         <vm:TestHardwareRelayChannelsViewModel />

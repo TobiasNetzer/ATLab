@@ -6,6 +6,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="{Binding WindowTitle}"
+        MinWidth="1600"
+        MinHeight="800"
         RequestedThemeVariant="Default">
     
     <Design.DataContext>
