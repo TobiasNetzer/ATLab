@@ -5,6 +5,15 @@
              x:DataType="vm:TestStepConfiguratorViewModel"
              Width="500">
     
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
     <Design.DataContext>
         <vm:TestStepConfiguratorViewModel />
     </Design.DataContext>
@@ -15,7 +24,8 @@
         <StackPanel>
             
             <Border Background="{DynamicResource SystemBaseLowColor}"
-                    CornerRadius="15"
+                    Classes="WithDynamicCorner"
+                    Classes.expanded="{Binding IsExpanded}"
                     Padding="10"
                     Margin="0">
                 <DockPanel>
@@ -34,11 +44,11 @@
                                     <Grid>
                                         <TextBlock Text="&#xE70D;" 
                                                    FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="24"
+                                                   FontSize="18"
                                                    IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
                                         <TextBlock Text="&#xE70E;" 
                                                    FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="24"
+                                                   FontSize="18"
                                                    IsVisible="{Binding IsExpanded}"/>
                                     </Grid>
                                 </Border>
