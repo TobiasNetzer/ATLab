@@ -5,38 +5,40 @@
              x:Class="ATLab.Views.ConfigTab"
              x:DataType="vm:ConfigTabViewModel">
     
-    <Grid ColumnDefinitions="*, 50, *"
-          RowDefinitions="*, auto"
-          Margin="10">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <Grid ColumnDefinitions="*, *"
+              RowDefinitions="*, auto"
+              Margin="10">
+                
+            <controls:CustomChannelNameSetter
+                Grid.Column="0"
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                DataContext="{Binding TestHardwareRelayChannels}"
+                Margin="0 0 20 20"/>
             
-        <controls:CustomChannelNameSetter
-            Grid.Column="0"
-            Grid.Row="0"
-            HorizontalAlignment="Right"
-            DataContext="{Binding TestHardwareRelayChannels}"
-            Margin="0 0 0 20"/>
-        
-        <controls:SerialDeviceManager
-            Grid.Column="2"
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            DataContext="{Binding SerialDeviceManager}"
-            Margin="0 0 0 20"/>
-        
-        <StackPanel
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Grid.ColumnSpan="3"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center" >
-            <TextBlock Text="Tolerance (%):"
-                       VerticalAlignment="Center"
-                       Margin="0,0,10,0"/>
-            <NumericUpDown Value="{Binding ToleranceValue}"
-                           Minimum="0"
-                           Maximum="100"
-                           Width="120"/>
-        </StackPanel>
+            <controls:SerialDeviceManager
+                Grid.Column="1"
+                Grid.Row="0"
+                HorizontalAlignment="Left"
+                DataContext="{Binding SerialDeviceManager}"
+                Margin="20 0 0 20"/>
             
-    </Grid>
+            <StackPanel
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center" >
+                <TextBlock Text="Tolerance (%):"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+                <NumericUpDown Value="{Binding ToleranceValue}"
+                               Minimum="0"
+                               Maximum="100"
+                               Width="120"/>
+            </StackPanel>
+                
+        </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -9,11 +9,9 @@
         CanResize="False">
 
     <StackPanel Margin="15" Spacing="10">
-
-        <!-- Header -->
-        <TextBlock Text="Select Test Interface Adapter" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
-
-        <!-- COM Port selector -->
+        
+        <TextBlock Text="Select Test Hardware" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+        
         <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
             <TextBlock Text="Port:" VerticalAlignment="Center"/>
             <ComboBox Width="150" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort}"/>

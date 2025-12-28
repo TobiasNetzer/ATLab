@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.ScriptManager"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:DataType="vm:ScpiScriptsManagerViewModel"
+             x:DataType="vm:ScriptsManagerViewModel"
              Width="1200">
     
     <Border 
@@ -27,42 +27,48 @@
                                HorizontalAlignment="Center"/>
                 </Border>
                 
-                
-                <StackPanel Orientation="Horizontal"
-                            Spacing="5"
-                            Margin="10">
-                
-                    <Button Content="&#xED25;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Change repository folder"
-                            Command="{Binding ChangeRepositoryCommand}"/>
+                <Border Background="{DynamicResource SystemListLowColor}"
+                        CornerRadius="5"
+                        Margin="10 10 10 0">
                     
-                    <Button Content="&#xE72C;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Reload script repository"
-                            Command="{Binding ReloadScriptsCommand}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5"
+                                Margin="10">
+                
+                        <Button Content="&#xED25;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Change repository folder"
+                                Command="{Binding ChangeRepositoryCommand}"/>
                     
-                    <Button Content="&#xED0E;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="New script"
-                            Command="{Binding NewScriptCommand}"/>
+                        <Button Content="&#xE72C;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Reload script repository"
+                                Command="{Binding ReloadScriptsCommand}"/>
+                    
+                        <Button Content="&#xED0E;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="New script"
+                                Command="{Binding NewScriptCommand}"/>
 
-                    <Button Content="&#xE74E;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Save script"
-                            Command="{Binding SaveScriptCommand}"/>
+                        <Button Content="&#xE74E;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Save script"
+                                Command="{Binding SaveScriptCommand}"/>
                     
-                    <Button Content="&#xE74D;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Delete script"
-                            Command="{Binding DeleteScriptCommand}"/>
+                        <Button Content="&#xE74D;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Delete script"
+                                Command="{Binding DeleteScriptCommand}"/>
                     
-                </StackPanel>
+                    </StackPanel>
+                    
+                </Border>
+                
             </StackPanel>
             
             <Grid Grid.Column="0"
@@ -135,7 +141,7 @@
                           BorderBrush="Gray">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Variable Name" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Default Value" Binding="{Binding DefaultValue}" Width="200"/>
+                        <DataGridTextColumn Header="Default Value" Binding="{Binding Value}" Width="200"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 

@@ -6,8 +6,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="{Binding WindowTitle}"
-        MinWidth="1700"
-        MinHeight="800">
+        MinWidth="1000"
+        MinHeight="600">
     
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}" />
@@ -19,72 +19,84 @@
     <Window.Styles>
         <Style Selector="FlyoutPresenter.LargeFlyout">
             <Setter Property="MaxWidth" Value="1000" />
+            <Setter Property="CornerRadius" Value="15"/>
         </Style>
     </Window.Styles>
 
     <Grid RowDefinitions="*,Auto">
-
-        <DockPanel Grid.Row="0">
-            
-            <TabControl ItemsSource="{Binding Tabs}" 
-                        SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
-                        Padding="0">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Title}" />
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.DataTemplates>
-                    <DataTemplate DataType="vm:TestingTabViewModel">
-                        <views:TestingTab/>
-                    </DataTemplate>
-                    <DataTemplate DataType="vm:LabTabViewModel">
-                        <views:LabTab/>
-                    </DataTemplate>
-                    <DataTemplate DataType="vm:ConfigTabViewModel">
-                        <views:ConfigTab/>
-                    </DataTemplate>
-                    <DataTemplate DataType="vm:ScpiScriptsManagerViewModel">
-                        <views:ScriptTab/>
-                    </DataTemplate>
-                </TabControl.DataTemplates>
-            </TabControl>
-        </DockPanel>
         
-        <DockPanel Grid.Row="1" 
+        <Border Grid.Row="0" 
+                Background="{DynamicResource SystemChromeLowColor}"
+                Height="50"
+                VerticalAlignment="Top"/>
+        
+        <TabControl Grid.Row="0"
+                    ItemsSource="{Binding Tabs}" 
+                    SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+                    Padding="0">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.DataTemplates>
+                <DataTemplate DataType="vm:TestingTabViewModel">
+                    <views:TestingTab/>
+                </DataTemplate>
+                <DataTemplate DataType="vm:LabTabViewModel">
+                    <views:LabTab/>
+                </DataTemplate>
+                <DataTemplate DataType="vm:ConfigTabViewModel">
+                    <views:ConfigTab/>
+                </DataTemplate>
+                <DataTemplate DataType="vm:ScriptsManagerViewModel">
+                    <views:ScriptTab/>
+                </DataTemplate>
+            </TabControl.DataTemplates>
+        </TabControl>
+        
+        <Border Grid.Row="1" 
                    Background="{DynamicResource SystemChromeLowColor}"
                    Height="40">
-            <Button DockPanel.Dock="Left"
-                    
+            
+            <StackPanel Spacing="10" Orientation="Horizontal">
+                
+                <Button
                     Background="{Binding HasErrors, Converter={StaticResource BoolToBrushConverter}}"
                     Height="30"
                     Margin="5">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" Spacing="5">
-                        <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource FluentIconsFont}"
-                                   FontSize="18"/>
-                        <TextBlock Text="{Binding ErrorCount}"
-                                   FontSize="14"/>
-                    </StackPanel>
-                </Button.Content>
-                <Button.Flyout>
-                    <Flyout Placement="Bottom"
-                            IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
-                            FlyoutPresenterClasses="LargeFlyout">
-                        <ListBox ItemsSource="{Binding Errors}"
-                                 Width="800"
-                                 Height="500">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" 
-                                               TextWrapping="Wrap"
-                                               Margin="2"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-        </DockPanel>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource FluentIconsFont}"
+                                       FontSize="18"/>
+                            <TextBlock Text="{Binding ErrorCount}"
+                                       FontSize="14"/>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="TopEdgeAlignedLeft"
+                                IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
+                                FlyoutPresenterClasses="LargeFlyout">
+                            <ListBox ItemsSource="{Binding Errors}"
+                                     Width="800"
+                                     Height="500">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" 
+                                                   TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            
+                <TextBlock Text="Software is working without test hardware!"
+                           FontSize="16"
+                           Foreground="Red"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding IsSimulation}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

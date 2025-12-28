@@ -13,6 +13,7 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
+    private readonly ISimulationService _simulationService;
 
     public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.CurrentFilePath))}{(TestingTab.IsDirty ? "*" : "")}";
     
@@ -32,11 +33,13 @@ public partial class MainWindowViewModel : ViewModelBase
     private ConfigTabViewModel _configTab;
     
     [ObservableProperty]
-    private ScpiScriptsManagerViewModel _scriptTab;
+    private ScriptsManagerViewModel _scriptTab;
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
 
     public ObservableCollection<string> Errors => _errorService.Errors;
+    
+    public bool IsSimulation => _simulationService.IsSimulationMode;
 
     [ObservableProperty]
     private int _errorCount;
@@ -48,19 +51,21 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isErrorFlyoutOpen;
 
     public MainWindowViewModel(IErrorService errorService,
+        ISimulationService simulationService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
         ConfigTabViewModel configTab,
-        ScpiScriptsManagerViewModel scpiScriptsManagerViewModel)
+        ScriptsManagerViewModel scriptsManagerViewModel)
     {
         _errorService = errorService;
+        _simulationService = simulationService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
 
         TestingTab = testingTab;
         LabTab = labTab;
         ConfigTab = configTab;
-        ScriptTab = scpiScriptsManagerViewModel;
+        ScriptTab = scriptsManagerViewModel;
 
         _selectedTab = TestingTab;
         

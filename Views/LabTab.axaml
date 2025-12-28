@@ -5,7 +5,7 @@
              x:Class="ATLab.Views.LabTab"
              x:DataType="vm:LabTabViewModel">
 
-    <ScrollViewer>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="5">
             
             <controls:MeasSelector

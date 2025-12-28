@@ -3,9 +3,11 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.ScriptTab"
-             x:DataType="vm:ScpiScriptsManagerViewModel">
+             x:DataType="vm:ScriptsManagerViewModel">
 
-    <controls:ScriptManager Margin="10"
-                            DataContext="{Binding }"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <controls:ScriptManager Margin="10"
+                                DataContext="{Binding }"/>
+    </ScrollViewer>
     
 </UserControl>
