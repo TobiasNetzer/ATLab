@@ -124,16 +124,46 @@
                 <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
                 <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" MinWidth="200" />
                 
+                <DataGridTemplateColumn Header="Lower Limit" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="vm:TestStepViewModel">
+                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                        <Binding Path="TestStep.LowerLimit"/>
+                                        <Binding Path="TestStep.CustomUnit"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
+                <DataGridTemplateColumn Header="Nominal Value" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="vm:TestStepViewModel">
+                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                        <Binding Path="TestStep.NominalValue"/>
+                                        <Binding Path="TestStep.CustomUnit"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
+                <DataGridTemplateColumn Header="Upper Limit" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="vm:TestStepViewModel">
+                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                        <Binding Path="TestStep.UpperLimit"/>
+                                        <Binding Path="TestStep.CustomUnit"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

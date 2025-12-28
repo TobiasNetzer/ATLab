@@ -22,6 +22,8 @@
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
                                          TrueBrush="Red"
                                          FalseBrush="Gray"/>
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+        <converters:UnitFormatConverter x:Key="UnitFormatConverter" />
     </Application.Resources>
     
     <Application.Styles>

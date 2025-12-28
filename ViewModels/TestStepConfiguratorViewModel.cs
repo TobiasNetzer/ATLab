@@ -24,9 +24,6 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private bool _isExpanded;
 
     [ObservableProperty]
-    private string? _testStepCustomUnit;
-
-    [ObservableProperty]
     private string? _nominalValueText;
 
     [ObservableProperty]
@@ -66,10 +63,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null) return;
 
-        NominalValueText = TestStepViewModel.TestStep.NominalValue.ToString(CultureInfo.CurrentCulture);
-        LowerLimitText = TestStepViewModel.TestStep.LowerLimit.ToString(CultureInfo.CurrentCulture);
-        UpperLimitText = TestStepViewModel.TestStep.UpperLimit.ToString(CultureInfo.CurrentCulture);
-        DelayText = TestStepViewModel.TestStep.Delay.ToString(CultureInfo.CurrentCulture);
+        NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.CustomUnit);
+        LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.CustomUnit);
+        UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.CustomUnit);
+        DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");
         
         OnPropertyChanged(nameof(NominalValueText));
         OnPropertyChanged(nameof(LowerLimitText));
@@ -81,65 +78,89 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null) return;
 
-        if (e.PropertyName == nameof(TestStepViewModel.TestStep.NominalValue))
+        switch (e.PropertyName)
         {
-            UpdateLimitsFromNominal();
-            NominalValueText = TestStepViewModel.TestStep.NominalValue.ToString(CultureInfo.CurrentCulture);
-        }
-        else if (e.PropertyName == nameof(TestStepViewModel.TestStep.LowerLimit))
-        {
-            LowerLimitText = TestStepViewModel.TestStep.LowerLimit.ToString(CultureInfo.CurrentCulture);
-        }
-        else if (e.PropertyName == nameof(TestStepViewModel.TestStep.UpperLimit))
-        {
-            UpperLimitText = TestStepViewModel.TestStep.UpperLimit.ToString(CultureInfo.CurrentCulture);
-        }
-        else if (e.PropertyName == nameof(TestStepViewModel.TestStep.Delay))
-        {
-            DelayText = TestStepViewModel.TestStep.Delay.ToString(CultureInfo.CurrentCulture);
+            case nameof(TestStepViewModel.TestStep.NominalValue):
+                UpdateLimitsFromNominal();
+                NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.CustomUnit);
+                break;
+            case nameof(TestStepViewModel.TestStep.LowerLimit):
+                LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.CustomUnit);
+                break;
+            case nameof(TestStepViewModel.TestStep.UpperLimit):
+                UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.CustomUnit);
+                break;
+            case nameof(TestStepViewModel.TestStep.Delay):
+                DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");
+                break;
+            case nameof(TestStepViewModel.TestStep.CustomUnit):
+                UpdateStringProperties();
+                break;
         }
     }
 
     partial void OnNominalValueTextChanged(string? value)
     {
-        if (!double.TryParse(value, CultureInfo.CurrentCulture, out var result)) return;
+        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep?.CustomUnit)) return;
         if (TestStepViewModel?.TestStep != null)
             TestStepViewModel.TestStep.NominalValue = result;
     }
 
     partial void OnLowerLimitTextChanged(string? value)
     {
-        if (double.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        if (TestStepViewModel?.TestStep != null)
         {
-            if (TestStepViewModel?.TestStep != null)
-                TestStepViewModel.TestStep.LowerLimit = result;
+            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.CustomUnit))
+            {
+                // Ensure LowerLimit is always <= NominalValue
+                var nominal = TestStepViewModel.TestStep.NominalValue;
+                TestStepViewModel.TestStep.LowerLimit = Math.Min(result, nominal);
+            }
+            else
+            {
+                TestStepViewModel.TestStep.LowerLimit = 0;
+            }
+
         }
     }
 
     partial void OnUpperLimitTextChanged(string? value)
     {
-        if (double.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        if (TestStepViewModel?.TestStep != null)
         {
-            if (TestStepViewModel?.TestStep != null)
-                TestStepViewModel.TestStep.UpperLimit = result;
+            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.CustomUnit))
+            {
+                // Ensure UpperLimit is always >= NominalValue
+                var nominal = TestStepViewModel.TestStep.NominalValue;
+                TestStepViewModel.TestStep.UpperLimit = Math.Max(result, nominal);
+            }
+            else
+            {
+                TestStepViewModel.TestStep.UpperLimit = 0;
+            }
         }
     }
 
     partial void OnDelayTextChanged(string? value)
     {
-        if (int.TryParse(value, CultureInfo.CurrentCulture, out var result))
+        if (UnitParser.TryParse(value, out var result, "s"))
         {
             if (TestStepViewModel?.TestStep != null)
-                TestStepViewModel.TestStep.Delay = result;
+                TestStepViewModel.TestStep.Delay = (int)Math.Round(result * 1000);
         }
     }
 
     private void UpdateLimitsFromNominal()
     {
         if (TestStepViewModel?.TestStep == null) return;
-        
-        TestStepViewModel.TestStep.UpperLimit = Math.Round(TestStepViewModel.TestStep.NominalValue * (1 + Tolerance), 4);
-        TestStepViewModel.TestStep.LowerLimit = Math.Round(TestStepViewModel.TestStep.NominalValue * (1 - Tolerance), 4);
+
+        var nominal = TestStepViewModel.TestStep.NominalValue;
+        var v1 = nominal * (1 + Tolerance);
+        var v2 = nominal * (1 - Tolerance);
+
+        // Ensure UpperLimit >= NominalValue and LowerLimit <= NominalValue
+        TestStepViewModel.TestStep.UpperLimit = Math.Max(Math.Max(v1, v2), nominal);
+        TestStepViewModel.TestStep.LowerLimit = Math.Min(Math.Min(v1, v2), nominal);
     }
     
     partial void OnIsExpandedChanged(bool value)

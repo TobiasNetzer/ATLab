@@ -62,6 +62,10 @@ public partial class TestStep : ObservableObject
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
+    [property: JsonPropertyOrder(13)]
+    private string _customUnit = string.Empty;
+
+    [ObservableProperty]
     [property: JsonIgnore]
     private RelayGroup _liveStimState = new(0);
 

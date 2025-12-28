@@ -115,7 +115,9 @@
                                 Spacing="5"
                                 Margin="65 10 10 10">
                         <TextBlock Text="Unit:"/>
-                        <TextBox Text="{Binding TestStepCustomUnit, Mode=TwoWay}"
+                        <TextBox Text="{Binding TestStepViewModel.TestStep.CustomUnit, Mode=TwoWay}"
+                                 helpers:FocusExtensions.MoveFocusOnEnter="True"
+                                 TabIndex="4"
                                  MaxLength="10"
                                  Width="50"/>
                     </StackPanel>
@@ -125,7 +127,7 @@
                             Orientation="Vertical"
                             Spacing="5"
                             Margin="10">
-                    <TextBlock Text="Delay (ms):"/>
+                    <TextBlock Text="Delay:"/>
                     <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                              helpers:FocusExtensions.MoveFocusOnEnter="True"
                              TabIndex="5"
