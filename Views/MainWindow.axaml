@@ -6,9 +6,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="{Binding WindowTitle}"
-        MinWidth="1600"
-        MinHeight="800"
-        RequestedThemeVariant="Default">
+        MinWidth="1700"
+        MinHeight="800">
     
     <Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}" />
@@ -16,6 +15,12 @@
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />
     </Window.KeyBindings>
+
+    <Window.Styles>
+        <Style Selector="FlyoutPresenter.LargeFlyout">
+            <Setter Property="MaxWidth" Value="1000" />
+        </Style>
+    </Window.Styles>
 
     <Grid RowDefinitions="*,Auto">
 
@@ -64,10 +69,11 @@
                 </Button.Content>
                 <Button.Flyout>
                     <Flyout Placement="Bottom"
-                            IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}">
+                            IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
+                            FlyoutPresenterClasses="LargeFlyout">
                         <ListBox ItemsSource="{Binding Errors}"
-                                 Width="400"
-                                 Height="300">
+                                 Width="800"
+                                 Height="500">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding}" 

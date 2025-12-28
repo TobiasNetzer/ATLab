@@ -128,9 +128,6 @@ public partial class MainWindowViewModel : ViewModelBase
             case TestingTabViewModel:
                 TestingTab.SelectedStepIndex = 0;
                 break;
-            case ScpiScriptsManagerViewModel:
-                 ScriptTab.ReloadScriptsCommand.Execute(null);
-                 break;
         }
     }
 }

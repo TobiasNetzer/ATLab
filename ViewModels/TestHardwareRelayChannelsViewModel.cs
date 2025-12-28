@@ -94,28 +94,4 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         foreach (var channel in ExtStimChannelNames) channel.ChannelName = string.Empty;
         foreach (var channel in MeasChannelNames) channel.ChannelName = string.Empty;
     }
-    
-    public TestHardwareRelayChannelsViewModel()
-    {
-        HardwareInfo = new DummyHardwareInfo();
-        
-        StimChannelNames = new ObservableCollection<CustomRelayChannelName>(
-            Enumerable.Range(1, HardwareInfo.StimChannelCount).Select(i => new CustomRelayChannelName("", i)));
-        
-        ExtStimChannelNames = new ObservableCollection<CustomRelayChannelName>(
-            Enumerable.Range(1, HardwareInfo.ExtStimChannelCount).Select(i => new CustomRelayChannelName("", i)));
-        
-        MeasChannelNames = new ObservableCollection<CustomRelayChannelName>(
-            Enumerable.Range(1, HardwareInfo.MeasChannelCount).Select(i => new CustomRelayChannelName("", i)));
-        
-        StimChannelViewModel = new StimChannelViewModel(StimChannelNames, new SettingsService());
-        ExtStimChannelViewModel = new ExtStimChannelViewModel(ExtStimChannelNames, new SettingsService());
-        MeasChannelViewModel = new MeasChannelViewModel(MeasChannelNames, new SettingsService());
-
-        foreach (var c in StimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
-        foreach (var c in ExtStimChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
-        foreach (var c in MeasChannelNames) c.PropertyChanged += (_, _) => OnChannelNameChanged();
-
-        ResetToDefault();
-    }
 }

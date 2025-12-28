@@ -5,11 +5,7 @@
              x:Class="ATLab.Views.ScriptTab"
              x:DataType="vm:ScpiScriptsManagerViewModel">
 
-    <ScrollViewer>
-        <StackPanel Margin="10">
-            <controls:ScriptManager
-                DataContext="{Binding }"/>
-        </StackPanel>
-    </ScrollViewer>
+    <controls:ScriptManager Margin="10"
+                            DataContext="{Binding }"/>
     
 </UserControl>
