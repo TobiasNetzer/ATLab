@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ATLab.Interfaces;
+using ATLab.Models;
 
 namespace ATLab.Services;
 
@@ -33,15 +34,21 @@ public class SerialPortManager : ISerialPortManager, IDisposable
 
     public void Open(string portName)
     {
+        var result = TryOpen(portName);
+        if (!result.IsSuccess)
+        {
+            throw new Exception($"Failed to open port {portName}: {result.ErrorMessage}");
+        }
+    }
+
+    public OperationResult TryOpen(string portName)
+    {
         var service = (SerialPortService)GetPort(portName);
         if (!service.IsOpen)
         {
-            var result = service.TryOpen();
-            if (!result.IsSuccess)
-            {
-                throw new Exception($"Failed to open port {portName}: {result.ErrorMessage}");
-            }
+            return service.TryOpen();
         }
+        return OperationResult.Success();
     }
 
     public void Dispose()
