@@ -271,7 +271,14 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.StepCompleted += (index, step, result) =>
         {
-            step.Result = result.MeasuredValue.ToString("F3");
+            if (result.IsSuccess)
+            {
+                step.Result = result.Value.ToString("F3");
+            }
+            else
+            {
+                step.Result = "Error";
+            }
         };
 
         _testExecutor.TestCompleted += () =>

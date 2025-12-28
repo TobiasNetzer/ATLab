@@ -21,7 +21,7 @@ public class TestStepRunner : ITestStepRunner
         _scriptRunner = scriptRunner;
     }
     
-    public async Task<TestStepResult> ExecuteAsync(TestStepViewModel step, CancellationToken token)
+    public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, CancellationToken token)
     {
         _testHardware.StimChannelStates = step.TestStep.LiveStimState.ToBoolArray();
         _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
@@ -32,13 +32,13 @@ public class TestStepRunner : ITestStepRunner
         
         if (!result.IsSuccess)
         {
-            throw new InvalidOperationException("Test Hardware Relay update failed: " + result.ErrorMessage);
+            return OperationResult<double>.Failure("Communication with test hardware failed: " + result.ErrorMessage);
         }
         
         await Task.Delay(step.TestStep.Delay, token);
         
         var value = await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice, step.TestStep.ScriptVariables, token);
         
-        return new TestStepResult(true, value);
+        return OperationResult<double>.Success(value);
     }
 }

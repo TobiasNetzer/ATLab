@@ -14,7 +14,7 @@ public class TestExecutor : ITestExecutor
     private readonly IErrorService _errorService;
 
     public event Action<int, TestStepViewModel>? StepStarted;
-    public event Action<int, TestStepViewModel, TestStepResult>? StepCompleted;
+    public event Action<int, TestStepViewModel, OperationResult<double>>? StepCompleted;
     public event Action? TestCompleted;
 
     public TestExecutor(ITestStepRunner runner, IErrorService errorService)
@@ -33,20 +33,24 @@ public class TestExecutor : ITestExecutor
 
             StepStarted?.Invoke(i, step);
 
-            TestStepResult result;
+            OperationResult<double> result;
             try
             {
                 result = await _runner.ExecuteAsync(step, token);
+                if (!result.IsSuccess)
+                {
+                    _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+                }
             }
             catch (OperationCanceledException)
             {
                 _errorService.AddError("Test execution cancelled.");
-                result = new TestStepResult(false, 0);
+                result = OperationResult<double>.Failure("Cancelled");
             }
             catch (Exception ex)
             {
-                _errorService.AddError($"Error in step {step.TestStep.Number}: {ex.Message}");
-                result = new TestStepResult(false, 0);
+                _errorService.AddError($"Unexpected error in step {step.TestStep.Number}: {ex.Message}");
+                result = OperationResult<double>.Failure(ex.Message);
             }
 
             StepCompleted?.Invoke(i, step, result);

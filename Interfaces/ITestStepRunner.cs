@@ -7,6 +7,6 @@ namespace ATLab.Interfaces;
 
 public interface ITestStepRunner
 {
-    Task<TestStepResult> ExecuteAsync(TestStepViewModel step, CancellationToken token);
+    Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, CancellationToken token);
 }
 
