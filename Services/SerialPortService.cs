@@ -123,7 +123,7 @@ namespace ATLab.Services
                 else
                 {
                     lock (_lock) { _pendingTcs = null; }
-                    throw new TimeoutException("Timed out waiting for response.");
+                    throw new TimeoutException($"Timed out waiting for response from device ({_port.PortName}) .");
                 }
             }
             finally
