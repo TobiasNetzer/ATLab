@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.TestStepConfigurator"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:DataType="vm:TestStepConfiguratorViewModel"
              Width="500">
     
@@ -66,6 +67,8 @@
                             Margin="10">
                     <TextBlock Text="Test Step Name:"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
+                             helpers:FocusExtensions.MoveFocusOnEnter="True"
+                             TabIndex="0"
                              MaxLength="50"
                              Width="480"/>
                 </StackPanel>
@@ -77,6 +80,8 @@
                                 Margin="10">
                         <TextBlock Text="Lower Limit:"/>
                         <TextBox Text="{Binding LowerLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 helpers:FocusExtensions.MoveFocusOnEnter="True"
+                                 TabIndex="2"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -87,6 +92,8 @@
                                 Margin="10">
                         <TextBlock Text="Nominal:"/>
                         <TextBox Text="{Binding NominalValueText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 helpers:FocusExtensions.MoveFocusOnEnter="True"
+                                 TabIndex="1"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -97,6 +104,8 @@
                                 Margin="10">
                         <TextBlock Text="Upper Limit:"/>
                         <TextBox Text="{Binding UpperLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 helpers:FocusExtensions.MoveFocusOnEnter="True"
+                                 TabIndex="3"
                                  MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
@@ -118,6 +127,8 @@
                             Margin="10">
                     <TextBlock Text="Delay (ms):"/>
                     <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             helpers:FocusExtensions.MoveFocusOnEnter="True"
+                             TabIndex="5"
                              MaxLength="20"
                              Width="100"/>
                 </StackPanel>
@@ -128,9 +139,9 @@
                             Margin="10">
                     <TextBlock Text="Evaluate:"/>
                     <ComboBox ItemsSource="{Binding EvaluationSources}"
-                              SelectedValue="{Binding TestStepViewModel.TestStep.EvaluationSource}"
-                              SelectedValueBinding="{Binding Key}"
-                              DisplayMemberBinding="{Binding Value}" />
+                              SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource, FallbackValue=''}"
+                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                    
                 </StackPanel>
                 
                 <StackPanel HorizontalAlignment="Left"
@@ -139,6 +150,8 @@
                             Margin="10">
                     <TextBlock Text="Comment:"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
+                             helpers:FocusExtensions.MoveFocusOnEnter="True"
+                             TabIndex="6"
                              Width="480"
                              Height="150"
                              TextWrapping="Wrap"/>
