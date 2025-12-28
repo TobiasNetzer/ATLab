@@ -27,11 +27,13 @@ public class TestHardwareSimulator : ITestHardware
 
     public async Task<OperationResult> InitializeAsync()
     {
+      await Task.CompletedTask;
         return OperationResult.Success();
     }
 
     public async Task<OperationResult> UpdateRelayStates()
     {
+        await Task.CompletedTask;
         return OperationResult.Success();
     }
 }

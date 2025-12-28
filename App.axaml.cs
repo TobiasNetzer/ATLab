@@ -161,9 +161,10 @@ public class App : Application
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<ISerialPortManager, SerialPortManager>();
-        services.AddSingleton<IScpiScriptRepository, FileScpiScriptRepository>();
-        services.AddSingleton<IScpiScriptService, ScpiScriptService>();
+        services.AddSingleton<IScriptRepository, FileScriptRepository>();
+        services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
+        services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -180,13 +181,13 @@ public class App : Application
         // ViewModels
         services.AddSingleton<TestHardwareRelayChannelsViewModel>();
         services.AddSingleton<TestStepConfiguratorViewModel>();
+        services.AddSingleton<SerialDeviceManagerViewModel>();
         
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();
         services.AddTransient<LabTabViewModel>();
         services.AddTransient<ConfigTabViewModel>();
-        services.AddTransient<ScpiScriptsManagerViewModel>();
-        services.AddSingleton<SerialDeviceManagerViewModel>();
+        services.AddTransient<ScriptsManagerViewModel>();
         services.AddTransient<ScriptSelectorViewModel>();
         services.AddTransient<SerialPortConnectWindowViewModel>();
 
