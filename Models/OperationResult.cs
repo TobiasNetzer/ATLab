@@ -1,8 +1,5 @@
 namespace ATLab.Models;
 
-/// <summary>
-/// Universal result class for operations that don't return a value
-/// </summary>
 public class OperationResult
 {
     public bool IsSuccess { get; }
@@ -20,9 +17,6 @@ public class OperationResult
         => new(false, errorMessage);
 }
 
-/// <summary>
-/// Universal result class for operations that return a value
-/// </summary>
 public class OperationResult<T>
 {
     public T? Value { get; }

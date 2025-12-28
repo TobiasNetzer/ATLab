@@ -67,7 +67,6 @@ namespace ATLab.Services
                     _port.Close();
                 }
                 
-                // Small delay to let the port settle
                 await Task.Delay(100);
                 
                 return TryOpen();
@@ -107,7 +106,7 @@ namespace ATLab.Services
             }
             catch
             {
-                // optionally log
+                // maybe log incoming data
             }
         }
 
