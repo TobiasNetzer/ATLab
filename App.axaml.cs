@@ -43,62 +43,69 @@ public class App : Application
             var initSuccess = false;
             var openConnectWindow = false;
 
-            var service = new SerialPortService(settingsService.Settings.LastComPort!);
-            var openResult = service.TryOpen();
-            if (!openResult.IsSuccess)
+            var serialPortManager = _services.GetRequiredService<ISerialPortManager>();
+            var lastPort = settingsService.Settings.LastComPort;
+
+            if (string.IsNullOrEmpty(lastPort))
             {
                 openConnectWindow = true;
             }
             else
             {
-                _testHardware = new CtiaHardware(service);
-                var initResult = await _testHardware.InitializeAsync();
-                if (!initResult.IsSuccess)
+                var openResult = serialPortManager.TryOpen(lastPort);
+                if (!openResult.IsSuccess)
                 {
                     openConnectWindow = true;
                 }
-                else initSuccess = true;
+                else
+                {
+                    var service = serialPortManager.GetPort(lastPort);
+                    var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_services!, service);
+                    _testHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_services!, communication);
+                    var initResult = await _testHardware.InitializeAsync();
+                    if (!initResult.IsSuccess)
+                    {
+                        openConnectWindow = true;
+                    }
+                    else initSuccess = true;
+                }
             }
 
             if (openConnectWindow)
             {
-                service.Dispose();
-                var serialPortWindow = new SerialPortConnectWindow();
+                var serialPortWindow = _services.GetRequiredService<SerialPortConnectWindow>();
                 var tcs = new TaskCompletionSource<bool?>();
 
-                if (new SerialPortConnectWindowViewModel(settingsService) is { } vm)
+                var vm = _services.GetRequiredService<SerialPortConnectWindowViewModel>();
+                serialPortWindow.DataContext = vm;
+                vm.Connected += connectionStatus =>
                 {
-                    serialPortWindow.DataContext = vm;
-                    vm.Connected += connectionStatus =>
+                    tcs.TrySetResult(connectionStatus);
+                    serialPortWindow.Close();
+                };
+
+                vm.RequestClose += () => serialPortWindow.Close();
+
+                serialPortWindow.Closed += (_, _) => tcs.TrySetResult(null);
+
+                serialPortWindow.Show();
+
+                var result = await tcs.Task;
+
+                if (result != null)
+                {
+                    initSuccess = true;
+
+                    if (result == true)
                     {
-                        tcs.TrySetResult(connectionStatus);
-                        serialPortWindow.Close();
-                    };
-
-                    vm.RequestClose += () => serialPortWindow.Close();
-
-                    serialPortWindow.Closed += (_, _) => tcs.TrySetResult(null);
-
-                    serialPortWindow.Show();
-
-                    var result = await tcs.Task;
-
-                    if (result != null)
-                    {
-                        initSuccess = true;
-
-                        if (result == true)
-                        {
-                            _testHardware = vm.TestHardware!;
-                            _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
-                        }
-                        else
-                        {
-                            _testHardware = new CtiaHardware(new SimulationService());
-                            _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
-                        }
+                        _testHardware = vm.TestHardware!;
+                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
                     }
-
+                    else
+                    {
+                        _testHardware = _services.GetRequiredService<TestHardwareSimulator>();
+                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
+                    }
                 }
             }
             
@@ -113,7 +120,8 @@ public class App : Application
             }
 
             var mainVm = _services.GetRequiredService<MainWindowViewModel>();
-            var window = new MainWindow(settingsService, _services.GetRequiredService<IMessageBoxService>()) { DataContext = mainVm };
+            var window = _services.GetRequiredService<MainWindow>();
+            window.DataContext = mainVm;
 
             desktop.MainWindow = window;
             window.Show();
@@ -160,6 +168,10 @@ public class App : Application
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
+
+        services.AddTransient<CtiaCommunication>();
+        services.AddTransient<CtiaHardware>();
+        services.AddTransient<TestHardwareSimulator>();
         
         // Factory for ITestHardware since it's initialized later
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
@@ -176,6 +188,11 @@ public class App : Application
         services.AddTransient<ScpiScriptsManagerViewModel>();
         services.AddSingleton<SerialDeviceManagerViewModel>();
         services.AddTransient<ScriptSelectorViewModel>();
+        services.AddTransient<SerialPortConnectWindowViewModel>();
+
+        // Windows
+        services.AddTransient<MainWindow>();
+        services.AddTransient<SerialPortConnectWindow>();
         
     }
 

@@ -8,6 +8,7 @@ using ATLab.Models;
 using ATLab.Services;
 using ATLab.CTIA;
 using ATLab.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab.ViewModels;
 
@@ -31,16 +32,12 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     public event Action? RequestClose;
 
     private readonly ISettingsService _settingsService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public SerialPortConnectWindowViewModel(ISettingsService settingsService)
+    public SerialPortConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider)
     {
         _settingsService = settingsService;
-        RefreshPorts();
-    }
-
-    public SerialPortConnectWindowViewModel()
-    {
-        _settingsService = new SettingsService();
+        _serviceProvider = serviceProvider;
         RefreshPorts();
     }
 
@@ -70,8 +67,9 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     {
         if (!CanConnect) return false;
 
-        var service = new SerialPortService(SelectedPort!);
-        var openResult = service.TryOpen();
+        var serialPortManager = _serviceProvider.GetRequiredService<ISerialPortManager>();
+        var openResult = serialPortManager.TryOpen(SelectedPort!);
+        
         if (!openResult.IsSuccess)
         {
             StatusText = $"Failed to connect to {SelectedPort}";
@@ -81,7 +79,9 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         else
         {
-            TestHardware = new CtiaHardware(service);
+            var service = serialPortManager.GetPort(SelectedPort!);
+            var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, service);
+            TestHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_serviceProvider, communication);
             var initResult = await TestHardware.InitializeAsync();
             if (!initResult.IsSuccess)
             {
