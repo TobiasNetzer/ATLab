@@ -2,14 +2,12 @@
 
 public class TestStepResult
 {
-    public bool IsSuccess { get; set; }
-    public double MeasuredValue { get; set; }
+    public bool IsSuccess { get; }
+    public double MeasuredValue { get; }
 
     public TestStepResult(bool isSuccess, double measuredValue)
     {
         IsSuccess = isSuccess;
         MeasuredValue = measuredValue;
     }
-
-    public TestStepResult() { }
 }

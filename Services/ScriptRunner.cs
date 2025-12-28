@@ -15,18 +15,15 @@ public class ScriptRunner : IScriptRunner
     private readonly ISerialPortManager _portManager;
     private readonly IScpiScriptRepository _scriptRepository;
     private readonly SerialDeviceManagerViewModel _deviceManager;
-    private readonly IErrorService _errorService;
 
     public ScriptRunner(
         ISerialPortManager portManager,
         IScpiScriptRepository scriptRepository,
-        SerialDeviceManagerViewModel deviceManager,
-        IErrorService errorService)
+        SerialDeviceManagerViewModel deviceManager)
     {
         _portManager = portManager;
         _scriptRepository = scriptRepository;
         _deviceManager = deviceManager;
-        _errorService = errorService;
     }
 
     public async Task ExecuteAsync(string scriptId, string deviceName, IEnumerable<ScpiVariable> variables, CancellationToken token)
@@ -39,7 +36,7 @@ public class ScriptRunner : IScriptRunner
         var result = await RunCoreAsync(scriptId, deviceName, variables, token);
         if (result == null) return default;
 
-        return (T?)Convert.ChangeType(result, typeof(T), CultureInfo.CurrentCulture);
+        return (T?)Convert.ChangeType(result, typeof(T));
     }
 
     private async Task<string?> RunCoreAsync(string scriptId, string deviceName, IEnumerable<ScpiVariable> variables, CancellationToken token)
