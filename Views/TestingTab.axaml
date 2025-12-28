@@ -5,173 +5,197 @@
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
         
-        <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto, *">
-            
-            <Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource SystemChromeLowColor}"
-                    CornerRadius="5"
-                    Margin="10 10 0 0">
-                <StackPanel Orientation="Horizontal"
-                            Margin="5"
-                            Spacing="5">
-                    
-                    <Button Content="&#xE8F4;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="New file"
-                            Command="{Binding NewFileCommand}"/>
-
-                    <Button Content="&#xE838;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Open file"
-                            Command="{Binding LoadFileWithDialogCommand}"/>
-
-                    <Button Content="&#xE74E;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Save file"
-                            Command="{Binding SaveFileCommand}"/>
-                    
-                    <Button Content="&#xE792;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Save file as"
-                            Command="{Binding SaveFileAsCommand}"/>
-
-                    <Separator Width="2"
-                               Height="25"
-                               Margin="5 0 5 0"
-                               CornerRadius="1"/>
-
-                    <Button Content="&#xF8AA;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Add a new test step"
-                            Command="{Binding AddTestStepCommand}"/>
-                    
-                    <Button Content="&#xF413;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Duplicate selected test step"
-                            Command="{Binding DuplicateTestStepCommand}"/>
-
-                    <Button Content="&#xF8AB;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Remove selected test step"
-                            Command="{Binding RemoveTestStepCommand}"/>
-                    
-                    <Button Content="&#xEB0F;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Move selected test step up"
-                            Command="{Binding MoveStepUpCommand}"/>
-                    
-                    <Button Content="&#xEB11;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Move selected test step down"
-                            Command="{Binding MoveStepDownCommand}"/>
-                    
-                    <Separator Width="2"
-                               Height="25"
-                               Margin="5 0 5 0"
-                               CornerRadius="1"/>
-                    
-                    <Button Content="&#xF5B0;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Start test execution"
-                            Command="{Binding StartTestCommand}"/>
-                    
-                    <Button Content="&#xE978;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="Stop test execution"
-                            Command="{Binding CancelTestCommand}"/>
-
-                    <Separator Width="2"
-                               Height="25"
-                               Margin="5 0 5 0"
-                               CornerRadius="1"/>
-
-                    <Button Content="&#xE946;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
-                            ToolTip.Tip="About"
-                            Command="{Binding OpenAboutWindowCommand}"/>
-                    
-                </StackPanel>
-            </Border>
-            
-            <DataGrid Grid.Column="0" Grid.Row="1"
-                      ItemsSource="{Binding TestSteps}"
-                      SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
-                      SelectedIndex="{Binding SelectedStepIndex, Mode=TwoWay}"
-                      Margin="10 10 0 10"
-                      IsReadOnly="True"
-                      CanUserReorderColumns="True"
-                      CanUserResizeColumns="True"
-                      CanUserSortColumns="False"
-                      GridLinesVisibility="All"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
-
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" />
-                    <DataGridTextColumn Header="Lower Limit" Binding="{Binding TestStep.LowerLimit}" />
-                    <DataGridTextColumn Header="Nominal Value" Binding="{Binding TestStep.NominalValue}" />
-                    <DataGridTextColumn Header="Upper Limit" Binding="{Binding TestStep.UpperLimit}" />
-                    <DataGridTextColumn Header="Result" Binding="{Binding Result}" />
-                    <DataGridTextColumn Header="Comment" Binding="{Binding TestStep.Comment}" Width="*"/>
-                </DataGrid.Columns>
-            
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add Step" Command="{Binding AddTestStepCommand}"/>
-                        <MenuItem Header="Duplicate Step" Command="{Binding DuplicateTestStepCommand}"/>
-                        <MenuItem Header="Remove Step" Command="{Binding RemoveTestStepCommand}"/>
-                        <MenuItem Header="Move Step Up" Command="{Binding MoveStepUpCommand}"/>
-                        <MenuItem Header="Move Step Down" Command="{Binding MoveStepDownCommand}"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
+    <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto, *">
+        
+        <Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="5"
+                Margin="10 10 0 0">
+            <StackPanel Orientation="Horizontal"
+                        Margin="5"
+                        Spacing="5">
                 
-                <DataGrid.KeyBindings>
-                    <KeyBinding Gesture="Insert"
-                                Command="{Binding AddTestStepCommand}" />
-                    <KeyBinding Gesture="Delete"
-                                Command="{Binding RemoveTestStepCommand}" />
-                </DataGrid.KeyBindings>
+                <Button Content="&#xE8F4;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="New file"
+                        Command="{Binding NewFileCommand}"/>
+
+                <Button Content="&#xE838;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Open file"
+                        Command="{Binding LoadFileWithDialogCommand}"/>
+
+                <Button Content="&#xE74E;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Save file"
+                        Command="{Binding SaveFileCommand}"/>
                 
-            </DataGrid>
+                <Button Content="&#xE792;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Save file as"
+                        Command="{Binding SaveFileAsCommand}"/>
+
+                <Separator Width="2"
+                           Height="25"
+                           Margin="5 0 5 0"
+                           CornerRadius="1"/>
+
+                <Button Content="&#xF8AA;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Add a new test step"
+                        Command="{Binding AddTestStepCommand}"/>
+                
+                <Button Content="&#xF413;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Duplicate selected test step"
+                        Command="{Binding DuplicateTestStepCommand}"/>
+
+                <Button Content="&#xF8AB;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Remove selected test step"
+                        Command="{Binding RemoveTestStepCommand}"/>
+                
+                <Button Content="&#xEB0F;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Move selected test step up"
+                        Command="{Binding MoveStepUpCommand}"/>
+                
+                <Button Content="&#xEB11;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Move selected test step down"
+                        Command="{Binding MoveStepDownCommand}"/>
+                
+                <Separator Width="2"
+                           Height="25"
+                           Margin="5 0 5 0"
+                           CornerRadius="1"/>
+                
+                <Button Content="&#xF5B0;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Start test execution"
+                        Command="{Binding StartTestCommand}"/>
+                
+                <Button Content="&#xE978;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="Stop test execution"
+                        Command="{Binding CancelTestCommand}"/>
+
+                <Separator Width="2"
+                           Height="25"
+                           Margin="5 0 5 0"
+                           CornerRadius="1"/>
+
+                <Button Content="&#xE946;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        ToolTip.Tip="About"
+                        Command="{Binding OpenAboutWindowCommand}"/>
+                
+            </StackPanel>
+        </Border>
+        
+        <DataGrid Grid.Column="0" Grid.Row="1"
+                  ItemsSource="{Binding TestSteps}"
+                  SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
+                  SelectedIndex="{Binding SelectedStepIndex, Mode=TwoWay}"
+                  Margin="10 10 0 10"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="False"
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  BorderBrush="Gray"
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
+                <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" MinWidth="200" />
+                
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Result" MinWidth="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="vm:TestStepViewModel">
+                            <TextBlock Text="{Binding Result}" 
+                                       Foreground="{Binding IsValid, Converter={StaticResource ResultBrushConverter}}"
+                                       VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Deviation" Binding="{Binding Deviation}" MinWidth="150" />
+                <DataGridTextColumn Header="Comment" Binding="{Binding TestStep.Comment}" Width="*" MinWidth="300"/>
+            </DataGrid.Columns>
+        
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add Step" Command="{Binding AddTestStepCommand}"/>
+                    <MenuItem Header="Duplicate Step" Command="{Binding DuplicateTestStepCommand}"/>
+                    <MenuItem Header="Remove Step" Command="{Binding RemoveTestStepCommand}"/>
+                    <MenuItem Header="Move Step Up" Command="{Binding MoveStepUpCommand}"/>
+                    <MenuItem Header="Move Step Down" Command="{Binding MoveStepDownCommand}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             
-            <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-                          Margin="0 10 0 10">
-                <StackPanel HorizontalAlignment="Right"
-                            Spacing="10"
-                            Margin="10 0 10 0"
-                            IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
-                    
-                    <controls:TestStepConfigurator 
-                        DataContext="{Binding TestStepConfiguratorViewModel}"/>
+            <DataGrid.KeyBindings>
+                <KeyBinding Gesture="Insert"
+                            Command="{Binding AddTestStepCommand}" />
+                <KeyBinding Gesture="Delete"
+                            Command="{Binding RemoveTestStepCommand}" />
+            </DataGrid.KeyBindings>
+            
+        </DataGrid>
+        
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                      Margin="0 10 0 10">
+            <StackPanel HorizontalAlignment="Right"
+                        Spacing="10"
+                        Margin="10 0 10 0"
+                        IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
+                
+                <controls:TestStepConfigurator 
+                    DataContext="{Binding TestStepConfiguratorViewModel}"/>
 
-                    <controls:ScriptSelector
-                        DataContext="{Binding ScriptSelector}"/>
+                <controls:ScriptSelector
+                    DataContext="{Binding ScriptSelector}"/>
 
-                    <controls:MeasSelector
-                        DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
+                <controls:MeasSelector
+                    DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
 
-                    <controls:StimSelector
-                        DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
-                        GridColumns="2" />
+                <controls:StimSelector
+                    DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+                    GridColumns="2" />
 
-                    <controls:ExtStimSelector
-                        DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
-                        GridColumns="2" />
+                <controls:ExtStimSelector
+                    DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+                    GridColumns="2" />
 
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

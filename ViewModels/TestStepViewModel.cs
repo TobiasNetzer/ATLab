@@ -10,6 +10,12 @@ public partial class TestStepViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _result;
+    
+    [ObservableProperty]
+    private bool? _isValid;
+
+    [ObservableProperty]
+    private string? _deviation;
 
     public TestStepViewModel(TestStep testStep, IHardwareInfo hardwareInfo)
     {

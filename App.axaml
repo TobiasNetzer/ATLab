@@ -17,6 +17,7 @@
         </FontFamily>
         
         <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
+        <converters:ResultBrushConverter x:Key="ResultBrushConverter" />
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
                                          TrueBrush="Red"
