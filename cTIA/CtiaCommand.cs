@@ -185,7 +185,7 @@ public class CtiaCommand
     public async Task<OperationResult<bool>> SetStimChBitfield(bool[] states)
     {
         if (states.Length % 8 != 0)
-            throw new ArgumentException("Length must be a multiple of 8");
+            return OperationResult<bool>.Failure("Length must be a multiple of 8");
 
         int bytes = states.Length / 8;
         byte[] array = new byte[bytes];

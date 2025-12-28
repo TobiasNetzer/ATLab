@@ -17,7 +17,7 @@ public class CtiaHardware : ITestHardware
     public byte ActiveMeasChannelH { get; set; }
     public byte ActiveMeasChannelL { get; set; }
 
-    public CtiaHardware(ISerialCommunication serialCommunication)
+    public CtiaHardware(CtiaCommunication communication)
     {
         HardwareInfo = new DummyHardwareInfo();
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
@@ -27,7 +27,6 @@ public class CtiaHardware : ITestHardware
         ActiveMeasChannelH = 0;
         ActiveMeasChannelL = 0;
         
-        var communication = new CtiaCommunication(serialCommunication);
         _command = new CtiaCommand(communication);
     }
 

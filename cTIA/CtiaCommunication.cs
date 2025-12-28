@@ -8,9 +8,11 @@ namespace ATLab.CTIA
     public class CtiaCommunication: IDisposable
     {
         private readonly ISerialCommunication _serialCommunication;
-        public CtiaCommunication(ISerialCommunication serialCommunication)
+        private readonly IErrorService _errorService;
+        public CtiaCommunication(ISerialCommunication serialCommunication, IErrorService errorService)
         {
             _serialCommunication = serialCommunication;
+            _errorService = errorService;
         }
         
         public async Task<CtiaCommandFrame> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
@@ -29,8 +31,10 @@ namespace ATLab.CTIA
                     Payload = [(byte)CTIAStatus.CTIA_TIMEOUT]
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _errorService.AddError($"Unexpected error while sending command to test hardware: {ex.Message}");
+                        
                 return new CtiaCommandFrame
                 {
                     Command = (ushort)RespCmd.RESP_ERROR,
