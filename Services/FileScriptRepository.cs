@@ -10,15 +10,15 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public sealed class FileScpiScriptRepository : IScpiScriptRepository
+public sealed class FileScriptRepository : IScriptRepository
 {
     private readonly ISettingsService _settingsService;
     private readonly IFileDialogService _fileDialogService;
     private string? _folder;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
-    private readonly Dictionary<string, ScpiScript> _cache = new();
+    private readonly Dictionary<string, CustomScript> _cache = new();
 
-    public FileScpiScriptRepository(
+    public FileScriptRepository(
         ISettingsService settingsService,
         IFileDialogService fileDialogService)
     {
@@ -88,10 +88,10 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
 
     private string GetPath(string folder, string id) => Path.Combine(folder, $"{id}.json");
 
-    public async Task<IReadOnlyList<ScpiScript>> LoadAllAsync(CancellationToken ct = default)
+    public async Task<IReadOnlyList<CustomScript>> LoadAllAsync(CancellationToken ct = default)
     {
         var folder = await GetFolderAsync();
-        var result = new List<ScpiScript>();
+        var result = new List<CustomScript>();
         
         var options = new JsonSerializerOptions()
         {
@@ -104,7 +104,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         foreach (var file in Directory.EnumerateFiles(folder, "*.json"))
         {
             await using var stream = File.OpenRead(file);
-            var script = await JsonSerializer.DeserializeAsync<ScpiScript>(stream, options, ct);
+            var script = await JsonSerializer.DeserializeAsync<CustomScript>(stream, options, ct);
             if (script != null)
                 result.Add(script);
         }
@@ -123,7 +123,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         return ordered;
     }
 
-    public async Task<ScpiScript?> LoadAsync(string id, CancellationToken ct = default)
+    public async Task<CustomScript?> LoadAsync(string id, CancellationToken ct = default)
     {
         lock (_cache)
         {
@@ -145,7 +145,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         };
 
         await using var stream = File.OpenRead(path);
-        var script = await JsonSerializer.DeserializeAsync<ScpiScript>(stream, options, ct);
+        var script = await JsonSerializer.DeserializeAsync<CustomScript>(stream, options, ct);
         
         if (script != null)
         {
@@ -158,7 +158,7 @@ public sealed class FileScpiScriptRepository : IScpiScriptRepository
         return script;
     }
 
-    public async Task SaveAsync(ScpiScript script, CancellationToken ct = default)
+    public async Task SaveAsync(CustomScript script, CancellationToken ct = default)
     {
         var folder = await GetFolderAsync();
         if (string.IsNullOrWhiteSpace(script.Id))

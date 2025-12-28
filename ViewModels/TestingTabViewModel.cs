@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Services;
 using ATLab.Models;
 using ATLab.Views;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -101,7 +100,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState!);
                 TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState!);
                 TestStepConfiguratorViewModel.LoadTestStep(value);
-                ScriptSelector.SelectedTestStep = value.TestStep;
+                ScriptSelector.LoadTestStep(value);
             }
             catch (Exception ex)
             {
@@ -163,7 +162,7 @@ public partial class TestingTabViewModel : ViewModelBase
             EvaluationSource = currentModel.EvaluationSource,
             TargetDevice = currentModel.TargetDevice,
             ScriptId = currentModel.ScriptId,
-            ScriptVariables = new ObservableCollection<ScpiVariable>(currentModel.ScriptVariables.Select(v => v.Clone())),
+            ScriptVariables = new ObservableCollection<ScriptVariable>(currentModel.ScriptVariables.Select(v => v.Clone())),
             StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
             ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
             MatrixState = new RelayMatrix(currentModel.MatrixState)
@@ -271,14 +270,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.StepCompleted += (index, step, result) =>
         {
-            if (result.IsSuccess)
-            {
-                step.Result = result.Value.ToString("F3");
-            }
-            else
-            {
-                step.Result = "Error";
-            }
+            //
         };
 
         _testExecutor.TestCompleted += () =>

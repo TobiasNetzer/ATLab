@@ -8,20 +8,20 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class ScpiScriptsManagerViewModel : ViewModelBase
+public partial class ScriptsManagerViewModel : ViewModelBase
 {
-    private readonly IScpiScriptService _scriptService;
-    private readonly IScpiScriptRepository _repository;
+    private readonly IScriptService _scriptService;
+    private readonly IScriptRepository _repository;
     private readonly IMessageBoxService _messageBoxService;
 
-    public ObservableCollection<ScpiScriptItemViewModel> Scripts => _scriptService.Scripts;
+    public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
-    private ScpiScriptItemViewModel? _selectedScript;
+    private ScriptItemViewModel? _selectedScript;
 
-    public ScpiScriptsManagerViewModel(
-        IScpiScriptService scriptService,
-        IScpiScriptRepository repository,
+    public ScriptsManagerViewModel(
+        IScriptService scriptService,
+        IScriptRepository repository,
         IMessageBoxService messageBoxService)
     {
         _scriptService = scriptService;
@@ -33,7 +33,7 @@ public partial class ScpiScriptsManagerViewModel : ViewModelBase
 
     private bool CanExecute() => SelectedScript != null;
 
-    partial void OnSelectedScriptChanged(ScpiScriptItemViewModel? value)
+    partial void OnSelectedScriptChanged(ScriptItemViewModel? value)
     {
         DeleteScriptCommand.NotifyCanExecuteChanged();
         SaveScriptCommand.NotifyCanExecuteChanged();

@@ -55,7 +55,7 @@ public partial class TestStep : ObservableObject
 
     [ObservableProperty]
     [property: JsonPropertyOrder(11)]
-    private ObservableCollection<ScpiVariable> _scriptVariables = new();
+    private ObservableCollection<ScriptVariable> _scriptVariables = new();
 
     [ObservableProperty]
     [property: JsonPropertyOrder(12)]
@@ -93,7 +93,7 @@ public partial class TestStep : ObservableObject
         newValue.PropertyChanged += Child_PropertyChanged;
     }
 
-    partial void OnScriptVariablesChanged(ObservableCollection<ScpiVariable>? oldValue, ObservableCollection<ScpiVariable> newValue)
+    partial void OnScriptVariablesChanged(ObservableCollection<ScriptVariable>? oldValue, ObservableCollection<ScriptVariable> newValue)
     {
         if (oldValue != null)
         {
@@ -110,12 +110,12 @@ public partial class TestStep : ObservableObject
     {
         if (e.OldItems != null)
         {
-            foreach (ScpiVariable item in e.OldItems) item.PropertyChanged -= Child_PropertyChanged;
+            foreach (ScriptVariable item in e.OldItems) item.PropertyChanged -= Child_PropertyChanged;
         }
 
         if (e.NewItems != null)
         {
-            foreach (ScpiVariable item in e.NewItems) item.PropertyChanged += Child_PropertyChanged;
+            foreach (ScriptVariable item in e.NewItems) item.PropertyChanged += Child_PropertyChanged;
         }
 
         OnPropertyChanged(nameof(ScriptVariables));

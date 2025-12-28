@@ -9,22 +9,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class ScpiScriptItemViewModel : ViewModelBase
+public partial class ScriptItemViewModel : ViewModelBase
 {
-    private readonly IScpiScriptRepository _repository;
-    private readonly ScpiScript _model;
+    private readonly IScriptRepository _repository;
+    private readonly CustomScript _model;
     
-    public ObservableCollection<ScpiCommandViewModel> Commands { get; } = new();
+    public ObservableCollection<ScriptCommandViewModel> Commands { get; } = new();
 
     [ObservableProperty]
     private int _selectedCommandIndex;
 
-    public ObservableCollection<ScpiVariable> Variables { get; } = new();
+    public ObservableCollection<ScriptVariable> Variables { get; } = new();
     
     [ObservableProperty]
     private int _selectedVariableIndex;
 
-    public ScpiScriptItemViewModel(IScpiScriptRepository repository, ScpiScript model)
+    public ScriptItemViewModel(IScriptRepository repository, CustomScript model)
     {
         _repository = repository;
         _model = model;
@@ -64,7 +64,7 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     {
         Commands.Clear();
         foreach (var command in _model.Commands)
-            Commands.Add(new ScpiCommandViewModel(command));
+            Commands.Add(new ScriptCommandViewModel(command));
 
         Variables.Clear();
         foreach (var p in _model.Variables)
@@ -83,19 +83,19 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
         await _repository.SaveAsync(_model);
     }
 
-    public ScpiScript GetModel() => _model;
+    public CustomScript GetModel() => _model;
 
     [RelayCommand]
     private void AddCommand()
     {
         var indexToInsertNewCommand = SelectedCommandIndex < 0 ? 0 : SelectedCommandIndex + 1;
         if (indexToInsertNewCommand > Commands.Count) indexToInsertNewCommand = Commands.Count;
-        var newCommand = new ScpiCommand
+        var newCommand = new ScriptCommand
         {
             Command = "",
             ExpectResponse = false
         };
-        Commands.Insert(indexToInsertNewCommand, new ScpiCommandViewModel(newCommand));
+        Commands.Insert(indexToInsertNewCommand, new ScriptCommandViewModel(newCommand));
         SelectedCommandIndex = indexToInsertNewCommand;
     }
     
@@ -113,10 +113,10 @@ public partial class ScpiScriptItemViewModel : ViewModelBase
     {
         var indexToInsertNewVariable = SelectedVariableIndex <= 0 ? 0 : SelectedVariableIndex + 1;
         if (indexToInsertNewVariable > Variables.Count) indexToInsertNewVariable = Variables.Count;
-        var newVariable = new ScpiVariable
+        var newVariable = new ScriptVariable
         {
             Name = "",
-            DefaultValue = "0"
+            Value = "0"
         };
         Variables.Insert(indexToInsertNewVariable, newVariable);
         SelectedVariableIndex = indexToInsertNewVariable;

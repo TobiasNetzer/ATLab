@@ -1,6 +1,6 @@
 ﻿namespace ATLab.Models;
 
-public sealed class ScpiCommand
+public sealed class ScriptCommand
 {
     public string Command { get; set; } = string.Empty;
     public bool ExpectResponse { get; set; }

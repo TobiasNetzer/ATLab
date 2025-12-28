@@ -4,12 +4,12 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
-public class ScpiClient
+public class ScriptClient
 {
     private readonly ISerialCommunication _transport;
     private readonly Encoding _encoding = Encoding.ASCII;
 
-    public ScpiClient(ISerialCommunication transport)
+    public ScriptClient(ISerialCommunication transport)
     {
         _transport = transport;
     }

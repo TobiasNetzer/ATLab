@@ -15,20 +15,20 @@ namespace ATLab.ViewModels;
 public partial class ScriptSelectorViewModel : ViewModelBase
 {
     private readonly SerialDeviceManagerViewModel _deviceManager;
-    private readonly IScpiScriptService _scriptService;
+    private readonly IScriptService _scriptService;
     private readonly ISettingsService _settingsService;
     
     public ObservableCollection<SerialDevices> Devices => _deviceManager.SerialDevices;
-    public ObservableCollection<ScpiScriptItemViewModel> Scripts => _scriptService.Scripts;
+    public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
+    public ObservableCollection<ScriptVariable> ScriptVariables { get; } = new();
 
     [ObservableProperty]
     private SerialDevices? _selectedDevice;
 
     [ObservableProperty]
-    private ScpiScriptItemViewModel? _selectedScript;
+    private ScriptItemViewModel? _selectedScript;
 
-    [ObservableProperty]
-    private TestStep? _selectedTestStep;
+    private TestStep? _currentTestStep;
 
     [ObservableProperty]
     private bool _isBusy;
@@ -40,7 +40,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     
     public ScriptSelectorViewModel(
         SerialDeviceManagerViewModel deviceManager,
-        IScpiScriptService scriptService,
+        IScriptService scriptService,
         ISettingsService settingsService)
     {
         _deviceManager = deviceManager;
@@ -55,20 +55,23 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         }
     }
 
-    partial void OnSelectedTestStepChanged(TestStep? value)
+    public void LoadTestStep(TestStepViewModel? testStepViewModel)
     {
         _isSyncing = true;
         try
         {
-            if (value == null)
+            _currentTestStep = testStepViewModel?.TestStep;
+
+            if (_currentTestStep == null)
             {
                 SelectedScript = null;
+                ScriptVariables.Clear();
                 return;
             }
 
-            SelectedScript = Scripts.FirstOrDefault(s => s.Id == value.ScriptId);
+            SelectedScript = Scripts.FirstOrDefault(s => s.Id == _currentTestStep.ScriptId);
             SyncVariables();
-            SelectedDevice = Devices.FirstOrDefault(d => d.Name == value.TargetDevice);
+            SelectedDevice = Devices.FirstOrDefault(d => d.Name == _currentTestStep.TargetDevice);
         }
         finally
         {
@@ -76,22 +79,36 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         }
     }
 
-    partial void OnSelectedScriptChanged(ScpiScriptItemViewModel? value)
+    partial void OnSelectedScriptChanged(ScriptItemViewModel? value)
     {
         if (_isSyncing) return;
 
-        if (SelectedTestStep != null && value != null)
+        if (_currentTestStep != null)
         {
-            SelectedTestStep.ScriptId = value.Id;
+            _currentTestStep.ScriptId = value?.Id ?? string.Empty;
             SyncVariables();
+            return;
+        }
+        
+        if (SelectedScript == null)
+        {
+            ScriptVariables.Clear();
+            return;
+        }
+        
+        var stepVars = SelectedScript.Variables;
+        ScriptVariables.Clear();
+        foreach (var v in stepVars)
+        {
+            ScriptVariables.Add(v);
         }
     }
 
     partial void OnSelectedDeviceChanged(SerialDevices? value)
     {
-        if (SelectedTestStep != null && value != null)
+        if (_currentTestStep != null)
         {
-            SelectedTestStep.TargetDevice = value.Name;
+            _currentTestStep.TargetDevice = value?.Name ?? string.Empty;
         }
     }
     
@@ -102,16 +119,21 @@ public partial class ScriptSelectorViewModel : ViewModelBase
 
     private void SyncVariables()
     {
-        if (SelectedTestStep == null) return;
+        if (_currentTestStep == null)
+        {
+            ScriptVariables.Clear();
+            return;
+        }
 
         if (SelectedScript == null)
         {
-            SelectedTestStep.ScriptVariables.Clear();
+            _currentTestStep.ScriptVariables.Clear();
+            ScriptVariables.Clear();
             return;
         }
 
         var scriptVars = SelectedScript.Variables;
-        var stepVars = SelectedTestStep.ScriptVariables;
+        var stepVars = _currentTestStep.ScriptVariables;
 
         // Remove variables that are no longer in the script
         var toRemove = stepVars.Where(sv => scriptVars.All(v => v.Name != sv.Name)).ToList();
@@ -127,27 +149,19 @@ public partial class ScriptSelectorViewModel : ViewModelBase
             }
             // If it exists, we keep the user's value
         }
+
+        // Sync the local collection
+        ScriptVariables.Clear();
+        foreach (var v in stepVars)
+        {
+            ScriptVariables.Add(v);
+        }
     }
 
     [RelayCommand]
-    void RemoveDevice()
-    {
-        if (SelectedTestStep == null) return;
-        if (SelectedDevice == null) return;
-
-        SelectedTestStep.TargetDevice = string.Empty;
-        SelectedDevice = null;
-    }
+    void RemoveDevice() => SelectedDevice = null;
 
     [RelayCommand]
-    void RemoveScript()
-    {
-        if (SelectedTestStep == null) return;
-        if (SelectedScript == null) return;
-        
-        SelectedTestStep.ScriptId = string.Empty;
-        SelectedTestStep.ScriptVariables.Clear();
-        SelectedScript = null;
-    }
+    void RemoveScript() => SelectedScript = null;
 
 }

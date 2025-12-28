@@ -3,11 +3,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
-public partial class ScpiCommandViewModel : ViewModelBase
+public partial class ScriptCommandViewModel : ViewModelBase
 {
-    private readonly ScpiCommand _model;
+    private readonly ScriptCommand _model;
 
-    public ScpiCommandViewModel(ScpiCommand model)
+    public ScriptCommandViewModel(ScriptCommand model)
     {
         _model = model;
         _command = model.Command;
@@ -57,7 +57,7 @@ public partial class ScpiCommandViewModel : ViewModelBase
         }
     }
 
-    public ScpiCommand GetModel() => _model;
+    public ScriptCommand GetModel() => _model;
     public int GetTimeoutMs() => _model.TimeoutMs;
     public int GetDelayMs() => _model.DelayMs;
 }

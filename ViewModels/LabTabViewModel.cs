@@ -27,7 +27,7 @@ public partial class LabTabViewModel : ViewModelBase
     private SerialDevices? _selectedDevice;
     
     [ObservableProperty]
-    private ScpiScriptItemViewModel? _selectedScript;
+    private ScriptItemViewModel? _selectedScript;
     
     [ObservableProperty]
     private bool _isBusy;
@@ -118,15 +118,20 @@ public partial class LabTabViewModel : ViewModelBase
         IsBusy = true;
         try
         {
-            await _scriptRunner.ExecuteAsync(
+            var result = await _scriptRunner.ExecuteAsync(
                 ScriptSelectorViewModel.SelectedScript.Id, 
                 ScriptSelectorViewModel.SelectedDevice.Name, 
                 ScriptSelectorViewModel.SelectedScript.Variables, 
                 CancellationToken.None);
+
+            if (!result.IsSuccess)
+            {
+                _errorService.AddError($"Failed to run script: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
-            _errorService.AddError($"Failed to run script: {ex.Message}");
+            _errorService.AddError($"Unexpected error while running script: {ex.Message}");
         }
         finally
         {

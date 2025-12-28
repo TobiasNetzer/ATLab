@@ -102,7 +102,7 @@
                                       SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
                                       HorizontalAlignment="Stretch">
                                 <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="vm:ScpiScriptItemViewModel">
+                                    <DataTemplate x:DataType="vm:ScriptItemViewModel">
                                         <TextBlock Text="{Binding Name}"
                                                    ToolTip.Tip="{Binding Description}"/>
                                     </DataTemplate>
@@ -112,15 +112,18 @@
                     </StackPanel>
                     
                     
-                    <DataGrid ItemsSource="{Binding SelectedTestStep.ScriptVariables}" 
+                    <DataGrid ItemsSource="{Binding ScriptVariables}" 
                               IsVisible="{Binding SelectedScript, Converter={x:Static ObjectConverters.IsNotNull}}"
                               AutoGenerateColumns="False"
                               CanUserSortColumns="False"
                               CanUserResizeColumns="True"
+                              GridLinesVisibility="All"
+                              BorderThickness="1"
+                              BorderBrush="Gray"
                               MaxHeight="200">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Variable" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Header="Value" Binding="{Binding DefaultValue}" Width="*"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                         

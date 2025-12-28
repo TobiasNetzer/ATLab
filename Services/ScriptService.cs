@@ -9,14 +9,14 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class ScpiScriptService : IScpiScriptService
+public class ScriptService : IScriptService
 {
-    private readonly IScpiScriptRepository _repository;
+    private readonly IScriptRepository _repository;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public ObservableCollection<ScpiScriptItemViewModel> Scripts { get; } = new();
+    public ObservableCollection<ScriptItemViewModel> Scripts { get; } = new();
 
-    public ScpiScriptService(IScpiScriptRepository repository)
+    public ScriptService(IScriptRepository repository)
     {
         _repository = repository;
     }
@@ -32,7 +32,7 @@ public class ScpiScriptService : IScpiScriptService
             Scripts.Clear();
             foreach (var model in models)
             {
-                var vm = new ScpiScriptItemViewModel(_repository, model);
+                var vm = new ScriptItemViewModel(_repository, model);
                 vm.LoadFromModel();
                 Scripts.Add(vm);
             }
@@ -43,7 +43,7 @@ public class ScpiScriptService : IScpiScriptService
         }
     }
 
-    public async Task SaveAsync(ScpiScriptItemViewModel script)
+    public async Task SaveAsync(ScriptItemViewModel script)
     {
         await script.SaveAsync();
         // If it's a new script not yet in the collection, add it
@@ -53,20 +53,20 @@ public class ScpiScriptService : IScpiScriptService
         }
     }
 
-    public async Task DeleteAsync(ScpiScriptItemViewModel script)
+    public async Task DeleteAsync(ScriptItemViewModel script)
     {
         await _repository.DeleteAsync(script.Id);
         Scripts.Remove(script);
     }
 
-    public ScpiScriptItemViewModel CreateNew()
+    public ScriptItemViewModel CreateNew()
     {
-        var model = new ScpiScript
+        var model = new CustomScript
         {
             Name = "New Script",
             Description = "",
         };
-        var vm = new ScpiScriptItemViewModel(_repository, model);
+        var vm = new ScriptItemViewModel(_repository, model);
         vm.LoadFromModel();
         return vm;
     }
