@@ -1,0 +1,37 @@
+﻿using System.Threading.Tasks;
+using ATLab.Interfaces;
+using ATLab.Models;
+
+namespace ATLab.Services;
+
+public class TestHardwareSimulator : ITestHardware
+{
+    public IHardwareInfo HardwareInfo { get; set; }
+    
+    public bool[] StimChannelStates {get; set;}
+    public bool[] ExtStimChannelStates { get; set; }
+    public bool[] MeasChannelStates { get; set; }
+    public byte ActiveMeasChannelH { get; set; }
+    public byte ActiveMeasChannelL { get; set; }
+
+    public TestHardwareSimulator()
+    {
+        HardwareInfo = new DummyHardwareInfo();
+        StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
+        ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
+        MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];
+        
+        ActiveMeasChannelH = 0;
+        ActiveMeasChannelL = 0;
+    }
+
+    public async Task<OperationResult> InitializeAsync()
+    {
+        return OperationResult.Success();
+    }
+
+    public async Task<OperationResult> UpdateRelayStates()
+    {
+        return OperationResult.Success();
+    }
+}
