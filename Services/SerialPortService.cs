@@ -19,6 +19,7 @@ namespace ATLab.Services
 
         public string PortName => _port.PortName;
         public bool IsOpen => _port.IsOpen;
+        public bool IsConnected => _port.IsOpen;
 
         public SerialPortService(string portName, int baudRate = 115200)
         {
@@ -54,6 +55,26 @@ namespace ATLab.Services
             catch (Exception ex)
             {
                 return OperationResult.Failure($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        public async Task<OperationResult> ReconnectAsync()
+        {
+            try
+            {
+                if (_port.IsOpen)
+                {
+                    _port.Close();
+                }
+                
+                // Small delay to let the port settle
+                await Task.Delay(100);
+                
+                return TryOpen();
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure($"Reconnect failed: {ex.Message}");
             }
         }
 

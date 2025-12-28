@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 
 namespace ATLab.CTIA
 {
@@ -9,6 +10,8 @@ namespace ATLab.CTIA
     {
         private readonly ISerialCommunication _serialCommunication;
         private readonly IErrorService _errorService;
+        public bool IsConnected => _serialCommunication.IsConnected;
+
         public CtiaCommunication(ISerialCommunication serialCommunication, IErrorService errorService)
         {
             _serialCommunication = serialCommunication;
@@ -19,6 +22,22 @@ namespace ATLab.CTIA
         {
             try
             {
+                if (!_serialCommunication.IsConnected)
+                {
+                    var reconnectResult = await _serialCommunication.ReconnectAsync();
+                    if (!reconnectResult.IsSuccess)
+                    {
+                        _errorService.AddError("Test hardware is no longer connected. Reconnection attempt failed.");
+                        
+                        return new CtiaCommandFrame
+                        {
+                            Command = (ushort)RespCmd.RESP_ERROR,
+                            PayloadSize = 1,
+                            Payload = [(byte)CTIAStatus.CTIA_FAIL]
+                        };
+                    }
+                }
+
                 byte[] responseBytes = await _serialCommunication.SendAsync(frame.ToByteArray(), timeoutMs);
                 return CtiaCommandFrame.Parse(responseBytes);
             }
@@ -42,6 +61,11 @@ namespace ATLab.CTIA
                     Payload = [(byte)CTIAStatus.CTIA_FAIL]
                 };
             }
+        }
+
+        public async Task<OperationResult> ReconnectAsync()
+        {
+            return await _serialCommunication.ReconnectAsync();
         }
 
         public async Task<CtiaCommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
