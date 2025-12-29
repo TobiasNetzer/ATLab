@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -311,12 +310,12 @@ public partial class TestingTabViewModel : ViewModelBase
         IsDirty = false;
     }
 
-    private string CaptureCurrentStateJson()
+    private AtlabFileDto CaptureCurrentState()
     {
         foreach (var vm in TestSteps)
             vm.TestStep.UpdateDtos();
 
-        var dto = new AtlabFileDto
+        return new AtlabFileDto
         {
             TestSteps = TestSteps.Select(vm => vm.TestStep).ToList(),
             StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
@@ -324,7 +323,11 @@ public partial class TestingTabViewModel : ViewModelBase
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
             SerialDevices = _serialDeviceManager.SerialDevices.ToList()
         };
+    }
 
+    private string CaptureCurrentStateJson()
+    {
+        var dto = CaptureCurrentState();
         return _fileService.Serialize(dto);
     }
 
@@ -361,10 +364,10 @@ public partial class TestingTabViewModel : ViewModelBase
 
         if (file is not null)
         {
-            var json = CaptureCurrentStateJson();
-            await File.WriteAllTextAsync(file.Path.LocalPath, json);
+            var dto = CaptureCurrentState();
+            await _fileService.SaveAsync(file.Path.LocalPath, dto);
 
-            _lastSavedJson = json;
+            _lastSavedJson = _fileService.Serialize(dto);
             CurrentFilePath = file.Path.LocalPath;
             _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
             IsDirty = false;
@@ -376,9 +379,9 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         if (!string.IsNullOrWhiteSpace(CurrentFilePath))
         {
-            var json = CaptureCurrentStateJson();
-            await File.WriteAllTextAsync(CurrentFilePath, json);
-            _lastSavedJson = json;
+            var dto = CaptureCurrentState();
+            await _fileService.SaveAsync(CurrentFilePath, dto);
+            _lastSavedJson = _fileService.Serialize(dto);
             IsDirty = false;
             return;
         }
@@ -408,8 +411,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         try
         {
-            var json = await File.ReadAllTextAsync(fileToLoad);
-            var dto = _fileService.Deserialize(json);
+            var dto = await _fileService.LoadAsync(fileToLoad);
 
             if (dto != null)
             {
@@ -431,7 +433,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 }
 
                 CurrentFilePath = fileToLoad;
-                _lastSavedJson = json;
+                _lastSavedJson = _fileService.Serialize(dto);
                 _settingsService.Settings.LastOpenedFile = fileToLoad;
                 IsDirty = false;
                 SelectedStepIndex = 0;
