@@ -14,10 +14,6 @@
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
-
-    <Design.DataContext>
-        <vm:TestStepConfiguratorViewModel />
-    </Design.DataContext>
     
     <Border Background="{DynamicResource SystemChromeLowColor}"
             CornerRadius="15">
@@ -115,7 +111,7 @@
                                 Spacing="5"
                                 Margin="65 10 10 10">
                         <TextBlock Text="Unit:"/>
-                        <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay}"
+                        <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="4"
                                  MaxLength="10"
@@ -142,7 +138,8 @@
                     <TextBlock Text="Evaluate:"/>
                     <ComboBox ItemsSource="{Binding EvaluationSources}"
                               SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource, FallbackValue=''}"
-                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                              TabIndex="6"/>
                     
                 </StackPanel>
                 
@@ -152,8 +149,7 @@
                             Margin="10">
                     <TextBlock Text="Comment:"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
-                             helpers:FocusExtensions.MoveFocusOnEnter="True"
-                             TabIndex="6"
+                             TabIndex="7"
                              Width="480"
                              Height="150"
                              TextWrapping="Wrap"/>

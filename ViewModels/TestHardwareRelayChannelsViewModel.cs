@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;

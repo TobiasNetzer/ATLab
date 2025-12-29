@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
-using ATLab.Models;
-using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;

@@ -1,7 +1,4 @@
-using ATLab.Interfaces;
-using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 

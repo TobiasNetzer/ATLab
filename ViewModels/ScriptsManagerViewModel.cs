@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 

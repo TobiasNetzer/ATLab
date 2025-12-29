@@ -37,31 +37,31 @@
                 
                         <Button Content="&#xED25;"
                                 FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
+                                FontSize="20"
                                 ToolTip.Tip="Change repository folder"
                                 Command="{Binding ChangeRepositoryCommand}"/>
                     
                         <Button Content="&#xE72C;"
                                 FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
+                                FontSize="20"
                                 ToolTip.Tip="Reload script repository"
                                 Command="{Binding ReloadScriptsCommand}"/>
                     
                         <Button Content="&#xED0E;"
                                 FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
+                                FontSize="20"
                                 ToolTip.Tip="New script"
                                 Command="{Binding NewScriptCommand}"/>
 
                         <Button Content="&#xE74E;"
                                 FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
+                                FontSize="20"
                                 ToolTip.Tip="Save script"
                                 Command="{Binding SaveScriptCommand}"/>
                     
                         <Button Content="&#xE74D;"
                                 FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
+                                FontSize="20"
                                 ToolTip.Tip="Delete script"
                                 Command="{Binding DeleteScriptCommand}"/>
                     
@@ -120,13 +120,13 @@
                             Margin="0 0 0 5">
                     <Button Content="&#xF8AA;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                            FontSize="20"
                             ToolTip.Tip="Add a new variable"
                             Command="{Binding SelectedScript.AddVariableCommand}" />
                     
                     <Button Content="&#xF8AB;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                            FontSize="20"
                             ToolTip.Tip="Remove variable"
                             Command="{Binding SelectedScript.RemoveVariableCommand}" />
                 </StackPanel>
@@ -154,13 +154,13 @@
                             Margin="0 0 0 5">
                     <Button Content="&#xF8AA;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                            FontSize="20"
                             ToolTip.Tip="Add a new command" 
                             Command="{Binding SelectedScript.AddCommandCommand}" />
                     
                     <Button Content="&#xF8AB;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                            FontSize="20"
                             ToolTip.Tip="Remove command" 
                             Command="{Binding SelectedScript.RemoveCommandCommand}" />
                 </StackPanel>
