@@ -1,8 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Views;
@@ -14,13 +14,10 @@ namespace ATLab.ViewModels;
 
 public partial class TestingTabViewModel : ViewModelBase
 {
-
+    private readonly ISettingsService _settingsService;
     private readonly ITestExecutor _testExecutor;
     private readonly IErrorService _errorService;
-    private readonly IFileDialogService _fileDialogService;
-    private readonly ISettingsService _settingsService;
-    private readonly IFileService _fileService;
-    private readonly IMessageBoxService _messageBoxService;
+    private readonly IProjectService _projectService;
     private readonly SerialDeviceManagerViewModel _serialDeviceManager;
 
     [ObservableProperty]
@@ -42,57 +39,48 @@ public partial class TestingTabViewModel : ViewModelBase
     private ScriptSelectorViewModel _scriptSelector;
     
     [ObservableProperty]
-    private bool _isRunning;
+    private bool _isEditingMode;
     
     [ObservableProperty]
     private int _numberFailedSteps;
+
+    [ObservableProperty]
+    private int _testProgress;
     
     [ObservableProperty]
-    private bool _isTestFailed;
-
-    private CancellationTokenSource? _cts;
-
-    [ObservableProperty]
-    private string? _currentFilePath;
-
-    [ObservableProperty]
-    private bool _isDirty;
-
-    private string? _lastSavedJson;
+    private TestStatus _testStatus = TestStatus.IDLE;
 
     public TestingTabViewModel(
+        ISettingsService settingsService,
         IErrorService errorService, 
         TestHardwareRelayChannelsViewModel testHardwareRelayChannels, 
         ITestExecutor testExecutor, 
         TestStepConfiguratorViewModel testStepConfiguratorViewModel,
-        IFileDialogService fileDialogService,
-        ISettingsService settingsService,
-        IFileService fileService,
-        IMessageBoxService messageBoxService,
+        IProjectService projectService,
         SerialDeviceManagerViewModel serialDeviceManager,
         ScriptSelectorViewModel scriptSelector)
     {
+        _settingsService = settingsService;
         _errorService = errorService;
         TestSteps = new ObservableCollection<TestStepViewModel>();
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
         _scriptSelector = scriptSelector;
-        _fileDialogService = fileDialogService;
-        _settingsService = settingsService;
-        _fileService = fileService;
-        _messageBoxService = messageBoxService;
+        _projectService = projectService;
         _serialDeviceManager = serialDeviceManager;
         
         Title = "Testing";
+        
+        IsEditingMode = settingsService.Settings.IsEditingMode;
         
         HookExecutorEvents();
         
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _serialDeviceManager.SerialDevices.CollectionChanged += (_, _) => CheckForChanges();
-
-        _lastSavedJson = CaptureCurrentStateJson();
+        
+        _projectService.UpdateLastSavedState(CaptureCurrentState());
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
@@ -115,7 +103,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    partial void OnIsRunningChanged(bool value)
+    partial void OnTestStatusChanged(TestStatus value)
     {
         AddTestStepCommand.NotifyCanExecuteChanged();
         DuplicateTestStepCommand.NotifyCanExecuteChanged();
@@ -226,46 +214,23 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = newIndex;
     }
     
-    private bool IsTestRunning() => !IsRunning;
+    private bool IsTestRunning() => TestStatus != TestStatus.RUNNING;
     
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private async Task StartTestAsync()
     {
-        if (TestSteps.Count == 0)
-        {
-            _errorService.AddError("No test steps configured.");
-            return;
-        }
-
-        IsRunning = true;
+        TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
-        IsTestFailed = false;
-        _cts = new CancellationTokenSource();
+        TestProgress = 0;
+        
+        await _testExecutor.StartTestAsync(TestSteps);
 
-        try
-        {
-            await _testExecutor.ExecuteAsync(TestSteps, _cts.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            _errorService.AddError("Test was cancelled by user.");
-        }
-        catch (Exception ex)
-        {
-            _errorService.AddError("Test execution failed: " + ex.Message);
-        }
-        finally
-        {
-            IsRunning = false;
-            _cts.Dispose();
-            _cts = null;
-        }
     }
 
     [RelayCommand]
     private void CancelTest()
     {
-        _cts?.Cancel();
+        _testExecutor.CancelTest();
     }
 
     private void HookExecutorEvents()
@@ -277,37 +242,37 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.StepCompleted += (index, step) =>
         {
+            TestProgress = TestSteps.Count == 0 ? 0 : (int)Math.Round((double)(SelectedStepIndex + 1) / TestSteps.Count * 100);
+            
             if (!step.IsValid)
             {
                 NumberFailedSteps++;
             }
         };
 
-        _testExecutor.TestCompleted += () =>
+        _testExecutor.TestCompleted += (cancelled) =>
         {
-            IsRunning = false;
-            if (NumberFailedSteps > 0)
+            TestProgress = 100;
+            if (cancelled)
             {
-                IsTestFailed = true;
+                TestStatus = TestStatus.CANCELLED;
+                return;
             }
+            TestStatus = NumberFailedSteps > 0 ? TestStatus.FAILED : TestStatus.PASSED;
         };
     }
 
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task NewFile()
     {
-        if (IsDirty)
+        if (await _projectService.NewProjectAsync())
         {
-            var confirm = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Do you want to continue and lose your changes?");
-            if (!confirm) return;
+            TestSteps.Clear();
+            TestHardwareRelayChannels.ResetToDefault();
+            _serialDeviceManager.SerialDevices.Clear();
+            _projectService.UpdateLastSavedState(CaptureCurrentState());
+            SelectedStepIndex = -1;
         }
-
-        TestSteps.Clear();
-        TestHardwareRelayChannels.ResetToDefault();
-        _serialDeviceManager.SerialDevices.Clear();
-        CurrentFilePath = null;
-        _lastSavedJson = CaptureCurrentStateJson();
-        IsDirty = false;
     }
 
     private AtlabFileDto CaptureCurrentState()
@@ -325,17 +290,9 @@ public partial class TestingTabViewModel : ViewModelBase
         };
     }
 
-    private string CaptureCurrentStateJson()
-    {
-        var dto = CaptureCurrentState();
-        return _fileService.Serialize(dto);
-    }
-
     private void CheckForChanges()
     {
-        if (_lastSavedJson == null) return;
-        var currentJson = CaptureCurrentStateJson();
-        IsDirty = currentJson != _lastSavedJson;
+        _projectService.IsStateChanged(CaptureCurrentState());
     }
 
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
@@ -360,49 +317,24 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task SaveFileAs()
     {
-        var file = await _fileDialogService.SaveFileAsync("ATLab files", "Test.atlab", "atlab", new[] { "atlab" });
-
-        if (file is not null)
-        {
-            var dto = CaptureCurrentState();
-            await _fileService.SaveAsync(file.Path.LocalPath, dto);
-
-            _lastSavedJson = _fileService.Serialize(dto);
-            CurrentFilePath = file.Path.LocalPath;
-            _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
-            IsDirty = false;
-        }
+        var dto = CaptureCurrentState();
+        await _projectService.SaveAsAsync(dto);
     }
 
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task SaveFile()
     {
-        if (!string.IsNullOrWhiteSpace(CurrentFilePath))
-        {
-            var dto = CaptureCurrentState();
-            await _fileService.SaveAsync(CurrentFilePath, dto);
-            _lastSavedJson = _fileService.Serialize(dto);
-            IsDirty = false;
-            return;
-        }
-
-        await SaveFileAs();
+        var dto = CaptureCurrentState();
+        await _projectService.SaveAsync(dto);
     }
 
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     public async Task LoadFileWithDialog()
     {
-        if (IsDirty)
+        var dto = await _projectService.OpenFileAsync();
+        if (dto != null)
         {
-            var result = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Do you want to continue and lose your changes?");
-            if (!result) return;
-        }
-
-        var file = await _fileDialogService.OpenFileAsync("ATLab files", new[] { "atlab" });
-
-        if (file is not null)
-        {
-            await LoadFile(file.Path.LocalPath);
+            ApplyDto(dto);
         }
     }
 
@@ -411,37 +343,41 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         try
         {
-            var dto = await _fileService.LoadAsync(fileToLoad);
-
+            var dto = await _projectService.LoadAsync(fileToLoad);
             if (dto != null)
             {
-                TestSteps.Clear();
-                foreach (var step in dto.TestSteps)
-                {
-                    var stepVm = new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo);
-                    stepVm.PropertyChanged += (_, _) => CheckForChanges();
-                    TestSteps.Add(stepVm);
-                }
-
-                TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
-                
-                _serialDeviceManager.SerialDevices.Clear();
-
-                foreach (var device in dto.SerialDevices)
-                {
-                    _serialDeviceManager.SerialDevices.Add(device);
-                }
-
-                CurrentFilePath = fileToLoad;
-                _lastSavedJson = _fileService.Serialize(dto);
-                _settingsService.Settings.LastOpenedFile = fileToLoad;
-                IsDirty = false;
-                SelectedStepIndex = 0;
+                ApplyDto(dto);
             }
         }
         catch (Exception ex)
         {
             _errorService.AddError("Failed to load file: " + ex.Message);
         }
+    }
+
+    private void ApplyDto(AtlabFileDto dto)
+    {
+        TestSteps.Clear();
+        foreach (var step in dto.TestSteps)
+        {
+            var stepVm = new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo);
+            stepVm.PropertyChanged += (_, _) => CheckForChanges();
+            TestSteps.Add(stepVm);
+        }
+
+        TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
+
+        _serialDeviceManager.SerialDevices.Clear();
+        foreach (var device in dto.SerialDevices)
+        {
+            _serialDeviceManager.SerialDevices.Add(device);
+        }
+        
+        SelectedStepIndex = 0;
+    }
+
+    partial void OnIsEditingModeChanged(bool value)
+    {
+        _settingsService.Settings.IsEditingMode = value;
     }
 }
