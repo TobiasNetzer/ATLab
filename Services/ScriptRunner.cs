@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ public class ScriptRunner : IScriptRunner
 
         try
         {
-            var converted = (T?)Convert.ChangeType(result.Value, typeof(T));
+            var converted = (T?)Convert.ChangeType(result.Value, typeof(T), CultureInfo.InvariantCulture);
             return OperationResult<T>.Success(converted!);
         }
         catch (Exception ex)

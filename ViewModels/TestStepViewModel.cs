@@ -12,7 +12,7 @@ public partial class TestStepViewModel : ViewModelBase
     private string? _result;
     
     [ObservableProperty]
-    private bool? _isValid;
+    private bool _isValid;
 
     [ObservableProperty]
     private string? _deviation;

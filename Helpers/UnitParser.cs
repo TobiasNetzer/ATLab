@@ -101,6 +101,6 @@ public static class UnitParser
             suffix = "p";
         }
 
-        return $"{Math.Round(displayValue, 6).ToString("0.######", CultureInfo.CurrentCulture)}{suffix}{unit ?? ""}";
+        return $"{Math.Round(displayValue, 3).ToString("0.###", CultureInfo.CurrentCulture)}{suffix}{unit ?? ""}";
     }
 }
