@@ -8,7 +8,7 @@ public class TestStepEvaluator : ITestStepEvaluator
 {
     public TestEvaluationResult Evaluate(TestStep testStep, double value)
     {
-        bool isValid = value >= testStep.LowerLimit && value <= testStep.UpperLimit;
+        bool isValid = Math.Round(value, 15) >= testStep.LowerLimit && value <= testStep.UpperLimit;
 
         double deviation = 0;
 
