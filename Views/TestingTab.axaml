@@ -5,38 +5,41 @@
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
         
-    <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto, *">
+    <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto, *, auto">
         
         <Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource SystemChromeLowColor}"
                 CornerRadius="5"
-                Margin="10 10 0 0">
+                Margin="10 10 10 0">
             <StackPanel Orientation="Horizontal"
-                        Margin="5"
+                        Margin="10"
                         Spacing="5">
                 
                 <Button Content="&#xE8F4;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="New file"
-                        Command="{Binding NewFileCommand}"/>
+                        Command="{Binding NewFileCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
 
                 <Button Content="&#xE838;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Open file"
                         Command="{Binding LoadFileWithDialogCommand}"/>
 
                 <Button Content="&#xE74E;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Save file"
-                        Command="{Binding SaveFileCommand}"/>
+                        Command="{Binding SaveFileCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xE792;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Save file as"
-                        Command="{Binding SaveFileAsCommand}"/>
+                        Command="{Binding SaveFileAsCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
 
                 <Separator Width="2"
                            Height="25"
@@ -45,33 +48,38 @@
 
                 <Button Content="&#xF8AA;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Add a new test step"
-                        Command="{Binding AddTestStepCommand}"/>
+                        Command="{Binding AddTestStepCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xF413;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Duplicate selected test step"
-                        Command="{Binding DuplicateTestStepCommand}"/>
+                        Command="{Binding DuplicateTestStepCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
 
                 <Button Content="&#xF8AB;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Remove selected test step"
-                        Command="{Binding RemoveTestStepCommand}"/>
+                        Command="{Binding RemoveTestStepCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xEB0F;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Move selected test step up"
-                        Command="{Binding MoveStepUpCommand}"/>
+                        Command="{Binding MoveStepUpCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xEB11;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Move selected test step down"
-                        Command="{Binding MoveStepDownCommand}"/>
+                        Command="{Binding MoveStepDownCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Separator Width="2"
                            Height="25"
@@ -80,13 +88,13 @@
                 
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Start test execution"
                         Command="{Binding StartTestCommand}"/>
                 
                 <Button Content="&#xE978;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="Stop test execution"
                         Command="{Binding CancelTestCommand}"/>
 
@@ -94,10 +102,17 @@
                            Height="25"
                            Margin="5 0 5 0"
                            CornerRadius="1"/>
-
+                
+                <ToggleButton Content="&#xEC7A;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Enable editing mode"
+                        IsChecked="{Binding IsEditingMode, Mode=TwoWay}"
+                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}"/>
+                
                 <Button Content="&#xE946;"
                         FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
+                        FontSize="20"
                         ToolTip.Tip="About"
                         Command="{Binding OpenAboutWindowCommand}"/>
                 
@@ -108,7 +123,7 @@
                   ItemsSource="{Binding TestSteps}"
                   SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
                   SelectedIndex="{Binding SelectedStepIndex, Mode=TwoWay}"
-                  Margin="10 10 0 10"
+                  Margin="10 10 10 10"
                   IsReadOnly="True"
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
@@ -118,7 +133,7 @@
                   BorderBrush="Gray"
                   HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
-                  IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
+                  IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
@@ -183,7 +198,7 @@
             </DataGrid.Columns>
         
             <DataGrid.ContextMenu>
-                <ContextMenu>
+                <ContextMenu IsEnabled="{Binding IsEditingMode}">
                     <MenuItem Header="Add Step" Command="{Binding AddTestStepCommand}"/>
                     <MenuItem Header="Duplicate Step" Command="{Binding DuplicateTestStepCommand}"/>
                     <MenuItem Header="Remove Step" Command="{Binding RemoveTestStepCommand}"/>
@@ -201,12 +216,58 @@
             
         </DataGrid>
         
-        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-                      Margin="0 10 0 10">
+        <Grid Grid.Column="0" Grid.Row="2"
+              Margin="10 0 10 10">
+
+            <ProgressBar Minimum="0"
+                         Maximum="100"
+                         Height="40"
+                         Value="{Binding TestProgress}"
+                         Foreground="{Binding TestStatus, Converter={StaticResource TestStatusToBrushConverter}}"/>
+            
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=RUNNING}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Running Test: {0} / {1}">
+                        <Binding Path="SelectedStep.TestStep.Number" FallbackValue="" />
+                        <Binding Path="TestSteps.Count" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            
+            <TextBlock Text="TEST PASSED" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=PASSED}"/>
+            
+            <TextBlock Text="TEST FAILED" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=FAILED}"/>
+            
+            <TextBlock Text="TEST CANCELLED" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=CANCELLED}"/>
+            
+        </Grid>
+        
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                      Margin="0 10 0 10"
+                      IsVisible="{Binding IsEditingMode}">
             <StackPanel HorizontalAlignment="Right"
                         Spacing="10"
-                        Margin="10 0 10 0"
-                        IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
+                        Margin="0 0 10 0"
+                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}">
                 
                 <controls:TestStepConfigurator 
                     DataContext="{Binding TestStepConfiguratorViewModel}"/>
