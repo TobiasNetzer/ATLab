@@ -160,6 +160,7 @@ public class App : Application
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
+        services.AddSingleton<IProjectService, ProjectService>();
         services.AddSingleton<ISerialPortManager, SerialPortManager>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
