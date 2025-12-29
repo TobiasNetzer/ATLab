@@ -106,7 +106,7 @@ public class ScriptRunner : IScriptRunner
         }
         catch (OperationCanceledException)
         {
-            return OperationResult<string?>.Failure("Cancelled");
+            return OperationResult<string?>.Failure(string.Empty);
         }
         catch (Exception ex)
         {

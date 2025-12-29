@@ -51,7 +51,7 @@ public class TestStepRunner : ITestStepRunner
         }
         catch (OperationCanceledException)
         {
-            return OperationResult<double>.Failure("Cancelled");
+            return OperationResult<double>.Failure(string.Empty);
         }
         catch (Exception ex)
         {
