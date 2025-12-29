@@ -24,6 +24,9 @@
                                          FalseBrush="Gray"/>
         <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <converters:UnitFormatConverter x:Key="UnitFormatConverter" />
+        <converters:EnumEqualsToBoolConverter x:Key="EnumEqualsToBool"/>
+        <converters:InvertedEnumEqualsToBoolConverter x:Key="InvertedEnumEqualsToBool"/>
+        <converters:TestStatusToBrushConverter x:Key="TestStatusToBrushConverter"/>
     </Application.Resources>
     
     <Application.Styles>
