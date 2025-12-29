@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -20,7 +15,9 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     
     public ObservableCollection<SerialDevices> Devices => _deviceManager.SerialDevices;
     public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
-    public ObservableCollection<ScriptVariable> ScriptVariables { get; } = new();
+
+    [ObservableProperty]
+    private ObservableCollection<ScriptVariable>? _scriptVariables;
 
     [ObservableProperty]
     private SerialDevices? _selectedDevice;
@@ -65,7 +62,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
             if (_currentTestStep == null)
             {
                 SelectedScript = null;
-                ScriptVariables.Clear();
+                ScriptVariables = null;
                 return;
             }
 
@@ -92,12 +89,12 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         
         if (SelectedScript == null)
         {
-            ScriptVariables.Clear();
+            ScriptVariables = null;
             return;
         }
         
         var stepVars = SelectedScript.Variables;
-        ScriptVariables.Clear();
+        ScriptVariables = new();
         foreach (var v in stepVars)
         {
             ScriptVariables.Add(v);
@@ -121,14 +118,14 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     {
         if (_currentTestStep == null)
         {
-            ScriptVariables.Clear();
+            ScriptVariables = null;
             return;
         }
 
         if (SelectedScript == null)
         {
             _currentTestStep.ScriptVariables.Clear();
-            ScriptVariables.Clear();
+            ScriptVariables = null;
             return;
         }
 
@@ -150,8 +147,14 @@ public partial class ScriptSelectorViewModel : ViewModelBase
             // If it exists, we keep the user's value
         }
 
+        if (stepVars.Count == 0)
+        {
+            ScriptVariables = null;
+            return;
+        }
+
         // Sync the local collection
-        ScriptVariables.Clear();
+        ScriptVariables = new();
         foreach (var v in stepVars)
         {
             ScriptVariables.Add(v);

@@ -113,7 +113,7 @@
                     
                     
                     <DataGrid ItemsSource="{Binding ScriptVariables}" 
-                              IsVisible="{Binding SelectedScript, Converter={x:Static ObjectConverters.IsNotNull}}"
+                              IsVisible="{Binding ScriptVariables, Converter={x:Static ObjectConverters.IsNotNull}}"
                               AutoGenerateColumns="False"
                               CanUserSortColumns="False"
                               CanUserResizeColumns="True"
