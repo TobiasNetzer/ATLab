@@ -131,7 +131,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource UnitFormatConverter}">
                                         <Binding Path="TestStep.LowerLimit"/>
-                                        <Binding Path="TestStep.CustomUnit"/>
+                                        <Binding Path="TestStep.Unit"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -146,7 +146,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource UnitFormatConverter}">
                                         <Binding Path="TestStep.NominalValue"/>
-                                        <Binding Path="TestStep.CustomUnit"/>
+                                        <Binding Path="TestStep.Unit"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -161,7 +161,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource UnitFormatConverter}">
                                         <Binding Path="TestStep.UpperLimit"/>
-                                        <Binding Path="TestStep.CustomUnit"/>
+                                        <Binding Path="TestStep.Unit"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>

@@ -44,6 +44,12 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private bool _isRunning;
+    
+    [ObservableProperty]
+    private int _numberFailedSteps;
+    
+    [ObservableProperty]
+    private bool _isTestFailed;
 
     private CancellationTokenSource? _cts;
 
@@ -157,6 +163,7 @@ public partial class TestingTabViewModel : ViewModelBase
             LowerLimit = currentModel.LowerLimit,
             UpperLimit = currentModel.UpperLimit,
             NominalValue = currentModel.NominalValue,
+            Unit = currentModel.Unit,
             Comment = currentModel.Comment,
             Delay = currentModel.Delay,
             EvaluationSource = currentModel.EvaluationSource,
@@ -232,6 +239,8 @@ public partial class TestingTabViewModel : ViewModelBase
         }
 
         IsRunning = true;
+        NumberFailedSteps = 0;
+        IsTestFailed = false;
         _cts = new CancellationTokenSource();
 
         try
@@ -265,17 +274,23 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor.StepStarted += (index, step) =>
         {
             SelectedStepIndex = index;
-            //SelectedStep = step;
         };
 
-        _testExecutor.StepCompleted += (index, step, result) =>
+        _testExecutor.StepCompleted += (index, step) =>
         {
-            //
+            if (!step.IsValid)
+            {
+                NumberFailedSteps++;
+            }
         };
 
         _testExecutor.TestCompleted += () =>
         {
             IsRunning = false;
+            if (NumberFailedSteps > 0)
+            {
+                IsTestFailed = true;
+            }
         };
     }
 

@@ -10,7 +10,7 @@ namespace ATLab.Interfaces;
 public interface ITestExecutor
 {
     event Action<int, TestStepViewModel>? StepStarted;
-    event Action<int, TestStepViewModel, OperationResult<double>>? StepCompleted;
+    event Action<int, TestStepViewModel>? StepCompleted;
     event Action? TestCompleted;
 
     Task ExecuteAsync(

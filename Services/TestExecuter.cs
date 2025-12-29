@@ -16,7 +16,7 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepEvaluator _evaluator;
 
     public event Action<int, TestStepViewModel>? StepStarted;
-    public event Action<int, TestStepViewModel, OperationResult<double>>? StepCompleted;
+    public event Action<int, TestStepViewModel>? StepCompleted;
     public event Action? TestCompleted;
 
     public TestExecutor(ITestStepRunner runner, IErrorService errorService, ITestStepEvaluator evaluator)
@@ -40,7 +40,7 @@ public class TestExecutor : ITestExecutor
 
             if (result.IsSuccess)
             {
-                step.Result = UnitParser.Format(result.Value, step.TestStep.CustomUnit);
+                step.Result = UnitParser.Format(result.Value, step.TestStep.Unit);
                 var evaluation = _evaluator.Evaluate(step.TestStep, result.Value);
                 step.IsValid = evaluation.IsValid;
                 step.Deviation = evaluation.Deviation.ToString("F2") + " %";
@@ -62,7 +62,7 @@ public class TestExecutor : ITestExecutor
                 step.Deviation = string.Empty;
             }
 
-            StepCompleted?.Invoke(i, step, result);
+            StepCompleted?.Invoke(i, step);
 
             if (!result.IsSuccess)
                 break;

@@ -115,7 +115,7 @@
                                 Spacing="5"
                                 Margin="65 10 10 10">
                         <TextBlock Text="Unit:"/>
-                        <TextBox Text="{Binding TestStepViewModel.TestStep.CustomUnit, Mode=TwoWay}"
+                        <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="4"
                                  MaxLength="10"

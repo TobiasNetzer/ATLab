@@ -63,9 +63,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null) return;
 
-        NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.CustomUnit);
-        LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.CustomUnit);
-        UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.CustomUnit);
+        NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
+        LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
+        UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
         DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");
         
         OnPropertyChanged(nameof(NominalValueText));
@@ -82,18 +82,18 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         {
             case nameof(TestStepViewModel.TestStep.NominalValue):
                 UpdateLimitsFromNominal();
-                NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.CustomUnit);
+                NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.LowerLimit):
-                LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.CustomUnit);
+                LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.UpperLimit):
-                UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.CustomUnit);
+                UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.Delay):
                 DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");
                 break;
-            case nameof(TestStepViewModel.TestStep.CustomUnit):
+            case nameof(TestStepViewModel.TestStep.Unit):
                 UpdateStringProperties();
                 break;
         }
@@ -101,7 +101,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnNominalValueTextChanged(string? value)
     {
-        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep?.CustomUnit)) return;
+        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep?.Unit)) return;
         if (TestStepViewModel?.TestStep != null)
             TestStepViewModel.TestStep.NominalValue = result;
     }
@@ -110,7 +110,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep != null)
         {
-            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.CustomUnit))
+            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
             {
                 // Ensure LowerLimit is always <= NominalValue
                 var nominal = TestStepViewModel.TestStep.NominalValue;
@@ -128,7 +128,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep != null)
         {
-            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.CustomUnit))
+            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
             {
                 // Ensure UpperLimit is always >= NominalValue
                 var nominal = TestStepViewModel.TestStep.NominalValue;
