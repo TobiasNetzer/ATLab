@@ -42,8 +42,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
     private async Task ReloadScripts()
     {
         await _scriptService.LoadAllAsync();
-        if (SelectedScript == null)
-            SelectedScript = Scripts.FirstOrDefault();
+        SelectedScript ??= Scripts.FirstOrDefault();
     }
 
     [RelayCommand]

@@ -50,10 +50,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
             AvailablePorts.Add(port);
         }
 
-        if (AvailablePorts.Count > 0)
-            SelectedPort = AvailablePorts[0];
-        else
-            SelectedPort = string.Empty;
+        SelectedPort = AvailablePorts.Count > 0 ? AvailablePorts[0] : string.Empty;
 
         ConnectCommand.NotifyCanExecuteChanged();
     }
@@ -67,7 +64,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         if (!CanConnect) return false;
 
         var serialPortManager = _serviceProvider.GetRequiredService<ISerialPortManager>();
-        var openResult = serialPortManager.TryOpen(SelectedPort!);
+        var openResult = serialPortManager.TryOpen(SelectedPort);
         
         if (!openResult.IsSuccess)
         {
@@ -78,7 +75,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         else
         {
-            var service = serialPortManager.GetPort(SelectedPort!);
+            var service = serialPortManager.GetPort(SelectedPort);
             var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, service);
             TestHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_serviceProvider, communication);
             var initResult = await TestHardware.InitializeAsync();

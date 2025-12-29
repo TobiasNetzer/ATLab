@@ -98,7 +98,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnNominalValueTextChanged(string? value)
     {
-        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep?.Unit)) return;
+        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep.Unit)) return;
         if (TestStepViewModel?.TestStep != null)
             TestStepViewModel.TestStep.NominalValue = result;
     }
