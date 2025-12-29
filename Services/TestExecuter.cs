@@ -72,10 +72,19 @@ public class TestExecutor : ITestExecutor
 
             if (result.IsSuccess)
             {
-                step.Result = UnitParser.Format(result.Value, step.TestStep.Unit);
-                var evaluation = _evaluator.Evaluate(step.TestStep, result.Value);
-                step.IsValid = evaluation.IsValid;
-                step.Deviation = evaluation.Deviation.ToString("F2") + " %";
+                if (result.Value >= 1E+9)
+                {
+                    step.Result = "Overflow";
+                    step.IsValid = false;
+                    step.Deviation = string.Empty;
+                }
+                else
+                {
+                    step.Result = UnitParser.Format(result.Value, step.TestStep.Unit);
+                    var evaluation = _evaluator.Evaluate(step.TestStep, result.Value);
+                    step.Deviation = evaluation.Deviation.ToString("F2") + " %";
+                    step.IsValid = evaluation.IsValid;
+                }
             }
             else
             {
