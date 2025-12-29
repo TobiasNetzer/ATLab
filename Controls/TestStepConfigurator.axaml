@@ -15,47 +15,50 @@
         </Style>
     </UserControl.Styles>
     
-    <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15">
+    <StackPanel>
         
-        <StackPanel>
-            
-            <Border Background="{DynamicResource SystemBaseLowColor}"
-                    Classes="WithDynamicCorner"
-                    Classes.expanded="{Binding IsExpanded}"
-                    Padding="10"
-                    Margin="0">
-                <DockPanel>
-                    <TextBlock Text="Test Step Configuration"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               DockPanel.Dock="Left"/>
+        <Border Background="{DynamicResource SystemBaseLowColor}"
+                Classes="WithDynamicCorner"
+                Classes.expanded="{Binding IsExpanded}"
+                Padding="10"
+                Margin="0">
+            <DockPanel>
+                <TextBlock Text="Test Step Configuration"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
 
-                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                  DockPanel.Dock="Right"
-                                  HorizontalAlignment="Right">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border Background="Transparent" Padding="5">
-                                    <Grid>
-                                        <TextBlock Text="&#xE70D;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                        <TextBlock Text="&#xE70E;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded}"/>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                </DockPanel>
-            </Border>
+                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                IsVisible="{Binding IsExpanded}">
             
-            <StackPanel IsVisible="{Binding IsExpanded}">
+            <StackPanel>
             
                 <StackPanel HorizontalAlignment="Left"
                             Orientation="Vertical"
@@ -119,28 +122,36 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <StackPanel HorizontalAlignment="Left"
-                            Orientation="Vertical"
-                            Spacing="5"
-                            Margin="10">
-                    <TextBlock Text="Delay:"/>
-                    <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                             helpers:FocusExtensions.MoveFocusOnEnter="True"
-                             TabIndex="5"
-                             MaxLength="20"
-                             Width="100"/>
-                </StackPanel>
-                
-                <StackPanel HorizontalAlignment="Left"
-                            Orientation="Vertical"
-                            Spacing="5"
-                            Margin="10">
-                    <TextBlock Text="Evaluate:"/>
-                    <ComboBox ItemsSource="{Binding EvaluationSources}"
-                              SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource, FallbackValue=''}"
-                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
-                              TabIndex="6"/>
+                <StackPanel Orientation="Horizontal">
                     
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="10">
+                        <TextBlock Text="Delay:"/>
+                        <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 helpers:FocusExtensions.MoveFocusOnEnter="True"
+                                 TabIndex="5"
+                                 MaxLength="20"
+                                 Width="100"/>
+                    </StackPanel>
+                
+                    <StackPanel HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Spacing="5"
+                                Margin="10">
+                        <TextBlock Text="Evaluate:"/>
+                        <ComboBox ItemsSource="{Binding EvaluationSources}"
+                                  MinWidth="100"
+                                  SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource, FallbackValue=''}"
+                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                                  TabIndex="6"/>
+                        
+                    </StackPanel>
+                    
+                    <CheckBox Margin="10 20 0 0 "
+                              Content="Repeat until Pass"
+                              IsChecked="{Binding TestStepViewModel.TestStep.RepeatUntilPass, FallbackValue='False'}"/>
                 </StackPanel>
                 
                 <StackPanel HorizontalAlignment="Left"
@@ -154,10 +165,7 @@
                              Height="150"
                              TextWrapping="Wrap"/>
                 </StackPanel>
-                
             </StackPanel>
-            
-            </StackPanel>
-    </Border>
-    
+        </Border>
+    </StackPanel>
 </UserControl>

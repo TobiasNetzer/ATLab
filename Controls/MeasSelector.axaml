@@ -6,103 +6,104 @@
              Width="500">
     
     <UserControl.Styles>
-        <Style Selector="Border.WithDynamicCorner">
+        <Style Selector="Border.Header">
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
-        <Style Selector="Border.WithDynamicCorner.expanded">
+        <Style Selector="Border.Header.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
     
-    <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15">
-        
-        <StackPanel>
-            
-            <Border Classes="WithDynamicCorner"
-                    Classes.expanded="{Binding IsExpanded}"
-                    Background="{DynamicResource SystemBaseLowColor}"
-                    Padding="10"
-                    Margin="0">
-                <DockPanel>
-                    <TextBlock Text="Matrix Channels"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               DockPanel.Dock="Left"/>
+    <StackPanel>
+        <Border Classes="Header"
+                Classes.expanded="{Binding IsExpanded}"
+                Background="{DynamicResource SystemBaseLowColor}"
+                Padding="10"
+                Margin="0">
+            <DockPanel>
+                <TextBlock Text="Matrix Channels"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
 
-                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                  DockPanel.Dock="Right"
-                                  HorizontalAlignment="Right">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border Background="Transparent" Padding="5">
-                                    <Grid>
-                                        <TextBlock Text="&#xE70D;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                        <TextBlock Text="&#xE70E;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded}"/>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                </DockPanel>
-            </Border>
-                
-                <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            Spacing="80"
-                            IsVisible="{Binding IsExpanded}"
-                            Margin="10">
-                    <StackPanel>
-                        <TextBlock Text="Matrix H:"
-                                   FontSize="16"/>
-                        
-                        <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
-                                  SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
-                                  Width="150">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock>
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} {1}">
-                                                <Binding Path="ChannelIndex" FallbackValue=""/>
-                                                <Binding Path="ChannelName"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
+                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="0 0 15 15"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource SystemBaseLowColor}"
+            IsVisible="{Binding IsExpanded}">
+            
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="80"
+                        Margin="10">
+                <StackPanel>
+                    <TextBlock Text="Matrix H:"
+                               FontSize="16"/>
                     
-                    <StackPanel>
-                        <TextBlock Text="Matrix L:"
-                                   FontSize="16"/>
-                    
-                        <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
-                                  SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
-                                  Width="150">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock>
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} {1}">
-                                                <Binding Path="ChannelIndex" FallbackValue=""/>
-                                                <Binding Path="ChannelName"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
+                              SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
+                              Width="150">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="ChannelIndex" FallbackValue=""/>
+                                            <Binding Path="ChannelName"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
-        </StackPanel>
-    </Border>
+                
+                <StackPanel>
+                    <TextBlock Text="Matrix L:"
+                               FontSize="16"/>
+                
+                    <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
+                              SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
+                              Width="150">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="ChannelIndex" FallbackValue=""/>
+                                            <Binding Path="ChannelName"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
 </UserControl>

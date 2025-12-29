@@ -14,16 +14,14 @@
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
-
-    <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15">
+    
+    <StackPanel>
         
-        <StackPanel>
-            <Border Background="{DynamicResource SystemBaseLowColor}"
-                    Classes="WithDynamicCorner"
-                    Classes.expanded="{Binding IsExpanded}"
-                    Padding="10"
-                    Margin="0">
+        <Border Background="{DynamicResource SystemBaseLowColor}"
+                Classes="WithDynamicCorner"
+                Classes.expanded="{Binding IsExpanded}"
+                Padding="10"
+                Margin="0">
             <DockPanel>
                 <TextBlock Text="Stimulation Channels"
                            FontSize="18"
@@ -52,10 +50,15 @@
                     </ToggleButton.Template>
                 </ToggleButton>
             </DockPanel>
-            </Border>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                IsVisible="{Binding IsExpanded}">
             
-            <ItemsControl ItemsSource="{Binding StimChannels}"
-                          IsVisible="{Binding IsExpanded}">
+            <ItemsControl ItemsSource="{Binding StimChannels}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:StimSelector}}"
@@ -79,6 +82,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </StackPanel>
-    </Border>
+        </Border>
+    </StackPanel>
 </UserControl>

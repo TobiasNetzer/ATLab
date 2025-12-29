@@ -15,119 +15,118 @@
         </Style>
     </UserControl.Styles>
     
-    <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15">
+    <StackPanel>
         
-        <StackPanel>
-            
-            <Border Classes="WithDynamicCorner"
-                    Classes.expanded="{Binding IsExpanded}"
-                    Background="{DynamicResource SystemBaseLowColor}"
-                    Padding="10"
-                    Margin="0">
-                <DockPanel>
-                    <TextBlock Text="Script Configurator"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               DockPanel.Dock="Left"/>
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding IsExpanded}"
+                Background="{DynamicResource SystemBaseLowColor}"
+                Padding="10"
+                Margin="0">
+            <DockPanel>
+                <TextBlock Text="Script Configurator"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
 
-                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                  DockPanel.Dock="Right"
-                                  HorizontalAlignment="Right">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border Background="Transparent" Padding="5">
-                                    <Grid>
-                                        <TextBlock Text="&#xE70D;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                        <TextBlock Text="&#xE70E;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded}"/>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                </DockPanel>
-            </Border>
-                
-                <StackPanel IsVisible="{Binding IsExpanded}"
-                            Margin="10"
-                            Spacing="15">
+                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                IsVisible="{Binding IsExpanded}">
+            
+            <StackPanel Margin="10"
+                        Spacing="15">
                     
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Target Device:"/>
-                        <DockPanel>
-                            <Button Content="&#xF8AB;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
-                                    ToolTip.Tip="Remove selected device"
-                                    DockPanel.Dock="Right"
-                                    Margin=" 5 0 0 0"
-                                    Command="{Binding RemoveDeviceCommand}"/>
-                            <ComboBox ItemsSource="{Binding Devices}" 
-                                      SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
-                                      HorizontalAlignment="Stretch">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="models:SerialDevices">
-                                        <TextBlock>
-                                            <Run Text="{Binding Name}"/>
-                                            <Run Text=" ("/>
-                                            <Run Text="{Binding SerialPort}"/>
-                                            <Run Text=")"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </DockPanel>
-                    </StackPanel>
-                    
-                    
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Script:"/>
-                        
-                        <DockPanel>
-                            <Button Content="&#xF8AB;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
-                                    ToolTip.Tip="Remove selected script"
-                                    DockPanel.Dock="Right"
-                                    Margin=" 5 0 0 0"
-                                    Command="{Binding RemoveScriptCommand}"/>
-                            <ComboBox ItemsSource="{Binding Scripts}" 
-                                      SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
-                                      HorizontalAlignment="Stretch">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="vm:ScriptItemViewModel">
-                                        <TextBlock Text="{Binding Name}"
-                                                   ToolTip.Tip="{Binding Description}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </DockPanel>
-                    </StackPanel>
-                    
-                    
-                    <DataGrid ItemsSource="{Binding ScriptVariables}" 
-                              IsVisible="{Binding ScriptVariables, Converter={x:Static ObjectConverters.IsNotNull}}"
-                              AutoGenerateColumns="False"
-                              CanUserSortColumns="False"
-                              CanUserResizeColumns="True"
-                              GridLinesVisibility="All"
-                              BorderThickness="1"
-                              BorderBrush="Gray"
-                              MaxHeight="200">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Variable" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                        
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Target Device:"/>
+                    <DockPanel>
+                        <Button Content="&#xF8AB;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Remove selected device"
+                                DockPanel.Dock="Right"
+                                Margin=" 5 0 0 0"
+                                Command="{Binding RemoveDeviceCommand}"/>
+                        <ComboBox ItemsSource="{Binding Devices}" 
+                                  SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:SerialDevices">
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                        <Run Text=" ("/>
+                                        <Run Text="{Binding SerialPort}"/>
+                                        <Run Text=")"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DockPanel>
                 </StackPanel>
-        </StackPanel>
-    </Border>
+                
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Script:"/>
+                    
+                    <DockPanel>
+                        <Button Content="&#xF8AB;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Remove selected script"
+                                DockPanel.Dock="Right"
+                                Margin=" 5 0 0 0"
+                                Command="{Binding RemoveScriptCommand}"/>
+                        <ComboBox ItemsSource="{Binding Scripts}" 
+                                  SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ScriptItemViewModel">
+                                    <TextBlock Text="{Binding Name}"
+                                               ToolTip.Tip="{Binding Description}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DockPanel>
+                </StackPanel>
+                
+                <DataGrid ItemsSource="{Binding ScriptVariables}" 
+                          IsVisible="{Binding ScriptVariables, Converter={x:Static ObjectConverters.IsNotNull}}"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="False"
+                          CanUserResizeColumns="True"
+                          GridLinesVisibility="All"
+                          BorderThickness="1"
+                          BorderBrush="Gray"
+                          MaxHeight="200">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Variable" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+    </StackPanel>
 </UserControl>

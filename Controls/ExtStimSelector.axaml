@@ -7,55 +7,58 @@
              Width="500">
     
     <UserControl.Styles>
-        <Style Selector="Border.WithDynamicCorner">
+        <Style Selector="Border.Header">
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
-        <Style Selector="Border.WithDynamicCorner.expanded">
+        <Style Selector="Border.Header.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
     
-    <Border Background="{DynamicResource SystemChromeLowColor}"
-            CornerRadius="15">
+    <StackPanel>
         
-        <StackPanel>
-            <Border Background="{DynamicResource SystemBaseLowColor}"
-                    Classes="WithDynamicCorner"
-                    Classes.expanded="{Binding IsExpanded}"
-                    Padding="10"
-                    Margin="0">
-                <DockPanel>
-                    <TextBlock Text="External Stimulation Channels"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               DockPanel.Dock="Left"/>
+        <Border Background="{DynamicResource SystemBaseLowColor}"
+                Classes="Header"
+                Classes.expanded="{Binding IsExpanded}"
+                Padding="10"
+                Margin="0">
+            <DockPanel>
+                <TextBlock Text="External Stimulation Channels"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
 
-                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                  DockPanel.Dock="Right"
-                                  HorizontalAlignment="Right">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border Background="Transparent" Padding="5">
-                                    <Grid>
-                                        <TextBlock Text="&#xE70D;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                        <TextBlock Text="&#xE70E;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsExpanded}"/>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                </DockPanel>
-            </Border>
-            
-            <ItemsControl ItemsSource="{Binding ExtStimChannels}"
-                          IsVisible="{Binding IsExpanded}">
+                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    <TextBlock Text="&#xE70D;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                    <TextBlock Text="&#xE70E;" 
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding IsExpanded}"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                IsVisible="{Binding IsExpanded}">
+        
+            <ItemsControl ItemsSource="{Binding ExtStimChannels}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:ExtStimSelector}}"
@@ -79,7 +82,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
-        </StackPanel>
-    </Border>
+        </Border>
+    </StackPanel>
 </UserControl>
