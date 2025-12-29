@@ -9,8 +9,8 @@ namespace ATLab.Views;
 public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;
-
     private readonly IMessageBoxService? _messageBoxService;
+    private readonly IProjectService? _projectService;
 
     public MainWindow()
     {
@@ -26,10 +26,11 @@ public partial class MainWindow : Window
         };
     }
 
-    public MainWindow(ISettingsService settingsService, IMessageBoxService messageBoxService) : this()
+    public MainWindow(ISettingsService settingsService, IMessageBoxService messageBoxService, IProjectService projectService) : this()
     {
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
+        _projectService = projectService;
 
         var s = _settingsService.Settings;
 
@@ -57,27 +58,16 @@ public partial class MainWindow : Window
 
     private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (DataContext is MainWindowViewModel vm)
+        if (_projectService != null && _projectService.IsDirty)
         {
-            if (vm.TestingTab.IsDirty)
+            e.Cancel = true;
+
+            if (await _projectService.ConfirmAndContinueIfDirtyAsync())
             {
-                e.Cancel = true;
-
-                if (_messageBoxService != null)
-                {
-                    var result = await _messageBoxService.ShowConfirmationAsync(
-                        "Unsaved Changes",
-                        "You have unsaved changes. Do you want to continue and lose your changes?");
-
-                    if (result)
-                    {
-                        vm.TestingTab.IsDirty = false;
-                        Close();
-                    }
-                }
-
-                return;
+                Close();
             }
+
+            return;
         }
 
         if (_settingsService == null)

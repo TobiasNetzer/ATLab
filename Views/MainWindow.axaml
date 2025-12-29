@@ -10,7 +10,7 @@
         MinHeight="600">
     
     <Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}" />
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}"/>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileWithDialogCommand}" />
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />

@@ -3,9 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
-using ATLab.CTIA;
 using ATLab.Interfaces;
-using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -14,8 +12,9 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ISimulationService _simulationService;
+    private readonly IProjectService _projectService;
 
-    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(TestingTab.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(TestingTab.CurrentFilePath))}{(TestingTab.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -52,6 +51,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(IErrorService errorService,
         ISimulationService simulationService,
+        IProjectService projectService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         LabTabViewModel labTab, 
@@ -60,6 +60,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _errorService = errorService;
         _simulationService = simulationService;
+        _projectService = projectService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
 
         TestingTab = testingTab;
@@ -80,9 +81,9 @@ public partial class MainWindowViewModel : ViewModelBase
             HasErrors = ErrorCount > 0;
         };
 
-        TestingTab.PropertyChanged += (s, e) =>
+        _projectService.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName is nameof(TestingTabViewModel.CurrentFilePath) or nameof(TestingTabViewModel.IsDirty))
+            if (e.PropertyName is nameof(IProjectService.CurrentFilePath) or nameof(IProjectService.IsDirty))
             {
                 OnPropertyChanged(nameof(WindowTitle));
             }
@@ -120,7 +121,15 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void Close()
     {
-        RequestClose?.Invoke();
+        _ = CloseAsync();
+    }
+
+    private async Task CloseAsync()
+    {
+        if (await _projectService.ConfirmAndContinueIfDirtyAsync())
+        {
+            RequestClose?.Invoke();
+        }
     }
 
     partial void OnSelectedTabChanged(ViewModelBase value)
