@@ -7,5 +7,12 @@ public partial class TestingTab : UserControl
     public TestingTab()
     {
         InitializeComponent();
+
+        DataGrid grid = this.FindControl<DataGrid>("TestStepPresenter");
+        grid.SelectionChanged += (_, e) =>
+        {
+            if (grid.SelectedItem != null)
+                grid.ScrollIntoView(grid.SelectedItem, null);
+        };
     }
 }

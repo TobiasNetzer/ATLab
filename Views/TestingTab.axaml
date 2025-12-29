@@ -120,10 +120,11 @@
         </Border>
         
         <DataGrid Grid.Column="0" Grid.Row="1"
+                  x:Name="TestStepPresenter"
                   ItemsSource="{Binding TestSteps}"
                   SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
                   SelectedIndex="{Binding SelectedStepIndex, Mode=TwoWay}"
-                  Margin="10 10 10 10"
+                  Margin="10"
                   IsReadOnly="True"
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
