@@ -1,4 +1,4 @@
-namespace ATLab.Models;
+namespace ATLab.Enums;
 public enum ConnectionStatus
 {
     DISCONNECTED,

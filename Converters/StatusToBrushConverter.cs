@@ -2,7 +2,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using System;
 using System.Globalization;
-using ATLab.Models;
+using ATLab.Enums;
 
 namespace ATLab.Converters;
 

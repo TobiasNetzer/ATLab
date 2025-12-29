@@ -12,6 +12,7 @@ public class AppSettings
     public WindowState WindowState { get; set; } = WindowState.Normal;
     public string LastOpenedFile { get; set; } = "";
     public string ScriptRepositoryFolder { get; set; } = "";
+    public bool IsEditingMode { get; set; } = false;
     public bool IsStepConfiguratorExpanded { get; set; } = false;
     public bool IsMeasSelectorExpanded { get; set; } = false;
     public bool IsStimSelectorExpanded { get; set; } = false;
