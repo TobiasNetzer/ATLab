@@ -11,7 +11,7 @@ public class ResultBrushConverter : IValueConverter
     {
         if (value is bool isValid)
         {
-            return isValid ? Brushes.LightGreen : Brushes.Red;
+            return isValid ? Brushes.LimeGreen : Brushes.Red;
         }
 
         return Brushes.Gray;
