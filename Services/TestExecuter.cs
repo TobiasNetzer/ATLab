@@ -14,10 +14,11 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepRunner _runner;
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
+    private CancellationTokenSource? _cts;
 
     public event Action<int, TestStepViewModel>? StepStarted;
     public event Action<int, TestStepViewModel>? StepCompleted;
-    public event Action? TestCompleted;
+    public event Action<bool>? TestCompleted;
 
     public TestExecutor(ITestStepRunner runner, IErrorService errorService, ITestStepEvaluator evaluator)
     {
@@ -26,10 +27,41 @@ public class TestExecutor : ITestExecutor
         _evaluator = evaluator;
     }
 
-    public async Task ExecuteAsync(
+    public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps)
+    {
+        if (steps.Count == 0)
+        {
+            _errorService.AddError("No test steps configured.");
+            return;
+        }
+
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            await ExecuteAsync(steps, _cts.Token);
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Test execution failed: " + ex.Message);
+        }
+        finally
+        {
+            _cts.Dispose();
+            _cts = null;
+        }
+    }
+
+    public void CancelTest()
+    {
+        _cts?.Cancel();
+    }
+
+    private async Task ExecuteAsync(
         IReadOnlyList<TestStepViewModel> steps,
         CancellationToken token)
     {
+        var canceled = false;
         for (int i = 0; i < steps.Count; i++)
         {
             var step = steps[i];
@@ -49,8 +81,8 @@ public class TestExecutor : ITestExecutor
             {
                 if (result.ErrorMessage == "Cancelled")
                 {
-                    _errorService.AddError("Test execution cancelled.");
-                    step.Result = "Cancelled";
+                    step.Result = string.Empty;
+                    canceled = true;
                 }
                 else
                 {
@@ -68,6 +100,6 @@ public class TestExecutor : ITestExecutor
                 break;
         }
 
-        TestCompleted?.Invoke();
+        TestCompleted?.Invoke(canceled);
     }
 }
