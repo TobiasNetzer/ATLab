@@ -44,25 +44,29 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(8)]
     private TestEvaluationSource _evaluationSource;
-
+    
     [ObservableProperty]
     [property: JsonPropertyOrder(9)]
+    private bool _repeatUntilPass;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(10)]
     private string _comment = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(10)]
+    [property: JsonPropertyOrder(11)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(11)]
+    [property: JsonPropertyOrder(12)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(12)]
+    [property: JsonPropertyOrder(13)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(13)]
+    [property: JsonPropertyOrder(14)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]

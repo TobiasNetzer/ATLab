@@ -58,57 +58,76 @@ public class TestExecutor : ITestExecutor
     }
 
     private async Task ExecuteAsync(
-        IReadOnlyList<TestStepViewModel> steps,
-        CancellationToken token)
+    IReadOnlyList<TestStepViewModel> steps,
+    CancellationToken token)
+{
+
+    for (int i = 0; i < steps.Count; i++)
     {
-        var canceled = false;
-        for (int i = 0; i < steps.Count; i++)
+        var step = steps[i];
+        OnStepStarted(i, step);
+        OperationResult<double> stepExecutionResult;
+        do
         {
-            var step = steps[i];
+            stepExecutionResult = await _runner.ExecuteAsync(step, token);
 
-            StepStarted?.Invoke(i, step);
-
-            var result = await _runner.ExecuteAsync(step, token);
-
-            if (result.IsSuccess)
+            if (stepExecutionResult.IsSuccess)
             {
-                if (result.Value >= 1E+9)
-                {
-                    step.Result = "Overflow";
-                    step.IsValid = false;
-                    step.Deviation = string.Empty;
-                }
-                else
-                {
-                    step.Result = UnitParser.Format(result.Value, step.TestStep.Unit);
-                    var evaluation = _evaluator.Evaluate(step.TestStep, result.Value);
-                    step.Deviation = evaluation.Deviation.ToString("F2") + " %";
-                    step.IsValid = evaluation.IsValid;
-                }
+                EvaluateTestStep(step, stepExecutionResult.Value);
             }
             else
             {
-                if (result.ErrorMessage == "Cancelled")
-                {
-                    step.Result = string.Empty;
-                    canceled = true;
-                }
-                else
-                {
-                    _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
-                    step.Result = "Error";
-                }
-
-                step.IsValid = false;
-                step.Deviation = string.Empty;
+                TestStepExecutionFailed(step, stepExecutionResult);
             }
+        } while (step.TestStep.RepeatUntilPass && !token.IsCancellationRequested && !step.IsValid);
+        
+        OnStepCompleted(i, step);
 
-            StepCompleted?.Invoke(i, step);
-
-            if (!result.IsSuccess)
-                break;
-        }
-
-        TestCompleted?.Invoke(canceled);
+        if (!stepExecutionResult.IsSuccess)
+            break;
     }
+
+    OnTestCompleted(token.IsCancellationRequested);
+}
+
+private void EvaluateTestStep(TestStepViewModel step, double value)
+{
+    if (IsOverflow(value))
+    {
+        step.Result = "Overflow";
+        step.IsValid = false;
+        step.Deviation = string.Empty;
+        return;
+    }
+
+    step.Result = UnitParser.Format(value, step.TestStep.Unit);
+
+    var evaluation = _evaluator.Evaluate(step.TestStep, value);
+    step.Deviation = $"{evaluation.Deviation:F2} %";
+    step.IsValid = evaluation.IsValid;
+}
+
+private void TestStepExecutionFailed(
+    TestStepViewModel step,
+    OperationResult<double> result)
+{
+    if (result.ErrorMessage != string.Empty)
+        _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+    step.Result = string.Empty;
+    step.IsValid = false;
+    step.Deviation = string.Empty;
+}
+
+private bool IsOverflow(double value) =>
+    value >= 1E9;
+
+private void OnStepStarted(int index, TestStepViewModel step) =>
+    StepStarted?.Invoke(index, step);
+
+private void OnStepCompleted(int index, TestStepViewModel step) =>
+    StepCompleted?.Invoke(index, step);
+
+private void OnTestCompleted(bool canceled) =>
+    TestCompleted?.Invoke(canceled);
+
 }

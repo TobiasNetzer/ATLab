@@ -154,6 +154,7 @@ public partial class TestingTabViewModel : ViewModelBase
             Comment = currentModel.Comment,
             Delay = currentModel.Delay,
             EvaluationSource = currentModel.EvaluationSource,
+            RepeatUntilPass = currentModel.RepeatUntilPass,
             TargetDevice = currentModel.TargetDevice,
             ScriptId = currentModel.ScriptId,
             ScriptVariables = new ObservableCollection<ScriptVariable>(currentModel.ScriptVariables.Select(v => v.Clone())),
