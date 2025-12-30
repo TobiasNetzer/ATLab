@@ -156,6 +156,7 @@ public class App : Application
         // Services
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
         services.AddSingleton<IMessageBoxService, MessageBoxService>();
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
