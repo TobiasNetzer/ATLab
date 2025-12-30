@@ -101,6 +101,12 @@ public class CtiaHardware : ITestHardware
         return OperationResult.Success();
     }
 
+    public async Task<OperationResult> ClearRelayStates()
+    {
+        var commandResponse = await _command.ClrAllRelayStates();
+        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
+    }
+
     private async Task<OperationResult> SetStimChannels()
     {
         var commandResponse = await _command.SetStimChBitfield(StimChannelStates);

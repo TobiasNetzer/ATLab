@@ -82,6 +82,7 @@ public enum ClrCmd : ushort
     CLR_STIM,
     CLR_EXT_STIM_CH,
     CLR_EXT_STIM,
+    CLR_ALL_RELAYS,
     CLR_END = 0x03FF
 }
 
@@ -405,6 +406,22 @@ public class CtiaCommand
         CtiaCommandFrame frame = new CtiaCommandFrame
         {
             Command = (ushort)ClrCmd.CLR_MEAS_L
+        };
+
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<bool>> ClrAllRelayStates()
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)ClrCmd.CLR_ALL_RELAYS
         };
 
         var responseFrame = await _CTIA.SendCommandAsync(frame);

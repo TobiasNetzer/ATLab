@@ -11,6 +11,7 @@ namespace ATLab.Services;
 
 public class TestExecutor : ITestExecutor
 {
+    private readonly ITestHardware _testHardware;
     private readonly ITestStepRunner _runner;
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
@@ -20,8 +21,13 @@ public class TestExecutor : ITestExecutor
     public event Action<int, TestStepViewModel>? StepCompleted;
     public event Action<bool>? TestCompleted;
 
-    public TestExecutor(ITestStepRunner runner, IErrorService errorService, ITestStepEvaluator evaluator)
+    public TestExecutor(
+        ITestHardware testHardware,
+        ITestStepRunner runner,
+        IErrorService errorService,
+        ITestStepEvaluator evaluator)
     {
+        _testHardware = testHardware;
         _runner = runner;
         _errorService = errorService;
         _evaluator = evaluator;
@@ -94,8 +100,10 @@ public class TestExecutor : ITestExecutor
                 break;
         }
 
-    OnTestCompleted(token.IsCancellationRequested);
-}
+        var clearResult = await _testHardware.ClearRelayStates();
+        if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
+        OnTestCompleted(token.IsCancellationRequested);
+    }
 
     private void EvaluateTestStep(TestStepViewModel step, double value)
     {

@@ -13,4 +13,5 @@ public interface ITestHardware
     IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> UpdateRelayStates();
+    Task<OperationResult> ClearRelayStates();
 }
