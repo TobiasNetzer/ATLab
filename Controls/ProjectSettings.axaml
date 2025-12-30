@@ -1,0 +1,48 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.ProjectSettings"
+             x:DataType="vm:ProjectSettingsViewModel"
+             Width="800">
+
+    
+    <Grid RowDefinitions="Auto, *">
+        
+        <Border Grid.Row="0" Background="{DynamicResource SystemBaseLowColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            
+            <TextBlock Text="Project Settings"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        
+        <Border Grid.Row="1" Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}">
+            
+            <Grid ColumnDefinitions="Auto, Auto"
+                  RowDefinitions="Auto,*"
+                  Margin="10">
+                
+                <TextBlock Grid.Column="0"
+                           Grid.Row="0"
+                           Text="Default Tolerance (%):"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+                
+                <NumericUpDown Grid.Column="1"
+                               Grid.Row="0"
+                               Value="{Binding ToleranceValue}"
+                               Minimum="0"
+                               Maximum="100"
+                               Width="120"/>
+                
+            </Grid>
+            
+        </Border>
+    </Grid>
+    
+</UserControl>
