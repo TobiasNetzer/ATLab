@@ -11,7 +11,7 @@ public class EnumDescriptionConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null) return string.Empty;
-        if (value is not Enum e) return value?.ToString();
+        if (value is not Enum e) return value.ToString()!;
         var field = e.GetType().GetField(e.ToString());
         var attr = field?.GetCustomAttribute<DescriptionAttribute>();
         return attr?.Description ?? e.ToString();

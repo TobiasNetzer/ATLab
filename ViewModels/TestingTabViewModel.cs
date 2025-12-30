@@ -93,21 +93,19 @@ public partial class TestingTabViewModel : ViewModelBase
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
-        if (value?.TestStep != null)
+        if (value?.TestStep == null) return;
+        
+        try
         {
-            try
-            {
-                TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState);
-                TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState);
-                TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
-                TestStepConfiguratorViewModel.LoadTestStep(value);
-                ScriptSelector.LoadTestStep(value);
-            }
-            catch (Exception ex)
-            {
-                _errorService.AddError("Exception: " + ex.Message);
-            }
-            
+            TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState);
+            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState);
+            TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
+            TestStepConfiguratorViewModel.LoadTestStep(value);
+            ScriptSelector.LoadTestStep(value);
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Exception: " + ex.Message);
         }
     }
 
@@ -129,8 +127,6 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
     }
-    
-    
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
     private bool CanPasteTestStep() => IsNotTestRunning() && _copiedStep != null;
