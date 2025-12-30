@@ -15,7 +15,9 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepRunner _runner;
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
+    private readonly IMessageBoxService _messageBoxService;
     private CancellationTokenSource? _cts;
+    private bool _messageBoxCancelled;
 
     public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
@@ -27,12 +29,14 @@ public class TestExecutor : ITestExecutor
         ITestHardware testHardware,
         ITestStepRunner runner,
         IErrorService errorService,
-        ITestStepEvaluator evaluator)
+        ITestStepEvaluator evaluator,
+        IMessageBoxService messageBoxService)
     {
         _testHardware = testHardware;
         _runner = runner;
         _errorService = errorService;
         _evaluator = evaluator;
+        _messageBoxService = messageBoxService;
     }
 
     public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
@@ -57,13 +61,17 @@ public class TestExecutor : ITestExecutor
         {
             await ExecuteAsync(steps, startIndex, _cts.Token);
         }
+        catch (OperationCanceledException)
+        {
+            // Cancellation requested
+        }
         catch (Exception ex)
         {
             _errorService.AddError("Test execution failed: " + ex.Message);
         }
         finally
         {
-            OnTestCompleted(_cts.Token.IsCancellationRequested);
+            OnTestCompleted(_cts.Token.IsCancellationRequested || _messageBoxCancelled);
             _cts.Dispose();
             _cts = null;
         }
@@ -85,6 +93,18 @@ public class TestExecutor : ITestExecutor
             var step = steps[i];
             OnStepStarted(i, step);
             OperationResult<double> stepExecutionResult;
+
+            if (step.TestStep.ShowCommentOnTestStart)
+            {
+                _messageBoxCancelled = true;
+                var result = await _messageBoxService.ShowConfirmationImageAsync("Test Execution Halted", step.TestStep.Comment, step.TestStep.CustomMessageBoxImagePath);
+                if (!result)
+                {
+                    throw new OperationCanceledException();
+                }
+            }
+            _messageBoxCancelled = false;
+            
             do
             {
                 stepExecutionResult = await _runner.ExecuteAsync(step, token);

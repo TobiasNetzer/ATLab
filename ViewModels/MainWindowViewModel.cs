@@ -114,6 +114,9 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadFileWithDialog() => await TestingTab.LoadFileWithDialog();
     
+    [RelayCommand]
+    private void CancelTest() => TestingTab.CancelTest();
+    
     public async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
     public event Action? RequestClose;

@@ -308,7 +308,7 @@ public partial class TestingTabViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void CancelTest()
+    public void CancelTest()
     {
         _testExecutor.CancelTest();
     }
@@ -323,6 +323,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor.StepStarted += (index, step) =>
         {
             SelectedStepIndex = index;
+            
         };
         
         _testExecutor.StepExecuted += () =>
