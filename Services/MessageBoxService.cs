@@ -5,6 +5,7 @@ using ATLab.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media.Imaging;
 
 namespace ATLab.Services;
 
@@ -26,6 +27,28 @@ public class MessageBoxService : IMessageBoxService
             Title = title,
             Message = message,
             ShowCancel = true
+        };
+
+        var mb = new MessageBox
+        {
+            DataContext = vm
+        };
+
+        await mb.ShowDialog(owner);
+        return mb.Result == MessageBox.MessageBoxResult.Ok;
+    }
+    
+    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath)
+    {
+        var owner = GetMainWindow();
+        if (owner == null) return false;
+
+        var vm = new MessageBoxViewModel
+        {
+            Title = title,
+            Message = message,
+            ShowCancel = true,
+            Bitmap = new Bitmap(imagePath)
         };
 
         var mb = new MessageBox

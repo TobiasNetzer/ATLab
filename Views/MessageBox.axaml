@@ -8,11 +8,40 @@
         CanResize="False"
         SizeToContent="WidthAndHeight">
     
-    <StackPanel Margin="20" Spacing="20">
-        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="400"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-            <Button Command="{Binding OkCommand}" Content="OK" Width="80" HorizontalContentAlignment="Center"/>
-            <Button Command="{Binding CancelCommand}" IsVisible="{Binding ShowCancel}" Content="Cancel" Width="80" HorizontalContentAlignment="Center"/>
+    <Grid Margin="20"
+          RowDefinitions="Auto,20,Auto,20,Auto">
+        
+        <Image Grid.Row="0"
+               Source="{Binding Bitmap, FallbackValue={x:Null}}"
+               MaxHeight="1000"
+               MaxWidth="1000"
+               Stretch="Uniform"
+               StretchDirection="DownOnly"/>
+
+        <TextBlock Grid.Row="2"
+                   Text="{Binding Message}"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   MaxWidth="1000"/>
+        
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Spacing="10">
+            
+            <Button Command="{Binding OkCommand}"
+                    Content="Ok"
+                    IsDefault="True"
+                    Width="80"
+                    HorizontalContentAlignment="Center"/>
+            
+            <Button Command="{Binding CancelCommand}"
+                    IsVisible="{Binding ShowCancel}"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Width="80"
+                    HorizontalContentAlignment="Center"/>
+            
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </Window>

@@ -494,6 +494,8 @@ public partial class TestingTabViewModel : ViewModelBase
             NominalValue = step.NominalValue,
             Unit = step.Unit,
             Comment = step.Comment,
+            ShowCommentOnTestStart = step.ShowCommentOnTestStart,
+            CustomMessageBoxImagePath = step.CustomMessageBoxImagePath,
             Delay = step.Delay,
             EvaluationSource = step.EvaluationSource,
             RepeatUntilPass = step.RepeatUntilPass,

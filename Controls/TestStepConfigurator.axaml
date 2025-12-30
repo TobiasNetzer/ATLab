@@ -158,12 +158,34 @@
                             Orientation="Vertical"
                             Spacing="5"
                             Margin="10">
-                    <TextBlock Text="Comment:"/>
+                    
+                    <TextBlock Text="Comment:"
+                               VerticalAlignment="Bottom"/>
+                    
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              TabIndex="7"
                              Width="480"
                              Height="100"
                              TextWrapping="Wrap"/>
+                    
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10"
+                                Margin="0 5 0 0">
+                        
+                        <CheckBox
+                            Content="Show Message"
+                            IsChecked="{Binding TestStepViewModel.TestStep.ShowCommentOnTestStart, FallbackValue=False}"/>
+                        
+                        <Button Content="&#xE8B9;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="20"
+                                ToolTip.Tip="Add image to message box"
+                                Command="{Binding OpenImagePickerCommand}"/>
+                        
+                        <TextBox Width="290"
+                            Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
+                        
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Border>

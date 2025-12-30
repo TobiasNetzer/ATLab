@@ -55,18 +55,26 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(11)]
+    private bool _showCommentOnTestStart;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(12)]
+    private string _customMessageBoxImagePath = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(13)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(12)]
+    [property: JsonPropertyOrder(14)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(13)]
+    [property: JsonPropertyOrder(15)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(14)]
+    [property: JsonPropertyOrder(16)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -77,10 +85,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(15)]
+    [JsonPropertyOrder(17)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(16)]
+    [JsonPropertyOrder(18)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     partial void OnMatrixStateChanged(RelayMatrix? oldValue, RelayMatrix newValue)

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using Avalonia.Media.Imaging;
 
 namespace ATLab.ViewModels;
 
@@ -14,6 +15,8 @@ public partial class MessageBoxViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _showCancel = true;
+
+    public Bitmap? Bitmap { get; set; }
 
     public event Action<bool>? CloseRequested;
 

@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
 public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
+    private readonly IFileDialogService _fileDialogService;
 
     public List<TestEvaluationSource> EvaluationSources { get; } = Enum.GetValues<TestEvaluationSource>().ToList();
         
@@ -34,9 +37,13 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     
     public double Tolerance;
 
-    public TestStepConfiguratorViewModel(ISettingsService settingsService)
+    public TestStepConfiguratorViewModel(
+        ISettingsService settingsService,
+        IFileDialogService fileDialogService)
     {
         _settingsService = settingsService;
+        _fileDialogService = fileDialogService;
+        
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
     }
 
@@ -163,5 +170,13 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsStepConfiguratorExpanded = value;
+    }
+
+    [RelayCommand]
+    private async Task OpenImagePicker()
+    {
+        var result = await _fileDialogService.OpenFileAsync("Select Image", new[] { "png", "jpg", "jpeg", "bmp", "gif", "webp" });
+        if (result == null || TestStepViewModel == null) return;
+            TestStepViewModel.TestStep.CustomMessageBoxImagePath = result.Path.LocalPath;
     }
 }

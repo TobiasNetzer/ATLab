@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using ATLab.ViewModels;
 
 namespace ATLab.Views;
@@ -16,22 +17,19 @@ public partial class MessageBox : Window
     public MessageBox()
     {
         InitializeComponent();
-        
-        DataContextChanged += (s, e) =>
-        {
-            if (DataContext is MessageBoxViewModel vm)
-            {
-                vm.CloseRequested += HandleCloseRequested;
-            }
-        };
 
-        Unloaded += (s, e) =>
+        DataContextChanged += OnDataContextChanged;
+
+        Closed += (_, _) => DataContextChanged -= OnDataContextChanged;
+    }
+
+    private void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        if (DataContext is MessageBoxViewModel vm)
         {
-            if (DataContext is MessageBoxViewModel vm)
-            {
-                vm.CloseRequested -= HandleCloseRequested;
-            }
-        };
+            vm.CloseRequested -= HandleCloseRequested;
+            vm.CloseRequested += HandleCloseRequested;
+        }
     }
 
     private void HandleCloseRequested(bool isOk)
