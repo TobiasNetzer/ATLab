@@ -20,6 +20,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IProjectService _projectService;
     private readonly SerialDeviceManagerViewModel _serialDeviceManager;
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
+    private readonly ISerialNumberDialogService _serialNumberDialogService;
     
     private TestStepViewModel? _copiedStep;
 
@@ -55,7 +56,15 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private TestStatus _testStatus = TestStatus.IDLE;
 
+    private DateTimeOffset StartTime { get; set; }
+    private TimeSpan Elapsed => DateTimeOffset.Now - StartTime;
     
+    [ObservableProperty]
+    private string _testDuration = string.Empty;
+    
+    [ObservableProperty]
+    private string _serialNumber = string.Empty;
+
     public TestingTabViewModel(
         ISettingsService settingsService,
         IErrorService errorService, 
@@ -65,7 +74,8 @@ public partial class TestingTabViewModel : ViewModelBase
         IProjectService projectService,
         SerialDeviceManagerViewModel serialDeviceManager,
         ScriptSelectorViewModel scriptSelector,
-        ProjectSettingsViewModel projectSettingsViewModel)
+        ProjectSettingsViewModel projectSettingsViewModel,
+        ISerialNumberDialogService serialNumberDialogService)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -77,6 +87,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService = projectService;
         _serialDeviceManager = serialDeviceManager;
         _projectSettingsViewModel = projectSettingsViewModel;
+        _serialNumberDialogService = serialNumberDialogService;
         
         Title = "Testing";
         
@@ -270,13 +281,30 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
+        if (_projectSettingsViewModel.UseSerialNumber)
+        {
+            var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
+
+            if (serial == null)
+            {
+                SerialNumber = string.Empty;
+                return;
+            }
+            
+            SerialNumber = serial;
+
+        }
+        else
+        {
+            SerialNumber = string.Empty;
+        }
+        
         TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
         TestProgress = 0;
         SelectedStepIndex = 0;
-        
-        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
 
+        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
     }
 
     [RelayCommand]
@@ -353,7 +381,8 @@ public partial class TestingTabViewModel : ViewModelBase
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
             SerialDevices = _serialDeviceManager.SerialDevices.ToList(),
-            DefaultTolerance = _projectSettingsViewModel.ToleranceValue
+            DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
+            UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
         };
     }
 
@@ -436,6 +465,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
         
         _projectSettingsViewModel.ToleranceValue = dto.DefaultTolerance;
+        _projectSettingsViewModel.UseSerialNumber = dto.UseSerialNumber;
         
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 

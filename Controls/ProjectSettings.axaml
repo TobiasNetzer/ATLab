@@ -24,7 +24,7 @@
                 BorderBrush="{DynamicResource SystemBaseLowColor}">
             
             <Grid ColumnDefinitions="Auto, Auto"
-                  RowDefinitions="Auto,*"
+                  RowDefinitions="Auto, Auto,*"
                   Margin="10">
                 
                 <TextBlock Grid.Column="0"
@@ -39,6 +39,11 @@
                                Minimum="0"
                                Maximum="100"
                                Width="120"/>
+                
+                <CheckBox Grid.Column="0"
+                          Grid.Row="1"
+                          Content="Use serial number"
+                          IsChecked="{Binding UseSerialNumber, Mode=TwoWay}"/>
                 
             </Grid>
             
