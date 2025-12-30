@@ -293,6 +293,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.StepCompleted += (index, step) =>
         {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
             TestProgress = TestSteps.Count == 0 ? 0 : (int)Math.Round((double)(SelectedStepIndex + 1) / TestSteps.Count * 100);
             
             if (!step.IsPassed)

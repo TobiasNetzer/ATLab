@@ -228,6 +228,8 @@
                 <ContextMenu IsEnabled="{Binding IsEditingMode}">
                     <MenuItem Header="Add Step" Command="{Binding AddTestStepCommand}"/>
                     <MenuItem Header="Duplicate Step" Command="{Binding DuplicateTestStepCommand}"/>
+                    <MenuItem Header="Copy Step" Command="{Binding CopyTestStepCommand}"/>
+                    <MenuItem Header="Paste Step" Command="{Binding PasteTestStepCommand}"/>
                     <MenuItem Header="Remove Step" Command="{Binding RemoveTestStepCommand}"/>
                     <MenuItem Header="Move Step Up" Command="{Binding MoveStepUpCommand}"/>
                     <MenuItem Header="Move Step Down" Command="{Binding MoveStepDownCommand}"/>
