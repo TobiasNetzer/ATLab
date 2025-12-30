@@ -26,13 +26,26 @@ public class FileDialogService : IFileDialogService
             Title = title,
             AllowMultiple = false
         };
-
+        
         if (extensions != null)
         {
-            options.FileTypeFilter = new List<FilePickerFileType>
+            var enumerable = extensions.ToList();
+            var filters = new List<FilePickerFileType>
             {
-                new FilePickerFileType(title) { Patterns = extensions.Select(e => $"*.{e}").ToList() }
+                new FilePickerFileType("All Files")
+                {
+                    Patterns = enumerable.Select(e => $"*.{e}").ToList() 
+                }
             };
+            
+            foreach (var ext in enumerable)
+            {
+                filters.Add(new FilePickerFileType($"{ext.ToUpper()} Files (*.{ext})")
+                {
+                    Patterns = new[] { $"*.{ext}" }
+                });
+            }
+            options.FileTypeFilter = filters;
         }
 
         var results = await storageProvider.OpenFilePickerAsync(options);

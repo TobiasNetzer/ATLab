@@ -27,6 +27,7 @@
         <converters:EnumEqualsToBoolConverter x:Key="EnumEqualsToBool"/>
         <converters:InvertedEnumEqualsToBoolConverter x:Key="InvertedEnumEqualsToBool"/>
         <converters:TestStatusToBrushConverter x:Key="TestStatusToBrushConverter"/>
+        <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
     </Application.Resources>
     
     <Application.Styles>

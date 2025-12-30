@@ -10,13 +10,24 @@ public partial class SerialNumberEntryBox : Window
     {
         InitializeComponent();
         DataContextChanged += OnDataContextChanged;
+        
+        Closed += (_, _) => DataContextChanged -= OnDataContextChanged;
+        
+        SerialNoTextBox.AttachedToVisualTree += (_, _) =>
+        {
+            SerialNoTextBox.Focus();
+            SerialNoTextBox.CaretIndex = SerialNoTextBox.Text?.Length ?? 0;
+        };
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
     {
         if (DataContext is SerialNumberEntryBoxViewModel vm)
         {
-            vm.RequestClose += result => Close(result);
+            vm.RequestClose -= OnRequestClose; 
+            vm.RequestClose += OnRequestClose;
         }
     }
+    
+    private void OnRequestClose(bool result) => Close(result);
 }

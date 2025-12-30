@@ -7,9 +7,9 @@ public enum TestEvaluationSource
     [Description("None")]
     NONE,
 
-    [Description("Internal Script")]
+    [Description("Script")]
     SCRIPT,
 
-    [Description("Console Script")]
+    [Description("Console Command")]
     COMMAND
 }

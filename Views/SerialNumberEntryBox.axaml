@@ -15,29 +15,31 @@
                         Margin="0,0,0,10" />
 
         <TextBox Grid.Row="1"
-                        Width="300"
-                        Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" />
+                 x:Name="SerialNoTextBox"
+                 Width="300"
+                 MaxLength="100"
+                 Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" />
 
         <StackPanel Grid.Row="2"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        Margin="0,10,0,0">
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0"
+                    Spacing="10">
 
             <Button Content="Start"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
                     MinWidth="100"
                     Command="{Binding OkCommand}"
-                    IsDefault="True"
-                    Margin="0,0,20,0" />
+                    IsEnabled="{Binding SerialNumber, Converter={StaticResource StringNotEmptyConverter}}"
+                    IsDefault="True"/>
 
             <Button Content="Cancel"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
                     MinWidth="100"
                     Command="{Binding CancelCommand}"
-                    IsCancel="True" 
-                    Margin="20,0,0,0"/>
+                    IsCancel="True" />
             
         </StackPanel>
     </Grid>

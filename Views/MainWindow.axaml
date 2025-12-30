@@ -36,7 +36,7 @@
                     Padding="0">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" />
+                    <TextBlock Text="{Binding Title}"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.DataTemplates>

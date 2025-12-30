@@ -112,13 +112,13 @@
                     <StackPanel HorizontalAlignment="Left"
                                 Orientation="Vertical"
                                 Spacing="5"
-                                Margin="65 10 10 10">
+                                Margin="40 10 10 10">
                         <TextBlock Text="Unit:"/>
                         <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="4"
                                  MaxLength="10"
-                                 Width="50"/>
+                                 Width="80"/>
                     </StackPanel>
                 </StackPanel>
                 
