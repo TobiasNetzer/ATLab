@@ -13,6 +13,6 @@ public interface ITestExecutor
     event Action<int, TestStepViewModel>? StepCompleted;
     event Action<bool>? TestCompleted;
 
-    Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps);
+    Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index);
     void CancelTest();
 }

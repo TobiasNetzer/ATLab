@@ -229,8 +229,9 @@ public partial class TestingTabViewModel : ViewModelBase
         TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
         TestProgress = 0;
+        SelectedStepIndex = 0;
         
-        await _testExecutor.StartTestAsync(TestSteps);
+        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
 
     }
 

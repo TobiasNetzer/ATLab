@@ -27,7 +27,7 @@ public class TestExecutor : ITestExecutor
         _evaluator = evaluator;
     }
 
-    public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps)
+    public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
     {
         if (steps.Count == 0)
         {
@@ -35,11 +35,17 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
+        if (startIndex >= steps.Count || startIndex < 0)
+        {
+            _errorService.AddError("Test step index out of range.");
+            return;
+        }
+
         _cts = new CancellationTokenSource();
 
         try
         {
-            await ExecuteAsync(steps, _cts.Token);
+            await ExecuteAsync(steps, startIndex, _cts.Token);
         }
         catch (Exception ex)
         {
@@ -59,17 +65,18 @@ public class TestExecutor : ITestExecutor
 
     private async Task ExecuteAsync(
     IReadOnlyList<TestStepViewModel> steps,
+    int startIndex,
     CancellationToken token)
-{
-
-    for (int i = 0; i < steps.Count; i++)
     {
-        var step = steps[i];
-        OnStepStarted(i, step);
-        OperationResult<double> stepExecutionResult;
-        do
+
+        for (int i = startIndex; i < steps.Count; i++)
         {
-            stepExecutionResult = await _runner.ExecuteAsync(step, token);
+            var step = steps[i];
+            OnStepStarted(i, step);
+            OperationResult<double> stepExecutionResult;
+            do
+            {
+                stepExecutionResult = await _runner.ExecuteAsync(step, token);
 
                 if (stepExecutionResult.IsSuccess)
                 {
@@ -83,9 +90,9 @@ public class TestExecutor : ITestExecutor
             
             OnStepCompleted(i, step);
 
-        if (!stepExecutionResult.IsSuccess)
-            break;
-    }
+            if (!stepExecutionResult.IsSuccess)
+                break;
+        }
 
     OnTestCompleted(token.IsCancellationRequested);
 }
