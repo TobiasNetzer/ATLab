@@ -121,6 +121,9 @@ public partial class TestingTabViewModel : ViewModelBase
         OpenAboutWindowCommand.NotifyCanExecuteChanged();
         LoadFileWithDialogCommand.NotifyCanExecuteChanged();
         SaveFileAsCommand.NotifyCanExecuteChanged();
+        StartTestFromSelectionCommand.NotifyCanExecuteChanged();
+        StartTestRepeatCommand.NotifyCanExecuteChanged();
+        StartTestCommand.NotifyCanExecuteChanged();
     }
 
     private void RenumberTestSteps()
@@ -224,6 +227,33 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool IsTestRunning() => TestStatus != TestStatus.RUNNING;
     
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    private async Task StartTestFromSelectionAsync()
+    {
+        NumberFailedSteps = 0;
+        TestStatus = TestStatus.RUNNING;
+        TestProgress = 0;
+                    
+        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+        
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    private async Task StartTestRepeatAsync()
+    {
+        NumberFailedSteps = 0;
+        _isRepeatedExecution = true;
+        while (_isRepeatedExecution)
+        {
+            TestStatus = TestStatus.RUNNING;
+            TestProgress = 0;
+            SelectedStepIndex = 0;
+                    
+            await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+        }
+        
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private async Task StartTestAsync()
     {
         TestStatus = TestStatus.RUNNING;
@@ -264,6 +294,7 @@ public partial class TestingTabViewModel : ViewModelBase
             if (cancelled)
             {
                 TestStatus = TestStatus.CANCELLED;
+                _isRepeatedExecution = false;
                 return;
             }
             TestStatus = NumberFailedSteps > 0 ? TestStatus.FAILED : TestStatus.PASSED;

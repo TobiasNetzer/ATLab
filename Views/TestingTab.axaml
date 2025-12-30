@@ -86,6 +86,18 @@
                            Margin="5 0 5 0"
                            CornerRadius="1"/>
                 
+                <Button Content="&#xE896;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Start continuous test execution"
+                        Command="{Binding StartTestFromSelectionCommand}"/>
+                
+                <Button Content="&#xE8EE;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Start continuous test execution"
+                        Command="{Binding StartTestRepeatCommand}"/>
+                
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
