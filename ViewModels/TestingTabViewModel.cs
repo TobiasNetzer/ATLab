@@ -55,6 +55,7 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private TestStatus _testStatus = TestStatus.IDLE;
 
+    
     public TestingTabViewModel(
         ISettingsService settingsService,
         IErrorService errorService, 
@@ -286,9 +287,19 @@ public partial class TestingTabViewModel : ViewModelBase
 
     private void HookExecutorEvents()
     {
+        _testExecutor.TestStarted += () =>
+        {
+            StartTime = DateTimeOffset.Now;
+        };
+        
         _testExecutor.StepStarted += (index, step) =>
         {
             SelectedStepIndex = index;
+        };
+        
+        _testExecutor.StepExecuted += () =>
+        {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
         };
 
         _testExecutor.StepCompleted += (index, step) =>
@@ -304,6 +315,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.TestCompleted += (cancelled) =>
         {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
             TestProgress = 100;
             if (cancelled)
             {

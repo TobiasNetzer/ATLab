@@ -9,7 +9,9 @@ namespace ATLab.Interfaces;
 
 public interface ITestExecutor
 {
+    event Action? TestStarted;
     event Action<int, TestStepViewModel>? StepStarted;
+    event Action? StepExecuted;
     event Action<int, TestStepViewModel>? StepCompleted;
     event Action<bool>? TestCompleted;
 

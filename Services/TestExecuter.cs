@@ -17,7 +17,9 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepEvaluator _evaluator;
     private CancellationTokenSource? _cts;
 
+    public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
+    public event Action? StepExecuted;
     public event Action<int, TestStepViewModel>? StepCompleted;
     public event Action<bool>? TestCompleted;
 
@@ -49,6 +51,8 @@ public class TestExecutor : ITestExecutor
 
         _cts = new CancellationTokenSource();
 
+        OnTestStarted();
+
         try
         {
             await ExecuteAsync(steps, startIndex, _cts.Token);
@@ -59,6 +63,7 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
+            OnTestCompleted(_cts.Token.IsCancellationRequested);
             _cts.Dispose();
             _cts = null;
         }
@@ -92,6 +97,9 @@ public class TestExecutor : ITestExecutor
                 {
                     TestStepExecutionFailed(step, stepExecutionResult);
                 }
+
+                OnStepExecuted();
+                
             } while (step.TestStep.RepeatUntilPass && !token.IsCancellationRequested && !step.IsPassed);
             
             OnStepCompleted(i, step);
@@ -102,7 +110,6 @@ public class TestExecutor : ITestExecutor
 
         var clearResult = await _testHardware.ClearRelayStates();
         if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
-        OnTestCompleted(token.IsCancellationRequested);
     }
 
     private void EvaluateTestStep(TestStepViewModel step, double value)
@@ -146,8 +153,14 @@ public class TestExecutor : ITestExecutor
     private bool IsOverflow(double value) =>
         value >= 1E9;
 
+    private void OnTestStarted() =>
+        TestStarted?.Invoke();
+    
     private void OnStepStarted(int index, TestStepViewModel step) =>
         StepStarted?.Invoke(index, step);
+    
+    private void OnStepExecuted() =>
+        StepExecuted?.Invoke();
 
     private void OnStepCompleted(int index, TestStepViewModel step) =>
         StepCompleted?.Invoke(index, step);
