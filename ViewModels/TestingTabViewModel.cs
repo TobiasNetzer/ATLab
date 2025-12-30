@@ -251,7 +251,7 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             TestProgress = TestSteps.Count == 0 ? 0 : (int)Math.Round((double)(SelectedStepIndex + 1) / TestSteps.Count * 100);
             
-            if (!step.IsValid)
+            if (!step.IsPassed)
             {
                 NumberFailedSteps++;
             }

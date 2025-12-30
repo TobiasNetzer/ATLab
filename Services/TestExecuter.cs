@@ -71,17 +71,17 @@ public class TestExecutor : ITestExecutor
         {
             stepExecutionResult = await _runner.ExecuteAsync(step, token);
 
-            if (stepExecutionResult.IsSuccess)
-            {
-                EvaluateTestStep(step, stepExecutionResult.Value);
-            }
-            else
-            {
-                TestStepExecutionFailed(step, stepExecutionResult);
-            }
-        } while (step.TestStep.RepeatUntilPass && !token.IsCancellationRequested && !step.IsValid);
-        
-        OnStepCompleted(i, step);
+                if (stepExecutionResult.IsSuccess)
+                {
+                    EvaluateTestStep(step, stepExecutionResult.Value);
+                }
+                else
+                {
+                    TestStepExecutionFailed(step, stepExecutionResult);
+                }
+            } while (step.TestStep.RepeatUntilPass && !token.IsCancellationRequested && !step.IsPassed);
+            
+            OnStepCompleted(i, step);
 
         if (!stepExecutionResult.IsSuccess)
             break;
@@ -110,34 +110,34 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
-    step.Result = UnitParser.Format(value, step.TestStep.Unit);
+        step.Result = UnitParser.Format(value, step.TestStep.Unit);
 
-    var evaluation = _evaluator.Evaluate(step.TestStep, value);
-    step.Deviation = $"{evaluation.Deviation:F2} %";
-    step.IsValid = evaluation.IsValid;
-}
+        var evaluation = _evaluator.Evaluate(step.TestStep, value);
+        step.Deviation = $"{evaluation.Deviation:F2} %";
+        step.IsPassed = evaluation.IsValid;
+    }
 
-private void TestStepExecutionFailed(
-    TestStepViewModel step,
-    OperationResult<double> result)
-{
-    if (result.ErrorMessage != string.Empty)
-        _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
-    step.Result = string.Empty;
-    step.IsValid = false;
-    step.Deviation = string.Empty;
-}
+    private void TestStepExecutionFailed(
+        TestStepViewModel step,
+        OperationResult<double> result)
+    {
+        if (result.ErrorMessage != string.Empty)
+            _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+        step.Result = string.Empty;
+        step.IsPassed = false;
+        step.Deviation = string.Empty;
+    }
 
-private bool IsOverflow(double value) =>
-    value >= 1E9;
+    private bool IsOverflow(double value) =>
+        value >= 1E9;
 
-private void OnStepStarted(int index, TestStepViewModel step) =>
-    StepStarted?.Invoke(index, step);
+    private void OnStepStarted(int index, TestStepViewModel step) =>
+        StepStarted?.Invoke(index, step);
 
-private void OnStepCompleted(int index, TestStepViewModel step) =>
-    StepCompleted?.Invoke(index, step);
+    private void OnStepCompleted(int index, TestStepViewModel step) =>
+        StepCompleted?.Invoke(index, step);
 
-private void OnTestCompleted(bool canceled) =>
-    TestCompleted?.Invoke(canceled);
+    private void OnTestCompleted(bool canceled) =>
+        TestCompleted?.Invoke(canceled);
 
 }
