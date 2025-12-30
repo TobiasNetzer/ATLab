@@ -59,6 +59,20 @@
                         ToolTip.Tip="Duplicate selected test step"
                         Command="{Binding DuplicateTestStepCommand}"
                         IsEnabled="{Binding IsEditingMode}"/>
+                
+                <Button Content="&#xE8C8;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Copy selected test step"
+                        Command="{Binding CopyTestStepCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
+                
+                <Button Content="&#xE77F;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Paste test step"
+                        Command="{Binding PasteTestStepCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
 
                 <Button Content="&#xF8AB;"
                         FontFamily="{StaticResource FluentIconsFont}"
@@ -89,7 +103,7 @@
                 <Button Content="&#xE896;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
-                        ToolTip.Tip="Start continuous test execution"
+                        ToolTip.Tip="Start test execution from selected step"
                         Command="{Binding StartTestFromSelectionCommand}"/>
                 
                 <Button Content="&#xE8EE;"

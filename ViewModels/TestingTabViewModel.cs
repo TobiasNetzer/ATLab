@@ -20,6 +20,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IProjectService _projectService;
     private readonly SerialDeviceManagerViewModel _serialDeviceManager;
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
+    
+    private TestStepViewModel? _copiedStep;
 
     private bool _isRepeatedExecution;
 
@@ -113,6 +115,8 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         AddTestStepCommand.NotifyCanExecuteChanged();
         DuplicateTestStepCommand.NotifyCanExecuteChanged();
+        CopyTestStepCommand.NotifyCanExecuteChanged();
+        PasteTestStepCommand.NotifyCanExecuteChanged();
         RemoveTestStepCommand.NotifyCanExecuteChanged();
         MoveStepUpCommand.NotifyCanExecuteChanged();
         MoveStepDownCommand.NotifyCanExecuteChanged();
@@ -125,6 +129,11 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
     }
+    
+    
+    
+    private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
+    private bool CanPasteTestStep() => IsNotTestRunning() && _copiedStep != null;
 
     private void RenumberTestSteps()
     {
@@ -134,43 +143,26 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void AddTestStep()
     {
         var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
         if (indexToInsertNewStep > TestSteps.Count) indexToInsertNewStep = TestSteps.Count;
         var newStep = new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo);
-        newStep.PropertyChanged += (_, _) => CheckForChanges();
+        newStep.PropertyChanged += OnStepPropertyChanged;
         TestSteps.Insert(indexToInsertNewStep, newStep);
         RenumberTestSteps();
         SelectedStepIndex = indexToInsertNewStep;
     }
     
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void DuplicateTestStep()
     {
         if (SelectedStep == null) return;
 
         SelectedStep.TestStep.UpdateDtos();
-        var currentModel = SelectedStep.TestStep;
-        var modelCopy = new TestStep
-        {
-            Name = currentModel.Name,
-            LowerLimit = currentModel.LowerLimit,
-            UpperLimit = currentModel.UpperLimit,
-            NominalValue = currentModel.NominalValue,
-            Unit = currentModel.Unit,
-            Comment = currentModel.Comment,
-            Delay = currentModel.Delay,
-            EvaluationSource = currentModel.EvaluationSource,
-            RepeatUntilPass = currentModel.RepeatUntilPass,
-            TargetDevice = currentModel.TargetDevice,
-            ScriptId = currentModel.ScriptId,
-            ScriptVariables = new ObservableCollection<ScriptVariable>(currentModel.ScriptVariables.Select(v => v.Clone())),
-            StimState = currentModel.StimState != null ? new RelayGroupDto(currentModel.StimState) : null,
-            ExtStimState = currentModel.ExtStimState != null ? new RelayGroupDto(currentModel.ExtStimState) : null,
-            MatrixState = new RelayMatrix(currentModel.MatrixState)
-        };
+        
+        var modelCopy = CopyTestStepModel(SelectedStep.TestStep);
 
         var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
         duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
@@ -182,7 +174,34 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = indexToInsert;
     }
     
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private void CopyTestStep()
+    {
+        if (SelectedStep == null) return;
+
+        SelectedStep.TestStep.UpdateDtos();
+        
+        var modelCopy = CopyTestStepModel(SelectedStep.TestStep);
+        
+        if (_copiedStep != null) _copiedStep.PropertyChanged -= OnStepPropertyChanged;
+        _copiedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
+        _copiedStep.PropertyChanged += OnStepPropertyChanged;
+        PasteTestStepCommand.NotifyCanExecuteChanged();
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanPasteTestStep))]
+    private void PasteTestStep()
+    {
+        if (SelectedStep == null || _copiedStep == null) return;
+
+        var indexToInsert = SelectedStepIndex + 1;
+        TestSteps.Insert(indexToInsert, _copiedStep);
+
+        RenumberTestSteps();
+        SelectedStepIndex = indexToInsert;
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void RemoveTestStep()
     {
         if (SelectedStepIndex >= 0 && SelectedStepIndex < TestSteps.Count)
@@ -192,7 +211,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void MoveStepUp()
     {
         if (SelectedStep == null || SelectedStepIndex <= 0) return;
@@ -208,7 +227,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = newIndex;
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void MoveStepDown()
     {
         if (SelectedStep == null || SelectedStepIndex < 0 || SelectedStepIndex >= TestSteps.Count - 1) return;
@@ -224,9 +243,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedStepIndex = newIndex;
     }
     
-    private bool IsTestRunning() => TestStatus != TestStatus.RUNNING;
-    
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestFromSelectionAsync()
     {
         NumberFailedSteps = 0;
@@ -237,7 +254,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
     }
     
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestRepeatAsync()
     {
         NumberFailedSteps = 0;
@@ -253,7 +270,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
     }
     
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
         TestStatus = TestStatus.RUNNING;
@@ -301,7 +318,7 @@ public partial class TestingTabViewModel : ViewModelBase
         };
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task NewFile()
     {
         if (await _projectService.NewProjectAsync())
@@ -336,7 +353,12 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService.IsStateChanged(CaptureCurrentState());
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    private void OnStepPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        CheckForChanges();
+    }
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task OpenAboutWindow()
     {
         var deviceInfoProvider = TestHardwareRelayChannels.HardwareInfo;
@@ -355,21 +377,21 @@ public partial class TestingTabViewModel : ViewModelBase
             aboutWindow.Show();
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task SaveFileAs()
     {
         var dto = CaptureCurrentState();
         await _projectService.SaveAsAsync(dto);
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task SaveFile()
     {
         var dto = CaptureCurrentState();
         await _projectService.SaveAsync(dto);
     }
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task LoadFileWithDialog()
     {
         var dto = await _projectService.OpenFileAsync();
@@ -378,8 +400,7 @@ public partial class TestingTabViewModel : ViewModelBase
             ApplyDto(dto);
         }
     }
-
-
+    
     public async Task LoadFile(string fileToLoad)
     {
         try
@@ -401,7 +422,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestSteps.Clear();
         foreach (var stepVm in dto.TestSteps.Select(step => new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo)))
         {
-            stepVm.PropertyChanged += (_, _) => CheckForChanges();
+            stepVm.PropertyChanged += OnStepPropertyChanged;
             TestSteps.Add(stepVm);
         }
         
@@ -421,5 +442,27 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsEditingModeChanged(bool value)
     {
         _settingsService.Settings.IsEditingMode = value;
+    }
+
+    private TestStep CopyTestStepModel(TestStep step)
+    {
+        return new TestStep
+        {
+            Name = step.Name,
+            LowerLimit = step.LowerLimit,
+            UpperLimit = step.UpperLimit,
+            NominalValue = step.NominalValue,
+            Unit = step.Unit,
+            Comment = step.Comment,
+            Delay = step.Delay,
+            EvaluationSource = step.EvaluationSource,
+            RepeatUntilPass = step.RepeatUntilPass,
+            TargetDevice = step.TargetDevice,
+            ScriptId = step.ScriptId,
+            ScriptVariables = new ObservableCollection<ScriptVariable>(step.ScriptVariables.Select(v => v.Clone())),
+            StimState = step.StimState != null ? new RelayGroupDto(step.StimState) : null,
+            ExtStimState = step.ExtStimState != null ? new RelayGroupDto(step.ExtStimState) : null,
+            MatrixState = new RelayMatrix(step.MatrixState)
+        };
     }
 }

@@ -26,8 +26,6 @@ public partial class TestStepViewModel : ViewModelBase
         
         TestStep.LiveExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
         TestStep.LiveExtStimState.ApplyDto(TestStep.ExtStimState ?? new RelayGroupDto());
-        
-        TestStep.MatrixState = new RelayMatrix(0, 0);
     }
 
     partial void OnTestStepChanged(TestStep? oldValue, TestStep newValue)

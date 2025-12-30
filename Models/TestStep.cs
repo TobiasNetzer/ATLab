@@ -77,10 +77,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(14)]
+    [JsonPropertyOrder(15)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(15)]
+    [JsonPropertyOrder(16)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     partial void OnMatrixStateChanged(RelayMatrix? oldValue, RelayMatrix newValue)
