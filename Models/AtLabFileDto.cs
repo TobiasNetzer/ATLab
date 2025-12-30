@@ -4,9 +4,10 @@ namespace ATLab.Models;
 
 public class AtlabFileDto
 {
-    public List<TestStep> TestSteps { get; set; } = new();
-    public List<CustomRelayChannelName> StimChannelNames { get; set; } = new();
-    public List<CustomRelayChannelName> ExtStimChannelNames { get; set; } = new();
-    public List<CustomRelayChannelName> MeasChannelNames { get; set; } = new();
-    public List<SerialDevices> SerialDevices { get; set; } = new();
+    public List<TestStep> TestSteps { get; init; } = new();
+    public List<CustomRelayChannelName> StimChannelNames { get; init; } = new();
+    public List<CustomRelayChannelName> ExtStimChannelNames { get; init; } = new();
+    public List<CustomRelayChannelName> MeasChannelNames { get; init; } = new();
+    public List<SerialDevices> SerialDevices { get; init; } = new();
+    public double DefaultTolerance { get; init; }
 }

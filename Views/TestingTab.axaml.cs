@@ -8,7 +8,8 @@ public partial class TestingTab : UserControl
     {
         InitializeComponent();
 
-        DataGrid grid = this.FindControl<DataGrid>("TestStepPresenter");
+        DataGrid? grid = this.FindControl<DataGrid>("TestStepPresenter");
+        if (grid == null) return;
         grid.SelectionChanged += (_, e) =>
         {
             if (grid.SelectedItem != null)

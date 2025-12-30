@@ -183,6 +183,7 @@ public class App : Application
         services.AddSingleton<TestHardwareRelayChannelsViewModel>();
         services.AddSingleton<TestStepConfiguratorViewModel>();
         services.AddSingleton<SerialDeviceManagerViewModel>();
+        services.AddSingleton<ProjectSettingsViewModel>();
         
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();

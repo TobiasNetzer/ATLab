@@ -162,7 +162,7 @@
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              TabIndex="7"
                              Width="480"
-                             Height="150"
+                             Height="100"
                              TextWrapping="Wrap"/>
                 </StackPanel>
             </StackPanel>
