@@ -7,37 +7,30 @@
     
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
         <Grid ColumnDefinitions="*, *"
-              RowDefinitions="*, auto"
+              RowDefinitions="*, *"
               Margin="10">
                 
             <controls:CustomChannelNameSetter
                 Grid.Column="0"
                 Grid.Row="0"
+                Grid.RowSpan="2"
                 HorizontalAlignment="Right"
                 DataContext="{Binding TestHardwareRelayChannels}"
                 Margin="0 0 20 20"/>
             
-            <controls:SerialDeviceManager
+            <controls:SerialDeviceManager 
                 Grid.Column="1"
                 Grid.Row="0"
                 HorizontalAlignment="Left"
                 DataContext="{Binding SerialDeviceManager}"
                 Margin="20 0 0 20"/>
-            
-            <StackPanel
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="2"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center" >
-                <TextBlock Text="Tolerance (%):"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"/>
-                <NumericUpDown Value="{Binding ToleranceValue}"
-                               Minimum="0"
-                               Maximum="100"
-                               Width="120"/>
-            </StackPanel>
+        
+            <controls:ProjectSettings 
+                Grid.Column="1"
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                DataContext="{Binding ProjectSettingsViewModel}"
+                Margin="20 0 0 20"/>
                 
         </Grid>
     </ScrollViewer>

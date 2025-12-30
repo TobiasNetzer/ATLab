@@ -9,25 +9,17 @@ public partial class ConfigTabViewModel : ViewModelBase
     
     public SerialDeviceManagerViewModel SerialDeviceManager { get; }
     
-    private readonly TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
-    
-    [ObservableProperty]
-    private double _toleranceValue;
+    public ProjectSettingsViewModel ProjectSettingsViewModel { get; }
 
-    public ConfigTabViewModel(TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
-        TestStepConfiguratorViewModel testStepConfiguratorViewModel,
-        SerialDeviceManagerViewModel serialDeviceManagerViewModel)
+    public ConfigTabViewModel(
+        TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
+        SerialDeviceManagerViewModel serialDeviceManagerViewModel,
+        ProjectSettingsViewModel projectSettingsViewModel)
     {
         TestHardwareRelayChannels = testHardwareRelayChannelsViewModel;
-        _testStepConfiguratorViewModel = testStepConfiguratorViewModel;
         SerialDeviceManager = serialDeviceManagerViewModel;
+        ProjectSettingsViewModel = projectSettingsViewModel;
 
         Title = "Config";
-        ToleranceValue = 10;
-    }
-
-    partial void OnToleranceValueChanged(double value)
-    {
-        _testStepConfiguratorViewModel.Tolerance = value / 100.0;
     }
 }
