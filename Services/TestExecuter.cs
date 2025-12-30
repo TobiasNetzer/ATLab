@@ -90,15 +90,25 @@ public class TestExecutor : ITestExecutor
     OnTestCompleted(token.IsCancellationRequested);
 }
 
-private void EvaluateTestStep(TestStepViewModel step, double value)
-{
-    if (IsOverflow(value))
+    private void EvaluateTestStep(TestStepViewModel step, double value)
     {
-        step.Result = "Overflow";
-        step.IsValid = false;
-        step.Deviation = string.Empty;
-        return;
-    }
+        if (IsOverflow(value))
+        {
+            // Overflow detected
+            step.Result = "Overflow";
+            step.IsPassed = false;
+            step.Deviation = string.Empty;
+            return;
+        }
+
+        if (double.IsNegativeInfinity(value))
+        {
+            // No evaluation source
+            step.Result = string.Empty;
+            step.IsPassed = true;
+            step.Deviation = string.Empty;
+            return;
+        }
 
     step.Result = UnitParser.Format(value, step.TestStep.Unit);
 

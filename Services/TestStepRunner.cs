@@ -40,7 +40,7 @@ public class TestStepRunner : ITestStepRunner
 
             switch (step.TestStep.EvaluationSource)
             {
-                case TestEvaluationSource.NONE: return OperationResult<double>.Success(0);
+                case TestEvaluationSource.NONE: return OperationResult<double>.Success(double.NegativeInfinity);
                 case TestEvaluationSource.SCRIPT:
                     return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice,
                         step.TestStep.ScriptVariables, token);
