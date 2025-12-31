@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,8 +23,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     
-    private TestStep? _modelCopy;
-
+    private List<TestStep>? _copiedSteps;
+    
     private bool _isRepeatedExecution;
 
     [ObservableProperty]
@@ -34,6 +35,9 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private TestStepViewModel? _selectedStep;
+    
+    [ObservableProperty]
+    private ObservableCollection<TestStepViewModel> _selectedSteps = new();
     
     [ObservableProperty]
     private int _selectedStepIndex;
@@ -52,6 +56,15 @@ public partial class TestingTabViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _testProgress;
+    
+    [ObservableProperty]
+    private string _user = Environment.UserName;
+    
+    [ObservableProperty]
+    private int _numberRunTests;
+    
+    [ObservableProperty]
+    private int _numberPassedTests;
     
     [ObservableProperty]
     private TestStatus _testStatus = TestStatus.IDLE;
@@ -124,10 +137,11 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnTestStatusChanged(TestStatus value)
     {
         AddTestStepCommand.NotifyCanExecuteChanged();
-        DuplicateTestStepCommand.NotifyCanExecuteChanged();
-        CopyTestStepCommand.NotifyCanExecuteChanged();
-        PasteTestStepCommand.NotifyCanExecuteChanged();
-        RemoveTestStepCommand.NotifyCanExecuteChanged();
+        DuplicateTestStepsCommand.NotifyCanExecuteChanged();
+        CutTestStepsCommand.NotifyCanExecuteChanged();
+        CopyTestStepsCommand.NotifyCanExecuteChanged();
+        PasteTestStepsCommand.NotifyCanExecuteChanged();
+        RemoveTestStepsCommand.NotifyCanExecuteChanged();
         MoveStepUpCommand.NotifyCanExecuteChanged();
         MoveStepDownCommand.NotifyCanExecuteChanged();
         NewFileCommand.NotifyCanExecuteChanged();
@@ -141,7 +155,7 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
-    private bool CanPasteTestStep() => IsNotTestRunning() && _modelCopy != null;
+    private bool CanPasteTestStep() => IsNotTestRunning() && _copiedSteps != null;
 
     private void RenumberTestSteps()
     {
@@ -154,70 +168,186 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void AddTestStep()
     {
-        var indexToInsertNewStep = SelectedStepIndex < 0 ? 0 : SelectedStepIndex + 1;
-        if (indexToInsertNewStep > TestSteps.Count) indexToInsertNewStep = TestSteps.Count;
+        int indexToInsertNewStep;
+
+        if (SelectedSteps.Count == 0)
+        {
+            indexToInsertNewStep = 0;
+        }
+        else
+        {
+            var lastSelected = SelectedSteps
+                .Select(s => TestSteps.IndexOf(s))
+                .Where(i => i >= 0)
+                .Max();
+
+            indexToInsertNewStep = lastSelected + 1;
+        }
+        
+        if (indexToInsertNewStep > TestSteps.Count)
+            indexToInsertNewStep = TestSteps.Count;
+        
         var newStep = new TestStepViewModel(new TestStep(), TestHardwareRelayChannels.HardwareInfo);
         newStep.PropertyChanged += OnStepPropertyChanged;
+
         TestSteps.Insert(indexToInsertNewStep, newStep);
+
         RenumberTestSteps();
-        SelectedStepIndex = indexToInsertNewStep;
+        
+        SelectedStep = newStep;
+    }
+
+    
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private void DuplicateTestSteps()
+    {
+        if (SelectedSteps.Count == 0)
+            return;
+        
+        var lastSelectedIndex = SelectedSteps
+            .Select(s => TestSteps.IndexOf(s))
+            .Where(i => i >= 0)
+            .Max();
+
+        int insertIndex = lastSelectedIndex + 1;
+        
+        var stepsToDuplicate = SelectedSteps
+            .OrderBy(s => TestSteps.IndexOf(s))
+            .ToList();
+
+        var newDuplicates = new List<TestStepViewModel>();
+
+        foreach (var step in stepsToDuplicate)
+        {
+            step.TestStep.UpdateDtos();
+            
+            var modelCopy = CopyTestStepModel(step.TestStep);
+            
+            var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
+            duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
+            
+            TestSteps.Insert(insertIndex, duplicatedStep);
+            newDuplicates.Add(duplicatedStep);
+
+            insertIndex++;
+        }
+
+        RenumberTestSteps();
+        
+        SelectedSteps.Clear();
+        foreach (var dup in newDuplicates)
+            SelectedSteps.Add(dup);
+        
+        SelectedStep = newDuplicates.Last();
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void DuplicateTestStep()
+    private void CopyTestSteps()
     {
-        if (SelectedStep == null) return;
-
-        SelectedStep.TestStep.UpdateDtos();
+        if (SelectedSteps.Count == 0)
+            return;
         
-        var modelCopy = CopyTestStepModel(SelectedStep.TestStep);
-
-        var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
-        duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
-
-        var indexToInsert = SelectedStepIndex + 1;
-        TestSteps.Insert(indexToInsert, duplicatedStep);
-
-        RenumberTestSteps();
-        SelectedStepIndex = indexToInsert;
-    }
-    
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void CopyTestStep()
-    {
-        if (SelectedStep == null) return;
-
-        SelectedStep.TestStep.UpdateDtos();
+        foreach (var step in SelectedSteps)
+            step.TestStep.UpdateDtos();
         
-        _modelCopy = CopyTestStepModel(SelectedStep.TestStep);
-        
-        PasteTestStepCommand.NotifyCanExecuteChanged();
+        _copiedSteps = SelectedSteps
+            .OrderBy(s => TestSteps.IndexOf(s))
+            .Select(s => CopyTestStepModel(s.TestStep))
+            .ToList();
+
+        PasteTestStepsCommand.NotifyCanExecuteChanged();
     }
     
     [RelayCommand(CanExecute = nameof(CanPasteTestStep))]
-    private void PasteTestStep()
+    private void PasteTestSteps()
     {
-        if (SelectedStep == null || _modelCopy == null) return;
+        if (_copiedSteps == null || _copiedSteps.Count == 0)
+            return;
         
-        var copiedStep = new TestStepViewModel(CopyTestStepModel(_modelCopy), TestHardwareRelayChannels.HardwareInfo);
-        copiedStep.PropertyChanged += OnStepPropertyChanged;
-        
-        var indexToInsert = SelectedStepIndex + 1;
-        TestSteps.Insert(indexToInsert, copiedStep);
+        int insertIndex;
+
+        if (SelectedSteps.Count == 0)
+        {
+            insertIndex = 0;
+        }
+        else
+        {
+            insertIndex = SelectedSteps
+                .Select(s => TestSteps.IndexOf(s))
+                .Where(i => i >= 0)
+                .Max() + 1;
+        }
+
+        var pasted = new List<TestStepViewModel>();
+
+        foreach (var model in _copiedSteps)
+        {
+            var modelCopy = CopyTestStepModel(model);
+
+            var vm = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
+            vm.PropertyChanged += OnStepPropertyChanged;
+
+            TestSteps.Insert(insertIndex, vm);
+            pasted.Add(vm);
+
+            insertIndex++;
+        }
 
         RenumberTestSteps();
-        SelectedStepIndex = indexToInsert;
+        
+        SelectedSteps.Clear();
+        foreach (var p in pasted)
+            SelectedSteps.Add(p);
+
+        SelectedStep = pasted.Last();
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void RemoveTestStep()
+    private void RemoveTestSteps()
     {
-        if (SelectedStepIndex > 0 && SelectedStepIndex < TestSteps.Count)
-        {   
-            TestSteps[SelectedStepIndex].PropertyChanged -= OnStepPropertyChanged;
-            TestSteps.RemoveAt(SelectedStepIndex);
-            RenumberTestSteps();
+        var toRemove = SelectedSteps
+            .OrderByDescending(s => TestSteps.IndexOf(s))
+            .ToList();
+
+        foreach (var step in toRemove)
+        {
+            step.PropertyChanged -= OnStepPropertyChanged;
+            TestSteps.Remove(step);
         }
+
+        RenumberTestSteps();
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private void CutTestSteps()
+    {
+        if (SelectedSteps.Count == 0)
+            return;
+        
+        foreach (var step in SelectedSteps)
+            step.TestStep.UpdateDtos();
+        
+        _copiedSteps = SelectedSteps
+            .OrderBy(s => TestSteps.IndexOf(s))
+            .Select(s => CopyTestStepModel(s.TestStep))
+            .ToList();
+        
+        var toRemove = SelectedSteps
+            .OrderByDescending(s => TestSteps.IndexOf(s)) // remove bottom-up
+            .ToList();
+
+        foreach (var step in toRemove)
+        {
+            step.PropertyChanged -= OnStepPropertyChanged;
+            TestSteps.Remove(step);
+        }
+
+        RenumberTestSteps();
+        
+        SelectedSteps.Clear();
+        SelectedStep = null;
+        
+        PasteTestStepsCommand.NotifyCanExecuteChanged();
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -318,6 +448,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor.TestStarted += () =>
         {
             StartTime = DateTimeOffset.Now;
+            NumberRunTests++;
         };
         
         _testExecutor.StepStarted += (index, step) =>
@@ -352,7 +483,16 @@ public partial class TestingTabViewModel : ViewModelBase
                 _isRepeatedExecution = false;
                 return;
             }
-            TestStatus = NumberFailedSteps > 0 ? TestStatus.FAILED : TestStatus.PASSED;
+
+            if (NumberFailedSteps > 0)
+            {
+                TestStatus = TestStatus.FAILED;
+            }
+            else
+            {
+                TestStatus = TestStatus.PASSED;
+                NumberPassedTests++;
+            }
         };
 
         _testExecutor.StepExecutionError += () =>

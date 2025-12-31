@@ -1,6 +1,7 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:behaviors="clr-namespace:ATLab.Behaviors"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
@@ -53,46 +54,39 @@
                         Command="{Binding AddTestStepCommand}"
                         IsEnabled="{Binding IsEditingMode}"/>
                 
+                <Button Content="&#xF8AB;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Remove selected test steps"
+                        Command="{Binding RemoveTestStepsCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
+                
                 <Button Content="&#xF413;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
-                        ToolTip.Tip="Duplicate selected test step"
-                        Command="{Binding DuplicateTestStepCommand}"
+                        ToolTip.Tip="Duplicate selected test steps"
+                        Command="{Binding DuplicateTestStepsCommand}"
+                        IsEnabled="{Binding IsEditingMode}"/>
+                
+                <Button Content="&#xE8C6;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Cut selected test steps"
+                        Command="{Binding CutTestStepsCommand}"
                         IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xE8C8;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
-                        ToolTip.Tip="Copy selected test step"
-                        Command="{Binding CopyTestStepCommand}"
+                        ToolTip.Tip="Copy selected test steps"
+                        Command="{Binding CopyTestStepsCommand}"
                         IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Button Content="&#xE77F;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
-                        ToolTip.Tip="Paste test step"
-                        Command="{Binding PasteTestStepCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
-
-                <Button Content="&#xF8AB;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="Remove selected test step"
-                        Command="{Binding RemoveTestStepCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
-                
-                <Button Content="&#xEB0F;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="Move selected test step up"
-                        Command="{Binding MoveStepUpCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
-                
-                <Button Content="&#xEB11;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="Move selected test step down"
-                        Command="{Binding MoveStepDownCommand}"
+                        ToolTip.Tip="Paste test steps"
+                        Command="{Binding PasteTestStepsCommand}"
                         IsEnabled="{Binding IsEditingMode}"/>
                 
                 <Separator Width="2"
@@ -160,6 +154,8 @@
                   BorderBrush="Gray"
                   HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
+                  SelectionMode="Extended"
+                  behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
                   IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}">
 
             <DataGrid.Columns>
@@ -226,13 +222,12 @@
         
             <DataGrid.ContextMenu>
                 <ContextMenu IsEnabled="{Binding IsEditingMode}">
-                    <MenuItem Header="Add Step" Command="{Binding AddTestStepCommand}"/>
-                    <MenuItem Header="Duplicate Step" Command="{Binding DuplicateTestStepCommand}"/>
-                    <MenuItem Header="Copy Step" Command="{Binding CopyTestStepCommand}"/>
-                    <MenuItem Header="Paste Step" Command="{Binding PasteTestStepCommand}"/>
-                    <MenuItem Header="Remove Step" Command="{Binding RemoveTestStepCommand}"/>
-                    <MenuItem Header="Move Step Up" Command="{Binding MoveStepUpCommand}"/>
-                    <MenuItem Header="Move Step Down" Command="{Binding MoveStepDownCommand}"/>
+                    <MenuItem Header="Add" Command="{Binding AddTestStepCommand}"/>
+                    <MenuItem Header="Duplicate" Command="{Binding DuplicateTestStepsCommand}"/>
+                    <MenuItem Header="Cut" Command="{Binding CutTestStepsCommand}"/>
+                    <MenuItem Header="Copy" Command="{Binding CopyTestStepsCommand}"/>
+                    <MenuItem Header="Paste" Command="{Binding PasteTestStepsCommand}"/>
+                    <MenuItem Header="Remove" Command="{Binding RemoveTestStepsCommand}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             
@@ -240,7 +235,13 @@
                 <KeyBinding Gesture="Insert"
                             Command="{Binding AddTestStepCommand}" />
                 <KeyBinding Gesture="Delete"
-                            Command="{Binding RemoveTestStepCommand}" />
+                            Command="{Binding RemoveTestStepsCommand}" />
+                <KeyBinding Gesture="Ctrl+C"
+                            Command="{Binding CopyTestStepsCommand}" />
+                <KeyBinding Gesture="Ctrl+X"
+                            Command="{Binding CutTestStepsCommand}" />
+                <KeyBinding Gesture="Ctrl+V"
+                            Command="{Binding PasteTestStepsCommand}" />
             </DataGrid.KeyBindings>
             
         </DataGrid>
@@ -250,12 +251,12 @@
                 CornerRadius="5"
                 Margin="10 0 10 10">
             
-            <Grid ColumnDefinitions="*,*,*"
+            <Grid ColumnDefinitions="*,*,*,*,*"
                   RowDefinitions="Auto,10,*"
                   Margin="10 10 10 10">
 
             <ProgressBar Grid.Column="0"
-                         Grid.ColumnSpan="3"
+                         Grid.ColumnSpan="5"
                          Grid.Row="0" 
                          Minimum="0"
                          Maximum="100"
@@ -264,7 +265,7 @@
                          Foreground="{Binding TestStatus, Converter={StaticResource TestStatusToBrushConverter}}"/>
             
             <TextBlock Grid.Column="0"
-                       Grid.ColumnSpan="3"
+                       Grid.ColumnSpan="5"
                        Grid.Row="0"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -327,9 +328,29 @@
                        Grid.Row="2"
                        FontWeight="Bold"
                        FontSize="16"
-                       HorizontalAlignment="Right"
-                       MinWidth="200"
+                       HorizontalAlignment="Center"
                        Text="{Binding TestDuration, StringFormat='Test duration: {0}'}"/>
+            
+            <TextBlock Grid.Column="3"
+                       Grid.Row="2"
+                       FontWeight="Bold"
+                       FontSize="16"
+                       HorizontalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Tests passed: {0}/{1}">
+                        <Binding Path="NumberPassedTests"/>
+                        <Binding Path="NumberRunTests"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            
+            <TextBlock Grid.Column="4"
+                       Grid.Row="2"
+                       FontWeight="Bold"
+                       FontSize="16"
+                       HorizontalAlignment="Center"
+                       Text="{Binding User, StringFormat='User: {0}'}"/>
             
         </Grid>
             

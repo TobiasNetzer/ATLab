@@ -74,8 +74,11 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
-            OnTestCompleted(_cts.Token.IsCancellationRequested || _messageBoxCancelled);
-            _cts.Dispose();
+            bool cancelled = _cts?.IsCancellationRequested == true || _messageBoxCancelled;
+
+            OnTestCompleted(cancelled);
+
+            _cts?.Dispose();
             _cts = null;
         }
     }
