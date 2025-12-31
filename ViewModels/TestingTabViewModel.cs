@@ -354,6 +354,11 @@ public partial class TestingTabViewModel : ViewModelBase
             }
             TestStatus = NumberFailedSteps > 0 ? TestStatus.FAILED : TestStatus.PASSED;
         };
+
+        _testExecutor.StepExecutionError += () =>
+        {
+            _isRepeatedExecution = false;
+        };
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]

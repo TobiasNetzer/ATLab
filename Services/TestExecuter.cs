@@ -24,6 +24,7 @@ public class TestExecutor : ITestExecutor
     public event Action? StepExecuted;
     public event Action<int, TestStepViewModel>? StepCompleted;
     public event Action<bool>? TestCompleted;
+    public event Action? StepExecutionError;
 
     public TestExecutor(
         ITestHardware testHardware,
@@ -44,12 +45,14 @@ public class TestExecutor : ITestExecutor
         if (steps.Count == 0)
         {
             _errorService.AddError("No test steps configured.");
+            OnTestCompleted(true);
             return;
         }
 
         if (startIndex >= steps.Count || startIndex < 0)
         {
             _errorService.AddError("Test step index out of range.");
+            OnTestCompleted(true);
             return;
         }
 
@@ -124,8 +127,9 @@ public class TestExecutor : ITestExecutor
             
             OnStepCompleted(i, step);
 
-            if (!stepExecutionResult.IsSuccess)
-                break;
+            if (stepExecutionResult.IsSuccess) continue;
+            StepExecutionErrorOccurred();
+            break;
         }
 
         var clearResult = await _testHardware.ClearRelayStates();
@@ -187,5 +191,8 @@ public class TestExecutor : ITestExecutor
 
     private void OnTestCompleted(bool canceled) =>
         TestCompleted?.Invoke(canceled);
+    
+    private void StepExecutionErrorOccurred() =>
+        StepExecutionError?.Invoke();
 
 }
