@@ -513,6 +513,9 @@ public partial class TestingTabViewModel : ViewModelBase
             _projectService.UpdateLastSavedState(CaptureCurrentState());
             SelectedStepIndex = -1;
             AddTestStep();
+            NumberPassedTests = 0;
+            NumberRunTests = 0;
+            TestStatus = TestStatus.IDLE;
         }
     }
 
@@ -579,11 +582,22 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task LoadFileWithDialog()
     {
-        var dto = await _projectService.OpenFileAsync();
-        if (dto != null)
+        try
         {
-            ApplyDto(dto);
+            var dto = await _projectService.OpenFileAsync();
+            if (dto != null)
+            {
+                ApplyDto(dto);
+            }
         }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Failed to load file: " + ex.Message);
+        }
+        
+        NumberPassedTests = 0;
+        NumberRunTests = 0;
+        TestStatus = TestStatus.IDLE;
     }
     
     public async Task LoadFile(string fileToLoad)
@@ -600,6 +614,10 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             _errorService.AddError("Failed to load file: " + ex.Message);
         }
+        
+        NumberPassedTests = 0;
+        NumberRunTests = 0;
+        TestStatus = TestStatus.IDLE;
     }
 
     private void ApplyDto(AtlabFileDto dto)
