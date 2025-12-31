@@ -61,6 +61,12 @@
                                     FontSize="20"
                                     ToolTip.Tip="Remove device" 
                                     Command="{Binding RemoveDeviceCommand}"/>
+                            
+                            <Button Content="&#xEB7E;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="20"
+                                    ToolTip.Tip="Update serial port of selected device" 
+                                    Command="{Binding EditPortCommand}"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

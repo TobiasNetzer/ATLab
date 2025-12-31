@@ -63,4 +63,13 @@ public partial class SerialDeviceManagerViewModel : ViewModelBase
         if (SelectedDevice is null) return;
         SerialDevices.Remove(SelectedDevice);
     }
+
+    [RelayCommand]
+    private void EditPort()
+    {
+        if(SelectedDevice is null || string.IsNullOrWhiteSpace(SelectedPort)) return;
+        CustomDeviceName = SelectedDevice?.Name ?? string.Empty;
+        RemoveDevice();
+        AddDevice();
+    }
 }
