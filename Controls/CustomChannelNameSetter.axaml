@@ -3,7 +3,7 @@
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:TestHardwareRelayChannelsViewModel"
-             Width="800">
+             Width="780">
     
     <Grid RowDefinitions="Auto, *">
     

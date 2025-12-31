@@ -3,7 +3,7 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.SerialDeviceManager"
              x:DataType="vm:SerialDeviceManagerViewModel"
-             Width="800">
+             Width="780">
     
     <Grid RowDefinitions="Auto, *">
         
