@@ -24,8 +24,6 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     
     private List<TestStep>? _copiedSteps;
-    
-    private bool _isRepeatedExecution;
 
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps;
@@ -396,16 +394,11 @@ public partial class TestingTabViewModel : ViewModelBase
     private async Task StartTestRepeatAsync()
     {
         NumberFailedSteps = 0;
-        _isRepeatedExecution = true;
-        while (_isRepeatedExecution)
-        {
-            TestStatus = TestStatus.RUNNING;
-            TestProgress = 0;
-            SelectedStepIndex = 0;
-                    
-            await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
-        }
-        
+        TestStatus = TestStatus.RUNNING;
+        TestProgress = 0;
+        SelectedStepIndex = 0;
+                
+        await _testExecutor.StartRepeatTestAsync(TestSteps, SelectedStepIndex);
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -438,7 +431,7 @@ public partial class TestingTabViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void CancelTest()
+    private void CancelTest()
     {
         _testExecutor.CancelTest();
     }
@@ -448,7 +441,6 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor.TestStarted += () =>
         {
             StartTime = DateTimeOffset.Now;
-            NumberRunTests++;
         };
         
         _testExecutor.StepStarted += (index, step) =>
@@ -473,31 +465,33 @@ public partial class TestingTabViewModel : ViewModelBase
             }
         };
 
-        _testExecutor.TestCompleted += (cancelled) =>
+        _testExecutor.TestCompleted += () =>
         {
             TestDuration = $"{Elapsed.TotalSeconds:F2}s";
             TestProgress = 100;
-            if (cancelled)
-            {
-                TestStatus = TestStatus.CANCELLED;
-                _isRepeatedExecution = false;
+            NumberRunTests++;
+
+            if (TestStatus == TestStatus.CANCELLED)
                 return;
-            }
 
             if (NumberFailedSteps > 0)
             {
                 TestStatus = TestStatus.FAILED;
+                return;
             }
-            else
-            {
-                TestStatus = TestStatus.PASSED;
-                NumberPassedTests++;
-            }
+            
+            TestStatus = TestStatus.PASSED;
+            NumberPassedTests++;
         };
 
-        _testExecutor.StepExecutionError += () =>
+        _testExecutor.TestCancelled += () =>
         {
-            _isRepeatedExecution = false;
+            TestStatus = TestStatus.CANCELLED;
+        };
+
+        _testExecutor.TestRepeated += () =>
+        {
+            TestStatus = TestStatus.RUNNING;
         };
     }
 
