@@ -112,46 +112,42 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnLowerLimitTextChanged(string? value)
     {
-        if (TestStepViewModel?.TestStep != null)
+        if (TestStepViewModel?.TestStep == null) return;
+        
+        if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
         {
-            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
-            {
-                // Ensure LowerLimit is always <= NominalValue
-                var nominal = TestStepViewModel.TestStep.NominalValue;
-                TestStepViewModel.TestStep.LowerLimit = Math.Min(result, nominal);
-            }
-            else
-            {
-                TestStepViewModel.TestStep.LowerLimit = 0;
-            }
-
+            // Ensure LowerLimit is always <= NominalValue
+            var nominal = TestStepViewModel.TestStep.NominalValue;
+            TestStepViewModel.TestStep.LowerLimit = Math.Min(result, nominal);
+        }
+        else
+        {
+            TestStepViewModel.TestStep.LowerLimit = 0;
         }
     }
 
     partial void OnUpperLimitTextChanged(string? value)
     {
-        if (TestStepViewModel?.TestStep != null)
+        if (TestStepViewModel?.TestStep == null) return;
+        
+        if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
         {
-            if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
-            {
-                // Ensure UpperLimit is always >= NominalValue
-                var nominal = TestStepViewModel.TestStep.NominalValue;
-                TestStepViewModel.TestStep.UpperLimit = Math.Max(result, nominal);
-            }
-            else
-            {
-                TestStepViewModel.TestStep.UpperLimit = 0;
-            }
+            // Ensure UpperLimit is always >= NominalValue
+            var nominal = TestStepViewModel.TestStep.NominalValue;
+            TestStepViewModel.TestStep.UpperLimit = Math.Max(result, nominal);
+        }
+        else
+        {
+            TestStepViewModel.TestStep.UpperLimit = 0;
         }
     }
 
     partial void OnDelayTextChanged(string? value)
     {
-        if (UnitParser.TryParse(value, out var result, "s"))
-        {
-            if (TestStepViewModel?.TestStep != null)
-                TestStepViewModel.TestStep.Delay = (int)Math.Round(result * 1000);
-        }
+        if (!UnitParser.TryParse(value, out var result, "s")) return;
+        
+        if (TestStepViewModel?.TestStep != null)
+            TestStepViewModel.TestStep.Delay = (int)Math.Round(result * 1000);
     }
 
     private void UpdateLimitsFromNominal()
