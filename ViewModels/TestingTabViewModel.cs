@@ -22,7 +22,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     
-    private TestStepViewModel? _copiedStep;
+    private TestStep? _modelCopy;
 
     private bool _isRepeatedExecution;
 
@@ -141,7 +141,7 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
-    private bool CanPasteTestStep() => IsNotTestRunning() && _copiedStep != null;
+    private bool CanPasteTestStep() => IsNotTestRunning() && _modelCopy != null;
 
     private void RenumberTestSteps()
     {
@@ -189,21 +189,21 @@ public partial class TestingTabViewModel : ViewModelBase
 
         SelectedStep.TestStep.UpdateDtos();
         
-        var modelCopy = CopyTestStepModel(SelectedStep.TestStep);
+        _modelCopy = CopyTestStepModel(SelectedStep.TestStep);
         
-        if (_copiedStep != null) _copiedStep.PropertyChanged -= OnStepPropertyChanged;
-        _copiedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
-        _copiedStep.PropertyChanged += OnStepPropertyChanged;
         PasteTestStepCommand.NotifyCanExecuteChanged();
     }
     
     [RelayCommand(CanExecute = nameof(CanPasteTestStep))]
     private void PasteTestStep()
     {
-        if (SelectedStep == null || _copiedStep == null) return;
-
+        if (SelectedStep == null || _modelCopy == null) return;
+        
+        var copiedStep = new TestStepViewModel(CopyTestStepModel(_modelCopy), TestHardwareRelayChannels.HardwareInfo);
+        copiedStep.PropertyChanged += OnStepPropertyChanged;
+        
         var indexToInsert = SelectedStepIndex + 1;
-        TestSteps.Insert(indexToInsert, _copiedStep);
+        TestSteps.Insert(indexToInsert, copiedStep);
 
         RenumberTestSteps();
         SelectedStepIndex = indexToInsert;
@@ -212,8 +212,9 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void RemoveTestStep()
     {
-        if (SelectedStepIndex >= 0 && SelectedStepIndex < TestSteps.Count)
-        {
+        if (SelectedStepIndex > 0 && SelectedStepIndex < TestSteps.Count)
+        {   
+            TestSteps[SelectedStepIndex].PropertyChanged -= OnStepPropertyChanged;
             TestSteps.RemoveAt(SelectedStepIndex);
             RenumberTestSteps();
         }
@@ -259,7 +260,6 @@ public partial class TestingTabViewModel : ViewModelBase
         TestProgress = 0;
                     
         await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
-        
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -367,6 +367,7 @@ public partial class TestingTabViewModel : ViewModelBase
             _serialDeviceManager.SerialDevices.Clear();
             _projectService.UpdateLastSavedState(CaptureCurrentState());
             SelectedStepIndex = -1;
+            AddTestStep();
         }
     }
 
