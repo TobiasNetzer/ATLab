@@ -4,7 +4,6 @@
         xmlns:views="clr-namespace:ATLab.Views"
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
         Title="{Binding WindowTitle}"
         MinWidth="1000"
         MinHeight="600">

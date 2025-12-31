@@ -14,7 +14,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ISimulationService _simulationService;
     private readonly IProjectService _projectService;
 
-    public string WindowTitle => $"ATLab - {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - Project: {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
