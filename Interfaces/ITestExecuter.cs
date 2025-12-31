@@ -13,9 +13,11 @@ public interface ITestExecutor
     event Action<int, TestStepViewModel>? StepStarted;
     event Action? StepExecuted;
     event Action<int, TestStepViewModel>? StepCompleted;
-    event Action<bool>? TestCompleted;
-    event Action? StepExecutionError;
+    event Action? TestCompleted;
+    event Action? TestCancelled;
+    event Action? TestRepeated;
 
     Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index);
+    Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex);
     void CancelTest();
 }

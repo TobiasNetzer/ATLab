@@ -17,14 +17,15 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
     private CancellationTokenSource? _cts;
-    private bool _messageBoxCancelled;
+    private bool _repeatTest;
 
     public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
     public event Action? StepExecuted;
     public event Action<int, TestStepViewModel>? StepCompleted;
-    public event Action<bool>? TestCompleted;
-    public event Action? StepExecutionError;
+    public event Action? TestCompleted;
+    public event Action? TestCancelled;
+    public event Action? TestRepeated;
 
     public TestExecutor(
         ITestHardware testHardware,
@@ -45,14 +46,14 @@ public class TestExecutor : ITestExecutor
         if (steps.Count == 0)
         {
             _errorService.AddError("No test steps configured.");
-            OnTestCompleted(true);
+            OnTestCancelled();
             return;
         }
 
         if (startIndex >= steps.Count || startIndex < 0)
         {
             _errorService.AddError("Test step index out of range.");
-            OnTestCompleted(true);
+            OnTestCancelled();
             return;
         }
 
@@ -66,7 +67,7 @@ public class TestExecutor : ITestExecutor
         }
         catch (OperationCanceledException)
         {
-            // Cancellation requested
+            OnTestCancelled();
         }
         catch (Exception ex)
         {
@@ -74,18 +75,27 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
-            bool cancelled = _cts?.IsCancellationRequested == true || _messageBoxCancelled;
-
-            OnTestCompleted(cancelled);
-
+            OnTestCompleted();
             _cts?.Dispose();
             _cts = null;
+        }
+    }
+
+    public async Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
+    {
+        _repeatTest = true;
+        while (_repeatTest)
+        {
+            OnTestRepeated();
+            await Task.Delay(100);
+            await StartTestAsync(steps, startIndex);
         }
     }
 
     public void CancelTest()
     {
         _cts?.Cancel();
+        _repeatTest = false;
     }
 
     private async Task ExecuteAsync(
@@ -102,14 +112,12 @@ public class TestExecutor : ITestExecutor
 
             if (step.TestStep.ShowCommentOnTestStart)
             {
-                _messageBoxCancelled = true;
                 var result = await _messageBoxService.ShowConfirmationImageAsync("Test Execution Halted", step.TestStep.Comment, step.TestStep.CustomMessageBoxImagePath);
                 if (!result)
                 {
                     throw new OperationCanceledException();
                 }
             }
-            _messageBoxCancelled = false;
             
             do
             {
@@ -126,13 +134,12 @@ public class TestExecutor : ITestExecutor
 
                 OnStepExecuted();
                 
-            } while (step.TestStep.RepeatUntilPass && !token.IsCancellationRequested && !step.IsPassed);
+            } while (step.TestStep.RepeatUntilPass && !step.IsPassed);
             
             OnStepCompleted(i, step);
 
-            if (stepExecutionResult.IsSuccess) continue;
-            StepExecutionErrorOccurred();
-            break;
+            if (!stepExecutionResult.IsSuccess)
+                break;
         }
 
         var clearResult = await _testHardware.ClearRelayStates();
@@ -192,10 +199,13 @@ public class TestExecutor : ITestExecutor
     private void OnStepCompleted(int index, TestStepViewModel step) =>
         StepCompleted?.Invoke(index, step);
 
-    private void OnTestCompleted(bool canceled) =>
-        TestCompleted?.Invoke(canceled);
+    private void OnTestCompleted() =>
+        TestCompleted?.Invoke();
     
-    private void StepExecutionErrorOccurred() =>
-        StepExecutionError?.Invoke();
+    private void OnTestCancelled() =>
+        TestCancelled?.Invoke();
+    
+    private void OnTestRepeated() =>
+        TestRepeated?.Invoke();
 
 }
