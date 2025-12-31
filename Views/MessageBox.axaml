@@ -9,22 +9,24 @@
         SizeToContent="WidthAndHeight">
     
     <Grid Margin="20"
-          RowDefinitions="Auto,20,Auto,20,Auto">
+          RowDefinitions="Auto,Auto,20,Auto">
         
         <Image Grid.Row="0"
                Source="{Binding Bitmap, FallbackValue={x:Null}}"
-               MaxHeight="1000"
+               MaxHeight="600"
                MaxWidth="1000"
                Stretch="Uniform"
                StretchDirection="DownOnly"/>
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="1"
                    Text="{Binding Message}"
                    TextWrapping="Wrap"
                    TextAlignment="Center"
-                   MaxWidth="1000"/>
+                   MaxWidth="1000"
+                   Margin="0 20 0 0"
+                   IsVisible="{Binding Message, Converter={StaticResource StringNotEmptyConverter}}"/>
         
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Spacing="10">

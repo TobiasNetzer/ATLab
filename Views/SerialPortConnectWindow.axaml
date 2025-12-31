@@ -34,7 +34,8 @@
                    MaxWidth="400"
                    TextWrapping="Wrap"
                    FontWeight="Bold"
-                   Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
+                   Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"
+                   IsVisible="{Binding StatusText, Converter={StaticResource StringNotEmptyConverter}}"/>
         
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
