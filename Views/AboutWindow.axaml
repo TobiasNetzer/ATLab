@@ -26,7 +26,7 @@
                 <Separator/>
 
                 <!-- Device Information -->
-                <TextBlock Text="Connected Hardware:" FontWeight="Bold"/>
+                <TextBlock Text="Connected Test Hardware:" FontWeight="Bold"/>
                 <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}" />
                 <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}" />
                 <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}" />

@@ -16,21 +16,21 @@
                 Grid.RowSpan="2"
                 HorizontalAlignment="Right"
                 DataContext="{Binding TestHardwareRelayChannels}"
-                Margin="0 0 20 0"/>
+                Margin="0 0 5 0"/>
             
             <controls:SerialDeviceManager 
                 Grid.Column="1"
                 Grid.Row="0"
                 HorizontalAlignment="Left"
                 DataContext="{Binding SerialDeviceManager}"
-                Margin="20 0 0 10"/>
+                Margin="5 0 0 10"/>
         
             <controls:ProjectSettings 
                 Grid.Column="1"
                 Grid.Row="1"
                 HorizontalAlignment="Left"
                 DataContext="{Binding ProjectSettingsViewModel}"
-                Margin="20 0 0 0"/>
+                Margin="5 0 0 0"/>
                 
         </Grid>
     </ScrollViewer>

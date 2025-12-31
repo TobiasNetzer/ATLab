@@ -58,7 +58,7 @@ public partial class LabTabViewModel : ViewModelBase
             }
         };
         
-        Title = "Lab";
+        Title = "Test Bench";
         
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
         _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);

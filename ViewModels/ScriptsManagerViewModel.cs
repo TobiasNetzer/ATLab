@@ -27,7 +27,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
         _repository = repository;
         _messageBoxService = messageBoxService;
         
-        Title = "Script Manager";
+        Title = "Scripts";
     }
 
     private bool CanExecute() => SelectedScript != null;

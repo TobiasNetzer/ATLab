@@ -35,7 +35,7 @@
                 
                     <StackPanel Spacing="2">
                     
-                        <TextBlock Text="COM Port:"/>
+                        <TextBlock Text="Serial Port:"/>
                     
                         <StackPanel Orientation="Horizontal" Spacing="5">
                         
@@ -46,18 +46,19 @@
                         
                             <Button Content="&#xE72C;"
                                     FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
+                                    FontSize="20"
+                                    ToolTip.Tip="Reload serial ports"
                                     Command="{Binding RefreshPortsCommand}"/>
                         
                             <Button Content="&#xF8AA;"
                                     FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
+                                    FontSize="20"
                                     ToolTip.Tip="Add new device" 
                                     Command="{Binding AddDeviceCommand}"/>
                         
                             <Button Content="&#xF8AB;"
                                     FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
+                                    FontSize="20"
                                     ToolTip.Tip="Remove device" 
                                     Command="{Binding RemoveDeviceCommand}"/>
                         </StackPanel>

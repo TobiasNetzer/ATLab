@@ -112,7 +112,7 @@
                     <StackPanel HorizontalAlignment="Left"
                                 Orientation="Vertical"
                                 Spacing="5"
-                                Margin="40 10 10 10">
+                                Margin="45 10 10 10">
                         <TextBlock Text="Unit:"/>
                         <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
