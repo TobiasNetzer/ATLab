@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -67,6 +68,12 @@ public partial class MeasChannelViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsMeasSelectorExpanded = value;
+    }
+    
+    [RelayCommand]
+    private void ToggleChannels()
+    {
+        (IsSelectedH, IsSelectedL) = (IsSelectedL, IsSelectedH);
     }
 }
 

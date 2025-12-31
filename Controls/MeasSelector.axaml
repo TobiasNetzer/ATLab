@@ -58,9 +58,9 @@
             
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal"
-                        Spacing="80"
+                        Spacing="20"
                         Margin="10">
-                <StackPanel>
+                <StackPanel Spacing="5">
                     <TextBlock Text="Matrix H:"
                                FontSize="16"/>
                     
@@ -82,7 +82,14 @@
                     </ComboBox>
                 </StackPanel>
                 
-                <StackPanel>
+                <Button Content="&#xF1CB;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Swap channels"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding ToggleChannelsCommand}"/>
+                
+                <StackPanel Spacing="5">
                     <TextBlock Text="Matrix L:"
                                FontSize="16"/>
                 
