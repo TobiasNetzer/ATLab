@@ -223,11 +223,11 @@
             <DataGrid.ContextMenu>
                 <ContextMenu IsEnabled="{Binding IsEditingMode}">
                     <MenuItem Header="Add" Command="{Binding AddTestStepCommand}"/>
+                    <MenuItem Header="Remove" Command="{Binding RemoveTestStepsCommand}"/>
                     <MenuItem Header="Duplicate" Command="{Binding DuplicateTestStepsCommand}"/>
                     <MenuItem Header="Cut" Command="{Binding CutTestStepsCommand}"/>
                     <MenuItem Header="Copy" Command="{Binding CopyTestStepsCommand}"/>
                     <MenuItem Header="Paste" Command="{Binding PasteTestStepsCommand}"/>
-                    <MenuItem Header="Remove" Command="{Binding RemoveTestStepsCommand}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             
@@ -281,7 +281,7 @@
             </TextBlock>
             
             <TextBlock Grid.Column="0"
-                       Grid.ColumnSpan="3"
+                       Grid.ColumnSpan="5"
                        Grid.Row="0"
                        Text="Test Passed" 
                        HorizontalAlignment="Center"
@@ -291,7 +291,7 @@
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=PASSED}"/>
             
             <TextBlock Grid.Column="0"
-                       Grid.ColumnSpan="3"
+                       Grid.ColumnSpan="5"
                        Grid.Row="0"
                        Text="Test Failed" 
                        HorizontalAlignment="Center"
@@ -301,7 +301,7 @@
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=FAILED}"/>
             
             <TextBlock Grid.Column="0"
-                       Grid.ColumnSpan="3"
+                       Grid.ColumnSpan="5"
                        Grid.Row="0"
                        Text="Test Cancelled" 
                        HorizontalAlignment="Center"
@@ -315,21 +315,21 @@
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Left"
-                       Text="{Binding SerialNumber, StringFormat='Serial number: {0}'}"/>
+                       Text="{Binding SerialNumber, StringFormat='S/N: {0}'}"/>
             
             <TextBlock Grid.Column="1"
                        Grid.Row="2"
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Center"
-                       Text="{Binding NumberFailedSteps, StringFormat='Number of errors: {0}'}"/>
+                       Text="{Binding TestDuration, StringFormat='Test duration: {0}'}"/>
             
             <TextBlock Grid.Column="2"
                        Grid.Row="2"
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Center"
-                       Text="{Binding TestDuration, StringFormat='Test duration: {0}'}"/>
+                       Text="{Binding NumberFailedSteps, StringFormat='Errors: {0}'}"/>
             
             <TextBlock Grid.Column="3"
                        Grid.Row="2"
@@ -337,7 +337,7 @@
                        FontSize="16"
                        HorizontalAlignment="Center">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="Tests passed: {0}/{1}">
+                    <MultiBinding StringFormat="Passed: {0}/{1}">
                         <Binding Path="NumberPassedTests"/>
                         <Binding Path="NumberRunTests"/>
                     </MultiBinding>
@@ -349,7 +349,7 @@
                        Grid.Row="2"
                        FontWeight="Bold"
                        FontSize="16"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Right"
                        Text="{Binding User, StringFormat='User: {0}'}"/>
             
         </Grid>
