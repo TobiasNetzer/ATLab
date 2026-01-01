@@ -505,6 +505,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.TestRepeated += () =>
         {
+            TestProgress = 0;
             TestStatus = TestStatus.RUNNING;
         };
     }
