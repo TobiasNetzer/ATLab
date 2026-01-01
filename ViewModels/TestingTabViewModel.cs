@@ -431,6 +431,19 @@ public partial class TestingTabViewModel : ViewModelBase
         await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
     }
 
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private async Task StartSingleStepTest()
+    {
+        if(SelectedStep == null) return;
+        
+        NumberFailedSteps = 0;
+        TestProgress = 0;
+        TestDuration = string.Empty;
+        TestStatus = TestStatus.RUNNING;
+        await _testExecutor.StartSingleStepTest(SelectedStep);
+        TestStatus = TestStatus.IDLE;
+    }
+
     [RelayCommand]
     private void CancelTest()
     {
