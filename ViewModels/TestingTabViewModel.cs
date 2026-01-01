@@ -150,6 +150,7 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestFromSelectionCommand.NotifyCanExecuteChanged();
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
+        StartSingleStepTestCommand.NotifyCanExecuteChanged();
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;

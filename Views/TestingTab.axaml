@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:behaviors="clr-namespace:ATLab.Behaviors"
+             xmlns:easings="clr-namespace:Avalonia.Animation.Easings;assembly=Avalonia.Animation"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
@@ -322,6 +323,7 @@
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Center"
+                       MinWidth="200"
                        Text="{Binding TestDuration, StringFormat='Test duration: {0}'}"/>
             
             <TextBlock Grid.Column="2"

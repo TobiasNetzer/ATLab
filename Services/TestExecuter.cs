@@ -122,6 +122,11 @@ public class TestExecutor : ITestExecutor
             do
             {
                 stepExecutionResult = await _runner.ExecuteAsync(step, token);
+                
+                if (token.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException(token);
+                }
 
                 if (stepExecutionResult.IsSuccess)
                 {
@@ -201,9 +206,12 @@ public class TestExecutor : ITestExecutor
 
     private void OnTestCompleted() =>
         TestCompleted?.Invoke();
-    
-    private void OnTestCancelled() =>
+
+    private void OnTestCancelled()
+    {
         TestCancelled?.Invoke();
+        _repeatTest = false;
+    }
     
     private void OnTestRepeated() =>
         TestRepeated?.Invoke();
