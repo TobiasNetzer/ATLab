@@ -93,6 +93,46 @@ public class TestExecutor : ITestExecutor
             await StartTestAsync(steps, startIndex);
         }
     }
+    
+    public async Task StartSingleStepTest(TestStepViewModel step)
+    { 
+        _cts = new CancellationTokenSource();
+        
+        try
+        {
+            _repeatTest = true;
+            while (_repeatTest)
+            {
+                var stepExecutionResult = await _runner.ExecuteAsync(step, _cts.Token);
+
+                if (_cts.Token.IsCancellationRequested) return;
+
+                if (stepExecutionResult.IsSuccess)
+                {
+                    EvaluateTestStep(step, stepExecutionResult.Value);
+                }
+                else
+                {
+                    TestStepExecutionFailed(step, stepExecutionResult);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            //
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError("Test execution failed: " + ex.Message);
+        }
+        finally
+        {
+            _cts?.Dispose();
+            _cts = null;
+            var clearResult = await _testHardware.ClearRelayStates();
+            if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
+        }
+    }
 
     public void CancelTest()
     {
