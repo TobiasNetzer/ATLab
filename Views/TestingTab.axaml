@@ -107,6 +107,12 @@
                         ToolTip.Tip="Start continuous test execution"
                         Command="{Binding StartTestRepeatCommand}"/>
                 
+                <Button Content="&#xE8ED;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Execute single step"
+                        Command="{Binding StartSingleStepTestCommand}"/>
+                
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"

@@ -120,6 +120,9 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task StartTest() => await TestingTab.StartTestCommand.ExecuteAsync(null);
     
+    [RelayCommand]
+    private async Task StartSingleTest() => await TestingTab.StartSingleStepTestCommand.ExecuteAsync(null);
+    
     public async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
     public event Action? RequestClose;

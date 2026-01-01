@@ -15,6 +15,7 @@
         <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />
         <KeyBinding Gesture="Escape" Command="{Binding CancelTestCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding StartTestCommand}" />
+        <KeyBinding Gesture="F3" Command="{Binding StartSingleTestCommand}" />
     </Window.KeyBindings>
 
     <Window.Styles>
