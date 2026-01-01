@@ -78,6 +78,8 @@ public class TestExecutor : ITestExecutor
             OnTestCompleted();
             _cts?.Dispose();
             _cts = null;
+            var clearResult = await _testHardware.ClearRelayStates();
+            if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
         }
     }
 
@@ -146,9 +148,6 @@ public class TestExecutor : ITestExecutor
             if (!stepExecutionResult.IsSuccess)
                 break;
         }
-
-        var clearResult = await _testHardware.ClearRelayStates();
-        if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
     }
 
     private void EvaluateTestStep(TestStepViewModel step, double value)
