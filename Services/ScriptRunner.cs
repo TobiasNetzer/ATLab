@@ -89,6 +89,8 @@ public class ScriptRunner : IScriptRunner
                         commandText = commandText.Replace($"{{{v.Name}}}", v.Value);
                     }
                 }
+                
+                await Task.Delay(command.DelayMs, token);
 
                 if (command.ExpectResponse)
                 {
@@ -98,8 +100,6 @@ public class ScriptRunner : IScriptRunner
                 {
                     await client.WriteAsync(commandText);
                 }
-
-                await Task.Delay(command.DelayMs, token);
             }
 
             return OperationResult<string?>.Success(lastResponse);
