@@ -269,7 +269,20 @@
                          Maximum="100"
                          Height="40"
                          Value="{Binding TestProgress}"
-                         Foreground="{Binding TestStatus, Converter={StaticResource TestStatusToBrushConverter}}"/>
+                         Foreground="{Binding TestStatus, Converter={StaticResource TestStatusToBrushConverter}}">
+                
+                <ProgressBar.Transitions>
+                    <Transitions>
+                        <DoubleTransition Property="Value"
+                                          Duration="0:0:0.25">
+                            <DoubleTransition.Easing>
+                                <CubicEaseOut/>
+                            </DoubleTransition.Easing>
+                        </DoubleTransition>
+                    </Transitions>
+                </ProgressBar.Transitions>
+                
+            </ProgressBar>
             
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
