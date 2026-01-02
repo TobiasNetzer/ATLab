@@ -147,7 +147,7 @@ public partial class TestStep : ObservableObject
 
     public void UpdateDtos()
     {
-        StimState = LiveStimState?.ToDto();
-        ExtStimState = LiveExtStimState?.ToDto();
+        StimState = LiveStimState.ToDto();
+        ExtStimState = LiveExtStimState.ToDto();
     }
 }

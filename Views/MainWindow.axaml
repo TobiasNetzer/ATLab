@@ -5,7 +5,7 @@
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding WindowTitle}"
-        MinWidth="1000"
+        MinWidth="1400"
         MinHeight="600">
     
     <Window.KeyBindings>
@@ -57,48 +57,63 @@
             </TabControl.DataTemplates>
         </TabControl>
         
-        <Border Grid.Row="1" 
-                   Background="{DynamicResource SystemChromeLowColor}"
-                   Height="40">
-            
-            <StackPanel Spacing="10" Orientation="Horizontal">
+        <Border Grid.Row="1"
+        Background="{DynamicResource SystemChromeLowColor}"
+        Height="40">
+
+            <Grid ColumnDefinitions="Auto,*">
                 
-                <Button
-                    Background="{Binding HasErrors, Converter={StaticResource BoolToBrushConverter}}"
-                    Height="30"
-                    Margin="5">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource FluentIconsFont}"
-                                       FontSize="18"/>
-                            <TextBlock Text="{Binding ErrorCount}"
-                                       FontSize="14"/>
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Flyout>
-                        <Flyout Placement="TopEdgeAlignedLeft"
-                                IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
-                                FlyoutPresenterClasses="LargeFlyout">
-                            <ListBox ItemsSource="{Binding Errors}"
-                                     Width="800"
-                                     Height="500">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding}" 
-                                                   TextWrapping="Wrap"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-            
-                <TextBlock Text="Software is working without test hardware!"
-                           FontSize="16"
-                           Foreground="Red"
-                           VerticalAlignment="Center"
-                           IsVisible="{Binding IsSimulation}"/>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            VerticalAlignment="Center"
+                            Margin="5">
+                    
+                    <Button
+                        Background="{Binding HasErrors, Converter={StaticResource BoolToBrushConverter}}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="&#xE7BA;" 
+                                           FontFamily="{StaticResource FluentIconsFont}"
+                                           FontSize="18"/>
+                                <TextBlock Text="{Binding ErrorCount}"
+                                           FontSize="14"/>
+                            </StackPanel>
+                        </Button.Content>
+
+                        <Button.Flyout>
+                            <Flyout Placement="TopEdgeAlignedLeft"
+                                    IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
+                                    FlyoutPresenterClasses="LargeFlyout">
+                                <ListBox ItemsSource="{Binding Errors}"
+                                         Width="800"
+                                         Height="500">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}"
+                                                       TextWrapping="Wrap"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
+                    <TextBlock Text="Software is working without test hardware!"
+                               FontSize="16"
+                               Foreground="Red"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding IsSimulation}"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="&#xF08C;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="18"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="10,0"
+                        Command="{Binding ToggleThemeCommand}"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>

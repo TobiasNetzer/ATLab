@@ -4,6 +4,8 @@ using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using Avalonia;
+using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -128,17 +130,21 @@ public partial class MainWindowViewModel : ViewModelBase
     public event Action? RequestClose;
     
     [RelayCommand]
-    private void Close()
-    {
-        _ = CloseAsync();
-    }
-
-    private async Task CloseAsync()
+    private async Task Close()
     {
         if (await _projectService.ConfirmAndContinueIfDirtyAsync())
         {
             RequestClose?.Invoke();
         }
+    }
+
+    [RelayCommand]
+    private void ToggleTheme()
+    {
+        Application.Current!.RequestedThemeVariant =
+            Application.Current!.RequestedThemeVariant == ThemeVariant.Light
+                ? ThemeVariant.Dark
+                : ThemeVariant.Light;
     }
 
     partial void OnSelectedTabChanged(ViewModelBase value)
