@@ -51,9 +51,6 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private int _numberFailedSteps;
-
-    [ObservableProperty]
-    private int _testProgress;
     
     [ObservableProperty]
     private string _user = Environment.UserName;
@@ -90,6 +87,23 @@ public partial class TestingTabViewModel : ViewModelBase
             }
         }
     }
+    
+    private int _testProgress;
+
+    public int TestProgress
+    {
+        get => _testProgress;
+        set
+        {
+            if (_testProgress != value)
+            {
+                _testProgress = value;
+                IsAnimationEnabled = _testProgress != 0;
+                OnPropertyChanged();
+            }
+        }
+    }
+
 
     public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero;
 
@@ -404,9 +418,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         NumberFailedSteps = 0;
         TestStatus = TestStatus.RUNNING;
-        IsAnimationEnabled = false;
         TestProgress = 0;
-        IsAnimationEnabled = true;       
         await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
     }
     
@@ -415,9 +427,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         NumberFailedSteps = 0;
         TestStatus = TestStatus.RUNNING;
-        IsAnimationEnabled = false;
         TestProgress = 0;
-        IsAnimationEnabled = true;
         SelectedStepIndex = 0;
                 
         await _testExecutor.StartRepeatTestAsync(TestSteps, SelectedStepIndex);
@@ -446,9 +456,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
-        IsAnimationEnabled = false;
         TestProgress = 0;
-        IsAnimationEnabled = true;
         SelectedStepIndex = 0;
 
         await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
@@ -460,9 +468,7 @@ public partial class TestingTabViewModel : ViewModelBase
         if(SelectedStep == null) return;
         
         NumberFailedSteps = 0;
-        IsAnimationEnabled = false;
         TestProgress = 0;
-        IsAnimationEnabled = true;
         TestDuration = string.Empty;
         TestStatus = TestStatus.RUNNING;
         await _testExecutor.StartSingleStepTest(SelectedStep);
@@ -530,9 +536,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.TestRepeated += () =>
         {
-            IsAnimationEnabled = false;
             TestProgress = 0;
-            IsAnimationEnabled = true;
             TestStatus = TestStatus.RUNNING;
         };
     }
