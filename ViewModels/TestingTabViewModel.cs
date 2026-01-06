@@ -555,6 +555,7 @@ public partial class TestingTabViewModel : ViewModelBase
             AddTestStep();
             NumberPassedTests = 0;
             NumberRunTests = 0;
+            TestDuration = string.Empty;
             TestStatus = TestStatus.IDLE;
         }
     }
@@ -637,6 +638,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         NumberPassedTests = 0;
         NumberRunTests = 0;
+        TestDuration = string.Empty;
         TestStatus = TestStatus.IDLE;
     }
     
@@ -657,6 +659,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         NumberPassedTests = 0;
         NumberRunTests = 0;
+        TestDuration = string.Empty;
         TestStatus = TestStatus.IDLE;
     }
 
