@@ -1,1 +1,1 @@
-![image](docs/UI_mockup.png)
+![image](docs/Example.GIF)
