@@ -115,6 +115,9 @@ public class TestExecutor : ITestExecutor
                 {
                     TestStepExecutionFailed(step, stepExecutionResult);
                 }
+                
+                if (!stepExecutionResult.IsSuccess) 
+                    break;
             }
         }
         catch (OperationCanceledException)
@@ -180,6 +183,9 @@ public class TestExecutor : ITestExecutor
                 }
 
                 OnStepExecuted();
+                
+                if (!stepExecutionResult.IsSuccess)
+                    break;
                 
             } while (step.TestStep.RepeatUntilPass && !step.IsPassed);
             
