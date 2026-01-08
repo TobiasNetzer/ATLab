@@ -114,10 +114,8 @@ public class TestExecutor : ITestExecutor
                 else
                 {
                     TestStepExecutionFailed(step, stepExecutionResult);
-                }
-                
-                if (!stepExecutionResult.IsSuccess) 
                     break;
+                }
             }
         }
         catch (OperationCanceledException)
@@ -149,7 +147,7 @@ public class TestExecutor : ITestExecutor
     CancellationToken token)
     {
 
-        for (int i = startIndex; i < steps.Count; i++)
+        for (var i = startIndex; i < steps.Count; i++)
         {
             var step = steps[i];
             OnStepStarted(i, step);
@@ -168,10 +166,7 @@ public class TestExecutor : ITestExecutor
             {
                 stepExecutionResult = await _runner.ExecuteAsync(step, token);
                 
-                if (token.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException(token);
-                }
+                token.ThrowIfCancellationRequested();
 
                 if (stepExecutionResult.IsSuccess)
                 {
@@ -180,12 +175,10 @@ public class TestExecutor : ITestExecutor
                 else
                 {
                     TestStepExecutionFailed(step, stepExecutionResult);
+                    break;
                 }
 
                 OnStepExecuted();
-                
-                if (!stepExecutionResult.IsSuccess)
-                    break;
                 
             } while (step.TestStep.RepeatUntilPass && !step.IsPassed);
             
