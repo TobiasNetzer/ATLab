@@ -2,9 +2,9 @@
 
 namespace ATLab.Views;
 
-public partial class LabTab : UserControl
+public partial class TestBenchTab : UserControl
 {
-    public LabTab()
+    public TestBenchTab()
     {
         InitializeComponent();
     }

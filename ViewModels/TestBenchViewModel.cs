@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class LabTabViewModel : ViewModelBase
+public partial class TestBenchViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ITestHardware _testHardware;
@@ -34,7 +34,7 @@ public partial class LabTabViewModel : ViewModelBase
     private readonly RelayGroup _testExtStimState;
     private readonly RelayMatrix _testMatrixState;
 
-    public LabTabViewModel(
+    public TestBenchViewModel(
         IErrorService errorService,
         ITestHardware testHardware,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
@@ -63,7 +63,7 @@ public partial class LabTabViewModel : ViewModelBase
         _testStimState = new RelayGroup(_testHardware.HardwareInfo.StimChannelCount);
         _testExtStimState = new RelayGroup(_testHardware.HardwareInfo.ExtStimChannelCount);
         _testMatrixState = new RelayMatrix(0,0);
-        LoadLabTabState();
+        LoadTestBenchTabState();
     }
     
     private bool CanUpdateRelayStates() => !_simulationService.IsSimulationMode && !IsBusy;
@@ -96,7 +96,7 @@ public partial class LabTabViewModel : ViewModelBase
         }
     }
 
-    public void LoadLabTabState()
+    public void LoadTestBenchTabState()
     {
         TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(_testStimState);
         TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(_testExtStimState);

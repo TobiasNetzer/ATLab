@@ -45,8 +45,8 @@
                 <DataTemplate DataType="vm:TestingTabViewModel">
                     <views:TestingTab/>
                 </DataTemplate>
-                <DataTemplate DataType="vm:LabTabViewModel">
-                    <views:LabTab/>
+                <DataTemplate DataType="vm:TestBenchViewModel">
+                    <views:TestBenchTab/>
                 </DataTemplate>
                 <DataTemplate DataType="vm:ConfigTabViewModel">
                     <views:ConfigTab/>
