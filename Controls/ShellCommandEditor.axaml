@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:models="clr-namespace:ATLab.Models"
+             xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ShellCommandEditor"
-             x:DataType="vm:ShellCommandEditorViewModel"
+             x:DataType="x:Object"
              Width="500">
-    
+
     <UserControl.Styles>
         <Style Selector="Border.WithDynamicCorner">
             <Setter Property="CornerRadius" Value="15"/>
@@ -14,40 +15,44 @@
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
-    
+
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"
                 Background="{DynamicResource SystemBaseLowColor}"
-                Padding="10"
-                Margin="0">
+                Padding="10">
+
             <DockPanel>
-                <TextBlock Text="Shell Command Editor"
+                <TextBlock Text="Shell Command"
                            FontSize="18"
                            FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           DockPanel.Dock="Left"/>
+                           VerticalAlignment="Center"/>
 
-                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
+                <ToggleButton IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right">
+
                     <ToggleButton.Template>
                         <ControlTemplate>
                             <Border Background="Transparent" Padding="5">
                                 <Grid>
-                                    <TextBlock Text="&#xE70D;" 
+
+                                    <TextBlock Text="&#xE70D;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
+                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded,
+                                                                   Converter={StaticResource InverseBoolConverter}}"/>
+
+                                    <TextBlock Text="&#xE70E;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding IsExpanded}"/>
+                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"/>
+
                                 </Grid>
                             </Border>
                         </ControlTemplate>
                     </ToggleButton.Template>
+
                 </ToggleButton>
             </DockPanel>
         </Border>
@@ -56,25 +61,26 @@
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
-                IsVisible="{Binding IsExpanded}">
-            
-            <StackPanel Margin="10"
-                        Spacing="15">
-                    
-                <TextBox Text="{Binding ShellCommand.Command}"/>
-                
+                IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}">
+
+            <StackPanel Margin="10" Spacing="15">
+
+                <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
+
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <TextBlock Text="Window Options:"
+                    <TextBlock Text="Window Behavior:"
                                VerticalAlignment="Center"/>
-                    
-                    <ComboBox ItemsSource="{Binding EvaluationSources}"
+
+                    <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.EvaluationSources}"
                               MinWidth="100"
-                              SelectedItem="{Binding ShellCommand.Option, FallbackValue=''}"
+                              SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option, FallbackValue=''}"
                               DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                               TabIndex="6"/>
                 </StackPanel>
-                
+
             </StackPanel>
         </Border>
+
     </StackPanel>
+
 </UserControl>

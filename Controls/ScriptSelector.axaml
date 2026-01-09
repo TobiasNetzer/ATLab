@@ -2,53 +2,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:models="clr-namespace:ATLab.Models"
+             xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ScriptSelector"
-             x:DataType="vm:ScriptSelectorViewModel"
+             x:DataType="x:Object"
              Width="500">
-    
+
+
     <UserControl.Styles>
         <Style Selector="Border.WithDynamicCorner">
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
+
         <Style Selector="Border.WithDynamicCorner.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
     </UserControl.Styles>
-    
+
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"
                 Background="{DynamicResource SystemBaseLowColor}"
-                Padding="10"
-                Margin="0">
+                Padding="10">
+
             <DockPanel>
+
                 <TextBlock Text="Script Configuration"
                            FontSize="18"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
 
-                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
+                <ToggleButton IsChecked="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right">
+
                     <ToggleButton.Template>
                         <ControlTemplate>
                             <Border Background="Transparent" Padding="5">
                                 <Grid>
-                                    <TextBlock Text="&#xE70D;" 
+                                    
+                                    <TextBlock Text="&#xE70D;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
+                                               IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded,
+                                                                   Converter={StaticResource InverseBoolConverter}}"/>
+                                    
+                                    <TextBlock Text="&#xE70E;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding IsExpanded}"/>
+                                               IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"/>
+
                                 </Grid>
                             </Border>
                         </ControlTemplate>
                     </ToggleButton.Template>
+
                 </ToggleButton>
+
             </DockPanel>
         </Border>
         
@@ -56,24 +66,27 @@
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
-                IsVisible="{Binding IsExpanded}">
-            
-            <StackPanel Margin="10"
-                        Spacing="15">
-                    
+                IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}">
+
+            <StackPanel Margin="10" Spacing="15">
+                
                 <StackPanel Spacing="5">
                     <TextBlock Text="Target Device:"/>
+
                     <DockPanel>
+
                         <Button Content="&#xF8AB;"
                                 FontFamily="{StaticResource FluentIconsFont}"
                                 FontSize="18"
                                 ToolTip.Tip="Remove selected device"
                                 DockPanel.Dock="Right"
-                                Margin=" 5 0 0 0"
-                                Command="{Binding RemoveDeviceCommand}"/>
-                        <ComboBox ItemsSource="{Binding Devices}" 
-                                  SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                Margin="5 0 0 0"
+                                Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveDeviceCommand}"/>
+
+                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Devices}"
+                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedDevice, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch">
+
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="models:SerialDevices">
                                     <TextBlock>
@@ -84,36 +97,44 @@
                                     </TextBlock>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
+
                         </ComboBox>
+
                     </DockPanel>
                 </StackPanel>
                 
                 <StackPanel Spacing="5">
                     <TextBlock Text="Script:"/>
-                    
+
                     <DockPanel>
+
                         <Button Content="&#xF8AB;"
                                 FontFamily="{StaticResource FluentIconsFont}"
                                 FontSize="18"
                                 ToolTip.Tip="Remove selected script"
                                 DockPanel.Dock="Right"
-                                Margin=" 5 0 0 0"
-                                Command="{Binding RemoveScriptCommand}"/>
-                        <ComboBox ItemsSource="{Binding Scripts}" 
-                                  SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
+                                Margin="5 0 0 0"
+                                Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveScriptCommand}"/>
+
+                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Scripts}"
+                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedScript, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch">
+
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:ScriptItemViewModel">
                                     <TextBlock Text="{Binding Name}"
                                                ToolTip.Tip="{Binding Description}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
+
                         </ComboBox>
+
                     </DockPanel>
                 </StackPanel>
                 
-                <DataGrid ItemsSource="{Binding ScriptVariables}" 
-                          IsVisible="{Binding ScriptVariables, Converter={x:Static ObjectConverters.IsNotNull}}"
+                <DataGrid ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ScriptVariables}"
+                          IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ScriptVariables,
+                                              Converter={x:Static ObjectConverters.IsNotNull}}"
                           AutoGenerateColumns="False"
                           CanUserSortColumns="False"
                           CanUserResizeColumns="True"
@@ -121,12 +142,24 @@
                           BorderThickness="1"
                           BorderBrush="Gray"
                           MaxHeight="200">
+
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Variable" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                        <DataGridTextColumn Header="Variable"
+                                            Binding="{Binding Name}"
+                                            IsReadOnly="True"
+                                            Width="*"/>
+
+                        <DataGridTextColumn Header="Value"
+                                            Binding="{Binding Value}"
+                                            Width="*"/>
                     </DataGrid.Columns>
+
                 </DataGrid>
+
             </StackPanel>
+
         </Border>
+
     </StackPanel>
+
 </UserControl>

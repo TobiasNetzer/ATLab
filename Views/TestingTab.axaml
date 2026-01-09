@@ -389,10 +389,12 @@
                     DataContext="{Binding TestStepConfiguratorViewModel}"/>
 
                 <controls:ScriptSelector
-                    DataContext="{Binding ScriptSelector}"/>
+                    ScriptSelectorVm="{Binding ScriptSelector}"
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SCRIPT}"/>
                 
                 <controls:ShellCommandEditor
-                    DataContext="{Binding ShellCommandEditor}"/>
+                    ShellCommandEditorVm="{Binding ShellCommandEditor}"
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SHELL_COMMAND}"/>
 
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
