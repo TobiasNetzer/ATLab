@@ -120,12 +120,17 @@ public class CsvExportService
     }
 
 
-    private static string Escape(string? value)
+    private string Escape(string? value)
     {
-        if (value is null) return "";
+        if (string.IsNullOrEmpty(value))
+            return "";
+
         var escaped = value.Replace("\"", "\"\"");
-        if (escaped.Contains(',') || escaped.Contains('"') || escaped.Contains('\n'))
+        
+        if (escaped.Contains(_separator) || escaped.Contains('"') || escaped.Contains('\n'))
             return $"\"{escaped}\"";
+
         return escaped;
     }
+
 }
