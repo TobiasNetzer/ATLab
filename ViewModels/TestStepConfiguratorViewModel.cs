@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -104,9 +105,17 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnNominalValueTextChanged(string? value)
     {
-        if (!UnitParser.TryParse(value, out var result, TestStepViewModel?.TestStep.Unit)) return;
-        if (TestStepViewModel?.TestStep != null)
+        if (TestStepViewModel?.TestStep == null) return;
+        if (UnitParser.TryParse(value, out var result, TestStepViewModel.TestStep.Unit))
+        {
             TestStepViewModel.TestStep.NominalValue = result;
+        }
+        else
+        {
+            TestStepViewModel.TestStep.NominalValue = 0;
+        }
+            
+        Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
     partial void OnLowerLimitTextChanged(string? value)
@@ -123,6 +132,8 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         {
             TestStepViewModel.TestStep.LowerLimit = 0;
         }
+        
+        Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
     partial void OnUpperLimitTextChanged(string? value)
@@ -139,14 +150,25 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         {
             TestStepViewModel.TestStep.UpperLimit = 0;
         }
+        
+        Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
     partial void OnDelayTextChanged(string? value)
     {
-        if (!UnitParser.TryParse(value, out var result, "s")) return;
+        if (TestStepViewModel?.TestStep == null) return;
         
-        if (TestStepViewModel?.TestStep != null)
+        if (UnitParser.TryParse(value, out var result, "s"))
+        {
+            if (result < 0) result = 0;
             TestStepViewModel.TestStep.Delay = (int)Math.Round(result * 1000);
+        }
+        else
+        {
+            TestStepViewModel.TestStep.Delay = 0;
+        }
+            
+        Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
     private void UpdateLimitsFromNominal()
