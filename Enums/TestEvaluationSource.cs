@@ -10,6 +10,6 @@ public enum TestEvaluationSource
     [Description("Script")]
     SCRIPT,
 
-    [Description("Console Command")]
-    COMMAND
+    [Description("Shell Command")]
+    SHELL_COMMAND
 }

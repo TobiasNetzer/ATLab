@@ -47,6 +47,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private ScriptSelectorViewModel _scriptSelector;
     
     [ObservableProperty]
+    private ShellCommandEditorViewModel _shellCommandEditor;
+    
+    [ObservableProperty]
     private bool _isEditingMode;
     
     [ObservableProperty]
@@ -117,6 +120,7 @@ public partial class TestingTabViewModel : ViewModelBase
         IProjectService projectService,
         SerialDeviceManagerViewModel serialDeviceManager,
         ScriptSelectorViewModel scriptSelector,
+        ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettingsViewModel projectSettingsViewModel,
         ISerialNumberDialogService serialNumberDialogService)
     {
@@ -126,7 +130,8 @@ public partial class TestingTabViewModel : ViewModelBase
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
-        _scriptSelector = scriptSelector;
+        ScriptSelector = scriptSelector;
+        ShellCommandEditor = shellCommandEditor;
         _projectService = projectService;
         _serialDeviceManager = serialDeviceManager;
         _projectSettingsViewModel = projectSettingsViewModel;
@@ -157,6 +162,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
             TestStepConfiguratorViewModel.LoadTestStep(value);
             ScriptSelector.LoadTestStep(value);
+            ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
         }
         catch (Exception ex)
         {
@@ -709,6 +715,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TargetDevice = step.TargetDevice,
             ScriptId = step.ScriptId,
             ScriptVariables = new ObservableCollection<ScriptVariable>(step.ScriptVariables.Select(v => v.Clone())),
+            ShellCommand = new ShellCommand(step.ShellCommand),
             StimState = step.StimState != null ? new RelayGroupDto(step.StimState) : null,
             ExtStimState = step.ExtStimState != null ? new RelayGroupDto(step.ExtStimState) : null,
             MatrixState = new RelayMatrix(step.MatrixState)

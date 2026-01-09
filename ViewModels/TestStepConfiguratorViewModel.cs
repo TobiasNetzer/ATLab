@@ -56,11 +56,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
         TestStepViewModel = testStep;
 
-        if (TestStepViewModel?.TestStep != null)
-        {
-            TestStepViewModel.TestStep.PropertyChanged += TestStepPropertyChanged;
-            UpdateStringProperties();
-        }
+        if (TestStepViewModel?.TestStep == null) return;
+        
+        TestStepViewModel.TestStep.PropertyChanged += TestStepPropertyChanged;
+        UpdateStringProperties();
     }
 
     private void UpdateStringProperties()

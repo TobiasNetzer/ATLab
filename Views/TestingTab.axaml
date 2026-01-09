@@ -390,6 +390,9 @@
 
                 <controls:ScriptSelector
                     DataContext="{Binding ScriptSelector}"/>
+                
+                <controls:ShellCommandEditor
+                    DataContext="{Binding ShellCommandEditor}"/>
 
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />

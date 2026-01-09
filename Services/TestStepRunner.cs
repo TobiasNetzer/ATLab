@@ -13,11 +13,13 @@ public class TestStepRunner : ITestStepRunner
     
     private readonly ITestHardware _testHardware;
     private readonly IScriptRunner _scriptRunner;
+    private readonly IShellCommandRunner _shellCommandRunner;
 
-    public TestStepRunner(ITestHardware testHardware, IScriptRunner scriptRunner)
+    public TestStepRunner(ITestHardware testHardware, IScriptRunner scriptRunner, IShellCommandRunner shellCommandRunner)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
+        _shellCommandRunner = shellCommandRunner;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, CancellationToken token)
@@ -41,11 +43,13 @@ public class TestStepRunner : ITestStepRunner
             switch (step.TestStep.EvaluationSource)
             {
                 case TestEvaluationSource.NONE: return OperationResult<double>.Success(double.NegativeInfinity);
+                
                 case TestEvaluationSource.SCRIPT:
                     return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice,
                         step.TestStep.ScriptVariables, token);
-                case TestEvaluationSource.COMMAND: return OperationResult<double>.Success(0);
 
+                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
+                
                 default: return OperationResult<double>.Failure("Unknown evaluation source");
             }
         }

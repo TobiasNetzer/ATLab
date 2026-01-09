@@ -72,9 +72,13 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(15)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
-
+    
     [ObservableProperty]
     [property: JsonPropertyOrder(16)]
+    private ShellCommand _shellCommand = new();
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(17)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -85,11 +89,17 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(17)]
+    [JsonPropertyOrder(18)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(18)]
+    [JsonPropertyOrder(19)]
     public RelayGroupDto? ExtStimState { get; set; }
+
+    partial void OnShellCommandChanged(ShellCommand? oldValue, ShellCommand newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
 
     partial void OnMatrixStateChanged(RelayMatrix? oldValue, RelayMatrix newValue)
     {
@@ -139,6 +149,7 @@ public partial class TestStep : ObservableObject
 
     private void Child_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        OnPropertyChanged(nameof(ShellCommand));
         OnPropertyChanged(nameof(MatrixState));
         OnPropertyChanged(nameof(LiveStimState));
         OnPropertyChanged(nameof(LiveExtStimState));
