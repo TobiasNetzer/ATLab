@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Helpers;
@@ -195,6 +196,7 @@ public class TestExecutor : ITestExecutor
         {
             // Overflow detected
             step.Result = "Overflow";
+            step.ResultNoFormatting = "Overflow";
             step.IsPassed = false;
             step.Deviation = string.Empty;
             return;
@@ -204,13 +206,14 @@ public class TestExecutor : ITestExecutor
         {
             // No evaluation source
             step.Result = string.Empty;
+            step.ResultNoFormatting = string.Empty;
             step.IsPassed = true;
             step.Deviation = string.Empty;
             return;
         }
 
         step.Result = UnitParser.Format(value, step.TestStep.Unit);
-
+        step.ResultNoFormatting = value.ToString(CultureInfo.CurrentCulture);
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";
         step.IsPassed = evaluation.IsValid;

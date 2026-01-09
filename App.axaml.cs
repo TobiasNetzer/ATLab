@@ -167,6 +167,7 @@ public class App : Application
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
+        services.AddSingleton<CsvExportService>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
