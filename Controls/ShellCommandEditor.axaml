@@ -30,7 +30,8 @@
                            VerticalAlignment="Center"/>
 
                 <ToggleButton IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right">
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
 
                     <ToggleButton.Template>
                         <ControlTemplate>

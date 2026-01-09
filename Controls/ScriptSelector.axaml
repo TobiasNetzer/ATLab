@@ -34,7 +34,8 @@
                            DockPanel.Dock="Left"/>
 
                 <ToggleButton IsChecked="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right">
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
 
                     <ToggleButton.Template>
                         <ControlTemplate>
