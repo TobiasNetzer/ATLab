@@ -25,7 +25,7 @@ public class CsvExportService
         _errorService = errorService;
     }
 
-    public async Task<bool> ExportWithDialogAsync(IEnumerable<TestStepViewModel> steps)
+    public async Task ExportWithDialogAsync(IEnumerable<TestStepViewModel> steps)
     {
         var file = await _fileDialogService.SaveFileAsync(
             title: "Export Measurement Data",
@@ -34,17 +34,15 @@ public class CsvExportService
             extensions: new[] { "csv" });
 
         if (file == null)
-            return false; // user cancelled
+            return; // user cancelled
 
         try
         {
             await ExportToFileAsync(steps, file);
-            return true;
         }
         catch (Exception ex)
         {
             _errorService.AddError(ex.Message);
-            return false;
         }
     }
 
