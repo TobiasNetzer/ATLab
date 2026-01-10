@@ -11,13 +11,10 @@ public class TestStepEvaluator : ITestStepEvaluator
         bool isValid = Math.Round(value, 15) >= testStep.LowerLimit && value <= testStep.UpperLimit;
 
         double deviation = 0;
-
-        if (testStep.NominalValue != 0)
-        {
-            double diff = value - testStep.NominalValue;
-            deviation = Math.Round((diff / testStep.NominalValue) * 100, 6);
-        }
-
+        
+        double diff = value - testStep.NominalValue;
+        deviation = testStep.NominalValue != 0 ? Math.Round((diff / testStep.NominalValue) * 100, 6) : diff;
+        
         return new TestEvaluationResult(isValid, deviation);
     }
 
