@@ -258,7 +258,7 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             step.TestStep.UpdateDtos();
             
-            var modelCopy = CopyTestStepModel(step.TestStep);
+            var modelCopy = step.TestStep.Clone();
             
             var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
             duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
@@ -289,7 +289,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         _copiedSteps = SelectedSteps
             .OrderBy(s => TestSteps.IndexOf(s))
-            .Select(s => CopyTestStepModel(s.TestStep))
+            .Select(s => s.TestStep.Clone())
             .ToList();
 
         PasteTestStepsCommand.NotifyCanExecuteChanged();
@@ -319,7 +319,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         foreach (var model in _copiedSteps)
         {
-            var modelCopy = CopyTestStepModel(model);
+            var modelCopy = model.Clone();
 
             var vm = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
             vm.PropertyChanged += OnStepPropertyChanged;
@@ -366,7 +366,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         _copiedSteps = SelectedSteps
             .OrderBy(s => TestSteps.IndexOf(s))
-            .Select(s => CopyTestStepModel(s.TestStep))
+            .Select(s => s.TestStep.Clone())
             .ToList();
         
         var toRemove = SelectedSteps
@@ -695,30 +695,5 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsEditingModeChanged(bool value)
     {
         _settingsService.Settings.IsEditingMode = value;
-    }
-
-    private TestStep CopyTestStepModel(TestStep step)
-    {
-        return new TestStep
-        {
-            Name = step.Name,
-            LowerLimit = step.LowerLimit,
-            UpperLimit = step.UpperLimit,
-            NominalValue = step.NominalValue,
-            Unit = step.Unit,
-            Comment = step.Comment,
-            ShowCommentOnTestStart = step.ShowCommentOnTestStart,
-            CustomMessageBoxImagePath = step.CustomMessageBoxImagePath,
-            Delay = step.Delay,
-            EvaluationSource = step.EvaluationSource,
-            RepeatUntilPass = step.RepeatUntilPass,
-            TargetDevice = step.TargetDevice,
-            ScriptId = step.ScriptId,
-            ScriptVariables = new ObservableCollection<ScriptVariable>(step.ScriptVariables.Select(v => v.Clone())),
-            ShellCommand = new ShellCommand(step.ShellCommand),
-            StimState = step.StimState != null ? new RelayGroupDto(step.StimState) : null,
-            ExtStimState = step.ExtStimState != null ? new RelayGroupDto(step.ExtStimState) : null,
-            MatrixState = new RelayMatrix(step.MatrixState)
-        };
     }
 }

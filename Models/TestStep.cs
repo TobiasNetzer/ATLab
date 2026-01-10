@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Text.Json.Serialization;
 using ATLab.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -161,4 +162,36 @@ public partial class TestStep : ObservableObject
         StimState = LiveStimState.ToDto();
         ExtStimState = LiveExtStimState.ToDto();
     }
+    
+    public TestStep Clone()
+    {
+        var clone = new TestStep
+        {
+            Number = Number,
+            Name = Name,
+            NominalValue = NominalValue,
+            LowerLimit = LowerLimit,
+            UpperLimit = UpperLimit,
+            Unit = Unit,
+            Delay = Delay,
+            EvaluationSource = EvaluationSource,
+            RepeatUntilPass = RepeatUntilPass,
+            Comment = Comment,
+            ShowCommentOnTestStart = ShowCommentOnTestStart,
+            CustomMessageBoxImagePath = CustomMessageBoxImagePath,
+            TargetDevice = TargetDevice,
+            ScriptId = ScriptId,
+            ShellCommand = new ShellCommand(ShellCommand),
+            MatrixState = new RelayMatrix(MatrixState),
+            StimState = StimState != null ? new RelayGroupDto(StimState) : null,
+            ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null
+        };
+        
+        clone.ScriptVariables = new ObservableCollection<ScriptVariable>(
+            ScriptVariables.Select(v => v.Clone())
+        );
+
+        return clone;
+    }
+
 }
