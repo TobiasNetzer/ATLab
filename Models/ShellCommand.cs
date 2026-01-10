@@ -4,11 +4,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
-public class ShellCommand : ObservableObject
+public partial class ShellCommand : ObservableObject
 {
-    public string Command { get; set; } = string.Empty;
+    [ObservableProperty]
+    private string _command = string.Empty;
 
-    public ShellCommandOptions Option { get; set; }
+    [ObservableProperty]
+    private ShellCommandOptions _option;
     
     public ShellCommand()
     {
