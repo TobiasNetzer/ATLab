@@ -78,6 +78,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
 
     partial void OnSelectedScriptChanged(ScriptItemViewModel? value)
     {
+        if (value == null) return;
         if (_isSyncing) return;
 
         if (_currentTestStep != null)
@@ -103,6 +104,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
 
     partial void OnSelectedDeviceChanged(SerialDevices? value)
     {
+        if (value == null) return;
         if (_currentTestStep != null)
         {
             _currentTestStep.TargetDevice = value?.Name ?? string.Empty;
