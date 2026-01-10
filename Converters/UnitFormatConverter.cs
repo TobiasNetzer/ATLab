@@ -8,13 +8,12 @@ namespace ATLab.Converters;
 
 public class UnitFormatConverter : IMultiValueConverter
 {
-    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(IList<object?>? values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values != null && values.Count >= 1 && values[0] is double val)
-        {
-            string? unit = values.Count >= 2 ? values[1]?.ToString() : null;
-            return UnitParser.Format(val, unit);
-        }
-        return string.Empty;
+        if (values is not { Count: >= 1 } || values[0] is not double val) return string.Empty;
+        
+        var unit = values.Count >= 2 ? values[1]?.ToString() : null;
+        
+        return string.IsNullOrEmpty(unit) ? val.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(val, unit);
     }
 }

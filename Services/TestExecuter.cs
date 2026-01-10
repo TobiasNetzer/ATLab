@@ -211,8 +211,8 @@ public class TestExecutor : ITestExecutor
             step.Deviation = string.Empty;
             return;
         }
-
-        step.Result = UnitParser.Format(value, step.TestStep.Unit);
+        
+        step.Result = string.IsNullOrEmpty(step.TestStep.Unit) ? value.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(value, step.TestStep.Unit);
         step.ResultNoFormatting = value.ToString(CultureInfo.CurrentCulture);
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";

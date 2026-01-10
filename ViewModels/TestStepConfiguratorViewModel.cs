@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -67,9 +68,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null) return;
 
-        NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
-        LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
-        UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
+        NominalValueText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.NominalValue.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
+        LowerLimitText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.LowerLimit.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
+        UpperLimitText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.UpperLimit.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
         DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");
         
         OnPropertyChanged(nameof(NominalValueText));
@@ -86,13 +87,13 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         {
             case nameof(TestStepViewModel.TestStep.NominalValue):
                 UpdateLimitsFromNominal();
-                NominalValueText = UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
+                NominalValueText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.NominalValue.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.NominalValue, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.LowerLimit):
-                LowerLimitText = UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
+                LowerLimitText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.LowerLimit.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.LowerLimit, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.UpperLimit):
-                UpperLimitText = UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
+                UpperLimitText = string.IsNullOrEmpty(TestStepViewModel.TestStep.Unit) ? TestStepViewModel.TestStep.UpperLimit.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(TestStepViewModel.TestStep.UpperLimit, TestStepViewModel.TestStep.Unit);
                 break;
             case nameof(TestStepViewModel.TestStep.Delay):
                 DelayText = UnitParser.Format(TestStepViewModel.TestStep.Delay / 1000.0, "s");

@@ -52,7 +52,7 @@ public static class UnitParser
 
         if (double.TryParse(input, CultureInfo.CurrentCulture, out double value))
         {
-            result = Math.Round(value * multiplier, 15);
+            result = Math.Round(value * multiplier, 14);
             return true;
         }
 
