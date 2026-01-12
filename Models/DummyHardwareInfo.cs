@@ -4,9 +4,9 @@ namespace ATLab.Models;
 
 public class DummyHardwareInfo : IHardwareInfo
 {
-    public string FirmwareVersion { get; set; } = "N/A";
     public string DeviceName { get; set; } = "No Device";
-    public string SerialNumber { get; set; } = "No Serial Number";
+    public string SerialNumber { get; set; } = "N/A";
+    public string FirmwareVersion { get; set; } = "N/A";
     public string BuildDate { get; set; } = "N/A";
     public string BuildTime { get; set; } = "N/A";
     public int MeasChannelCount { get; set; } = 32;
