@@ -48,6 +48,11 @@ public class CtiaHardware : ITestHardware
         if (!deviceName.IsSuccess)
             return OperationResult.Failure(deviceName.ErrorMessage);
         HardwareInfo.DeviceName = deviceName.Value ?? string.Empty;
+        
+        var serialNumber = await _command.GetSerialNumber();
+        if (!serialNumber.IsSuccess)
+            return OperationResult.Failure(serialNumber.ErrorMessage);
+        HardwareInfo.SerialNumber = serialNumber.Value ?? string.Empty;
 
         var buildDate = await _command.GetFirmwareBuildDate();
         if (!buildDate.IsSuccess)

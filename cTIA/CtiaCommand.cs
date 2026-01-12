@@ -33,6 +33,7 @@ public enum RespCmd : ushort
     RESP_ERROR,
     RESP_DEVICE_ID,
     RESP_DEVICE_NAME,
+    RESP_SERIAL_NUMBER,
     RESP_FW_BUILD_DATE,
     RESP_FW_BUILD_TIME,
     RESP_FW_VERSION,
@@ -93,6 +94,7 @@ public enum GetCmd : ushort
 {
     GET_DEVICE_ID = 0x0401,
     GET_DEVICE_NAME,
+    GET_SERIAL_NUMBER,
     GET_FW_BUILD_DATE,
     GET_FW_BUILD_TIME,
     GET_FW_VERSION,
@@ -327,6 +329,22 @@ public class CtiaCommand
         var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
+            return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
+        
+        var status = (CTIAStatus)responseFrame.Payload[0];
+        return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<string>> GetSerialNumber()
+    {
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = (ushort)GetCmd.GET_SERIAL_NUMBER
+        };
+
+        var responseFrame = await _CTIA.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_SERIAL_NUMBER)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
         
         var status = (CTIAStatus)responseFrame.Payload[0];
