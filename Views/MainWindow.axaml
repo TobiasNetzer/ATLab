@@ -54,6 +54,9 @@
                 <DataTemplate DataType="vm:ScriptsManagerViewModel">
                     <views:ScriptTab/>
                 </DataTemplate>
+                <DataTemplate DataType="vm:AboutTabViewModel">
+                    <views:AboutTab/>
+                </DataTemplate>
             </TabControl.DataTemplates>
         </TabControl>
         

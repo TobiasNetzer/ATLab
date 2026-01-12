@@ -137,12 +137,6 @@
                         IsChecked="{Binding IsEditingMode, Mode=TwoWay}"
                         IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}"/>
                 
-                <Button Content="&#xE946;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="About"
-                        Command="{Binding OpenAboutWindowCommand}"/>
-                
             </StackPanel>
         </Border>
         

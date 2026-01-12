@@ -35,6 +35,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private ScriptsManagerViewModel _scriptTab;
+    
+    [ObservableProperty]
+    private AboutTabViewModel _aboutTab;
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
 
@@ -58,7 +61,8 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTabViewModel testingTab, 
         TestBenchViewModel testBench, 
         ConfigTabViewModel configTab,
-        ScriptsManagerViewModel scriptsManagerViewModel)
+        ScriptsManagerViewModel scriptsManagerViewModel,
+        AboutTabViewModel aboutTab)
     {
         _errorService = errorService;
         _simulationService = simulationService;
@@ -69,6 +73,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TestBench = testBench;
         ConfigTab = configTab;
         ScriptTab = scriptsManagerViewModel;
+        AboutTab = aboutTab;
 
         _selectedTab = TestingTab;
         
@@ -76,6 +81,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(TestBench);
         Tabs.Add(ConfigTab);
         Tabs.Add(ScriptTab);
+        Tabs.Add(AboutTab);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -91,9 +97,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         };
     }
-
-    [RelayCommand]
-    private async Task OpenAboutWindow() => await TestingTab.OpenAboutWindow();
     
     partial void OnIsErrorFlyoutOpenChanged(bool value)
     {

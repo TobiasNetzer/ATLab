@@ -194,6 +194,7 @@ public class App : Application
         services.AddTransient<TestBenchViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<ScriptsManagerViewModel>();
+        services.AddTransient<AboutTabViewModel>();
         services.AddTransient<ScriptSelectorViewModel>();
         services.AddTransient<SerialPortConnectWindowViewModel>();
         services.AddTransient<ShellCommandEditorViewModel>();

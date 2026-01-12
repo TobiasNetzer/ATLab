@@ -182,7 +182,6 @@ public partial class TestingTabViewModel : ViewModelBase
         MoveStepDownCommand.NotifyCanExecuteChanged();
         NewFileCommand.NotifyCanExecuteChanged();
         SaveFileCommand.NotifyCanExecuteChanged();
-        OpenAboutWindowCommand.NotifyCanExecuteChanged();
         LoadFileWithDialogCommand.NotifyCanExecuteChanged();
         SaveFileAsCommand.NotifyCanExecuteChanged();
         StartTestFromSelectionCommand.NotifyCanExecuteChanged();
@@ -591,25 +590,6 @@ public partial class TestingTabViewModel : ViewModelBase
     private void OnStepPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         CheckForChanges();
-    }
-
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public async Task OpenAboutWindow()
-    {
-        var deviceInfoProvider = TestHardwareRelayChannels.HardwareInfo;
-        var aboutVm = new AboutWindowViewModel(deviceInfoProvider);
-        var aboutWindow = new AboutWindow
-        {
-            DataContext = aboutVm
-        };
-
-        var desktop = Avalonia.Application.Current?.ApplicationLifetime
-            as IClassicDesktopStyleApplicationLifetime;
-
-        if (desktop?.MainWindow != null)
-            await aboutWindow.ShowDialog(desktop.MainWindow);
-        else
-            aboutWindow.Show();
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]

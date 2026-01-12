@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.About"
+             x:DataType="vm:AboutTabViewModel"
+             Width="780">
+    
+    <Grid RowDefinitions="Auto, *">
+        
+        <Border Grid.Row="0" Background="{DynamicResource SystemBaseLowColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            
+            <TextBlock Text="About"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        
+        <Border Grid.Row="1" Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}">
+                
+            <StackPanel Margin="20"
+                        Spacing="8"
+                        HorizontalAlignment="Center">
+                
+                <TextBlock Text="ATLab"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="Automated Testing Toolkit"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+
+                <Separator/>
+
+                <!-- Standard information -->
+                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"
+                           HorizontalAlignment="Center"/>
+
+                <Separator/>
+
+                <!-- Device Information -->
+                <TextBlock Text="Connected Test Hardware:" FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding SerialNumber, StringFormat=Serial number: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Available Channels:" FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding MeasChannelCount, StringFormat=MEAS CH: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding StimChannelCount, StringFormat=STIM CH: {0}}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=EXT STIM CH: {0}}"
+                           HorizontalAlignment="Center"/>
+                
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
