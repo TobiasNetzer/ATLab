@@ -22,7 +22,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly SerialDeviceManagerViewModel _serialDeviceManager;
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
-    private readonly CsvExportService _csvExportService;
+    private readonly TestResultExportService _testResultExportService;
     
     private List<TestStep>? _copiedSteps;
 
@@ -124,7 +124,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettingsViewModel projectSettingsViewModel,
         ISerialNumberDialogService serialNumberDialogService,
-        CsvExportService csvExportService)
+        TestResultExportService testResultExportService)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -138,7 +138,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _serialDeviceManager = serialDeviceManager;
         _projectSettingsViewModel = projectSettingsViewModel;
         _serialNumberDialogService = serialNumberDialogService;
-        _csvExportService = csvExportService;
+        _testResultExportService = testResultExportService;
         
         Title = "Testing";
         
@@ -536,7 +536,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestStatus = TestStatus.PASSED;
             NumberPassedTests++;
 
-            _ = SaveTestResult();
+            _ = _testResultExportService.SaveAsync(TestSteps, SerialNumber, NumberFailedSteps);
         };
 
         _testExecutor.TestCancelled += () =>
@@ -686,28 +686,5 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsEditingModeChanged(bool value)
     {
         _settingsService.Settings.IsEditingMode = value;
-    }
-
-    private async Task SaveTestResult()
-    {
-        if (!_projectSettingsViewModel.SaveTestResult) return;
-        if (_projectSettingsViewModel.SaveTestResultOptions == SaveTestResultOptions.ONLY_WHEN_PASSED && NumberFailedSteps > 0) return;
-
-        try
-        {
-            var timestamp = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss");
-            var filename = $"{SerialNumber}_{timestamp}.csv";
-
-            var directory = _projectSettingsViewModel.SaveTestResultFilePath;
-
-            Directory.CreateDirectory(directory);
-
-            var fullPath = Path.Combine(directory, filename);
-            await _csvExportService.ExportToPathAsync(TestSteps, fullPath);
-        }
-        catch (Exception ex)
-        {
-            _errorService.AddError(ex.Message);
-        }
     }
 }
