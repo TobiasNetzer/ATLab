@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
@@ -15,8 +16,8 @@ public class CsvExportService
 {
     private readonly IFileDialogService _fileDialogService;
     private readonly IErrorService _errorService;
-    
-    private readonly string _separator = "\t"; // or "\t"
+
+    private const string Separator = "\t";
 
     public CsvExportService(IFileDialogService fileDialogService,
         IErrorService errorService)
@@ -56,26 +57,32 @@ public class CsvExportService
 
         await writer.WriteAsync(csv);
     }
-
     
-    public IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
+    public async Task ExportToPathAsync(IEnumerable<TestStepViewModel> steps, string path)
     {
-        foreach (var vm in steps)
-        {
-            var ts = vm.TestStep;
+        var csv = BuildCsv(steps);
 
-            yield return new TestStepCsvRow(
-                Number: ts.Number,
-                Name: ts.Name,
-                NominalValue: ts.NominalValue,
-                LowerLimit: ts.LowerLimit,
-                UpperLimit: ts.UpperLimit,
-                Unit: ts.Unit,
-                Result: vm.ResultNoFormatting,
-                IsPassed: vm.IsPassed ? "Pass" : "Fail",
-                Deviation: vm.Deviation?.Replace("%", "")
-            );
-        }
+        await using var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
+        await using var writer = new StreamWriter(stream, Encoding.UTF8);
+
+        await writer.WriteAsync(csv);
+    }
+
+
+
+    private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
+    {
+        return from vm in steps let ts = vm.TestStep select new TestStepCsvRow(
+            Number: ts.Number,
+            Name: ts.Name,
+            NominalValue: ts.NominalValue,
+            LowerLimit: ts.LowerLimit,
+            UpperLimit: ts.UpperLimit,
+            Unit: ts.Unit,
+            Result: vm.ResultNoFormatting,
+            IsPassed: vm.IsPassed ? "Pass" : "Fail",
+            Deviation: vm.Deviation?.Replace("%", "")
+        );
     }
 
     private string BuildCsv(IEnumerable<TestStepViewModel> steps)
@@ -84,7 +91,7 @@ public class CsvExportService
         var sb = new StringBuilder();
 
         // Header
-        sb.AppendLine(string.Join(_separator, new[]
+        sb.AppendLine(string.Join(Separator, new[]
         {
             "Number",
             "Name",
@@ -100,7 +107,7 @@ public class CsvExportService
         // Rows
         foreach (var r in rows)
         {
-            sb.AppendLine(string.Join(_separator, new[]
+            sb.AppendLine(string.Join(Separator, new[]
             {
                 r.Number.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Name),
@@ -125,7 +132,7 @@ public class CsvExportService
 
         var escaped = value.Replace("\"", "\"\"");
         
-        if (escaped.Contains(_separator) || escaped.Contains('"') || escaped.Contains('\n'))
+        if (escaped.Contains(Separator) || escaped.Contains('"') || escaped.Contains('\n'))
             return $"\"{escaped}\"";
 
         return escaped;
