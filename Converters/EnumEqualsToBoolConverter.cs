@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Avalonia.Data;
 using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
@@ -10,8 +11,7 @@ public class EnumEqualsToBoolConverter : IValueConverter
     {
         if (value == null || parameter == null)
             return false;
-
-        // parameter comes in as a string → parse it to the enum type
+        
         var enumType = value.GetType();
         var parameterValue = Enum.Parse(enumType, parameter.ToString()!);
 
@@ -19,5 +19,7 @@ public class EnumEqualsToBoolConverter : IValueConverter
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+    {
+        return value is bool and true ? Enum.Parse(targetType, parameter!.ToString()!) : BindingOperations.DoNothing;
+    }
 }

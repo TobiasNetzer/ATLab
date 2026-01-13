@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ATLab.Enums;
 
 namespace ATLab.Models;
 
@@ -11,4 +12,7 @@ public class AtlabFileDto
     public List<SerialDevices> SerialDevices { get; init; } = new();
     public double DefaultTolerance { get; init; }
     public bool UseSerialNumber { get; init; }
+    public bool SaveTestResults { get; init; }
+    public SaveTestResultOptions SaveTestResultOptions { get; init; }
+    public string SaveTestResultFilePath { get; init; } = string.Empty;
 }

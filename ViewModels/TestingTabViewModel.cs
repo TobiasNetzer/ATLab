@@ -579,6 +579,9 @@ public partial class TestingTabViewModel : ViewModelBase
             SerialDevices = _serialDeviceManager.SerialDevices.ToList(),
             DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
             UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
+            SaveTestResults = _projectSettingsViewModel.SaveTestResult,
+            SaveTestResultOptions =  _projectSettingsViewModel.SaveTestResultOptions,
+            SaveTestResultFilePath = _projectSettingsViewModel.SaveTestResultFilePath,
         };
     }
 
@@ -660,6 +663,9 @@ public partial class TestingTabViewModel : ViewModelBase
         
         _projectSettingsViewModel.ToleranceValue = dto.DefaultTolerance;
         _projectSettingsViewModel.UseSerialNumber = dto.UseSerialNumber;
+        _projectSettingsViewModel.SaveTestResult = dto.SaveTestResults;
+        _projectSettingsViewModel.SaveTestResultOptions = dto.SaveTestResultOptions;
+        _projectSettingsViewModel.SaveTestResultFilePath = dto.SaveTestResultFilePath;
         
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
