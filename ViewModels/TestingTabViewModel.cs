@@ -581,7 +581,7 @@ public partial class TestingTabViewModel : ViewModelBase
             StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
-            SerialDevices = _deviceManager.SerialDevices.ToList(),
+            Devices = _deviceManager.SerialDevices.ToList(),
             DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
             UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
             SaveTestResults = _projectSettingsViewModel.SaveTestResult,
@@ -675,7 +675,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
         _deviceManager.SerialDevices.Clear();
-        foreach (var device in dto.SerialDevices)
+        foreach (var device in dto.Devices)
         {
             _deviceManager.SerialDevices.Add(device);
         }

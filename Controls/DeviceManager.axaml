@@ -84,7 +84,7 @@
                                             Binding="{Binding Name}"
                                             Width="*"/>
                         <DataGridTextColumn Header="Port"
-                                            Binding="{Binding SerialPort}"
+                                            Binding="{Binding ResourceString}"
                                             Width="200"/>
                     </DataGrid.Columns>
                 </DataGrid>

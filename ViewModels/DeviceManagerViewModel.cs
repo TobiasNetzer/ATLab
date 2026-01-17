@@ -9,10 +9,10 @@ namespace ATLab.ViewModels;
 public partial class DeviceManagerViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private ObservableCollection<SerialDevices> _serialDevices = new();
+    private ObservableCollection<Device> _serialDevices = new();
     
     [ObservableProperty]
-    private SerialDevices? _selectedDevice;
+    private Device? _selectedDevice;
 
     [ObservableProperty]
     private string _customDeviceName = string.Empty;
@@ -48,10 +48,10 @@ public partial class DeviceManagerViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(CustomDeviceName) || string.IsNullOrWhiteSpace(SelectedPort))
             return;
 
-        SerialDevices.Add(new SerialDevices
+        SerialDevices.Add(new Device
         {
             Name = CustomDeviceName,
-            SerialPort = SelectedPort
+            ResourceString = SelectedPort
         });
 
         CustomDeviceName = string.Empty;

@@ -71,7 +71,7 @@ public class ScriptRunner : IScriptRunner
                 return OperationResult<string?>.Failure($"Device {deviceName} not found.");
             }
 
-            var portName = device.SerialPort;
+            var portName = device.ResourceString;
 
             if (_testDeviceInterface == null ||
                 !_testDeviceInterface.IsConnected ||

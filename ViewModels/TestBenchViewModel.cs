@@ -22,7 +22,7 @@ public partial class TestBenchViewModel : ViewModelBase
     private ScriptSelectorViewModel _scriptSelectorViewModel;
     
     [ObservableProperty]
-    private SerialDevices? _selectedDevice;
+    private Device? _selectedDevice;
     
     [ObservableProperty]
     private ScriptItemViewModel? _selectedScript;

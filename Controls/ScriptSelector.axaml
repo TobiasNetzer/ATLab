@@ -89,11 +89,11 @@
                                   HorizontalAlignment="Stretch">
 
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="models:SerialDevices">
+                                <DataTemplate x:DataType="models:Device">
                                     <TextBlock>
                                         <Run Text="{Binding Name}"/>
                                         <Run Text=" ("/>
-                                        <Run Text="{Binding SerialPort}"/>
+                                        <Run Text="{Binding ResourceString}"/>
                                         <Run Text=")"/>
                                     </TextBlock>
                                 </DataTemplate>

@@ -13,14 +13,14 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private readonly IScriptService _scriptService;
     private readonly ISettingsService _settingsService;
     
-    public ObservableCollection<SerialDevices> Devices => _deviceManager.SerialDevices;
+    public ObservableCollection<Device> Devices => _deviceManager.SerialDevices;
     public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
     private ObservableCollection<ScriptVariable>? _scriptVariables;
 
     [ObservableProperty]
-    private SerialDevices? _selectedDevice;
+    private Device? _selectedDevice;
 
     [ObservableProperty]
     private ScriptItemViewModel? _selectedScript;
@@ -102,7 +102,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         }
     }
 
-    partial void OnSelectedDeviceChanged(SerialDevices? value)
+    partial void OnSelectedDeviceChanged(Device? value)
     {
         if (value == null) return;
         if (_currentTestStep != null)
