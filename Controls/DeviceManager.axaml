@@ -1,8 +1,8 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:Class="ATLab.Controls.SerialDeviceManager"
-             x:DataType="vm:SerialDeviceManagerViewModel"
+             x:Class="ATLab.Controls.DeviceManager"
+             x:DataType="vm:DeviceManagerViewModel"
              Width="780">
     
     <Grid RowDefinitions="Auto, *">

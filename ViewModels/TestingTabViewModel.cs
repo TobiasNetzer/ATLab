@@ -19,7 +19,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ITestExecutor _testExecutor;
     private readonly IErrorService _errorService;
     private readonly IProjectService _projectService;
-    private readonly SerialDeviceManagerViewModel _serialDeviceManager;
+    private readonly DeviceManagerViewModel _deviceManager;
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly TestResultExportService _testResultExportService;
@@ -119,7 +119,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ITestExecutor testExecutor, 
         TestStepConfiguratorViewModel testStepConfiguratorViewModel,
         IProjectService projectService,
-        SerialDeviceManagerViewModel serialDeviceManager,
+        DeviceManagerViewModel deviceManager,
         ScriptSelectorViewModel scriptSelector,
         ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettingsViewModel projectSettingsViewModel,
@@ -135,7 +135,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ScriptSelector = scriptSelector;
         ShellCommandEditor = shellCommandEditor;
         _projectService = projectService;
-        _serialDeviceManager = serialDeviceManager;
+        _deviceManager = deviceManager;
         _projectSettingsViewModel = projectSettingsViewModel;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
@@ -149,7 +149,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettingsViewModel.ConfigurationChanged += () => CheckForChanges();
-        _serialDeviceManager.SerialDevices.CollectionChanged += (_, _) => CheckForChanges();
+        _deviceManager.SerialDevices.CollectionChanged += (_, _) => CheckForChanges();
         
         _projectService.UpdateLastSavedState(CaptureCurrentState());
     }
@@ -559,7 +559,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestSteps.Clear();
             TestHardwareRelayChannels.ResetToDefault();
             _projectSettingsViewModel.ResetToDefault();
-            _serialDeviceManager.SerialDevices.Clear();
+            _deviceManager.SerialDevices.Clear();
             _projectService.UpdateLastSavedState(CaptureCurrentState());
             SelectedStepIndex = -1;
             AddTestStep();
@@ -581,7 +581,7 @@ public partial class TestingTabViewModel : ViewModelBase
             StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
-            SerialDevices = _serialDeviceManager.SerialDevices.ToList(),
+            SerialDevices = _deviceManager.SerialDevices.ToList(),
             DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
             UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
             SaveTestResults = _projectSettingsViewModel.SaveTestResult,
@@ -674,10 +674,10 @@ public partial class TestingTabViewModel : ViewModelBase
         
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
-        _serialDeviceManager.SerialDevices.Clear();
+        _deviceManager.SerialDevices.Clear();
         foreach (var device in dto.SerialDevices)
         {
-            _serialDeviceManager.SerialDevices.Add(device);
+            _deviceManager.SerialDevices.Add(device);
         }
         
         SelectedStepIndex = 0;

@@ -9,7 +9,7 @@ namespace ATLab.ViewModels;
 
 public partial class ScriptSelectorViewModel : ViewModelBase
 {
-    private readonly SerialDeviceManagerViewModel _deviceManager;
+    private readonly DeviceManagerViewModel _deviceManager;
     private readonly IScriptService _scriptService;
     private readonly ISettingsService _settingsService;
     
@@ -36,7 +36,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private bool _isSyncing;
     
     public ScriptSelectorViewModel(
-        SerialDeviceManagerViewModel deviceManager,
+        DeviceManagerViewModel deviceManager,
         IScriptService scriptService,
         ISettingsService settingsService)
     {

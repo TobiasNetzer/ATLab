@@ -190,7 +190,7 @@ public class App : Application
         // ViewModels
         services.AddSingleton<TestHardwareRelayChannelsViewModel>();
         services.AddSingleton<TestStepConfiguratorViewModel>();
-        services.AddSingleton<SerialDeviceManagerViewModel>();
+        services.AddSingleton<DeviceManagerViewModel>();
         services.AddSingleton<ProjectSettingsViewModel>();
         
         services.AddTransient<MainWindowViewModel>();

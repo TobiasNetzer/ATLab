@@ -14,14 +14,14 @@ public class ScriptRunner : IScriptRunner
 {
     private readonly ICommunicationFactory _communicationInterface;
     private readonly IScriptRepository _scriptRepository;
-    private readonly SerialDeviceManagerViewModel _deviceManager;
+    private readonly DeviceManagerViewModel _deviceManager;
 
     private ICommunication? _testDeviceInterface;
 
     public ScriptRunner(
         ICommunicationFactory communicationInterface,
         IScriptRepository scriptRepository,
-        SerialDeviceManagerViewModel deviceManager)
+        DeviceManagerViewModel deviceManager)
     {
         _communicationInterface = communicationInterface;
         _scriptRepository = scriptRepository;

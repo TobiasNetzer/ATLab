@@ -7,17 +7,17 @@ public partial class ConfigTabViewModel : ViewModelBase
     
     public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; set; }
     
-    public SerialDeviceManagerViewModel SerialDeviceManager { get; }
+    public DeviceManagerViewModel DeviceManager { get; }
     
     public ProjectSettingsViewModel ProjectSettingsViewModel { get; }
 
     public ConfigTabViewModel(
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
-        SerialDeviceManagerViewModel serialDeviceManagerViewModel,
+        DeviceManagerViewModel deviceManagerViewModel,
         ProjectSettingsViewModel projectSettingsViewModel)
     {
         TestHardwareRelayChannels = testHardwareRelayChannelsViewModel;
-        SerialDeviceManager = serialDeviceManagerViewModel;
+        DeviceManager = deviceManagerViewModel;
         ProjectSettingsViewModel = projectSettingsViewModel;
 
         Title = "Config";

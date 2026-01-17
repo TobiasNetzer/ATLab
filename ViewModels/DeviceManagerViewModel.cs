@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class SerialDeviceManagerViewModel : ViewModelBase
+public partial class DeviceManagerViewModel : ViewModelBase
 {
     [ObservableProperty]
     private ObservableCollection<SerialDevices> _serialDevices = new();
@@ -22,7 +22,7 @@ public partial class SerialDeviceManagerViewModel : ViewModelBase
 
     public ObservableCollection<string> AvailablePorts { get; } = new();
 
-    public SerialDeviceManagerViewModel()
+    public DeviceManagerViewModel()
     {
         RefreshPorts();
     }

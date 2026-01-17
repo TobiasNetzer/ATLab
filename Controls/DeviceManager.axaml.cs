@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
-public partial class SerialDeviceManager : UserControl
+public partial class DeviceManager : UserControl
 {
-    public SerialDeviceManager()
+    public DeviceManager()
     {
         InitializeComponent();
     }
