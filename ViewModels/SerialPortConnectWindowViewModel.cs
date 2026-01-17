@@ -32,6 +32,8 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
 
     private readonly ISettingsService _settingsService;
     private readonly IServiceProvider _serviceProvider;
+    
+    private ICommunication? _currentComm;
 
     public SerialPortConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider)
     {
@@ -61,40 +63,58 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanConnect))]
     private async Task<bool> Connect()
     {
-        if (!CanConnect) return false;
-
-        var testHardwareInterfaceFactory = _serviceProvider.GetRequiredService<ICommunicationFactory>();
-        var testHardwareInterface = testHardwareInterfaceFactory.CreateSerial(SelectedPort);
-        var openResult = await testHardwareInterface.ConnectAsync();
+        if (!CanConnect) 
+            return false;
         
+        if (_currentComm is IDisposable oldDisposable)
+        {
+            await _currentComm.DisconnectAsync();
+            oldDisposable.Dispose();
+            _currentComm = null;
+        }
+        
+        var factory = _serviceProvider.GetRequiredService<ICommunicationFactory>();
+        var comm = factory.CreateSerial(SelectedPort);
+        
+        var openResult = await comm.ConnectAsync();
         if (!openResult.IsSuccess)
         {
             StatusText = $"Failed to connect to {SelectedPort}";
             Status = ConnectionStatus.FAILED;
+
+            await comm.DisconnectAsync();
+            (comm as IDisposable)?.Dispose();
+
             ConnectCommand.NotifyCanExecuteChanged();
             return false;
         }
-        else
+        
+        var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, comm);
+        var hardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_serviceProvider, communication);
+        
+        var initResult = await hardware.InitializeAsync();
+        if (!initResult.IsSuccess)
         {
-            var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, testHardwareInterface);
-            TestHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_serviceProvider, communication);
-            var initResult = await TestHardware.InitializeAsync();
-            if (!initResult.IsSuccess)
-            {
-                StatusText = $"Initialization failed: {initResult.ErrorMessage}";
-                Status = ConnectionStatus.FAILED;
-                ConnectCommand.NotifyCanExecuteChanged();
-                return false;
-            }
-            else{
-                StatusText = $"Connected to {SelectedPort}";
-                Status = ConnectionStatus.CONNECTED;
-                _settingsService.Settings.LastComPort = SelectedPort;
-                Connected?.Invoke(true);
-                ConnectCommand.NotifyCanExecuteChanged();
-                return true;
-            }
+            StatusText = $"Initialization failed: {initResult.ErrorMessage}";
+            Status = ConnectionStatus.FAILED;
+
+            await comm.DisconnectAsync();
+            (comm as IDisposable)?.Dispose();
+
+            ConnectCommand.NotifyCanExecuteChanged();
+            return false;
         }
+        
+        _currentComm = comm;
+        TestHardware = hardware;
+
+        StatusText = $"Connected to {SelectedPort}";
+        Status = ConnectionStatus.CONNECTED;
+        _settingsService.Settings.LastComPort = SelectedPort;
+
+        Connected?.Invoke(true);
+        ConnectCommand.NotifyCanExecuteChanged();
+        return true;
     }
 
     [RelayCommand]

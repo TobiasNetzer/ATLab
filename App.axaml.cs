@@ -55,6 +55,8 @@ public class App : Application
                 var openResult = await testHardwareInterface.ConnectAsync();
                 if (!openResult.IsSuccess)
                 {
+                    await testHardwareInterface.DisconnectAsync();
+                    (testHardwareInterface as IDisposable)?.Dispose();
                     openConnectWindow = true;
                 }
                 else
@@ -65,6 +67,7 @@ public class App : Application
                     if (!initResult.IsSuccess)
                     {
                         await testHardwareInterface.DisconnectAsync();
+                        (testHardwareInterface as IDisposable)?.Dispose();
                         openConnectWindow = true;
                     }
                     else initSuccess = true;

@@ -78,8 +78,11 @@ public class ScriptRunner : IScriptRunner
                 _testDeviceInterface.Resource != portName)
             {
                 if (_testDeviceInterface != null)
+                {
                     await _testDeviceInterface.DisconnectAsync();
-
+                    (_testDeviceInterface as IDisposable)?.Dispose();
+                }
+                    
                 _testDeviceInterface = _communicationInterface.CreateSerial(portName);
 
                 var result = await _testDeviceInterface.ConnectAsync();
