@@ -86,9 +86,9 @@ public class ScriptRunner : IScriptRunner
                 
                 _testDeviceInterface = device.Type switch
                 {
-                    DeviceType.SERIAL => _communicationInterface.CreateSerial(resource),
-                    DeviceType.VISA   => _communicationInterface.CreateVisa(resource),
-                    _ => throw new NotSupportedException($"Unsupported device type: {device.Type}")
+                    DeviceType.SERIAL => _communicationInterface.CreateSerial(device.ResourceString, device.Configuration),
+                    DeviceType.VISA   => _communicationInterface.CreateVisa(device.ResourceString, device.Configuration),
+                    _ => throw new NotSupportedException()
                 };
                 
                 var result = await _testDeviceInterface.ConnectAsync();

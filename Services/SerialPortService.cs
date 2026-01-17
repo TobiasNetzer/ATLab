@@ -21,11 +21,17 @@ public class SerialPortService : ICommunication, IDisposable
     public string Resource => _port.PortName;
     public bool IsConnected => _port.IsOpen;
 
-    public SerialPortService(string portName, int baudRate = 115200)
+    public SerialPortService(
+        string portName,
+        int baudRate,
+        int dataBits,
+        Parity parity,
+        StopBits stopBits,
+        Handshake handshake)
     {
-        _port = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One)
+        _port = new SerialPort(portName, baudRate, parity, dataBits, stopBits)
         {
-            Handshake = Handshake.None,
+            Handshake = handshake,
             ReadTimeout = 1000,
             WriteTimeout = 1000
         };

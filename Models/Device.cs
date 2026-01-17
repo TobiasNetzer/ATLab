@@ -13,4 +13,7 @@ public partial class Device : ObservableObject
 
     [ObservableProperty]
     private DeviceType _type;
+    
+    [ObservableProperty]
+    private DeviceConfiguration _configuration = new();
 }

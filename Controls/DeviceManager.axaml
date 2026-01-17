@@ -5,9 +5,9 @@
              x:DataType="vm:DeviceManagerViewModel"
              Width="780">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid ColumnDefinitions="250,*" RowDefinitions="Auto,*">
         
-        <Border Grid.Row="0"
+        <Border Grid.ColumnSpan="2"
                 Background="{DynamicResource SystemBaseLowColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
@@ -18,98 +18,175 @@
         </Border>
         
         <Border Grid.Row="1"
+                Grid.Column="0"
                 Background="{DynamicResource SystemChromeLowColor}"
-                CornerRadius="0 0 15 15"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource SystemBaseLowColor}">
+                CornerRadius="0 0 0 15"
+                Padding="10">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="10"
-                                Margin="10">
-                        
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Device Name:"/>
-                            <TextBox Width="150"
-                                     Text="{Binding CustomDeviceName}"/>
-                        </StackPanel>
-                        
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Interface:"/>
-                            <ComboBox Width="150"
-                                      ItemsSource="{Binding AvailableDeviceTypes}"
-                                      SelectedItem="{Binding SelectedDeviceType}"/>
-                        </StackPanel>
-                        
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="Resource:"/>
+                <StackPanel Spacing="10">
+                    
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Device Name" FontWeight="Bold"/>
+                        <TextBox Text="{Binding EditorDeviceName}"
+                                 Width="220"
+                                 HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Interface" FontWeight="Bold"/>
+                        <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
+                                  SelectedItem="{Binding EditorDeviceType}"
+                                  Width="220"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Resource" FontWeight="Bold"/>
 
-                            <StackPanel Orientation="Horizontal" Spacing="5">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+
+                            <StackPanel>
                                 
-                                <ComboBox Width="150"
-                                          ItemsSource="{Binding AvailableSerialPorts}"
-                                          SelectedItem="{Binding SelectedResource}"
-                                          IsVisible="{Binding SelectedDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}"/>
+                                <ComboBox ItemsSource="{Binding AvailableSerialPorts}"
+                                          SelectedItem="{Binding EditorResource}"
+                                          Width="180"
+                                          IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}"/>
                                 
-                                <ComboBox Width="150"
-                                          ItemsSource="{Binding AvailableVisaResources}"
-                                          SelectedItem="{Binding SelectedResource}"
-                                          IsVisible="{Binding SelectedDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA}"/>
-                                
-                                <Button Content="&#xE72C;"
-                                        FontFamily="{StaticResource FluentIconsFont}"
-                                        FontSize="20"
-                                        ToolTip.Tip="Reload resources"
-                                        Margin=" 5 0 0 0"
-                                        Command="{Binding RefreshResourcesCommand}"/>
-                                
-                                <Button Content="&#xF8AA;"
-                                        FontFamily="{StaticResource FluentIconsFont}"
-                                        FontSize="20"
-                                        ToolTip.Tip="Add new device"
-                                        Command="{Binding AddDeviceCommand}"/>
-                                
-                                <Button Content="&#xF8AB;"
-                                        FontFamily="{StaticResource FluentIconsFont}"
-                                        FontSize="20"
-                                        ToolTip.Tip="Remove device"
-                                        Command="{Binding RemoveDeviceCommand}"/>
-                                
-                                <Button Content="&#xEB7E;"
-                                        FontFamily="{StaticResource FluentIconsFont}"
-                                        FontSize="20"
-                                        ToolTip.Tip="Update selected device"
-                                        Command="{Binding EditDeviceCommand}"/>
+                                <ComboBox ItemsSource="{Binding AvailableVisaResources}"
+                                          SelectedItem="{Binding EditorResource}"
+                                          Width="180"
+                                          IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA}"/>
+
                             </StackPanel>
+
+                            <Button Content="&#xE72C;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="18"
+                                    ToolTip.Tip="Reload resources"
+                                    VerticalAlignment="Top"
+                                    Command="{Binding RefreshResourcesCommand}"/>
+
                         </StackPanel>
 
                     </StackPanel>
                     
-                    <DataGrid ItemsSource="{Binding Devices}"
-                              SelectedItem="{Binding SelectedDevice}"
-                              AutoGenerateColumns="False"
-                              IsReadOnly="True"
-                              GridLinesVisibility="All"
-                              BorderThickness="1"
-                              BorderBrush="Gray"
-                              Margin="10 0 10 10">
+                    <StackPanel Spacing="5"
+                                IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}">
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Device Name"
-                                                Binding="{Binding Name}"
-                                                Width="150"/>
-                            <DataGridTextColumn Header="Interface"
-                                                Binding="{Binding Type}"
-                                                Width="120"/>
-                            <DataGridTextColumn Header="Resource"
-                                                Binding="{Binding ResourceString}"
-                                                Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <TextBlock Text="Settings" FontWeight="Bold" FontSize="14"/>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Baud Rate"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableBaudRates}"
+                                      SelectedItem="{Binding EditorBaudRate}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Data Bits"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableDataBits}"
+                                      SelectedItem="{Binding EditorDataBits}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Parity"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableParities}"
+                                      SelectedItem="{Binding EditorParity}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Stop Bits"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableStopBits}"
+                                      SelectedItem="{Binding EditorStopBits}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Handshake"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableHandshakes}"
+                                      SelectedItem="{Binding EditorHandshake}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="10"
+                                IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA}">
+
+                        <TextBlock Text="Settings" FontWeight="Bold" FontSize="14"/>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Timeout (ms)"/>
+                            <NumericUpDown Width="220"
+                                           Minimum="10"
+                                           Maximum="10000"
+                                           HorizontalAlignment="Left"
+                                           Value="{Binding EditorVisaTimeout}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Termination Character"/>
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableVisaTerminations}"
+                                      SelectedItem="{Binding EditorVisaTermination}"/>
+                        </StackPanel>
+
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
+        </Border>
+        
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="{DynamicResource SystemChromeLowColor}"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderThickness="2"
+                CornerRadius="0 0 15 0"
+                Padding="10">
+
+            <StackPanel Spacing="5">
+
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Button Content="&#xF8AA;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="20"
+                            Width="40"
+                            ToolTip.Tip="Add new device"
+                            Command="{Binding AddDeviceCommand}"/>
+
+                    <Button Content="&#xF8AB;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="20"
+                            Width="40"
+                            ToolTip.Tip="Remove device"
+                            Command="{Binding RemoveDeviceCommand}"/>
+
+                    <Button Content="&#xEB7E;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="20"
+                            Width="40"
+                            ToolTip.Tip="Update selected device"
+                            Command="{Binding EditDeviceCommand}"/>
+                </StackPanel>
+
+                <DataGrid ItemsSource="{Binding Devices}"
+                          SelectedItem="{Binding SelectedDevice}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All"
+                          BorderThickness="1"
+                          BorderBrush="Gray">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                        <DataGridTextColumn Header="Interface" Binding="{Binding Type}" Width="100"/>
+                        <DataGridTextColumn Header="Resource" Binding="{Binding ResourceString}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

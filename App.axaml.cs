@@ -11,6 +11,7 @@ using ATLab.Services;
 using System.Threading.Tasks;
 using ATLab.CTIA;
 using ATLab.Interfaces;
+using ATLab.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab;
@@ -51,7 +52,7 @@ public class App : Application
             }
             else
             {
-                var testHardwareInterface = factory.CreateSerial(lastPort);
+                var testHardwareInterface = factory.CreateSerial(lastPort, new DeviceConfiguration());
                 var openResult = await testHardwareInterface.ConnectAsync();
                 if (!openResult.IsSuccess)
                 {

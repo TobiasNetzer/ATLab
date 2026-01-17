@@ -14,12 +14,17 @@ public class NiVisaService : ICommunication, IDisposable
     private bool _disposed;
     private bool _connected;
 
+    private readonly int _timeoutMs;
+    private readonly byte _terminationChar;
+
     public string Resource { get; }
     public bool IsConnected => _connected;
 
-    public NiVisaService(string resource)
+    public NiVisaService(string resource, int timeoutMs, byte terminationChar)
     {
         Resource = resource ?? throw new ArgumentNullException(nameof(resource));
+        _timeoutMs = timeoutMs;
+        _terminationChar = terminationChar;
     }
 
     public async Task<OperationResult> ConnectAsync()
@@ -36,7 +41,10 @@ public class NiVisaService : ICommunication, IDisposable
             {
                 var rm = new ResourceManager();
                 _session = (MessageBasedSession)rm.Open(Resource);
-                _session.TimeoutMilliseconds = 2000;
+                _session.TimeoutMilliseconds = _timeoutMs;
+                _session.TerminationCharacterEnabled = true;
+                _session.TerminationCharacter = _terminationChar;
+
                 _connected = true;
             });
 

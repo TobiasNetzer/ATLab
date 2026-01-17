@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ATLab.Enums;
 using ATLab.CTIA;
 using ATLab.Interfaces;
+using ATLab.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab.ViewModels;
@@ -74,7 +75,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         
         var factory = _serviceProvider.GetRequiredService<ICommunicationFactory>();
-        var comm = factory.CreateSerial(SelectedPort);
+        var comm = factory.CreateSerial(SelectedPort, new DeviceConfiguration());
         
         var openResult = await comm.ConnectAsync();
         if (!openResult.IsSuccess)
