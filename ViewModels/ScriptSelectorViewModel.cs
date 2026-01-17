@@ -95,6 +95,12 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         }
         
         var stepVars = SelectedScript.Variables;
+        if (stepVars.Count == 0)
+        {
+            ScriptVariables = null;
+            return;
+        }
+        
         ScriptVariables = new();
         foreach (var v in stepVars)
         {
@@ -167,6 +173,10 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     void RemoveDevice() => SelectedDevice = null;
 
     [RelayCommand]
-    void RemoveScript() => SelectedScript = null;
+    void RemoveScript()
+    { 
+        SelectedScript = null;
+        ScriptVariables = null;
+    }
 
 }
