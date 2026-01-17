@@ -32,6 +32,7 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="NationalInstruments.Visa" Version="25.5.0.13" />
     <PackageReference Include="System.IO.Ports" Version="10.0.1" />
   </ItemGroup>
 </Project>

@@ -63,8 +63,9 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     {
         if (!CanConnect) return false;
 
-        var serialPortManager = _serviceProvider.GetRequiredService<ISerialPortManager>();
-        var openResult = serialPortManager.TryOpen(SelectedPort);
+        var testHardwareInterfaceFactory = _serviceProvider.GetRequiredService<ICommunicationFactory>();
+        var testHardwareInterface = testHardwareInterfaceFactory.CreateSerial(SelectedPort);
+        var openResult = await testHardwareInterface.ConnectAsync();
         
         if (!openResult.IsSuccess)
         {
@@ -75,8 +76,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
         }
         else
         {
-            var service = serialPortManager.GetPort(SelectedPort);
-            var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, service);
+            var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_serviceProvider, testHardwareInterface);
             TestHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_serviceProvider, communication);
             var initResult = await TestHardware.InitializeAsync();
             if (!initResult.IsSuccess)

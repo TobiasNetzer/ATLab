@@ -8,13 +8,13 @@ namespace ATLab.CTIA
 {
     public class CtiaCommunication: IDisposable
     {
-        private readonly ISerialCommunication _serialCommunication;
+        private readonly ICommunication _communication;
         private readonly IErrorService _errorService;
-        public bool IsConnected => _serialCommunication.IsConnected;
+        public bool IsConnected => _communication.IsConnected;
 
-        public CtiaCommunication(ISerialCommunication serialCommunication, IErrorService errorService)
+        public CtiaCommunication(ICommunication communication, IErrorService errorService)
         {
-            _serialCommunication = serialCommunication;
+            _communication = communication;
             _errorService = errorService;
         }
         
@@ -22,9 +22,9 @@ namespace ATLab.CTIA
         {
             try
             {
-                if (!_serialCommunication.IsConnected)
+                if (!_communication.IsConnected)
                 {
-                    var reconnectResult = await _serialCommunication.ReconnectAsync();
+                    var reconnectResult = await _communication.ReconnectAsync();
                     if (!reconnectResult.IsSuccess)
                     {
                         _errorService.AddError("Test hardware is no longer connected. Reconnection attempt failed.");
@@ -38,7 +38,7 @@ namespace ATLab.CTIA
                     }
                 }
 
-                byte[] responseBytes = await _serialCommunication.SendAsync(frame.ToByteArray(), timeoutMs);
+                byte[] responseBytes = await _communication.SendAsync(frame.ToByteArray(), timeoutMs);
                 return CtiaCommandFrame.Parse(responseBytes);
             }
             catch (TimeoutException)
@@ -65,18 +65,18 @@ namespace ATLab.CTIA
 
         public async Task<OperationResult> ReconnectAsync()
         {
-            return await _serialCommunication.ReconnectAsync();
+            return await _communication.ReconnectAsync();
         }
 
         public async Task<CtiaCommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
         {
-            byte[] receivedData = await _serialCommunication.ReceiveAsync(cancellationToken);
+            byte[] receivedData = await _communication.ReceiveAsync(cancellationToken);
             return CtiaCommandFrame.Parse(receivedData);
         }
 
         public void Dispose()
         {
-            if (_serialCommunication is IDisposable d) d.Dispose();
+            if (_communication is IDisposable d) d.Dispose();
         }
     }
 }

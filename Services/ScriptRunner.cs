@@ -12,16 +12,18 @@ namespace ATLab.Services;
 
 public class ScriptRunner : IScriptRunner
 {
-    private readonly ISerialPortManager _portManager;
+    private readonly ICommunicationFactory _communicationInterface;
     private readonly IScriptRepository _scriptRepository;
     private readonly SerialDeviceManagerViewModel _deviceManager;
 
+    private ICommunication? _testDeviceInterface;
+
     public ScriptRunner(
-        ISerialPortManager portManager,
+        ICommunicationFactory communicationInterface,
         IScriptRepository scriptRepository,
         SerialDeviceManagerViewModel deviceManager)
     {
-        _portManager = portManager;
+        _communicationInterface = communicationInterface;
         _scriptRepository = scriptRepository;
         _deviceManager = deviceManager;
     }
@@ -70,9 +72,23 @@ public class ScriptRunner : IScriptRunner
             }
 
             var portName = device.SerialPort;
-            _portManager.Open(portName);
-            var transport = _portManager.GetPort(portName);
-            var client = new ScriptClient(transport);
+
+            if (_testDeviceInterface == null ||
+                !_testDeviceInterface.IsConnected ||
+                _testDeviceInterface.Resource != portName)
+            {
+                if (_testDeviceInterface != null)
+                    await _testDeviceInterface.DisconnectAsync();
+
+                _testDeviceInterface = _communicationInterface.CreateSerial(portName);
+
+                var result = await _testDeviceInterface.ConnectAsync();
+                if (!result.IsSuccess)
+                    return OperationResult<string?>.Failure(result.ErrorMessage);
+            }
+
+            
+            var client = new ScriptClient(_testDeviceInterface);
 
             foreach (var command in script.Commands)
             {

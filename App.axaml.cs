@@ -42,9 +42,8 @@ public class App : Application
             
             var initSuccess = false;
             var openConnectWindow = false;
-
-            var serialPortManager = _services.GetRequiredService<ISerialPortManager>();
             var lastPort = settingsService.Settings.LastComPort;
+            var factory = _services.GetRequiredService<ICommunicationFactory>();
 
             if (string.IsNullOrEmpty(lastPort))
             {
@@ -52,19 +51,20 @@ public class App : Application
             }
             else
             {
-                var openResult = serialPortManager.TryOpen(lastPort);
+                var testHardwareInterface = factory.CreateSerial(lastPort);
+                var openResult = await testHardwareInterface.ConnectAsync();
                 if (!openResult.IsSuccess)
                 {
                     openConnectWindow = true;
                 }
                 else
                 {
-                    var service = serialPortManager.GetPort(lastPort);
-                    var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_services!, service);
+                    var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_services!, testHardwareInterface);
                     _testHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_services!, communication);
                     var initResult = await _testHardware.InitializeAsync();
                     if (!initResult.IsSuccess)
                     {
+                        await testHardwareInterface.DisconnectAsync();
                         openConnectWindow = true;
                     }
                     else initSuccess = true;
@@ -162,7 +162,6 @@ public class App : Application
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IProjectService, ProjectService>();
-        services.AddSingleton<ISerialPortManager, SerialPortManager>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
@@ -182,6 +181,7 @@ public class App : Application
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
         services.AddSingleton<IShellCommandRunner>(_ => ShellCommandRunnerFactory.Create());
+        services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
 
         
         // ViewModels

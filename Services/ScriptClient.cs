@@ -6,10 +6,10 @@ namespace ATLab.Services;
 
 public class ScriptClient
 {
-    private readonly ISerialCommunication _transport;
+    private readonly ICommunication _transport;
     private readonly Encoding _encoding = Encoding.ASCII;
 
-    public ScriptClient(ISerialCommunication transport)
+    public ScriptClient(ICommunication transport)
     {
         _transport = transport;
     }
