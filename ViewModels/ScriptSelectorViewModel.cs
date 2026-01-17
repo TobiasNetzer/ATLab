@@ -13,7 +13,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private readonly IScriptService _scriptService;
     private readonly ISettingsService _settingsService;
     
-    public ObservableCollection<Device> Devices => _deviceManager.SerialDevices;
+    public ObservableCollection<Device> Devices => _deviceManager.Devices;
     public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]

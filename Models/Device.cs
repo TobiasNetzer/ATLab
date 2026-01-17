@@ -1,7 +1,16 @@
-﻿namespace ATLab.Models;
+﻿using ATLab.Enums;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Device
+namespace ATLab.Models;
+
+public partial class Device : ObservableObject
 {
-    public string Name { get; set; } = "";
-    public string ResourceString { get; set; } = "";
+    [ObservableProperty]
+    private string _name = string.Empty;
+
+    [ObservableProperty]
+    private string _resourceString = string.Empty;
+
+    [ObservableProperty]
+    private DeviceType _type;
 }

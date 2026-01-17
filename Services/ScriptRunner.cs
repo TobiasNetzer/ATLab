@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -65,31 +66,35 @@ public class ScriptRunner : IScriptRunner
                 return OperationResult<string?>.Failure($"Script with ID {scriptId} not found.");
             }
 
-            var device = _deviceManager.SerialDevices.FirstOrDefault(d => d.Name == deviceName);
+            var device = _deviceManager.Devices.FirstOrDefault(d => d.Name == deviceName);
             if (device == null)
             {
                 return OperationResult<string?>.Failure($"Device {deviceName} not found.");
             }
 
-            var portName = device.ResourceString;
-
+            var resource = device.ResourceString;
+            
             if (_testDeviceInterface == null ||
                 !_testDeviceInterface.IsConnected ||
-                _testDeviceInterface.Resource != portName)
+                _testDeviceInterface.Resource != resource)
             {
                 if (_testDeviceInterface != null)
                 {
                     await _testDeviceInterface.DisconnectAsync();
                     (_testDeviceInterface as IDisposable)?.Dispose();
                 }
-                    
-                _testDeviceInterface = _communicationInterface.CreateSerial(portName);
-
+                
+                _testDeviceInterface = device.Type switch
+                {
+                    DeviceType.SERIAL => _communicationInterface.CreateSerial(resource),
+                    DeviceType.VISA   => _communicationInterface.CreateVisa(resource),
+                    _ => throw new NotSupportedException($"Unsupported device type: {device.Type}")
+                };
+                
                 var result = await _testDeviceInterface.ConnectAsync();
                 if (!result.IsSuccess)
                     return OperationResult<string?>.Failure(result.ErrorMessage);
             }
-
             
             var client = new ScriptClient(_testDeviceInterface);
 

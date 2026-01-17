@@ -3,4 +3,5 @@
 public interface ICommunicationFactory
 {
     ICommunication CreateSerial(string portName, int baudRate = 115200);
+    ICommunication CreateVisa(string resourceString);
 }

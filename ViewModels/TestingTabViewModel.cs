@@ -149,7 +149,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettingsViewModel.ConfigurationChanged += () => CheckForChanges();
-        _deviceManager.SerialDevices.CollectionChanged += (_, _) => CheckForChanges();
+        _deviceManager.Devices.CollectionChanged += (_, _) => CheckForChanges();
         
         _projectService.UpdateLastSavedState(CaptureCurrentState());
     }
@@ -559,7 +559,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestSteps.Clear();
             TestHardwareRelayChannels.ResetToDefault();
             _projectSettingsViewModel.ResetToDefault();
-            _deviceManager.SerialDevices.Clear();
+            _deviceManager.Devices.Clear();
             _projectService.UpdateLastSavedState(CaptureCurrentState());
             SelectedStepIndex = -1;
             AddTestStep();
@@ -581,7 +581,7 @@ public partial class TestingTabViewModel : ViewModelBase
             StimChannelNames = TestHardwareRelayChannels.GetStimNames(),
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
-            Devices = _deviceManager.SerialDevices.ToList(),
+            Devices = _deviceManager.Devices.ToList(),
             DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
             UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
             SaveTestResults = _projectSettingsViewModel.SaveTestResult,
@@ -674,10 +674,10 @@ public partial class TestingTabViewModel : ViewModelBase
         
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
-        _deviceManager.SerialDevices.Clear();
+        _deviceManager.Devices.Clear();
         foreach (var device in dto.Devices)
         {
-            _deviceManager.SerialDevices.Add(device);
+            _deviceManager.Devices.Add(device);
         }
         
         SelectedStepIndex = 0;

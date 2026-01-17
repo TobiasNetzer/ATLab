@@ -4,91 +4,112 @@
              x:Class="ATLab.Controls.DeviceManager"
              x:DataType="vm:DeviceManagerViewModel"
              Width="780">
-    
+
     <Grid RowDefinitions="Auto, *">
         
-        <Border Grid.Row="0" Background="{DynamicResource SystemBaseLowColor}"
+        <Border Grid.Row="0"
+                Background="{DynamicResource SystemBaseLowColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            
             <TextBlock Text="Device Manager"
                        FontSize="18"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
         </Border>
         
-        <Border Grid.Row="1" Background="{DynamicResource SystemChromeLowColor}"
+        <Border Grid.Row="1"
+                Background="{DynamicResource SystemChromeLowColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource SystemBaseLowColor}">
-            
-            <StackPanel>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
                 
-                <StackPanel Orientation="Horizontal"
-                        Spacing="10"
-                        Margin="10">
-                    
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Device Name:"/>
-                        <TextBox Width="200" Text="{Binding CustomDeviceName}"/>
-                    </StackPanel>
-                
-                    <StackPanel Spacing="2">
-                    
-                        <TextBlock Text="Serial Port:"/>
-                    
-                        <StackPanel Orientation="Horizontal" Spacing="5">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10"
+                                Margin="10">
                         
-                            <ComboBox ItemsSource="{Binding AvailablePorts}"
-                                      SelectedItem="{Binding SelectedPort}"
-                                      Width="150"
-                                      Margin="0 0 5 0"/>
-                        
-                            <Button Content="&#xE72C;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Reload serial ports"
-                                    Command="{Binding RefreshPortsCommand}"/>
-                        
-                            <Button Content="&#xF8AA;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Add new device" 
-                                    Command="{Binding AddDeviceCommand}"/>
-                        
-                            <Button Content="&#xF8AB;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Remove device" 
-                                    Command="{Binding RemoveDeviceCommand}"/>
-                            
-                            <Button Content="&#xEB7E;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Update serial port of selected device" 
-                                    Command="{Binding EditPortCommand}"/>
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Device Name:"/>
+                            <TextBox Width="150"
+                                     Text="{Binding CustomDeviceName}"/>
                         </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Interface:"/>
+                            <ComboBox Width="150"
+                                      ItemsSource="{Binding AvailableDeviceTypes}"
+                                      SelectedItem="{Binding SelectedDeviceType}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Resource:"/>
+
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                
+                                <ComboBox Width="150"
+                                          ItemsSource="{Binding AvailableSerialPorts}"
+                                          SelectedItem="{Binding SelectedResource}"
+                                          IsVisible="{Binding SelectedDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}"/>
+                                
+                                <ComboBox Width="150"
+                                          ItemsSource="{Binding AvailableVisaResources}"
+                                          SelectedItem="{Binding SelectedResource}"
+                                          IsVisible="{Binding SelectedDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA}"/>
+                                
+                                <Button Content="&#xE72C;"
+                                        FontFamily="{StaticResource FluentIconsFont}"
+                                        FontSize="20"
+                                        ToolTip.Tip="Reload resources"
+                                        Margin=" 5 0 0 0"
+                                        Command="{Binding RefreshResourcesCommand}"/>
+                                
+                                <Button Content="&#xF8AA;"
+                                        FontFamily="{StaticResource FluentIconsFont}"
+                                        FontSize="20"
+                                        ToolTip.Tip="Add new device"
+                                        Command="{Binding AddDeviceCommand}"/>
+                                
+                                <Button Content="&#xF8AB;"
+                                        FontFamily="{StaticResource FluentIconsFont}"
+                                        FontSize="20"
+                                        ToolTip.Tip="Remove device"
+                                        Command="{Binding RemoveDeviceCommand}"/>
+                                
+                                <Button Content="&#xEB7E;"
+                                        FontFamily="{StaticResource FluentIconsFont}"
+                                        FontSize="20"
+                                        ToolTip.Tip="Update selected device"
+                                        Command="{Binding EditDeviceCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+
                     </StackPanel>
+                    
+                    <DataGrid ItemsSource="{Binding Devices}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="All"
+                              BorderThickness="1"
+                              BorderBrush="Gray"
+                              Margin="10 0 10 10">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Device Name"
+                                                Binding="{Binding Name}"
+                                                Width="150"/>
+                            <DataGridTextColumn Header="Interface"
+                                                Binding="{Binding Type}"
+                                                Width="120"/>
+                            <DataGridTextColumn Header="Resource"
+                                                Binding="{Binding ResourceString}"
+                                                Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
-                
-                <DataGrid ItemsSource="{Binding SerialDevices}"
-                          SelectedItem="{Binding SelectedDevice}"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          GridLinesVisibility="All"
-                          BorderThickness="1"
-                          BorderBrush="Gray"
-                          Margin="10 0 10 10">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Device Name"
-                                            Binding="{Binding Name}"
-                                            Width="*"/>
-                        <DataGridTextColumn Header="Port"
-                                            Binding="{Binding ResourceString}"
-                                            Width="200"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
+            </ScrollViewer>
         </Border>
     </Grid>
 </UserControl>
