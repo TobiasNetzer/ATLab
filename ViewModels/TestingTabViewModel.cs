@@ -642,9 +642,40 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService.IsStateChanged(CaptureCurrentState());
     }
 
-    private void OnStepPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         CheckForChanges();
+
+        if (sender is not TestStepViewModel changedVm)
+            return;
+        
+        if (changedVm != SelectedStep)
+            return;
+        
+        if (string.IsNullOrWhiteSpace(e.PropertyName))
+            return;
+        
+        var isTestStepProperty = typeof(TestStep).GetProperty(e.PropertyName) != null;
+        if (!isTestStepProperty)
+            return;
+
+        foreach (var vm in SelectedSteps)
+        {
+            if (vm == changedVm)
+                continue;
+
+            CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+        }
+    }
+    
+    private static void CopyChangedProperty(TestStep source, TestStep target, string propertyName)
+    {
+        var prop = typeof(TestStep).GetProperty(propertyName);
+        if (prop == null || !prop.CanWrite)
+            return;
+
+        var value = prop.GetValue(source);
+        prop.SetValue(target, value);
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]

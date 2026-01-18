@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -35,9 +36,9 @@ public partial class TestStepViewModel : ViewModelBase
         if (oldValue != null) oldValue.PropertyChanged -= TestStep_PropertyChanged;
         newValue.PropertyChanged += TestStep_PropertyChanged;
     }
-
-    private void TestStep_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    
+    private void TestStep_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(TestStep));
+        OnPropertyChanged(e.PropertyName);
     }
 }

@@ -12,6 +12,7 @@ public partial class TestStep : ObservableObject
     public TestStep()
     {
         _scriptVariables.CollectionChanged += ScriptVariables_CollectionChanged;
+        _matrixState.PropertyChanged += Child_PropertyChanged;
     }
 
     [ObservableProperty]
