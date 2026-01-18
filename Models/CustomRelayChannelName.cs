@@ -27,4 +27,10 @@ public class CustomRelayChannelName : INotifyPropertyChanged
         _channelName = channelName;
         ChannelIndex = channelIndex;
     }
+    
+    public override string ToString()
+    {
+        // this allows for keyboard selection
+        return $"{ChannelIndex} {ChannelName}";
+    }
 }
