@@ -26,9 +26,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private TestingTabViewModel _testingTab;
-
-    [ObservableProperty]
-    private TestBenchViewModel _testBench;
     
     [ObservableProperty]
     private ConfigTabViewModel _configTab;
@@ -59,7 +56,6 @@ public partial class MainWindowViewModel : ViewModelBase
         IProjectService projectService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
-        TestBenchViewModel testBench, 
         ConfigTabViewModel configTab,
         ScriptsManagerViewModel scriptsManagerViewModel,
         AboutTabViewModel aboutTab)
@@ -70,7 +66,6 @@ public partial class MainWindowViewModel : ViewModelBase
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
 
         TestingTab = testingTab;
-        TestBench = testBench;
         ConfigTab = configTab;
         ScriptTab = scriptsManagerViewModel;
         AboutTab = aboutTab;
@@ -78,7 +73,6 @@ public partial class MainWindowViewModel : ViewModelBase
         _selectedTab = TestingTab;
         
         Tabs.Add(TestingTab);
-        Tabs.Add(TestBench);
         Tabs.Add(ConfigTab);
         Tabs.Add(ScriptTab);
         Tabs.Add(AboutTab);
@@ -154,9 +148,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         switch (value)
         {
-            case TestBenchViewModel:
-                TestBench.LoadTestBenchTabState();
-                break;
             case TestingTabViewModel:
                 TestingTab.SelectedStepIndex = 0;
                 break;

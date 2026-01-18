@@ -196,7 +196,6 @@ public class App : Application
         
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TestingTabViewModel>();
-        services.AddTransient<TestBenchViewModel>();
         services.AddTransient<ConfigTabViewModel>();
         services.AddTransient<ScriptsManagerViewModel>();
         services.AddTransient<AboutTabViewModel>();
