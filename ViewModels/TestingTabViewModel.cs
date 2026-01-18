@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -149,9 +150,51 @@ public partial class TestingTabViewModel : ViewModelBase
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettingsViewModel.ConfigurationChanged += () => CheckForChanges();
-        _deviceManager.Devices.CollectionChanged += (_, _) => CheckForChanges();
+        _deviceManager.Devices.CollectionChanged += DevicesChanged;
+        
+        foreach (var device in _deviceManager.Devices)
+            SubscribeToDevice(device);
         
         _projectService.UpdateLastSavedState(CaptureCurrentState());
+    }
+    
+    private void DevicesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (Device device in e.NewItems)
+                SubscribeToDevice(device);
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (Device device in e.OldItems)
+                UnsubscribeFromDevice(device);
+        }
+
+        CheckForChanges();
+    }
+
+    private void SubscribeToDevice(Device device)
+    {
+        device.PropertyChanged += DeviceChanged;
+        device.Configuration.PropertyChanged += DeviceConfigurationChanged;
+    }
+
+    private void UnsubscribeFromDevice(Device device)
+    {
+        device.PropertyChanged -= DeviceChanged;
+        device.Configuration.PropertyChanged -= DeviceConfigurationChanged;
+    }
+
+    private void DeviceChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CheckForChanges();
+    }
+
+    private void DeviceConfigurationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CheckForChanges();
     }
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)

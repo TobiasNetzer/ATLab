@@ -1,19 +1,19 @@
 ﻿using System.IO.Ports;
+using ATLab.Enums;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
-public class DeviceConfiguration
+public partial class DeviceConfiguration : ObservableObject
 {
-
     // Serial settings
-    public int BaudRate { get; set; } = 115200;
-    public int DataBits { get; set; } = 8;
-    public Parity Parity { get; set; } = Parity.None;
-    public StopBits StopBits { get; set; } = StopBits.One;
-    public Handshake Handshake { get; set; } = Handshake.None;
+    [ObservableProperty] private int _baudRate = 115200;
+    [ObservableProperty] private int _dataBits = 8;
+    [ObservableProperty] private Parity _parity = Parity.None;
+    [ObservableProperty] private StopBits _stopBits = StopBits.One;
+    [ObservableProperty] private Handshake _handshake = Handshake.None;
 
     // VISA settings
-    public int VisaTimeoutMs { get; set; } = 2000;
-    public byte VisaTerminationChar { get; set; } = 0x0A; // LF
-    
+    [ObservableProperty] private int _visaTimeoutMs = 2000;
+    [ObservableProperty] private VisaTerminationMode _visaTerminationMode = VisaTerminationMode.LF;
 }

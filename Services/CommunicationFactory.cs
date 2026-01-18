@@ -18,5 +18,5 @@ public class CommunicationFactory : ICommunicationFactory
         => new NiVisaService(
             resourceString,
             config.VisaTimeoutMs,
-            config.VisaTerminationChar);
+            config.VisaTerminationMode);
 }

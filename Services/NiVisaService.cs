@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using Ivi.Visa;
@@ -15,16 +16,16 @@ public class NiVisaService : ICommunication, IDisposable
     private bool _connected;
 
     private readonly int _timeoutMs;
-    private readonly byte _terminationChar;
+    private readonly VisaTerminationMode _terminationMode;
 
     public string Resource { get; }
     public bool IsConnected => _connected;
 
-    public NiVisaService(string resource, int timeoutMs, byte terminationChar)
+    public NiVisaService(string resource, int timeoutMs, VisaTerminationMode terminationMode)
     {
         Resource = resource ?? throw new ArgumentNullException(nameof(resource));
         _timeoutMs = timeoutMs;
-        _terminationChar = terminationChar;
+        _terminationMode = terminationMode;
     }
 
     public async Task<OperationResult> ConnectAsync()
@@ -42,8 +43,9 @@ public class NiVisaService : ICommunication, IDisposable
                 var rm = new ResourceManager();
                 _session = (MessageBasedSession)rm.Open(Resource);
                 _session.TimeoutMilliseconds = _timeoutMs;
-                _session.TerminationCharacterEnabled = true;
-                _session.TerminationCharacter = _terminationChar;
+                var termByte = ToTerminationByte(_terminationMode);
+                _session.TerminationCharacterEnabled = _terminationMode != VisaTerminationMode.NONE;
+                _session.TerminationCharacter = termByte;
 
                 _connected = true;
             });
@@ -145,5 +147,17 @@ public class NiVisaService : ICommunication, IDisposable
         _session?.Dispose();
         _session = null;
         _connected = false;
+    }
+
+    private static byte ToTerminationByte(VisaTerminationMode mode)
+    {
+        return mode switch
+        {
+            VisaTerminationMode.LF   => 10,
+            VisaTerminationMode.CR   => 13,
+            VisaTerminationMode.CRLF => 10, // VISA uses LF; CR must be written manually
+            VisaTerminationMode.NONE => 0,
+            _ => 10
+        };
     }
 }
