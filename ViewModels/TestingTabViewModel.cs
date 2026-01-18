@@ -112,6 +112,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
     public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero;
 
+    private bool _allowResultSave;
 
     public TestingTabViewModel(
         ISettingsService settingsService,
@@ -510,7 +511,9 @@ public partial class TestingTabViewModel : ViewModelBase
         TestProgress = 0;
         SelectedStepIndex = 0;
 
+        _allowResultSave = true;
         await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+        _allowResultSave = false;
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -569,6 +572,9 @@ public partial class TestingTabViewModel : ViewModelBase
 
             if (TestStatus == TestStatus.CANCELLED)
                 return;
+            
+            if (_allowResultSave)
+                _ = _testResultExportService.SaveAsync(TestSteps, SerialNumber, NumberFailedSteps);
 
             if (NumberFailedSteps > 0)
             {
@@ -578,8 +584,6 @@ public partial class TestingTabViewModel : ViewModelBase
             
             TestStatus = TestStatus.PASSED;
             NumberPassedTests++;
-
-            _ = _testResultExportService.SaveAsync(TestSteps, SerialNumber, NumberFailedSteps);
         };
 
         _testExecutor.TestCancelled += () =>
