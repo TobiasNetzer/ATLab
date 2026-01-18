@@ -71,7 +71,7 @@
 
             <StackPanel Margin="10" Spacing="15">
                 
-                <StackPanel Spacing="5">
+                <StackPanel Spacing="2">
                     <TextBlock Text="Target Device:"/>
 
                     <DockPanel>
@@ -104,7 +104,7 @@
                     </DockPanel>
                 </StackPanel>
                 
-                <StackPanel Spacing="5">
+                <StackPanel Spacing="2">
                     <TextBlock Text="Script:"/>
 
                     <DockPanel>

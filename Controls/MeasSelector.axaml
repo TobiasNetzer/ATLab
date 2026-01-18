@@ -60,7 +60,7 @@
                         Orientation="Horizontal"
                         Spacing="20"
                         Margin="10">
-                <StackPanel Spacing="5">
+                <StackPanel>
                     <TextBlock Text="Matrix H:"
                                FontSize="16"/>
                     
@@ -89,7 +89,7 @@
                         VerticalAlignment="Bottom"
                         Command="{Binding ToggleChannelsCommand}"/>
                 
-                <StackPanel Spacing="5">
+                <StackPanel>
                     <TextBlock Text="Matrix L:"
                                FontSize="16"/>
                 
