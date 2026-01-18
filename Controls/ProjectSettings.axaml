@@ -60,7 +60,7 @@
                                          IsChecked="{Binding SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ONLY_WHEN_PASSED}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
 
-                            <StackPanel Orientation="Horizontal" Spacing="10">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBox Width="300"
                                          Text="{Binding SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>

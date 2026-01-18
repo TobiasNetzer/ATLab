@@ -52,10 +52,17 @@ public partial class DeviceManagerViewModel : ViewModelBase
     [RelayCommand]
     private void RefreshResources()
     {
-        if (SelectedDevice?.Type == DeviceType.SERIAL)
-            RefreshSerialPorts();
-        else
-            RefreshVisaResources();
+        switch (SelectedDevice?.Type)
+        {
+            case DeviceType.SERIAL: RefreshSerialPorts();
+                break;
+            case DeviceType.VISA: RefreshVisaResources();
+                break;
+            case null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private void RefreshSerialPorts()
