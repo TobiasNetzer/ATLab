@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
@@ -14,12 +15,16 @@ public partial class TestBenchViewModel : ViewModelBase
     private readonly ITestHardware _testHardware;
     private readonly ISimulationService _simulationService;
     private readonly IScriptRunner _scriptRunner;
+    private readonly IShellCommandRunner _shellCommandRunner;
 
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
-
+    
     [ObservableProperty]
-    private ScriptSelectorViewModel _scriptSelectorViewModel;
+    private ScriptSelectorViewModel _scriptSelector;
+    
+    [ObservableProperty]
+    private ShellCommandEditorViewModel _shellCommandEditor;
     
     [ObservableProperty]
     private Device? _selectedDevice;
@@ -29,6 +34,9 @@ public partial class TestBenchViewModel : ViewModelBase
     
     [ObservableProperty]
     private bool _isBusy;
+    
+    [ObservableProperty]
+    private string _scriptResult = string.Empty;
         
     private readonly RelayGroup _testStimState;
     private readonly RelayGroup _testExtStimState;
@@ -40,19 +48,23 @@ public partial class TestBenchViewModel : ViewModelBase
         TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
         ISimulationService simulationService,
         IScriptRunner scriptRunner,
-        ScriptSelectorViewModel scriptSelector)
+        IShellCommandRunner shellCommandRunner,
+        ScriptSelectorViewModel scriptSelector,
+        ShellCommandEditorViewModel shellCommandEditor)
     {
         _errorService = errorService;
         _testHardware = testHardware;
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _simulationService = simulationService;
         _scriptRunner = scriptRunner;
-        ScriptSelectorViewModel = scriptSelector;
+        _shellCommandRunner = shellCommandRunner;
+        ScriptSelector = scriptSelector;
+        ShellCommandEditor = shellCommandEditor;
         
-        ScriptSelectorViewModel.PropertyChanged += (s, e) =>
+        ScriptSelector.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName is nameof(ScriptSelectorViewModel.SelectedDevice) 
-                               or nameof(ScriptSelectorViewModel.SelectedScript))
+            if (e.PropertyName is nameof(ScriptSelector.SelectedDevice) 
+                               or nameof(ScriptSelector.SelectedScript))
             {
                 RunScriptCommand.NotifyCanExecuteChanged();
             }
@@ -65,8 +77,6 @@ public partial class TestBenchViewModel : ViewModelBase
         _testMatrixState = new RelayMatrix(0,0);
         LoadTestBenchTabState();
     }
-    
-    private bool CanUpdateRelayStates() => !_simulationService.IsSimulationMode && !IsBusy;
 
     [RelayCommand(CanExecute = nameof(CanUpdateRelayStates))]
     private async Task UpdateTestHardwareRelayStates()
@@ -103,28 +113,27 @@ public partial class TestBenchViewModel : ViewModelBase
         TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(_testMatrixState);
     }
     
-    private bool CanRunScript() => 
-        ScriptSelectorViewModel.SelectedDevice != null && 
-        ScriptSelectorViewModel.SelectedScript != null && 
-        !IsBusy;
-    
     [RelayCommand(CanExecute = nameof(CanRunScript))]
     private async Task RunScript()
     {
-        if (ScriptSelectorViewModel.SelectedDevice == null || ScriptSelectorViewModel.SelectedScript == null) return;
+        if (ScriptSelector.SelectedDevice == null || ScriptSelector.SelectedScript == null) return;
 
         IsBusy = true;
         try
         {
-            var result = await _scriptRunner.ExecuteAsync(
-                ScriptSelectorViewModel.SelectedScript.Id, 
-                ScriptSelectorViewModel.SelectedDevice.Name, 
-                ScriptSelectorViewModel.SelectedScript.Variables, 
+            var result = await _scriptRunner.ExecuteAsync<double>(
+                ScriptSelector.SelectedScript.Id, 
+                ScriptSelector.SelectedDevice.Name, 
+                ScriptSelector.SelectedScript.Variables, 
                 CancellationToken.None);
 
             if (!result.IsSuccess)
             {
                 _errorService.AddError($"Failed to run script: {result.ErrorMessage}");
+            }
+            else
+            {
+               ScriptResult = result.Value.ToString(CultureInfo.CurrentCulture);
             }
         }
         catch (Exception ex)
@@ -136,5 +145,45 @@ public partial class TestBenchViewModel : ViewModelBase
             IsBusy = false;
         }
     }
-    partial void OnIsBusyChanged(bool value) => RunScriptCommand.NotifyCanExecuteChanged();
+
+    [RelayCommand(CanExecute = nameof(CanRunShell))]
+    private async Task RunShell()
+    {
+        if (string.IsNullOrWhiteSpace(ShellCommandEditor.ShellCommand.Command))
+            return;
+        
+        IsBusy = true;
+        
+        try
+        {
+            var result = await _shellCommandRunner.RunAsync(ShellCommandEditor.ShellCommand.Command,ShellCommandEditor.ShellCommand.Option, CancellationToken.None);
+
+            if (!result.IsSuccess)
+            {
+                _errorService.AddError($"Failed to run shell command: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorService.AddError($"Unexpected error while running shell command: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+    
+    private bool CanUpdateRelayStates() => !_simulationService.IsSimulationMode && !IsBusy;
+    private bool CanRunScript() => 
+        ScriptSelector.SelectedDevice != null && 
+        ScriptSelector.SelectedScript != null && 
+        !IsBusy;
+
+    private bool CanRunShell() => !IsBusy;
+
+    partial void OnIsBusyChanged(bool value)
+    {
+        RunScriptCommand.NotifyCanExecuteChanged();
+        RunShellCommand.NotifyCanExecuteChanged();
+    } 
 }
