@@ -72,17 +72,20 @@ public class CsvExportService
 
     private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
     {
-        return from vm in steps let ts = vm.TestStep select new TestStepCsvRow(
-            Number: ts.Number,
-            Name: ts.Name,
-            NominalValue: ts.NominalValue,
-            LowerLimit: ts.LowerLimit,
-            UpperLimit: ts.UpperLimit,
-            Unit: ts.Unit,
-            Result: vm.ResultNoFormatting,
-            IsPassed: vm.IsPassed ? "Pass" : "Fail",
-            Deviation: vm.Deviation?.Replace("%", "")
-        );
+        return from vm in steps
+            let ts = vm.TestStep
+            where !ts.IgnoreStep && !ts.DontSaveResult
+            select new TestStepCsvRow(
+                Number: ts.Number,
+                Name: ts.Name,
+                NominalValue: ts.NominalValue,
+                LowerLimit: ts.LowerLimit,
+                UpperLimit: ts.UpperLimit,
+                Unit: ts.Unit,
+                Result: vm.ResultNoFormatting,
+                IsPassed: vm.IsPassed ? "Pass" : "Fail",
+                Deviation: vm.Deviation?.Replace("%", "")
+            );
     }
 
     private string BuildCsv(IEnumerable<TestStepViewModel> steps)

@@ -65,22 +65,30 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(13)]
+    private bool _ignoreStep;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(14)]
+    private bool _dontSaveResult;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(15)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(14)]
+    [property: JsonPropertyOrder(16)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(15)]
+    [property: JsonPropertyOrder(17)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(16)]
+    [property: JsonPropertyOrder(18)]
     private ShellCommand _shellCommand = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(17)]
+    [property: JsonPropertyOrder(19)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -91,10 +99,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(18)]
+    [JsonPropertyOrder(20)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(19)]
+    [JsonPropertyOrder(21)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     partial void OnShellCommandChanged(ShellCommand? oldValue, ShellCommand newValue)
@@ -180,6 +188,8 @@ public partial class TestStep : ObservableObject
             Comment = Comment,
             ShowCommentOnTestStart = ShowCommentOnTestStart,
             CustomMessageBoxImagePath = CustomMessageBoxImagePath,
+            IgnoreStep = IgnoreStep,
+            DontSaveResult = DontSaveResult,
             TargetDevice = TargetDevice,
             ScriptId = ScriptId,
             ShellCommand = new ShellCommand(ShellCommand),

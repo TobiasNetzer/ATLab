@@ -151,6 +151,10 @@ public class TestExecutor : ITestExecutor
         for (var i = startIndex; i < steps.Count; i++)
         {
             var step = steps[i];
+            
+            if(step.TestStep.IgnoreStep)
+                continue;
+            
             OnStepStarted(i, step);
             OperationResult<double> stepExecutionResult;
 

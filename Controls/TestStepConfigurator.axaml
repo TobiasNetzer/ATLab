@@ -149,23 +149,38 @@
                         
                     </StackPanel>
                     
-                    <CheckBox Margin="10 20 0 0 "
-                              Content="Repeat until Pass"
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Margin="10 0 0 0">
+                    
+                    <CheckBox Content="Repeat until Pass"
+                              TabIndex="7"
                               IsChecked="{Binding TestStepViewModel.TestStep.RepeatUntilPass, FallbackValue='False'}"/>
+                    
+                    <CheckBox Content="Ignore Step"
+                              TabIndex="8"
+                              IsChecked="{Binding TestStepViewModel.TestStep.IgnoreStep, FallbackValue='False'}"/>
+                    
+                    <CheckBox Content="Don't save result"
+                              TabIndex="9"
+                              IsChecked="{Binding TestStepViewModel.TestStep.DontSaveResult, FallbackValue='False'}"/>
+                    
                 </StackPanel>
                 
                 <StackPanel HorizontalAlignment="Left"
                             Orientation="Vertical"
                             Spacing="5"
-                            Margin="10">
+                            Margin="10 5 10 10">
                     
                     <TextBlock Text="Comment:"
                                VerticalAlignment="Bottom"/>
                     
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
-                             TabIndex="7"
+                             TabIndex="10"
                              Width="480"
-                             Height="100"
+                             Height="60"
                              TextWrapping="Wrap"/>
                     
                     <StackPanel Orientation="Horizontal"
@@ -174,16 +189,19 @@
                         
                         <CheckBox
                             Content="Show Message"
+                            TabIndex="11"
                             IsChecked="{Binding TestStepViewModel.TestStep.ShowCommentOnTestStart, FallbackValue=False}"/>
                         
                         <Button Content="&#xE8B9;"
                                 FontFamily="{StaticResource FluentIconsFont}"
                                 FontSize="20"
                                 ToolTip.Tip="Add image to message box"
+                                TabIndex="12"
                                 Command="{Binding OpenImagePickerCommand}"/>
                         
                         <TextBox Width="290"
-                            Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
+                                 TabIndex="13"
+                                 Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
                         
                     </StackPanel>
                 </StackPanel>

@@ -75,8 +75,7 @@
                     <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
                               MinWidth="100"
                               SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
-                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
-                              TabIndex="6"/>
+                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                 </StackPanel>
 
             </StackPanel>
