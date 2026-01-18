@@ -6,7 +6,6 @@ using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Ivi.Visa;
 using NationalInstruments.Visa;
 
 namespace ATLab.ViewModels;
@@ -84,21 +83,9 @@ public partial class DeviceManagerViewModel : ViewModelBase
             foreach (var res in rm.Find("(USB|GPIB|ASRL|TCPIP)?*"))
                 AvailableVisaResources.Add(res);
         }
-        catch (DllNotFoundException)
-        {
-            _errorService.AddError("No VISA backend was detected on this system. Please install NI‑VISA or Keysight VISA.");
-        }
-        catch (TypeInitializationException)
-        {
-            _errorService.AddError("The VISA backend could not be initialized. It may be missing or corrupted.");
-        }
-        catch (VisaException)
-        {
-            _errorService.AddError("VISA is installed, but no resources could be enumerated.");
-        }
         catch (Exception ex)
         {
-            _errorService.AddError($"An unexpected error occurred while accessing VISA:\n{ex.Message}");
+            _errorService.AddError($"An unexpected error occurred while accessing VISA: {ex.Message}");
         }
 
         if (SelectedDevice != null &&
