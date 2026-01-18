@@ -31,7 +31,7 @@ public class TestResultExportService
 
         try
         {
-            var timestamp = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss");
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             var filename = $"{serialNumber}_{timestamp}.csv";
 
             var directory = _settings.SaveTestResultFilePath;
