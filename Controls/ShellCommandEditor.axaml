@@ -1,7 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:ATLab.ViewModels"
-             xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ShellCommandEditor"
              x:DataType="x:Object"
@@ -68,11 +66,13 @@
 
                 <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
 
-                <StackPanel Orientation="Horizontal" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10"
+                            HorizontalAlignment="Right">
+                    
                     <TextBlock Text="Window Behavior:"
                                VerticalAlignment="Center"/>
 
-                    <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.EvaluationSources}"
+                    <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
                               MinWidth="100"
                               SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
                               DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"

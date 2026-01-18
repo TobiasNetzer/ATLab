@@ -12,7 +12,7 @@ public partial class ShellCommandEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     
-    public List<ShellCommandOptions> EvaluationSources { get; } = Enum.GetValues<ShellCommandOptions>().ToList();
+    public List<ShellCommandOptions> CommandOptions { get; } = Enum.GetValues<ShellCommandOptions>().ToList();
     
     [ObservableProperty]
     private ShellCommand _shellCommand = new();

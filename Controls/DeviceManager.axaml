@@ -29,21 +29,21 @@
                 <StackPanel Spacing="10">
                     
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Device Name" FontWeight="Bold"/>
+                        <TextBlock Text="Device Name"/>
                         <TextBox Text="{Binding EditorDeviceName}"
                                  Width="220"
                                  HorizontalAlignment="Left"/>
                     </StackPanel>
                     
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Interface" FontWeight="Bold"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Interface"/>
                         <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
                                   SelectedItem="{Binding EditorDeviceType}"
                                   Width="220"/>
                     </StackPanel>
                     
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Resource" FontWeight="Bold"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Resource"/>
 
                         <StackPanel Orientation="Horizontal" Spacing="5">
 
@@ -72,10 +72,8 @@
 
                     </StackPanel>
                     
-                    <StackPanel Spacing="5"
+                    <StackPanel Spacing="10"
                                 IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}">
-
-                        <TextBlock Text="Settings" FontWeight="Bold" FontSize="14"/>
                         
                         <StackPanel Spacing="2">
                             <TextBlock Text="Baud Rate"/>
@@ -115,8 +113,6 @@
                     
                     <StackPanel Spacing="10"
                                 IsVisible="{Binding EditorDeviceType, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA}">
-
-                        <TextBlock Text="Settings" FontWeight="Bold" FontSize="14"/>
                         
                         <StackPanel Spacing="2">
                             <TextBlock Text="Timeout (ms)"/>
