@@ -161,7 +161,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
-                <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" MinWidth="200" />
+                <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
                 
                 <DataGridTemplateColumn Header="Lower Limit" MinWidth="150">
                     <DataGridTemplateColumn.CellTemplate>
@@ -218,7 +218,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Deviation" Binding="{Binding Deviation}" MinWidth="150" />
-                <DataGridTextColumn Header="Comment" Binding="{Binding TestStep.Comment}" Width="*" MinWidth="300"/>
             </DataGrid.Columns>
         
             <DataGrid.ContextMenu>
