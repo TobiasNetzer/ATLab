@@ -77,10 +77,10 @@ public class App : Application
 
             if (openConnectWindow)
             {
-                var serialPortWindow = _services.GetRequiredService<SerialPortConnectWindow>();
+                var serialPortWindow = _services.GetRequiredService<TestHardwareConnectWindow>();
                 var tcs = new TaskCompletionSource<bool?>();
 
-                var vm = _services.GetRequiredService<SerialPortConnectWindowViewModel>();
+                var vm = _services.GetRequiredService<TestHardwareConnectWindowViewModel>();
                 serialPortWindow.DataContext = vm;
                 vm.Connected += connectionStatus =>
                 {
@@ -200,12 +200,12 @@ public class App : Application
         services.AddTransient<ScriptsManagerViewModel>();
         services.AddTransient<AboutTabViewModel>();
         services.AddTransient<ScriptSelectorViewModel>();
-        services.AddTransient<SerialPortConnectWindowViewModel>();
+        services.AddTransient<TestHardwareConnectWindowViewModel>();
         services.AddTransient<ShellCommandEditorViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();
-        services.AddTransient<SerialPortConnectWindow>();
+        services.AddTransient<TestHardwareConnectWindow>();
         
     }
 

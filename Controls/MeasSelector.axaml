@@ -65,7 +65,7 @@
                         Spacing="20"
                         Margin="10">
                 <StackPanel>
-                    <TextBlock Text="Matrix H:"
+                    <TextBlock Text="Matrix H"
                                FontSize="16"/>
                     
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
@@ -95,7 +95,7 @@
                         Command="{Binding ToggleChannelsCommand}"/>
                 
                 <StackPanel>
-                    <TextBlock Text="Matrix L:"
+                    <TextBlock Text="Matrix L"
                                FontSize="16"/>
                 
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"

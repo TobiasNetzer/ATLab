@@ -69,7 +69,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="10"
                             HorizontalAlignment="Right">
                     
-                    <TextBlock Text="Window Behavior:"
+                    <TextBlock Text="Window Behavior"
                                VerticalAlignment="Center"/>
 
                     <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"

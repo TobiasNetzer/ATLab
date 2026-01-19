@@ -3,15 +3,15 @@ using Avalonia.Controls;
 
 namespace ATLab.Views;
 
-public partial class SerialPortConnectWindow : Window
+public partial class TestHardwareConnectWindow : Window
 {
-    public SerialPortConnectWindow()
+    public TestHardwareConnectWindow()
     {
         InitializeComponent();
 
         DataContextChanged += (sender, args) =>
         {
-            if (DataContext is SerialPortConnectWindowViewModel vm)
+            if (DataContext is TestHardwareConnectWindowViewModel vm)
             {
                 vm.RequestClose += () => this.Close();
             }

@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab.ViewModels;
 
-public partial class SerialPortConnectWindowViewModel : ViewModelBase
+public partial class TestHardwareConnectWindowViewModel : ViewModelBase
 {
     public ITestHardware? TestHardware;
 
@@ -36,7 +36,7 @@ public partial class SerialPortConnectWindowViewModel : ViewModelBase
     
     private ICommunication? _currentComm;
 
-    public SerialPortConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider)
+    public TestHardwareConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider)
     {
         _settingsService = settingsService;
         _serviceProvider = serviceProvider;

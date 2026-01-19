@@ -1,9 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
-        x:Class="ATLab.Views.SerialPortConnectWindow"
-        x:DataType="vm:SerialPortConnectWindowViewModel"
-        Title="Serial Port Selector"
+        x:Class="ATLab.Views.TestHardwareConnectWindow"
+        x:DataType="vm:TestHardwareConnectWindowViewModel"
+        Title="Test Hardware Selector"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         CanResize="False">
@@ -13,8 +13,10 @@
         <TextBlock Text="Select Test Hardware" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
         
         <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-            <TextBlock Text="Port:" VerticalAlignment="Center"/>
-            <ComboBox Width="150" ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort, Mode=TwoWay}"/>
+            <ComboBox Width="150"
+                      Margin="35 0 0 0"
+                      ItemsSource="{Binding AvailablePorts}"
+                      SelectedItem="{Binding SelectedPort, Mode=TwoWay}"/>
             <Button Command="{Binding RefreshPortsCommand}" Width="30" Height="30">
                 <Button.Content>
                     <TextBlock 
@@ -39,7 +41,7 @@
         
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
-            <Button Content="Simulation Mode" Width="150" HorizontalContentAlignment="Center" Command="{Binding SimulationModeCommand}"/>
+            <Button Content="Simulation" Width="120" HorizontalContentAlignment="Center" Command="{Binding SimulationModeCommand}"/>
             <Button Content="Exit" Width="120" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"/>
         </StackPanel>
         

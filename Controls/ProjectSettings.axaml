@@ -85,10 +85,10 @@
                                        Margin="0 0 0 10"/>
 
                             <StackPanel Orientation="Horizontal"
-                                        Spacing="10"
+                                        Spacing="5"
                                         HorizontalAlignment="Center">
 
-                                <TextBlock Text="Default Tolerance (%):"
+                                <TextBlock Text="Default Tolerance (%)"
                                            VerticalAlignment="Center"/>
 
                                 <NumericUpDown Value="{Binding ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
