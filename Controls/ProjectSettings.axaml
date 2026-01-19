@@ -91,7 +91,7 @@
                                 <TextBlock Text="Default Tolerance (%):"
                                            VerticalAlignment="Center"/>
 
-                                <NumericUpDown Value="{Binding ToleranceValue}"
+                                <NumericUpDown Value="{Binding ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                Minimum="0"
                                                Maximum="100"
                                                Width="120"/>

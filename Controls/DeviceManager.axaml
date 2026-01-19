@@ -26,13 +26,15 @@
                 BorderThickness="2"
                 CornerRadius="0 0 0 15">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Padding="10 0 10 0"
+                          Margin="0 10 0 10">
                 
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                       RowSpacing="12">
                     
                     <Grid Grid.Row="0" RowDefinitions="Auto,Auto">
-                        <TextBlock Text="Device Name"/>
+                        <TextBlock Grid.Row="0" Text="Device Name"/>
                         <TextBox Grid.Row="1"
                                  Text="{Binding SelectedDevice.Name}"
                                  Width="210"
@@ -40,7 +42,7 @@
                     </Grid>
                     
                     <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
-                        <TextBlock Text="Interface"/>
+                        <TextBlock Grid.Row="0" Text="Interface"/>
                         <ComboBox Grid.Row="1"
                                   ItemsSource="{Binding AvailableDeviceTypes}"
                                   SelectedItem="{Binding SelectedDevice.Type}"
@@ -48,11 +50,11 @@
                     </Grid>
                     
                     <Grid Grid.Row="2" RowDefinitions="Auto,Auto">
-                        <TextBlock Text="Resource"/>
+                        <TextBlock Grid.Row="0" Text="Resource"/>
 
-                        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="5">
 
-                            <Grid>
+                            <Grid Grid.Column="0" Grid.Row="0">
                                 <Grid RowDefinitions="Auto,Auto">
                                     
                                     <ComboBox Grid.Row="0"
@@ -101,8 +103,8 @@
                           RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="10">
                         
-                        <Grid RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Baud Rate"/>
+                        <Grid Grid.Row="0" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Text="Baud Rate"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableBaudRates}"
@@ -110,7 +112,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Data Bits"/>
+                            <TextBlock Grid.Row="0" Text="Data Bits"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableDataBits}"
@@ -118,7 +120,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="2" RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Parity"/>
+                            <TextBlock Grid.Row="0" Text="Parity"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableParities}"
@@ -126,7 +128,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="3" RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Stop Bits"/>
+                            <TextBlock Grid.Row="0" Text="Stop Bits"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableStopBits}"
@@ -134,7 +136,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="4" RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Handshake"/>
+                            <TextBlock Grid.Row="0" Text="Handshake"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableHandshakes}"
@@ -147,8 +149,8 @@
                           RowDefinitions="Auto,Auto"
                           RowSpacing="10">
                         
-                        <Grid RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Timeout (ms)"/>
+                        <Grid Grid.Row="0" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Text="Timeout (ms)"/>
                             <NumericUpDown Grid.Row="1"
                                            Width="210"
                                            Minimum="10"
@@ -158,7 +160,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
-                            <TextBlock Text="Termination Character"/>
+                            <TextBlock Grid.Row="0" Text="Termination Character"/>
                             <ComboBox Grid.Row="1"
                                       Width="210"
                                       ItemsSource="{Binding AvailableVisaTerminations}"

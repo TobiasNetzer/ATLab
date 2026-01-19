@@ -44,7 +44,6 @@
                                     <TextBox Text="{Binding ChannelName, Mode=TwoWay}"
                                              Grid.Column="1"
                                              Width="150"
-                                             MaxLength="15"
                                              Margin="0 0 20 0 "/>
                                 </Grid>
                             </DataTemplate>
@@ -72,7 +71,6 @@
                                     <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"
                                              Grid.Column="1"
                                              Width="150"
-                                             MaxLength="15"
                                              Margin="0 0 20 0 "/>
                                 </Grid>
                             </DataTemplate>
@@ -100,7 +98,6 @@
                                         <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"
                                                  Grid.Column="1"
                                                  Width="150"
-                                                 MaxLength="15"
                                                  Margin="0 0 20 0 "/>
                                     </Grid>
                                 </DataTemplate>

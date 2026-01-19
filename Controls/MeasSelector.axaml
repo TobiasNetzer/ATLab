@@ -12,6 +12,10 @@
         <Style Selector="Border.Header.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
+        
+        <Style Selector="ComboBox /template/ Popup#PART_Popup">
+            <Setter Property="Width" Value="{Binding $parent[ComboBox].Bounds.Width}"/>
+        </Style>
     </UserControl.Styles>
     
     <StackPanel>
@@ -69,7 +73,8 @@
                               Width="150">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock>
+                                <TextBlock TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} {1}">
                                             <Binding Path="ChannelIndex" FallbackValue=""/>
@@ -98,7 +103,8 @@
                               Width="150">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock>
+                                <TextBlock TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} {1}">
                                             <Binding Path="ChannelIndex" FallbackValue=""/>

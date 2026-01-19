@@ -69,14 +69,20 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox IsChecked="{Binding State.IsEnabled, Mode=TwoWay}"
-                                  Margin="5"
-                                  Width="200">
+                        <CheckBox Margin="5"
+                                  IsChecked="{Binding State.IsEnabled, Mode=TwoWay}">
                             <CheckBox.Content>
-                                <MultiBinding StringFormat="{}{0} {1}">
-                                    <Binding Path="State.ChannelIndex"/>
-                                    <Binding Path="CustomName.ChannelName"/>
-                                </MultiBinding>
+                                <Border Width="180">
+                                    <TextBlock TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="State.ChannelIndex"/>
+                                                <Binding Path="CustomName.ChannelName"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Border>
                             </CheckBox.Content>
                         </CheckBox>
                     </DataTemplate>
