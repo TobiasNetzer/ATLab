@@ -181,7 +181,8 @@
                              TabIndex="10"
                              Width="480"
                              Height="60"
-                             TextWrapping="Wrap"/>
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"/>
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10"
