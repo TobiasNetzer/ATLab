@@ -38,15 +38,15 @@
                             Padding="10">
 
                         <StackPanel>
-                            <TextBlock Text="Test settings"
+                            <TextBlock Text="Test Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
                                        Margin="0 0 0 10"/>
 
-                            <CheckBox Content="Enter serial number"
+                            <CheckBox Content="Request Serial Number"
                                       IsChecked="{Binding UseSerialNumber, Mode=TwoWay}"/>
 
-                            <CheckBox Content="Save test result"
+                            <CheckBox Content="Save Test Result"
                                       IsChecked="{Binding SaveTestResult, Mode=TwoWay}"
                                       IsEnabled="{Binding UseSerialNumber}"/>
 
@@ -55,7 +55,7 @@
                                          IsChecked="{Binding SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ALWAYS}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
 
-                            <RadioButton Content="Passed only"
+                            <RadioButton Content="Passed Only"
                                          Margin="30 0 0 0"
                                          IsChecked="{Binding SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ONLY_WHEN_PASSED}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
@@ -79,7 +79,7 @@
                             Padding="10">
 
                         <StackPanel>
-                            <TextBlock Text="Measurement settings"
+                            <TextBlock Text="Measurement Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
                                        Margin="0 0 0 10"/>

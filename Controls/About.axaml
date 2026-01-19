@@ -51,7 +51,7 @@
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"
                            HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding SerialNumber, StringFormat=Serial number: {0}}"
+                <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"
                            HorizontalAlignment="Center"/>

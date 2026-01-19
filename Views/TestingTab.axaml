@@ -336,14 +336,14 @@
                        FontSize="16"
                        HorizontalAlignment="Center"
                        MinWidth="200"
-                       Text="{Binding TestDuration, StringFormat='Test duration: {0}'}"/>
+                       Text="{Binding TestDuration, StringFormat='Test Duration: {0}'}"/>
             
             <TextBlock Grid.Column="2"
                        Grid.Row="2"
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Center"
-                       Text="{Binding NumberFailedSteps, StringFormat='Errors: {0}'}"/>
+                       Text="{Binding NumberFailedSteps, StringFormat='Failed Steps: {0}'}"/>
             
             <TextBlock Grid.Column="3"
                        Grid.Row="2"
@@ -351,7 +351,7 @@
                        FontSize="16"
                        HorizontalAlignment="Center">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="Passed: {0}/{1}">
+                    <MultiBinding StringFormat="Passed Tests: {0}/{1}">
                         <Binding Path="NumberPassedTests"/>
                         <Binding Path="NumberRunTests"/>
                     </MultiBinding>
