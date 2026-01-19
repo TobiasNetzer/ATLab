@@ -77,6 +77,8 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(ScriptTab);
         Tabs.Add(AboutTab);
         
+        ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);
+        
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
             ErrorCount += 1; // Only show number of new errors
@@ -94,11 +96,11 @@ public partial class MainWindowViewModel : ViewModelBase
     
     partial void OnIsErrorFlyoutOpenChanged(bool value)
     {
-        if (value)
-        {
-            ErrorCount = 0;
-            HasErrors = false;
-        }
+        if (!value)
+            return;
+        
+        ErrorCount = 0;
+        HasErrors = false;
     }
 
     [RelayCommand]
@@ -136,7 +138,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ToggleTheme()
+    private static void ToggleTheme()
     {
         Application.Current!.RequestedThemeVariant =
             Application.Current!.RequestedThemeVariant == ThemeVariant.Light

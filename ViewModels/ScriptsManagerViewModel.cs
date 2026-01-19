@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
@@ -26,7 +27,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
         _scriptService = scriptService;
         _repository = repository;
         _messageBoxService = messageBoxService;
-        
+
         Title = "Scripts";
     }
 
@@ -38,10 +39,30 @@ public partial class ScriptsManagerViewModel : ViewModelBase
         SaveScriptCommand.NotifyCanExecuteChanged();
     }
 
+    private void Script_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ScriptItemViewModel.IsDirty))
+            UpdateTitle();
+    }
+
+    private void UpdateTitle()
+    {
+        Title = Scripts.Any(s => s.IsDirty) ? "Scripts*" : "Scripts";
+    }
+
     [RelayCommand]
     private async Task ReloadScripts()
     {
+        foreach (var script in Scripts)
+            script.PropertyChanged -= Script_PropertyChanged;
+
         await _scriptService.LoadAllAsync();
+
+        foreach (var script in Scripts)
+            script.PropertyChanged += Script_PropertyChanged;
+        
+        UpdateTitle();
+
         SelectedScript ??= Scripts.FirstOrDefault();
     }
 
@@ -49,28 +70,42 @@ public partial class ScriptsManagerViewModel : ViewModelBase
     private async Task NewScript()
     {
         var vm = _scriptService.CreateNew();
+        Scripts.Add(vm);
+
+        vm.PropertyChanged += Script_PropertyChanged;
         SelectedScript = vm;
+
         await _scriptService.SaveAsync(vm);
+        UpdateTitle();
     }
 
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task DeleteScript()
     {
         if (SelectedScript is null) return;
-        
-        var confirm = await _messageBoxService.ShowConfirmationAsync("Delete Script", "The selected script will be permanently deleted.");
+
+        var confirm = await _messageBoxService.ShowConfirmationAsync(
+            "Delete Script",
+            "The selected script will be permanently deleted.");
+
         if (!confirm) return;
 
         var vmToRemove = SelectedScript;
         SelectedScript = Scripts.FirstOrDefault(s => s != vmToRemove);
+
+        vmToRemove.PropertyChanged -= Script_PropertyChanged;
+
         await _scriptService.DeleteAsync(vmToRemove);
+        UpdateTitle();
     }
-    
+
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task SaveScript()
     {
         if (SelectedScript is null) return;
+
         await _scriptService.SaveAsync(SelectedScript);
+        UpdateTitle();
     }
 
     [RelayCommand]
