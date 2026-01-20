@@ -523,7 +523,8 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestRepeatAsync()
     {
-        await ShowSerialNumberRequestWindow();
+        if (!await ShowSerialNumberRequestWindow())
+            return;
         
         NumberFailedSteps = 0;
         TestStatus = TestStatus.RUNNING;
@@ -538,7 +539,8 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
-        await ShowSerialNumberRequestWindow();
+        if (!await ShowSerialNumberRequestWindow())
+            return;
         
         TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
@@ -569,7 +571,7 @@ public partial class TestingTabViewModel : ViewModelBase
         await _testExecutor.CancelTest();
     }
 
-    private async Task ShowSerialNumberRequestWindow()
+    private async Task<bool> ShowSerialNumberRequestWindow()
     {
         if (_projectSettingsViewModel.UseSerialNumber)
         {
@@ -578,7 +580,7 @@ public partial class TestingTabViewModel : ViewModelBase
             if (serial == null)
             {
                 SerialNumber = string.Empty;
-                return;
+                return false;
             }
             
             SerialNumber = serial;
@@ -588,6 +590,8 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             SerialNumber = string.Empty;
         }
+
+        return true;
     }
 
     private void HookExecutorEvents()
