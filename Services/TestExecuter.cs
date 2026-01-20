@@ -17,8 +17,12 @@ public class TestExecutor : ITestExecutor
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
+
     private CancellationTokenSource? _cts;
     private bool _repeatTest;
+
+    private readonly SemaphoreSlim _relaySemaphore = new(1, 1);
+    private bool _relayStatesCleared;
 
     public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
@@ -42,6 +46,33 @@ public class TestExecutor : ITestExecutor
         _messageBoxService = messageBoxService;
     }
 
+    private void ResetRelayClearFlag() => _relayStatesCleared = false;
+
+    private async Task EnsureRelayStatesClearedAsync()
+    {
+        if (_relayStatesCleared)
+            return;
+
+        await _relaySemaphore.WaitAsync();
+        try
+        {
+            if (_relayStatesCleared)
+                return;
+
+            var result = await _testHardware.ClearRelayStates();
+            if (!result.IsSuccess)
+                _errorService.AddError($"Error on resetting relay states: {result.ErrorMessage}");
+
+            _relayStatesCleared = true;
+            
+            await Task.Delay(500);
+        }
+        finally
+        {
+            _relaySemaphore.Release();
+        }
+    }
+    
     public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
     {
         if (steps.Count == 0)
@@ -58,8 +89,11 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
-        _cts = new CancellationTokenSource();
+        ResetRelayClearFlag();
+        await EnsureRelayStatesClearedAsync();
+        ResetRelayClearFlag();
 
+        _cts = new CancellationTokenSource();
         OnTestStarted();
 
         try
@@ -79,14 +113,15 @@ public class TestExecutor : ITestExecutor
             OnTestCompleted();
             _cts?.Dispose();
             _cts = null;
-            var clearResult = await _testHardware.ClearRelayStates();
-            if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
+
+            await EnsureRelayStatesClearedAsync();
         }
     }
 
     public async Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
     {
         _repeatTest = true;
+
         while (_repeatTest)
         {
             OnTestRepeated();
@@ -96,28 +131,22 @@ public class TestExecutor : ITestExecutor
     }
     
     public async Task StartSingleStepTest(TestStepViewModel step)
-    { 
+    {
         _cts = new CancellationTokenSource();
+
+        ResetRelayClearFlag();
         
         try
         {
-            _repeatTest = true;
-            while (_repeatTest)
-            {
-                var stepExecutionResult = await _runner.ExecuteAsync(step, _cts.Token);
+            var result = await _runner.ExecuteAsync(step, _cts.Token);
 
-                if (_cts.Token.IsCancellationRequested) return;
+            if (_cts.Token.IsCancellationRequested)
+                return;
 
-                if (stepExecutionResult.IsSuccess)
-                {
-                    EvaluateTestStep(step, stepExecutionResult.Value);
-                }
-                else
-                {
-                    TestStepExecutionFailed(step, stepExecutionResult);
-                    break;
-                }
-            }
+            if (result.IsSuccess)
+                EvaluateTestStep(step, result.Value);
+            else
+                TestStepExecutionFailed(step, result);
         }
         catch (OperationCanceledException)
         {
@@ -131,46 +160,48 @@ public class TestExecutor : ITestExecutor
         {
             _cts?.Dispose();
             _cts = null;
-            var clearResult = await _testHardware.ClearRelayStates();
-            if (!clearResult.IsSuccess) _errorService.AddError($"Error on resetting relay states: {clearResult.ErrorMessage}");
         }
     }
 
-    public void CancelTest()
+    public async Task CancelTest()
     {
-        _cts?.Cancel();
+        _cts?.CancelAsync();
         _repeatTest = false;
+
+        await EnsureRelayStatesClearedAsync();
     }
-
+    
     private async Task ExecuteAsync(
-    IReadOnlyList<TestStepViewModel> steps,
-    int startIndex,
-    CancellationToken token)
+        IReadOnlyList<TestStepViewModel> steps,
+        int startIndex,
+        CancellationToken token)
     {
-
         for (var i = startIndex; i < steps.Count; i++)
         {
             var step = steps[i];
-            
-            if(step.TestStep.IgnoreStep)
+
+            if (step.TestStep.IgnoreStep)
                 continue;
-            
+
             OnStepStarted(i, step);
+
             OperationResult<double> stepExecutionResult;
 
             if (step.TestStep.ShowCommentOnTestStart)
             {
-                var result = await _messageBoxService.ShowConfirmationImageAsync("Test Execution Halted", step.TestStep.Comment, step.TestStep.CustomMessageBoxImagePath);
+                var result = await _messageBoxService.ShowConfirmationImageAsync(
+                    "Test Execution Halted",
+                    step.TestStep.Comment,
+                    step.TestStep.CustomMessageBoxImagePath);
+
                 if (!result)
-                {
                     throw new OperationCanceledException();
-                }
             }
-            
+
             do
             {
                 stepExecutionResult = await _runner.ExecuteAsync(step, token);
-                
+
                 token.ThrowIfCancellationRequested();
 
                 if (stepExecutionResult.IsSuccess)
@@ -184,9 +215,9 @@ public class TestExecutor : ITestExecutor
                 }
 
                 OnStepExecuted();
-                
+
             } while (step.TestStep.RepeatUntilPass && !step.IsPassed);
-            
+
             OnStepCompleted(i, step);
 
             if (!stepExecutionResult.IsSuccess)
@@ -198,7 +229,6 @@ public class TestExecutor : ITestExecutor
     {
         if (IsOverflow(value))
         {
-            // Overflow detected
             step.Result = "Overflow";
             step.ResultNoFormatting = "Overflow";
             step.IsPassed = false;
@@ -208,27 +238,29 @@ public class TestExecutor : ITestExecutor
 
         if (double.IsNegativeInfinity(value))
         {
-            // No evaluation source
             step.Result = string.Empty;
             step.ResultNoFormatting = string.Empty;
             step.IsPassed = true;
             step.Deviation = string.Empty;
             return;
         }
-        
-        step.Result = string.IsNullOrEmpty(step.TestStep.Unit) ? value.ToString(CultureInfo.CurrentCulture) : UnitParser.Format(value, step.TestStep.Unit);
+
+        step.Result = string.IsNullOrEmpty(step.TestStep.Unit)
+            ? value.ToString(CultureInfo.CurrentCulture)
+            : UnitParser.Format(value, step.TestStep.Unit);
+
         step.ResultNoFormatting = value.ToString(CultureInfo.CurrentCulture);
+
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";
         step.IsPassed = evaluation.IsValid;
     }
 
-    private void TestStepExecutionFailed(
-        TestStepViewModel step,
-        OperationResult<double> result)
+    private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result)
     {
-        if (result.ErrorMessage != string.Empty)
+        if (!string.IsNullOrEmpty(result.ErrorMessage))
             _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+
         step.Result = string.Empty;
         step.IsPassed = false;
         step.Deviation = string.Empty;
@@ -260,5 +292,4 @@ public class TestExecutor : ITestExecutor
     
     private void OnTestRepeated() =>
         TestRepeated?.Invoke();
-
 }

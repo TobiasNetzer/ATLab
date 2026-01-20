@@ -20,5 +20,5 @@ public interface ITestExecutor
     Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index);
     Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex);
     Task StartSingleStepTest(TestStepViewModel step);
-    void CancelTest();
+    Task CancelTest();
 }
