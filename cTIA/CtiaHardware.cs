@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
@@ -16,6 +17,8 @@ public class CtiaHardware : ITestHardware
     public bool[] MeasChannelStates { get; set; }
     public byte ActiveMeasChannelH { get; set; }
     public byte ActiveMeasChannelL { get; set; }
+    
+    private readonly SemaphoreSlim _ioLock = new(1, 1);
 
     public CtiaHardware(CtiaCommunication communication)
     {
@@ -32,85 +35,112 @@ public class CtiaHardware : ITestHardware
 
     public async Task<OperationResult> InitializeAsync()
     {
-        var deviceIdResult = await _command.GetDeviceID();
-        if (!deviceIdResult.IsSuccess)
-            return OperationResult.Failure(deviceIdResult.ErrorMessage);
+        await _ioLock.WaitAsync();
+        try
+        {
+            var deviceIdResult = await _command.GetDeviceID();
+            if (!deviceIdResult.IsSuccess)
+                return OperationResult.Failure(deviceIdResult.ErrorMessage);
 
-        if (deviceIdResult.Value != 0xA101)
-            return OperationResult.Failure("Device ID invalid");
+            if (deviceIdResult.Value != 0xA101)
+                return OperationResult.Failure("Device ID invalid");
 
-        var firmwareVersion = await _command.GetFirmwareVersion();
-        if (!firmwareVersion.IsSuccess)
-            return OperationResult.Failure(firmwareVersion.ErrorMessage);
-        HardwareInfo.FirmwareVersion = firmwareVersion.Value ?? string.Empty;
+            var firmwareVersion = await _command.GetFirmwareVersion();
+            if (!firmwareVersion.IsSuccess)
+                return OperationResult.Failure(firmwareVersion.ErrorMessage);
+            HardwareInfo.FirmwareVersion = firmwareVersion.Value ?? string.Empty;
 
-        var deviceName = await _command.GetDeviceName();
-        if (!deviceName.IsSuccess)
-            return OperationResult.Failure(deviceName.ErrorMessage);
-        HardwareInfo.DeviceName = deviceName.Value ?? string.Empty;
-        
-        var serialNumber = await _command.GetSerialNumber();
-        if (!serialNumber.IsSuccess)
-            return OperationResult.Failure(serialNumber.ErrorMessage);
-        HardwareInfo.SerialNumber = serialNumber.Value ?? string.Empty;
+            var deviceName = await _command.GetDeviceName();
+            if (!deviceName.IsSuccess)
+                return OperationResult.Failure(deviceName.ErrorMessage);
+            HardwareInfo.DeviceName = deviceName.Value ?? string.Empty;
 
-        var buildDate = await _command.GetFirmwareBuildDate();
-        if (!buildDate.IsSuccess)
-            return OperationResult.Failure(buildDate.ErrorMessage);
-        HardwareInfo.BuildDate = buildDate.Value ?? string.Empty;
+            var serialNumber = await _command.GetSerialNumber();
+            if (!serialNumber.IsSuccess)
+                return OperationResult.Failure(serialNumber.ErrorMessage);
+            HardwareInfo.SerialNumber = serialNumber.Value ?? string.Empty;
 
-        var buildTime = await _command.GetFirmwareBuildTime();
-        if (!buildTime.IsSuccess)
-            return OperationResult.Failure(buildTime.ErrorMessage);
-        HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
+            var buildDate = await _command.GetFirmwareBuildDate();
+            if (!buildDate.IsSuccess)
+                return OperationResult.Failure(buildDate.ErrorMessage);
+            HardwareInfo.BuildDate = buildDate.Value ?? string.Empty;
 
-        var measChannelCount = await _command.GetMeasChannelCount();
-        if (!measChannelCount.IsSuccess)
-            return OperationResult.Failure(measChannelCount.ErrorMessage);
-        HardwareInfo.MeasChannelCount =  measChannelCount.Value;
-        
-        var stimChannelCount = await _command.GetStimChannelCount();
-        if (!stimChannelCount.IsSuccess)
-            return OperationResult.Failure(stimChannelCount.ErrorMessage);
-        HardwareInfo.StimChannelCount = stimChannelCount.Value;
-        
-        var extStimChannelCount = await _command.GetExtStimChannelCount();
-        if (!extStimChannelCount.IsSuccess)
-            return OperationResult.Failure(extStimChannelCount.ErrorMessage);
-        HardwareInfo.ExtStimChannelCount =  extStimChannelCount.Value;
-        
-        StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
-        ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
-        MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];
-        
-        return OperationResult.Success();
+            var buildTime = await _command.GetFirmwareBuildTime();
+            if (!buildTime.IsSuccess)
+                return OperationResult.Failure(buildTime.ErrorMessage);
+            HardwareInfo.BuildTime = buildTime.Value ?? string.Empty;
+
+            var measChannelCount = await _command.GetMeasChannelCount();
+            if (!measChannelCount.IsSuccess)
+                return OperationResult.Failure(measChannelCount.ErrorMessage);
+            HardwareInfo.MeasChannelCount = measChannelCount.Value;
+
+            var stimChannelCount = await _command.GetStimChannelCount();
+            if (!stimChannelCount.IsSuccess)
+                return OperationResult.Failure(stimChannelCount.ErrorMessage);
+            HardwareInfo.StimChannelCount = stimChannelCount.Value;
+
+            var extStimChannelCount = await _command.GetExtStimChannelCount();
+            if (!extStimChannelCount.IsSuccess)
+                return OperationResult.Failure(extStimChannelCount.ErrorMessage);
+            HardwareInfo.ExtStimChannelCount = extStimChannelCount.Value;
+
+            StimChannelStates = new bool[HardwareInfo.StimChannelCount];
+            ExtStimChannelStates = new bool[HardwareInfo.ExtStimChannelCount];
+            MeasChannelStates = new bool[HardwareInfo.MeasChannelCount];
+
+            return OperationResult.Success();
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
     }
 
     public async Task<OperationResult> UpdateRelayStates()
     {
-        var steps = new List<Func<Task<OperationResult>>>
+        await _ioLock.WaitAsync();
+        try
         {
-            () => SetStimChannels(),
-            () => SetMeasChannelH(ActiveMeasChannelH),
-            () => SetMeasChannelL(ActiveMeasChannelL),
-            () => SetExtStimChannels()
-        };
+            var steps = new List<Func<Task<OperationResult>>>
+            {
+                () => SetStimChannels(),
+                () => SetMeasChannelH(ActiveMeasChannelH),
+                () => SetMeasChannelL(ActiveMeasChannelL),
+                () => SetExtStimChannels()
+            };
 
-        foreach (var step in steps)
-        {
-            var result = await step();
-            if (!result.IsSuccess)
-                return result;
+            foreach (var step in steps)
+            {
+                var result = await step();
+                if (!result.IsSuccess)
+                    return result;
+            }
+
+            return OperationResult.Success();
         }
-
-        return OperationResult.Success();
+        finally
+        {
+            _ioLock.Release();
+        }
     }
 
     public async Task<OperationResult> ClearRelayStates()
     {
-        var commandResponse = await _command.ClrAllRelayStates();
-        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
+        await _ioLock.WaitAsync();
+        try
+        {
+            var commandResponse = await _command.ClrAllRelayStates();
+            return !commandResponse.IsSuccess
+                ? OperationResult.Failure(commandResponse.ErrorMessage)
+                : OperationResult.Success();
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
     }
+
 
     private async Task<OperationResult> SetStimChannels()
     {
