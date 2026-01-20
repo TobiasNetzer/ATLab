@@ -159,6 +159,47 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService.UpdateLastSavedState(CaptureCurrentState());
     }
     
+    private void CheckForChanges()
+    {
+        _projectService.IsStateChanged(CaptureCurrentState());
+    }
+
+    private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CheckForChanges();
+
+        if (sender is not TestStepViewModel changedVm)
+            return;
+        
+        if (changedVm != SelectedStep)
+            return;
+        
+        if (string.IsNullOrWhiteSpace(e.PropertyName))
+            return;
+        
+        var isTestStepProperty = typeof(TestStep).GetProperty(e.PropertyName) != null;
+        if (!isTestStepProperty)
+            return;
+
+        foreach (var vm in SelectedSteps)
+        {
+            if (vm == changedVm)
+                continue;
+
+            CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+        }
+    }
+    
+    private static void CopyChangedProperty(TestStep source, TestStep target, string propertyName)
+    {
+        var prop = typeof(TestStep).GetProperty(propertyName);
+        if (prop == null || !prop.CanWrite)
+            return;
+
+        var value = prop.GetValue(source);
+        prop.SetValue(target, value);
+    }
+    
     private void DevicesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.NewItems != null)
@@ -235,6 +276,11 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
         StartSingleStepTestCommand.NotifyCanExecuteChanged();
+    }
+    
+    partial void OnIsEditingModeChanged(bool value)
+    {
+        _settingsService.Settings.IsEditingMode = value;
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
@@ -477,34 +523,22 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestRepeatAsync()
     {
+        await ShowSerialNumberRequestWindow();
+        
         NumberFailedSteps = 0;
         TestStatus = TestStatus.RUNNING;
         TestProgress = 0;
         SelectedStepIndex = 0;
-                
+              
+        _allowResultSave = true;
         await _testExecutor.StartRepeatTestAsync(TestSteps, SelectedStepIndex);
+        _allowResultSave = false;
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
-        if (_projectSettingsViewModel.UseSerialNumber)
-        {
-            var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
-
-            if (serial == null)
-            {
-                SerialNumber = string.Empty;
-                return;
-            }
-            
-            SerialNumber = serial;
-
-        }
-        else
-        {
-            SerialNumber = string.Empty;
-        }
+        await ShowSerialNumberRequestWindow();
         
         TestStatus = TestStatus.RUNNING;
         NumberFailedSteps = 0;
@@ -530,9 +564,30 @@ public partial class TestingTabViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void CancelTest()
+    private async Task CancelTest()
     {
-        _testExecutor.CancelTest();
+        await _testExecutor.CancelTest();
+    }
+
+    private async Task ShowSerialNumberRequestWindow()
+    {
+        if (_projectSettingsViewModel.UseSerialNumber)
+        {
+            var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
+
+            if (serial == null)
+            {
+                SerialNumber = string.Empty;
+                return;
+            }
+            
+            SerialNumber = serial;
+
+        }
+        else
+        {
+            SerialNumber = string.Empty;
+        }
     }
 
     private void HookExecutorEvents()
@@ -637,47 +692,6 @@ public partial class TestingTabViewModel : ViewModelBase
         };
     }
 
-    private void CheckForChanges()
-    {
-        _projectService.IsStateChanged(CaptureCurrentState());
-    }
-
-    private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        CheckForChanges();
-
-        if (sender is not TestStepViewModel changedVm)
-            return;
-        
-        if (changedVm != SelectedStep)
-            return;
-        
-        if (string.IsNullOrWhiteSpace(e.PropertyName))
-            return;
-        
-        var isTestStepProperty = typeof(TestStep).GetProperty(e.PropertyName) != null;
-        if (!isTestStepProperty)
-            return;
-
-        foreach (var vm in SelectedSteps)
-        {
-            if (vm == changedVm)
-                continue;
-
-            CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
-        }
-    }
-    
-    private static void CopyChangedProperty(TestStep source, TestStep target, string propertyName)
-    {
-        var prop = typeof(TestStep).GetProperty(propertyName);
-        if (prop == null || !prop.CanWrite)
-            return;
-
-        var value = prop.GetValue(source);
-        prop.SetValue(target, value);
-    }
-
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     public async Task SaveFileAs()
     {
@@ -759,10 +773,5 @@ public partial class TestingTabViewModel : ViewModelBase
         }
         
         SelectedStepIndex = 0;
-    }
-
-    partial void OnIsEditingModeChanged(bool value)
-    {
-        _settingsService.Settings.IsEditingMode = value;
     }
 }
