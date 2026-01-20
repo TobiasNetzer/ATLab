@@ -52,7 +52,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private ShellCommandEditorViewModel _shellCommandEditor;
     
     [ObservableProperty]
-    private bool _isEditingMode;
+    private bool _isDevelopmentMode;
     
     [ObservableProperty]
     private int _numberFailedSteps;
@@ -144,7 +144,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         Title = "Testing";
         
-        IsEditingMode = settingsService.Settings.IsEditingMode;
+        IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
         
         HookExecutorEvents();
         
@@ -278,9 +278,9 @@ public partial class TestingTabViewModel : ViewModelBase
         StartSingleStepTestCommand.NotifyCanExecuteChanged();
     }
     
-    partial void OnIsEditingModeChanged(bool value)
+    partial void OnIsDevelopmentModeChanged(bool value)
     {
-        _settingsService.Settings.IsEditingMode = value;
+        _settingsService.Settings.IsDevelopmentMode = value;
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;

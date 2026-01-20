@@ -21,7 +21,7 @@
                         FontSize="20"
                         ToolTip.Tip="New file"
                         Command="{Binding NewFileCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
 
                 <Button Content="&#xE838;"
                         FontFamily="{StaticResource FluentIconsFont}"
@@ -34,14 +34,14 @@
                         FontSize="20"
                         ToolTip.Tip="Save file"
                         Command="{Binding SaveFileCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE792;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Save file as"
                         Command="{Binding SaveFileAsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
 
                 <Separator Width="2"
                            Height="25"
@@ -53,42 +53,42 @@
                         FontSize="20"
                         ToolTip.Tip="Add a new test step"
                         Command="{Binding AddTestStepCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xF8AB;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Remove selected test steps"
                         Command="{Binding RemoveTestStepsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xF413;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Duplicate selected test steps"
                         Command="{Binding DuplicateTestStepsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE8C6;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Cut selected test steps"
                         Command="{Binding CutTestStepsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE8C8;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Copy selected test steps"
                         Command="{Binding CopyTestStepsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE77F;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Paste test steps"
                         Command="{Binding PasteTestStepsCommand}"
-                        IsEnabled="{Binding IsEditingMode}"/>
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Separator Width="2"
                            Height="25"
@@ -99,19 +99,22 @@
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Execute single step"
-                        Command="{Binding StartSingleStepTestCommand}"/>
+                        Command="{Binding StartSingleStepTestCommand}"
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE896;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Start test execution from selected step"
-                        Command="{Binding StartTestFromSelectionCommand}"/>
+                        Command="{Binding StartTestFromSelectionCommand}"
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xE8EE;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="Start continuous test execution"
-                        Command="{Binding StartTestRepeatCommand}"/>
+                        Command="{Binding StartTestRepeatCommand}"
+                        IsEnabled="{Binding IsDevelopmentMode}"/>
                 
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
@@ -133,8 +136,8 @@
                 <ToggleButton Content="&#xEC7A;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
-                        ToolTip.Tip="Enable editing mode"
-                        IsChecked="{Binding IsEditingMode, Mode=TwoWay}"
+                        ToolTip.Tip="Enable development mode"
+                        IsChecked="{Binding IsDevelopmentMode, Mode=TwoWay}"
                         IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}"/>
                 
             </StackPanel>
@@ -221,7 +224,7 @@
             </DataGrid.Columns>
         
             <DataGrid.ContextMenu>
-                <ContextMenu IsEnabled="{Binding IsEditingMode}">
+                <ContextMenu IsEnabled="{Binding IsDevelopmentMode}">
                     <MenuItem Header="Add" Command="{Binding AddTestStepCommand}"/>
                     <MenuItem Header="Remove" Command="{Binding RemoveTestStepsCommand}"/>
                     <MenuItem Header="Duplicate" Command="{Binding DuplicateTestStepsCommand}"/>
@@ -372,7 +375,7 @@
         
         <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
                       Margin="0 10 0 10"
-                      IsVisible="{Binding IsEditingMode}">
+                      IsVisible="{Binding IsDevelopmentMode}">
             <StackPanel HorizontalAlignment="Right"
                         Spacing="10"
                         Margin="0 0 10 0"
