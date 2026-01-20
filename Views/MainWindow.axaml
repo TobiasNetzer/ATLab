@@ -106,7 +106,7 @@
                 </StackPanel>
 
                 <Button Grid.Column="1"
-                        Content="&#xF08C;"
+                        Content="&#xE793;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="18"
                         HorizontalAlignment="Right"
