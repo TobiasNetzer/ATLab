@@ -95,6 +95,12 @@
                            Margin="5 0 5 0"
                            CornerRadius="1"/>
                 
+                <Button Content="&#xe751;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="20"
+                        ToolTip.Tip="Execute single step"
+                        Command="{Binding StartSingleStepTestCommand}"/>
+                
                 <Button Content="&#xE896;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
@@ -106,12 +112,6 @@
                         FontSize="20"
                         ToolTip.Tip="Start continuous test execution"
                         Command="{Binding StartTestRepeatCommand}"/>
-                
-                <Button Content="&#xE8ED;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="Execute single step"
-                        Command="{Binding StartSingleStepTestCommand}"/>
                 
                 <Button Content="&#xF5B0;"
                         FontFamily="{StaticResource FluentIconsFont}"
