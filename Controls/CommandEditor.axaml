@@ -1,0 +1,135 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:models="clr-namespace:ATLab.Models"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             x:Class="ATLab.Controls.CommandEditor"
+             x:DataType="x:Object"
+             Width="500">
+
+
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel>
+        
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}"
+                Background="{DynamicResource SystemBaseLowColor}"
+                Padding="10">
+
+            <DockPanel>
+
+                <TextBlock Text="Command"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
+
+                <ToggleButton IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+                                    
+                                    <TextBlock Text="&#xE70D;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded,
+                                                                   Converter={StaticResource InverseBoolConverter}}"/>
+                                    
+                                    <TextBlock Text="&#xE70E;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}"/>
+
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+
+                </ToggleButton>
+
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}">
+
+            <StackPanel Margin="10" Spacing="15">
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Target Device"/>
+
+                    <DockPanel>
+
+                        <Button Content="&#xF8AB;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="18"
+                                ToolTip.Tip="Remove selected device"
+                                DockPanel.Dock="Right"
+                                Margin="5 0 0 0"
+                                Command="{Binding $parent[controls:CommandEditor].CommandEditorVm.RemoveDeviceCommand}"/>
+
+                        <ComboBox ItemsSource="{Binding $parent[controls:CommandEditor].CommandEditorVm.Devices}"
+                                  SelectedItem="{Binding $parent[controls:CommandEditor].CommandEditorVm.SelectedDevice, Mode=TwoWay}"
+                                  HorizontalAlignment="Stretch">
+
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:Device">
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                        <Run Text=" ("/>
+                                        <Run Text="{Binding ResourceString}"/>
+                                        <Run Text=")"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+
+                        </ComboBox>
+
+                    </DockPanel>
+                </StackPanel>
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Command"/>
+                    
+                    <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.Command}"/>
+                    
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5"
+                                Margin="0 8 0 0">
+                        
+                        <CheckBox Content="Expect Response"
+                                  IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.ExpectResponse}"/>
+                        
+                        <TextBlock Text="Timeout (ms)"
+                                   VerticalAlignment="Center"
+                                   Margin="135 0 0 0"/>
+                        <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm.TimeoutMs, Mode=TwoWay}"
+                                 Width="100"/>
+                        
+                    </StackPanel>
+                    
+                </StackPanel>
+
+            </StackPanel>
+
+        </Border>
+
+    </StackPanel>
+
+</UserControl>

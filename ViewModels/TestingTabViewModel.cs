@@ -28,7 +28,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private List<TestStep>? _copiedSteps;
 
     [ObservableProperty]
-    private ObservableCollection<TestStepViewModel> _testSteps;
+    private ObservableCollection<TestStepViewModel> _testSteps = new();
 
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
@@ -47,6 +47,9 @@ public partial class TestingTabViewModel : ViewModelBase
 
     [ObservableProperty]
     private ScriptSelectorViewModel _scriptSelector;
+    
+    [ObservableProperty]
+    private CommandEditorViewModel _commandEditor;
     
     [ObservableProperty]
     private ShellCommandEditorViewModel _shellCommandEditor;
@@ -123,6 +126,7 @@ public partial class TestingTabViewModel : ViewModelBase
         IProjectService projectService,
         DeviceManagerViewModel deviceManager,
         ScriptSelectorViewModel scriptSelector,
+        CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettingsViewModel projectSettingsViewModel,
         ISerialNumberDialogService serialNumberDialogService,
@@ -130,11 +134,11 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         _settingsService = settingsService;
         _errorService = errorService;
-        TestSteps = new ObservableCollection<TestStepViewModel>();
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
         ScriptSelector = scriptSelector;
+        CommandEditor = commandEditor;
         ShellCommandEditor = shellCommandEditor;
         _projectService = projectService;
         _deviceManager = deviceManager;
@@ -250,6 +254,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
             TestStepConfiguratorViewModel.LoadTestStep(value);
             ScriptSelector.LoadTestStep(value);
+            CommandEditor.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
         }
         catch (Exception ex)

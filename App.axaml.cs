@@ -169,6 +169,7 @@ public class App : Application
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
+        services.AddSingleton<ICommandExecutor, CommandExecutor>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<CsvExportService>();
         services.AddSingleton<TestResultExportService>();
@@ -200,6 +201,7 @@ public class App : Application
         services.AddTransient<ScriptsManagerViewModel>();
         services.AddTransient<AboutTabViewModel>();
         services.AddTransient<ScriptSelectorViewModel>();
+        services.AddTransient<CommandEditorViewModel>();
         services.AddTransient<TestHardwareConnectWindowViewModel>();
         services.AddTransient<ShellCommandEditorViewModel>();
 

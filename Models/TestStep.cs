@@ -85,10 +85,14 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(18)]
+    private ScriptCommand _command = new();
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(19)]
     private ShellCommand _shellCommand = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(19)]
+    [property: JsonPropertyOrder(20)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -99,12 +103,18 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(20)]
+    [JsonPropertyOrder(21)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(21)]
+    [JsonPropertyOrder(22)]
     public RelayGroupDto? ExtStimState { get; set; }
 
+    partial void OnCommandChanged(ScriptCommand? oldValue, ScriptCommand newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+    
     partial void OnShellCommandChanged(ShellCommand? oldValue, ShellCommand newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
@@ -192,6 +202,7 @@ public partial class TestStep : ObservableObject
             DontSaveResult = DontSaveResult,
             TargetDevice = TargetDevice,
             ScriptId = ScriptId,
+            Command = new ScriptCommand(Command),
             ShellCommand = new ShellCommand(ShellCommand),
             MatrixState = new RelayMatrix(MatrixState),
             StimState = StimState != null ? new RelayGroupDto(StimState) : null,

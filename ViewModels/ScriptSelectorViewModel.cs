@@ -170,13 +170,26 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    void RemoveDevice() => SelectedDevice = null;
+    void RemoveDevice()
+    {
+        SelectedDevice = null;
+        
+        if (_currentTestStep != null)
+            _currentTestStep.TargetDevice = string.Empty;
+    } 
+    
 
     [RelayCommand]
     void RemoveScript()
     { 
         SelectedScript = null;
         ScriptVariables = null;
+
+        if (_currentTestStep == null)
+             return;
+        
+        _currentTestStep.ScriptId = string.Empty;
+        _currentTestStep.ScriptVariables.Clear();
     }
 
 }

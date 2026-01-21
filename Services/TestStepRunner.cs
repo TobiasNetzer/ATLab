@@ -13,12 +13,18 @@ public class TestStepRunner : ITestStepRunner
     
     private readonly ITestHardware _testHardware;
     private readonly IScriptRunner _scriptRunner;
+    private readonly ICommandExecutor _commandExecutor;
     private readonly IShellCommandRunner _shellCommandRunner;
 
-    public TestStepRunner(ITestHardware testHardware, IScriptRunner scriptRunner, IShellCommandRunner shellCommandRunner)
+    public TestStepRunner(
+        ITestHardware testHardware,
+        IScriptRunner scriptRunner,
+        ICommandExecutor commandExecutor,
+        IShellCommandRunner shellCommandRunner)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
+        _commandExecutor = commandExecutor;
         _shellCommandRunner = shellCommandRunner;
     }
     
@@ -47,6 +53,9 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.SCRIPT:
                     return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice,
                         step.TestStep.ScriptVariables, token);
+                
+                case TestEvaluationSource.COMMAND:
+                    return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDevice, token);
 
                 case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
                 

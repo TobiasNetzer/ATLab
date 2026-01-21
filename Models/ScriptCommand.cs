@@ -1,9 +1,31 @@
-﻿namespace ATLab.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public sealed class ScriptCommand
+namespace ATLab.Models;
+
+public partial class ScriptCommand : ObservableObject
 {
-    public string Command { get; set; } = string.Empty;
-    public bool ExpectResponse { get; set; }
-    public int DelayMs { get; set; }
-    public int TimeoutMs { get; set; } = 1000;
+    [ObservableProperty]
+    private string _command = string.Empty;
+
+    [ObservableProperty]
+    private bool _expectResponse;
+
+    [ObservableProperty]
+    private int _delayMs;
+    
+    [ObservableProperty]
+    private int _timeoutMs = 1000;
+
+    public ScriptCommand()
+    {
+        
+    }
+    
+    public ScriptCommand(ScriptCommand other)
+    {
+        Command = other.Command;
+        ExpectResponse = other.ExpectResponse;
+        DelayMs = other.DelayMs;
+        TimeoutMs = other.TimeoutMs;
+    }
 }

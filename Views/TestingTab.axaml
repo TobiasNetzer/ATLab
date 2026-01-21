@@ -388,6 +388,10 @@
                     ScriptSelectorVm="{Binding ScriptSelector}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SCRIPT}"/>
                 
+                <controls:CommandEditor
+                    CommandEditorVm="{Binding CommandEditor}"
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=COMMAND}"/>
+                
                 <controls:ShellCommandEditor
                     ShellCommandEditorVm="{Binding ShellCommandEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SHELL_COMMAND}"/>
