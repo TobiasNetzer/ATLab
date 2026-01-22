@@ -26,7 +26,7 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Grid ColumnDefinitions="*,10,*"
-                      RowDefinitions="Auto,*"
+                      RowDefinitions="Auto,*,*"
                       Margin="10">
                     
                     <Border Grid.Column="0"
@@ -38,7 +38,7 @@
                             Padding="10">
 
                         <StackPanel>
-                            <TextBlock Text="Test Settings"
+                            <TextBlock Text="Test Execution Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
                                        Margin="0 0 0 10"/>
@@ -79,7 +79,7 @@
                             Padding="10">
 
                         <StackPanel>
-                            <TextBlock Text="Measurement Settings"
+                            <TextBlock Text="Default Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
                                        Margin="0 0 0 10"/>

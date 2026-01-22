@@ -53,8 +53,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
             }
 
             var resource = device.ResourceString;
-
-            // Ensure correct and connected interface
+            
             if (_deviceInterface == null ||
                 !_deviceInterface.IsConnected ||
                 _deviceInterface.Resource != resource)
@@ -103,9 +102,21 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
             return OperationResult<string?>.Success(lastResponse);
         }
-        catch (OperationCanceledException)
+        catch (TimeoutException tex)
         {
-            return OperationResult<string?>.Failure(string.Empty);
+            return OperationResult<string?>.Timeout(tex.Message);
+        }
+        catch (TaskCanceledException tce)
+        {
+            return token.IsCancellationRequested
+                ? OperationResult<string?>.Failure("Operation cancelled by user")
+                : OperationResult<string?>.Timeout("Operation timed out");
+        }
+        catch (OperationCanceledException oce)
+        {
+            return token.IsCancellationRequested
+                ? OperationResult<string?>.Failure("Operation cancelled by user")
+                : OperationResult<string?>.Timeout("Operation timed out");
         }
         catch (Exception ex)
         {
@@ -120,7 +131,10 @@ public class CommandExecutor : ICommandExecutor, IDisposable
     {
         var result = await ExecuteAsync(command, deviceName, token);
 
-        if (!result.IsSuccess)
+        if (result.IsTimeout)
+            return OperationResult<T>.Timeout(result.ErrorMessage);
+
+        if (result.IsFailure)
             return OperationResult<T>.Failure(result.ErrorMessage);
 
         if (result.Value == null)
@@ -140,11 +154,11 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
     public void Dispose()
     {
-        if (_deviceInterface != null)
-        {
-            _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
-            (_deviceInterface as IDisposable)?.Dispose();
-            _deviceInterface = null;
-        }
+        if (_deviceInterface == null)
+            return;
+        
+        _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
+        (_deviceInterface as IDisposable)?.Dispose();
+        _deviceInterface = null;
     }
 }

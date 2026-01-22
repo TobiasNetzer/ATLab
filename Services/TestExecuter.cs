@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
@@ -143,10 +144,24 @@ public class TestExecutor : ITestExecutor
             if (_cts.Token.IsCancellationRequested)
                 return;
 
-            if (result.IsSuccess)
-                EvaluateTestStep(step, result.Value);
-            else
-                TestStepExecutionFailed(step, result);
+            switch (result.Status)
+            {
+                case OperationStatus.SUCCESS:
+                    EvaluateTestStep(step, result.Value);
+                    break;
+                
+                case OperationStatus.TIMEOUT:
+                    TestStepExecutionTimedOut(step);
+                    break;
+                
+                case OperationStatus.FAILURE:
+                    TestStepExecutionFailed(step, result);
+                    break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
         }
         catch (OperationCanceledException)
         {
@@ -204,14 +219,22 @@ public class TestExecutor : ITestExecutor
 
                 token.ThrowIfCancellationRequested();
 
-                if (stepExecutionResult.IsSuccess)
+                switch (stepExecutionResult.Status)
                 {
-                    EvaluateTestStep(step, stepExecutionResult.Value);
-                }
-                else
-                {
-                    TestStepExecutionFailed(step, stepExecutionResult);
-                    break;
+                    case OperationStatus.SUCCESS:
+                        EvaluateTestStep(step, stepExecutionResult.Value);
+                        break;
+                
+                    case OperationStatus.TIMEOUT:
+                        TestStepExecutionTimedOut(step);
+                        break;
+                
+                    case OperationStatus.FAILURE:
+                        TestStepExecutionFailed(step, stepExecutionResult);
+                        break;
+                
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 OnStepExecuted();
@@ -220,7 +243,7 @@ public class TestExecutor : ITestExecutor
 
             OnStepCompleted(i, step);
 
-            if (!stepExecutionResult.IsSuccess)
+            if (stepExecutionResult.IsFailure)
                 break;
         }
     }
@@ -254,6 +277,14 @@ public class TestExecutor : ITestExecutor
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";
         step.IsPassed = evaluation.IsValid;
+    }
+    
+    private void TestStepExecutionTimedOut(TestStepViewModel step)
+    {
+        step.Result = "Timeout";
+        step.ResultNoFormatting = "Timeout";
+        step.IsPassed = false;
+        step.Deviation = string.Empty;
     }
 
     private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result)

@@ -41,7 +41,11 @@ public class ScriptRunner : IScriptRunner
         CancellationToken token)
     {
         var result = await RunCoreAsync(scriptId, deviceName, variables, token);
-        if (!result.IsSuccess)
+        
+        if (result.IsTimeout)
+            return OperationResult<T>.Timeout(result.ErrorMessage);
+
+        if (result.IsFailure)
             return OperationResult<T>.Failure(result.ErrorMessage);
 
         if (result.Value == null)
