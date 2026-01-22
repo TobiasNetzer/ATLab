@@ -667,6 +667,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.TestRepeated += () =>
         {
+            ResetAllResults();
             TestProgress = 0;
             TestStatus = TestStatus.RUNNING;
         };
