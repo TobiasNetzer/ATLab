@@ -17,6 +17,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
     private readonly DeviceManagerViewModel _deviceManager;
 
     private ICommunication? _deviceInterface;
+    private DeviceConfiguration? _lastConfig;
 
     public CommandExecutor(
         ICommunicationFactory communicationFactory,
@@ -54,9 +55,12 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
             var resource = device.ResourceString;
             
+            var configChanged = _lastConfig == null || !_lastConfig.Equals(device.Configuration);
+
             if (_deviceInterface == null ||
                 !_deviceInterface.IsConnected ||
-                _deviceInterface.Resource != resource)
+                _deviceInterface.Resource != resource ||
+                configChanged)
             {
                 if (_deviceInterface != null)
                 {
@@ -70,6 +74,8 @@ public class CommandExecutor : ICommandExecutor, IDisposable
                     DeviceType.VISA   => _communicationFactory.CreateVisa(device.ResourceString, device.Configuration),
                     _ => throw new NotSupportedException($"Device type {device.Type} is not supported.")
                 };
+                
+                _lastConfig = device.Configuration.Clone();
 
                 var connectResult = await _deviceInterface.ConnectAsync();
                 if (!connectResult.IsSuccess)
@@ -106,13 +112,13 @@ public class CommandExecutor : ICommandExecutor, IDisposable
         {
             return OperationResult<string?>.Timeout(tex.Message);
         }
-        catch (TaskCanceledException tce)
+        catch (TaskCanceledException)
         {
             return token.IsCancellationRequested
                 ? OperationResult<string?>.Failure("Operation cancelled by user")
                 : OperationResult<string?>.Timeout("Operation timed out");
         }
-        catch (OperationCanceledException oce)
+        catch (OperationCanceledException)
         {
             return token.IsCancellationRequested
                 ? OperationResult<string?>.Failure("Operation cancelled by user")
@@ -123,7 +129,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
             return OperationResult<string?>.Failure(ex.Message);
         }
     }
-    
+
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         ScriptCommand command,
         string deviceName,
@@ -156,7 +162,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
     {
         if (_deviceInterface == null)
             return;
-        
+
         _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
         (_deviceInterface as IDisposable)?.Dispose();
         _deviceInterface = null;

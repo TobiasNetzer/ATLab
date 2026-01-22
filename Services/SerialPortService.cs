@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -15,6 +16,9 @@ public class SerialPortService : ICommunication, IDisposable
     private readonly object _lock = new();
     private TaskCompletionSource<byte[]>? _pendingTcs;
     private readonly Queue<byte[]> _incomingQueue = new();
+    private readonly IMessageFramer _framer;
+    private readonly List<byte> _rxBuffer = new();
+
 
     private bool _disposed;
 
@@ -27,8 +31,17 @@ public class SerialPortService : ICommunication, IDisposable
         int dataBits,
         Parity parity,
         StopBits stopBits,
-        Handshake handshake)
+        Handshake handshake,
+        MessageFramingMode framingMode)
     {
+        _framer = framingMode switch
+        {
+            MessageFramingMode.LF_TERMINATED => new LfMessageFramer(),
+            MessageFramingMode.CHUNK => new ChunkMessageFramer(),
+            MessageFramingMode.CR_LF_TERMINATED => new CrLfMessageFramer(),
+            _ => new ChunkMessageFramer()
+        };
+        
         _port = new SerialPort(portName, baudRate, parity, dataBits, stopBits)
         {
             Handshake = handshake,
@@ -126,34 +139,40 @@ public class SerialPortService : ICommunication, IDisposable
     {
         try
         {
-            int bytesToRead = _port.BytesToRead;
+            var bytesToRead = _port.BytesToRead;
             if (bytesToRead <= 0) return;
 
             var buffer = new byte[bytesToRead];
-            int read = _port.Read(buffer, 0, bytesToRead);
+            var read = _port.Read(buffer, 0, bytesToRead);
             if (read <= 0) return;
 
-            TaskCompletionSource<byte[]>? tcs = null;
             lock (_lock)
             {
-                if (_pendingTcs != null)
+                _rxBuffer.AddRange(buffer);
+
+                if (!_framer.TryExtractMessages(_rxBuffer, out var messages))
+                    return;
+                
+                foreach (var msg in messages)
                 {
-                    tcs = _pendingTcs;
-                    _pendingTcs = null;
-                }
-                else
-                {
-                    _incomingQueue.Enqueue(buffer);
+                    if (_pendingTcs != null)
+                    {
+                        _pendingTcs.TrySetResult(msg);
+                        _pendingTcs = null;
+                    }
+                    else
+                    {
+                        _incomingQueue.Enqueue(msg);
+                    }
                 }
             }
-
-            tcs?.TrySetResult(buffer);
         }
         catch
         {
-            // maybe log incoming data
+            // optional logging
         }
     }
+
 
     public void SendRaw(byte[] data)
     {

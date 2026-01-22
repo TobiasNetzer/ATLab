@@ -100,7 +100,7 @@
                     
                     <Grid Grid.Row="3"
                           IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}"
-                          RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="10">
                         
                         <Grid Grid.Row="0" RowDefinitions="Auto,Auto" RowSpacing="2">
@@ -142,6 +142,16 @@
                                       ItemsSource="{Binding AvailableHandshakes}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.Handshake}"/>
                         </Grid>
+                        
+                        <Grid Grid.Row="5" RowDefinitions="Auto,Auto" RowSpacing="2">
+                            <TextBlock Grid.Row="0" Text="Framing Mode"/>
+                            <ComboBox Grid.Row="1"
+                                      Width="210"
+                                      ItemsSource="{Binding AvailableFramingModes}"
+                                      SelectedItem="{Binding SelectedDevice.Configuration.FramingMode}"
+                                      DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                        </Grid>
+                        
                     </Grid>
                     
                     <Grid Grid.Row="4"

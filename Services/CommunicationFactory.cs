@@ -12,7 +12,8 @@ public class CommunicationFactory : ICommunicationFactory
             config.DataBits,
             config.Parity,
             config.StopBits,
-            config.Handshake);
+            config.Handshake,
+            config.FramingMode);
 
     public ICommunication CreateVisa(string resourceString, DeviceConfiguration config)
         => new NiVisaService(
