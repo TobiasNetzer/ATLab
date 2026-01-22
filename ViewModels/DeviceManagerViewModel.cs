@@ -102,11 +102,6 @@ public partial class DeviceManagerViewModel : ViewModelBase
             SelectedDevice.ResourceString = AvailableVisaResources[0];
         }
     }
-
-    partial void OnSelectedDeviceChanged(Device? oldValue, Device? newValue)
-    {
-        RefreshResources();
-    }
     
     [RelayCommand]
     private void AddDevice()
