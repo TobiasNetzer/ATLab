@@ -298,6 +298,11 @@ public partial class TestingTabViewModel : ViewModelBase
             TestSteps[i].TestStep.Number = i + 1; // 1‑based numbering
         }
     }
+    private void ResetAllResults()
+    {
+        foreach (var step in TestSteps)
+            step.ResetResults();
+    }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void AddTestStep()
@@ -519,6 +524,7 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestFromSelectionAsync()
     {
+        ResetAllResults();
         NumberFailedSteps = 0;
         TestStatus = TestStatus.RUNNING;
         TestProgress = 0;
@@ -528,6 +534,8 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestRepeatAsync()
     {
+        ResetAllResults();
+        
         if (!await ShowSerialNumberRequestWindow())
             return;
         
@@ -544,6 +552,8 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
+        ResetAllResults();
+        
         if (!await ShowSerialNumberRequestWindow())
             return;
         

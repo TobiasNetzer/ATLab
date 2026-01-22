@@ -41,4 +41,12 @@ public partial class TestStepViewModel : ViewModelBase
     {
         OnPropertyChanged(e.PropertyName);
     }
+
+    public void ResetResults()
+    {
+        Result = null;
+        ResultNoFormatting = null;
+        Deviation = null;
+        IsPassed  = false;
+    }
 }
