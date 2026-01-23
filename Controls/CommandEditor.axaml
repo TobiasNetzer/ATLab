@@ -1,10 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.CommandEditor"
-             x:DataType="x:Object"
+             x:DataType="controls:CommandEditor"
              Width="500">
 
 

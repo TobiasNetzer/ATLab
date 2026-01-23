@@ -46,6 +46,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
 
     [ObservableProperty]
+    private ResponseMaskEditorViewModel _responseMaskEditor;
+
+    [ObservableProperty]
     private ScriptSelectorViewModel _scriptSelector;
     
     [ObservableProperty]
@@ -125,6 +128,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestStepConfiguratorViewModel testStepConfiguratorViewModel,
         IProjectService projectService,
         DeviceManagerViewModel deviceManager,
+        ResponseMaskEditorViewModel responseMaskEditor,
         ScriptSelectorViewModel scriptSelector,
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
@@ -137,6 +141,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestHardwareRelayChannels = testHardwareRelayChannels;
         _testExecutor = testExecutor;
         TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
+        ResponseMaskEditor = responseMaskEditor;
         ScriptSelector = scriptSelector;
         CommandEditor = commandEditor;
         ShellCommandEditor = shellCommandEditor;
@@ -256,6 +261,7 @@ public partial class TestingTabViewModel : ViewModelBase
             ScriptSelector.LoadTestStep(value);
             CommandEditor.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
+            ResponseMaskEditor.LoadTestStep(value);
         }
         catch (Exception ex)
         {

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -60,9 +61,18 @@ public partial class CommandEditorViewModel : ViewModelBase
         }
         else
         {
-            TimeoutMs = "0";
             Command.TimeoutMs = 0;
         }
+        Dispatcher.UIThread.Post(UpdateStringProperties);
+    }
+
+    private void UpdateStringProperties()
+    {
+        if (_currentTestStep == null)
+            return;
+
+        TimeoutMs = _currentTestStep.Command.TimeoutMs.ToString();
+        OnPropertyChanged(nameof(TimeoutMs));
     }
     
     public void LoadTestStep(TestStepViewModel? testStepViewModel)
@@ -73,8 +83,8 @@ public partial class CommandEditorViewModel : ViewModelBase
             return;
         
         SelectedDevice = Devices.FirstOrDefault(d => d.Name == _currentTestStep.TargetDevice);
-        TimeoutMs = _currentTestStep.Command.TimeoutMs.ToString();
         Command =  _currentTestStep.Command;
+        UpdateStringProperties();
     }
 
     [RelayCommand]

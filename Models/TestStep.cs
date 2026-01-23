@@ -49,50 +49,58 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(9)]
+    private bool _customMask;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(10)]
     private bool _repeatUntilPass;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(10)]
+    [property: JsonPropertyOrder(11)]
     private string _comment = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(11)]
+    [property: JsonPropertyOrder(12)]
     private bool _showCommentOnTestStart;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(12)]
+    [property: JsonPropertyOrder(13)]
     private string _customMessageBoxImagePath = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(13)]
+    [property: JsonPropertyOrder(14)]
     private bool _ignoreStep;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(14)]
+    [property: JsonPropertyOrder(15)]
     private bool _dontSaveResult;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(15)]
+    [property: JsonPropertyOrder(16)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(16)]
+    [property: JsonPropertyOrder(17)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(17)]
+    [property: JsonPropertyOrder(18)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(18)]
+    [property: JsonPropertyOrder(19)]
     private ScriptCommand _command = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(19)]
+    [property: JsonPropertyOrder(20)]
     private ShellCommand _shellCommand = new();
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(21)]
+    private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(20)]
+    [property: JsonPropertyOrder(22)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -103,10 +111,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(21)]
+    [JsonPropertyOrder(23)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(22)]
+    [JsonPropertyOrder(24)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     partial void OnCommandChanged(ScriptCommand? oldValue, ScriptCommand newValue)
@@ -116,6 +124,12 @@ public partial class TestStep : ObservableObject
     }
     
     partial void OnShellCommandChanged(ShellCommand? oldValue, ShellCommand newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+    
+    partial void OnResponseMaskChanged(ResponseMask? oldValue, ResponseMask newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -194,6 +208,7 @@ public partial class TestStep : ObservableObject
             Unit = Unit,
             Delay = Delay,
             EvaluationSource = EvaluationSource,
+            CustomMask = CustomMask,
             RepeatUntilPass = RepeatUntilPass,
             Comment = Comment,
             ShowCommentOnTestStart = ShowCommentOnTestStart,
@@ -204,6 +219,7 @@ public partial class TestStep : ObservableObject
             ScriptId = ScriptId,
             Command = new ScriptCommand(Command),
             ShellCommand = new ShellCommand(ShellCommand),
+            ResponseMask = new ResponseMask(ResponseMask),
             MatrixState = new RelayMatrix(MatrixState),
             StimState = StimState != null ? new RelayGroupDto(StimState) : null,
             ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null

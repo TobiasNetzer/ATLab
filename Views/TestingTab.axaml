@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:behaviors="clr-namespace:ATLab.Behaviors"
-             xmlns:easings="clr-namespace:Avalonia.Animation.Easings;assembly=Avalonia.Animation"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
@@ -396,6 +395,10 @@
                     ShellCommandEditorVm="{Binding ShellCommandEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SHELL_COMMAND}"/>
 
+                <controls:ResponseMaskEditor
+                    ResponseMaskEditorVm="{Binding ResponseMaskEditor}"
+                    IsVisible="{Binding SelectedStep.TestStep.CustomMask}"/>
+                
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
 

@@ -204,6 +204,7 @@ public class App : Application
         services.AddTransient<CommandEditorViewModel>();
         services.AddTransient<TestHardwareConnectWindowViewModel>();
         services.AddTransient<ShellCommandEditorViewModel>();
+        services.AddTransient<ResponseMaskEditorViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

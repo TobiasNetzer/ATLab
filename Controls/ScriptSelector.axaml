@@ -4,7 +4,7 @@
              xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ScriptSelector"
-             x:DataType="x:Object"
+             x:DataType="controls:ScriptSelector"
              Width="500">
 
 

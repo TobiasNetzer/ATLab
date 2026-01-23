@@ -1,14 +1,15 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:ATLab.Controls"
-             x:Class="ATLab.Controls.ShellCommandEditor"
-             x:DataType="controls:ShellCommandEditor"
+             x:Class="ATLab.Controls.ResponseMaskEditor"
+             x:DataType="controls:ResponseMaskEditor"
              Width="500">
 
     <UserControl.Styles>
         <Style Selector="Border.WithDynamicCorner">
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
+
         <Style Selector="Border.WithDynamicCorner.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
@@ -17,17 +18,19 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"
                 Background="{DynamicResource SystemBaseLowColor}"
                 Padding="10">
 
             <DockPanel>
-                <TextBlock Text="Shell Command"
+
+                <TextBlock Text="Response Mask"
                            FontSize="18"
                            FontWeight="Bold"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
 
-                <ToggleButton IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Mode=TwoWay}"
+                <ToggleButton IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded, Mode=TwoWay}"
                               DockPanel.Dock="Right"
                               HorizontalAlignment="Right">
 
@@ -35,17 +38,17 @@
                         <ControlTemplate>
                             <Border Background="Transparent" Padding="5">
                                 <Grid>
-
+                                    
                                     <TextBlock Text="&#xE70D;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded,
+                                               IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded,
                                                                    Converter={StaticResource InverseBoolConverter}}"/>
-
+                                    
                                     <TextBlock Text="&#xE70E;"
                                                FontFamily="{StaticResource FluentIconsFont}"
                                                FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"/>
+                                               IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"/>
 
                                 </Grid>
                             </Border>
@@ -53,6 +56,7 @@
                     </ToggleButton.Template>
 
                 </ToggleButton>
+
             </DockPanel>
         </Border>
         
@@ -60,25 +64,34 @@
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
-                IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}">
 
             <StackPanel Margin="10" Spacing="15">
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Mask"/>
+                    <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Spacing="275">
 
-                <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Skip"/>
+                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 Width="100"
+                                 HorizontalAlignment="Left"/>
+                    </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Spacing="10"
-                            HorizontalAlignment="Right">
-                    
-                    <TextBlock Text="Window Behavior"
-                               VerticalAlignment="Center"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Length"/>
+                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 Width="100"/>
+                    </StackPanel>
 
-                    <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
-                              MinWidth="100"
-                              SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
-                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                 </StackPanel>
 
             </StackPanel>
+
         </Border>
 
     </StackPanel>

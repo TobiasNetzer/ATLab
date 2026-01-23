@@ -20,5 +20,5 @@ public class AppSettings
     public bool IsScriptSelectorExpanded { get; set; } = false;
     public bool IsCommandEditorExpanded  { get; set; } = false;
     public bool IsShellCommandEditorExpanded { get; set; } = false;
-
+    public bool IsResponseMaskEditorExpanded { get; set; } = false;
 }
