@@ -1,7 +1,12 @@
-﻿namespace ATLab.Enums;
+﻿using System.ComponentModel;
+
+namespace ATLab.Enums;
 
 public enum DeviceType
 {
+    [Description("Serial Port")]
     SERIAL,
+    
+    [Description("VISA")]
     VISA
 }

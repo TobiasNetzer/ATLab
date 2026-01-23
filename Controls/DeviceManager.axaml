@@ -46,6 +46,7 @@
                         <ComboBox Grid.Row="1"
                                   ItemsSource="{Binding AvailableDeviceTypes}"
                                   SelectedItem="{Binding SelectedDevice.Type}"
+                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   Width="210"/>
                     </Grid>
                     
