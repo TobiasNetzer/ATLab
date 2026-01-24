@@ -3,72 +3,69 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.About"
              x:DataType="vm:AboutTabViewModel"
-             Width="780">
-    
-    <Grid RowDefinitions="Auto, Auto">
-        
-        <Border Grid.Row="0" Background="{DynamicResource SystemBaseLowColor}"
-                CornerRadius="15 15 0 0"
-                Padding="10">
+             Width="780"
+             VerticalAlignment="Top">
+
+    <Border Background="{DynamicResource SystemChromeLowColor}"
+            CornerRadius="15"
+            BorderBrush="{DynamicResource SystemBaseLowColor}"
+            BorderThickness="2">
+
+        <Grid RowDefinitions="Auto,Auto">
             
-            <TextBlock Text="About"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
-        </Border>
-        
-        <Border Grid.Row="1" Background="{DynamicResource SystemChromeLowColor}"
-                CornerRadius="0 0 15 15"
-                BorderThickness="2"
-                BorderBrush="{DynamicResource SystemBaseLowColor}">
-                
-            <StackPanel Margin="20"
-                        Spacing="8"
-                        HorizontalAlignment="Center">
-                
-                <TextBlock Text="ATLab"
-                           FontSize="24"
+            <Border Grid.Row="0"
+                    Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15 15 0 0"
+                    Padding="12">
+                <TextBlock Text="About"
+                           FontSize="20"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
-                
+            </Border>
+            
+            <StackPanel Grid.Row="1"
+                        Margin="30"
+                        Spacing="20">
+
+                <TextBlock Text="ATLab"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+
                 <TextBlock Text="A cross‑platform automated testing toolkit for interfacing with hardware via the Test Interface Adapter and controlling external test instruments through remote control interfaces. Built with Avalonia UI and .NET 9, it offers a modern environment for developing and running automated test sequences."
                            TextWrapping="Wrap"
-                           Width="600"
-                           TextAlignment="Center"/>
-
-                <Separator/>
-
-                <!-- Standard information -->
-                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"
+                           TextAlignment="Center"
                            HorizontalAlignment="Center"/>
 
-                <Separator/>
+                <Separator Margin="0"/>
 
-                <!-- Device Information -->
-                <TextBlock Text="Connected Test Hardware:" FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="Available Channels:" FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding MeasChannelCount, StringFormat=MEAS CH: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding StimChannelCount, StringFormat=STIM CH: {0}}"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=EXT STIM CH: {0}}"
-                           HorizontalAlignment="Center"/>
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Application" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
+                    <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
+                </StackPanel>
+
+                <Separator Margin="0"/>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
+                    <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
+                    <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
+                    <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"/>
+                    <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
+                </StackPanel>
+
+                <Separator Margin="0"/>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Meas Channels: {0}}"/>
+                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stim Channels: {0}}"/>
+                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
+                </StackPanel>
                 
             </StackPanel>
-        </Border>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>
