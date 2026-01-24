@@ -675,6 +675,7 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             ResetAllResults();
             TestProgress = 0;
+            NumberFailedSteps = 0;
             TestStatus = TestStatus.RUNNING;
         };
     }
