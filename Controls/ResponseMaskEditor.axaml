@@ -66,7 +66,7 @@
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
                 IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}">
 
-            <StackPanel Margin="10" Spacing="15">
+            <StackPanel Margin="10" Spacing="10">
                 
                 <StackPanel Spacing="2">
                     <TextBlock Text="Mask"/>
@@ -98,7 +98,7 @@
 
                 <Grid ColumnDefinitions="Auto, *"
                       RowDefinitions="Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Response Processing:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 5"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Response Processing:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 10"/>
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Original:" FontWeight="SemiBold" Margin="0,0,10,5"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}" TextWrapping="Wrap"/>
 
