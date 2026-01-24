@@ -69,7 +69,7 @@ public class TestExecutor : ITestExecutor
 
             _relayStatesCleared = true;
             
-            await Task.Delay(500);
+            await Task.Delay(250);
         }
         finally
         {
