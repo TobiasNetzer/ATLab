@@ -78,25 +78,43 @@
                             BorderBrush="{DynamicResource SystemBaseLowColor}"
                             Padding="10">
 
-                        <StackPanel>
-                            <TextBlock Text="Default Settings"
+                        <Grid RowDefinitions="Auto,Auto,Auto"
+                              ColumnDefinitions="Auto, Auto"
+                              ColumnSpacing="10"
+                              RowSpacing="10"
+                              HorizontalAlignment="Center">
+                            
+                            <TextBlock Grid.ColumnSpan="2"
+                                       Text="Default Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
                                        Margin="0 0 0 10"/>
+                            
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="Default Tolerance (%)"
+                                       VerticalAlignment="Center"/>
 
-                            <StackPanel Orientation="Horizontal"
-                                        Spacing="5"
-                                        HorizontalAlignment="Center">
+                            <NumericUpDown Grid.Row="1"
+                                           Grid.Column="1"
+                                           Value="{Binding ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Minimum="0"
+                                           Maximum="100"
+                                           Width="120"/>
+                            
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="Result Precision (Digits)"
+                                       VerticalAlignment="Center"/>
 
-                                <TextBlock Text="Default Tolerance (%)"
-                                           VerticalAlignment="Center"/>
-
-                                <NumericUpDown Value="{Binding ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                               Minimum="0"
-                                               Maximum="100"
-                                               Width="120"/>
-                            </StackPanel>
-                        </StackPanel>
+                            <NumericUpDown Grid.Row="2"
+                                           Grid.Column="1"
+                                           Value="{Binding ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Minimum="0"
+                                           Maximum="10"
+                                           Increment="1"
+                                           Width="120"/>
+                        </Grid>
                     </Border>
                 </Grid>
             </ScrollViewer>

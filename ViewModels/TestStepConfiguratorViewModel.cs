@@ -16,6 +16,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly IProjectSettings _projectSettings;
 
     public List<TestEvaluationSource> EvaluationSources { get; } = Enum.GetValues<TestEvaluationSource>().ToList();
         
@@ -36,15 +37,15 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _delayText;
-    
-    public double Tolerance;
 
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
-        IFileDialogService fileDialogService)
+        IFileDialogService fileDialogService,
+        IProjectSettings projectSettings)
     {
         _settingsService = settingsService;
         _fileDialogService = fileDialogService;
+        _projectSettings = projectSettings;
         
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
     }
@@ -177,8 +178,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (TestStepViewModel?.TestStep == null) return;
 
         var nominal = TestStepViewModel.TestStep.NominalValue;
-        var v1 = nominal * (1 + Tolerance);
-        var v2 = nominal * (1 - Tolerance);
+        var tolerance = _projectSettings.ToleranceValue / 100.0;
+        var v1 = nominal * (1 + tolerance);
+        var v2 = nominal * (1 - tolerance);
 
         // Ensure UpperLimit >= NominalValue and LowerLimit <= NominalValue
         TestStepViewModel.TestStep.UpperLimit = Math.Max(Math.Max(v1, v2), nominal);

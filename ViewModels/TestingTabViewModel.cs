@@ -22,6 +22,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IProjectService _projectService;
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly ProjectSettingsViewModel _projectSettingsViewModel;
+    private readonly IProjectSettings _projectSettings;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly TestResultExportService _testResultExportService;
     
@@ -133,6 +134,7 @@ public partial class TestingTabViewModel : ViewModelBase
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettingsViewModel projectSettingsViewModel,
+        IProjectSettings projectSettings,
         ISerialNumberDialogService serialNumberDialogService,
         TestResultExportService testResultExportService)
     {
@@ -148,6 +150,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService = projectService;
         _deviceManager = deviceManager;
         _projectSettingsViewModel = projectSettingsViewModel;
+        _projectSettings = projectSettings;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
         
@@ -711,11 +714,12 @@ public partial class TestingTabViewModel : ViewModelBase
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
             Devices = _deviceManager.Devices.ToList(),
-            DefaultTolerance = _projectSettingsViewModel.ToleranceValue,
-            UseSerialNumber = _projectSettingsViewModel.UseSerialNumber,
-            SaveTestResults = _projectSettingsViewModel.SaveTestResult,
-            SaveTestResultOptions =  _projectSettingsViewModel.SaveTestResultOptions,
-            SaveTestResultFilePath = _projectSettingsViewModel.SaveTestResultFilePath,
+            DefaultTolerance = _projectSettings.ToleranceValue,
+            ResultPrecision = _projectSettings.ResultPrecision,
+            UseSerialNumber = _projectSettings.UseSerialNumber,
+            SaveTestResults = _projectSettings.SaveTestResult,
+            SaveTestResultOptions =  _projectSettings.SaveTestResultOptions,
+            SaveTestResultFilePath = _projectSettings.SaveTestResultFilePath,
         };
     }
 
@@ -785,11 +789,12 @@ public partial class TestingTabViewModel : ViewModelBase
             TestSteps.Add(stepVm);
         }
         
-        _projectSettingsViewModel.ToleranceValue = dto.DefaultTolerance;
-        _projectSettingsViewModel.UseSerialNumber = dto.UseSerialNumber;
-        _projectSettingsViewModel.SaveTestResult = dto.SaveTestResults;
-        _projectSettingsViewModel.SaveTestResultOptions = dto.SaveTestResultOptions;
-        _projectSettingsViewModel.SaveTestResultFilePath = dto.SaveTestResultFilePath;
+        _projectSettings.ToleranceValue = dto.DefaultTolerance;
+        _projectSettings.ResultPrecision = dto.ResultPrecision;
+        _projectSettings.UseSerialNumber = dto.UseSerialNumber;
+        _projectSettings.SaveTestResult = dto.SaveTestResults;
+        _projectSettings.SaveTestResultOptions = dto.SaveTestResultOptions;
+        _projectSettings.SaveTestResultFilePath = dto.SaveTestResultFilePath;
         
         TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 

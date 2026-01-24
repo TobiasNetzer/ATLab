@@ -18,6 +18,7 @@ public class TestExecutor : ITestExecutor
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly IProjectSettings _projectSettings;
 
     private CancellationTokenSource? _cts;
     private bool _repeatTest;
@@ -38,13 +39,15 @@ public class TestExecutor : ITestExecutor
         ITestStepRunner runner,
         IErrorService errorService,
         ITestStepEvaluator evaluator,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        IProjectSettings projectSettings)
     {
         _testHardware = testHardware;
         _runner = runner;
         _errorService = errorService;
         _evaluator = evaluator;
         _messageBoxService = messageBoxService;
+        _projectSettings = projectSettings;
     }
 
     private void ResetRelayClearFlag() => _relayStatesCleared = false;
@@ -268,11 +271,14 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
-        step.Result = string.IsNullOrEmpty(step.TestStep.Unit)
-            ? value.ToString(CultureInfo.CurrentCulture)
-            : UnitParser.Format(value, step.TestStep.Unit);
+        var precision = _projectSettings.ResultPrecision;
+        var format = "0." + new string('#', precision);
 
-        step.ResultNoFormatting = value.ToString(CultureInfo.CurrentCulture);
+        step.Result = string.IsNullOrEmpty(step.TestStep.Unit)
+            ? Math.Round(value, precision).ToString(format, CultureInfo.CurrentCulture)
+            : UnitParser.Format(value, step.TestStep.Unit, precision);
+
+        step.ResultNoFormatting = Math.Round(value, precision).ToString(format, CultureInfo.CurrentCulture);
 
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";

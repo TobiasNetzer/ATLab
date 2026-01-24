@@ -11,6 +11,7 @@ public class AtlabFileDto
     public List<CustomRelayChannelName> MeasChannelNames { get; init; } = new();
     public List<Device> Devices { get; init; } = new();
     public double DefaultTolerance { get; init; }
+    public int ResultPrecision { get; init; }
     public bool UseSerialNumber { get; init; }
     public bool SaveTestResults { get; init; }
     public SaveTestResultOptions SaveTestResultOptions { get; init; }

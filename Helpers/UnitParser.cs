@@ -59,7 +59,7 @@ public static class UnitParser
         return false;
     }
 
-    public static string Format(double value, string? unit = null)
+    public static string Format(double value, string? unit = null, int precision = 6)
     {
         double absValue = Math.Abs(value);
         string suffix = "";
@@ -101,6 +101,7 @@ public static class UnitParser
             suffix = "p";
         }
 
-        return $"{Math.Round(displayValue, 6).ToString("0.######", CultureInfo.CurrentCulture)}{suffix}{unit ?? ""}";
+        string format = "0." + new string('#', precision);
+        return $"{Math.Round(displayValue, precision).ToString(format, CultureInfo.CurrentCulture)}{suffix}{unit ?? ""}";
     }
 }

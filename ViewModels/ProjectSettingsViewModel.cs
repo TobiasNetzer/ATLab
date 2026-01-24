@@ -9,11 +9,14 @@ namespace ATLab.ViewModels;
 
 public partial class ProjectSettingsViewModel : ViewModelBase
 {
-    private readonly TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
     private readonly IFileDialogService _fileDialogService;
+    private readonly IProjectSettings _projectSettings;
     
     [ObservableProperty]
     private double _toleranceValue;
+
+    [ObservableProperty]
+    private int _resultPrecision;
     
     [ObservableProperty]
     private bool _useSerialNumber;
@@ -31,43 +34,66 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     
     public event Action? ConfigurationChanged;
     
-    public ProjectSettingsViewModel(TestStepConfiguratorViewModel testStepConfiguratorViewModel,
-        IFileDialogService fileDialogService)
+    public ProjectSettingsViewModel(IFileDialogService fileDialogService,
+        IProjectSettings projectSettings)
     {
-        _testStepConfiguratorViewModel = testStepConfiguratorViewModel;
         _fileDialogService = fileDialogService;
+        _projectSettings = projectSettings;
+        
+        _projectSettings.SettingsChanged += UpdateFromService;
         
         ResetToDefault();
+    }
+
+    private void UpdateFromService()
+    {
+        ToleranceValue = _projectSettings.ToleranceValue;
+        ResultPrecision = _projectSettings.ResultPrecision;
+        UseSerialNumber = _projectSettings.UseSerialNumber;
+        SaveTestResult = _projectSettings.SaveTestResult;
+        SaveTestResultOptions = _projectSettings.SaveTestResultOptions;
+        SaveTestResultFilePath = _projectSettings.SaveTestResultFilePath;
     }
     
     public void ResetToDefault()
     {
-        ToleranceValue = 10;
-        UseSerialNumber = false;
-        SaveTestResultFilePath = string.Empty;
-        UseSerialNumber = false;
-        SaveTestResult = false;
-        SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
+        _projectSettings.ResetToDefault();
+    }
+    
+    partial void OnResultPrecisionChanged(int value)
+    {
+        _projectSettings.ResultPrecision = value;
+        ConfigurationChanged?.Invoke();
     }
     
     partial void OnToleranceValueChanged(double value)
     {
-        _testStepConfiguratorViewModel.Tolerance = value / 100.0;
+        _projectSettings.ToleranceValue = value;
         ConfigurationChanged?.Invoke();
     }
 
     partial void OnUseSerialNumberChanged(bool value)
     {
+        _projectSettings.UseSerialNumber = value;
         OnPropertyChanged(nameof(CanSaveTestResult));
         ConfigurationChanged?.Invoke();
     }
     partial void OnSaveTestResultChanged(bool value)
     {
+        _projectSettings.SaveTestResult = value;
         OnPropertyChanged(nameof(CanSaveTestResult));
         ConfigurationChanged?.Invoke();
     }
-    partial void OnSaveTestResultOptionsChanged(SaveTestResultOptions value) => ConfigurationChanged?.Invoke();
-    partial void OnSaveTestResultFilePathChanged(string value) => ConfigurationChanged?.Invoke();
+    partial void OnSaveTestResultOptionsChanged(SaveTestResultOptions value)
+    {
+        _projectSettings.SaveTestResultOptions = value;
+        ConfigurationChanged?.Invoke();
+    }
+    partial void OnSaveTestResultFilePathChanged(string value)
+    {
+        _projectSettings.SaveTestResultFilePath = value;
+        ConfigurationChanged?.Invoke();
+    }
 
     [RelayCommand]
     private async Task SelectSaveTestResultFilePath()
