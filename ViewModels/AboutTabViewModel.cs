@@ -29,6 +29,32 @@ public partial class AboutTabViewModel : ViewModelBase
             .Company
         ?? "Unknown";
     
+    public string BuildConfiguration =>
+#if DEBUG
+        "Debug";
+#else
+    "Release";
+#endif
+
+    public string TargetFramework =>
+        System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+
+    public string RuntimeVersion =>
+        Environment.Version.ToString();
+
+    public string OSDescription =>
+        System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+
+    public string OSArchitecture =>
+        System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString();
+
+    public string ProcessArchitecture =>
+        System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString();
+
+    public string AvaloniaVersion =>
+        typeof(Avalonia.Application).Assembly.GetName().Version?.ToString() ?? "Unknown";
+
+    
     public AboutTabViewModel(IHardwareInfo hardwareInfo)
     {
         FirmwareVersion = hardwareInfo.FirmwareVersion;

@@ -11,7 +11,7 @@
             BorderBrush="{DynamicResource SystemBaseLowColor}"
             BorderThickness="2">
 
-        <Grid RowDefinitions="Auto,Auto">
+        <Grid RowDefinitions="Auto,*">
             
             <Border Grid.Row="0"
                     Background="{DynamicResource SystemBaseLowColor}"
@@ -22,50 +22,67 @@
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
             </Border>
-            
-            <StackPanel Grid.Row="1"
-                        Margin="30"
-                        Spacing="20">
 
-                <TextBlock Text="ATLab"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
-
-                <TextBlock Text="A cross‑platform automated testing toolkit for interfacing with hardware via the Test Interface Adapter and controlling external test instruments through remote control interfaces. Built with Avalonia UI and .NET 9, it offers a modern environment for developing and running automated test sequences."
-                           TextWrapping="Wrap"
-                           TextAlignment="Center"
-                           HorizontalAlignment="Center"/>
-
-                <Separator Margin="0"/>
-
-                <StackPanel Spacing="5">
-                    <TextBlock Text="Application" FontSize="16" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
-                    <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
-                </StackPanel>
-
-                <Separator Margin="0"/>
-
-                <StackPanel Spacing="5">
-                    <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
-                    <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
-                    <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
-                    <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"/>
-                    <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
-                </StackPanel>
-
-                <Separator Margin="0"/>
-
-                <StackPanel Spacing="5">
-                    <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Meas Channels: {0}}"/>
-                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stim Channels: {0}}"/>
-                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
-                </StackPanel>
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto">
                 
-            </StackPanel>
+                <StackPanel Margin="30"
+                            Spacing="20">
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="avares://ATLab/Assets/AppIcon.png"
+                               Height="64"/>
+                        <TextBlock Text="ATLab"
+                                   FontSize="32"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="225 0 0 0"/>
+                    </StackPanel>
+
+                    <TextBlock Text="A cross‑platform automated testing toolkit for interfacing with hardware via the Test Interface Adapter and controlling external test instruments through remote control interfaces. Built with Avalonia UI and .NET 9, it offers a modern environment for developing and running automated test sequences."
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"/>
+
+                    <Separator Margin="0"/>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Application" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
+                        <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
+                        <TextBlock Text="{Binding BuildConfiguration, StringFormat=Build: {0}}"/>
+                        <TextBlock Text="{Binding TargetFramework, StringFormat=Target Framework: {0}}"/>
+                        <TextBlock Text="{Binding RuntimeVersion, StringFormat=.NET Runtime: {0}}"/>
+                        <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
+                        <TextBlock Text="{Binding OSDescription, StringFormat=OS: {0}}"/>
+                        <TextBlock Text="{Binding OSArchitecture, StringFormat=OS Architecture: {0}}"/>
+                        <TextBlock Text="{Binding ProcessArchitecture, StringFormat=Process Architecture: {0}}"/>
+                    </StackPanel>
+
+                    <Separator Margin="0"/>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
+                        <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
+                        <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
+                        <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"/>
+                        <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
+                    </StackPanel>
+
+                    <Separator Margin="0"/>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding MeasChannelCount, StringFormat=Meas Channels: {0}}"/>
+                        <TextBlock Text="{Binding StimChannelCount, StringFormat=Stim Channels: {0}}"/>
+                        <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+            </ScrollViewer>
         </Grid>
     </Border>
 </UserControl>
