@@ -330,7 +330,9 @@
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Left"
-                       Text="{Binding SerialNumber, StringFormat='S/N: {0}'}"/>
+                       Text="{Binding SerialNumber, StringFormat='S/N: {0}'}"
+                       TextTrimming="CharacterEllipsis"
+                       ToolTip.Tip="{Binding SerialNumber}"/>
             
             <TextBlock Grid.Column="1"
                        Grid.Row="2"
