@@ -239,7 +239,7 @@ public class TestExecutor : ITestExecutor
 
                 OnStepExecuted();
 
-            } while (step.TestStep.RepeatUntilPass && !step.IsPassed);
+            } while (step.TestStep.RepeatUntilPass && !step.IsPassed && !stepExecutionResult.IsFailure);
 
             OnStepCompleted(i, step);
 

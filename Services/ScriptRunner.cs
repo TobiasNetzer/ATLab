@@ -13,13 +13,16 @@ public class ScriptRunner : IScriptRunner
 {
     private readonly IScriptRepository _scriptRepository;
     private readonly ICommandExecutor _commandExecutor;
+    private readonly IResponseProcessor _responseProcessor;
 
     public ScriptRunner(
         IScriptRepository scriptRepository,
-        ICommandExecutor commandExecutor)
+        ICommandExecutor commandExecutor,
+        IResponseProcessor responseProcessor)
     {
         _scriptRepository = scriptRepository;
         _commandExecutor = commandExecutor;
+        _responseProcessor = responseProcessor;
     }
 
     public async Task<OperationResult> ExecuteAsync(
@@ -38,7 +41,8 @@ public class ScriptRunner : IScriptRunner
         string scriptId,
         string deviceName,
         IEnumerable<ScriptVariable> variables,
-        CancellationToken token)
+        CancellationToken token,
+        ResponseMask? mask = null)
     {
         var result = await RunCoreAsync(scriptId, deviceName, variables, token);
         
@@ -51,15 +55,17 @@ public class ScriptRunner : IScriptRunner
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
+        var processedValue = _responseProcessor.ApplyMask(result.Value, mask);
+
         try
         {
-            var converted = (T?)Convert.ChangeType(result.Value, typeof(T), CultureInfo.InvariantCulture);
+            var converted = (T?)Convert.ChangeType(processedValue, typeof(T), CultureInfo.InvariantCulture);
             return OperationResult<T>.Success(converted!);
         }
         catch (Exception ex)
         {
             return OperationResult<T>.Failure(
-                $"Failed to convert result '{result.Value}' to type {typeof(T).Name}: {ex.Message}");
+                $"Failed to convert result '{processedValue}' (original: '{result.Value}') to type {typeof(T).Name}: {ex.Message}");
         }
     }
 

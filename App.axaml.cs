@@ -171,6 +171,7 @@ public class App : Application
         services.AddSingleton<IScriptRunner, ScriptRunner>();
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
+        services.AddSingleton<IResponseProcessor, ResponseProcessor>();
         services.AddSingleton<CsvExportService>();
         services.AddSingleton<TestResultExportService>();
         
@@ -180,7 +181,7 @@ public class App : Application
 
         services.AddTransient<CtiaCommunication>();
         services.AddTransient<CtiaHardware>();
-        services.AddTransient<TestHardwareSimulator>();
+        services.AddSingleton<TestHardwareSimulator>();
         
         // Factory for ITestHardware since it's initialized later
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
@@ -194,17 +195,16 @@ public class App : Application
         services.AddSingleton<TestStepConfiguratorViewModel>();
         services.AddSingleton<DeviceManagerViewModel>();
         services.AddSingleton<ProjectSettingsViewModel>();
-        
-        services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<TestingTabViewModel>();
-        services.AddTransient<ConfigTabViewModel>();
-        services.AddTransient<ScriptsManagerViewModel>();
-        services.AddTransient<AboutTabViewModel>();
-        services.AddTransient<ScriptSelectorViewModel>();
-        services.AddTransient<CommandEditorViewModel>();
-        services.AddTransient<TestHardwareConnectWindowViewModel>();
-        services.AddTransient<ShellCommandEditorViewModel>();
-        services.AddTransient<ResponseMaskEditorViewModel>();
+        services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<TestingTabViewModel>();
+        services.AddSingleton<ConfigTabViewModel>();
+        services.AddSingleton<ScriptsManagerViewModel>();
+        services.AddSingleton<AboutTabViewModel>();
+        services.AddSingleton<ScriptSelectorViewModel>();
+        services.AddSingleton<CommandEditorViewModel>();
+        services.AddSingleton<TestHardwareConnectWindowViewModel>();
+        services.AddSingleton<ShellCommandEditorViewModel>();
+        services.AddSingleton<ResponseMaskEditorViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

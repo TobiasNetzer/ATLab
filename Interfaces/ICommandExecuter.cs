@@ -20,5 +20,6 @@ public interface ICommandExecutor
     Task<OperationResult<T>> ExecuteAsync<T>(
         ScriptCommand command,
         string deviceName,
-        CancellationToken token);
+        CancellationToken token,
+        ResponseMask? mask = null);
 }

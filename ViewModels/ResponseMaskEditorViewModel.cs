@@ -22,6 +22,18 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     [ObservableProperty]
     private string _skipCharacters = string.Empty;
 
+    [ObservableProperty]
+    private bool _onlyNumeric;
+
+    [ObservableProperty]
+    private string _lastOriginalResponse = string.Empty;
+
+    [ObservableProperty]
+    private string _lastProcessedInput = string.Empty;
+
+    [ObservableProperty]
+    private string _lastFinalResult = string.Empty;
+    
     private TestStep? _currentTestStep;
 
     public ResponseMaskEditorViewModel(ISettingsService settingsService)
@@ -73,6 +85,12 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
+    partial void OnOnlyNumericChanged(bool value)
+    {
+        if (_currentTestStep?.ResponseMask != null)
+            _currentTestStep.ResponseMask.OnlyNumeric = value;
+    }
+
     private void UpdateStringProperties()
     {
         if (_currentTestStep == null)
@@ -81,12 +99,20 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
+        OnlyNumeric = _currentTestStep.ResponseMask.OnlyNumeric;
+        LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
+        LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
+        LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;
         
         OnPropertyChanged(nameof(Mask));
         OnPropertyChanged(nameof(Length));
         OnPropertyChanged(nameof(SkipCharacters));
+        OnPropertyChanged(nameof(OnlyNumeric));
+        OnPropertyChanged(nameof(LastOriginalResponse));
+        OnPropertyChanged(nameof(LastProcessedInput));
+        OnPropertyChanged(nameof(LastFinalResult));
     }
-    
+
     public void LoadTestStep(TestStepViewModel? testStepViewModel)
     {
         if (_currentTestStep?.ResponseMask != null)
@@ -100,6 +126,10 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
+        OnlyNumeric = _currentTestStep.ResponseMask.OnlyNumeric;
+        LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
+        LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
+        LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;
         
         _currentTestStep.ResponseMask.PropertyChanged += ResponseMaskChanged;
 

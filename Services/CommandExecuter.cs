@@ -15,16 +15,19 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 {
     private readonly ICommunicationFactory _communicationFactory;
     private readonly DeviceManagerViewModel _deviceManager;
+    private readonly IResponseProcessor _responseProcessor;
 
     private ICommunication? _deviceInterface;
     private DeviceConfiguration? _lastConfig;
 
     public CommandExecutor(
         ICommunicationFactory communicationFactory,
-        DeviceManagerViewModel deviceManager)
+        DeviceManagerViewModel deviceManager,
+        IResponseProcessor responseProcessor)
     {
         _communicationFactory = communicationFactory;
         _deviceManager = deviceManager;
+        _responseProcessor = responseProcessor;
     }
 
     public Task<OperationResult<string?>> ExecuteAsync(
@@ -133,7 +136,8 @@ public class CommandExecutor : ICommandExecutor, IDisposable
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         ScriptCommand command,
         string deviceName,
-        CancellationToken token)
+        CancellationToken token,
+        ResponseMask? mask = null)
     {
         var result = await ExecuteAsync(command, deviceName, token);
 
@@ -146,15 +150,17 @@ public class CommandExecutor : ICommandExecutor, IDisposable
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
+        var processedValue = _responseProcessor.ApplyMask(result.Value, mask);
+
         try
         {
-            var converted = (T?)Convert.ChangeType(result.Value, typeof(T), CultureInfo.InvariantCulture);
+            var converted = (T?)Convert.ChangeType(processedValue, typeof(T), CultureInfo.InvariantCulture);
             return OperationResult<T>.Success(converted!);
         }
         catch (Exception ex)
         {
             return OperationResult<T>.Failure(
-                $"Failed to convert result '{result.Value}' to type {typeof(T).Name}: {ex.Message}");
+                $"Failed to convert result '{processedValue}' (original: '{result.Value}') to type {typeof(T).Name}: {ex.Message}");
         }
     }
 
