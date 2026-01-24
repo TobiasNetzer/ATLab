@@ -112,7 +112,7 @@ public class ProjectService : IProjectService
     {
         if (IsDirty)
         {
-            var result = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Do you want to continue and lose your changes?");
+            var result = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Continue without saving?");
             if (!result) return false;
         }
 

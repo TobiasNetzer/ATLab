@@ -15,7 +15,7 @@
                         Margin="10"
                         Spacing="5">
                 
-                <Button Content="&#xE8F4;"
+                <Button Content="&#xED0E;"
                         FontFamily="{StaticResource FluentIconsFont}"
                         FontSize="20"
                         ToolTip.Tip="New file"
