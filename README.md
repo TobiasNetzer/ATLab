@@ -1,6 +1,6 @@
 # ATLab - Automated Testing Toolkit
 
-![image](docs/Example.GIF)
+![image](docs/Example.gif)
 
 ATLab is a cross‑platform automated testing toolkit for interfacing with hardware via the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter) and controlling external test instruments through remote control interfaces.
 Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for developing and running automated test sequences.
