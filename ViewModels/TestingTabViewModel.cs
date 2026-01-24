@@ -372,7 +372,7 @@ public partial class TestingTabViewModel : ViewModelBase
             var modelCopy = step.TestStep.Clone();
             
             var duplicatedStep = new TestStepViewModel(modelCopy, TestHardwareRelayChannels.HardwareInfo);
-            duplicatedStep.PropertyChanged += (_, _) => CheckForChanges();
+            duplicatedStep.PropertyChanged += OnStepPropertyChanged;
             
             TestSteps.Insert(insertIndex, duplicatedStep);
             newDuplicates.Add(duplicatedStep);
