@@ -27,7 +27,7 @@
                         HorizontalAlignment="Center">
                 
                 <TextBlock Text="ATLab"
-                           FontSize="18"
+                           FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
                 
