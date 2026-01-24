@@ -2,7 +2,7 @@
 
 ![image](docs/Example.GIF)
 
-ATLab is a cross‑platform automated testing toolkit for interfacing with hardware via the Test Interface Adapter and controlling external test instruments through remote control interfaces. Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for managing devices, creating test scripts, and running automated test sequences.
+ATLab is a cross‑platform automated testing toolkit for interfacing with hardware via the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter) and controlling external test instruments through remote control interfaces. Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for managing devices, creating test scripts, and running automated test sequences.
 
 ## Features
 
@@ -11,10 +11,9 @@ ATLab is a cross‑platform automated testing toolkit for interfacing with hardw
 -   **Scripting Engine**: Create test sequences with multi-step scripts.
 -   **Customizable Test Steps**: Each test step can perform multiple actions:
     -   **Instrument Commands**: Send commands to devices with configurable timeouts and delays.
-    -   **Response Validation**: Use response masks to verify hardware output.
+    -   **Response Validation**: Use response masking to verify hardware output.
     -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
     -   **Relay Control**: Manage the Relay Matrix and Relay Groups, using the Test Interface Adapter to route signals through different relays.
-    -   **Variables**: Define and use script variables within your test steps.
 
 ## Build and Prerequisites
 
