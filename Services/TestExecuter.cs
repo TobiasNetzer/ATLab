@@ -129,7 +129,6 @@ public class TestExecutor : ITestExecutor
         while (_repeatTest)
         {
             OnTestRepeated();
-            await Task.Delay(100);
             await StartTestAsync(steps, startIndex);
         }
     }
