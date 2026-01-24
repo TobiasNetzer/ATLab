@@ -18,14 +18,9 @@ public class ResponseProcessor : IResponseProcessor
         var processedInput = input;
         if (mask.Skip > 0)
         {
-            if (mask.Skip < processedInput.Length)
-            {
-                processedInput = processedInput.Substring(mask.Skip);
-            }
-            else
-            {
-                processedInput = string.Empty;
-            }
+            processedInput = mask.Skip < processedInput.Length
+                ? processedInput.Substring(mask.Skip)
+                : string.Empty;
         }
 
         if (mask.Length > 0 && mask.Length < processedInput.Length)
@@ -36,8 +31,8 @@ public class ResponseProcessor : IResponseProcessor
         processedInput = processedInput.Trim();
 
         // HEX/BIN Conversion
-        bool isHex = mask.Mask.Contains("HEX", StringComparison.OrdinalIgnoreCase);
-        bool isBin = mask.Mask.Contains("BIN", StringComparison.OrdinalIgnoreCase);
+        var isHex = mask.Mask.Contains("HEX", StringComparison.OrdinalIgnoreCase);
+        var isBin = mask.Mask.Contains("BIN", StringComparison.OrdinalIgnoreCase);
 
         if (isHex || isBin)
         {
@@ -46,7 +41,7 @@ public class ResponseProcessor : IResponseProcessor
                 // Remove prefix if present (e.g., 0x or 0b)
                 var cleanValue = processedInput.Replace("0x", "").Replace("0b", "").Trim();
                 
-                long value = isHex ? Convert.ToInt64(cleanValue, 16) : Convert.ToInt64(cleanValue, 2);
+                var value = isHex ? Convert.ToInt64(cleanValue, 16) : Convert.ToInt64(cleanValue, 2);
                 processedInput = value.ToString();
             }
             catch
@@ -69,14 +64,14 @@ public class ResponseProcessor : IResponseProcessor
         // Evaluate Mask
         // Check for quoted strings: All of them must be found in the original input
         var quotedMatches = Regex.Matches(mask.Mask, "\"(.*?)\"");
-        bool hasQuotes = quotedMatches.Count > 0;
+        var hasQuotes = quotedMatches.Count > 0;
 
         // Extract plain text by removing all quoted parts and keywords
         var plainText = Regex.Replace(mask.Mask, "\".*?\"", "");
         plainText = plainText.Replace("HEX", "", StringComparison.OrdinalIgnoreCase);
         plainText = plainText.Replace("BIN", "", StringComparison.OrdinalIgnoreCase);
         plainText = plainText.Trim();
-        bool hasPlainText = !string.IsNullOrEmpty(plainText);
+        var hasPlainText = !string.IsNullOrEmpty(plainText);
 
         if (!hasQuotes && !hasPlainText)
         {
@@ -86,22 +81,22 @@ public class ResponseProcessor : IResponseProcessor
         else
         {
             // Comparison Mode: If a mask is provided, look for matches
-            bool allQuotesMatched = true;
+            var allQuotesMatched = true;
 
             if (hasQuotes)
             {
                 foreach (Match match in quotedMatches)
                 {
                     var search = match.Groups[1].Value;
-                    if (string.IsNullOrEmpty(search) || !input.Contains(search))
-                    {
-                        allQuotesMatched = false;
-                        break;
-                    }
+                    if (!string.IsNullOrEmpty(search) && input.Contains(search))
+                        continue;
+                    
+                    allQuotesMatched = false;
+                    break;
                 }
             }
 
-            bool plainTextMatched = true;
+            var plainTextMatched = true;
             if (hasPlainText)
             {
                 // Compare with processed input
@@ -109,7 +104,7 @@ public class ResponseProcessor : IResponseProcessor
             }
 
             // If we have both quotes and plain text, both must match (AND logic)
-            bool isMatch = allQuotesMatched && plainTextMatched;
+            var isMatch = allQuotesMatched && plainTextMatched;
 
             finalResult = isMatch ? "1" : "0";
         }
