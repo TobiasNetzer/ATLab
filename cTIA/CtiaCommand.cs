@@ -345,7 +345,10 @@ public class CtiaCommand
         var responseFrame = await _CTIA.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_SERIAL_NUMBER)
-            return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
+        {
+            var serial = BitConverter.ToUInt32(responseFrame.Payload, 0);
+            return OperationResult<string>.Success(serial.ToString());
+        }
         
         var status = (CTIAStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
