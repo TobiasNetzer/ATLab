@@ -17,5 +17,4 @@ public interface IProjectService : INotifyPropertyChanged
     Task<bool> ConfirmAndContinueIfDirtyAsync();
     
     void UpdateLastSavedState(AtlabFileDto dto);
-    bool IsStateChanged(AtlabFileDto currentDto);
 }

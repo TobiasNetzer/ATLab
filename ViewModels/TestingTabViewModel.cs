@@ -171,25 +171,31 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectService.UpdateLastSavedState(CaptureCurrentState());
     }
     
+    private int _suppressChangesCount;
+    
     private void CheckForChanges()
     {
-        _projectService.IsStateChanged(CaptureCurrentState());
+        if (_suppressChangesCount > 0) return;
+        _projectService.IsDirty = true;
     }
 
     private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        CheckForChanges();
-
         if (sender is not TestStepViewModel changedVm)
             return;
         
+        var isTestStepProperty = string.IsNullOrWhiteSpace(e.PropertyName) || 
+                                 typeof(TestStep).GetProperty(e.PropertyName) != null;
+
+        if (isTestStepProperty)
+            CheckForChanges();
+
         if (changedVm != SelectedStep)
             return;
         
         if (string.IsNullOrWhiteSpace(e.PropertyName))
             return;
         
-        var isTestStepProperty = typeof(TestStep).GetProperty(e.PropertyName) != null;
         if (!isTestStepProperty)
             return;
 
@@ -255,6 +261,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         if (value?.TestStep == null) return;
         
+        _suppressChangesCount++;
         try
         {
             TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState);
@@ -269,6 +276,10 @@ public partial class TestingTabViewModel : ViewModelBase
         catch (Exception ex)
         {
             _errorService.AddError("Exception: " + ex.Message);
+        }
+        finally
+        {
+            _suppressChangesCount--;
         }
     }
 
@@ -533,60 +544,91 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestFromSelectionAsync()
     {
-        ResetAllResults();
-        NumberFailedSteps = 0;
-        TestStatus = TestStatus.RUNNING;
-        TestProgress = 0;
-        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+        _suppressChangesCount++;
+        try
+        {
+            ResetAllResults();
+            NumberFailedSteps = 0;
+            TestStatus = TestStatus.RUNNING;
+            TestProgress = 0;
+            await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+        }
+        finally
+        {
+            _suppressChangesCount--;
+        }
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestRepeatAsync()
     {
-        ResetAllResults();
-        
-        if (!await ShowSerialNumberRequestWindow())
-            return;
-        
-        NumberFailedSteps = 0;
-        TestStatus = TestStatus.RUNNING;
-        TestProgress = 0;
-        SelectedStepIndex = 0;
-              
-        _allowResultSave = true;
-        await _testExecutor.StartRepeatTestAsync(TestSteps, SelectedStepIndex);
-        _allowResultSave = false;
+        _suppressChangesCount++;
+        try
+        {
+            ResetAllResults();
+
+            if (!await ShowSerialNumberRequestWindow())
+                return;
+
+            NumberFailedSteps = 0;
+            TestStatus = TestStatus.RUNNING;
+            TestProgress = 0;
+            SelectedStepIndex = 0;
+
+            _allowResultSave = true;
+            await _testExecutor.StartRepeatTestAsync(TestSteps, SelectedStepIndex);
+        }
+        finally
+        {
+            _suppressChangesCount--;
+        }
     }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartTestAsync()
     {
-        ResetAllResults();
-        
-        if (!await ShowSerialNumberRequestWindow())
-            return;
-        
-        TestStatus = TestStatus.RUNNING;
-        NumberFailedSteps = 0;
-        TestProgress = 0;
-        SelectedStepIndex = 0;
+        _suppressChangesCount++;
+        try
+        {
+            ResetAllResults();
 
-        _allowResultSave = true;
-        await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
-        _allowResultSave = false;
+            if (!await ShowSerialNumberRequestWindow())
+                return;
+
+            TestStatus = TestStatus.RUNNING;
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            SelectedStepIndex = 0;
+
+            _allowResultSave = true;
+            await _testExecutor.StartTestAsync(TestSteps, SelectedStepIndex);
+            _allowResultSave = false;
+        }
+        finally
+        {
+            _suppressChangesCount--;
+        }
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task StartSingleStepTest()
     {
-        if(SelectedStep == null) return;
-        
-        NumberFailedSteps = 0;
-        TestProgress = 0;
-        TestDuration = string.Empty;
-        TestStatus = TestStatus.RUNNING;
-        await _testExecutor.StartSingleStepTest(SelectedStep);
-        TestStatus = TestStatus.IDLE;
+        if (SelectedStep == null) return;
+
+        _suppressChangesCount++;
+        try
+        {
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            TestDuration = string.Empty;
+            TestStatus = TestStatus.RUNNING;
+            await _testExecutor.StartSingleStepTest(SelectedStep);
+            TestStatus = TestStatus.IDLE;
+        }
+        finally
+        {
+            _suppressChangesCount--;
+        }
     }
 
     [RelayCommand]
@@ -689,21 +731,29 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         if (await _projectService.NewProjectAsync())
         {
-            TestSteps.Clear();
-            TestHardwareRelayChannels.ResetToDefault();
-            _projectSettingsViewModel.ResetToDefault();
-            _deviceManager.Devices.Clear();
-            _projectService.UpdateLastSavedState(CaptureCurrentState());
-            SelectedStepIndex = -1;
-            AddTestStep();
-            NumberPassedTests = 0;
-            NumberRunTests = 0;
-            TestDuration = string.Empty;
-            TestStatus = TestStatus.IDLE;
+            _suppressChangesCount++;
+            try
+            {
+                TestSteps.Clear();
+                TestHardwareRelayChannels.ResetToDefault();
+                _projectSettingsViewModel.ResetToDefault();
+                _deviceManager.Devices.Clear();
+                _projectService.UpdateLastSavedState(CaptureCurrentState());
+                SelectedStepIndex = -1;
+                AddTestStep();
+                NumberPassedTests = 0;
+                NumberRunTests = 0;
+                TestDuration = string.Empty;
+                TestStatus = TestStatus.IDLE;
+            }
+            finally
+            {
+                _suppressChangesCount--;
+            }
         }
     }
 
-    private AtlabFileDto CaptureCurrentState()
+    public AtlabFileDto CaptureCurrentState()
     {
         foreach (var vm in TestSteps)
             vm.TestStep.UpdateDtos();
@@ -764,6 +814,8 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         try
         {
+            if (!await _projectService.ConfirmAndContinueIfDirtyAsync()) return;
+
             var dto = await _projectService.LoadAsync(fileToLoad);
             if (dto != null)
             {
@@ -783,28 +835,36 @@ public partial class TestingTabViewModel : ViewModelBase
 
     private void ApplyDto(AtlabFileDto dto)
     {
-        TestSteps.Clear();
-        foreach (var stepVm in dto.TestSteps.Select(step => new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo)))
+        _suppressChangesCount++;
+        try
         {
-            stepVm.PropertyChanged += OnStepPropertyChanged;
-            TestSteps.Add(stepVm);
-        }
-        
-        _projectSettings.ToleranceValue = dto.DefaultTolerance;
-        _projectSettings.ResultPrecision = dto.ResultPrecision;
-        _projectSettings.UseSerialNumber = dto.UseSerialNumber;
-        _projectSettings.SaveTestResult = dto.SaveTestResults;
-        _projectSettings.SaveTestResultOptions = dto.SaveTestResultOptions;
-        _projectSettings.SaveTestResultFilePath = dto.SaveTestResultFilePath;
-        
-        TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
+            TestSteps.Clear();
+            foreach (var stepVm in dto.TestSteps.Select(step => new TestStepViewModel(step, TestHardwareRelayChannels.HardwareInfo)))
+            {
+                stepVm.PropertyChanged += OnStepPropertyChanged;
+                TestSteps.Add(stepVm);
+            }
+            
+            _projectSettings.ToleranceValue = dto.DefaultTolerance;
+            _projectSettings.ResultPrecision = dto.ResultPrecision;
+            _projectSettings.UseSerialNumber = dto.UseSerialNumber;
+            _projectSettings.SaveTestResult = dto.SaveTestResults;
+            _projectSettings.SaveTestResultOptions = dto.SaveTestResultOptions;
+            _projectSettings.SaveTestResultFilePath = dto.SaveTestResultFilePath;
+            
+            TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
-        _deviceManager.Devices.Clear();
-        foreach (var device in dto.Devices)
-        {
-            _deviceManager.Devices.Add(device);
+            _deviceManager.Devices.Clear();
+            foreach (var device in dto.Devices)
+            {
+                _deviceManager.Devices.Add(device);
+            }
+            
+            SelectedStepIndex = 0;
         }
-        
-        SelectedStepIndex = 0;
+        finally
+        {
+            _suppressChangesCount--;
+        }
     }
 }
