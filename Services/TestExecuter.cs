@@ -114,11 +114,12 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
-            OnTestCompleted();
+            await EnsureRelayStatesClearedAsync();
+            
             _cts?.Dispose();
             _cts = null;
-
-            await EnsureRelayStatesClearedAsync();
+            
+            OnTestCompleted();
         }
     }
 
