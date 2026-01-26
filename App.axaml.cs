@@ -144,10 +144,10 @@ public class App : Application
                     catch (Exception ex)
                     {
                         _errorService.Errors.Add(ex.ToString());
-                        mainVm.NewFileCommand.Execute(null);
+                        await mainVm.NewFile();
                     }
                 }
-                else mainVm.NewFileCommand.Execute(null);
+                else await mainVm.NewFile();
             });
             
         }

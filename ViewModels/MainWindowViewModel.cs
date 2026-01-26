@@ -102,27 +102,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ErrorCount = 0;
         HasErrors = false;
     }
-
-    [RelayCommand]
-    private async Task NewFile() => await TestingTab.NewFile();
-
-    [RelayCommand]
-    private async Task SaveFileAs() => await TestingTab.SaveFileAs();
     
-    [RelayCommand]
-    private async Task SaveFile() => await TestingTab.SaveFile();
-    
-    [RelayCommand]
-    private async Task LoadFileWithDialog() => await TestingTab.LoadFileWithDialog();
-    
-    [RelayCommand]
-    private async Task CancelTest() => await TestingTab.CancelTestCommand.ExecuteAsync(null);
-
-    [RelayCommand]
-    private async Task StartTest() => await TestingTab.StartTestCommand.ExecuteAsync(null);
-    
-    [RelayCommand]
-    private async Task StartSingleTest() => await TestingTab.StartSingleStepTestCommand.ExecuteAsync(null);
+    public async Task NewFile() => await TestingTab.NewFile();
     
     public async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
@@ -144,15 +125,5 @@ public partial class MainWindowViewModel : ViewModelBase
             Application.Current!.RequestedThemeVariant == ThemeVariant.Light
                 ? ThemeVariant.Dark
                 : ThemeVariant.Light;
-    }
-
-    partial void OnSelectedTabChanged(ViewModelBase value)
-    {
-        switch (value)
-        {
-            case TestingTabViewModel:
-                TestingTab.SelectedStepIndex = 0;
-                break;
-        }
     }
 }

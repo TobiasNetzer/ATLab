@@ -68,8 +68,6 @@ public class TestExecutor : ITestExecutor
                 _errorService.AddError($"Error on resetting relay states: {result.ErrorMessage}");
 
             _relayStatesCleared = true;
-            
-            await Task.Delay(250);
         }
         finally
         {
@@ -96,6 +94,8 @@ public class TestExecutor : ITestExecutor
         ResetRelayClearFlag();
         await EnsureRelayStatesClearedAsync();
         ResetRelayClearFlag();
+        
+        await Task.Delay(200);
 
         _cts = new CancellationTokenSource();
         OnTestStarted();
@@ -115,11 +115,10 @@ public class TestExecutor : ITestExecutor
         finally
         {
             await EnsureRelayStatesClearedAsync();
+            OnTestCompleted();
             
             _cts?.Dispose();
             _cts = null;
-            
-            OnTestCompleted();
         }
     }
 

@@ -9,13 +9,13 @@
         MinHeight="600">
     
     <Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}"/>
-        <KeyBinding Gesture="Ctrl+O" Command="{Binding LoadFileWithDialogCommand}" />
-        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
-        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />
-        <KeyBinding Gesture="Escape" Command="{Binding CancelTestCommand}" />
-        <KeyBinding Gesture="F5" Command="{Binding StartTestCommand}" />
-        <KeyBinding Gesture="F3" Command="{Binding StartSingleTestCommand}" />
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding TestingTab.NewFileCommand}"/>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding TestingTab.LoadFileWithDialogCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding TestingTab.SaveFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding TestingTab.SaveFileAsCommand}" />
+        <KeyBinding Gesture="Escape" Command="{Binding TestingTab.CancelTestCommand}" />
+        <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
+        <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
     </Window.KeyBindings>
 
     <Window.Styles>
