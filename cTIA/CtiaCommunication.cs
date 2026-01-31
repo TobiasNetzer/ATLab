@@ -33,12 +33,12 @@ namespace ATLab.CTIA
                         {
                             Command = (ushort)RespCmd.RESP_ERROR,
                             PayloadSize = 1,
-                            Payload = [(byte)CTIAStatus.CTIA_FAIL]
+                            Payload = [(byte)CtiaStatus.CTIA_FAIL]
                         };
                     }
                 }
 
-                byte[] responseBytes = await _communication.SendAsync(frame.ToByteArray(), timeoutMs);
+                var responseBytes = await _communication.SendAsync(frame.ToByteArray(), timeoutMs);
                 return CtiaCommandFrame.Parse(responseBytes);
             }
             catch (TimeoutException)
@@ -47,7 +47,7 @@ namespace ATLab.CTIA
                 {
                     Command = (ushort)RespCmd.RESP_ERROR,
                     PayloadSize = 1,
-                    Payload = [(byte)CTIAStatus.CTIA_TIMEOUT]
+                    Payload = [(byte)CtiaStatus.CTIA_TIMEOUT]
                 };
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace ATLab.CTIA
                 {
                     Command = (ushort)RespCmd.RESP_ERROR,
                     PayloadSize = 1,
-                    Payload = [(byte)CTIAStatus.CTIA_FAIL]
+                    Payload = [(byte)CtiaStatus.CTIA_FAIL]
                 };
             }
         }
@@ -70,7 +70,7 @@ namespace ATLab.CTIA
 
         public async Task<CtiaCommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default)
         {
-            byte[] receivedData = await _communication.ReceiveAsync(cancellationToken);
+            var receivedData = await _communication.ReceiveAsync(cancellationToken);
             return CtiaCommandFrame.Parse(receivedData);
         }
 

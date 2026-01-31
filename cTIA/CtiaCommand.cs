@@ -10,7 +10,7 @@ namespace ATLab.CTIA;
 // -------------------------
 // Status codes
 // -------------------------
-public enum CTIAStatus : byte
+public enum CtiaStatus : byte
 {
     CTIA_SUCCESS,
     CTIA_FAIL,
@@ -144,44 +144,62 @@ public enum DbgCmd : ushort
 
 public class CtiaCommand
 {
-    private readonly CtiaCommunication _CTIA;
-    public CtiaCommand(CtiaCommunication cTIA) => _CTIA = cTIA;
+    private readonly CtiaCommunication _ctia;
+    public CtiaCommand(CtiaCommunication cTia) => _ctia = cTia;
 
     #region SET_CMD
     
     public async Task<OperationResult<bool>> SetExclusiveMeasChH(byte channel)
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_EXCLUSIVE_MEAS_H_CH,
             PayloadSize = 1,
             Payload = [channel]
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<bool>> SetExclusiveMeasChL(byte channel)
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_EXCLUSIVE_MEAS_L_CH,
             PayloadSize = 1,
             Payload = [channel]
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<bool>> SetExternalProbeIn(byte state)
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)SetCmd.SET_EXT_PROBE_IN,
+            PayloadSize = 1,
+            Payload = [state]
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult<bool>.Success(true);
+        
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
@@ -190,64 +208,62 @@ public class CtiaCommand
         if (states.Length % 8 != 0)
             return OperationResult<bool>.Failure("Length must be a multiple of 8");
 
-        int bytes = states.Length / 8;
-        byte[] array = new byte[bytes];
+        var bytes = states.Length / 8;
+        var array = new byte[bytes];
 
-        for (int i = 0; i < states.Length; i++)
+        for (var i = 0; i < states.Length; i++)
         {
-            if (states[i])
-            {
-                int byteIndex = i / 8;       // which byte
-                int bitIndex = i % 8;        // which bit inside that byte
-                array[byteIndex] |= (byte)(1 << bitIndex);
-            }
+            if (!states[i]) continue;
+            
+            var byteIndex = i / 8;       // which byte
+            var bitIndex = i % 8;        // which bit inside that byte
+            array[byteIndex] |= (byte)(1 << bitIndex);
         }
         
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_BITFIELD_STIM_CH,
             PayloadSize = Convert.ToByte(array.Length),
+            Payload = array
         };
-        frame.Payload = array;
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<bool>> SetExtStimChBitfield(bool[] states)
     {
 
-        int bytes = 1 + (states.Length / 8);
-        byte[] array = new byte[bytes];
+        var bytes = 1 + (states.Length / 8);
+        var array = new byte[bytes];
 
-        for (int i = 0; i < states.Length; i++)
+        for (var i = 0; i < states.Length; i++)
         {
-            if (states[i])
-            {
-                int byteIndex = i / 8;       // which byte
-                int bitIndex = i % 8;        // which bit inside that byte
-                array[byteIndex] |= (byte)(1 << bitIndex);
-            }
+            if (!states[i]) continue;
+            
+            var byteIndex = i / 8;       // which byte
+            var bitIndex = i % 8;        // which bit inside that byte
+            array[byteIndex] |= (byte)(1 << bitIndex);
         }
         
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)SetCmd.SET_BITFIELD_EXT_STIM_CH,
             PayloadSize = Convert.ToByte(1 + (array.Length / 8)),
+            Payload = array
         };
-        frame.Payload = array;
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
@@ -257,92 +273,92 @@ public class CtiaCommand
 
     public async Task<OperationResult<ushort>> GetDeviceID()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_DEVICE_ID
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_ID)
             return OperationResult<ushort>.Success(BitConverter.ToUInt16(responseFrame.Payload, 0));
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<ushort>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareVersion()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_VERSION
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_VERSION)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareBuildDate()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_BUILD_DATE
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_DATE)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
 
     public async Task<OperationResult<string>> GetFirmwareBuildTime()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_FW_BUILD_TIME
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_TIME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
 
     public async Task<OperationResult<string>> GetDeviceName()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_DEVICE_NAME
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<string>> GetSerialNumber()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_SERIAL_NUMBER
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_SERIAL_NUMBER)
         {
@@ -350,55 +366,55 @@ public class CtiaCommand
             return OperationResult<string>.Success(serial.ToString());
         }
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<string>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<int>> GetMeasChannelCount()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_AVAILABLE_MEAS_CH
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_MEAS_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<int>> GetStimChannelCount()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_AVAILABLE_STIM_CH
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<int>> GetExtStimChannelCount()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)GetCmd.GET_AVAILABLE_EXT_STIM_CH
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_EXT_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
@@ -408,49 +424,49 @@ public class CtiaCommand
 
     public async Task<OperationResult<bool>> ClrMeasH()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)ClrCmd.CLR_MEAS_H
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<bool>> ClrMeasL()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)ClrCmd.CLR_MEAS_L
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<bool>> ClrAllRelayStates()
     {
-        CtiaCommandFrame frame = new CtiaCommandFrame
+        var frame = new CtiaCommandFrame
         {
             Command = (ushort)ClrCmd.CLR_ALL_RELAYS
         };
 
-        var responseFrame = await _CTIA.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame);
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
         
-        var status = (CTIAStatus)responseFrame.Payload[0];
+        var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     

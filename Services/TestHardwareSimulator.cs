@@ -13,6 +13,7 @@ public class TestHardwareSimulator : ITestHardware
     public bool[] MeasChannelStates { get; set; }
     public byte ActiveMeasChannelH { get; set; }
     public byte ActiveMeasChannelL { get; set; }
+    public byte UseExternalProbe { get; set; }
 
     public TestHardwareSimulator()
     {
@@ -23,6 +24,7 @@ public class TestHardwareSimulator : ITestHardware
         
         ActiveMeasChannelH = 0;
         ActiveMeasChannelL = 0;
+        UseExternalProbe = 0;
     }
 
     public async Task<OperationResult> InitializeAsync()

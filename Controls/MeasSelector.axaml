@@ -64,6 +64,7 @@
                         Orientation="Horizontal"
                         Spacing="20"
                         Margin="10">
+                
                 <StackPanel>
                     <TextBlock Text="Matrix H"
                                FontSize="16"/>
@@ -116,6 +117,14 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
+                
+                <ToggleButton Content="&#xE95F;"
+                              VerticalAlignment="Bottom"
+                              FontFamily="{StaticResource FluentIconsFont}"
+                              FontSize="20"
+                              ToolTip.Tip="Enable external probe"
+                              IsChecked="{Binding ExternalProbeEnabled, Mode=TwoWay}"/>
+                
             </StackPanel>
         </Border>
     </StackPanel>

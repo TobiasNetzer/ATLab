@@ -34,8 +34,9 @@ public class TestStepRunner : ITestStepRunner
         {
             _testHardware.StimChannelStates = step.TestStep.LiveStimState.ToBoolArray();
             _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
-            _testHardware.ActiveMeasChannelH = (byte)(step.TestStep.MatrixState.ActiveChannelHigh);
-            _testHardware.ActiveMeasChannelL = (byte)(step.TestStep.MatrixState.ActiveChannelLow);
+            _testHardware.ActiveMeasChannelH = Convert.ToByte(step.TestStep.MatrixState.ActiveChannelHigh);
+            _testHardware.ActiveMeasChannelL = Convert.ToByte(step.TestStep.MatrixState.ActiveChannelLow);
+            _testHardware.UseExternalProbe = Convert.ToByte(step.TestStep.MatrixState.UseExternalProbe);
 
             var result = await _testHardware.UpdateRelayStates();
 

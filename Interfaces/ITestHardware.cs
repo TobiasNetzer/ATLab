@@ -10,6 +10,7 @@ public interface ITestHardware
     bool[] MeasChannelStates { get; set; }
     byte ActiveMeasChannelH { get; set; }
     byte ActiveMeasChannelL { get; set; }
+    byte UseExternalProbe { get; set; }
     IHardwareInfo HardwareInfo { get; }
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> UpdateRelayStates();

@@ -18,6 +18,8 @@ public class CtiaHardware : ITestHardware
     public byte ActiveMeasChannelH { get; set; }
     public byte ActiveMeasChannelL { get; set; }
     
+    public byte UseExternalProbe { get; set; }
+    
     private readonly SemaphoreSlim _ioLock = new(1, 1);
 
     public CtiaHardware(CtiaCommunication communication)
@@ -29,6 +31,7 @@ public class CtiaHardware : ITestHardware
         
         ActiveMeasChannelH = 0;
         ActiveMeasChannelL = 0;
+        UseExternalProbe = 0;
         
         _command = new CtiaCommand(communication);
     }
@@ -107,6 +110,7 @@ public class CtiaHardware : ITestHardware
                 () => SetStimChannels(),
                 () => SetMeasChannelH(ActiveMeasChannelH),
                 () => SetMeasChannelL(ActiveMeasChannelL),
+                () => SetExternalProbe(UseExternalProbe),
                 () => SetExtStimChannels()
             };
 
@@ -146,20 +150,14 @@ public class CtiaHardware : ITestHardware
     {
         var commandResponse = await _command.SetStimChBitfield(StimChannelStates);
         
-        if (!commandResponse.IsSuccess)
-            return OperationResult.Failure(commandResponse.ErrorMessage);
-        
-        return OperationResult.Success();
+        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
     }
     
     private async Task<OperationResult> SetExtStimChannels()
     {
         var commandResponse = await _command.SetExtStimChBitfield(ExtStimChannelStates);
         
-        if (!commandResponse.IsSuccess)
-            return OperationResult.Failure(commandResponse.ErrorMessage);
-        
-        return OperationResult.Success();
+        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
     }
 
     private async Task<OperationResult> SetMeasChannelH(byte channel)
@@ -196,5 +194,12 @@ public class CtiaHardware : ITestHardware
         }
         
         return OperationResult.Success();
+    }
+    
+    private async Task<OperationResult> SetExternalProbe(byte channel)
+    {
+        var commandResponse = await _command.SetExternalProbeIn(channel);
+        
+        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
     }
 }
