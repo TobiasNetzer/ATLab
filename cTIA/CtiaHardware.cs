@@ -43,7 +43,7 @@ public class CtiaHardware : ITestHardware
         {
             var deviceIdResult = await _command.GetDeviceID();
             if (!deviceIdResult.IsSuccess)
-                return OperationResult.Failure(deviceIdResult.ErrorMessage);
+                return OperationResult.Failure("Invalid response from device");
 
             if (deviceIdResult.Value != 0xA101)
                 return OperationResult.Failure("Device ID invalid");
