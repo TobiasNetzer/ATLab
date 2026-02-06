@@ -200,7 +200,10 @@ public class CtiaCommand
             return OperationResult<bool>.Success(true);
         
         var status = (CtiaStatus)responseFrame.Payload[0];
-        return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+
+        return OperationResult<bool>.Failure(status == CtiaStatus.CTIA_UNAVAILABLE
+            ? "External Probe not detected."
+            : $"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     public async Task<OperationResult<bool>> SetStimChBitfield(bool[] states)
