@@ -30,11 +30,11 @@ public partial class AboutTabViewModel : ViewModelBase
         ?? "Unknown";
     
     public string BuildConfiguration =>
-#if DEBUG
-        "Debug";
-#else
-    "Release";
-#endif
+        #if DEBUG
+                "Debug";
+        #else
+            "Release";
+        #endif
 
     public string TargetFramework =>
         System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
