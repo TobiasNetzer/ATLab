@@ -24,17 +24,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ViewModelBase _selectedTab;
 
-    [ObservableProperty]
-    private TestingTabViewModel _testingTab;
-    
-    [ObservableProperty]
-    private ConfigTabViewModel _configTab;
-    
-    [ObservableProperty]
-    private ScriptsManagerViewModel _scriptTab;
-    
-    [ObservableProperty]
-    private AboutTabViewModel _aboutTab;
+    public TestingTabViewModel TestingTab { get; }
+    public ConfigTabViewModel ConfigTab { get; }
+    public ScriptsManagerViewModel ScriptTab { get; }
+    public AboutTabViewModel AboutTab { get; }
+    public HardwareTabViewModel HardwareTab { get; }
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
 
@@ -58,7 +52,8 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
         ScriptsManagerViewModel scriptsManagerViewModel,
-        AboutTabViewModel aboutTab)
+        AboutTabViewModel aboutTab,
+        HardwareTabViewModel hardwareTab)
     {
         _errorService = errorService;
         _simulationService = simulationService;
@@ -69,12 +64,14 @@ public partial class MainWindowViewModel : ViewModelBase
         ConfigTab = configTab;
         ScriptTab = scriptsManagerViewModel;
         AboutTab = aboutTab;
+        HardwareTab = hardwareTab;
 
         _selectedTab = TestingTab;
         
         Tabs.Add(TestingTab);
         Tabs.Add(ConfigTab);
         Tabs.Add(ScriptTab);
+        Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);
         
         ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);

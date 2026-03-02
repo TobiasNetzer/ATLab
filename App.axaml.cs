@@ -201,6 +201,7 @@ public class App : Application
         services.AddSingleton<ConfigTabViewModel>();
         services.AddSingleton<ScriptsManagerViewModel>();
         services.AddSingleton<AboutTabViewModel>();
+        services.AddSingleton<HardwareTabViewModel>();
         services.AddSingleton<ScriptSelectorViewModel>();
         services.AddSingleton<CommandEditorViewModel>();
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
