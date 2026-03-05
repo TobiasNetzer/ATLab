@@ -14,7 +14,7 @@
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Device Manager"
-                       FontSize="18"
+                       FontSize="20"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
         </Border>
