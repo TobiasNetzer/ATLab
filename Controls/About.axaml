@@ -26,19 +26,17 @@
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     
-                    <StackPanel Margin="30"
+                    <StackPanel Margin="20"
                                 Spacing="20">
-
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="avares://ATLab/Assets/AppIcon.png"
-                                   Height="64"/>
-                            <TextBlock Text="ATLab"
-                                       FontSize="32"
-                                       FontWeight="Bold"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Margin="225 0 0 0"/>
-                        </StackPanel>
+                        
+                        <Image Source="avares://ATLab/Assets/AppIcon.png"
+                               Height="100"/>
+                        
+                        <TextBlock Text="ATLab"
+                                   FontSize="32"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
 
                         <TextBlock Text="A cross‑platform automated testing toolkit for interfacing with hardware via the Test Interface Adapter and controlling external test instruments through remote control interfaces. Built with Avalonia UI and .NET 9, it offers a modern environment for developing and running automated test sequences."
                                    TextWrapping="Wrap"
@@ -46,19 +44,41 @@
                                    HorizontalAlignment="Center"/>
 
                         <Separator Margin="0"/>
+                        
+                        <Grid ColumnDefinitions="*,*">
+                            
+                            <StackPanel Grid.Column="0" Spacing="5">
+                                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
+                                <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
+                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Build: {0}}"/>
+                                <TextBlock Text="{Binding TargetFramework, StringFormat=Target Framework: {0}}"/>
+                                <TextBlock Text="{Binding RuntimeVersion, StringFormat=.NET Runtime: {0}}"/>
+                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
+                                <TextBlock Text="{Binding OSDescription, StringFormat=OS: {0}}"/>
+                                <TextBlock Text="{Binding OSArchitecture, StringFormat=OS Architecture: {0}}"/>
+                                <TextBlock Text="{Binding ProcessArchitecture, StringFormat=Process Architecture: {0}}"/>
+                            
+                            </StackPanel>
+                            
+                            <StackPanel Grid.Column="1" Spacing="5">
+                                
+                                <TextBlock HorizontalAlignment="Right">
+                                    <Button Command="{Binding OpenLinkCommand}"
+                                            CommandParameter="https://github.com/TobiasNetzer/ATLab">
+                                        View project on GitHub
+                                    </Button>
+                                </TextBlock>
 
-                        <StackPanel Spacing="5">
-                            <TextBlock Text="Application" FontSize="16" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
-                            <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
-                            <TextBlock Text="{Binding BuildConfiguration, StringFormat=Build: {0}}"/>
-                            <TextBlock Text="{Binding TargetFramework, StringFormat=Target Framework: {0}}"/>
-                            <TextBlock Text="{Binding RuntimeVersion, StringFormat=.NET Runtime: {0}}"/>
-                            <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
-                            <TextBlock Text="{Binding OSDescription, StringFormat=OS: {0}}"/>
-                            <TextBlock Text="{Binding OSArchitecture, StringFormat=OS Architecture: {0}}"/>
-                            <TextBlock Text="{Binding ProcessArchitecture, StringFormat=Process Architecture: {0}}"/>
-                        </StackPanel>
+                                <TextBlock HorizontalAlignment="Right">
+                                    <Button Command="{Binding OpenLinkCommand}"
+                                            CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE">
+                                        License
+                                    </Button>
+                                </TextBlock>
+                                
+                            </StackPanel>
+                            
+                        </Grid>
 
                     </StackPanel>
 

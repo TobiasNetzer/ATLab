@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public class AboutTabViewModel : ViewModelBase
+public partial class AboutTabViewModel : ViewModelBase
 {
     public static string AppVersion =>
         Assembly.GetEntryAssembly()?
@@ -45,5 +47,15 @@ public class AboutTabViewModel : ViewModelBase
     public AboutTabViewModel()
     {
         Title = "About";
+    }
+
+    [RelayCommand]
+    void OpenLink(string url)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = url,
+            UseShellExecute = true
+        });
     }
 }
