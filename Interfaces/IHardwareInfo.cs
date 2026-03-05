@@ -9,4 +9,7 @@ public interface IHardwareInfo
     int MeasChannelCount { get; set; }
     int StimChannelCount { get; set; }
     int ExtStimChannelCount { get; set; }
+    bool InterfaceAvailableI2C { get; set; }
+    bool InterfaceAvailableUART { get; set; }
+    bool InterfaceAvailableRS485 { get; set; }
 }

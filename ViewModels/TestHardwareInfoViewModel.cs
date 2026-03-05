@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.Marshalling;
 using ATLab.Interfaces;
 
 namespace ATLab.ViewModels;
@@ -30,9 +29,9 @@ public class TestHardwareInfoViewModel : ViewModelBase
         MeasChannelCount = hardwareInfo.MeasChannelCount;
         StimChannelCount = hardwareInfo.StimChannelCount;
         ExtStimChannelCount = hardwareInfo.ExtStimChannelCount;
-
-        InterfaceAvailableI2C = true;
-        InterfaceAvailableUART = true;
-        InterfaceAvailableRS485 = true;
+        
+        InterfaceAvailableI2C = hardwareInfo.InterfaceAvailableI2C;
+        InterfaceAvailableUART = hardwareInfo.InterfaceAvailableUART;
+        InterfaceAvailableRS485 = hardwareInfo.InterfaceAvailableRS485;
     }
 }

@@ -12,4 +12,7 @@ public class DummyHardwareInfo : IHardwareInfo
     public int MeasChannelCount { get; set; } = 32;
     public int StimChannelCount { get; set; } = 16;
     public int ExtStimChannelCount { get; set; } = 4;
+    public bool InterfaceAvailableI2C { get; set; } = true;
+    public bool InterfaceAvailableUART { get; set; } = true;
+    public bool InterfaceAvailableRS485 { get; set; } = true;
 }
