@@ -187,7 +187,7 @@ public class App : Application
         // Factory for ITestHardware since it's initialized later
         services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
-        services.AddSingleton<IShellCommandRunner>(_ => ShellCommandRunnerFactory.Create());
+        services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
 
         
@@ -202,6 +202,7 @@ public class App : Application
         services.AddSingleton<ScriptsManagerViewModel>();
         services.AddSingleton<AboutTabViewModel>();
         services.AddSingleton<HardwareTabViewModel>();
+        services.AddSingleton<TestHardwareInfoViewModel>();
         services.AddSingleton<ScriptSelectorViewModel>();
         services.AddSingleton<CommandEditorViewModel>();
         services.AddSingleton<TestHardwareConnectWindowViewModel>();

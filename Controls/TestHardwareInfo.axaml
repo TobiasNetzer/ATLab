@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.TestHardwareInfo"
+             x:DataType="vm:TestHardwareInfoViewModel"
+             Width="780">
+    
+    <Grid RowDefinitions="Auto,*">
+            
+        <Border Grid.Row="0"
+                Background="{DynamicResource SystemBaseLowColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            <TextBlock Text="Test Hardware Info"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+            
+        <Border Grid.Row="1"
+                Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderThickness="2">
+                    
+            <StackPanel Margin="20"
+                        Spacing="20"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
+                    <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
+                    <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
+                    <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"/>
+                    <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
+                </StackPanel>
+
+                <Border BorderBrush="{DynamicResource SystemBaseLowColor}"
+                        BorderThickness="1"/>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Meas Channels: {0}}"/>
+                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stim Channels: {0}}"/>
+                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
+                </StackPanel>
+                
+                <Border BorderBrush="{DynamicResource SystemBaseLowColor}"
+                        BorderThickness="1"/>
+                
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Available Interfaces" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding InterfaceAvailableI2C, StringFormat=Isolated I2C: {0}}"/>
+                    <TextBlock Text="{Binding InterfaceAvailableUART, StringFormat=Isolated UART: {0}}"/>
+                    <TextBlock Text="{Binding InterfaceAvailableRS485, StringFormat=Isolated RS485: {0}}"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
