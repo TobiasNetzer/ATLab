@@ -7,12 +7,19 @@
     
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     
-        <Grid RowDefinitions="auto, auto, *"
+        <Grid ColumnDefinitions="*, Auto, Auto, *"
+              RowDefinitions="Auto,*, Auto, *"
               Margin="10"
-              RowSpacing="10">
+              ColumnSpacing="10">
+            
+            <controls:TestHardwareInterface Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="1"/>  
+            
             <controls:TestHardwareInfo Grid.Row="0"
+                                       Grid.Column="2"
                                        DataContext="{Binding TestHardwareInfoViewModel}"/> 
-            <controls:TestHardwareInterface Grid.Row="1"/>  
+            
         </Grid>
     </ScrollViewer>
 </UserControl>

@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.TestHardwareInterface"
-             Width="780">
+             Width="1200">
     
     <Grid RowDefinitions="Auto,*">
             
@@ -26,9 +26,9 @@
                 <StackPanel Margin="30"
                             Spacing="20">
                     
-                    <Image Source="avares://ATLab/Assets/Render.png"
-                           Width="700"/>
-
+                    <Image Source="avares://ATLab/Assets/Hardware_Interface.png"
+                           Width="1000"/>
+                    
                 </StackPanel>
 
             </ScrollViewer>

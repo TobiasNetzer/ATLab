@@ -3,7 +3,7 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.TestHardwareInfo"
              x:DataType="vm:TestHardwareInfoViewModel"
-             Width="780">
+             Width="300">
     
     <Grid RowDefinitions="Auto,*">
             
@@ -25,7 +25,7 @@
                     
             <StackPanel Margin="20"
                         Spacing="20"
-                        Orientation="Horizontal"
+                        Orientation="Vertical"
                         HorizontalAlignment="Center">
 
                 <StackPanel Spacing="5">
