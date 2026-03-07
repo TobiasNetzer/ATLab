@@ -4,10 +4,8 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.ScriptTab"
              x:DataType="vm:ScriptsManagerViewModel">
-
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    
         <controls:ScriptManager DataContext="{Binding }"
                                 Margin="10"/>
-    </ScrollViewer>
     
 </UserControl>

@@ -22,16 +22,13 @@
                 BorderThickness="2">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    
-                <StackPanel Margin="30"
-                            Spacing="20">
-                    
+                <Grid>
                     <Image Source="avares://ATLab/Assets/Hardware_Interface.png"
-                           Width="1000"/>
-                    
-                </StackPanel>
-
+                           Width="1150"
+                           Margin="0,10,0,10"/>
+                </Grid>
             </ScrollViewer>
+
         </Border>
     </Grid>
     
