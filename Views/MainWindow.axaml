@@ -48,6 +48,9 @@
                 <DataTemplate DataType="vm:ConfigTabViewModel">
                     <views:ConfigTab/>
                 </DataTemplate>
+                <DataTemplate DataType="vm:DocumentationTabViewModel">
+                    <views:DocumentationTab/>
+                </DataTemplate>
                 <DataTemplate DataType="vm:ScriptsManagerViewModel">
                     <views:ScriptTab/>
                 </DataTemplate>

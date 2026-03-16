@@ -29,6 +29,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ScriptsManagerViewModel ScriptTab { get; }
     public AboutTabViewModel AboutTab { get; }
     public HardwareTabViewModel HardwareTab { get; }
+    public DocumentationTabViewModel DocumentationTab { get; }
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
 
@@ -53,7 +54,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ConfigTabViewModel configTab,
         ScriptsManagerViewModel scriptsManagerViewModel,
         AboutTabViewModel aboutTab,
-        HardwareTabViewModel hardwareTab)
+        HardwareTabViewModel hardwareTab,
+        DocumentationTabViewModel documentationTab)
     {
         _errorService = errorService;
         _simulationService = simulationService;
@@ -65,11 +67,13 @@ public partial class MainWindowViewModel : ViewModelBase
         ScriptTab = scriptsManagerViewModel;
         AboutTab = aboutTab;
         HardwareTab = hardwareTab;
+        DocumentationTab = documentationTab;
 
         _selectedTab = TestingTab;
         
         Tabs.Add(TestingTab);
         Tabs.Add(ConfigTab);
+        Tabs.Add(DocumentationTab);
         Tabs.Add(ScriptTab);
         Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);

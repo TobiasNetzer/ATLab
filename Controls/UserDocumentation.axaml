@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.UserDocumentation"
+             Width="1200">
+    
+    <Grid RowDefinitions="Auto,*">
+            
+        <Border Grid.Row="0"
+                Background="{DynamicResource SystemBaseLowColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            <TextBlock Text="Test Documentation"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+            
+        <Border Grid.Row="1"
+                Background="{DynamicResource SystemChromeLowColor}"
+                CornerRadius="0 0 15 15"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderThickness="2">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <TextBox Margin="10"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"/>
+                </Grid>
+            </ScrollViewer>
+
+        </Border>
+    </Grid>
+    
+</UserControl>
