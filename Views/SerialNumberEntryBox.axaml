@@ -12,7 +12,7 @@
             RowDefinitions="Auto,Auto,Auto">
 
         <TextBlock Text="Enter serial number:"
-                        Margin="0,0,0,10" />
+                        Margin="0,0,0,2" />
 
         <TextBox Grid.Row="1"
                  x:Name="SerialNoTextBox"
@@ -29,7 +29,7 @@
             <Button Content="Start"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    MinWidth="100"
+                    MinWidth="145"
                     Command="{Binding OkCommand}"
                     IsEnabled="{Binding SerialNumber, Converter={StaticResource StringNotEmptyConverter}}"
                     IsDefault="True"/>
@@ -37,7 +37,7 @@
             <Button Content="Cancel"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    MinWidth="100"
+                    MinWidth="145"
                     Command="{Binding CancelCommand}"
                     IsCancel="True" />
             
