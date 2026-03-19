@@ -4,32 +4,60 @@
              Width="1200">
     
     <Grid RowDefinitions="Auto,*">
-            
+        
         <Border Grid.Row="0"
                 Background="{DynamicResource SystemBaseLowColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            <TextBlock Text="Test Documentation"
+            <TextBlock Text="Project Documentation"
                        FontSize="20"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
         </Border>
-            
+        
         <Border Grid.Row="1"
                 Background="{DynamicResource SystemChromeLowColor}"
                 CornerRadius="0 0 15 15"
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
                 BorderThickness="2">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <Grid>
-                    <TextBox Margin="10"
-                             AcceptsReturn="True"
-                             AcceptsTab="True"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Padding="10">
+                
+                <Grid RowDefinitions="Auto, 20,Auto">
+                    
+                    <StackPanel Grid.Row="0" Spacing="2">
+                        <TextBlock Text="Test Documentation"/>
+                        <TextBox AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 Height="200"/>
+                    </StackPanel>
+                    
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="*,10,*">
+
+                        <StackPanel Grid.Column="0" Spacing="2" Height="270">
+                            <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+                            <TextBox AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     Height="200"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Spacing="2" Height="270">
+                            <TextBlock Text="Known Issues"/>
+                            <TextBox AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     Height="200"/>
+                        </StackPanel>
+
+                    </Grid>
+
                 </Grid>
+
             </ScrollViewer>
 
         </Border>
+
     </Grid>
     
 </UserControl>
