@@ -5,6 +5,6 @@
              x:DataType="vm:DocumentationTabViewModel"
              x:Class="ATLab.Views.DocumentationTab">
     
-            <controls:UserDocumentation Margin="10"/>
+            <controls:UserDocumentation Margin="10" DataContext="{Binding }"/>
     
 </UserControl>

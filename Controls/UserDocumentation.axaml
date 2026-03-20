@@ -1,63 +1,153 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="ATLab.Controls.UserDocumentation"
+             x:DataType="vm:DocumentationTabViewModel"
              Width="1200">
-    
-    <Grid RowDefinitions="Auto,*">
-        
-        <Border Grid.Row="0"
-                Background="{DynamicResource SystemBaseLowColor}"
-                CornerRadius="15 15 0 0"
-                Padding="10">
-            <TextBlock Text="Project Documentation"
-                       FontSize="20"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
-        </Border>
-        
-        <Border Grid.Row="1"
-                Background="{DynamicResource SystemChromeLowColor}"
-                CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource SystemBaseLowColor}"
-                BorderThickness="2">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          Padding="10">
-                
-                <Grid RowDefinitions="Auto, 20,Auto">
-                    
-                    <StackPanel Grid.Row="0" Spacing="2">
-                        <TextBlock Text="Test Documentation"/>
-                        <TextBox AcceptsReturn="True"
-                                 AcceptsTab="True"
-                                 Height="200"/>
-                    </StackPanel>
-                    
-                    <Grid Grid.Row="2"
-                          ColumnDefinitions="*,10,*">
+    <Grid>
 
-                        <StackPanel Grid.Column="0" Spacing="2" Height="270">
-                            <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+        <!-- MAIN CONTENT -->
+        <Grid RowDefinitions="Auto,*">
+
+            <Border Grid.Row="0"
+                    Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15 15 0 0"
+                    Padding="10">
+                <TextBlock Text="Project Documentation"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Background="{DynamicResource SystemChromeLowColor}"
+                    CornerRadius="0 0 15 15"
+                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderThickness="2">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Padding="10">
+
+                    <Grid RowDefinitions="Auto,20,Auto,20,Auto">
+
+                        <!-- Test Documentation -->
+                        <StackPanel Grid.Row="0" Spacing="2">
+                            <TextBlock Text="Test Documentation"/>
                             <TextBox AcceptsReturn="True"
                                      AcceptsTab="True"
                                      Height="200"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2" Spacing="2" Height="270">
-                            <TextBlock Text="Known Issues"/>
-                            <TextBox AcceptsReturn="True"
-                                     AcceptsTab="True"
-                                     Height="200"/>
+                        <!-- Gear + Issues -->
+                        <Grid Grid.Row="2"
+                              ColumnDefinitions="*,10,*">
+
+                            <StackPanel Grid.Column="0" Spacing="2" Height="270">
+                                <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+                                <TextBox AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         Height="200"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Spacing="2" Height="270">
+                                <TextBlock Text="Known Issues"/>
+                                <TextBox AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         Height="200"/>
+                            </StackPanel>
+
+                        </Grid>
+
+                        <!-- Images -->
+                        <StackPanel Grid.Row="4">
+                            <TextBlock Text="Attached Pictures"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Margin="0 0 0 10"/>
+
+                            <Button Content="Add Picture"
+                                    Command="{Binding AddImageCommand}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0 0 0 10"/>
+
+                            <!-- Correct ItemsControl -->
+                            <ItemsControl ItemsSource="{Binding Images}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ImagePreviewViewModel">
+                                        <Border BorderBrush="Gray"
+                                                BorderThickness="1"
+                                                Margin="5"
+                                                Padding="5"
+                                                CornerRadius="5">
+                                            <StackPanel>
+
+                                                <!-- Thumbnail button -->
+                                                <Button Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="0"
+                                                        BorderThickness="0"
+                                                        Background="Transparent">
+
+                                                    <Image Source="{Binding Thumbnail}"
+                                                           Width="120"
+                                                           Height="120"
+                                                           Stretch="UniformToFill"/>
+                                                </Button>
+
+                                                <!-- Delete button -->
+                                                <Button Content="Delete"
+                                                        Margin="0 5 0 0"
+                                                        Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
+                                                        CommandParameter="{Binding Path}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
                         </StackPanel>
 
                     </Grid>
 
-                </Grid>
+                </ScrollViewer>
 
-            </ScrollViewer>
+            </Border>
 
+        </Grid>
+
+        <!-- IMAGE PREVIEW OVERLAY -->
+        <Border IsVisible="{Binding SelectedImagePath, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                Background="#80000000"
+                ZIndex="999"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+
+            <Grid>
+
+                <!-- Full-size preview -->
+                <Image Source="{Binding SelectedImage}"
+                       Stretch="Uniform"
+                       MaxWidth="1000"
+                       MaxHeight="800"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+                <Button Content="Close"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="20"
+                        Command="{Binding ClosePreviewCommand}"/>
+            </Grid>
         </Border>
 
     </Grid>
-    
+
 </UserControl>
