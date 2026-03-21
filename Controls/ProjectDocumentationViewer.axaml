@@ -123,7 +123,7 @@
 
         </Grid>
         
-        <Border IsVisible="{Binding SelectedImagePath, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+        <Border IsVisible="{Binding SelectedImage, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
                 Background="#A0000000"
                 ZIndex="999"
                 HorizontalAlignment="Stretch"

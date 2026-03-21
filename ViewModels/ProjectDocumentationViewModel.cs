@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         ProjectDocumentation = projectDocumentation;
         _errorService = errorService;
         
-        ProjectDocumentation.ImagePaths.CollectionChanged += (_, __) => LoadImages();
+        ProjectDocumentation.ImagePaths.CollectionChanged += OnImagePathsChanged;
     }
 
     [ObservableProperty]
@@ -44,8 +45,6 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         if (file != null)
         {
             var path = file.Path.LocalPath;
-
-            Images.Add(new ImagePreviewViewModel(path));
             ProjectDocumentation.ImagePaths.Add(path);
         }
     }
@@ -53,8 +52,6 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveImage(string path)
     {
-        var item = Images.First(i => i.Path == path);
-        Images.Remove(item);
         ProjectDocumentation.ImagePaths.Remove(path);
     }
 
@@ -65,7 +62,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         SelectedImage = null;
 
         if (File.Exists(item.Path))
-            SelectedImage = item.Thumbnail;
+            SelectedImage = new Bitmap(item.Path);
     }
 
     [RelayCommand]
@@ -75,16 +72,48 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         SelectedImage = null;
     }
 
-    private void LoadImages()
+    private void OnImagePathsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Images.Clear();
-
-        foreach (var path in ProjectDocumentation.ImagePaths)
+        switch (e.Action)
         {
-            if (!File.Exists(path))
-                _errorService.AddError($"Image not found: {path}");
+            case NotifyCollectionChangedAction.Add:
+                foreach (string path in e.NewItems!)
+                    AddImageVm(path);
+                break;
 
-            Images.Add(new ImagePreviewViewModel(path));
+            case NotifyCollectionChangedAction.Remove:
+                foreach (string path in e.OldItems!)
+                    RemoveImageVm(path);
+                break;
+
+            case NotifyCollectionChangedAction.Replace:
+                foreach (string oldPath in e.OldItems!)
+                    RemoveImageVm(oldPath);
+                foreach (string newPath in e.NewItems!)
+                    AddImageVm(newPath);
+                break;
+
+            case NotifyCollectionChangedAction.Reset:
+                Images.Clear();
+                foreach (var path in ProjectDocumentation.ImagePaths)
+                    AddImageVm(path);
+                break;
         }
+    }
+
+    private void AddImageVm(string path)
+    {
+        if (!File.Exists(path))
+            _errorService.AddError($"Image not found: {path}");
+
+        Images.Add(new ImagePreviewViewModel(path));
+    }
+
+    private void RemoveImageVm(string path)
+    {
+        var vm = Images.FirstOrDefault(i => i.Path == path);
+        if (vm == null) return;
+        vm.Dispose();
+        Images.Remove(vm);
     }
 }
