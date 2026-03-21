@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
-public partial class UserDocumentation : UserControl
+public partial class ProjectDocumentationViewer : UserControl
 {
-    public UserDocumentation()
+    public ProjectDocumentationViewer()
     {
         InitializeComponent();
     }

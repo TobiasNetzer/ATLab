@@ -176,6 +176,7 @@ public class App : Application
         services.AddSingleton<TestResultExportService>();
         
         services.AddSingleton<ProjectSettings>();
+        services.AddSingleton<ProjectDocumentation>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -210,6 +211,7 @@ public class App : Application
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
         services.AddSingleton<ShellCommandEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
+        services.AddSingleton<ProjectDocumentationViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

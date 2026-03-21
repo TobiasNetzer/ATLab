@@ -5,7 +5,7 @@ namespace ATLab.ViewModels;
 public partial class ConfigTabViewModel : ViewModelBase
 {
     
-    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; set; }
+    public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
     
     public DeviceManagerViewModel DeviceManager { get; }
     

@@ -23,7 +23,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly TestResultExportService _testResultExportService;
-    private ProjectSettings _projectSettings;
+    private readonly ProjectSettings _projectSettings;
+    private readonly ProjectDocumentation _projectDocumentation;
     
     private List<TestStep>? _copiedSteps;
 
@@ -134,7 +135,8 @@ public partial class TestingTabViewModel : ViewModelBase
         ShellCommandEditorViewModel shellCommandEditor,
         ProjectSettings projectSettings,
         ISerialNumberDialogService serialNumberDialogService,
-        TestResultExportService testResultExportService)
+        TestResultExportService testResultExportService,
+        ProjectDocumentation projectDocumentation)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -150,6 +152,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectSettings = projectSettings;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
+        _projectDocumentation = projectDocumentation;
         
         Title = "Testing";
         
@@ -161,6 +164,7 @@ public partial class TestingTabViewModel : ViewModelBase
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettings.SettingsChanged += () => CheckForChanges();
         _deviceManager.Devices.CollectionChanged += DevicesChanged;
+        _projectDocumentation.DocumentationChanged += () => CheckForChanges();
         
         foreach (var device in _deviceManager.Devices)
             SubscribeToDevice(device);
@@ -326,20 +330,27 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         int indexToInsertNewStep;
 
-        if (SelectedSteps.Count == 0)
+        if (SelectedStep != null)
         {
-            indexToInsertNewStep = 0;
+            if (SelectedSteps.Count == 0)
+            {
+                indexToInsertNewStep = 0;
+            }
+            else
+            {
+                var lastSelected = SelectedSteps
+                    .Select(s => TestSteps.IndexOf(s))
+                    .Where(i => i >= 0)
+                    .Max();
+
+                indexToInsertNewStep = lastSelected + 1;
+            }
         }
         else
         {
-            var lastSelected = SelectedSteps
-                .Select(s => TestSteps.IndexOf(s))
-                .Where(i => i >= 0)
-                .Max();
-
-            indexToInsertNewStep = lastSelected + 1;
+            indexToInsertNewStep = 0;
         }
-        
+
         if (indexToInsertNewStep > TestSteps.Count)
             indexToInsertNewStep = TestSteps.Count;
         
@@ -734,6 +745,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 TestSteps.Clear();
                 TestHardwareRelayChannels.ResetToDefault();
                 _projectSettings.ResetToDefault();
+                _projectDocumentation.ResetToDefault();
                 _deviceManager.Devices.Clear();
                 _projectService.UpdateLastSavedState(CaptureCurrentState());
                 SelectedStepIndex = -1;
@@ -762,7 +774,8 @@ public partial class TestingTabViewModel : ViewModelBase
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
             Devices = _deviceManager.Devices.ToList(),
-            ProjectSettings = _projectSettings
+            ProjectSettings = _projectSettings,
+            ProjectDocumentation = _projectDocumentation
         };
     }
 
@@ -838,6 +851,7 @@ public partial class TestingTabViewModel : ViewModelBase
             }
             
             _projectSettings.CopyFrom(dto.ProjectSettings);
+            _projectDocumentation.CopyFrom(dto.ProjectDocumentation);
             
             TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 
