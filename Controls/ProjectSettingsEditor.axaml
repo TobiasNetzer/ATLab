@@ -1,7 +1,7 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:Class="ATLab.Controls.ProjectSettings"
+             x:Class="ATLab.Controls.ProjectSettingsEditor"
              x:DataType="vm:ProjectSettingsViewModel"
              Width="780">
 
@@ -45,20 +45,20 @@
                                        Margin="0 0 0 10"/>
 
                             <CheckBox Content="Request Serial Number"
-                                      IsChecked="{Binding UseSerialNumber, Mode=TwoWay}"/>
+                                      IsChecked="{Binding Settings.UseSerialNumber, Mode=TwoWay}"/>
 
                             <CheckBox Content="Save Test Result"
-                                      IsChecked="{Binding SaveTestResult, Mode=TwoWay}"
-                                      IsEnabled="{Binding UseSerialNumber}"/>
+                                      IsChecked="{Binding Settings.SaveTestResult, Mode=TwoWay}"
+                                      IsEnabled="{Binding Settings.UseSerialNumber}"/>
 
                             <RadioButton Content="Always"
                                          Margin="30 0 0 0"
-                                         IsChecked="{Binding SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ALWAYS}"
+                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ALWAYS}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
 
                             <RadioButton Content="Passed Only"
                                          Margin="30 0 0 0"
-                                         IsChecked="{Binding SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ONLY_WHEN_PASSED}"
+                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ONLY_WHEN_PASSED}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
                             
                             <TextBlock
@@ -67,7 +67,7 @@
 
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBox Width="315"
-                                         Text="{Binding SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"
+                                         Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
                                 <Button Content="..."
                                         Command="{Binding SelectSaveTestResultFilePathCommand}"
@@ -102,7 +102,7 @@
 
                             <NumericUpDown Grid.Row="1"
                                            Grid.Column="1"
-                                           Value="{Binding ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Value="{Binding Settings.ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                            Minimum="0"
                                            Maximum="100"
                                            Width="120"/>
@@ -114,7 +114,7 @@
 
                             <NumericUpDown Grid.Row="2"
                                            Grid.Column="1"
-                                           Value="{Binding ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Value="{Binding Settings.ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                            Minimum="0"
                                            Maximum="10"
                                            Increment="1"

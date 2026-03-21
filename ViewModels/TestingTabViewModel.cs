@@ -21,10 +21,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IErrorService _errorService;
     private readonly IProjectService _projectService;
     private readonly DeviceManagerViewModel _deviceManager;
-    private readonly ProjectSettingsViewModel _projectSettingsViewModel;
-    private readonly IProjectSettings _projectSettings;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly TestResultExportService _testResultExportService;
+    private ProjectSettings _projectSettings;
     
     private List<TestStep>? _copiedSteps;
 
@@ -133,8 +132,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ScriptSelectorViewModel scriptSelector,
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
-        ProjectSettingsViewModel projectSettingsViewModel,
-        IProjectSettings projectSettings,
+        ProjectSettings projectSettings,
         ISerialNumberDialogService serialNumberDialogService,
         TestResultExportService testResultExportService)
     {
@@ -149,7 +147,6 @@ public partial class TestingTabViewModel : ViewModelBase
         ShellCommandEditor = shellCommandEditor;
         _projectService = projectService;
         _deviceManager = deviceManager;
-        _projectSettingsViewModel = projectSettingsViewModel;
         _projectSettings = projectSettings;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
@@ -162,7 +159,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
-        _projectSettingsViewModel.ConfigurationChanged += () => CheckForChanges();
+        _projectSettings.SettingsChanged += () => CheckForChanges();
         _deviceManager.Devices.CollectionChanged += DevicesChanged;
         
         foreach (var device in _deviceManager.Devices)
@@ -639,7 +636,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
     private async Task<bool> ShowSerialNumberRequestWindow()
     {
-        if (_projectSettingsViewModel.UseSerialNumber)
+        if (_projectSettings.UseSerialNumber)
         {
             var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
 
@@ -736,7 +733,7 @@ public partial class TestingTabViewModel : ViewModelBase
             {
                 TestSteps.Clear();
                 TestHardwareRelayChannels.ResetToDefault();
-                _projectSettingsViewModel.ResetToDefault();
+                _projectSettings.ResetToDefault();
                 _deviceManager.Devices.Clear();
                 _projectService.UpdateLastSavedState(CaptureCurrentState());
                 SelectedStepIndex = -1;
@@ -753,7 +750,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    public AtlabFileDto CaptureCurrentState()
+    private AtlabFileDto CaptureCurrentState()
     {
         foreach (var vm in TestSteps)
             vm.TestStep.UpdateDtos();
@@ -765,31 +762,26 @@ public partial class TestingTabViewModel : ViewModelBase
             ExtStimChannelNames = TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = TestHardwareRelayChannels.GetMeasNames(),
             Devices = _deviceManager.Devices.ToList(),
-            DefaultTolerance = _projectSettings.ToleranceValue,
-            ResultPrecision = _projectSettings.ResultPrecision,
-            UseSerialNumber = _projectSettings.UseSerialNumber,
-            SaveTestResults = _projectSettings.SaveTestResult,
-            SaveTestResultOptions =  _projectSettings.SaveTestResultOptions,
-            SaveTestResultFilePath = _projectSettings.SaveTestResultFilePath,
+            ProjectSettings = _projectSettings
         };
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public async Task SaveFileAs()
+    private async Task SaveFileAs()
     {
         var dto = CaptureCurrentState();
         await _projectService.SaveAsAsync(dto);
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public async Task SaveFile()
+    private async Task SaveFile()
     {
         var dto = CaptureCurrentState();
         await _projectService.SaveAsync(dto);
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public async Task LoadFileWithDialog()
+    private async Task LoadFileWithDialog()
     {
         try
         {
@@ -845,12 +837,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 TestSteps.Add(stepVm);
             }
             
-            _projectSettings.ToleranceValue = dto.DefaultTolerance;
-            _projectSettings.ResultPrecision = dto.ResultPrecision;
-            _projectSettings.UseSerialNumber = dto.UseSerialNumber;
-            _projectSettings.SaveTestResult = dto.SaveTestResults;
-            _projectSettings.SaveTestResultOptions = dto.SaveTestResultOptions;
-            _projectSettings.SaveTestResultFilePath = dto.SaveTestResultFilePath;
+            _projectSettings.CopyFrom(dto.ProjectSettings);
             
             TestHardwareRelayChannels.ApplyChannelNames(dto.StimChannelNames, dto.ExtStimChannelNames, dto.MeasChannelNames);
 

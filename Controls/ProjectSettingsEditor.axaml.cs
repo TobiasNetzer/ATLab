@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
-public partial class ProjectSettings : UserControl
+public partial class ProjectSettingsEditor : UserControl
 {
-    public ProjectSettings()
+    public ProjectSettingsEditor()
     {
         InitializeComponent();
     }
