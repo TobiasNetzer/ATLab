@@ -49,6 +49,5 @@ public partial class ProjectDocumentation : ObservableObject
         RequiredGearDocumentation = string.Empty;
         KnownIssuesDocumentation = string.Empty;
         ImagePaths.Clear();
-        DocumentationChanged?.Invoke();
     }
 }

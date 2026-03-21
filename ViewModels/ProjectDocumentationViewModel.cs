@@ -13,6 +13,7 @@ namespace ATLab.ViewModels;
 public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;
+    private readonly IErrorService _errorService;
 
     public ProjectDocumentation ProjectDocumentation { get; }
 
@@ -20,16 +21,15 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
 
     public ProjectDocumentationViewModel(
         IFileDialogService fileDialogService,
-        ProjectDocumentation projectDocumentation)
+        ProjectDocumentation projectDocumentation,
+        IErrorService errorService)
     {
         _fileDialogService = fileDialogService;
         ProjectDocumentation = projectDocumentation;
+        _errorService = errorService;
         
         ProjectDocumentation.ImagePaths.CollectionChanged += (_, __) => LoadImages();
     }
-
-    [ObservableProperty]
-    private string? _selectedImagePath;
 
     [ObservableProperty]
     private Bitmap? _selectedImage;
@@ -56,28 +56,21 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         var item = Images.First(i => i.Path == path);
         Images.Remove(item);
         ProjectDocumentation.ImagePaths.Remove(path);
-
-        if (SelectedImagePath == path)
-            ClosePreview();
     }
 
     [RelayCommand]
     private void OpenPreview(ImagePreviewViewModel item)
     {
-        SelectedImagePath = item.Path;
-
         SelectedImage?.Dispose();
         SelectedImage = null;
 
         if (File.Exists(item.Path))
-            SelectedImage = new Bitmap(item.Path);
+            SelectedImage = item.Thumbnail;
     }
 
     [RelayCommand]
     private void ClosePreview()
     {
-        SelectedImagePath = null;
-
         SelectedImage?.Dispose();
         SelectedImage = null;
     }
@@ -85,8 +78,12 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     private void LoadImages()
     {
         Images.Clear();
-        foreach (var path in ProjectDocumentation.ImagePaths.Where(path => File.Exists(path)))
+
+        foreach (var path in ProjectDocumentation.ImagePaths)
         {
+            if (!File.Exists(path))
+                _errorService.AddError($"Image not found: {path}");
+
             Images.Add(new ImagePreviewViewModel(path));
         }
     }

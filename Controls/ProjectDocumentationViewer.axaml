@@ -29,7 +29,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               Padding="10">
 
-                    <Grid RowDefinitions="Auto,20,Auto,20,Auto">
+                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,Auto">
                         
                         <StackPanel Grid.Row="0" Spacing="2">
                             <TextBlock Text="Test Documentation"/>
@@ -60,7 +60,10 @@
 
                         </Grid>
                         
-                        <StackPanel Grid.Row="4">
+                        <Separator Grid.Row="4" Height="2"/>
+                        
+                        <StackPanel Grid.Row="6">
+                            
                             <TextBlock Text="Images"
                                        FontSize="16"
                                        FontWeight="Bold"
@@ -74,7 +77,7 @@
                             <ItemsControl ItemsSource="{Binding Images}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel Orientation="Horizontal" ItemSpacing="10"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
 
@@ -82,7 +85,6 @@
                                     <DataTemplate>
                                         <Border BorderBrush="Gray"
                                                 BorderThickness="1"
-                                                Margin="5"
                                                 Padding="5"
                                                 CornerRadius="5">
                                             <StackPanel>
@@ -91,7 +93,8 @@
                                                         CommandParameter="{Binding}"
                                                         Padding="0"
                                                         BorderThickness="0"
-                                                        Background="Transparent">
+                                                        Background="Transparent"
+                                                        IsEnabled="{Binding Thumbnail, Converter={x:Static conv:ObjectConverters.IsNotNull}}">
 
                                                     <Image Source="{Binding Thumbnail}"
                                                            Width="120"
