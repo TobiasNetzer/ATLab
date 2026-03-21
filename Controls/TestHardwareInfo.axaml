@@ -3,7 +3,7 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.TestHardwareInfo"
              x:DataType="vm:TestHardwareInfoViewModel"
-             Width="300">
+             Width="350">
     
     <Grid RowDefinitions="Auto,*">
             
