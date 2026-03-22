@@ -89,7 +89,8 @@
                                                 CornerRadius="5">
                                             <StackPanel>
                                                 
-                                                <Button Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                <Button x:CompileBindings="False" 
+                                                        Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
                                                         CommandParameter="{Binding}"
                                                         Padding="0"
                                                         BorderThickness="0"
@@ -102,7 +103,8 @@
                                                            Stretch="UniformToFill"/>
                                                 </Button>
                                                 
-                                                <Button Content="Remove"
+                                                <Button x:CompileBindings="False" 
+                                                        Content="Remove"
                                                         HorizontalAlignment="Center"
                                                         Margin="0 5 0 0"
                                                         Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
