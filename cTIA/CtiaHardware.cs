@@ -24,7 +24,7 @@ public class CtiaHardware : ITestHardware
 
     public CtiaHardware(CtiaCommunication communication)
     {
-        HardwareInfo = new DummyHardwareInfo();
+        HardwareInfo = new HardwareInfo();
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];

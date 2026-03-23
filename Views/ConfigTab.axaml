@@ -25,7 +25,7 @@
                 DataContext="{Binding DeviceManager}"
                 Margin="5 0 0 10"/>
         
-            <controls:ProjectSettings 
+            <controls:ProjectSettingsEditor 
                 Grid.Column="1"
                 Grid.Row="1"
                 HorizontalAlignment="Left"

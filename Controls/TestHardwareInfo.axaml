@@ -23,8 +23,8 @@
                 BorderBrush="{DynamicResource SystemBaseLowColor}"
                 BorderThickness="2">
                     
-            <StackPanel Margin="20"
-                        Spacing="20"
+            <StackPanel Margin="15"
+                        Spacing="15"
                         Orientation="Vertical"
                         HorizontalAlignment="Center">
 

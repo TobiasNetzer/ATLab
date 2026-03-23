@@ -172,9 +172,11 @@ public class App : Application
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<IResponseProcessor, ResponseProcessor>();
-        services.AddSingleton<IProjectSettings, ProjectSettingsService>();
         services.AddSingleton<CsvExportService>();
         services.AddSingleton<TestResultExportService>();
+        
+        services.AddSingleton<ProjectSettings>();
+        services.AddSingleton<ProjectDocumentation>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -202,12 +204,14 @@ public class App : Application
         services.AddSingleton<ScriptsManagerViewModel>();
         services.AddSingleton<AboutTabViewModel>();
         services.AddSingleton<HardwareTabViewModel>();
+        services.AddSingleton<DocumentationTabViewModel>();
         services.AddSingleton<TestHardwareInfoViewModel>();
         services.AddSingleton<ScriptSelectorViewModel>();
         services.AddSingleton<CommandEditorViewModel>();
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
         services.AddSingleton<ShellCommandEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
+        services.AddSingleton<ProjectDocumentationViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

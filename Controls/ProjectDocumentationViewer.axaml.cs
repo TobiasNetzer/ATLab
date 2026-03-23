@@ -1,12 +1,12 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
-public partial class ProjectSettings : UserControl
+public partial class ProjectDocumentationViewer : UserControl
 {
-    public ProjectSettings()
+    public ProjectDocumentationViewer()
     {
         InitializeComponent();
     }

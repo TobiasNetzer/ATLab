@@ -18,7 +18,7 @@ public class TestExecutor : ITestExecutor
     private readonly IErrorService _errorService;
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
-    private readonly IProjectSettings _projectSettings;
+    private readonly ProjectSettings _projectSettings;
 
     private CancellationTokenSource? _cts;
     private bool _repeatTest;
@@ -40,7 +40,7 @@ public class TestExecutor : ITestExecutor
         IErrorService errorService,
         ITestStepEvaluator evaluator,
         IMessageBoxService messageBoxService,
-        IProjectSettings projectSettings)
+        ProjectSettings projectSettings)
     {
         _testHardware = testHardware;
         _runner = runner;

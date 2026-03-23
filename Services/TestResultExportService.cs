@@ -4,18 +4,19 @@ using System.IO;
 using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Interfaces;
+using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
 public class TestResultExportService
 {
-    private readonly ProjectSettingsViewModel _settings;
+    private readonly ProjectSettings _settings;
     private readonly CsvExportService _csvExportService;
     private readonly IErrorService _errorService;
 
     public TestResultExportService(
-        ProjectSettingsViewModel settings,
+        ProjectSettings settings,
         CsvExportService csvExportService,
         IErrorService errorService)
     {

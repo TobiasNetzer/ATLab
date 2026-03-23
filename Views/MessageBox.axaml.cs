@@ -37,4 +37,13 @@ public partial class MessageBox : Window
         Result = isOk ? MessageBoxResult.Ok : MessageBoxResult.Cancel;
         Close();
     }
+    
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+
+        if (DataContext is MessageBoxViewModel vm)
+            vm.Bitmap?.Dispose();
+    }
+
 }

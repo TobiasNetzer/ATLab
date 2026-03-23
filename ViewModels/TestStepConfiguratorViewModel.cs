@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
+using ATLab.Models;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,7 +17,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     private readonly IFileDialogService _fileDialogService;
-    private readonly IProjectSettings _projectSettings;
+    private readonly ProjectSettings _projectSettings;
 
     public List<TestEvaluationSource> EvaluationSources { get; } = Enum.GetValues<TestEvaluationSource>().ToList();
         
@@ -41,7 +42,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
         IFileDialogService fileDialogService,
-        IProjectSettings projectSettings)
+        ProjectSettings projectSettings)
     {
         _settingsService = settingsService;
         _fileDialogService = fileDialogService;

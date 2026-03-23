@@ -1,0 +1,155 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             x:Class="ATLab.Controls.ProjectDocumentationViewer"
+             x:DataType="vm:ProjectDocumentationViewModel"
+             Width="1200">
+
+    <Grid>
+        
+        <Grid RowDefinitions="Auto,*">
+
+            <Border Grid.Row="0"
+                    Background="{DynamicResource SystemBaseLowColor}"
+                    CornerRadius="15 15 0 0"
+                    Padding="10">
+                <TextBlock Text="Project Documentation"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Background="{DynamicResource SystemChromeLowColor}"
+                    CornerRadius="0 0 15 15"
+                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderThickness="2">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Padding="10">
+
+                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,Auto">
+                        
+                        <StackPanel Grid.Row="0" Spacing="2">
+                            <TextBlock Text="Test Documentation"/>
+                            <TextBox Text="{Binding ProjectDocumentation.TestDocumentation, UpdateSourceTrigger=LostFocus}"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     Height="200"/>
+                        </StackPanel>
+                        
+                        <Grid Grid.Row="2"
+                              ColumnDefinitions="*,10,*">
+
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+                                <TextBox Text="{Binding ProjectDocumentation.RequiredGearDocumentation, UpdateSourceTrigger=LostFocus}"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         Height="200"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Spacing="2">
+                                <TextBlock Text="Known Issues"/>
+                                <TextBox Text="{Binding ProjectDocumentation.KnownIssuesDocumentation, UpdateSourceTrigger=LostFocus}"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         Height="200"/>
+                            </StackPanel>
+
+                        </Grid>
+                        
+                        <Separator Grid.Row="4" Height="2"/>
+                        
+                        <StackPanel Grid.Row="6">
+                            
+                            <TextBlock Text="Images"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Margin="0 0 0 10"/>
+
+                            <Button Content="Add Image"
+                                    Command="{Binding AddImageCommand}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0 0 0 10"/>
+                            
+                            <ItemsControl ItemsSource="{Binding Images}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" ItemSpacing="10"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="Gray"
+                                                BorderThickness="1"
+                                                Padding="5"
+                                                CornerRadius="5">
+                                            <StackPanel>
+                                                
+                                                <Button x:CompileBindings="False" 
+                                                        Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="0"
+                                                        BorderThickness="0"
+                                                        Background="Transparent"
+                                                        IsEnabled="{Binding Thumbnail, Converter={x:Static conv:ObjectConverters.IsNotNull}}">
+
+                                                    <Image Source="{Binding Thumbnail}"
+                                                           Width="120"
+                                                           Height="120"
+                                                           Stretch="UniformToFill"/>
+                                                </Button>
+                                                
+                                                <Button x:CompileBindings="False" 
+                                                        Content="Remove"
+                                                        HorizontalAlignment="Center"
+                                                        Margin="0 5 0 0"
+                                                        Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
+                                                        CommandParameter="{Binding Path}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </StackPanel>
+
+                    </Grid>
+
+                </ScrollViewer>
+
+            </Border>
+
+        </Grid>
+        
+        <Border IsVisible="{Binding SelectedImage, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                Background="#A0000000"
+                ZIndex="999"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                CornerRadius="15">
+
+            <Grid>
+                
+                <Button BorderThickness="0"
+                        Background="Transparent"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="10"
+                        Command="{Binding ClosePreviewCommand}">
+
+                    <Image Source="{Binding SelectedImage}"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                </Button>
+                
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>
