@@ -123,4 +123,14 @@ public partial class MainWindowViewModel : ViewModelBase
                 ? ThemeVariant.Dark
                 : ThemeVariant.Light;
     }
+    
+    partial void OnSelectedTabChanged(ViewModelBase value)
+    {
+        switch (value)
+        {
+            case TestingTabViewModel:
+                TestingTab.SelectedStepIndex = 0;
+                break;
+        }
+    }
 }
