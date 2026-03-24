@@ -174,6 +174,9 @@ public class App : Application
         services.AddSingleton<IResponseProcessor, ResponseProcessor>();
         services.AddSingleton<CsvExportService>();
         services.AddSingleton<TestResultExportService>();
+        services.AddSingleton<ProjectController>();
+        services.AddSingleton<TestExecutionController>();
+        services.AddSingleton<TestStepEditor>();
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();

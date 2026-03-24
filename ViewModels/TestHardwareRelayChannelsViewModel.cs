@@ -80,7 +80,7 @@ public partial class TestHardwareRelayChannelsViewModel : ViewModelBase
         foreach (var item in source)
         {
             // ChannelIndex is 1-based
-            int index = (item.ChannelIndex ?? 0) - 1;
+            var index = (item.ChannelIndex ?? 0) - 1;
 
             if (index >= 0 && index < target.Count)
                 target[index].ChannelName = item.ChannelName;
