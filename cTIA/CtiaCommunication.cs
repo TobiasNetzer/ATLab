@@ -10,7 +10,6 @@ namespace ATLab.CTIA
     {
         private readonly ICommunication _communication;
         private readonly IErrorService _errorService;
-        public bool IsConnected => _communication.IsConnected;
 
         public CtiaCommunication(ICommunication communication, IErrorService errorService)
         {
