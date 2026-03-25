@@ -9,7 +9,6 @@ namespace ATLab.Views;
 public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;
-    private readonly IMessageBoxService? _messageBoxService;
     private readonly IProjectService? _projectService;
 
     public MainWindow()
@@ -26,10 +25,9 @@ public partial class MainWindow : Window
         };
     }
 
-    public MainWindow(ISettingsService settingsService, IMessageBoxService messageBoxService, IProjectService projectService) : this()
+    public MainWindow(ISettingsService settingsService, IProjectService projectService) : this()
     {
         _settingsService = settingsService;
-        _messageBoxService = messageBoxService;
         _projectService = projectService;
 
         var s = _settingsService.Settings;
