@@ -32,6 +32,10 @@ public class TestStepRunner : ITestStepRunner
     {
         try
         {
+            // detect if the matrix channel is unset or not available
+            if (step.TestStep.MatrixState.ActiveChannelHigh == -1 || step.TestStep.MatrixState.ActiveChannelLow == -1)
+                return OperationResult<double>.Failure("Matrix Channel is not available.");
+            
             _testHardware.StimChannelStates = step.TestStep.LiveStimState.ToBoolArray();
             _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
             _testHardware.ActiveMeasChannelH = Convert.ToByte(step.TestStep.MatrixState.ActiveChannelHigh);
