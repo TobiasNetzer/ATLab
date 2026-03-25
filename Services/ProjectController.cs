@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
@@ -14,19 +15,22 @@ public class ProjectController
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
     private readonly DeviceManagerViewModel _deviceManager;
+    private readonly IMessageBoxService _messageBoxService;
 
     public ProjectController(
         IProjectService projectService,
         IErrorService errorService,
         ProjectSettings projectSettings,
         ProjectDocumentation projectDocumentation,
-        DeviceManagerViewModel deviceManager)
+        DeviceManagerViewModel deviceManager,
+        IMessageBoxService messageBoxService)
     {
         _projectService = projectService;
         _errorService = errorService;
         _projectSettings = projectSettings;
         _projectDocumentation = projectDocumentation;
         _deviceManager = deviceManager;
+        _messageBoxService = messageBoxService;
     }
 
     public async Task NewProjectAsync(TestingTabViewModel vm)
@@ -68,7 +72,10 @@ public class ProjectController
         {
             var dto = await _projectService.OpenFileAsync();
             if (dto != null)
+            {
+                await CheckForHardwareCompatibility(vm.TestHardwareRelayChannels.HardwareInfo, dto);
                 ApplyDto(vm, dto);
+            }
         }
         catch (Exception ex)
         {
@@ -87,11 +94,15 @@ public class ProjectController
 
             var dto = await _projectService.LoadAsync(path);
             if (dto != null)
+            {
+                await CheckForHardwareCompatibility(vm.TestHardwareRelayChannels.HardwareInfo, dto);
                 ApplyDto(vm, dto);
+            }
+                
         }
         catch (Exception ex)
         {
-            _errorService.AddError("Failed to load file: " + ex.Message);
+            _errorService.AddError($"Failed to load file {path}: " + ex.Message);
         }
 
         vm.ResetTestCounters();
@@ -141,6 +152,49 @@ public class ProjectController
             ProjectSettings = _projectSettings,
             ProjectDocumentation = _projectDocumentation
         };
+    }
+
+    private async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)
+    {
+        List<string> warnings = [];
+
+        var highestUsedMatrixChannel =
+            dto.TestSteps
+                .Select(s => Math.Max(s.MatrixState.ActiveChannelHigh, s.MatrixState.ActiveChannelLow))
+                .DefaultIfEmpty(-1)
+                .Max();
+
+        var highestUsedStimChannel =
+            dto.TestSteps
+                .Where(s => s.StimState?.EnabledChannels != null)
+                .SelectMany(s => s.StimState!.EnabledChannels)
+                .DefaultIfEmpty(-1)
+                .Max();
+
+        var highestUsedExtStimChannel =
+            dto.TestSteps
+                .Where(s => s.ExtStimState?.EnabledChannels != null)
+                .SelectMany(s => s.ExtStimState!.EnabledChannels)
+                .DefaultIfEmpty(-1)
+                .Max();
+        
+        if (hardwareInfo.MeasChannelCount < highestUsedMatrixChannel)
+            warnings.Add($"- Matrix channels (available:{hardwareInfo.MeasChannelCount}/{highestUsedMatrixChannel})");
+
+        if (hardwareInfo.StimChannelCount < highestUsedStimChannel)
+            warnings.Add($"- Stimulation channels (available:{hardwareInfo.StimChannelCount}/{highestUsedStimChannel})");
+
+        if (hardwareInfo.ExtStimChannelCount < highestUsedExtStimChannel)
+            warnings.Add($"- External Stimulation channels (available:{hardwareInfo.ExtStimChannelCount}/{highestUsedExtStimChannel})");
+        
+        if (warnings.Count > 0)
+        {
+            warnings.Insert(0, "Connected test hardware is missing required channels:");
+            warnings.Add("All unavailable channels will be permanently lost upon saving!");
+
+            var message = string.Join(Environment.NewLine, warnings);
+            await _messageBoxService.ShowMessageAsync("Warning", message);
+        }
     }
     
     public void MarkDirty()
