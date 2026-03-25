@@ -19,8 +19,6 @@ namespace ATLab;
 public class App : Application
 {
     private IServiceProvider? _services;
-    
-    private IErrorService? _errorService;
 
     private ITestHardware? _testHardware;
 
@@ -34,13 +32,11 @@ public class App : Application
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         _services = serviceCollection.BuildServiceProvider();
-
-        _errorService = _services.GetRequiredService<IErrorService>();
+        
         var settingsService = _services.GetRequiredService<ISettingsService>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            
             var initSuccess = false;
             var openConnectWindow = false;
             var lastPort = settingsService.Settings.LastComPort;
@@ -112,7 +108,7 @@ public class App : Application
                     }
                 }
             }
-            
+
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
@@ -126,33 +122,13 @@ public class App : Application
             var mainVm = _services.GetRequiredService<MainWindowViewModel>();
             var window = _services.GetRequiredService<MainWindow>();
             window.DataContext = mainVm;
+            window.Opened += async (_, __) => await mainVm.OnWindowOpened();
 
             desktop.MainWindow = window;
             window.Show();
-            
-            // Load last open file
-            _ = Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                var lastFile = settingsService.Settings.LastOpenedFile;
 
-                if (File.Exists(lastFile))
-                {
-                    try
-                    {
-                        await mainVm.LoadFile(lastFile);
-                    }
-                    catch (Exception ex)
-                    {
-                        _errorService.Errors.Add(ex.ToString());
-                        await mainVm.NewFile();
-                    }
-                }
-                else await mainVm.NewFile();
-            });
-            
+            base.OnFrameworkInitializationCompleted();
         }
-        
-        base.OnFrameworkInitializationCompleted();
     }
 
     private void ConfigureServices(IServiceCollection services)
@@ -194,7 +170,6 @@ public class App : Application
         services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
         services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
-
         
         // ViewModels
         services.AddSingleton<TestHardwareRelayChannelsViewModel>();

@@ -15,6 +15,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IErrorService _errorService;
     private readonly ISimulationService _simulationService;
     private readonly IProjectService _projectService;
+    private readonly ISettingsService _settingsService;
 
     public string WindowTitle => $"ATLab - Project: {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
     
@@ -55,12 +56,14 @@ public partial class MainWindowViewModel : ViewModelBase
         ScriptsManagerViewModel scriptsManagerViewModel,
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
-        DocumentationTabViewModel documentationTab)
+        DocumentationTabViewModel documentationTab,
+        ISettingsService settingsService)
     {
         _errorService = errorService;
         _simulationService = simulationService;
         _projectService = projectService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
+        _settingsService = settingsService;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -104,9 +107,9 @@ public partial class MainWindowViewModel : ViewModelBase
         HasErrors = false;
     }
     
-    public async Task NewFile() => await TestingTab.NewFile();
+    private async Task NewFile() => await TestingTab.NewFile();
     
-    public async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
+    private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
     public event Action? RequestClose;
     
@@ -135,6 +138,28 @@ public partial class MainWindowViewModel : ViewModelBase
             case TestingTabViewModel:
                 TestingTab.SelectedStepIndex = 0;
                 break;
+        }
+    }
+    
+    public async Task OnWindowOpened()
+    {
+        var lastFile = _settingsService.Settings.LastOpenedFile;
+
+        if (File.Exists(lastFile))
+        {
+            try
+            {
+                await LoadFile(lastFile);
+            }
+            catch (Exception ex)
+            {
+                _errorService.Errors.Add(ex.ToString());
+                await NewFile();
+            }
+        }
+        else
+        {
+            await NewFile();
         }
     }
 }
