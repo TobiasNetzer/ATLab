@@ -85,7 +85,6 @@
                              SelectedItem="{Binding SelectedScript , Mode=TwoWay}"
                              Margin="0 2 5 0"
                              Width="500"
-                             MinHeight="400"
                              Background="{DynamicResource SystemListLowColor}"
                              CornerRadius="10">
                         

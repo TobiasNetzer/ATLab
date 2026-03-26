@@ -5,7 +5,7 @@
         x:Class="ATLab.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding WindowTitle}"
-        MinWidth="1400"
+        MinWidth="1300"
         MinHeight="600">
     
     <Window.KeyBindings>
