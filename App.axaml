@@ -18,6 +18,7 @@
                     <Color x:Key="PanelBorder">#FFE0E0E0</Color>
                     <Color x:Key="MainWindowToolbarBackground">#FFF0F0F0</Color>
                     <Color x:Key="ToolbarBackground">#FFF0F0F0</Color>
+                    <Color x:Key="ImageBackground">White</Color>
                 </ResourceDictionary>
                 
                 <ResourceDictionary x:Key="Dark">
@@ -25,6 +26,7 @@
                     <Color x:Key="PanelBorder">#FF5A5A5A</Color>
                     <Color x:Key="MainWindowToolbarBackground">#FF2D2D2D</Color>
                     <Color x:Key="ToolbarBackground">#FF3D3D3D</Color>
+                    <Color x:Key="ImageBackground">Black</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -54,6 +56,28 @@
         </FluentTheme>
         
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        
+        <Style Selector="Button.no-effects">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
         
     </Application.Styles>
 
