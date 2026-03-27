@@ -74,11 +74,20 @@
                             VerticalAlignment="Center"
                             Margin="5">
                     
-                    <Button
-                        Background="{Binding HasErrors, Converter={StaticResource BoolToBrushConverter}}">
+                    <Button Classes.error="{Binding HasErrors}">
+                        <Button.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="Background" Value="{DynamicResource PanelBorder}" />
+                            </Style>
+
+                            <Style Selector="Button.error">
+                                <Setter Property="Background" Value="Red" />
+                            </Style>
+                        </Button.Styles>
+
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Spacing="5">
-                                <TextBlock Text="&#xE7BA;" 
+                                <TextBlock Text="&#xE7BA;"
                                            FontFamily="{StaticResource FluentIconsFont}"
                                            FontSize="18"/>
                                 <TextBlock Text="{Binding ErrorCount}"
