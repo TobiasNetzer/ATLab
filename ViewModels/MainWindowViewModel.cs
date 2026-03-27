@@ -123,12 +123,14 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private static void ToggleTheme()
+    private void ToggleTheme()
     {
         Application.Current!.RequestedThemeVariant =
             Application.Current!.RequestedThemeVariant == ThemeVariant.Light
                 ? ThemeVariant.Dark
                 : ThemeVariant.Light;
+
+        _settingsService.Settings.IsDarkMode = Application.Current!.RequestedThemeVariant == ThemeVariant.Dark;
     }
     
     partial void OnSelectedTabChanged(ViewModelBase value)

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using ATLab.CTIA;
 using ATLab.Interfaces;
 using ATLab.Models;
+using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab;
@@ -34,6 +34,10 @@ public class App : Application
         _services = serviceCollection.BuildServiceProvider();
         
         var settingsService = _services.GetRequiredService<ISettingsService>();
+        
+        Current!.RequestedThemeVariant = settingsService.Settings.IsDarkMode
+            ? ThemeVariant.Dark
+            : ThemeVariant.Light;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
