@@ -12,6 +12,24 @@
 
     <Application.Resources>
         
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="PanelBackground">White</Color>
+                    <Color x:Key="PanelBorder">#FFE0E0E0</Color>
+                    <Color x:Key="MainWindowToolbarBackground">#FFF0F0F0</Color>
+                    <Color x:Key="ToolbarBackground">#FFF0F0F0</Color>
+                </ResourceDictionary>
+                
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="PanelBackground">#FF2D2D2D</Color>
+                    <Color x:Key="PanelBorder">#FF5A5A5A</Color>
+                    <Color x:Key="MainWindowToolbarBackground">#FF2D2D2D</Color>
+                    <Color x:Key="ToolbarBackground">#FF3D3D3D</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        
         <FontFamily x:Key="FluentIconsFont">
             avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons
         </FontFamily>
@@ -34,10 +52,11 @@
         
         <FluentTheme>
             <FluentTheme.Palettes>
-            <ColorPaletteResources x:Key="Light" Accent="#ff0073cf" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ffcccccc" BaseMedium="#ff898989" BaseMediumHigh="#ff5d5d5d" BaseMediumLow="#ff737373" ChromeAltLow="#ff5d5d5d" ChromeBlackHigh="Black" ChromeBlackLow="#ffcccccc" ChromeBlackMedium="#ff5d5d5d" ChromeBlackMediumLow="#ff898989" ChromeDisabledHigh="#ffcccccc" ChromeDisabledLow="#ff898989" ChromeGray="#ff737373" ChromeHigh="#ffcccccc" ChromeLow="#ffececec" ChromeMedium="#ffe6e6e6" ChromeMediumLow="#ffececec" ChromeWhite="White" ListLow="#ffe6e6e6" ListMedium="#ffcccccc" RegionColor="White" />
-            <ColorPaletteResources x:Key="Dark" Accent="#ff0073cf" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff666666" BaseMedium="#ffb3b3b3" BaseMediumHigh="#ffc6c6c6" BaseMediumLow="#ff8c8c8c" ChromeAltLow="#ffc6c6c6" ChromeBlackHigh="Black" ChromeBlackLow="#ffc6c6c6" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff666666" ChromeDisabledLow="#ffb3b3b3" ChromeGray="#ffa0a0a0" ChromeHigh="#ffa0a0a0" ChromeLow="#ff2d2d2d" ChromeMedium="#ff3b3b3b" ChromeMediumLow="#ff585858" ChromeWhite="White" ListLow="#ff3b3b3b" ListMedium="#ff666666" RegionColor="#ff333333" />
-        </FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#ff0073cf" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ffcccccc" BaseMedium="#ff898989" BaseMediumHigh="#ff5d5d5d" BaseMediumLow="#ff737373" ChromeAltLow="#ff5d5d5d" ChromeBlackHigh="Black" ChromeBlackLow="#ffcccccc" ChromeBlackMedium="#ff5d5d5d" ChromeBlackMediumLow="#ff898989" ChromeDisabledHigh="#ffcccccc" ChromeDisabledLow="#ff898989" ChromeGray="#ff737373" ChromeHigh="#ffcccccc" ChromeLow="#ffececec" ChromeMedium="#ffe6e6e6" ChromeMediumLow="#ffececec" ChromeWhite="White" ListLow="#ffe6e6e6" ListMedium="#ffcccccc" RegionColor="White" />
+                <ColorPaletteResources x:Key="Dark" Accent="#ff0073cf" AltHigh="#FF2D2D30" AltLow="#FF2D2D30" AltMedium="#FF2D2D30" AltMediumHigh="#FF2D2D30" AltMediumLow="#FF2D2D30" BaseHigh="White" BaseLow="#ff666666" BaseMedium="#ffb3b3b3" BaseMediumHigh="#ffc6c6c6" BaseMediumLow="#ff8c8c8c" ChromeAltLow="#ffc6c6c6" ChromeBlackHigh="Black" ChromeBlackLow="#ffc6c6c6" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff666666" ChromeDisabledLow="#ffb3b3b3" ChromeGray="#ffa0a0a0" ChromeHigh="#ffa0a0a0" ChromeLow="#ff2d2d2d" ChromeMedium="#ff3b3b3b" ChromeMediumLow="#ff585858" ChromeWhite="White" ListLow="#ff3b3b3b" ListMedium="#ff666666" RegionColor="#ff333333" />
+            </FluentTheme.Palettes>
         </FluentTheme>
+        
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         
     </Application.Styles>

@@ -17,7 +17,7 @@
     
     <StackPanel>
         
-        <Border Background="{DynamicResource SystemBaseLowColor}"
+        <Border Background="{DynamicResource PanelBorder}"
                 Classes="WithDynamicCorner"
                 Classes.expanded="{Binding IsExpanded}"
                 Padding="10"
@@ -52,10 +52,10 @@
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource SystemChromeLowColor}"
+        <Border Background="{DynamicResource PanelBackground}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderBrush="{DynamicResource PanelBorder}"
                 IsVisible="{Binding IsExpanded}">
             
             <ItemsControl ItemsSource="{Binding StimChannels}">

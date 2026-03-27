@@ -21,7 +21,7 @@
     <StackPanel>
         <Border Classes="Header"
                 Classes.expanded="{Binding IsExpanded}"
-                Background="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBorder}"
                 Padding="10"
                 Margin="0">
             <DockPanel>
@@ -54,10 +54,10 @@
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource SystemChromeLowColor}"
+        <Border Background="{DynamicResource PanelBackground}"
             CornerRadius="0 0 15 15"
             BorderThickness="2"
-            BorderBrush="{DynamicResource SystemBaseLowColor}"
+            BorderBrush="{DynamicResource PanelBorder}"
             IsVisible="{Binding IsExpanded}">
             
             <StackPanel HorizontalAlignment="Center"

@@ -9,7 +9,7 @@
         <Grid RowDefinitions="Auto,*">
             
             <Border Grid.Row="0"
-                    Background="{DynamicResource SystemBaseLowColor}"
+                    Background="{DynamicResource PanelBorder}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
                 <TextBlock Text="About"
@@ -19,9 +19,9 @@
             </Border>
             
             <Border Grid.Row="1"
-                    Background="{DynamicResource SystemChromeLowColor}"
+                    Background="{DynamicResource PanelBackground}"
                     CornerRadius="0 0 15 15"
-                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="2">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -43,7 +43,8 @@
                                    TextAlignment="Center"
                                    HorizontalAlignment="Center"/>
 
-                        <Separator Margin="0"/>
+                        <Border BorderBrush="{DynamicResource PanelBorder}"
+                                BorderThickness="1"/>
                         
                         <Grid ColumnDefinitions="*,*">
                             

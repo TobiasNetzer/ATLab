@@ -28,7 +28,7 @@
     <Grid RowDefinitions="*,Auto">
         
         <Border Grid.Row="0" 
-                Background="{DynamicResource SystemChromeLowColor}"
+                Background="{DynamicResource MainWindowToolbarBackground}"
                 Height="50"
                 VerticalAlignment="Top"/>
         
@@ -64,7 +64,7 @@
         </TabControl>
         
         <Border Grid.Row="1"
-        Background="{DynamicResource SystemChromeLowColor}"
+        Background="{DynamicResource MainWindowToolbarBackground}"
         Height="40">
 
             <Grid ColumnDefinitions="Auto,*">

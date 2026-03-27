@@ -10,7 +10,7 @@
         <Border Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Background="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBorder}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Device Manager"
@@ -21,8 +21,8 @@
         
         <Border Grid.Row="1"
                 Grid.Column="0"
-                Background="{DynamicResource SystemChromeLowColor}"
-                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBackground}"
+                BorderBrush="{DynamicResource PanelBorder}"
                 BorderThickness="2"
                 CornerRadius="0 0 0 15">
 
@@ -184,8 +184,8 @@
         
         <Border Grid.Row="1"
                 Grid.Column="1"
-                Background="{DynamicResource SystemChromeLowColor}"
-                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBackground}"
+                BorderBrush="{DynamicResource PanelBorder}"
                 BorderThickness="2"
                 CornerRadius="0 0 15 0"
                 Padding="10">

@@ -11,7 +11,7 @@
         <Grid RowDefinitions="Auto,*">
 
             <Border Grid.Row="0"
-                    Background="{DynamicResource SystemBaseLowColor}"
+                    Background="{DynamicResource PanelBorder}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
                 <TextBlock Text="Project Documentation"
@@ -21,15 +21,15 @@
             </Border>
 
             <Border Grid.Row="1"
-                    Background="{DynamicResource SystemChromeLowColor}"
+                    Background="{DynamicResource PanelBackground}"
                     CornerRadius="0 0 15 15"
-                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="2">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               Padding="10">
 
-                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,Auto">
+                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,*">
                         
                         <StackPanel Grid.Row="0" Spacing="2">
                             <TextBlock Text="Test Documentation"/>
@@ -60,63 +60,85 @@
 
                         </Grid>
                         
-                        <Separator Grid.Row="4" Height="2"/>
+                        <Border Grid.Row="4" BorderBrush="{DynamicResource PanelBorder}"
+                                BorderThickness="1"/>
                         
-                        <StackPanel Grid.Row="6">
+                        <Grid Grid.Row="6"
+                              ColumnDefinitions="590,Auto">
+                        
+                        
+                            <StackPanel Grid.Column="0"
+                                        Margin="0,0,0,40">
                             
-                            <TextBlock Text="Images"
-                                       FontSize="16"
-                                       FontWeight="Bold"
-                                       Margin="0 0 0 10"/>
+                                <TextBlock Text="Images"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 10"/>
 
-                            <Button Content="Add Image"
-                                    Command="{Binding AddImageCommand}"
-                                    HorizontalAlignment="Left"
-                                    Margin="0 0 0 10"/>
+                                <Button Content="Add Image"
+                                        Command="{Binding AddImageCommand}"
+                                        HorizontalAlignment="Left"
+                                        Margin="0 0 0 10"/>
+                                
+                                <ItemsControl ItemsSource="{Binding Images}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"
+                                                       ItemSpacing="10"
+                                                       LineSpacing="10"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Gray"
+                                                    BorderThickness="1"
+                                                    Padding="5"
+                                                    CornerRadius="5">
+                                                <StackPanel>
+                                                    
+                                                    <Button x:CompileBindings="False" 
+                                                            Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Padding="0"
+                                                            BorderThickness="0"
+                                                            Background="Transparent"
+                                                            IsEnabled="{Binding Thumbnail, Converter={x:Static conv:ObjectConverters.IsNotNull}}">
+
+                                                        <Image Source="{Binding Thumbnail}"
+                                                               Width="120"
+                                                               Height="120"
+                                                               Stretch="UniformToFill"/>
+                                                    </Button>
+                                                    
+                                                    <Button x:CompileBindings="False" 
+                                                            Content="Remove"
+                                                            HorizontalAlignment="Center"
+                                                            Margin="0 5 0 0"
+                                                            Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
+                                                            CommandParameter="{Binding Path}"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
                             
-                            <ItemsControl ItemsSource="{Binding Images}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" ItemSpacing="10"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                            <StackPanel Grid.Column="1">
+                                
+                                <TextBlock Text="Documents"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 10"/>
 
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="Gray"
-                                                BorderThickness="1"
-                                                Padding="5"
-                                                CornerRadius="5">
-                                            <StackPanel>
-                                                
-                                                <Button x:CompileBindings="False" 
-                                                        Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="0"
-                                                        BorderThickness="0"
-                                                        Background="Transparent"
-                                                        IsEnabled="{Binding Thumbnail, Converter={x:Static conv:ObjectConverters.IsNotNull}}">
-
-                                                    <Image Source="{Binding Thumbnail}"
-                                                           Width="120"
-                                                           Height="120"
-                                                           Stretch="UniformToFill"/>
-                                                </Button>
-                                                
-                                                <Button x:CompileBindings="False" 
-                                                        Content="Remove"
-                                                        HorizontalAlignment="Center"
-                                                        Margin="0 5 0 0"
-                                                        Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
-                                                        CommandParameter="{Binding Path}"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                        </StackPanel>
-
+                                <Button Content="Add Document"
+                                        Command="{Binding AddImageCommand}"
+                                        HorizontalAlignment="Left"
+                                        Margin="0 0 0 10"/>
+                                
+                            </StackPanel>
+                            
+                        </Grid>
                     </Grid>
 
                 </ScrollViewer>

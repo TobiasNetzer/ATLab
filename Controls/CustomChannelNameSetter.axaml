@@ -7,7 +7,7 @@
     
     <Grid RowDefinitions="Auto, *">
     
-        <Border Grid.Row="0" Background="{DynamicResource SystemBaseLowColor}"
+        <Border Grid.Row="0" Background="{DynamicResource PanelBorder}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
                 
@@ -17,10 +17,10 @@
                        HorizontalAlignment="Center"/>
         </Border>
         
-        <Border Grid.Row="1" Background="{DynamicResource SystemChromeLowColor}"
+        <Border Grid.Row="1" Background="{DynamicResource PanelBackground}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource SystemBaseLowColor}">
+                BorderBrush="{DynamicResource PanelBorder}">
         <StackPanel 
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">

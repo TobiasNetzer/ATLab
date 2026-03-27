@@ -8,7 +8,7 @@
     <Grid RowDefinitions="auto, *">
         
         <Border Grid.Row="0"
-                Background="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBorder}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
                             
@@ -20,10 +20,10 @@
         
         
         <Border Grid.Row="1"
-                Background="{DynamicResource SystemChromeLowColor}"
+                Background="{DynamicResource PanelBackground}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource SystemBaseLowColor}">
+                BorderBrush="{DynamicResource PanelBorder}">
             
             <Grid ColumnDefinitions="auto, *"
                   RowDefinitions="auto, *">
@@ -31,7 +31,7 @@
                 <StackPanel Grid.Column="0"
                             Grid.Row="0">
                     
-                    <Border Background="{DynamicResource SystemListLowColor}"
+                    <Border Background="{DynamicResource ToolbarBackground}"
                             CornerRadius="5"
                             Margin="10 10 15 0">
                         
@@ -85,7 +85,7 @@
                              SelectedItem="{Binding SelectedScript , Mode=TwoWay}"
                              Margin="0 2 5 0"
                              Width="500"
-                             Background="{DynamicResource SystemListLowColor}"
+                             Background="{DynamicResource ToolbarBackground}"
                              CornerRadius="10">
                         
                         <ListBox.ItemTemplate>

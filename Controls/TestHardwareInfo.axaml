@@ -8,7 +8,7 @@
     <Grid RowDefinitions="Auto,*">
             
         <Border Grid.Row="0"
-                Background="{DynamicResource SystemBaseLowColor}"
+                Background="{DynamicResource PanelBorder}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Test Hardware Info"
@@ -18,9 +18,9 @@
         </Border>
             
         <Border Grid.Row="1"
-                Background="{DynamicResource SystemChromeLowColor}"
+                Background="{DynamicResource PanelBackground}"
                 CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderBrush="{DynamicResource PanelBorder}"
                 BorderThickness="2">
                     
             <StackPanel Margin="15"
@@ -37,7 +37,7 @@
                     <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
                 </StackPanel>
 
-                <Border BorderBrush="{DynamicResource SystemBaseLowColor}"
+                <Border BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"/>
 
                 <StackPanel Spacing="5">
@@ -47,7 +47,7 @@
                     <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
                 </StackPanel>
                 
-                <Border BorderBrush="{DynamicResource SystemBaseLowColor}"
+                <Border BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"/>
                 
                 <StackPanel Spacing="5">
