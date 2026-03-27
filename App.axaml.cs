@@ -160,6 +160,7 @@ public class App : Application
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();
+        services.AddSingleton<DocumentLauncherService>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();

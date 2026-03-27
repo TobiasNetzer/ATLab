@@ -24,10 +24,13 @@ public partial class ProjectDocumentation : ObservableObject
     partial void OnKnownIssuesDocumentationChanged(string value) => DocumentationChanged?.Invoke();
 
     public ObservableCollection<string> ImagePaths { get; set; } = new();
+    
+    public ObservableCollection<DocumentEntry> Documents { get; set; } = new();
 
     public ProjectDocumentation()
     {
         ImagePaths.CollectionChanged += (_, __) => DocumentationChanged?.Invoke();
+        Documents.CollectionChanged += (_, __) => DocumentationChanged?.Invoke();
     }
 
     public void CopyFrom(ProjectDocumentation other)
@@ -39,6 +42,10 @@ public partial class ProjectDocumentation : ObservableObject
         ImagePaths.Clear();
         foreach (var path in other.ImagePaths)
             ImagePaths.Add(path);
+        
+        Documents.Clear();
+        foreach (var path in other.Documents)
+            Documents.Add(path);
     }
 
     public void ResetToDefault()
@@ -47,5 +54,6 @@ public partial class ProjectDocumentation : ObservableObject
         RequiredGearDocumentation = string.Empty;
         KnownIssuesDocumentation = string.Empty;
         ImagePaths.Clear();
+        Documents.Clear();
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Services;
 using ATLab.Models;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,19 +15,22 @@ namespace ATLab.ViewModels;
 public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;
+    private readonly DocumentLauncherService _documentLauncherService;
     private readonly IErrorService _errorService;
 
     public ProjectDocumentation ProjectDocumentation { get; }
 
     public ObservableCollection<ImagePreviewViewModel> Images { get; } = new();
-
+    
     public ProjectDocumentationViewModel(
         IFileDialogService fileDialogService,
         ProjectDocumentation projectDocumentation,
+        DocumentLauncherService documentLauncherService,
         IErrorService errorService)
     {
         _fileDialogService = fileDialogService;
         ProjectDocumentation = projectDocumentation;
+        _documentLauncherService = documentLauncherService;
         _errorService = errorService;
         
         ProjectDocumentation.ImagePaths.CollectionChanged += OnImagePathsChanged;
@@ -115,5 +119,35 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         if (vm == null) return;
         vm.Dispose();
         Images.Remove(vm);
+    }
+    
+    [RelayCommand]
+    private async Task AddDocument()
+    {
+        var file = await _fileDialogService.OpenFileAsync(
+            "Select Document",
+            new[] { "*" }
+        );
+
+        if (file != null)
+        {
+            var path = file.Path.LocalPath;
+            ProjectDocumentation.Documents.Add(new DocumentEntry { Path = path });
+        }
+    }
+    
+    [RelayCommand]
+    private void RemoveDocument(DocumentEntry entry)
+    {
+        ProjectDocumentation.Documents.Remove(entry);
+    }
+    
+    [RelayCommand]
+    private async Task OpenDocument(DocumentEntry entry)
+    {
+        if (!File.Exists(entry.Path))
+            _errorService.AddError($"File not found: {entry.Path}");
+        
+        await _documentLauncherService.OpenDocumentAsync(entry.Path);
     }
 }

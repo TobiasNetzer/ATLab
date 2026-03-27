@@ -97,12 +97,14 @@
                                                     CornerRadius="5">
                                                 <StackPanel>
                                                     
-                                                    <Button x:CompileBindings="False" 
+                                                    <Button Classes="no-effects"
+                                                            x:CompileBindings="False" 
                                                             Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
                                                             CommandParameter="{Binding}"
                                                             Padding="0"
                                                             BorderThickness="0"
                                                             Background="Transparent"
+                                                            Cursor="Hand"
                                                             IsEnabled="{Binding Thumbnail, Converter={x:Static conv:ObjectConverters.IsNotNull}}">
 
                                                         <Image Source="{Binding Thumbnail}"
@@ -111,10 +113,17 @@
                                                                Stretch="UniformToFill"/>
                                                     </Button>
                                                     
-                                                    <Button x:CompileBindings="False" 
-                                                            Content="Remove"
+                                                    <Button Classes="no-effects"
+                                                            x:CompileBindings="False" 
+                                                            Content="✕"
                                                             HorizontalAlignment="Center"
                                                             Margin="0 5 0 0"
+                                                            Background="Transparent"
+                                                            BorderThickness="0"
+                                                            Foreground="Crimson"
+                                                            FontWeight="Bold"
+                                                            Padding="0"
+                                                            Cursor="Hand"
                                                             Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
                                                             CommandParameter="{Binding Path}"/>
                                                 </StackPanel>
@@ -132,19 +141,63 @@
                                            Margin="0 0 0 10"/>
 
                                 <Button Content="Add Document"
-                                        Command="{Binding AddImageCommand}"
+                                        Command="{Binding AddDocumentCommand}"
                                         HorizontalAlignment="Left"
                                         Margin="0 0 0 10"/>
                                 
+                                
+                                
+                                <ItemsControl ItemsSource="{Binding ProjectDocumentation.Documents}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,10,Auto"
+                                                  Margin="5">
+
+                                                <Button Grid.Column="0" Classes="no-effects"
+                                                        x:CompileBindings="False"
+                                                        Command="{Binding $parent[UserControl].DataContext.OpenDocumentCommand,
+                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="Transparent"
+                                                        BorderThickness="0"
+                                                        Padding="0"
+                                                        MaxWidth="500"
+                                                        Cursor="Hand">
+                    
+                                                    <TextBlock Text="{Binding FileName}"
+                                                               TextWrapping="NoWrap"
+                                                               TextTrimming="CharacterEllipsis">
+                                                        <TextBlock.Styles>
+                                                            <Style Selector="TextBlock:pointerover">
+                                                                <Setter Property="TextDecorations" Value="Underline"/>
+                                                            </Style>
+                                                        </TextBlock.Styles>
+                                                    </TextBlock>
+
+                                                </Button>
+                                                
+                                                <Button Grid.Column="2" Classes="no-effects"
+                                                        x:CompileBindings="False"
+                                                        Content="✕"
+                                                        Command="{Binding $parent[UserControl].DataContext.RemoveDocumentCommand,
+                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="Transparent"
+                                                        BorderThickness="0"
+                                                        Foreground="Crimson"
+                                                        FontWeight="Bold"
+                                                        Padding="0"
+                                                        Cursor="Hand"
+                                                        VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
-                            
                         </Grid>
                     </Grid>
-
                 </ScrollViewer>
-
             </Border>
-
         </Grid>
         
         <Border IsVisible="{Binding SelectedImage, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
@@ -156,22 +209,21 @@
 
             <Grid>
                 
-                <Button BorderThickness="0"
-                        Background="Transparent"
+                <Button Classes="no-effects"
+                        BorderThickness="0"
+                        Background="{DynamicResource ImageBackground}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="10"
                         Command="{Binding ClosePreviewCommand}">
+                    
 
                     <Image Source="{Binding SelectedImage}"
                            Stretch="Uniform"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
                 </Button>
-                
             </Grid>
         </Border>
-
     </Grid>
-
 </UserControl>
