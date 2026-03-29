@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using ATLab.Models;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace ATLab.CTIA;
@@ -44,6 +45,7 @@ public enum RespCmd : ushort
     RESP_BITFIELD_EXT_STIM,
     RESP_EXT_PROBE_IN_STATE,
     RESP_EXT_TRIGGER_STATE,
+    RESP_EXECUTE_SELFTEST,
     RESP_END = 0x01FF
 }
 
@@ -64,7 +66,7 @@ public enum SetCmd : ushort
     SET_EXT_STIM_CH,
     SET_BITFIELD_EXT_STIM_CH,
     SET_EXT_PROBE_IN,
-    SET_EXT_TRIGGER,
+    SET_ANALOG_BUS_DETECT,
     SET_END = 0x02FF
 }
 
@@ -113,7 +115,8 @@ public enum GetCmd : ushort
 // -------------------------
 public enum ConfCmd : ushort
 {
-    CONF_AVAILABLE_MEAS_CH = 0x0501,
+    CONF_SERIAL_NUMBER = 0x0501,
+    CONF_AVAILABLE_MEAS_CH,
     CONF_AVAILABLE_STIM_CH,
     CONF_AVAILABLE_EXT_STIM_CH,
     CONF_AVAILABLE_UART,
@@ -127,7 +130,8 @@ public enum ConfCmd : ushort
 // -------------------------
 public enum ExecCmd : ushort
 {
-    UART_TRANSMIT = 0x0601,
+    EXECUTE_SELFTEST = 0x0601,
+    UART_TRANSMIT,
     EXEC_END = 0x06FF
 }
 
@@ -136,7 +140,7 @@ public enum ExecCmd : ushort
 // -------------------------
 public enum DbgCmd : ushort
 {
-    EXAMPLE_DBG_CMD = 0x0701,
+    DBG_ENTER_BOOTLOADER = 0x0701,
     DBG_END = 0x07FF
 }
 
@@ -469,6 +473,77 @@ public class CtiaCommand
         
         var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<bool>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    #endregion
+    
+    #region EXEC_CMD
+    
+    public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)ExecCmd.EXECUTE_SELFTEST
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame, 10000);
+
+        if ((RespCmd)responseFrame.Command != RespCmd.RESP_EXECUTE_SELFTEST)
+        {
+            return OperationResult<TestHardwareDiagnostics>.Failure((CtiaStatus)responseFrame.Payload[0] == CtiaStatus.CTIA_FAIL
+                ? "Analog Bus is permanently shorted. Unable to detect defective relays."
+                : $"Unexpected response: CMD:{responseFrame.Command:X4}");
+        }
+        
+
+        // ---------------------------------------------------------
+        // Decode payload: first half = H, second half = L
+        // ---------------------------------------------------------
+
+        var total = responseFrame.PayloadSize;
+        if (total % 2 != 0)
+            return OperationResult<TestHardwareDiagnostics>.Failure("Invalid payload size for selftest bitfields.");
+
+        var half = total / 2;
+
+        var defectiveH = responseFrame.Payload.Take(half).ToArray();
+        var defectiveL = responseFrame.Payload.Skip(half).Take(half).ToArray();
+
+        var diagnostics = new TestHardwareDiagnostics();
+
+        // ---------------------------------------------------------
+        // Parse high‑side relays K201, K202, ...
+        // ---------------------------------------------------------
+        for (var byteIndex = 0; byteIndex < defectiveH.Length; byteIndex++)
+        {
+            var b = defectiveH[byteIndex];
+
+            for (var bit = 0; bit < 8; bit++)
+            {
+                if ((b & (1 << bit)) == 0) continue;
+                
+                var relayNumber = byteIndex * 8 + bit + 1; // 1‑based
+                diagnostics.DefectiveRelaysMatrixH.Add($"K2{relayNumber:00}");
+            }
+        }
+
+        // ---------------------------------------------------------
+        // Parse low‑side relays K301, K302, ...
+        // ---------------------------------------------------------
+        for (var byteIndex = 0; byteIndex < defectiveL.Length; byteIndex++)
+        {
+            var b = defectiveL[byteIndex];
+
+            for (var bit = 0; bit < 8; bit++)
+            {
+                if ((b & (1 << bit)) == 0) continue;
+                
+                var relayNumber = byteIndex * 8 + bit + 1; // 1‑based
+                diagnostics.DefectiveRelaysMatrixL.Add($"K3{relayNumber:00}");
+            }
+        }
+
+        return OperationResult<TestHardwareDiagnostics>.Success(diagnostics);
     }
     
     #endregion

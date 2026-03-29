@@ -8,17 +8,24 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
     
         <Grid ColumnDefinitions="*, Auto, Auto, *"
-              RowDefinitions="Auto, *"
+              RowDefinitions="Auto, Auto, *"
               Margin="0 10"
-              ColumnSpacing="10">
+              ColumnSpacing="10"
+              RowSpacing="10">
             
             <controls:TestHardwareInterface Grid.Row="0"
-                                            Grid.RowSpan="2"
+                                            Grid.RowSpan="3"
                                             Grid.Column="1"/>  
             
             <controls:TestHardwareInfo Grid.Row="0"
                                        Grid.Column="2"
                                        DataContext="{Binding TestHardwareInfoViewModel}"/> 
+            
+            <controls:TestHardwareDiagnostics Grid.Row="1"
+                                              Grid.Column="2"
+                                              Grid.RowSpan="2"
+                                              VerticalAlignment="Top"
+                                              DataContext="{Binding TestHardwareDiagnosticsViewModel}"/>
             
         </Grid>
     </ScrollViewer>

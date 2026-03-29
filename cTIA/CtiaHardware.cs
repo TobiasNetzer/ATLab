@@ -144,7 +144,19 @@ public class CtiaHardware : ITestHardware
             _ioLock.Release();
         }
     }
-
+    
+    public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
+    {
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ExecuteSelfTest();
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
 
     private async Task<OperationResult> SetStimChannels()
     {

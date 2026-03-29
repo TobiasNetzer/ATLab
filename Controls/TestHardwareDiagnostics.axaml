@@ -1,0 +1,120 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.TestHardwareDiagnostics"
+             x:DataType="vm:TestHardwareDiagnosticsViewModel"
+             Width="300">
+    
+    <Grid RowDefinitions="Auto,*">
+            
+        <Border Grid.Row="0"
+                Background="{DynamicResource PanelBorder}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            <TextBlock Text="Test Hardware Diagnostics"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+            
+        <Border Grid.Row="1"
+                Background="{DynamicResource PanelBackground}"
+                CornerRadius="0 0 15 15"
+                BorderBrush="{DynamicResource PanelBorder}"
+                BorderThickness="2">
+            
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    
+                <StackPanel Margin="15"
+                            HorizontalAlignment="Center"
+                            Spacing="10">
+                    
+                    <StackPanel>
+                        
+                        <TextBlock Text="Warning:"
+                                   FontWeight="Bold"/>
+                                        
+                        <TextBlock Text="Ensure that everything is disconnected from the relay matrix before running the test. Leaving devices connected may cause permanent damage to the test hardware or the connected equipment."
+                                   TextWrapping="Wrap"/>
+                        
+                    </StackPanel>
+                    
+                    <CheckBox Content="I have disconnected everything"
+                              IsChecked="{Binding IsAcknowledged}"/>
+                    
+                    <Button Content="Run Relay Matrix Test"
+                            HorizontalAlignment="Center"
+                            Command="{Binding RunSelfTestCommand}"/>
+                    
+                    <ProgressBar IsIndeterminate="True"
+                                 IsVisible="{Binding IsSelfTestRunning}"
+                                 Height="4"
+                                 Margin="10"/>
+                    
+                    <TextBlock Text="{Binding SelfTestResult}"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"
+                               Foreground="{Binding SelfTestPassed, Converter={StaticResource ResultBrushConverter}}"
+                               IsVisible="{Binding SelfTestResult, Converter={StaticResource StringNotEmptyConverter}}"/>
+                    
+                        
+                    <Grid ColumnDefinitions="*,100,*,100,*"
+                          RowDefinitions="Auto,Auto"
+                          IsVisible="{Binding HasDefectiveRelays}">
+                        
+                        <TextBlock Grid.Column="1"
+                                   Grid.Row="0"
+                                   Text="Matrix H"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                        
+                        <TextBlock Grid.Column="3"
+                                   Grid.Row="0"
+                                   Text="Matrix L"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                        
+                        <ItemsControl Grid.Column="1"
+                                      Grid.Row="1"
+                                      ItemsSource="{Binding DefectiveRelaysMatrixH}"
+                                      Margin="0 10 0 0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"
+                                                 HorizontalAlignment="Center"
+                                                 ColumnSpacing="10"
+                                                 RowSpacing="10"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                        <ItemsControl Grid.Column="3"
+                                      Grid.Row="1"
+                                      ItemsSource="{Binding DefectiveRelaysMatrixL}"
+                                      Margin="0 10 0 0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"
+                                                 HorizontalAlignment="Center"
+                                                 ColumnSpacing="10"
+                                                 RowSpacing="10"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

@@ -23,8 +23,8 @@ public class CtiaCommandFrame
         if (Payload.Length != PayloadSize)
             throw new InvalidOperationException("Parameter PayloadSize does not match actual payload length");
 
-        int frameLength = MinFrameSize + Payload.Length;
-        byte[] bytes = new byte[frameLength];
+        var frameLength = MinFrameSize + Payload.Length;
+        var bytes = new byte[frameLength];
 
         // Header
         bytes[0] = (byte)(Header & 0xFF);
@@ -42,7 +42,7 @@ public class CtiaCommandFrame
         Array.Copy(Payload, 0, bytes, 6, Payload.Length);
 
         // CRC (from byte 2 to second-last)
-        byte[] crcData = bytes[2..(frameLength - 1)];
+        var crcData = bytes[2..(frameLength - 1)];
         bytes[frameLength - 1] = Crc8.Compute(crcData);
 
         return bytes;
@@ -50,7 +50,7 @@ public class CtiaCommandFrame
 
     public override string ToString()
     {
-        string asciiString = Encoding.ASCII.GetString(Payload);
+        var asciiString = Encoding.ASCII.GetString(Payload);
         return $"CMD=0x{Command:X4}, CTRL=0x{ControlByte:X2}, PAYLOAD={asciiString}";
     }
     
@@ -59,36 +59,38 @@ public class CtiaCommandFrame
         if (data == null || data.Length < CtiaCommandFrame.MinFrameSize)
             throw new ArgumentException("Data too short to be a valid frame", nameof(data));
 
-        ushort header = (ushort)(data[0] | (data[1] << 8));
+        var header = (ushort)(data[0] | (data[1] << 8));
         if (header != expectedHeader)
             throw new InvalidOperationException("Invalid frame header");
 
-        byte payloadSize = data[5];
-        int expectedLength = 7 + payloadSize;
+        var payloadSize = data[5];
+        var expectedLength = 7 + payloadSize;
 
         if (data.Length != expectedLength)
             throw new InvalidOperationException("Frame length does not match payload size");
 
-        byte[] crcData = new byte[expectedLength - 3];
+        var crcData = new byte[expectedLength - 3];
         Array.Copy(data, 2, crcData, 0, crcData.Length);
-        byte calculatedCrc = Crc8.Compute(crcData);
-        byte receivedCrc = data[expectedLength - 1];
+        var calculatedCrc = Crc8.Compute(crcData);
+        var receivedCrc = data[expectedLength - 1];
 
         if (calculatedCrc != receivedCrc)
             throw new InvalidOperationException("CRC mismatch");
 
-        ushort command = (ushort)(data[2] | (data[3] << 8));
-        byte control = data[4];
-        byte[] payload = new byte[payloadSize];
+        var command = (ushort)(data[2] | (data[3] << 8));
+        var control = data[4];
+        var payload = new byte[payloadSize];
         if (payloadSize > 0)
             Array.Copy(data, 6, payload, 0, payloadSize);
 
-        CtiaCommandFrame frame = new CtiaCommandFrame();
-        frame.Command = command;
-        frame.ControlByte = control;
-        frame.PayloadSize = payloadSize;
-        frame.Payload = payload;
-        frame.Crc = receivedCrc;
+        CtiaCommandFrame frame = new CtiaCommandFrame
+        {
+            Command = command,
+            ControlByte = control,
+            PayloadSize = payloadSize,
+            Payload = payload,
+            Crc = receivedCrc
+        };
 
         return frame;
     }

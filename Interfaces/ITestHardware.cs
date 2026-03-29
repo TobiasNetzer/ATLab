@@ -15,4 +15,5 @@ public interface ITestHardware
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> UpdateRelayStates();
     Task<OperationResult> ClearRelayStates();
+    Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest();
 }

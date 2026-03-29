@@ -44,4 +44,10 @@ public class TestHardwareSimulator : ITestHardware
         await Task.CompletedTask;
         return OperationResult.Success();
     }
+
+    public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
+    {
+        await Task.CompletedTask;
+        return OperationResult<TestHardwareDiagnostics>.Success(new TestHardwareDiagnostics());
+    }
 }

@@ -3,9 +3,14 @@ namespace ATLab.ViewModels;
 public class HardwareTabViewModel : ViewModelBase
 {
     public TestHardwareInfoViewModel TestHardwareInfoViewModel { get; }
-    public HardwareTabViewModel(TestHardwareInfoViewModel testHardwareInfoViewModel)
+    public TestHardwareDiagnosticsViewModel TestHardwareDiagnosticsViewModel { get; }
+    
+    public HardwareTabViewModel(
+        TestHardwareInfoViewModel testHardwareInfoViewModel,
+        TestHardwareDiagnosticsViewModel testHardwareDiagnosticsViewModel)
     {
         TestHardwareInfoViewModel = testHardwareInfoViewModel;
+        TestHardwareDiagnosticsViewModel = testHardwareDiagnosticsViewModel;
         
         Title = "Hardware";
     }
