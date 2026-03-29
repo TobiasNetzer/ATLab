@@ -24,15 +24,17 @@
             BorderThickness="2"
             BorderBrush="{DynamicResource PanelBorder}">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          Padding="0 10">
-                <Grid ColumnDefinitions="*,10,*"
-                      RowDefinitions="Auto,10,*"
-                      Margin="10 0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid ColumnDefinitions="*,*"
+                      RowDefinitions="Auto,Auto"
+                      ColumnSpacing="10"
+                      RowSpacing="10"
+                      Margin="10">
                     
                     <Border Grid.Column="0"
                             Grid.Row="0"
                             Grid.RowSpan="2"
+                            VerticalAlignment="Top"
                             BorderThickness="2"
                             CornerRadius="5"
                             BorderBrush="{DynamicResource PanelBorder}"
@@ -67,17 +69,16 @@
 
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBox Width="315"
-                                         Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"
-                                         IsEnabled="{Binding CanSaveTestResult}"/>
+                                         Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"/>
                                 <Button Content="..."
-                                        Command="{Binding SelectSaveTestResultFilePathCommand}"
-                                        IsEnabled="{Binding CanSaveTestResult}"/>
+                                        Command="{Binding SelectSaveTestResultFilePathCommand}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
                     
-                    <Border Grid.Column="2"
+                    <Border Grid.Column="1"
                             Grid.Row="0"
+                            VerticalAlignment="Top"
                             BorderThickness="2"
                             CornerRadius="5"
                             BorderBrush="{DynamicResource PanelBorder}"
@@ -89,7 +90,9 @@
                               RowSpacing="10"
                               HorizontalAlignment="Center">
                             
-                            <TextBlock Grid.ColumnSpan="2"
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
                                        Text="General Settings"
                                        HorizontalAlignment="Center"
                                        FontWeight="Bold"
@@ -119,6 +122,70 @@
                                            Maximum="10"
                                            Increment="1"
                                            Width="120"/>
+                        </Grid>
+                    </Border>
+                    
+                    <Border Grid.Column="1"
+                            Grid.Row="1"
+                            BorderThickness="2"
+                            CornerRadius="5"
+                            BorderBrush="{DynamicResource PanelBorder}"
+                            Padding="10">
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                              ColumnDefinitions="Auto, Auto"
+                              ColumnSpacing="10"
+                              RowSpacing="10"
+                              HorizontalAlignment="Center">
+                            
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="Serial Number Validation"
+                                       HorizontalAlignment="Center"
+                                       FontWeight="Bold"/>
+                            
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Content="Enable Serial Number Validation"/>
+                            
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="Length"
+                                       VerticalAlignment="Center"/>
+                        
+                            <TextBox Grid.Row="2"
+                                     Grid.Column="1"
+                                     Width="100"/>
+                            
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       Text="Starts With"
+                                       VerticalAlignment="Center"/>
+                        
+                            <TextBox Grid.Row="3"
+                                     Grid.Column="1"
+                                     Width="100"/>
+                            
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Text="Ends With"
+                                       VerticalAlignment="Center"/>
+                        
+                            <TextBox Grid.Row="4"
+                                     Grid.Column="1"
+                                     Width="100"/>
+                        
+                            <TextBlock Grid.Row="5"
+                                       Grid.Column="0"
+                                       Text="Contains"
+                                       VerticalAlignment="Center"/>
+                        
+                            <TextBox Grid.Row="5"
+                                     Grid.Column="1"
+                                     Width="100"/>
+                            
                         </Grid>
                     </Border>
                 </Grid>
