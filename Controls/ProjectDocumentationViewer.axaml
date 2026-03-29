@@ -26,10 +26,10 @@
                     BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="2">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              Padding="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,*">
+                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,*"
+                          Margin="10">
                         
                         <StackPanel Grid.Row="0" Spacing="2">
                             <TextBlock Text="Test Documentation"/>
@@ -67,8 +67,7 @@
                               ColumnDefinitions="590,Auto">
                         
                         
-                            <StackPanel Grid.Column="0"
-                                        Margin="0,0,0,40">
+                            <StackPanel Grid.Column="0">
                             
                                 <TextBlock Text="Images"
                                            FontSize="16"
