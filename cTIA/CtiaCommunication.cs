@@ -21,6 +21,9 @@ namespace ATLab.CTIA
         {
             try
             {
+                // This reconnection attempt is not functioning on Linux.
+                // It seems to be a problem with the serial port library that doesn't handle the disconnect properly and doesn't update
+                // its state to 'disconnected'
                 if (!_communication.IsConnected)
                 {
                     var reconnectResult = await _communication.ReconnectAsync();
