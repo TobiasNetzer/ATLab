@@ -86,6 +86,7 @@ public partial class TestHardwareDiagnosticsViewModel : ViewModelBase
         finally
         {
             IsSelfTestRunning = false;
+            IsAcknowledged = false;
         }
     }
 }
