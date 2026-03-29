@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class ScriptsManagerViewModel : ViewModelBase
+public partial class ScriptingTabViewModel : ViewModelBase
 {
     private readonly IScriptService _scriptService;
     private readonly IScriptRepository _repository;
@@ -19,7 +19,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
     [ObservableProperty]
     private ScriptItemViewModel? _selectedScript;
 
-    public ScriptsManagerViewModel(
+    public ScriptingTabViewModel(
         IScriptService scriptService,
         IScriptRepository repository,
         IMessageBoxService messageBoxService)
@@ -28,7 +28,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
         _repository = repository;
         _messageBoxService = messageBoxService;
 
-        Title = "Scripts";
+        Title = "Scripting";
     }
 
     private bool CanExecute() => SelectedScript != null;
@@ -47,7 +47,7 @@ public partial class ScriptsManagerViewModel : ViewModelBase
 
     private void UpdateTitle()
     {
-        Title = Scripts.Any(s => s.IsDirty) ? "Scripts*" : "Scripts";
+        Title = Scripts.Any(s => s.IsDirty) ? "Scripting*" : "Scripting";
     }
 
     [RelayCommand]

@@ -1,8 +1,8 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="ATLab.Controls.ScriptManager"
+             x:Class="ATLab.Controls.ScriptEditor"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
-             x:DataType="vm:ScriptsManagerViewModel"
+             x:DataType="vm:ScriptingTabViewModel"
              Width="1200">
     
     <Grid RowDefinitions="auto, *">

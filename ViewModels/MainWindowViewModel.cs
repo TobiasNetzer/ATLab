@@ -27,7 +27,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public TestingTabViewModel TestingTab { get; }
     public ConfigTabViewModel ConfigTab { get; }
-    public ScriptsManagerViewModel ScriptTab { get; }
+    public ScriptingTabViewModel ScriptTab { get; }
     public AboutTabViewModel AboutTab { get; }
     public HardwareTabViewModel HardwareTab { get; }
     public DocumentationTabViewModel DocumentationTab { get; }
@@ -53,7 +53,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
-        ScriptsManagerViewModel scriptsManagerViewModel,
+        ScriptingTabViewModel scriptingTabViewModel,
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
@@ -67,7 +67,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         TestingTab = testingTab;
         ConfigTab = configTab;
-        ScriptTab = scriptsManagerViewModel;
+        ScriptTab = scriptingTabViewModel;
         AboutTab = aboutTab;
         HardwareTab = hardwareTab;
         DocumentationTab = documentationTab;

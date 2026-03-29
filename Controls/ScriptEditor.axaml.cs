@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
-public partial class ScriptManager : UserControl
+public partial class ScriptEditor : UserControl
 {
-    public ScriptManager()
+    public ScriptEditor()
     {
         InitializeComponent();
     }

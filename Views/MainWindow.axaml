@@ -51,7 +51,7 @@
                 <DataTemplate DataType="vm:DocumentationTabViewModel">
                     <views:DocumentationTab/>
                 </DataTemplate>
-                <DataTemplate DataType="vm:ScriptsManagerViewModel">
+                <DataTemplate DataType="vm:ScriptingTabViewModel">
                     <views:ScriptTab/>
                 </DataTemplate>
                 <DataTemplate DataType="vm:HardwareTabViewModel">

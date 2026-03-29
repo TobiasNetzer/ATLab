@@ -184,7 +184,7 @@ public class App : Application
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<TestingTabViewModel>();
         services.AddSingleton<ConfigTabViewModel>();
-        services.AddSingleton<ScriptsManagerViewModel>();
+        services.AddSingleton<ScriptingTabViewModel>();
         services.AddSingleton<AboutTabViewModel>();
         services.AddSingleton<HardwareTabViewModel>();
         services.AddSingleton<DocumentationTabViewModel>();

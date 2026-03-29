@@ -3,9 +3,9 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Views.ScriptTab"
-             x:DataType="vm:ScriptsManagerViewModel">
+             x:DataType="vm:ScriptingTabViewModel">
     
-        <controls:ScriptManager DataContext="{Binding }"
+        <controls:ScriptEditor DataContext="{Binding }"
                                 Margin="10"/>
     
 </UserControl>
