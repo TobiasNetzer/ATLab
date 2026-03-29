@@ -28,46 +28,61 @@
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-                    <Grid RowDefinitions="Auto,10,Auto,10,Auto,10,*"
+                    <Grid RowDefinitions="Auto,Auto,Auto,*"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="10"
+                          RowSpacing="10"
                           Margin="10">
                         
-                        <StackPanel Grid.Row="0" Spacing="2">
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Spacing="2">
+                            
                             <TextBlock Text="Test Documentation"/>
+                            
                             <TextBox Text="{Binding ProjectDocumentation.TestDocumentation, UpdateSourceTrigger=LostFocus}"
                                      AcceptsReturn="True"
                                      AcceptsTab="True"
                                      Height="200"/>
+                            
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="0"
+                                    Spacing="2">
+                            
+                            <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+                            
+                            <TextBox Text="{Binding ProjectDocumentation.RequiredGearDocumentation, UpdateSourceTrigger=LostFocus}"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     Height="200"/>
+                            
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="1"
+                                    Spacing="2">
+                            
+                            <TextBlock Text="Known Issues"/>
+                            
+                            <TextBox Text="{Binding ProjectDocumentation.KnownIssuesDocumentation, UpdateSourceTrigger=LostFocus}"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     Height="200"/>
+                            
                         </StackPanel>
                         
-                        <Grid Grid.Row="2"
-                              ColumnDefinitions="*,10,*">
-
-                            <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Required Test Gear / Instruments / Tools"/>
-                                <TextBox Text="{Binding ProjectDocumentation.RequiredGearDocumentation, UpdateSourceTrigger=LostFocus}"
-                                         AcceptsReturn="True"
-                                         AcceptsTab="True"
-                                         Height="200"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2" Spacing="2">
-                                <TextBlock Text="Known Issues"/>
-                                <TextBox Text="{Binding ProjectDocumentation.KnownIssuesDocumentation, UpdateSourceTrigger=LostFocus}"
-                                         AcceptsReturn="True"
-                                         AcceptsTab="True"
-                                         Height="200"/>
-                            </StackPanel>
-
-                        </Grid>
+                        <Border Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.RowSpan="2"
+                                BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
                         
-                        <Border Grid.Row="4" BorderBrush="{DynamicResource PanelBorder}"
-                                BorderThickness="1"/>
-                        
-                        <Grid Grid.Row="6"
-                              ColumnDefinitions="590,Auto">
-                        
-                        
-                            <StackPanel Grid.Column="0">
+                            <StackPanel>
                             
                                 <TextBlock Text="Images"
                                            FontSize="16"
@@ -131,8 +146,17 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </StackPanel>
+                            </Border>
+                        
+                        <Border Grid.Row="2"
+                                Grid.Column="1"
+                                Grid.RowSpan="2"
+                                BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
                             
-                            <StackPanel Grid.Column="1">
+                            <StackPanel>
                                 
                                 <TextBlock Text="Documents"
                                            FontSize="16"
@@ -143,8 +167,6 @@
                                         Command="{Binding AddDocumentCommand}"
                                         HorizontalAlignment="Left"
                                         Margin="0 0 0 10"/>
-                                
-                                
                                 
                                 <ItemsControl ItemsSource="{Binding ProjectDocumentation.Documents}">
                                     <ItemsControl.ItemTemplate>
@@ -160,7 +182,7 @@
                                                         Background="Transparent"
                                                         BorderThickness="0"
                                                         Padding="0"
-                                                        MaxWidth="500"
+                                                        MaxWidth="520"
                                                         Cursor="Hand">
                     
                                                     <TextBlock Text="{Binding FileName}"
@@ -193,7 +215,7 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </StackPanel>
-                        </Grid>
+                        </Border>
                     </Grid>
                 </ScrollViewer>
             </Border>
