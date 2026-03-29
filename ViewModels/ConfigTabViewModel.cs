@@ -20,6 +20,6 @@ public partial class ConfigTabViewModel : ViewModelBase
         DeviceManager = deviceManagerViewModel;
         ProjectSettingsViewModel = projectSettingsViewModel;
 
-        Title = "Config";
+        Title = "Configuration";
     }
 }
