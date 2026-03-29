@@ -23,10 +23,10 @@
                 BorderBrush="{DynamicResource PanelBorder}"
                 BorderThickness="2">
                     
-            <StackPanel Margin="15"
-                        Spacing="15"
+            <StackPanel Margin="10"
+                        Spacing="10"
                         Orientation="Vertical"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Stretch">
 
                 <StackPanel Spacing="5">
                     <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
