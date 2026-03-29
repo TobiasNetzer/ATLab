@@ -161,6 +161,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -179,6 +182,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -197,6 +203,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -233,6 +242,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -264,6 +276,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -284,6 +299,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<ushort>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_ID)
             return OperationResult<ushort>.Success(BitConverter.ToUInt16(responseFrame.Payload, 0));
@@ -300,6 +318,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<string>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_VERSION)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -316,6 +337,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<string>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_DATE)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -332,6 +356,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<string>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_FW_BUILD_TIME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -348,6 +375,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<string>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_DEVICE_NAME)
             return OperationResult<string>.Success(Encoding.ASCII.GetString(responseFrame.Payload));
@@ -364,6 +394,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<string>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_SERIAL_NUMBER)
         {
@@ -383,6 +416,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_MEAS_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -399,6 +435,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -415,6 +454,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_EXT_STIM_CH)
             return OperationResult<int>.Success(responseFrame.Payload[0]);
@@ -435,6 +477,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -451,6 +496,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -467,6 +515,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<bool>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
             return OperationResult<bool>.Success(true);
@@ -487,6 +538,9 @@ public class CtiaCommand
         };
 
         var responseFrame = await _ctia.SendCommandAsync(frame, 10000);
+        
+        if (responseFrame is null)
+            return OperationResult<TestHardwareDiagnostics>.Failure("Communication with test hardware failed.");
 
         if ((RespCmd)responseFrame.Command != RespCmd.RESP_EXECUTE_SELFTEST)
         {

@@ -46,7 +46,7 @@ public class TestStepRunner : ITestStepRunner
 
             if (!result.IsSuccess)
             {
-                return OperationResult<double>.Failure("Test hardware reported an error: " + result.ErrorMessage);
+                return OperationResult<double>.Failure(result.ErrorMessage);
             }
 
             await Task.Delay(step.TestStep.Delay, token);

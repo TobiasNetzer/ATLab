@@ -17,7 +17,7 @@ namespace ATLab.CTIA
             _errorService = errorService;
         }
         
-        public async Task<CtiaCommandFrame> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
+        public async Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
         {
             try
             {
@@ -27,13 +27,7 @@ namespace ATLab.CTIA
                     if (!reconnectResult.IsSuccess)
                     {
                         _errorService.AddError("Test hardware is no longer connected. Reconnection attempt failed.");
-                        
-                        return new CtiaCommandFrame
-                        {
-                            Command = (ushort)RespCmd.RESP_ERROR,
-                            PayloadSize = 1,
-                            Payload = [(byte)CtiaStatus.CTIA_FAIL]
-                        };
+                        return null;
                     }
                 }
 
@@ -42,23 +36,13 @@ namespace ATLab.CTIA
             }
             catch (TimeoutException)
             {
-                return new CtiaCommandFrame
-                {
-                    Command = (ushort)RespCmd.RESP_ERROR,
-                    PayloadSize = 1,
-                    Payload = [(byte)CtiaStatus.CTIA_TIMEOUT]
-                };
+                _errorService.AddError("Timeout during communication with test hardware.");
+                return null;
             }
             catch (Exception ex)
             {
                 _errorService.AddError($"Unexpected error while sending command to test hardware: {ex.Message}");
-                        
-                return new CtiaCommandFrame
-                {
-                    Command = (ushort)RespCmd.RESP_ERROR,
-                    PayloadSize = 1,
-                    Payload = [(byte)CtiaStatus.CTIA_FAIL]
-                };
+                return null;
             }
         }
 
