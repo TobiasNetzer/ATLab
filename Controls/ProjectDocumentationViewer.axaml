@@ -129,7 +129,8 @@
                                                     
                                                     <Button Classes="no-effects"
                                                             x:CompileBindings="False" 
-                                                            Content="✕"
+                                                            Content="&#xE8BB;"
+                                                            FontFamily="{StaticResource FluentIconsFont}"
                                                             HorizontalAlignment="Center"
                                                             Margin="0 5 0 0"
                                                             Background="Transparent"
@@ -199,7 +200,8 @@
                                                 
                                                 <Button Grid.Column="2" Classes="no-effects"
                                                         x:CompileBindings="False"
-                                                        Content="✕"
+                                                        Content="&#xE8BB;"
+                                                        FontFamily="{StaticResource FluentIconsFont}"
                                                         Command="{Binding $parent[UserControl].DataContext.RemoveDocumentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
