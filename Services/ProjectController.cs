@@ -179,17 +179,19 @@ public class ProjectController
                 .Max();
         
         if (hardwareInfo.MeasChannelCount < highestUsedMatrixChannel)
-            warnings.Add($"- Matrix channels (available:{hardwareInfo.MeasChannelCount}/{highestUsedMatrixChannel})");
+            warnings.Add($"- Matrix channels (available: {hardwareInfo.MeasChannelCount}/{highestUsedMatrixChannel})");
 
         if (hardwareInfo.StimChannelCount < highestUsedStimChannel)
-            warnings.Add($"- Stimulation channels (available:{hardwareInfo.StimChannelCount}/{highestUsedStimChannel})");
+            warnings.Add($"- Stimulation channels (available: {hardwareInfo.StimChannelCount}/{highestUsedStimChannel})");
 
         if (hardwareInfo.ExtStimChannelCount < highestUsedExtStimChannel)
-            warnings.Add($"- External Stimulation channels (available:{hardwareInfo.ExtStimChannelCount}/{highestUsedExtStimChannel})");
+            warnings.Add($"- External Stimulation channels (available: {hardwareInfo.ExtStimChannelCount}/{highestUsedExtStimChannel})");
         
         if (warnings.Count > 0)
         {
             warnings.Insert(0, "Connected test hardware is missing required channels:");
+            warnings.Insert(1,"");
+            warnings.Add("");
             warnings.Add("All unavailable channels will be permanently lost upon saving!");
 
             var message = string.Join(Environment.NewLine, warnings);

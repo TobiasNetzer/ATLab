@@ -8,8 +8,9 @@
         CanResize="False"
         SizeToContent="WidthAndHeight">
     
-    <Grid Margin="20"
-          RowDefinitions="Auto,Auto,20,Auto">
+    <Grid Margin="10"
+          RowDefinitions="Auto,Auto,Auto"
+          RowSpacing="10">
         
         <Image Grid.Row="0"
                Source="{Binding Bitmap, FallbackValue={x:Null}}"
@@ -23,10 +24,9 @@
                    TextWrapping="Wrap"
                    TextAlignment="Center"
                    MaxWidth="1000"
-                   Margin="0 20 0 0"
                    IsVisible="{Binding Message, Converter={StaticResource StringNotEmptyConverter}}"/>
         
-        <StackPanel Grid.Row="3"
+        <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Spacing="10">
