@@ -45,11 +45,6 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         _settingsService = settingsService;
         
         IsExpanded = settingsService.Settings.IsScriptSelectorExpanded;
-
-        if (Scripts.Count == 0)
-        {
-            _ = _scriptService.LoadAllAsync();
-        }
     }
 
     public void LoadTestStep(TestStepViewModel? testStepViewModel)
