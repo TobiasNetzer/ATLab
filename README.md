@@ -7,14 +7,17 @@ Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for de
 
 ## Features
 
+-   **Custom Test Sequences**: Test steps can perform various actions:
+    -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
+    -   **Response Validation**: Use response masking to verify hardware output.
+    -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
+    -   **Relay Control**: Manage the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
 -   **Test Instrument Interfacing**: Support for both **Serial Port (RS232/UART)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
 -   **Scripting Engine**: Create test sequences with multi-step scripts.
--   **Customizable Test Steps**: Each test step can perform multiple actions:
-    -   **Instrument Commands**: Send commands to devices with configurable timeouts and delays.
-    -   **Response Validation**: Use response masking to verify hardware output.
-    -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
-    -   **Relay Control**: Manage the Relay Matrix and Relay Groups, using the Test Interface Adapter to route signals through different relays.
+-   **Test Result Export**: Export test results to CSV files for analysis.
+-   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
+-   **Cross-Platform Support**: Runs on Windows & Linux.
 
 ## Build and Prerequisites
 
@@ -51,30 +54,48 @@ Alternatively, you can open the `ATLab.sln` file in **JetBrains Rider**, **Visua
 ## Usage
 
 ### 1. Configure Devices and Settings
--   **Hardware Setup**: Go to the **Config** tab to add and configure your hardware devices. You can set up **Serial Port (RS232/UART)** or **VISA** devices, defining their connection parameters.
+-   **Hardware Setup**: Go to the **Configuration** tab to add and configure your external test instruments. You can set up **Serial Port (RS232/UART)** or **VISA** devices, defining their connection parameters.
 -   **Project Settings**: Configure project-wide settings such as default tolerances, serial number requirements, and test result export options.
+-   **Optional:** Add custom channel names for the various relay channels.
 
-### 2. Manage Scripts
-The **Scripts** tab allows you to create and manage reusable script snippets that can be used within your test steps.
+![image](docs/Configuration_Tab.png)
+
+### 2. Create Scripts
+The **Scripting** tab allows you to create and manage reusable script snippets that can be used within your test steps.
 -   **Create New Scripts**: Click on **New Script** to create a new script sequence.
 -   **Define Commands**: Add instrument commands with specific delays and timeouts. The system is primarily designed for SCPI commands.
 -   **Use Variables**: Define variables within your script (e.g., `{Range}`) to make them customizable when used in different test steps.
 -   **Central Repository**: Scripts are saved in a configured repository folder, making them available across different projects.
 
+![image](docs/Scripting_Tab.png)
+
 ### 3. Build Test Sequence
 In the **Testing** tab, you can build your automated test sequence. Note that editing features require **Development Mode** to be enabled (toggle button in the toolbar).
 -   **Add/Manage Steps**: Use the toolbar to add, remove, copy, paste, duplicate, or reorder test steps.
 -   **Configure Step Parameters**: Customize step settings such as pass/fail limits and evaluation sources.
--   **Assign Scripts or Commands**: For each test step, you can either select a pre-configured script from your repository or enter a direct instrument command.
+-   **Assign Scripts or Commands**: For each test step, you can either select a pre-configured script from your repository or manually enter a command (e.g., SCPI).
 -   **Custom Variables**: If a script with variables is selected, you can provide specific values for that step.
--   **Response Validation**: Configure expected responses and use response masking to verify hardware output.
+-   **Response Validation**: Configure expected responses and use response masking to verify the instrument output.
 -   **Relay Control**: Set the state of the Relay Matrix or Relay Groups for signal routing during that step.
 -   **Shell Commands**: Optionally execute local system commands or scripts.
 
+![image](docs/Testing_Tab.png)
+
 ### 4. Run Tests
-Once your sequence is ready, use the execution controls:
+Once your sequence is ready, use the execution controls to run the test:
 -   **Start Test**: Run the entire sequence.
 -   **Start from Selection**: Begin execution from the currently selected step.
 -   **Single Step**: Execute only the selected step for debugging.
 -   **Repeat Test**: Run the sequence in a continuous loop.
 -   **Stop**: Cancel the running test at any time.
+
+### 5. Documentation
+The **Documentation** tab allows you to document your test sequence.  
+You can add images, descriptions, and links to external resources, so they are easily accessible within the project.
+
+![image](docs/Documentation_Tab.png)
+
+### 6. Hardware Overview
+The **Hardware** tab provides a visual representation of the attached hardware, as well as information about the available channels and interfaces.
+
+![image](docs/Hardware_Tab.png)
