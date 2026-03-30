@@ -4,9 +4,9 @@ using ATLab.ViewModels;
 
 namespace ATLab.Views;
 
-public partial class SerialNumberEntryBox : Window
+public partial class SerialNumberEntryWindow : Window
 {
-    public SerialNumberEntryBox()
+    public SerialNumberEntryWindow()
     {
         InitializeComponent();
         DataContextChanged += OnDataContextChanged;
@@ -22,7 +22,7 @@ public partial class SerialNumberEntryBox : Window
 
     private void OnDataContextChanged(object? sender, EventArgs e)
     {
-        if (DataContext is SerialNumberEntryBoxViewModel vm)
+        if (DataContext is SerialNumberEntryWindowViewModel vm)
         {
             vm.RequestClose -= OnRequestClose; 
             vm.RequestClose += OnRequestClose;

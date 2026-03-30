@@ -10,6 +10,12 @@ namespace ATLab.Services;
 
 public class SerialNumberDialogService : ISerialNumberDialogService
 {
+    private readonly SerialNumberEntryWindowViewModel _serialNumberEntryWindowViewModel;
+
+    public SerialNumberDialogService(SerialNumberEntryWindowViewModel serialNumberEntryWindowViewModel)
+    {
+        _serialNumberEntryWindowViewModel = serialNumberEntryWindowViewModel;
+    }
     private Window? GetMainWindow()
     {
         var desktop = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
@@ -21,14 +27,16 @@ public class SerialNumberDialogService : ISerialNumberDialogService
         var owner = GetMainWindow();
         if (owner == null) return null;
 
-        var vm = new SerialNumberEntryBoxViewModel();
-        var dialog = new SerialNumberEntryBox
+        var dialog = new SerialNumberEntryWindow
         {
-            DataContext = vm
+            DataContext = _serialNumberEntryWindowViewModel
         };
 
         var result = await dialog.ShowDialog<bool?>(owner);
 
-        return result == true ? vm.SerialNumber : null;
+        var serialNumber = _serialNumberEntryWindowViewModel.SerialNumber;
+        _serialNumberEntryWindowViewModel.SerialNumber = string.Empty;
+
+        return result == true ? serialNumber : null;
     }
 }

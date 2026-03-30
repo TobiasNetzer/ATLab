@@ -19,12 +19,12 @@ public partial class ProjectSettings : ObservableObject
     partial void OnResultPrecisionChanged(int value) => OnSettingsChanged();
 
     [ObservableProperty]
-    private bool _useSerialNumber = false;
+    private bool _useSerialNumber;
 
     partial void OnUseSerialNumberChanged(bool value) => OnSettingsChanged();
 
     [ObservableProperty]
-    private bool _saveTestResult = false;
+    private bool _saveTestResult;
 
     partial void OnSaveTestResultChanged(bool value) => OnSettingsChanged();
 
@@ -37,6 +37,31 @@ public partial class ProjectSettings : ObservableObject
     private string _saveTestResultFilePath = string.Empty;
 
     partial void OnSaveTestResultFilePathChanged(string value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private bool _enableSerialNumberValidation;
+    
+    partial void OnEnableSerialNumberValidationChanged(bool value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private int _serialNumberValidationLength;
+    
+    partial void OnSerialNumberValidationLengthChanged(int value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private string _serialNumberValidationStartsWith = string.Empty;
+
+    partial void OnSerialNumberValidationStartsWithChanged(string value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private string _serialNumberValidationEndsWith = string.Empty;
+
+    partial void OnSerialNumberValidationEndsWithChanged(string value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private string _serialNumberValidationContains = string.Empty;
+
+    partial void OnSerialNumberValidationContainsChanged(string value) => OnSettingsChanged();
 
     public void ResetToDefault()
     {
@@ -46,6 +71,11 @@ public partial class ProjectSettings : ObservableObject
         SaveTestResult = false;
         SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
         SaveTestResultFilePath = string.Empty;
+        EnableSerialNumberValidation = false;
+        SerialNumberValidationLength = 0;
+        SerialNumberValidationStartsWith = string.Empty;
+        SerialNumberValidationEndsWith = string.Empty;
+        SerialNumberValidationContains = string.Empty;
 
         OnSettingsChanged();
     }
@@ -58,6 +88,11 @@ public partial class ProjectSettings : ObservableObject
         SaveTestResult = other.SaveTestResult;
         SaveTestResultOptions = other.SaveTestResultOptions;
         SaveTestResultFilePath = other.SaveTestResultFilePath;
+        EnableSerialNumberValidation = other.EnableSerialNumberValidation;
+        SerialNumberValidationLength = other.SerialNumberValidationLength;
+        SerialNumberValidationStartsWith = other.SerialNumberValidationStartsWith;
+        SerialNumberValidationEndsWith = other.SerialNumberValidationEndsWith;
+        SerialNumberValidationContains = other.SerialNumberValidationContains;
     }
 
 

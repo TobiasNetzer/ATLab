@@ -196,6 +196,7 @@ public class App : Application
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<TestHardwareDiagnosticsViewModel>();
+        services.AddSingleton<SerialNumberEntryWindowViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

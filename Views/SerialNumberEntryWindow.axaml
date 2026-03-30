@@ -1,8 +1,8 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ATLab.ViewModels"
-        x:Class="ATLab.Views.SerialNumberEntryBox"
-        x:DataType="vm:SerialNumberEntryBoxViewModel"
+        x:Class="ATLab.Views.SerialNumberEntryWindow"
+        x:DataType="vm:SerialNumberEntryWindowViewModel"
         Title="Serial Number"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
@@ -11,7 +11,7 @@
     <Grid Margin="10"
             RowDefinitions="Auto,Auto,Auto">
 
-        <TextBlock Text="Enter Serial Number:"
+        <TextBlock Text="Enter Serial Number"
                         Margin="0,0,0,2" />
 
         <TextBox Grid.Row="1"
@@ -31,7 +31,7 @@
                     HorizontalContentAlignment="Center"
                     Width="145"
                     Command="{Binding OkCommand}"
-                    IsEnabled="{Binding SerialNumber, Converter={StaticResource StringNotEmptyConverter}}"
+                    IsEnabled="{Binding IsOkEnabled}"
                     IsDefault="True"/>
 
             <Button Content="Cancel"

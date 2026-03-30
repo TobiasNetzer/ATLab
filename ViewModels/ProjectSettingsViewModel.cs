@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
@@ -10,6 +11,9 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     private readonly IFileDialogService _fileDialogService;
 
     public ProjectSettings Settings { get; }
+
+    [ObservableProperty]
+    private string _serialNumberValidationLengthString = string.Empty;
 
     public bool CanSaveTestResult =>
         Settings.UseSerialNumber && Settings.SaveTestResult;
@@ -23,12 +27,29 @@ public partial class ProjectSettingsViewModel : ViewModelBase
         
         Settings.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName is nameof(Settings.UseSerialNumber)
-                or nameof(Settings.SaveTestResult))
+            switch (e.PropertyName)
             {
-                OnPropertyChanged(nameof(CanSaveTestResult));
+                case nameof(Settings.UseSerialNumber)
+                    or nameof(Settings.SaveTestResult):
+                    
+                    OnPropertyChanged(nameof(CanSaveTestResult));
+                    break;
+                
+                case nameof(Settings.SerialNumberValidationLength):
+                    
+                    SerialNumberValidationLengthString = Settings.SerialNumberValidationLength == 0
+                        ? string.Empty
+                        : Settings.SerialNumberValidationLength.ToString();
+                    
+                    break;
             }
         };
+    }
+    
+    partial void OnSerialNumberValidationLengthStringChanged(string value)
+    {
+        if (int.TryParse(value, out var parsed))
+            Settings.SerialNumberValidationLength = parsed;
     }
 
     [RelayCommand]
