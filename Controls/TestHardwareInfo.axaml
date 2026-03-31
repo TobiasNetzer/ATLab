@@ -42,9 +42,9 @@
 
                 <StackPanel Spacing="5">
                     <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Meas Channels: {0}}"/>
-                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stim Channels: {0}}"/>
-                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stim Channels: {0}}"/>
+                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Matrix Channels: {0}}"/>
+                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stimulation Channels: {0}}"/>
+                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stimulation Channels: {0}}"/>
                 </StackPanel>
                 
                 <Border BorderBrush="{DynamicResource PanelBorder}"
