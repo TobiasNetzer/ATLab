@@ -46,7 +46,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
         if (string.IsNullOrWhiteSpace(deviceName))
             return OperationResult<string?>.Failure("Device is required.");
 
-        string? lastResponse = null;
+        string? queryResult = null;
 
         try
         {
@@ -99,17 +99,21 @@ public class CommandExecutor : ICommandExecutor, IDisposable
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
 
-                if (command.ExpectResponse)
+                switch (command.ExpectResponse)
                 {
-                    lastResponse = await client.QueryAsync(commandText, command.TimeoutMs);
-                }
-                else
-                {
-                    await client.WriteAsync(commandText);
+                    case true when command.UseForValidation:
+                        queryResult = await client.QueryAsync(commandText, command.TimeoutMs);
+                        break;
+                    case true:
+                        await client.QueryAsync(commandText, command.TimeoutMs);
+                        break;
+                    default:
+                        await client.WriteAsync(commandText);
+                        break;
                 }
             }
 
-            return OperationResult<string?>.Success(lastResponse);
+            return OperationResult<string?>.Success(queryResult);
         }
         catch (TimeoutException tex)
         {

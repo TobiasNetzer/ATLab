@@ -6,9 +6,9 @@ namespace ATLab.Interfaces;
 
 public interface IScriptService
 {
-    ObservableCollection<ScriptItemViewModel> Scripts { get; }
+    ObservableCollection<ScriptViewModel> Scripts { get; }
     Task LoadAllAsync();
-    Task SaveAsync(ScriptItemViewModel script);
-    Task DeleteAsync(ScriptItemViewModel script);
-    ScriptItemViewModel CreateNew();
+    Task SaveAsync(ScriptViewModel script);
+    Task DeleteAsync(ScriptViewModel script);
+    ScriptViewModel CreateNew();
 }

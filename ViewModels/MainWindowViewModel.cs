@@ -16,7 +16,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ISimulationService _simulationService;
     private readonly IProjectService _projectService;
     private readonly ISettingsService _settingsService;
-    private readonly IScriptService _scriptService;
 
     public string WindowTitle => $"ATLab - Project: {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
     
@@ -58,15 +57,13 @@ public partial class MainWindowViewModel : ViewModelBase
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
-        ISettingsService settingsService,
-        IScriptService scriptService)
+        ISettingsService settingsService)
     {
         _errorService = errorService;
         _simulationService = simulationService;
         _projectService = projectService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
-        _scriptService = scriptService;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -83,8 +80,6 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(ScriptTab);
         Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);
-        
-        ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
@@ -148,7 +143,7 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public async Task OnWindowOpened()
     {
-        await _scriptService.LoadAllAsync();
+        await ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);
         
         var lastFile = _settingsService.Settings.LastOpenedFile;
 

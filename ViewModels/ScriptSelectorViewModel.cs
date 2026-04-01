@@ -14,7 +14,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private readonly ISettingsService _settingsService;
     
     public ObservableCollection<Device> Devices => _deviceManager.Devices;
-    public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
+    public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
     private ObservableCollection<ScriptVariable>? _scriptVariables;
@@ -23,7 +23,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private Device? _selectedDevice;
 
     [ObservableProperty]
-    private ScriptItemViewModel? _selectedScript;
+    private ScriptViewModel? _selectedScript;
 
     private TestStep? _currentTestStep;
 
@@ -71,7 +71,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         }
     }
 
-    partial void OnSelectedScriptChanged(ScriptItemViewModel? value)
+    partial void OnSelectedScriptChanged(ScriptViewModel? value)
     {
         if (value == null) return;
         if (_isSyncing) return;

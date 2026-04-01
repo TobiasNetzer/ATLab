@@ -6,21 +6,15 @@ namespace ATLab.ViewModels;
 public partial class ScriptCommandViewModel : ViewModelBase
 {
     private readonly ScriptCommand _model;
-
-    public ScriptCommandViewModel(ScriptCommand model)
-    {
-        _model = model;
-        _command = model.Command;
-        _expectResponse = model.ExpectResponse;
-        _delayMs = model.DelayMs.ToString();
-        _timeoutMs = model.TimeoutMs.ToString();
-    }
-
+    
     [ObservableProperty]
     private string _command;
 
     [ObservableProperty]
     private bool _expectResponse;
+    
+    [ObservableProperty]
+    private bool _useForValidation;
 
     [ObservableProperty]
     private string _delayMs;
@@ -28,8 +22,19 @@ public partial class ScriptCommandViewModel : ViewModelBase
     [ObservableProperty]
     private string _timeoutMs;
 
+    public ScriptCommandViewModel(ScriptCommand model)
+    {
+        _model = model;
+        Command = model.Command;
+        ExpectResponse = model.ExpectResponse;
+        UseForValidation = model.UseForValidation;
+        DelayMs = model.DelayMs.ToString();
+        TimeoutMs = model.TimeoutMs.ToString();
+    }
+
     partial void OnCommandChanged(string value) => _model.Command = value;
     partial void OnExpectResponseChanged(bool value) => _model.ExpectResponse = value;
+    partial void OnUseForValidationChanged(bool value) => _model.UseForValidation = value;
 
     partial void OnDelayMsChanged(string value)
     {
@@ -58,6 +63,4 @@ public partial class ScriptCommandViewModel : ViewModelBase
     }
 
     public ScriptCommand GetModel() => _model;
-    public int GetTimeoutMs() => _model.TimeoutMs;
-    public int GetDelayMs() => _model.DelayMs;
 }

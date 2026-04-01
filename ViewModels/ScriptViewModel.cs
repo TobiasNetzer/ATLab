@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class ScriptItemViewModel : ViewModelBase
+public partial class ScriptViewModel : ViewModelBase
 {
     private readonly IScriptRepository _repository;
     private readonly CustomScript _model;
@@ -26,18 +26,7 @@ public partial class ScriptItemViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _selectedVariableIndex;
-
-    public ScriptItemViewModel(IScriptRepository repository, CustomScript model)
-    {
-        _repository = repository;
-        _model = model;
-        
-        Commands.CollectionChanged += Commands_CollectionChanged;
-        Variables.CollectionChanged += Variables_CollectionChanged;
-
-        LoadFromModel();
-    }
-
+    
     public string Id => _model.Id;
 
     public string Name
@@ -70,6 +59,17 @@ public partial class ScriptItemViewModel : ViewModelBase
     }
 
     public string DisplayName => IsDirty ? $"{Name}*" : Name;
+
+    public ScriptViewModel(IScriptRepository repository, CustomScript model)
+    {
+        _repository = repository;
+        _model = model;
+        
+        Commands.CollectionChanged += Commands_CollectionChanged;
+        Variables.CollectionChanged += Variables_CollectionChanged;
+
+        LoadFromModel();
+    }
 
     partial void OnIsDirtyChanged(bool value)
     {

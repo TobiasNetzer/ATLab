@@ -14,7 +14,7 @@ public class ScriptService : IScriptService
     private readonly IScriptRepository _repository;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public ObservableCollection<ScriptItemViewModel> Scripts { get; } = new();
+    public ObservableCollection<ScriptViewModel> Scripts { get; } = new();
 
     public ScriptService(IScriptRepository repository)
     {
@@ -32,7 +32,7 @@ public class ScriptService : IScriptService
             Scripts.Clear();
             foreach (var model in models)
             {
-                var vm = new ScriptItemViewModel(_repository, model);
+                var vm = new ScriptViewModel(_repository, model);
                 vm.LoadFromModel();
                 Scripts.Add(vm);
             }
@@ -43,7 +43,7 @@ public class ScriptService : IScriptService
         }
     }
 
-    public async Task SaveAsync(ScriptItemViewModel script)
+    public async Task SaveAsync(ScriptViewModel script)
     {
         await script.SaveAsync();
         // If it's a new script not yet in the collection, add it
@@ -53,20 +53,20 @@ public class ScriptService : IScriptService
         }
     }
 
-    public async Task DeleteAsync(ScriptItemViewModel script)
+    public async Task DeleteAsync(ScriptViewModel script)
     {
         await _repository.DeleteAsync(script.Id);
         Scripts.Remove(script);
     }
 
-    public ScriptItemViewModel CreateNew()
+    public ScriptViewModel CreateNew()
     {
         var model = new CustomScript
         {
             Name = "New Script",
             Description = "",
         };
-        var vm = new ScriptItemViewModel(_repository, model);
+        var vm = new ScriptViewModel(_repository, model);
         vm.LoadFromModel();
         return vm;
     }

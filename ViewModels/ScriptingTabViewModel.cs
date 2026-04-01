@@ -14,10 +14,10 @@ public partial class ScriptingTabViewModel : ViewModelBase
     private readonly IScriptRepository _repository;
     private readonly IMessageBoxService _messageBoxService;
 
-    public ObservableCollection<ScriptItemViewModel> Scripts => _scriptService.Scripts;
+    public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
-    private ScriptItemViewModel? _selectedScript;
+    private ScriptViewModel? _selectedScript;
 
     public ScriptingTabViewModel(
         IScriptService scriptService,
@@ -33,7 +33,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
 
     private bool CanExecute() => SelectedScript != null;
 
-    partial void OnSelectedScriptChanged(ScriptItemViewModel? value)
+    partial void OnSelectedScriptChanged(ScriptViewModel? value)
     {
         DeleteScriptCommand.NotifyCanExecuteChanged();
         SaveScriptCommand.NotifyCanExecuteChanged();
@@ -41,7 +41,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
 
     private void Script_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ScriptItemViewModel.IsDirty))
+        if (e.PropertyName == nameof(ScriptViewModel.IsDirty))
             UpdateTitle();
     }
 

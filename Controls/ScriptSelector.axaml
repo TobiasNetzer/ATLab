@@ -122,7 +122,7 @@
                                   HorizontalAlignment="Stretch">
 
                             <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="vm:ScriptItemViewModel">
+                                <DataTemplate x:DataType="vm:ScriptViewModel">
                                     <TextBlock Text="{Binding Name}"
                                                ToolTip.Tip="{Binding Description}"/>
                                 </DataTemplate>
