@@ -145,6 +145,24 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         await ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);
         
+        var args = Environment.GetCommandLineArgs();
+        var fileFromArgs = args.Length > 1 ? args[1] : null;
+
+        if (!string.IsNullOrWhiteSpace(fileFromArgs) && File.Exists(fileFromArgs))
+        {
+            try
+            {
+                await LoadFile(fileFromArgs);
+                return;
+            }
+            catch (Exception ex)
+            {
+                _errorService.Errors.Add(ex.ToString());
+                await NewFile();
+                return;
+            }
+        }
+        
         var lastFile = _settingsService.Settings.LastOpenedFile;
 
         if (File.Exists(lastFile))
