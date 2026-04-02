@@ -101,7 +101,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
                 switch (command.ExpectResponse)
                 {
-                    case true when command.UseForValidation:
+                    case true when command.Evaluate:
                         queryResult = await client.QueryAsync(commandText, command.TimeoutMs);
                         break;
                     case true:

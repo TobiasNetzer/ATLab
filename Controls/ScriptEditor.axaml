@@ -38,18 +38,6 @@
                         <StackPanel Orientation="Horizontal"
                                     Spacing="5"
                                     Margin="10">
-                    
-                            <Button Content="&#xED25;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Change repository folder"
-                                    Command="{Binding ChangeRepositoryCommand}"/>
-                        
-                            <Button Content="&#xE72C;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="20"
-                                    ToolTip.Tip="Reload script repository"
-                                    Command="{Binding ReloadScriptsCommand}"/>
                         
                             <Button Content="&#xED0E;"
                                     FontFamily="{StaticResource FluentIconsFont}"
@@ -68,6 +56,18 @@
                                     FontSize="20"
                                     ToolTip.Tip="Delete script"
                                     Command="{Binding DeleteScriptCommand}"/>
+                            
+                            <Button Content="&#xED25;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="20"
+                                    ToolTip.Tip="Change repository folder"
+                                    Command="{Binding ChangeRepositoryCommand}"/>
+                        
+                            <Button Content="&#xE72C;"
+                                    FontFamily="{StaticResource FluentIconsFont}"
+                                    FontSize="20"
+                                    ToolTip.Tip="Reload script repository"
+                                    Command="{Binding ReloadScriptsCommand}"/>
                         
                         </StackPanel>
                     </Border>
@@ -203,7 +203,6 @@
                                     FontSize="16"
                                     ToolTip.Tip="Remove command" 
                                     Command="{Binding SelectedScript.RemoveCommandCommand}" />
-
                             
                         </StackPanel>
                         
@@ -219,13 +218,21 @@
                                   VerticalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
-                                <DataGridCheckBoxColumn Header="Expect Response" Binding="{Binding ExpectResponse}"/>
-                                <DataGridTemplateColumn Header="Use For Validation">
+                                <DataGridTemplateColumn Header="Expect Response">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                IsChecked="{Binding ExpectResponse}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Evaluate">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <RadioButton
-                                                GroupName="ValidationGroup"
-                                                IsChecked="{Binding UseForValidation, Mode=TwoWay}"
+                                                IsChecked="{Binding Evaluate}"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"/>
                                         </DataTemplate>

@@ -70,6 +70,15 @@ public partial class ScriptViewModel : ViewModelBase
 
         LoadFromModel();
     }
+    
+    public void ClearEvaluateExcept(ScriptCommandViewModel selected)
+    {
+        foreach (var cmd in Commands)
+        {
+            if (cmd != selected && cmd.Evaluate)
+                cmd.Evaluate = false;
+        }
+    }
 
     partial void OnIsDirtyChanged(bool value)
     {
@@ -84,7 +93,7 @@ public partial class ScriptViewModel : ViewModelBase
         Commands.Clear();
         foreach (var command in _model.Commands)
         {
-            var vm = new ScriptCommandViewModel(command);
+            var vm = new ScriptCommandViewModel(command, this);
             vm.PropertyChanged += ChildChanged;
             Commands.Add(vm);
         }
@@ -160,13 +169,9 @@ public partial class ScriptViewModel : ViewModelBase
         var index = SelectedCommandIndex < 0 ? 0 : SelectedCommandIndex + 1;
         if (index > Commands.Count) index = Commands.Count;
 
-        var newCommand = new ScriptCommand
-        {
-            Command = "",
-            ExpectResponse = false
-        };
+        var newCommand = new ScriptCommand();
 
-        var vm = new ScriptCommandViewModel(newCommand);
+        var vm = new ScriptCommandViewModel(newCommand, this);
         vm.PropertyChanged += ChildChanged;
 
         Commands.Insert(index, vm);

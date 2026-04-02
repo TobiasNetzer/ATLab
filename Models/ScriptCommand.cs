@@ -11,7 +11,7 @@ public partial class ScriptCommand : ObservableObject
     private bool _expectResponse;
     
     [ObservableProperty]
-    private bool _useForValidation;
+    private bool _evaluate;
 
     [ObservableProperty]
     private int _delayMs;
@@ -28,7 +28,7 @@ public partial class ScriptCommand : ObservableObject
     {
         Command = other.Command;
         ExpectResponse = other.ExpectResponse;
-        UseForValidation = other.UseForValidation;
+        Evaluate = other.Evaluate;
         DelayMs = other.DelayMs;
         TimeoutMs = other.TimeoutMs;
     }

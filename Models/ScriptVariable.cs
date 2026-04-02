@@ -8,7 +8,7 @@ public partial class ScriptVariable : ObservableObject
     private string _name = string.Empty;
     
     [ObservableProperty]
-    private string _value = "1.0";
+    private string _value = string.Empty;
 
     public ScriptVariable Clone() => new() { Name = Name, Value = Value };
 }
