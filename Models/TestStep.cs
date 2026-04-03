@@ -89,7 +89,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(19)]
-    private ScriptCommand _command = new();
+    private ScriptCommand _command = new() { Evaluate = true }; // for single non-script commands, evaluate is always true
     
     [ObservableProperty]
     [property: JsonPropertyOrder(20)]
