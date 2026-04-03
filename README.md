@@ -19,6 +19,9 @@ Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for de
 -   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
 -   **JSON File Format**: Project files use a standard JSON file format, perfect for version control.
 -   **Cross-Platform Support**: Runs on Windows & Linux.
+-   **Themes**: Light and Dark theme available.
+
+![image](docs/Themes.png)
 
 ## Build and Prerequisites
 
