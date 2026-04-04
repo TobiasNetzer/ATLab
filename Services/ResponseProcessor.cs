@@ -88,7 +88,7 @@ public class ResponseProcessor : IResponseProcessor
                 foreach (Match match in quotedMatches)
                 {
                     var search = match.Groups[1].Value;
-                    if (!string.IsNullOrEmpty(search) && input.Contains(search))
+                    if (!string.IsNullOrEmpty(search) && processedInput.Contains(search))
                         continue;
                     
                     allQuotesMatched = false;
