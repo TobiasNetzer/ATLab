@@ -28,11 +28,6 @@ public sealed class FileScriptRepository : IScriptRepository
 
     private async Task<string> GetFolderAsync()
     {
-        if (!string.IsNullOrEmpty(_folder) && Directory.Exists(_folder))
-        {
-            return _folder;
-        }
-
         await _semaphore.WaitAsync();
         try
         {
@@ -43,7 +38,7 @@ public sealed class FileScriptRepository : IScriptRepository
 
             var folderPath = _settingsService.Settings.ScriptRepositoryFolder;
 
-            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath))
             {
                 if (!string.IsNullOrWhiteSpace(folderPath))
                 {
@@ -60,21 +55,10 @@ public sealed class FileScriptRepository : IScriptRepository
 
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
-                var storageFolder = await _fileDialogService.OpenFolderAsync("Select Script Repository Folder");
-                if (storageFolder != null)
-                {
-                    folderPath = storageFolder.Path.LocalPath;
-                    _settingsService.Settings.ScriptRepositoryFolder = folderPath;
-                    _settingsService.Save();
-                    Directory.CreateDirectory(folderPath);
-                }
-                else
-                {
-                    folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ATLab", "Scripts");
-                    _settingsService.Settings.ScriptRepositoryFolder = folderPath;
-                    _settingsService.Save();
-                    Directory.CreateDirectory(folderPath);
-                }
+                folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ATLab", "Scripts");
+                _settingsService.Settings.ScriptRepositoryFolder = folderPath;
+                _settingsService.Save();
+                Directory.CreateDirectory(folderPath);
             }
 
             _folder = folderPath;
