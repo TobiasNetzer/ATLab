@@ -1,5 +1,5 @@
-using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,16 +7,22 @@ namespace ATLab.ViewModels;
 
 public partial class AboutTabViewModel : ViewModelBase
 {
+    public static string AppName =>
+        Assembly.GetEntryAssembly()?
+            .GetCustomAttribute<AssemblyProductAttribute>()?
+            .Product
+        ?? "Unknown";
+    
     public static string AppVersion =>
         Assembly.GetEntryAssembly()?
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion
         ?? "Unknown";
 
-    public static string Author =>
+    public static string Copyright =>
         Assembly.GetEntryAssembly()?
-            .GetCustomAttribute<AssemblyCompanyAttribute>()?
-            .Company
+            .GetCustomAttribute<AssemblyCopyrightAttribute>()?
+            .Copyright
         ?? "Unknown";
     
     public string BuildConfiguration =>
@@ -25,24 +31,31 @@ public partial class AboutTabViewModel : ViewModelBase
         #else
             "Release";
         #endif
-
-    public string TargetFramework =>
+    
+    public static string BuildDate =>
+        Assembly.GetEntryAssembly()?
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => a.Key == "BuildDate")?
+            .Value
+        ?? "Unknown";
+    
+    public string RuntimeFramework =>
         System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
 
-    public string RuntimeVersion =>
-        Environment.Version.ToString();
-
-    public string OSDescription =>
+    private string OSDescription =>
         System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
-    public string OSArchitecture =>
+    private string OSArchitecture =>
         System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString();
 
-    public string ProcessArchitecture =>
+    private string ProcessArchitecture =>
         System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString();
 
     public string AvaloniaVersion =>
         typeof(Avalonia.Application).Assembly.GetName().Version?.ToString() ?? "Unknown";
+    
+    public string OSInfo =>
+        $"{OSDescription} ({OSArchitecture}, {ProcessArchitecture})";
     
     public AboutTabViewModel()
     {

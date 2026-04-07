@@ -49,16 +49,16 @@
                         <Grid ColumnDefinitions="*,*">
                             
                             <StackPanel Grid.Column="0" Spacing="5">
+                                <TextBlock Text="{Binding AppName}" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
-                                <TextBlock Text="{Binding Author, StringFormat=Author: {0}}"/>
-                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Build: {0}}"/>
-                                <TextBlock Text="{Binding TargetFramework, StringFormat=Target Framework: {0}}"/>
-                                <TextBlock Text="{Binding RuntimeVersion, StringFormat=.NET Runtime: {0}}"/>
-                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
-                                <TextBlock Text="{Binding OSDescription, StringFormat=OS: {0}}"/>
-                                <TextBlock Text="{Binding OSArchitecture, StringFormat=OS Architecture: {0}}"/>
-                                <TextBlock Text="{Binding ProcessArchitecture, StringFormat=Process Architecture: {0}}"/>
-                            
+                                <TextBlock Text="{Binding Copyright}"/>
+                                <TextBlock Text="Build" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}"/>
+                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}"/>
+                                <TextBlock Text="System" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="{Binding OSInfo}"/>
+                                <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}"/>
+                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=UI: Avalonia {0}}"/>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Spacing="5">
@@ -76,13 +76,9 @@
                                         License
                                     </Button>
                                 </TextBlock>
-                                
                             </StackPanel>
-                            
                         </Grid>
-
                     </StackPanel>
-
                 </ScrollViewer>
             </Border>
         </Grid>
