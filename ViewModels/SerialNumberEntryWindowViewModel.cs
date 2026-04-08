@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class SerialNumberEntryWindowViewModel : ObservableObject
+public partial class SerialNumberEntryWindowViewModel : ViewModelBase
 {
     private readonly ProjectSettings _settings;
     
