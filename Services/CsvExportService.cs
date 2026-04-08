@@ -47,7 +47,6 @@ public class CsvExportService
         }
     }
 
-
     private async Task ExportToFileAsync(IEnumerable<TestStepViewModel> steps, IStorageFile file)
     {
         var csv = BuildCsv(steps);
@@ -67,9 +66,7 @@ public class CsvExportService
 
         await writer.WriteAsync(csv);
     }
-
-
-
+    
     private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
     {
         return from vm in steps
@@ -96,7 +93,7 @@ public class CsvExportService
         // Header
         sb.AppendLine(string.Join(Separator, new[]
         {
-            "Number",
+            "Step",
             "Name",
             "Nominal Value",
             "Lower Limit",
@@ -126,8 +123,7 @@ public class CsvExportService
 
         return sb.ToString();
     }
-
-
+    
     private string Escape(string? value)
     {
         if (string.IsNullOrEmpty(value))
@@ -140,5 +136,4 @@ public class CsvExportService
 
         return escaped;
     }
-
 }
