@@ -49,13 +49,13 @@
                         <Grid ColumnDefinitions="*,*">
                             
                             <StackPanel Grid.Column="0" Spacing="5">
-                                <TextBlock Text="{Binding AppName}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding AppName}" FontSize="16" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
                                 <TextBlock Text="{Binding Copyright}"/>
-                                <TextBlock Text="Build" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="Build" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}"/>
                                 <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}"/>
-                                <TextBlock Text="System" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="System" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding OSInfo}"/>
                                 <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}"/>
                                 <TextBlock Text="{Binding AvaloniaVersion, StringFormat=UI: Avalonia {0}}"/>
