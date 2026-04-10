@@ -39,6 +39,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     [ObservableProperty]
     private string? _delayText;
 
+    [ObservableProperty]
+    private bool _isAdvancedExpanded;
+
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
         IFileDialogService fileDialogService,

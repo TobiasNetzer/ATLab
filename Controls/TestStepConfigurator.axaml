@@ -58,25 +58,23 @@
                 BorderBrush="{DynamicResource PanelBorder}"
                 IsVisible="{Binding IsExpanded}">
             
-            <StackPanel>
+            <StackPanel Margin="10"
+                        Spacing="10">
             
-                <StackPanel HorizontalAlignment="Left"
+                <StackPanel HorizontalAlignment="Stretch"
                             Orientation="Vertical"
-                            Spacing="2"
-                            Margin="10">
+                            Spacing="2">
                     <TextBlock Text="Name"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              helpers:FocusExtensions.MoveFocusOnEnter="True"
                              TabIndex="0"
-                             MaxLength="50"
-                             Width="480"/>
+                             MaxLength="50"/>
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
-                                Spacing="2"
-                                Margin="10">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="20">
+                    <StackPanel Orientation="Vertical"
+                                Spacing="2">
                         <TextBlock Text="Lower Limit"/>
                         <TextBox Text="{Binding LowerLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
@@ -85,10 +83,8 @@
                                  Width="100"/>
                     </StackPanel>
                     
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
-                                Spacing="2"
-                                Margin="10">
+                    <StackPanel Orientation="Vertical"
+                                Spacing="2">
                         <TextBlock Text="Nominal"/>
                         <TextBox Text="{Binding NominalValueText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
@@ -97,10 +93,8 @@
                                  Width="100"/>
                     </StackPanel>
                     
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
-                                Spacing="2"
-                                Margin="10">
+                    <StackPanel Orientation="Vertical"
+                                Spacing="2">
                         <TextBlock Text="Upper Limit"/>
                         <TextBox Text="{Binding UpperLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
@@ -109,10 +103,9 @@
                                  Width="100"/>
                     </StackPanel>
                     
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
+                    <StackPanel Orientation="Vertical"
                                 Spacing="2"
-                                Margin="45 10 10 10">
+                                Margin="35 0 0 0">
                         <TextBlock Text="Unit"/>
                         <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
@@ -122,12 +115,11 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="20">
                     
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
-                                Spacing="2"
-                                Margin="10">
+                    <StackPanel Orientation="Vertical"
+                                Spacing="2">
                         <TextBlock Text="Delay"/>
                         <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
@@ -136,10 +128,8 @@
                                  Width="100"/>
                     </StackPanel>
                 
-                    <StackPanel HorizontalAlignment="Left"
-                                Orientation="Vertical"
-                                Spacing="2"
-                                Margin="10">
+                    <StackPanel Orientation="Vertical"
+                                Spacing="2">
                         <TextBlock Text="Evaluate"/>
                         <ComboBox ItemsSource="{Binding EvaluationSources}"
                                   MinWidth="100"
@@ -150,67 +140,94 @@
                     </StackPanel>
                     
                     <CheckBox VerticalAlignment="Bottom"
-                              Margin="0 0 0 10"
                               Content="Custom Response Mask"
                               TabIndex="7"
                               IsChecked="{Binding TestStepViewModel.TestStep.CustomMask, FallbackValue='False'}"/>
                     
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal"
-                            Spacing="10"
-                            Margin="10 0 0 0">
-                    
-                    <CheckBox Content="Repeat Until Pass"
-                              TabIndex="8"
-                              IsChecked="{Binding TestStepViewModel.TestStep.RepeatUntilPass, FallbackValue='False'}"/>
-                    
-                    <CheckBox Content="Ignore Step"
-                              TabIndex="9"
-                              IsChecked="{Binding TestStepViewModel.TestStep.IgnoreStep, FallbackValue='False'}"/>
-                    
-                    <CheckBox Content="Don't Save Result"
-                              TabIndex="10"
-                              IsChecked="{Binding TestStepViewModel.TestStep.DontSaveResult, FallbackValue='False'}"/>
-                    
-                </StackPanel>
-                
-                <StackPanel HorizontalAlignment="Left"
+                <StackPanel HorizontalAlignment="Stretch"
                             Orientation="Vertical"
-                            Spacing="2"
-                            Margin="10 5 10 10">
+                            Spacing="2">
                     
                     <TextBlock Text="Comment"
                                VerticalAlignment="Bottom"/>
                     
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
-                             TabIndex="11"
-                             Width="480"
+                             TabIndex="8"
                              Height="60"
                              TextWrapping="Wrap"
                              AcceptsReturn="True"/>
                     
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10">
+                    
+                    <CheckBox
+                        Content="Show Message"
+                        TabIndex="9"
+                        IsChecked="{Binding TestStepViewModel.TestStep.ShowCommentOnTestStart, FallbackValue=False}"/>
+                    
+                    <Button Content="&#xE8B9;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="20"
+                            ToolTip.Tip="Add image to message box"
+                            TabIndex="10"
+                            Command="{Binding OpenImagePickerCommand}"/>
+                    
+                    <TextBox TabIndex="11"
+                             Width="290"
+                             Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
+                    
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal">
+                    
+                    <TextBlock Text="Advanced Settings"
+                               VerticalAlignment="Center"/>
+                    
+                    <Separator Width="300"/>
+
+                    <ToggleButton IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Border Background="Transparent" Padding="5">
+                                    <Grid>
+                                        <TextBlock Text="&#xE70D;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="18"
+                                                   IsVisible="{Binding IsAdvancedExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                        <TextBlock Text="&#xE70E;" 
+                                                   FontFamily="{StaticResource FluentIconsFont}"
+                                                   FontSize="18"
+                                                   IsVisible="{Binding IsAdvancedExpanded}"/>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+                </StackPanel>
+                
+                <StackPanel IsVisible="{Binding IsAdvancedExpanded}">
+                    
                     <StackPanel Orientation="Horizontal"
-                                Spacing="10"
-                                Margin="0 5 0 0">
-                        
-                        <CheckBox
-                            Content="Show Message"
-                            TabIndex="12"
-                            IsChecked="{Binding TestStepViewModel.TestStep.ShowCommentOnTestStart, FallbackValue=False}"/>
-                        
-                        <Button Content="&#xE8B9;"
-                                FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="20"
-                                ToolTip.Tip="Add image to message box"
-                                TabIndex="13"
-                                Command="{Binding OpenImagePickerCommand}"/>
-                        
-                        <TextBox Width="290"
-                                 TabIndex="14"
-                                 Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
-                        
+                                Spacing="10">
+                
+                        <CheckBox Content="Repeat Until Pass"
+                                  TabIndex="12"
+                                  IsChecked="{Binding TestStepViewModel.TestStep.RepeatUntilPass, FallbackValue='False'}"/>
+                
+                        <CheckBox Content="Ignore Step"
+                                  TabIndex="13"
+                                  IsChecked="{Binding TestStepViewModel.TestStep.IgnoreStep, FallbackValue='False'}"/>
+                
+                        <CheckBox Content="Don't Save Result"
+                                  TabIndex="14"
+                                  IsChecked="{Binding TestStepViewModel.TestStep.DontSaveResult, FallbackValue='False'}"/>
+                
                     </StackPanel>
+                    
                 </StackPanel>
             </StackPanel>
         </Border>
