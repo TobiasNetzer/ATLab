@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -11,96 +12,106 @@ public partial class TestStep : ObservableObject
 {
     public TestStep()
     {
-        _scriptVariables.CollectionChanged += ScriptVariables_CollectionChanged;
-        _matrixState.PropertyChanged += Child_PropertyChanged;
+        Id = Guid.NewGuid().ToString("N");
+        HookEvents();
     }
+    
+    [JsonConstructor]
+    public TestStep(string id)
+    {
+        Id = id;
+        HookEvents();
+    }
+    
+    [property: JsonPropertyOrder(1)]
+    public string Id { get; init; }
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(1)]
+    [property: JsonPropertyOrder(2)]
     private int _number;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(2)]
+    [property: JsonPropertyOrder(3)]
     private string _name = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(3)]
+    [property: JsonPropertyOrder(4)]
     private double _nominalValue;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(4)]
+    [property: JsonPropertyOrder(5)]
     private double _lowerLimit;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(5)]
+    [property: JsonPropertyOrder(6)]
     private double _upperLimit;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(6)]
+    [property: JsonPropertyOrder(7)]
     private string _unit = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(7)]
+    [property: JsonPropertyOrder(8)]
     private int _delay;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(8)]
+    [property: JsonPropertyOrder(9)]
     private TestEvaluationSource _evaluationSource;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(9)]
+    [property: JsonPropertyOrder(10)]
     private bool _customMask;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(10)]
+    [property: JsonPropertyOrder(11)]
     private bool _repeatUntilPass;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(11)]
+    [property: JsonPropertyOrder(12)]
     private string _comment = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(12)]
+    [property: JsonPropertyOrder(13)]
     private bool _showCommentOnTestStart;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(13)]
+    [property: JsonPropertyOrder(14)]
     private string _customMessageBoxImagePath = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(14)]
+    [property: JsonPropertyOrder(15)]
     private bool _ignoreStep;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(15)]
+    [property: JsonPropertyOrder(16)]
     private bool _dontSaveResult;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(16)]
+    [property: JsonPropertyOrder(17)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(17)]
+    [property: JsonPropertyOrder(18)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(18)]
+    [property: JsonPropertyOrder(19)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(19)]
+    [property: JsonPropertyOrder(20)]
     private ScriptCommand _command = new() { Evaluate = true }; // for single non-script commands, evaluate is always true
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(20)]
+    [property: JsonPropertyOrder(21)]
     private ShellCommand _shellCommand = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(21)]
+    [property: JsonPropertyOrder(22)]
     private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(22)]
+    [property: JsonPropertyOrder(23)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -111,11 +122,17 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(23)]
+    [JsonPropertyOrder(24)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(24)]
+    [JsonPropertyOrder(25)]
     public RelayGroupDto? ExtStimState { get; set; }
+
+    private void HookEvents()
+    {
+        ScriptVariables.CollectionChanged += ScriptVariables_CollectionChanged;
+        MatrixState.PropertyChanged += Child_PropertyChanged;
+    }
 
     partial void OnCommandChanged(ScriptCommand? oldValue, ScriptCommand newValue)
     {
