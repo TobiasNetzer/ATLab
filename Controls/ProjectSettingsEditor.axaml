@@ -47,11 +47,11 @@
                                        Margin="0 0 0 10"/>
 
                             <CheckBox Content="Request Serial Number"
-                                      IsChecked="{Binding Settings.UseSerialNumber, Mode=TwoWay}"/>
+                                      IsChecked="{Binding Settings.IsUseSerialNumber, Mode=TwoWay}"/>
 
                             <CheckBox Content="Save Test Result"
-                                      IsChecked="{Binding Settings.SaveTestResult, Mode=TwoWay}"
-                                      IsEnabled="{Binding Settings.UseSerialNumber}"/>
+                                      IsChecked="{Binding Settings.IsSaveTestResult, Mode=TwoWay}"
+                                      IsEnabled="{Binding Settings.IsUseSerialNumber}"/>
 
                             <RadioButton Content="Always"
                                          Margin="30 0 0 0"
@@ -149,7 +149,7 @@
                                       Grid.Column="0"
                                       Grid.ColumnSpan="2"
                                       Content="Enable Serial Number Validation"
-                                      IsChecked="{Binding Settings.EnableSerialNumberValidation}"/>
+                                      IsChecked="{Binding Settings.IsEnableSerialNumberValidation}"/>
                             
                             <TextBlock Grid.Row="2"
                                        Grid.Column="0"

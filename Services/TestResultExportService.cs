@@ -27,7 +27,7 @@ public class TestResultExportService
 
     public async Task SaveAsync(IEnumerable<TestStepViewModel> steps, string serialNumber, int failedSteps)
     {
-        if (!_settings.SaveTestResult || !_settings.UseSerialNumber) return;
+        if (!_settings.IsSaveTestResult || !_settings.IsUseSerialNumber) return;
         if (_settings.SaveTestResultOptions == SaveTestResultOptions.ONLY_WHEN_PASSED && failedSteps > 0) return;
 
         try

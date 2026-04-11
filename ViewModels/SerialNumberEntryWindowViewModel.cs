@@ -38,7 +38,7 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase
         if (string.IsNullOrEmpty(serial))
             return false;
         
-        if (!_settings.EnableSerialNumberValidation)
+        if (!_settings.IsEnableSerialNumberValidation)
             return true;
         
         // Length check

@@ -16,7 +16,7 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     private string _serialNumberValidationLengthString = string.Empty;
 
     public bool CanSaveTestResult =>
-        Settings.UseSerialNumber && Settings.SaveTestResult;
+        Settings.IsUseSerialNumber && Settings.IsSaveTestResult;
 
     public ProjectSettingsViewModel(
         IFileDialogService fileDialogService,
@@ -29,8 +29,8 @@ public partial class ProjectSettingsViewModel : ViewModelBase
         {
             switch (e.PropertyName)
             {
-                case nameof(Settings.UseSerialNumber)
-                    or nameof(Settings.SaveTestResult):
+                case nameof(Settings.IsUseSerialNumber)
+                    or nameof(Settings.IsSaveTestResult):
                     
                     OnPropertyChanged(nameof(CanSaveTestResult));
                     break;

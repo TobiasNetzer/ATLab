@@ -19,14 +19,14 @@ public partial class ProjectSettings : ObservableObject
     partial void OnResultPrecisionChanged(int value) => OnSettingsChanged();
 
     [ObservableProperty]
-    private bool _useSerialNumber;
+    private bool _isUseSerialNumber;
 
-    partial void OnUseSerialNumberChanged(bool value) => OnSettingsChanged();
+    partial void OnIsUseSerialNumberChanged(bool value) => OnSettingsChanged();
 
     [ObservableProperty]
-    private bool _saveTestResult;
+    private bool _isSaveTestResult;
 
-    partial void OnSaveTestResultChanged(bool value) => OnSettingsChanged();
+    partial void OnIsSaveTestResultChanged(bool value) => OnSettingsChanged();
 
     [ObservableProperty]
     private SaveTestResultOptions _saveTestResultOptions = SaveTestResultOptions.ALWAYS;
@@ -39,9 +39,9 @@ public partial class ProjectSettings : ObservableObject
     partial void OnSaveTestResultFilePathChanged(string value) => OnSettingsChanged();
     
     [ObservableProperty]
-    private bool _enableSerialNumberValidation;
+    private bool _isEnableSerialNumberValidation;
     
-    partial void OnEnableSerialNumberValidationChanged(bool value) => OnSettingsChanged();
+    partial void OnIsEnableSerialNumberValidationChanged(bool value) => OnSettingsChanged();
     
     [ObservableProperty]
     private int _serialNumberValidationLength;
@@ -67,11 +67,11 @@ public partial class ProjectSettings : ObservableObject
     {
         ToleranceValue = 10;
         ResultPrecision = 3;
-        UseSerialNumber = false;
-        SaveTestResult = false;
+        IsUseSerialNumber = false;
+        IsSaveTestResult = false;
         SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
         SaveTestResultFilePath = string.Empty;
-        EnableSerialNumberValidation = false;
+        IsEnableSerialNumberValidation = false;
         SerialNumberValidationLength = 0;
         SerialNumberValidationStartsWith = string.Empty;
         SerialNumberValidationEndsWith = string.Empty;
@@ -84,11 +84,11 @@ public partial class ProjectSettings : ObservableObject
     {
         ToleranceValue = other.ToleranceValue;
         ResultPrecision = other.ResultPrecision;
-        UseSerialNumber = other.UseSerialNumber;
-        SaveTestResult = other.SaveTestResult;
+        IsUseSerialNumber = other.IsUseSerialNumber;
+        IsSaveTestResult = other.IsSaveTestResult;
         SaveTestResultOptions = other.SaveTestResultOptions;
         SaveTestResultFilePath = other.SaveTestResultFilePath;
-        EnableSerialNumberValidation = other.EnableSerialNumberValidation;
+        IsEnableSerialNumberValidation = other.IsEnableSerialNumberValidation;
         SerialNumberValidationLength = other.SerialNumberValidationLength;
         SerialNumberValidationStartsWith = other.SerialNumberValidationStartsWith;
         SerialNumberValidationEndsWith = other.SerialNumberValidationEndsWith;

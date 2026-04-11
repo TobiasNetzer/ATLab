@@ -166,7 +166,7 @@ public class TestExecutionController
 
     private async Task<bool> RequestSerialNumber(TestingTabViewModel vm)
     {
-        if (_projectSettings.UseSerialNumber)
+        if (_projectSettings.IsUseSerialNumber)
         {
             var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
 
