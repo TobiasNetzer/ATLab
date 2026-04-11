@@ -209,7 +209,8 @@
                     </ToggleButton>
                 </StackPanel>
                 
-                <StackPanel IsVisible="{Binding IsAdvancedExpanded}">
+                <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
+                            Spacing="10">
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
@@ -227,6 +228,32 @@
                                   IsChecked="{Binding TestStepViewModel.TestStep.DontSaveResult, FallbackValue='False'}"/>
                 
                     </StackPanel>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        
+                        <StackPanel Grid.Column="0">
+                        
+                            <TextBlock Text="Pass-Condition" FontWeight="Bold"/>
+                        
+                            <RadioButton Content="Continue"/>
+                            <RadioButton Content="Repeat"/>
+                            <RadioButton Content="End Test"/>
+                            <RadioButton Content="Jump"/>
+                            
+                        </StackPanel>
+                    
+                        <StackPanel Grid.Column="1">
+                        
+                            <TextBlock Text="Fail-Condition" FontWeight="Bold"/>
+                        
+                            <RadioButton Content="Continue"/>
+                            <RadioButton Content="Repeat"/>
+                            <RadioButton Content="End Test"/>
+                            <RadioButton Content="Jump"/>
+                            
+                        </StackPanel>
+                        
+                    </Grid>
                     
                 </StackPanel>
             </StackPanel>
