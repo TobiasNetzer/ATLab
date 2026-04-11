@@ -1,20 +1,16 @@
+using ATLab.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
 public partial class PassFailAction : ObservableObject
 {
-    [ObservableProperty]
-    private bool _isContinue = true;
 
     [ObservableProperty]
-    private bool _isRepeat;
+    private bool _isInvertResult;
     
     [ObservableProperty]
-    private bool _isEndTest;
-    
-    [ObservableProperty]
-    private bool _isJumpTo;
+    private PassFailMode _mode = PassFailMode.CONTINUE;
     
     [ObservableProperty]
     private string _jumpToId = string.Empty;
@@ -25,10 +21,8 @@ public partial class PassFailAction : ObservableObject
 
     public PassFailAction(PassFailAction other)
     {
-        IsContinue = other.IsContinue;
-        IsRepeat = other.IsRepeat;
-        IsEndTest = other.IsEndTest;
-        IsJumpTo = other.IsJumpTo;
+        IsInvertResult = other.IsInvertResult;
+        Mode = other.Mode;
         JumpToId = other.JumpToId;
     }
 }

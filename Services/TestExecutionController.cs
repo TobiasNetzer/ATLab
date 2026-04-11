@@ -38,11 +38,6 @@ public class TestExecutionController
             vm.SelectedStepIndex = index;
         };
 
-        _testExecutor.StepExecuted += () =>
-        {
-            vm.TestDuration = $"{vm.Elapsed.TotalSeconds:F2}s";
-        };
-
         _testExecutor.StepCompleted += (index, step) =>
         {
             vm.TestDuration = $"{vm.Elapsed.TotalSeconds:F2}s";

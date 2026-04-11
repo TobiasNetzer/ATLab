@@ -10,6 +10,7 @@ public class TestStepEditor
     private readonly TestHardwareRelayChannelsViewModel _hardware;
 
     private List<TestStep>? _clipboard;
+    private bool _clipboardIsCut;
 
     public TestStepEditor(TestHardwareRelayChannelsViewModel hardware)
     {
@@ -77,9 +78,10 @@ public class TestStepEditor
 
         _clipboard = vm.SelectedSteps
             .OrderBy(s => vm.TestSteps.IndexOf(s))
-            .Select(s => s.TestStep.Clone())
+            .Select(s => s.TestStep.Clone(preserveId: false))
             .ToList();
-
+        
+        _clipboardIsCut = false;
         vm.NotifyPasteChanged();
     }
 
@@ -96,7 +98,8 @@ public class TestStepEditor
 
         foreach (var model in _clipboard)
         {
-            var clone = model.Clone();
+            var clone = model.Clone(preserveId: _clipboardIsCut);
+            
             var vmStep = new TestStepViewModel(clone, _hardware.HardwareInfo);
             vmStep.PropertyChanged += vm.OnStepPropertyChanged;
 
@@ -111,6 +114,13 @@ public class TestStepEditor
             vm.SelectedSteps.Add(p);
 
         vm.SelectedStep = pasted.Last();
+
+        if (!_clipboardIsCut)
+            return;
+        
+        _clipboard = null;
+        _clipboardIsCut = false;
+        vm.NotifyPasteChanged();
     }
 
     public void CutSteps(TestingTabViewModel vm)
@@ -118,7 +128,15 @@ public class TestStepEditor
         if (vm.SelectedSteps.Count == 0)
             return;
 
-        CopySteps(vm);
+        foreach (var step in vm.SelectedSteps)
+            step.TestStep.UpdateDtos();
+
+        _clipboard = vm.SelectedSteps
+            .OrderBy(s => vm.TestSteps.IndexOf(s))
+            .Select(s => s.TestStep.Clone(preserveId: true))
+            .ToList();
+        
+        _clipboardIsCut = true;
 
         var toRemove = vm.SelectedSteps
             .OrderByDescending(s => vm.TestSteps.IndexOf(s))

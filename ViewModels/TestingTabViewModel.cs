@@ -114,7 +114,7 @@ public partial class TestingTabViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-    public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(250) : TimeSpan.Zero;
+    public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(200) : TimeSpan.Zero;
 
     public TestingTabViewModel(
         ISettingsService settingsService,
@@ -275,7 +275,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState);
             TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState);
             TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
-            TestStepConfiguratorViewModel.LoadTestStep(value);
+            TestStepConfiguratorViewModel.LoadTestStep(value, TestSteps);
             ScriptSelector.LoadTestStep(value);
             CommandEditor.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);

@@ -28,11 +28,12 @@ public class TestExecutor : ITestExecutor
 
     public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
-    public event Action? StepExecuted;
     public event Action<int, TestStepViewModel>? StepCompleted;
     public event Action? TestCompleted;
     public event Action? TestCancelled;
     public event Action? TestRepeated;
+    
+    private const int MinRepeatDelayMs = 5;
 
     public TestExecutor(
         ITestHardware testHardware,
@@ -214,39 +215,45 @@ public class TestExecutor : ITestExecutor
                 if (!result)
                     throw new OperationCanceledException();
             }
+            
+            stepExecutionResult = await _runner.ExecuteAsync(step, token);
 
-            do
+            token.ThrowIfCancellationRequested();
+
+            switch (stepExecutionResult.Status)
             {
-                stepExecutionResult = await _runner.ExecuteAsync(step, token);
-
-                token.ThrowIfCancellationRequested();
-
-                switch (stepExecutionResult.Status)
-                {
-                    case OperationStatus.SUCCESS:
-                        EvaluateTestStep(step, stepExecutionResult.Value);
-                        break;
-                
-                    case OperationStatus.TIMEOUT:
-                        TestStepExecutionTimedOut(step);
-                        break;
-                
-                    case OperationStatus.FAILURE:
-                        TestStepExecutionFailed(step, stepExecutionResult);
-                        break;
-                
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                OnStepExecuted();
-
-            } while (step.TestStep.RepeatUntilPass && !step.IsPassed && !stepExecutionResult.IsFailure);
-
-            OnStepCompleted(i, step);
-
+                case OperationStatus.SUCCESS:
+                    EvaluateTestStep(step, stepExecutionResult.Value);
+                    break;
+            
+                case OperationStatus.TIMEOUT:
+                    TestStepExecutionTimedOut(step);
+                    break;
+            
+                case OperationStatus.FAILURE:
+                    TestStepExecutionFailed(step, stepExecutionResult);
+                    break;
+            
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             if (stepExecutionResult.IsFailure)
                 break;
+            
+            var nextIndex = EvaluateNextStepIndex(steps, i, step);
+            
+            OnStepCompleted(i, step);
+            
+            if (nextIndex == null)
+                break; // END_TEST
+
+            i = nextIndex.Value - 1;
+            
+            if ((step.TestStep.OnPass.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0) || (step.TestStep.OnFail.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0))
+            {
+                await Task.Delay(MinRepeatDelayMs, token); // minimum delay between repeats to prevent UI lockup
+            }
         }
     }
 
@@ -301,6 +308,61 @@ public class TestExecutor : ITestExecutor
         step.IsPassed = false;
         step.Deviation = string.Empty;
     }
+    
+    private static int FindStepIndexById(IReadOnlyList<TestStepViewModel> steps, string id)
+    {
+        for (var i = 0; i < steps.Count; i++)
+            if (steps[i].TestStep.Id == id)
+                return i;
+
+        return -1;
+    }
+    
+    private int? EvaluateNextStepIndex(
+        IReadOnlyList<TestStepViewModel> steps,
+        int currentIndex,
+        TestStepViewModel step)
+    {
+        var action = step.IsPassed ? step.TestStep.OnPass : step.TestStep.OnFail;
+        
+        if (action.IsInvertResult)
+            step.IsPassed = !step.IsPassed;
+
+        switch (action.Mode)
+        {
+            case PassFailMode.CONTINUE:
+                return currentIndex + 1;
+
+            case PassFailMode.REPEAT:
+                return currentIndex;
+
+            case PassFailMode.END_TEST:
+                return null; // signals end test
+
+            case PassFailMode.JUMP_TO:
+                var targetIndex = FindStepIndexById(steps, action.JumpToId);
+                
+                if (targetIndex < 0)
+                {
+                    _errorService.AddError($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to a non-existent step.");
+                    step.IsPassed = false;
+                    return null;
+                }
+
+                if (steps[targetIndex].TestStep.IgnoreStep)
+                {
+                    _errorService.AddError($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name}.");
+                    step.IsPassed = false;
+                    return null;
+                }
+                
+                return targetIndex;
+
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
 
     private bool IsOverflow(double value) =>
         value >= 1E9;
@@ -310,9 +372,6 @@ public class TestExecutor : ITestExecutor
     
     private void OnStepStarted(int index, TestStepViewModel step) =>
         StepStarted?.Invoke(index, step);
-    
-    private void OnStepExecuted() =>
-        StepExecuted?.Invoke();
 
     private void OnStepCompleted(int index, TestStepViewModel step) =>
         StepCompleted?.Invoke(index, step);

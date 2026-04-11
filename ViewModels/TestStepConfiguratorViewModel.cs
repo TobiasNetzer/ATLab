@@ -41,6 +41,15 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isAdvancedExpanded;
+    
+    [ObservableProperty]
+    private List<JumpTargetDto> _jumpTargets = new();
+    
+    [ObservableProperty]
+    private JumpTargetDto? _selectedPassJumpTarget;
+
+    [ObservableProperty]
+    private JumpTargetDto? _selectedFailJumpTarget;
 
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
@@ -54,7 +63,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
     }
 
-    public void LoadTestStep(TestStepViewModel testStep)
+    public void LoadTestStep(TestStepViewModel testStep, IEnumerable<TestStepViewModel> allSteps)
     {
         if (TestStepViewModel?.TestStep != null)
         {
@@ -67,6 +76,16 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         
         TestStepViewModel.TestStep.PropertyChanged += TestStepPropertyChanged;
         UpdateStringProperties();
+        
+        JumpTargets = allSteps
+            .Select(s => new JumpTargetDto(s.TestStep.Id, s.TestStep.Number, s.TestStep.Name))
+            .ToList();
+        
+        SelectedPassJumpTarget =
+            JumpTargets.FirstOrDefault(j => j.Id == TestStepViewModel.TestStep.OnPass.JumpToId);
+
+        SelectedFailJumpTarget =
+            JumpTargets.FirstOrDefault(j => j.Id == TestStepViewModel.TestStep.OnFail.JumpToId);
     }
 
     private void UpdateStringProperties()
@@ -194,6 +213,18 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsStepConfiguratorExpanded = value;
+    }
+    
+    partial void OnSelectedPassJumpTargetChanged(JumpTargetDto? value)
+    {
+        if (TestStepViewModel?.TestStep == null || value == null) return;
+        TestStepViewModel.TestStep.OnPass.JumpToId = value?.Id ?? string.Empty;
+    }
+
+    partial void OnSelectedFailJumpTargetChanged(JumpTargetDto? value)
+    {
+        if (TestStepViewModel?.TestStep == null || value == null) return;
+        TestStepViewModel.TestStep.OnFail.JumpToId = value?.Id ?? string.Empty;
     }
 
     [RelayCommand]

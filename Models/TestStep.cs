@@ -61,65 +61,61 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(10)]
     private bool _customMask;
-    
-    [ObservableProperty]
-    [property: JsonPropertyOrder(11)]
-    private bool _repeatUntilPass;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(12)]
+    [property: JsonPropertyOrder(11)]
     private string _comment = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(13)]
+    [property: JsonPropertyOrder(12)]
     private bool _showCommentOnTestStart;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(14)]
+    [property: JsonPropertyOrder(13)]
     private string _customMessageBoxImagePath = string.Empty;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(15)]
+    [property: JsonPropertyOrder(14)]
     private bool _ignoreStep;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(16)]
+    [property: JsonPropertyOrder(15)]
     private bool _dontSaveResult;
 
     [ObservableProperty]
+    [property: JsonPropertyOrder(16)]
+    private PassFailAction _onPass = new();
+    
+    [ObservableProperty]
     [property: JsonPropertyOrder(17)]
-    private PassFailAction _passCondition = new();
+    private PassFailAction _onFail = new();
     
     [ObservableProperty]
     [property: JsonPropertyOrder(18)]
-    private PassFailAction _failCondition = new();
-    
-    [ObservableProperty]
-    [property: JsonPropertyOrder(19)]
     private string _targetDevice = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(20)]
+    [property: JsonPropertyOrder(19)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(21)]
+    [property: JsonPropertyOrder(20)]
     private ObservableCollection<ScriptVariable> _scriptVariables = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(22)]
+    [property: JsonPropertyOrder(21)]
     private ScriptCommand _command = new() { Evaluate = true }; // for single non-script commands, evaluate is always true
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(23)]
+    [property: JsonPropertyOrder(22)]
     private ShellCommand _shellCommand = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(24)]
+    [property: JsonPropertyOrder(23)]
     private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(25)]
+    [property: JsonPropertyOrder(24)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -130,10 +126,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(26)]
+    [JsonPropertyOrder(25)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(27)]
+    [JsonPropertyOrder(26)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     private void HookEvents()
@@ -142,13 +138,13 @@ public partial class TestStep : ObservableObject
         MatrixState.PropertyChanged += Child_PropertyChanged;
     }
 
-    partial void OnPassConditionChanged(PassFailAction? oldValue, PassFailAction newValue)
+    partial void OnOnPassChanged(PassFailAction? oldValue, PassFailAction newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
     }
     
-    partial void OnFailConditionChanged(PassFailAction? oldValue, PassFailAction newValue)
+    partial void OnOnFailChanged(PassFailAction? oldValue, PassFailAction newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -220,8 +216,8 @@ public partial class TestStep : ObservableObject
 
     private void Child_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(PassCondition));
-        OnPropertyChanged(nameof(FailCondition));
+        OnPropertyChanged(nameof(OnPass));
+        OnPropertyChanged(nameof(OnFail));
         OnPropertyChanged(nameof(ShellCommand));
         OnPropertyChanged(nameof(MatrixState));
         OnPropertyChanged(nameof(LiveStimState));
@@ -235,9 +231,9 @@ public partial class TestStep : ObservableObject
         ExtStimState = LiveExtStimState.ToDto();
     }
     
-    public TestStep Clone()
+    public TestStep Clone(bool preserveId = false)
     {
-        var clone = new TestStep
+        var clone = new TestStep(preserveId ? this.Id : Guid.NewGuid().ToString("N"))
         {
             Number = Number,
             Name = Name,
@@ -248,14 +244,13 @@ public partial class TestStep : ObservableObject
             Delay = Delay,
             EvaluationSource = EvaluationSource,
             CustomMask = CustomMask,
-            RepeatUntilPass = RepeatUntilPass,
             Comment = Comment,
             ShowCommentOnTestStart = ShowCommentOnTestStart,
             CustomMessageBoxImagePath = CustomMessageBoxImagePath,
             IgnoreStep = IgnoreStep,
             DontSaveResult = DontSaveResult,
-            PassCondition = new PassFailAction(PassCondition),
-            FailCondition = new PassFailAction(FailCondition),
+            OnPass = new PassFailAction(OnPass),
+            OnFail = new PassFailAction(OnFail),
             TargetDevice = TargetDevice,
             ScriptId = ScriptId,
             Command = new ScriptCommand(Command),

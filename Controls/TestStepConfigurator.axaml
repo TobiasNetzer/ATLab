@@ -13,6 +13,10 @@
         <Style Selector="Border.WithDynamicCorner.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
+        
+        <Style Selector="ComboBox /template/ Popup#PART_Popup">
+            <Setter Property="Width" Value="250"/>
+        </Style>
     </UserControl.Styles>
     
     <StackPanel>
@@ -67,8 +71,7 @@
                     <TextBlock Text="Name"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              helpers:FocusExtensions.MoveFocusOnEnter="True"
-                             TabIndex="0"
-                             MaxLength="50"/>
+                             TabIndex="0"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal"
@@ -189,7 +192,8 @@
                     
                     <Separator Width="300"/>
 
-                    <ToggleButton IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}">
+                    <ToggleButton IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}"
+                                  TabIndex="12">
                         <ToggleButton.Template>
                             <ControlTemplate>
                                 <Border Background="Transparent" Padding="5">
@@ -214,11 +218,7 @@
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
-                
-                        <CheckBox Content="Repeat Until Pass"
-                                  TabIndex="12"
-                                  IsChecked="{Binding TestStepViewModel.TestStep.RepeatUntilPass, FallbackValue='False'}"/>
-                
+                        
                         <CheckBox Content="Ignore Step"
                                   TabIndex="13"
                                   IsChecked="{Binding TestStepViewModel.TestStep.IgnoreStep, FallbackValue='False'}"/>
@@ -233,28 +233,95 @@
                         
                         <StackPanel Grid.Column="0">
                         
-                            <TextBlock Text="Pass-Condition" FontWeight="Bold"/>
+                            <TextBlock Text="Pass-Action" FontWeight="Bold"/>
+                            
+                            <CheckBox Content="Invert Result"
+                                      TabIndex="15"
+                                      IsChecked="{Binding TestStepViewModel.TestStep.OnPass.IsInvertResult}"/>
                         
-                            <RadioButton Content="Continue"/>
-                            <RadioButton Content="Repeat"/>
-                            <RadioButton Content="End Test"/>
-                            <RadioButton Content="Jump"/>
+                            <RadioButton Content="Continue"
+                                         TabIndex="16"
+                                         GroupName="PassAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE}"/>
+
+                            <RadioButton Content="Repeat"
+                                         TabIndex="17"
+                                         GroupName="PassAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT}"/>
+
+                            <RadioButton Content="End Test"
+                                         TabIndex="18"
+                                         GroupName="PassAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST}"/>
+                            
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <RadioButton Content="Jump To"
+                                             TabIndex="19"
+                                             GroupName="PassAction"
+                                             IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}"/>
+
+                                <ComboBox Width="120"
+                                          TabIndex="20"
+                                          ItemsSource="{Binding JumpTargets}"
+                                          SelectedItem="{Binding SelectedPassJumpTarget, Mode=TwoWay}"
+                                          IsEnabled="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Display}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       TextWrapping="NoWrap"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
                             
                         </StackPanel>
                     
                         <StackPanel Grid.Column="1">
                         
-                            <TextBlock Text="Fail-Condition" FontWeight="Bold"/>
-                        
-                            <RadioButton Content="Continue"/>
-                            <RadioButton Content="Repeat"/>
-                            <RadioButton Content="End Test"/>
-                            <RadioButton Content="Jump"/>
+                            <TextBlock Text="Fail-Action" FontWeight="Bold"/>
                             
-                        </StackPanel>
+                            <CheckBox Content="Invert Result"
+                                      TabIndex="21"
+                                      IsChecked="{Binding TestStepViewModel.TestStep.OnFail.IsInvertResult}"/>
                         
+                            <RadioButton Content="Continue"
+                                         TabIndex="22"
+                                         GroupName="FailAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE}"/>
+
+                            <RadioButton Content="Repeat"
+                                         TabIndex="23"
+                                         GroupName="FailAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT}"/>
+
+                            <RadioButton Content="End Test"
+                                         TabIndex="24"
+                                         GroupName="FailAction"
+                                         IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST}"/>
+                            
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <RadioButton Content="Jump To"
+                                             TabIndex="25"
+                                             GroupName="FailAction"
+                                             IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}"/>
+
+                                <ComboBox Width="120"
+                                          TabIndex="26"
+                                          ItemsSource="{Binding JumpTargets}"
+                                          SelectedItem="{Binding SelectedFailJumpTarget, Mode=TwoWay}"
+                                          IsEnabled="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Display}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       TextWrapping="NoWrap"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
-                    
                 </StackPanel>
             </StackPanel>
         </Border>
