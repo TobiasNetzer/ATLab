@@ -23,7 +23,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     private string _skipCharacters = string.Empty;
 
     [ObservableProperty]
-    private bool _onlyNumeric;
+    private bool _isOnlyNumeric;
 
     [ObservableProperty]
     private string _lastOriginalResponse = string.Empty;
@@ -85,10 +85,10 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
-    partial void OnOnlyNumericChanged(bool value)
+    partial void OnIsOnlyNumericChanged(bool value)
     {
         if (_currentTestStep?.ResponseMask != null)
-            _currentTestStep.ResponseMask.OnlyNumeric = value;
+            _currentTestStep.ResponseMask.IsOnlyNumeric = value;
     }
 
     private void UpdateStringProperties()
@@ -99,7 +99,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
-        OnlyNumeric = _currentTestStep.ResponseMask.OnlyNumeric;
+        IsOnlyNumeric = _currentTestStep.ResponseMask.IsOnlyNumeric;
         LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
         LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
         LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;
@@ -107,7 +107,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         OnPropertyChanged(nameof(Mask));
         OnPropertyChanged(nameof(Length));
         OnPropertyChanged(nameof(SkipCharacters));
-        OnPropertyChanged(nameof(OnlyNumeric));
+        OnPropertyChanged(nameof(IsOnlyNumeric));
         OnPropertyChanged(nameof(LastOriginalResponse));
         OnPropertyChanged(nameof(LastProcessedInput));
         OnPropertyChanged(nameof(LastFinalResult));
@@ -126,7 +126,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
-        OnlyNumeric = _currentTestStep.ResponseMask.OnlyNumeric;
+        IsOnlyNumeric = _currentTestStep.ResponseMask.IsOnlyNumeric;
         LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
         LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
         LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;

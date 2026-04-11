@@ -75,8 +75,8 @@ public partial class ScriptViewModel : ViewModelBase
     {
         foreach (var cmd in Commands)
         {
-            if (cmd != selected && cmd.Evaluate)
-                cmd.Evaluate = false;
+            if (cmd != selected && cmd.IsEvaluate)
+                cmd.IsEvaluate = false;
         }
     }
 

@@ -99,9 +99,9 @@ public class CommandExecutor : ICommandExecutor, IDisposable
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
 
-                switch (command.ExpectResponse)
+                switch (command.IsExpectResponse)
                 {
-                    case true when command.Evaluate:
+                    case true when command.IsEvaluate:
                         queryResult = await client.QueryAsync(commandText, command.TimeoutMs);
                         break;
                     case true:

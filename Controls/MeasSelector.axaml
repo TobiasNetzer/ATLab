@@ -123,7 +123,7 @@
                               FontFamily="{StaticResource FluentIconsFont}"
                               FontSize="20"
                               ToolTip.Tip="Enable external probe"
-                              IsChecked="{Binding ExternalProbeEnabled, Mode=TwoWay}"/>
+                              IsChecked="{Binding IsExternalProbeEnabled, Mode=TwoWay}"/>
                 
             </StackPanel>
         </Border>

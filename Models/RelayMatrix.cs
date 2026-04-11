@@ -11,7 +11,7 @@ public partial class RelayMatrix : ObservableObject
     private int _activeChannelLow;
 
     [ObservableProperty]
-    private bool _useExternalProbe;
+    private bool _isExternalProbe;
 
     public RelayMatrix(int activeChannelHigh, int activeChannelLow)
     {
@@ -23,7 +23,7 @@ public partial class RelayMatrix : ObservableObject
     {
         ActiveChannelHigh = other.ActiveChannelHigh;
         ActiveChannelLow = other.ActiveChannelLow;
-        UseExternalProbe = other.UseExternalProbe;
+        IsExternalProbe = other.IsExternalProbe;
     }
     
     public RelayMatrix() {}

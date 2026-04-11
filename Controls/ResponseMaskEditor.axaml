@@ -89,7 +89,7 @@
                     </StackPanel>
                     
                     <CheckBox Content="Only Numeric Characters"
-                              IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.OnlyNumeric, Mode=TwoWay}"
+                              IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsOnlyNumeric, Mode=TwoWay}"
                               Margin="0 20 0 0"/>
 
                 </StackPanel>

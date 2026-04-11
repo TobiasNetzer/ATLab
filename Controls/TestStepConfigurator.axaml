@@ -145,7 +145,7 @@
                     <CheckBox VerticalAlignment="Bottom"
                               Content="Custom Response Mask"
                               TabIndex="7"
-                              IsChecked="{Binding TestStepViewModel.TestStep.CustomMask, FallbackValue='False'}"/>
+                              IsChecked="{Binding TestStepViewModel.TestStep.IsCustomMask, FallbackValue='False'}"/>
                     
                 </StackPanel>
                 
@@ -170,7 +170,7 @@
                     <CheckBox
                         Content="Show Message"
                         TabIndex="9"
-                        IsChecked="{Binding TestStepViewModel.TestStep.ShowCommentOnTestStart, FallbackValue=False}"/>
+                        IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                     
                     <Button Content="&#xE8B9;"
                             FontFamily="{StaticResource FluentIconsFont}"
@@ -215,25 +215,22 @@
                 
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
-                    
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="10">
                         
-                        <CheckBox Content="Ignore Step"
-                                  TabIndex="13"
-                                  IsChecked="{Binding TestStepViewModel.TestStep.IgnoreStep, FallbackValue='False'}"/>
-                
-                        <CheckBox Content="Don't Save Result"
-                                  TabIndex="14"
-                                  IsChecked="{Binding TestStepViewModel.TestStep.DontSaveResult, FallbackValue='False'}"/>
-                
-                    </StackPanel>
+                    <CheckBox Content="Ignore Step"
+                              TabIndex="13"
+                              IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
+            
+                    <CheckBox Content="Exclude from Export"
+                              TabIndex="14"
+                              IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
+                    
                     
                     <Grid ColumnDefinitions="*,*">
                         
                         <StackPanel Grid.Column="0">
                         
-                            <TextBlock Text="Pass-Action" FontWeight="Bold"/>
+                            <TextBlock Text="Pass-Action" FontWeight="Bold"
+                                       Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
                                       TabIndex="15"
@@ -279,7 +276,8 @@
                     
                         <StackPanel Grid.Column="1">
                         
-                            <TextBlock Text="Fail-Action" FontWeight="Bold"/>
+                            <TextBlock Text="Fail-Action" FontWeight="Bold"
+                                       Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
                                       TabIndex="21"

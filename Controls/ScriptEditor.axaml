@@ -222,7 +222,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox
-                                                IsChecked="{Binding ExpectResponse}"
+                                                IsChecked="{Binding IsExpectResponse}"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"/>
                                         </DataTemplate>
@@ -232,7 +232,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <RadioButton
-                                                IsChecked="{Binding Evaluate}"
+                                                IsChecked="{Binding IsEvaluate}"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"/>
                                         </DataTemplate>

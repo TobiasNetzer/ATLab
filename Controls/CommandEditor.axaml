@@ -113,7 +113,7 @@
                                 Margin="0 8 0 0">
                         
                         <CheckBox Content="Expect Response"
-                                  IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.ExpectResponse}"/>
+                                  IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.IsExpectResponse}"/>
                         
                         <TextBlock Text="Timeout (ms)"
                                    VerticalAlignment="Center"

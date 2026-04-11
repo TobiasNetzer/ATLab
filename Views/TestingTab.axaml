@@ -399,7 +399,7 @@
 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.CustomMask}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.IsCustomMask}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />

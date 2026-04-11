@@ -51,7 +51,7 @@ public class ResponseProcessor : IResponseProcessor
         }
 
         // Clean Numeric
-        if (mask.OnlyNumeric)
+        if (mask.IsOnlyNumeric)
         {
             // Keep only digits, decimal point, signs and scientific notation (E/e)
             processedInput = Regex.Replace(processedInput, @"[^0-9\.\+\-Ee]", "");

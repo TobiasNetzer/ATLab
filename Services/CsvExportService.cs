@@ -71,7 +71,7 @@ public class CsvExportService
     {
         return from vm in steps
             let ts = vm.TestStep
-            where !ts.IgnoreStep && !ts.DontSaveResult
+            where !ts.IsIgnoreStep && !ts.IsExcludeFromExport
             select new TestStepCsvRow(
                 Number: ts.Number,
                 Name: ts.Name,

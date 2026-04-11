@@ -198,14 +198,14 @@ public class TestExecutor : ITestExecutor
         {
             var step = steps[i];
 
-            if (step.TestStep.IgnoreStep)
+            if (step.TestStep.IsIgnoreStep)
                 continue;
 
             OnStepStarted(i, step);
 
             OperationResult<double> stepExecutionResult;
 
-            if (step.TestStep.ShowCommentOnTestStart)
+            if (step.TestStep.IsShowComment)
             {
                 var result = await _messageBoxService.ShowConfirmationImageAsync(
                     "Test Execution Halted",
@@ -349,7 +349,7 @@ public class TestExecutor : ITestExecutor
                     return null;
                 }
 
-                if (steps[targetIndex].TestStep.IgnoreStep)
+                if (steps[targetIndex].TestStep.IsIgnoreStep)
                 {
                     _errorService.AddError($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name}.");
                     step.IsPassed = false;

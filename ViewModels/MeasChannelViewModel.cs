@@ -24,7 +24,7 @@ public partial class MeasChannelViewModel : ViewModelBase
     private int _isSelectedL;
     
     [ObservableProperty]
-    private bool _externalProbeEnabled;
+    private bool _isExternalProbeEnabled;
     
     private RelayMatrix? _relayMatrixState;
     
@@ -61,10 +61,10 @@ public partial class MeasChannelViewModel : ViewModelBase
             _relayMatrixState.ActiveChannelLow = value;
     }
 
-    partial void OnExternalProbeEnabledChanged(bool value)
+    partial void OnIsExternalProbeEnabledChanged(bool value)
     {
         if (_relayMatrixState != null)
-            _relayMatrixState.UseExternalProbe = value;
+            _relayMatrixState.IsExternalProbe = value;
     }
 
     public void LoadActiveMeasChannels(RelayMatrix relayMatrixState)
@@ -72,7 +72,7 @@ public partial class MeasChannelViewModel : ViewModelBase
         _relayMatrixState = relayMatrixState;
         IsSelectedH = relayMatrixState.ActiveChannelHigh;
         IsSelectedL = relayMatrixState.ActiveChannelLow;
-        ExternalProbeEnabled = relayMatrixState.UseExternalProbe;
+        IsExternalProbeEnabled = relayMatrixState.IsExternalProbe;
     }
     
     partial void OnIsExpandedChanged(bool value)

@@ -60,7 +60,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(10)]
-    private bool _customMask;
+    private bool _isCustomMask;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(11)]
@@ -68,7 +68,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(12)]
-    private bool _showCommentOnTestStart;
+    private bool _isShowComment;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(13)]
@@ -76,11 +76,11 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(14)]
-    private bool _ignoreStep;
+    private bool _isIgnoreStep;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(15)]
-    private bool _dontSaveResult;
+    private bool _isExcludeFromExport;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(16)]
@@ -104,7 +104,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(21)]
-    private ScriptCommand _command = new() { Evaluate = true }; // for single non-script commands, evaluate is always true
+    private ScriptCommand _command = new() { IsEvaluate = true }; // for single non-script commands, evaluate is always true
     
     [ObservableProperty]
     [property: JsonPropertyOrder(22)]
@@ -243,12 +243,12 @@ public partial class TestStep : ObservableObject
             Unit = Unit,
             Delay = Delay,
             EvaluationSource = EvaluationSource,
-            CustomMask = CustomMask,
+            IsCustomMask = IsCustomMask,
             Comment = Comment,
-            ShowCommentOnTestStart = ShowCommentOnTestStart,
+            IsShowComment = IsShowComment,
             CustomMessageBoxImagePath = CustomMessageBoxImagePath,
-            IgnoreStep = IgnoreStep,
-            DontSaveResult = DontSaveResult,
+            IsIgnoreStep = IsIgnoreStep,
+            IsExcludeFromExport = IsExcludeFromExport,
             OnPass = new PassFailAction(OnPass),
             OnFail = new PassFailAction(OnFail),
             TargetDevice = TargetDevice,

@@ -12,10 +12,10 @@ public partial class ScriptCommandViewModel : ViewModelBase
     private string _command;
 
     [ObservableProperty]
-    private bool _expectResponse;
+    private bool _isExpectResponse;
     
     [ObservableProperty]
-    private bool _evaluate;
+    private bool _isEvaluate;
 
     [ObservableProperty]
     private string _delayMs;
@@ -29,17 +29,17 @@ public partial class ScriptCommandViewModel : ViewModelBase
         _parent = parent;
         
         Command = model.Command;
-        ExpectResponse = model.ExpectResponse;
-        Evaluate = model.Evaluate;
+        IsExpectResponse = model.IsExpectResponse;
+        IsEvaluate = model.IsEvaluate;
         DelayMs = model.DelayMs.ToString();
         TimeoutMs = model.TimeoutMs.ToString();
     }
 
     partial void OnCommandChanged(string value) => _model.Command = value;
-    partial void OnExpectResponseChanged(bool value) => _model.ExpectResponse = value;
-    partial void OnEvaluateChanged(bool value)
+    partial void OnIsExpectResponseChanged(bool value) => _model.IsExpectResponse = value;
+    partial void OnIsEvaluateChanged(bool value)
     {
-        _model.Evaluate = value;
+        _model.IsEvaluate = value;
 
         if (value)
             _parent?.ClearEvaluateExcept(this);

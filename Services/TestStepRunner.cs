@@ -40,7 +40,7 @@ public class TestStepRunner : ITestStepRunner
             _testHardware.ExtStimChannelStates = step.TestStep.LiveExtStimState.ToBoolArray();
             _testHardware.ActiveMeasChannelH = Convert.ToByte(step.TestStep.MatrixState.ActiveChannelHigh);
             _testHardware.ActiveMeasChannelL = Convert.ToByte(step.TestStep.MatrixState.ActiveChannelLow);
-            _testHardware.UseExternalProbe = Convert.ToByte(step.TestStep.MatrixState.UseExternalProbe);
+            _testHardware.UseExternalProbe = Convert.ToByte(step.TestStep.MatrixState.IsExternalProbe);
 
             var result = await _testHardware.UpdateRelayStates();
 
@@ -51,7 +51,7 @@ public class TestStepRunner : ITestStepRunner
 
             await Task.Delay(step.TestStep.Delay, token);
             
-            var mask = step.TestStep.CustomMask ? step.TestStep.ResponseMask : null;
+            var mask = step.TestStep.IsCustomMask ? step.TestStep.ResponseMask : null;
 
             switch (step.TestStep.EvaluationSource)
             {
