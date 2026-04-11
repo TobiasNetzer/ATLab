@@ -137,7 +137,7 @@
                         FontSize="20"
                         ToolTip.Tip="Enable development mode"
                         IsChecked="{Binding IsDevelopmentMode, Mode=TwoWay}"
-                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}"/>
+                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}"/>
                 
             </StackPanel>
         </Border>
@@ -159,7 +159,7 @@
                   VerticalScrollBarVisibility="Auto"
                   SelectionMode="Extended"
                   behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
-                  IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}">
+                  IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
@@ -286,7 +286,7 @@
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=RUNNING}">
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RUNNING}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="Running Test: {0} / {1}">
                         <Binding Path="SelectedStep.TestStep.Number" FallbackValue="" />
@@ -303,7 +303,7 @@
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=PASSED}"/>
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=PASSED}"/>
             
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
@@ -313,7 +313,7 @@
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=FAILED}"/>
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FAILED}"/>
             
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
@@ -323,7 +323,7 @@
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=CANCELLED}"/>
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CANCELLED}"/>
             
             <TextBlock Grid.Column="0"
                        Grid.Row="2"
@@ -380,22 +380,22 @@
             <StackPanel HorizontalAlignment="Right"
                         Spacing="10"
                         Margin="0 0 10 0"
-                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumEqualsToBool}, ConverterParameter=RUNNING}">
+                        IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
                 
                 <controls:TestStepConfigurator 
                     DataContext="{Binding TestStepConfiguratorViewModel}"/>
 
                 <controls:ScriptSelector
                     ScriptSelectorVm="{Binding ScriptSelector}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SCRIPT}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SCRIPT}"/>
                 
                 <controls:CommandEditor
                     CommandEditorVm="{Binding CommandEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=COMMAND}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND}"/>
                 
                 <controls:ShellCommandEditor
                     ShellCommandEditorVm="{Binding ShellCommandEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SHELL_COMMAND}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND}"/>
 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding ResponseMaskEditor}"

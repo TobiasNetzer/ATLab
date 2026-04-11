@@ -55,12 +55,12 @@
 
                             <RadioButton Content="Always"
                                          Margin="30 0 0 0"
-                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ALWAYS}"
+                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ALWAYS}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
 
                             <RadioButton Content="Passed Only"
                                          Margin="30 0 0 0"
-                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=ONLY_WHEN_PASSED}"
+                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
                             
                             <TextBlock

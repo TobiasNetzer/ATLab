@@ -40,8 +40,8 @@
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <converters:UnitFormatConverter x:Key="UnitFormatConverter" />
-        <converters:EnumEqualsToBoolConverter x:Key="EnumEqualsToBool"/>
-        <converters:InvertedEnumEqualsToBoolConverter x:Key="InvertedEnumEqualsToBool"/>
+        <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+        <converters:InvertedEnumToBoolConverter x:Key="InvertedEnumToBoolConverter"/>
         <converters:TestStatusToBrushConverter x:Key="TestStatusToBrushConverter"/>
         <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
     </Application.Resources>

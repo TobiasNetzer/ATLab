@@ -62,7 +62,7 @@
                                               Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
                                               IsEditable="True"
                                               Width="170"
-                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}">
+                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}">
                                         <ComboBox.Styles>
                                             <Style Selector="TextBox#PART_EditableTextBox">
                                                 <Setter Property="Padding" Value="0"/>
@@ -76,7 +76,7 @@
                                               Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
                                               IsEditable="True"
                                               Width="170"
-                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA, FallbackValue='FALSE'}">
+                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}">
                                         <ComboBox.Styles>
                                             <Style Selector="TextBox#PART_EditableTextBox">
                                                 <Setter Property="Padding" Value="0"/>
@@ -99,7 +99,7 @@
                     </Grid>
                     
                     <Grid Grid.Row="3"
-                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=SERIAL}"
+                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
                           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="10">
                         
@@ -155,7 +155,7 @@
                     </Grid>
                     
                     <Grid Grid.Row="4"
-                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumEqualsToBool}, ConverterParameter=VISA, FallbackValue='FALSE'}"
+                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
                           RowDefinitions="Auto,Auto"
                           RowSpacing="10">
                         

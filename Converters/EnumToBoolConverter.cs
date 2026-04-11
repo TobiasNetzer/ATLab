@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
-public class EnumEqualsToBoolConverter : IValueConverter
+public class EnumToBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
