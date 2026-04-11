@@ -257,7 +257,7 @@
                                              GroupName="PassAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}"/>
 
-                                <ComboBox Width="120"
+                                <ComboBox Width="130"
                                           TabIndex="20"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedPassJumpTarget, Mode=TwoWay}"
@@ -274,7 +274,8 @@
                             
                         </StackPanel>
                     
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Column="1"
+                                    HorizontalAlignment="Right">
                         
                             <TextBlock Text="Fail-Action" FontWeight="Bold"
                                        Margin="0 0 0 5"/>
@@ -304,7 +305,7 @@
                                              GroupName="FailAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO}"/>
 
-                                <ComboBox Width="120"
+                                <ComboBox Width="130"
                                           TabIndex="26"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedFailJumpTarget, Mode=TwoWay}"
