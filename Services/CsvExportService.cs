@@ -75,11 +75,10 @@ public class CsvExportService
             select new TestStepCsvRow(
                 Number: ts.Number,
                 Name: ts.Name,
-                NominalValue: ts.NominalValue,
                 LowerLimit: ts.LowerLimit,
                 UpperLimit: ts.UpperLimit,
-                Unit: ts.Unit,
                 Result: vm.ResultNoFormatting,
+                Unit: ts.Unit,
                 IsPassed: vm.IsPassed ? "Pass" : "Fail",
                 Deviation: vm.Deviation?.Replace("%", "")
             );
@@ -95,7 +94,6 @@ public class CsvExportService
         {
             "Step",
             "Name",
-            "Nominal Value",
             "Lower Limit",
             "Upper Limit",
             "Measured Value",
@@ -111,7 +109,6 @@ public class CsvExportService
             {
                 r.Number.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Name),
-                r.NominalValue.ToString(CultureInfo.CurrentCulture),
                 r.LowerLimit.ToString(CultureInfo.CurrentCulture),
                 r.UpperLimit.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Result),

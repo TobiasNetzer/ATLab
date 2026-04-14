@@ -3,11 +3,10 @@
 public sealed record TestStepCsvRow(
     int Number,
     string Name,
-    double NominalValue,
     double LowerLimit,
     double UpperLimit,
-    string Unit,
     string? Result,
+    string Unit,
     string IsPassed,
     string? Deviation
 );
