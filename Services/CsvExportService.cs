@@ -12,7 +12,7 @@ using Avalonia.Platform.Storage;
 
 namespace ATLab.Services;
 
-public class CsvExportService
+public class CsvExportService : ICsvExportService
 {
     private readonly IFileDialogService _fileDialogService;
     private readonly IErrorService _errorService;

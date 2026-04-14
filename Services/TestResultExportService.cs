@@ -12,12 +12,12 @@ namespace ATLab.Services;
 public class TestResultExportService
 {
     private readonly ProjectSettings _settings;
-    private readonly CsvExportService _csvExportService;
+    private readonly ICsvExportService _csvExportService;
     private readonly IErrorService _errorService;
 
     public TestResultExportService(
         ProjectSettings settings,
-        CsvExportService csvExportService,
+        ICsvExportService csvExportService,
         IErrorService errorService)
     {
         _settings = settings;

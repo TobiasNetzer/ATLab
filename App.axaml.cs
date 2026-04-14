@@ -148,7 +148,7 @@ public class App : Application
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<IResponseProcessor, ResponseProcessor>();
-        services.AddSingleton<CsvExportService>();
+        services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<TestResultExportService>();
         services.AddSingleton<ProjectController>();
         services.AddSingleton<TestExecutionController>();
