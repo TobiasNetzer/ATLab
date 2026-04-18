@@ -61,7 +61,9 @@ public class CsvExportService : ICsvExportService
     {
         var csv = BuildCsv(steps);
 
-        await using var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
+        var outputPath = $"{path}.csv";
+
+        await using var stream = File.Open(outputPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await using var writer = new StreamWriter(stream, Encoding.UTF8);
 
         await writer.WriteAsync(csv);

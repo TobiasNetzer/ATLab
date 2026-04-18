@@ -1,8 +1,6 @@
 using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
 using ATLab.ViewModels;
 using ATLab.Views;
@@ -13,6 +11,7 @@ using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF.Infrastructure;
 
 namespace ATLab;
 
@@ -29,6 +28,8 @@ public class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
+        QuestPDF.Settings.License = LicenseType.Community;
+        
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         _services = serviceCollection.BuildServiceProvider();
@@ -149,6 +150,7 @@ public class App : Application
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<IResponseProcessor, ResponseProcessor>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
+        services.AddSingleton<IPdfExportService, PdfExportService>();
         services.AddSingleton<TestResultExportService>();
         services.AddSingleton<ProjectController>();
         services.AddSingleton<TestExecutionController>();
@@ -197,6 +199,5 @@ public class App : Application
         // Windows
         services.AddTransient<MainWindow>();
         services.AddTransient<TestHardwareConnectWindow>();
-        
     }
 }
