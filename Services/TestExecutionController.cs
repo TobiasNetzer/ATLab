@@ -74,7 +74,8 @@ public class TestExecutionController
                     SerialNumber = vm.SerialNumber,
                     DeviceUnderTestInfo = _deviceUnderTestInfoPanelViewModel.DeviceUnderTestInfo
                 };
-                _ = _testResultExportService.SaveAsync(vm.TestSteps, testInfo, vm.NumberFailedSteps);
+                
+                EnqueueExport(() => _testResultExportService.SaveAsync(vm.TestSteps, testInfo, vm.NumberFailedSteps));
             }
 
             if (vm.NumberFailedSteps > 0)
@@ -201,4 +202,12 @@ public class TestExecutionController
 
         return true;
     }
+    
+    private Task _exportQueue = Task.CompletedTask;
+
+    private Task EnqueueExport(Func<Task> work)
+    {
+        return _exportQueue = _exportQueue.ContinueWith(_ => work()).Unwrap();
+    }
+
 }
