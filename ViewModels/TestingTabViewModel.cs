@@ -23,6 +23,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
+    private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
     
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps = new();
@@ -130,7 +131,8 @@ public partial class TestingTabViewModel : ViewModelBase
         TestExecutionController testExecutionController,
         DeviceManagerViewModel deviceManager,
         ProjectSettings projectSettings,
-        ProjectDocumentation projectDocumentation)
+        ProjectDocumentation projectDocumentation,
+        DeviceUnderTestInfo deviceUnderTestInfo)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -146,6 +148,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _deviceManager = deviceManager;
         _projectSettings = projectSettings;
         _projectDocumentation = projectDocumentation;
+        _deviceUnderTestInfo = deviceUnderTestInfo;
 
         Title = "Testing";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
@@ -155,6 +158,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectSettings.SettingsChanged += () => CheckForChanges();
         _deviceManager.Devices.CollectionChanged += DevicesChanged;
         _projectDocumentation.DocumentationChanged += () => CheckForChanges();
+        _deviceUnderTestInfo.DeviceUnderTestInfoChanged += () => CheckForChanges();
         
         foreach (var device in _deviceManager.Devices)
             SubscribeToDevice(device);

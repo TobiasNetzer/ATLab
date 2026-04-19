@@ -14,6 +14,7 @@ public class ProjectController
     private readonly IErrorService _errorService;
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
+    private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly IMessageBoxService _messageBoxService;
 
@@ -22,6 +23,7 @@ public class ProjectController
         IErrorService errorService,
         ProjectSettings projectSettings,
         ProjectDocumentation projectDocumentation,
+        DeviceUnderTestInfo deviceUnderTestInfo,
         DeviceManagerViewModel deviceManager,
         IMessageBoxService messageBoxService)
     {
@@ -29,6 +31,7 @@ public class ProjectController
         _errorService = errorService;
         _projectSettings = projectSettings;
         _projectDocumentation = projectDocumentation;
+        _deviceUnderTestInfo = deviceUnderTestInfo;
         _deviceManager = deviceManager;
         _messageBoxService = messageBoxService;
     }
@@ -44,6 +47,7 @@ public class ProjectController
             vm.TestHardwareRelayChannels.ResetToDefault();
             _projectSettings.ResetToDefault();
             _projectDocumentation.ResetToDefault();
+            _deviceUnderTestInfo.ResetToDefault();
             _deviceManager.Devices.Clear();
 
             _projectService.UpdateLastSavedState(CaptureCurrentState(vm));
@@ -123,6 +127,7 @@ public class ProjectController
 
             _projectSettings.CopyFrom(dto.ProjectSettings);
             _projectDocumentation.CopyFrom(dto.ProjectDocumentation);
+            _deviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
 
             vm.TestHardwareRelayChannels.ApplyChannelNames(
                 dto.StimChannelNames,
@@ -150,7 +155,8 @@ public class ProjectController
             MeasChannelNames = vm.TestHardwareRelayChannels.GetMeasNames(),
             Devices = _deviceManager.Devices.ToList(),
             ProjectSettings = _projectSettings,
-            ProjectDocumentation = _projectDocumentation
+            ProjectDocumentation = _projectDocumentation,
+            DeviceUnderTestInfo = _deviceUnderTestInfo
         };
     }
 

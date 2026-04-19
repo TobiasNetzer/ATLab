@@ -159,6 +159,7 @@ public class App : Application
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();
         services.AddSingleton<DocumentLauncherService>();
+        services.AddSingleton<DeviceUnderTestInfo>();
         
         // Register the runner and executor
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
@@ -193,6 +194,7 @@ public class App : Application
         services.AddSingleton<ShellCommandEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
+        services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();
         services.AddSingleton<TestHardwareDiagnosticsViewModel>();
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
 

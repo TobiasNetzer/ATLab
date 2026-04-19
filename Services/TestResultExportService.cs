@@ -29,7 +29,7 @@ public class TestResultExportService
         _errorService = errorService;
     }
 
-    public async Task SaveAsync(IEnumerable<TestStepViewModel> steps, string serialNumber, int failedSteps)
+    public async Task SaveAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo, int failedSteps)
     {
         if (!_settings.IsSaveTestResult || !_settings.IsUseSerialNumber) return;
         if (_settings.SaveTestResultOptions == SaveTestResultOptions.ONLY_WHEN_PASSED && failedSteps > 0) return;
@@ -37,15 +37,17 @@ public class TestResultExportService
         try
         {
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            var filename = $"{serialNumber}_{timestamp}";
+            var filename = $"{testInfo.SerialNumber}_{timestamp}";
 
             var directory = _settings.SaveTestResultFilePath;
             Directory.CreateDirectory(directory);
 
             var fullPath = Path.Combine(directory, filename);
-            var testStepViewModels = steps.ToList();
-            await _csvExportService.ExportToPathAsync(testStepViewModels, fullPath);
-            await _pdfExportService.ExportToPathAsync(testStepViewModels, fullPath);
+            if (_settings.IsExportCsv)
+                await _csvExportService.ExportToPathAsync(steps, fullPath);
+            
+            if (_settings.IsExportPdf)
+                await _pdfExportService.ExportToPathAsync(steps, testInfo, fullPath);
         }
         catch (Exception ex)
         {

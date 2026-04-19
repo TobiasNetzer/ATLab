@@ -17,7 +17,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IProjectService _projectService;
     private readonly ISettingsService _settingsService;
 
-    public string WindowTitle => $"ATLab - Project: {(string.IsNullOrEmpty(_projectService.CurrentFilePath) ? "Untitled" : Path.GetFileNameWithoutExtension(_projectService.CurrentFilePath))}{(_projectService.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - Project: {_projectService.ProjectName}{(_projectService.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;

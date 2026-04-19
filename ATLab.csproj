@@ -36,4 +36,13 @@
     <PackageReference Include="QuestPDF" Version="2026.2.4" />
     <PackageReference Include="System.IO.Ports" Version="10.0.5" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Reporting\Assets\Fail.png" />
+    <EmbeddedResource Include="Reporting\Assets\Fail.png" />
+    <None Remove="Reporting\Assets\Logo.png" />
+    <EmbeddedResource Include="Reporting\Assets\Logo.png" />
+    <None Remove="Reporting\Assets\Pass.png" />
+    <EmbeddedResource Include="Reporting\Assets\Pass.png" />
+  </ItemGroup>
 </Project>

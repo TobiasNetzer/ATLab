@@ -52,7 +52,7 @@
                             <CheckBox Content="Save Test Result"
                                       IsChecked="{Binding Settings.IsSaveTestResult, Mode=TwoWay}"
                                       IsEnabled="{Binding Settings.IsUseSerialNumber}"/>
-
+                            
                             <RadioButton Content="Always"
                                          Margin="30 0 0 0"
                                          IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ALWAYS}"
@@ -62,6 +62,14 @@
                                          Margin="30 0 0 0"
                                          IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
                                          IsEnabled="{Binding CanSaveTestResult}"/>
+                            
+                            <CheckBox Content="Export Test Data (CSV)"
+                                      IsChecked="{Binding Settings.IsExportCsv}"
+                                      IsEnabled="{Binding CanSaveTestResult}"/>
+
+                            <CheckBox Content="Export Test Report (PDF)"
+                                      IsChecked="{Binding Settings.IsExportPdf}"
+                                      IsEnabled="{Binding CanSaveTestResult}"/>
                             
                             <TextBlock
                                 Text="Output Path"

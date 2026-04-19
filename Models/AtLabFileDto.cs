@@ -11,4 +11,5 @@ public class AtlabFileDto
     public List<Device> Devices { get; init; } = new();
     public ProjectSettings ProjectSettings { get; init; } = new();
     public ProjectDocumentation ProjectDocumentation { get; init; } = new();
+    public DeviceUnderTestInfo DeviceUnderTestInfo { get; init; } = new();
 }

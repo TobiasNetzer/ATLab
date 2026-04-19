@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,6 +19,10 @@ public partial class ProjectService : ObservableObject, IProjectService
     [ObservableProperty]
     private bool _isDirty;
 
+    public string ProjectName =>
+        string.IsNullOrEmpty(CurrentFilePath)
+            ? "Untitled"
+            : Path.GetFileNameWithoutExtension(CurrentFilePath);
 
     public ProjectService(
         IFileDialogService fileDialogService,
@@ -108,5 +113,4 @@ public partial class ProjectService : ObservableObject, IProjectService
     {
         IsDirty = false;
     }
-
 }

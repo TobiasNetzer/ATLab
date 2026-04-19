@@ -30,7 +30,7 @@ public class CsvExportService : ICsvExportService
     {
         var file = await _fileDialogService.SaveFileAsync(
             title: "Export Measurement Data",
-            suggestedName: "measurement-data",
+            suggestedName: "Measurement Data",
             defaultExtension: "csv",
             extensions: new[] { "csv" });
 
@@ -69,7 +69,7 @@ public class CsvExportService : ICsvExportService
         await writer.WriteAsync(csv);
     }
     
-    private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
+    private static IEnumerable<TestStepCsvRow> ToCsvRows(List<TestStepViewModel> steps)
     {
         return from vm in steps
             let ts = vm.TestStep
@@ -78,8 +78,8 @@ public class CsvExportService : ICsvExportService
                 Number: ts.Number,
                 Name: ts.Name,
                 LowerLimit: ts.LowerLimit,
-                UpperLimit: ts.UpperLimit,
                 Result: vm.ResultNoFormatting,
+                UpperLimit: ts.UpperLimit,
                 Unit: ts.Unit,
                 IsPassed: vm.IsPassed ? "Pass" : "Fail",
                 Deviation: vm.Deviation?.Replace("%", "")
@@ -88,7 +88,8 @@ public class CsvExportService : ICsvExportService
 
     private string BuildCsv(IEnumerable<TestStepViewModel> steps)
     {
-        var rows = ToCsvRows(steps);
+        var stepList = steps.ToList();
+        var rows = ToCsvRows(stepList);
         var sb = new StringBuilder();
 
         // Header
@@ -97,8 +98,8 @@ public class CsvExportService : ICsvExportService
             "Step",
             "Name",
             "Lower Limit",
-            "Upper Limit",
             "Measured Value",
+            "Upper Limit",
             "Unit",
             "Deviation (%)",
             "Result"
@@ -112,8 +113,8 @@ public class CsvExportService : ICsvExportService
                 r.Number.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Name),
                 r.LowerLimit.ToString(CultureInfo.CurrentCulture),
-                r.UpperLimit.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Result),
+                r.UpperLimit.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Unit),
                 Escape(r.Deviation),
                 r.IsPassed

@@ -8,6 +8,7 @@ public interface IProjectService : INotifyPropertyChanged
 {
     string? CurrentFilePath { get; set; }
     bool IsDirty { get; set; }
+    public string ProjectName { get; }
     
     Task<AtlabFileDto?> OpenFileAsync();
     Task<AtlabFileDto?> LoadAsync(string path);

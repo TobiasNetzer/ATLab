@@ -27,6 +27,16 @@ public partial class ProjectSettings : ObservableObject
     private bool _isSaveTestResult;
 
     partial void OnIsSaveTestResultChanged(bool value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private bool _isExportCsv;
+    
+    partial void OnIsExportCsvChanged(bool value) => OnSettingsChanged();
+    
+    [ObservableProperty]
+    private bool _isExportPdf;
+    
+    partial void OnIsExportPdfChanged(bool value) => OnSettingsChanged();
 
     [ObservableProperty]
     private SaveTestResultOptions _saveTestResultOptions = SaveTestResultOptions.ALWAYS;
@@ -86,6 +96,8 @@ public partial class ProjectSettings : ObservableObject
         ResultPrecision = other.ResultPrecision;
         IsUseSerialNumber = other.IsUseSerialNumber;
         IsSaveTestResult = other.IsSaveTestResult;
+        IsExportCsv = other.IsExportCsv;
+        IsExportPdf = other.IsExportPdf;
         SaveTestResultOptions = other.SaveTestResultOptions;
         SaveTestResultFilePath = other.SaveTestResultFilePath;
         IsEnableSerialNumberValidation = other.IsEnableSerialNumberValidation;

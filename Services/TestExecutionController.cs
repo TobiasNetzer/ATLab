@@ -13,17 +13,23 @@ public class TestExecutionController
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly TestResultExportService _testResultExportService;
     private readonly ProjectSettings _projectSettings;
+    private readonly IProjectService _projectService;
+    private readonly DeviceUnderTestInfoPanelViewModel _deviceUnderTestInfoPanelViewModel;
 
     public TestExecutionController(
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
         TestResultExportService testResultExportService,
-        ProjectSettings projectSettings)
+        ProjectSettings projectSettings,
+        IProjectService projectService,
+        DeviceUnderTestInfoPanelViewModel deviceUnderTestInfoPanelViewModel)
     {
         _testExecutor = testExecutor;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
         _projectSettings = projectSettings;
+        _projectService = projectService;
+        _deviceUnderTestInfoPanelViewModel = deviceUnderTestInfoPanelViewModel;
     }
 
     public void HookExecutorEvents(TestingTabViewModel vm)
@@ -59,7 +65,17 @@ public class TestExecutionController
                 return;
 
             if (vm.AllowResultSave)
-                _ = _testResultExportService.SaveAsync(vm.TestSteps, vm.SerialNumber, vm.NumberFailedSteps);
+            {
+                var testInfo = new TestInfo()
+                {
+                    ProjectName = _projectService.ProjectName,
+                    Operator = vm.User,
+                    Duration = vm.TestDuration,
+                    SerialNumber = vm.SerialNumber,
+                    DeviceUnderTestInfo = _deviceUnderTestInfoPanelViewModel.DeviceUnderTestInfo
+                };
+                _ = _testResultExportService.SaveAsync(vm.TestSteps, testInfo, vm.NumberFailedSteps);
+            }
 
             if (vm.NumberFailedSteps > 0)
             {

@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.DutInfoPanel"
+             x:DataType="vm:DeviceUnderTestInfoPanelViewModel"
+             Width="300">
+    
+    <Grid RowDefinitions="Auto,*">
+            
+        <Border Grid.Row="0"
+                Background="{DynamicResource PanelBorder}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            <TextBlock Text="Device Under Test"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+            
+        <Border Grid.Row="1"
+                Background="{DynamicResource PanelBackground}"
+                CornerRadius="0 0 15 15"
+                BorderBrush="{DynamicResource PanelBorder}"
+                BorderThickness="2">
+                    
+            <StackPanel Margin="10"
+                        Spacing="10"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Stretch">
+
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Name"/>
+                    <TextBox Text="{Binding DeviceUnderTestInfo.DeviceName, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Revision"/>
+                    <TextBox Text="{Binding DeviceUnderTestInfo.Revision, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Variant"/>
+                    <TextBox Text="{Binding DeviceUnderTestInfo.Variant, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Part Number"/>
+                    <TextBox Text="{Binding DeviceUnderTestInfo.PartNumber, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
