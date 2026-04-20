@@ -238,12 +238,12 @@ public class TestExecutor : ITestExecutor
                     throw new ArgumentOutOfRangeException();
             }
             
-            if (stepExecutionResult.IsFailure)
-                break;
-            
             var nextIndex = EvaluateNextStepIndex(steps, i, step);
             
             OnStepCompleted(i, step);
+            
+            if (stepExecutionResult.IsFailure)
+                break; // END_TEST
             
             if (nextIndex == null)
                 break; // END_TEST
