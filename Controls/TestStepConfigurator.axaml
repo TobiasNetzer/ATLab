@@ -168,7 +168,7 @@
                             Spacing="10">
                     
                     <CheckBox
-                        Content="Show Message"
+                        Content="Show Info"
                         TabIndex="9"
                         IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                     
