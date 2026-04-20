@@ -27,12 +27,18 @@ public partial class DeviceUnderTestInfo : ObservableObject
     
     partial void OnPartNumberChanged(string? value) => DeviceUnderTestInfoChanged?.Invoke();
     
+    [ObservableProperty]
+    private string? _additionalNotes;
+    
+    partial void OnAdditionalNotesChanged(string? value) => DeviceUnderTestInfoChanged?.Invoke();
+    
     public void CopyFrom(DeviceUnderTestInfo other)
     {
         DeviceName = other.DeviceName;
         Revision = other.Revision;
         Variant = other.Variant;
         PartNumber = other.PartNumber;
+        AdditionalNotes = other.AdditionalNotes;
     }
 
     public void ResetToDefault()
@@ -41,5 +47,6 @@ public partial class DeviceUnderTestInfo : ObservableObject
         Revision = string.Empty;
         Variant = string.Empty;
         PartNumber = string.Empty;
+        AdditionalNotes = string.Empty;
     }
 }

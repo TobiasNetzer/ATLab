@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using ATLab.Enums;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -15,6 +16,18 @@ public class TestReportComposer
 {
     private readonly List<TestStepViewModel> _testResults;
     private readonly TestInfo _info;
+    
+    private static string AppName =>
+        Assembly.GetEntryAssembly()?
+            .GetCustomAttribute<AssemblyProductAttribute>()?
+            .Product
+        ?? "Unknown";
+    
+    private static string AppVersion =>
+        Assembly.GetEntryAssembly()?
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion
+        ?? "Unknown";
     
     private static readonly byte[] LogoImage =
         LoadResource("ATLab.Reporting.Assets.Logo.png");
@@ -46,7 +59,7 @@ public class TestReportComposer
                     .AlignMiddle()
                     .Column(col =>
                     {
-                        col.Item().Text($"Test Report - DUT: {_info.DeviceUnderTestInfo.DeviceName} {_info.SerialNumber}")
+                        col.Item().Text($"Test Report - {_info.DeviceUnderTestInfo.DeviceName} {_info.SerialNumber}")
                             .FontSize(20)
                             .Bold()
                             .FontColor(Colors.Black);
@@ -67,6 +80,11 @@ public class TestReportComposer
                 row.RelativeItem().Element(ComposeDutSection);
             });
 
+            if (!string.IsNullOrWhiteSpace(_info.DeviceUnderTestInfo.AdditionalNotes))
+            {
+                col.Item().Element(ComposeAdditionalNotesSection);
+            }
+
             col.Item().Element(ComposeResultBanner);
             col.Item().Element(ComposeTable);
         });
@@ -74,13 +92,19 @@ public class TestReportComposer
 
     public void ComposeFooter(IContainer container)
     {
-        container.AlignRight().Text(text =>
-        {
-            text.Span("Page: ");
-            text.CurrentPageNumber();
-            text.Span(" / ");
-            text.TotalPages();
-        });
+        container.PaddingTop(10)
+            .Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text($"{AppName} - Version: {AppVersion}");
+                
+                row.RelativeItem().AlignRight().Text(text =>
+                {
+                    text.Span("Page ");
+                    text.CurrentPageNumber();
+                    text.Span(" / ");
+                    text.TotalPages();
+                });
+            });
     }
     
     private void ComposeInfoSection(IContainer container)
@@ -95,6 +119,8 @@ public class TestReportComposer
                 .FontSize(16)
                 .SemiBold()
                 .FontColor(Colors.Black);
+            
+            col.Item().BorderBottom(2).BorderColor(Colors.Grey.Darken1);
 
             col.Item().Row(r =>
             {
@@ -140,6 +166,8 @@ public class TestReportComposer
                 .FontSize(16)
                 .SemiBold()
                 .FontColor(Colors.Black);
+            
+            col.Item().BorderBottom(2).BorderColor(Colors.Grey.Darken1);
 
             col.Item().Row(r =>
             {
@@ -170,6 +198,19 @@ public class TestReportComposer
                 r.ConstantItem(90).Text("Part Number:");
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.PartNumber) ? "-" : info.DeviceUnderTestInfo.PartNumber).SemiBold();
             });
+        });
+    }
+    
+    private void ComposeAdditionalNotesSection(IContainer container)
+    {
+        var info = _info;
+
+        container.Padding(5).Column(c =>
+        {
+            c.Item().Text("Additional Notes:")
+                .SemiBold()
+                .FontColor(Colors.Black);
+            c.Item().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.AdditionalNotes) ? "-" : info.DeviceUnderTestInfo.AdditionalNotes);
         });
     }
 

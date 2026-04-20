@@ -387,7 +387,7 @@
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Right"
-                       Text="{Binding User, StringFormat='User: {0}'}"/>
+                       Text="{Binding User, StringFormat='Operator: {0}'}"/>
             
         </Grid>
             

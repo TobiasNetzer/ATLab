@@ -27,6 +27,9 @@
                         Spacing="10"
                         Orientation="Vertical"
                         HorizontalAlignment="Stretch">
+                
+                <TextBlock Text="Device‑specific information to be included in the generated test report"
+                           TextWrapping="Wrap"/>
 
                 <StackPanel Spacing="2">
                     <TextBlock Text="Name"/>
@@ -46,6 +49,14 @@
                 <StackPanel Spacing="2">
                     <TextBlock Text="Part Number"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.PartNumber, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Additional Notes"/>
+                    <TextBox Text="{Binding DeviceUnderTestInfo.AdditionalNotes, UpdateSourceTrigger=LostFocus}"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"
+                             Height="100"/>
                 </StackPanel>
 
             </StackPanel>
