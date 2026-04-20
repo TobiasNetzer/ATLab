@@ -69,10 +69,10 @@ public class TestStepRunner : ITestStepRunner
 
                 case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
                 
-                case TestEvaluationSource.OPERATOR:
+                case TestEvaluationSource.USER_RESPONSE:
                 {
                     var operatorResponse = await _messageBoxService.ShowConfirmationImageAsync(
-                        "Awaiting Operator Input",
+                        "Awaiting User Response",
                         step.TestStep.Comment,
                         step.TestStep.CustomMessageBoxImagePath,
                         "Pass",
