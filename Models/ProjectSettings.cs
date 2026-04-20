@@ -79,6 +79,8 @@ public partial class ProjectSettings : ObservableObject
         ResultPrecision = 3;
         IsUseSerialNumber = false;
         IsSaveTestResult = false;
+        IsExportCsv = false;
+        IsExportPdf = false;
         SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
         SaveTestResultFilePath = string.Empty;
         IsEnableSerialNumberValidation = false;
