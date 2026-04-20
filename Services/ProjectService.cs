@@ -101,7 +101,11 @@ public partial class ProjectService : ObservableObject, IProjectService
     {
         if (IsDirty)
         {
-            var result = await _messageBoxService.ShowConfirmationAsync("Unsaved Changes", "You have unsaved changes. Continue without saving?");
+            var result = await _messageBoxService.ShowConfirmationAsync(
+                "Unsaved Changes", 
+                "You have unsaved changes. Continue without saving?",
+                "Continue",
+                "Cancel");
             if (!result) return false;
         }
 

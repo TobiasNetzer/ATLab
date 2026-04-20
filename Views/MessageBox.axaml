@@ -9,22 +9,24 @@
         SizeToContent="WidthAndHeight">
     
     <Grid Margin="10"
-          RowDefinitions="Auto,Auto,Auto"
-          RowSpacing="10">
+          RowDefinitions="Auto,Auto,Auto">
         
         <Image Grid.Row="0"
                Source="{Binding Bitmap, FallbackValue={x:Null}}"
                MaxHeight="600"
                MaxWidth="1000"
                Stretch="Uniform"
-               StretchDirection="DownOnly"/>
+               StretchDirection="DownOnly"
+               IsVisible="{Binding Bitmap, Converter={StaticResource StringNotEmptyConverter}}"
+               Margin=" 0 0 0 10"/>
 
         <TextBlock Grid.Row="1"
                    Text="{Binding Message}"
                    TextWrapping="Wrap"
                    TextAlignment="Center"
                    MaxWidth="1000"
-                   IsVisible="{Binding Message, Converter={StaticResource StringNotEmptyConverter}}"/>
+                   IsVisible="{Binding Message, Converter={StaticResource StringNotEmptyConverter}}"
+                   Margin=" 0 0 0 10"/>
         
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
@@ -32,14 +34,14 @@
                     Spacing="10">
             
             <Button Command="{Binding OkCommand}"
-                    Content="Ok"
+                    Content="{Binding OkText}"
                     IsDefault="True"
                     Width="80"
                     HorizontalContentAlignment="Center"/>
             
             <Button Command="{Binding CancelCommand}"
                     IsVisible="{Binding ShowCancel}"
-                    Content="Cancel"
+                    Content="{Binding CancelText}"
                     IsCancel="True"
                     Width="80"
                     HorizontalContentAlignment="Center"/>

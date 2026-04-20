@@ -24,7 +24,7 @@ public class MessageBoxService : IMessageBoxService
         return desktop?.MainWindow;
     }
 
-    public async Task<bool> ShowConfirmationAsync(string title, string message)
+    public async Task<bool> ShowConfirmationAsync(string title, string message, string okText = "Ok", string cancelText = "Cancel")
     {
         var owner = GetMainWindow();
         if (owner == null) return false;
@@ -33,6 +33,8 @@ public class MessageBoxService : IMessageBoxService
         {
             Title = title,
             Message = message,
+            OkText = okText,
+            CancelText = cancelText,
             ShowCancel = true
         };
 
@@ -45,7 +47,7 @@ public class MessageBoxService : IMessageBoxService
         return mb.Result == MessageBox.MessageBoxResult.Ok;
     }
     
-    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath)
+    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, string okText = "Ok", string cancelText = "Cancel")
     {
         var owner = GetMainWindow();
         if (owner == null) return false;
@@ -63,6 +65,8 @@ public class MessageBoxService : IMessageBoxService
         {
             Title = title,
             Message = message,
+            OkText = okText,
+            CancelText = cancelText,
             ShowCancel = true,
             Bitmap = bitmap
         };

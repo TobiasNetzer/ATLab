@@ -15,17 +15,20 @@ public class TestStepRunner : ITestStepRunner
     private readonly IScriptRunner _scriptRunner;
     private readonly ICommandExecutor _commandExecutor;
     private readonly IShellCommandRunner _shellCommandRunner;
+    private readonly IMessageBoxService _messageBoxService;
 
     public TestStepRunner(
         ITestHardware testHardware,
         IScriptRunner scriptRunner,
         ICommandExecutor commandExecutor,
-        IShellCommandRunner shellCommandRunner)
+        IShellCommandRunner shellCommandRunner,
+        IMessageBoxService messageBoxService)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
         _commandExecutor = commandExecutor;
         _shellCommandRunner = shellCommandRunner;
+        _messageBoxService = messageBoxService;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, CancellationToken token)
@@ -65,6 +68,18 @@ public class TestStepRunner : ITestStepRunner
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDevice, token, mask);
 
                 case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
+                
+                case TestEvaluationSource.OPERATOR:
+                {
+                    var operatorResponse = await _messageBoxService.ShowConfirmationImageAsync(
+                        "Awaiting Operator Input",
+                        step.TestStep.Comment,
+                        step.TestStep.CustomMessageBoxImagePath,
+                        "Pass",
+                        "Fail");
+
+                    return OperationResult<double>.Success(Convert.ToDouble(operatorResponse));
+                }
                 
                 default: return OperationResult<double>.Failure("Unknown evaluation source");
             }

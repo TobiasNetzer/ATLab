@@ -208,7 +208,7 @@ public class TestExecutor : ITestExecutor
             if (step.TestStep.IsShowComment)
             {
                 var result = await _messageBoxService.ShowConfirmationImageAsync(
-                    "Test Execution Halted",
+                    "Awaiting Operator Input",
                     step.TestStep.Comment,
                     step.TestStep.CustomMessageBoxImagePath);
 

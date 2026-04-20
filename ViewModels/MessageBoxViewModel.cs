@@ -12,6 +12,12 @@ public partial class MessageBoxViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _message = string.Empty;
+    
+    [ObservableProperty]
+    private string _okText = "Ok";
+
+    [ObservableProperty]
+    private string _cancelText = "Cancel";
 
     [ObservableProperty]
     private bool _showCancel = true;

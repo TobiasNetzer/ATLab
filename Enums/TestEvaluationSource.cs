@@ -14,5 +14,8 @@ public enum TestEvaluationSource
     COMMAND,
 
     [Description("Shell Command")]
-    SHELL_COMMAND
+    SHELL_COMMAND,
+    
+    [Description("Operator")]
+    OPERATOR
 }
