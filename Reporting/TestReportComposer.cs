@@ -270,7 +270,7 @@ public class TestReportComposer
 
                 var measured = string.IsNullOrWhiteSpace(row.Result)
                     ? "-"
-                    : $"{row.Result} {row.TestStep.Unit}";
+                    : $"{row.ResultNoFormatting} {row.TestStep.Unit}";
 
                 table.Cell().Element(BodyCell).Text(measured).FontSize(10);
                 

@@ -69,7 +69,9 @@ public class PdfExportService : IPdfExportService
     
     private byte[] BuildPdf(IEnumerable<TestStepViewModel> steps, TestInfo testInfo)
     {
-        var stepList = steps.ToList();
+        var stepList = steps
+            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport)
+            .ToList();
         var document = new TestReportDocument(stepList, testInfo);
         return document.GeneratePdf();
     }

@@ -69,21 +69,20 @@ public class CsvExportService : ICsvExportService
         await writer.WriteAsync(csv);
     }
     
-    private static IEnumerable<TestStepCsvRow> ToCsvRows(List<TestStepViewModel> steps)
+    private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
     {
-        return from vm in steps
-            let ts = vm.TestStep
-            where !ts.IsIgnoreStep && !ts.IsExcludeFromExport
-            select new TestStepCsvRow(
-                Number: ts.Number,
-                Name: ts.Name,
-                LowerLimit: ts.LowerLimit,
+        return steps
+            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport)
+            .Select(vm => new TestStepCsvRow(
+                Number: vm.TestStep.Number,
+                Name: vm.TestStep.Name,
+                LowerLimit: vm.TestStep.LowerLimit,
+                UpperLimit: vm.TestStep.UpperLimit,
                 Result: vm.ResultNoFormatting,
-                UpperLimit: ts.UpperLimit,
-                Unit: ts.Unit,
+                Unit: vm.TestStep.Unit,
                 IsPassed: vm.IsPassed ? "Pass" : "Fail",
                 Deviation: vm.Deviation?.Replace("%", "")
-            );
+            ));
     }
 
     private string BuildCsv(IEnumerable<TestStepViewModel> steps)
