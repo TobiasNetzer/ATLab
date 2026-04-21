@@ -363,10 +363,17 @@
             
             <TextBlock Grid.Column="2"
                        Grid.Row="2"
+                       Classes.error="{Binding NumberFailedSteps}"
                        FontWeight="Bold"
                        FontSize="16"
                        HorizontalAlignment="Center"
-                       Text="{Binding NumberFailedSteps, StringFormat='Failed Steps: {0}'}"/>
+                       Text="{Binding NumberFailedSteps, StringFormat='Failed Steps: {0}'}">
+                <TextBlock.Styles>
+                    <Style Selector="TextBlock.error">
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </TextBlock.Styles>
+            </TextBlock>
             
             <TextBlock Grid.Column="3"
                        Grid.Row="2"
