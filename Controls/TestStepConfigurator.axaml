@@ -168,8 +168,9 @@
                             Spacing="10">
                     
                     <CheckBox
-                        Content="Show Info"
+                        Content="Show Comment"
                         TabIndex="9"
+                        IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
                         IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                     
                     <Button Content="&#xE8B9;"
@@ -180,7 +181,7 @@
                             Command="{Binding OpenImagePickerCommand}"/>
                     
                     <TextBox TabIndex="11"
-                             Width="290"
+                             Width="285"
                              Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
                     
                 </StackPanel>

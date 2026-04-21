@@ -205,7 +205,7 @@ public class TestExecutor : ITestExecutor
 
             OperationResult<double> stepExecutionResult;
 
-            if (step.TestStep.IsShowComment)
+            if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
             {
                 var result = await _messageBoxService.ShowConfirmationImageAsync(
                     "Awaiting User Response",
