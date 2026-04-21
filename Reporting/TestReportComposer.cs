@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ATLab.Enums;
+using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Records;
 using ATLab.ViewModels;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -16,6 +18,8 @@ public class TestReportComposer
 {
     private readonly List<TestStepViewModel> _testResults;
     private readonly TestInfo _info;
+    private readonly IHardwareInfo _hardwareInfo;
+    private readonly List<DeviceIdentification> _deviceIdentification;
     
     private static string AppName =>
         Assembly.GetEntryAssembly()?
@@ -38,10 +42,12 @@ public class TestReportComposer
     private static readonly byte[] FailIcon =
         LoadResource("ATLab.Reporting.Assets.Fail.png");
 
-    public TestReportComposer(List<TestStepViewModel> testResults, TestInfo info)
+    public TestReportComposer(List<TestStepViewModel> testResults, TestInfo info, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
     {
         _testResults = testResults;
         _info = info;
+        _hardwareInfo = hardwareInfo;
+        _deviceIdentification = deviceIdentification;
     }
 
     public void ComposeHeader(IContainer container)
@@ -87,6 +93,12 @@ public class TestReportComposer
 
             col.Item().Element(ComposeResultBanner);
             col.Item().Element(ComposeTable);
+
+            if (_hardwareInfo is not DummyHardwareInfo || _deviceIdentification.Count > 0)
+            {
+                col.Item().Element(ComposeEquipmentSection);
+            }
+            
         });
     }
 
@@ -113,7 +125,7 @@ public class TestReportComposer
 
         container.Padding(5).Column(col =>
         {
-            col.Spacing(6);
+            col.Spacing(5);
 
             col.Item().Text("Test Information")
                 .FontSize(16)
@@ -160,7 +172,7 @@ public class TestReportComposer
 
         container.Padding(5).Column(col =>
         {
-            col.Spacing(6);
+            col.Spacing(5);
 
             col.Item().Text("Device Under Test")
                 .FontSize(16)
@@ -296,6 +308,67 @@ public class TestReportComposer
 
         static IContainer BodyCell(IContainer c) =>
             c.Padding(4).BorderBottom(1).BorderColor(Colors.Grey.Lighten3);
+    }
+    
+    private void ComposeEquipmentSection(IContainer container)
+    {
+        var info = _info;
+
+        container.Padding(5).Column(col =>
+        {
+            col.Spacing(5);
+
+            col.Item().Text("Used Equipment")
+                .FontSize(16)
+                .SemiBold()
+                .FontColor(Colors.Black);
+            
+            col.Item().BorderBottom(2).BorderColor(Colors.Grey.Darken1);
+
+            if (_hardwareInfo is not DummyHardwareInfo)
+            {
+                col.Item().PaddingTop(10)
+                    .Text("Test Hardware:")
+                    .SemiBold()
+                    .FontColor(Colors.Black);
+                
+                col.Item().Row(r =>
+                {
+                    r.ConstantItem(120).Text("Device Name:");
+                    r.RelativeItem().Text(_hardwareInfo.DeviceName ?? "-").SemiBold();
+                });
+                
+                col.Item().Row(r =>
+                {
+                    r.ConstantItem(120).Text("Serial Number:");
+                    r.RelativeItem().Text(_hardwareInfo.SerialNumber ?? "-").SemiBold();
+                });
+                
+                col.Item().Row(r =>
+                {
+                    r.ConstantItem(120).Text("Firmware Version:");
+                    r.RelativeItem().Text(_hardwareInfo.FirmwareVersion ?? "-").SemiBold();
+                });
+            }
+
+            if (_deviceIdentification.Count > 0)
+            {
+                col.Item().PaddingTop(10)
+                    .Text("Devices:")
+                    .FontSize(12)
+                    .SemiBold()
+                    .FontColor(Colors.Black);
+
+                foreach (var device in _deviceIdentification)
+                {
+                    col.Item().Row(r =>
+                    {
+                        r.ConstantItem(120).Text(device.Name + ":");
+                        r.RelativeItem().Text(device.Identification ?? "-").SemiBold();
+                    });
+                }
+            }
+        });
     }
     
     private static byte[] LoadResource(string resourceName)

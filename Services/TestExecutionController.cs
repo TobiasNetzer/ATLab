@@ -53,6 +53,8 @@ public class TestExecutionController
 
             if (!step.IsPassed)
                 vm.NumberFailedSteps++;
+            
+            step.IsExecuted = true;
         };
 
         _testExecutor.TestCompleted += () =>

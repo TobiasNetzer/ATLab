@@ -26,39 +26,46 @@
                 BorderThickness="2"
                 CornerRadius="0 0 0 15">
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          Padding="10">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
                 
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                      RowSpacing="12">
+                <StackPanel Spacing="10"
+                            Margin="10">
                     
-                    <Grid Grid.Row="0" RowDefinitions="Auto,Auto" RowSpacing="2">
-                        <TextBlock Grid.Row="0" Text="Device Name"/>
-                        <TextBox Grid.Row="1"
-                                 Text="{Binding SelectedDevice.Name}"
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Device Name"/>
+                        <TextBox Text="{Binding SelectedDevice.Name}"
                                  Width="210"
                                  HorizontalAlignment="Left"/>
-                    </Grid>
+                    </StackPanel>
                     
-                    <Grid Grid.Row="1" RowDefinitions="Auto,Auto" RowSpacing="2">
-                        <TextBlock Grid.Row="0" Text="Interface"/>
-                        <ComboBox Grid.Row="1"
-                                  ItemsSource="{Binding AvailableDeviceTypes}"
+                    <CheckBox Content="Include in Test Report"
+                              IsChecked="{Binding SelectedDevice.IsIncludeInReport}"/>
+                    
+                    <StackPanel Spacing="2"
+                                IsVisible="{Binding SelectedDevice.IsIncludeInReport}">
+                        <TextBlock Text="Identification Query"/>
+                        <TextBox Text="{Binding SelectedDevice.IdentificationQuery}"
+                                 Width="210"
+                                 HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Interface"/>
+                        <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
                                   SelectedItem="{Binding SelectedDevice.Type}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   Width="210"/>
-                    </Grid>
+                    </StackPanel>
                     
-                    <Grid Grid.Row="2" RowDefinitions="Auto,Auto" RowSpacing="2">
-                        <TextBlock Grid.Row="0" Text="Resource"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Resource"/>
 
-                        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="5">
+                        <StackPanel Spacing="5" Orientation="Horizontal">
 
-                            <Grid Grid.Column="0" Grid.Row="0">
-                                <Grid RowDefinitions="Auto,Auto">
+                            <StackPanel>
+                                <StackPanel>
                                     
-                                    <ComboBox Grid.Row="0"
-                                              ItemsSource="{Binding AvailableSerialPorts}"
+                                    <ComboBox ItemsSource="{Binding AvailableSerialPorts}"
                                               Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
                                               IsEditable="True"
                                               Width="170"
@@ -71,8 +78,7 @@
                                         </ComboBox.Styles>
                                     </ComboBox>
                                     
-                                    <ComboBox Grid.Row="1"
-                                              ItemsSource="{Binding AvailableVisaResources}"
+                                    <ComboBox ItemsSource="{Binding AvailableVisaResources}"
                                               Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
                                               IsEditable="True"
                                               Width="170"
@@ -85,100 +91,87 @@
                                         </ComboBox.Styles>
                                     </ComboBox>
 
-                                </Grid>
-                            </Grid>
+                                </StackPanel>
+                            </StackPanel>
 
-                            <Button Grid.Column="1"
-                                    Content="&#xE72C;"
+                            <Button Content="&#xE72C;"
                                     FontFamily="{StaticResource FluentIconsFont}"
                                     FontSize="18"
                                     ToolTip.Tip="Reload resources"
                                     VerticalAlignment="Top"
                                     Command="{Binding RefreshResourcesCommand}"/>
-                        </Grid>
-                    </Grid>
+                        </StackPanel>
+                    </StackPanel>
                     
-                    <Grid Grid.Row="3"
-                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
-                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                          RowSpacing="10">
+                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
+                                Spacing="10">
                         
-                        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Baud Rate"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Baud Rate"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableBaudRates}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.BaudRate}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Data Bits"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Data Bits"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableDataBits}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.DataBits}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="2" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Parity"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Parity"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableParities}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.Parity}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="3" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Stop Bits"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Stop Bits"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableStopBits}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.StopBits}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="4" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Handshake"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Handshake"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableHandshakes}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.Handshake}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="5" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Framing Mode"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Framing Mode"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableFramingModes}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.FramingMode}"
                                       DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                    </Grid>
+                    </StackPanel>
                     
-                    <Grid Grid.Row="4"
-                          IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
-                          RowDefinitions="Auto,Auto"
-                          RowSpacing="10">
+                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
+                                Spacing="10">
                         
-                        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Timeout (ms)"/>
-                            <NumericUpDown Grid.Row="1"
-                                           Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Timeout (ms)"/>
+                            <NumericUpDown Width="210"
                                            Minimum="10"
                                            Maximum="10000"
                                            HorizontalAlignment="Left"
                                            Value="{Binding SelectedDevice.Configuration.VisaTimeoutMs}"/>
-                        </Grid>
+                        </StackPanel>
                         
-                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" RowSpacing="2">
-                            <TextBlock Grid.Row="0" Text="Termination Character"/>
-                            <ComboBox Grid.Row="1"
-                                      Width="210"
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Termination Character"/>
+                            <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableVisaTerminations}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.VisaTerminationMode}"/>
-                        </Grid>
-                    </Grid>
+                        </StackPanel>
+                    </StackPanel>
 
-                </Grid>
+                </StackPanel>
             </ScrollViewer>
         </Border>
         

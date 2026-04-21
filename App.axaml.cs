@@ -155,6 +155,7 @@ public class App : Application
         services.AddSingleton<ProjectController>();
         services.AddSingleton<TestExecutionController>();
         services.AddSingleton<TestStepEditor>();
+        services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();

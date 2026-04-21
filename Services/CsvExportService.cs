@@ -72,7 +72,7 @@ public class CsvExportService : ICsvExportService
     private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
     {
         return steps
-            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport)
+            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport && vm.IsExecuted)
             .Select(vm => new TestStepCsvRow(
                 Number: vm.TestStep.Number,
                 Name: vm.TestStep.Name,

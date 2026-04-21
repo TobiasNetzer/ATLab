@@ -23,6 +23,12 @@ public partial class Device : ObservableObject
     
     [ObservableProperty]
     private string _name = string.Empty;
+    
+    [ObservableProperty]
+    private bool _isIncludeInReport;
+    
+    [ObservableProperty]
+    private string _identificationQuery = string.Empty;
 
     [ObservableProperty]
     private string _resourceString = string.Empty;
