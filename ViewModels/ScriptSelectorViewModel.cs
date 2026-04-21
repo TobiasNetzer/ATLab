@@ -63,7 +63,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
 
             SelectedScript = Scripts.FirstOrDefault(s => s.Id == _currentTestStep.ScriptId);
             SyncVariables();
-            SelectedDevice = Devices.FirstOrDefault(d => d.Name == _currentTestStep.TargetDevice);
+            SelectedDevice = Devices.FirstOrDefault(d => d.Id == _currentTestStep.TargetDeviceId);
         }
         finally
         {
@@ -108,7 +108,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         if (value == null) return;
         if (_currentTestStep != null)
         {
-            _currentTestStep.TargetDevice = value?.Name ?? string.Empty;
+            _currentTestStep.TargetDeviceId = value?.Id ?? string.Empty;
         }
     }
     
@@ -170,7 +170,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         SelectedDevice = null;
         
         if (_currentTestStep != null)
-            _currentTestStep.TargetDevice = string.Empty;
+            _currentTestStep.TargetDeviceId = string.Empty;
     } 
     
 

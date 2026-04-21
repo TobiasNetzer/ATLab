@@ -32,28 +32,28 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
     public Task<OperationResult<string?>> ExecuteAsync(
         ScriptCommand command,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token)
     {
-        return ExecuteAsync(new[] { command }, deviceName, token);
+        return ExecuteAsync(new[] { command }, targetDeviceId, token);
     }
 
     public async Task<OperationResult<string?>> ExecuteAsync(
         IEnumerable<ScriptCommand> commands,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(deviceName))
+        if (string.IsNullOrWhiteSpace(targetDeviceId))
             return OperationResult<string?>.Failure("Device is required.");
 
         string? queryResult = null;
 
         try
         {
-            var device = _deviceManager.Devices.FirstOrDefault(d => d.Name == deviceName);
+            var device = _deviceManager.Devices.FirstOrDefault(d => d.Id == targetDeviceId);
             if (device == null)
             {
-                return OperationResult<string?>.Failure($"Device {deviceName} not found.");
+                return OperationResult<string?>.Failure($"Target Device ID {targetDeviceId} not found.");
             }
 
             var resource = device.ResourceString;
@@ -139,11 +139,11 @@ public class CommandExecutor : ICommandExecutor, IDisposable
 
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         ScriptCommand command,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token,
         ResponseMask? mask = null)
     {
-        var result = await ExecuteAsync(command, deviceName, token);
+        var result = await ExecuteAsync(command, targetDeviceId, token);
 
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);

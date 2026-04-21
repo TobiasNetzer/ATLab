@@ -9,17 +9,17 @@ public interface ICommandExecutor
 {
     Task<OperationResult<string?>> ExecuteAsync(
         ScriptCommand command,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token);
 
     Task<OperationResult<string?>> ExecuteAsync(
         IEnumerable<ScriptCommand> commands,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token);
 
     Task<OperationResult<T>> ExecuteAsync<T>(
         ScriptCommand command,
-        string deviceName,
+        string targetDeviceId,
         CancellationToken token,
         ResponseMask? mask = null);
 }

@@ -92,7 +92,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(18)]
-    private string _targetDevice = string.Empty;
+    private string _targetDeviceId = string.Empty;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(19)]
@@ -251,7 +251,7 @@ public partial class TestStep : ObservableObject
             IsExcludeFromExport = IsExcludeFromExport,
             OnPass = new PassFailAction(OnPass),
             OnFail = new PassFailAction(OnFail),
-            TargetDevice = TargetDevice,
+            TargetDeviceId = TargetDeviceId,
             ScriptId = ScriptId,
             Command = new ScriptCommand(Command),
             ShellCommand = new ShellCommand(ShellCommand),

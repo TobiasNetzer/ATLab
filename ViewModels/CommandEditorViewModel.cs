@@ -44,7 +44,7 @@ public partial class CommandEditorViewModel : ViewModelBase
         if (value == null) return;
         if (_currentTestStep != null)
         {
-            _currentTestStep.TargetDevice = value?.Name ?? string.Empty;
+            _currentTestStep.TargetDeviceId = value?.Id ?? string.Empty;
         }
     }
     
@@ -82,7 +82,7 @@ public partial class CommandEditorViewModel : ViewModelBase
         if (_currentTestStep == null)
             return;
         
-        SelectedDevice = Devices.FirstOrDefault(d => d.Name == _currentTestStep.TargetDevice);
+        SelectedDevice = Devices.FirstOrDefault(d => d.Id == _currentTestStep.TargetDeviceId);
         Command =  _currentTestStep.Command;
         UpdateStringProperties();
     }
@@ -93,6 +93,6 @@ public partial class CommandEditorViewModel : ViewModelBase
         SelectedDevice = null;
         
         if (_currentTestStep != null)
-            _currentTestStep.TargetDevice = string.Empty;
+            _currentTestStep.TargetDeviceId = string.Empty;
     }
 }

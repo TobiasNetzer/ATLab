@@ -61,11 +61,11 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.NONE: return OperationResult<double>.Success(double.NegativeInfinity);
                 
                 case TestEvaluationSource.SCRIPT:
-                    return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDevice,
+                    return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDeviceId,
                         step.TestStep.ScriptVariables, token, mask);
                 
                 case TestEvaluationSource.COMMAND:
-                    return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDevice, token, mask);
+                    return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, mask);
 
                 case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
                 
