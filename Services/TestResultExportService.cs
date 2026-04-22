@@ -39,6 +39,12 @@ public class TestResultExportService
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             var filename = $"{testInfo.SerialNumber}_{timestamp}";
 
+            if (string.IsNullOrWhiteSpace(_settings.SaveTestResultFilePath))
+            {
+                _errorService.AddError("No output path for test results provided.");
+                return;
+            }
+
             var directory = _settings.SaveTestResultFilePath;
             Directory.CreateDirectory(directory);
 
