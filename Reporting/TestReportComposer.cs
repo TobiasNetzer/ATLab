@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -280,9 +281,22 @@ public class TestReportComposer
                 
                 table.Cell().Element(BodyCell).Text(lower).FontSize(10);
 
-                var measured = string.IsNullOrWhiteSpace(row.Result)
-                    ? "-"
-                    : $"{row.ResultNoFormatting} {row.TestStep.Unit}";
+                string measured;
+
+                if (string.IsNullOrWhiteSpace(row.ResultNoFormatting))
+                {
+                    measured = "-";
+                }
+                else if (!double.TryParse(row.ResultNoFormatting, NumberStyles.Any, CultureInfo.CurrentCulture, out _))
+                {
+                    measured = row.ResultNoFormatting ?? "-";
+                }
+                else
+                {
+                    measured = string.IsNullOrWhiteSpace(row.TestStep.Unit)
+                        ? row.ResultNoFormatting
+                        : $"{row.ResultNoFormatting} {row.TestStep.Unit}";
+                }
 
                 table.Cell().Element(BodyCell).Text(measured).FontSize(10);
                 
@@ -354,7 +368,7 @@ public class TestReportComposer
             if (_deviceIdentification.Count > 0)
             {
                 col.Item().PaddingTop(10)
-                    .Text("Devices:")
+                    .Text("Instruments:")
                     .FontSize(12)
                     .SemiBold()
                     .FontColor(Colors.Black);
