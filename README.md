@@ -3,7 +3,7 @@
 ![image](https://github.com/TobiasNetzer/ATLab/releases/download/assets-v1/Example.gif)
 
 ATLab is a cross‑platform automated testing toolkit for interfacing with hardware through the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter) and controlling external test instruments through remote control interfaces.
-Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for developing and running automated test sequences.
+Built with **Avalonia UI** and **.NET**, it offers a modern environment for developing and running automated test sequences.
 
 ## Features
 
@@ -11,13 +11,14 @@ Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for de
     -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
     -   **Response Validation**: Use response masking to verify hardware output.
     -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
-    -   **Relay Control**: Manage the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
+    -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
 -   **Test Instrument Interfacing**: Support for both **Serial Port (VCOM/RS232/UART)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
 -   **Scripting Engine**: Create test sequences with predefined multi-step scripts.
--   **Test Result Export**: Export test results to CSV files for analysis and logging.
+-   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
+-   **Test Report Generation**: Automatically generate a test report with detailed test results.
 -   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
--   **JSON File Format**: Project files use a standard JSON file format, perfect for version control.
+-   **JSON File Format**: All project files use a standard JSON file format, perfect for tracking changes with version control.
 -   **Cross-Platform Support**: Runs on Windows & Linux.
 -   **Themes**: Light and Dark theme available.
 
@@ -27,7 +28,7 @@ Built with **Avalonia UI** and **.NET 9**, it offers a modern environment for de
 
 ### Prerequisites
 
--   **.NET 9.0 SDK** (or newer)
+-   **.NET 10.0 SDK** (or newer)
 -   *Optional:* NI-VISA drivers (if using VISA-based instruments) **currently Windows only**
 
 ### How to Build
@@ -92,6 +93,10 @@ Once your sequence is ready, use the execution controls to run the test:
 -   **Single Step**: Execute only the selected step for debugging.
 -   **Repeat Test**: Run the sequence in a continuous loop.
 -   **Stop**: Cancel the running test at any time.
+
+Depending on the project settings, a test report will be generated automatically when the test completes.
+- [TestReport Example 2026-001_2026-04-21_20-57-52](docs/2026-001_2026-04-21_20-57-52.pdf)
+- [TestReport Example 2026-002_2026-04-21_21-01-42](docs/2026-002_2026-04-21_21-01-42.pdf)
 
 ### 5. Documentation
 The **Documentation** tab allows for adding documentation to the project.  
