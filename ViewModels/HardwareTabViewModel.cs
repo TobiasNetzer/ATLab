@@ -12,6 +12,6 @@ public class HardwareTabViewModel : ViewModelBase
         TestHardwareInfoViewModel = testHardwareInfoViewModel;
         TestHardwareDiagnosticsViewModel = testHardwareDiagnosticsViewModel;
         
-        Title = "Hardware";
+        Title = "Test Hardware";
     }
 }

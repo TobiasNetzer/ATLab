@@ -150,7 +150,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
 
-        Title = "Testing";
+        Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
 
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
