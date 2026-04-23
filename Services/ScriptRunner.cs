@@ -27,11 +27,11 @@ public class ScriptRunner : IScriptRunner
 
     public async Task<OperationResult> ExecuteAsync(
         string scriptId,
-        string deviceName,
+        string deviceId,
         IEnumerable<ScriptVariable> variables,
         CancellationToken token)
     {
-        var result = await RunCoreAsync(scriptId, deviceName, variables, token);
+        var result = await RunCoreAsync(scriptId, deviceId, variables, token);
         return result.IsSuccess
             ? OperationResult.Success()
             : OperationResult.Failure(result.ErrorMessage);
@@ -39,12 +39,12 @@ public class ScriptRunner : IScriptRunner
 
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         string scriptId,
-        string deviceName,
+        string deviceId,
         IEnumerable<ScriptVariable> variables,
         CancellationToken token,
         ResponseMask? mask = null)
     {
-        var result = await RunCoreAsync(scriptId, deviceName, variables, token);
+        var result = await RunCoreAsync(scriptId, deviceId, variables, token);
         
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);
