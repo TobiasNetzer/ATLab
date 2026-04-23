@@ -44,6 +44,7 @@
         <converters:InvertedEnumToBoolConverter x:Key="InvertedEnumToBoolConverter"/>
         <converters:TestStatusToBrushConverter x:Key="TestStatusToBrushConverter"/>
         <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
+        <converters:PassFailConverter x:Key="PassFailConverter"/>
     </Application.Resources>
     
     <Application.Styles>

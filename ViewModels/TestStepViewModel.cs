@@ -19,8 +19,9 @@ public partial class TestStepViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _deviation;
-    
-    public bool IsExecuted { get; set;}
+
+    [ObservableProperty]
+    private bool _isExecuted;
 
     public TestStepViewModel(TestStep testStep, IHardwareInfo hardwareInfo)
     {

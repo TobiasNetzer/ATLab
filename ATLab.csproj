@@ -39,6 +39,8 @@
 
   <ItemGroup>
     <None Remove="Reporting\Assets\Fail.png" />
+    <EmbeddedResource Include="Assets\Fail.png" />
+    <EmbeddedResource Include="Assets\Pass.png" />
     <EmbeddedResource Include="Reporting\Assets\Fail.png" />
     <None Remove="Reporting\Assets\Logo.png" />
     <EmbeddedResource Include="Reporting\Assets\Logo.png" />
