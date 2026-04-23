@@ -19,6 +19,7 @@ public class TestExecutor : ITestExecutor
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectSettings _projectSettings;
+    private readonly ICommandExecutor _commandExecutor;
 
     private CancellationTokenSource? _cts;
     private bool _repeatTest;
@@ -41,7 +42,8 @@ public class TestExecutor : ITestExecutor
         IErrorService errorService,
         ITestStepEvaluator evaluator,
         IMessageBoxService messageBoxService,
-        ProjectSettings projectSettings)
+        ProjectSettings projectSettings,
+        ICommandExecutor commandExecutor)
     {
         _testHardware = testHardware;
         _runner = runner;
@@ -49,6 +51,7 @@ public class TestExecutor : ITestExecutor
         _evaluator = evaluator;
         _messageBoxService = messageBoxService;
         _projectSettings = projectSettings;
+        _commandExecutor = commandExecutor;
     }
 
     private void ResetRelayClearFlag() => _relayStatesCleared = false;
@@ -116,8 +119,8 @@ public class TestExecutor : ITestExecutor
         finally
         {
             await EnsureRelayStatesClearedAsync();
+            await _commandExecutor.ReleaseDeviceAsync();
             OnTestCompleted();
-            
             _cts?.Dispose();
             _cts = null;
         }
@@ -187,6 +190,7 @@ public class TestExecutor : ITestExecutor
         _repeatTest = false;
 
         await EnsureRelayStatesClearedAsync();
+        await _commandExecutor.ReleaseDeviceAsync();
     }
     
     private async Task ExecuteAsync(

@@ -124,12 +124,23 @@ public class App : Application
             var window = _services.GetRequiredService<MainWindow>();
             window.DataContext = mainVm;
             window.Opened += async (_, __) => await mainVm.OnWindowOpened();
-
+            
+            desktop.Exit += async (_, __) => await OnExitAsync();
+            
             desktop.MainWindow = window;
             window.Show();
 
             base.OnFrameworkInitializationCompleted();
         }
+    }
+
+    private async Task OnExitAsync()
+    {
+        var executor = _services?.GetService<ICommandExecutor>();
+        if (executor is IAsyncDisposable asyncDisposable)
+            await asyncDisposable.DisposeAsync();
+        else
+            executor?.Dispose();
     }
 
     private void ConfigureServices(IServiceCollection services)

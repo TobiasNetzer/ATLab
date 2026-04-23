@@ -11,7 +11,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class CommandExecutor : ICommandExecutor, IDisposable
+public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
 {
     private readonly ICommunicationFactory _communicationFactory;
     private readonly DeviceManagerViewModel _deviceManager;
@@ -167,14 +167,31 @@ public class CommandExecutor : ICommandExecutor, IDisposable
                 $"Failed to convert result '{processedValue}' (original: '{result.Value}') to type {typeof(T).Name}: {ex.Message}");
         }
     }
+    
+    public async Task ReleaseDeviceAsync()
+    {
+        if (_deviceInterface != null)
+        {
+            await _deviceInterface.DisconnectAsync();
+            (_deviceInterface as IDisposable)?.Dispose();
+            _deviceInterface = null;
+        }
+
+        _lastConfig = null;
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        if (_deviceInterface != null)
+        {
+            await _deviceInterface.DisconnectAsync();
+            (_deviceInterface as IDisposable)?.Dispose();
+            _deviceInterface = null;
+        }
+    }
 
     public void Dispose()
     {
-        if (_deviceInterface == null)
-            return;
-
-        _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
-        (_deviceInterface as IDisposable)?.Dispose();
-        _deviceInterface = null;
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
     }
 }

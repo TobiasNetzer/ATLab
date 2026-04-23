@@ -30,6 +30,8 @@ public class DeviceIdentificationService : IDeviceIdentificationService
 
         var result = await _executor.ExecuteAsync(cmd, device.Id, token);
 
+        await _executor.ReleaseDeviceAsync();
+
         return result.IsSuccess ? result.Value : null;
     }
 }

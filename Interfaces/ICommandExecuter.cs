@@ -22,4 +22,8 @@ public interface ICommandExecutor
         string targetDeviceId,
         CancellationToken token,
         ResponseMask? mask = null);
+
+    Task ReleaseDeviceAsync();
+    
+    void Dispose();
 }
