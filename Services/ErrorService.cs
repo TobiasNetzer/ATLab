@@ -26,7 +26,7 @@ public class ErrorService : IErrorService
     public void AddError(string message)
     {
         var timestamp = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
-        string formattedMessage = $"[{timestamp}] {message}";
+        var formattedMessage = $"[{timestamp}] {message}";
 
         Errors.Insert(0, formattedMessage);
 
