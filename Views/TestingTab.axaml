@@ -182,7 +182,7 @@
                 <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
                 <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
                 
-                <DataGridTemplateColumn Header="Lower Limit" MinWidth="100">
+                <DataGridTemplateColumn Header="Lower Limit" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -197,7 +197,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Nominal Value" MinWidth="100">
+                <DataGridTemplateColumn Header="Nominal Value" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -212,7 +212,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Upper Limit" MinWidth="100">
+                <DataGridTemplateColumn Header="Upper Limit" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -227,7 +227,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Measured" MinWidth="100">
+                <DataGridTemplateColumn Header="Measured Value" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock Text="{Binding Result}" 
