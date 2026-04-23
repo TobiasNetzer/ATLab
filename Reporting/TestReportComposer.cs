@@ -263,9 +263,9 @@ public class TestReportComposer
             {
                 header.Cell().Element(HeaderCell).Text("Step");
                 header.Cell().Element(HeaderCell).Text("Name");
-                header.Cell().Element(HeaderCell).Text("Lower");
+                header.Cell().Element(HeaderCell).Text("Lower Limit");
                 header.Cell().Element(HeaderCell).Text("Measured");
-                header.Cell().Element(HeaderCell).Text("Upper");
+                header.Cell().Element(HeaderCell).Text("Upper Limit");
                 header.Cell().Element(HeaderCell).Text("Result");
             });
 
