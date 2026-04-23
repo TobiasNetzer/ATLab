@@ -8,6 +8,6 @@ namespace ATLab.Interfaces;
 
 public interface IScriptRunner
 {
-    Task<OperationResult> ExecuteAsync(string scriptId, string deviceName, IEnumerable<ScriptVariable> variables, CancellationToken token);
-    Task<OperationResult<T>> ExecuteAsync<T>(string scriptId, string deviceName, IEnumerable<ScriptVariable> variables, CancellationToken token, ResponseMask? mask = null);
+    Task<OperationResult> ExecuteAsync(string scriptId, string deviceId, IEnumerable<ScriptVariable> variables, CancellationToken token);
+    Task<OperationResult<T>> ExecuteAsync<T>(string scriptId, string deviceId, IEnumerable<ScriptVariable> variables, CancellationToken token, ResponseMask? mask = null);
 }
