@@ -51,5 +51,6 @@ public partial class TestStepViewModel : ViewModelBase
         ResultNoFormatting = null;
         Deviation = null;
         IsPassed  = false;
+        IsExecuted = false;
     }
 }
