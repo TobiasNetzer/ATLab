@@ -35,13 +35,13 @@ public class TestReportComposer
         ?? "Unknown";
     
     private static readonly byte[] LogoImage =
-        LoadResource("ATLab.Reporting.Assets.Logo.png");
+        LoadResource("ATLab.Assets.AppIcon.png");
 
     private static readonly byte[] PassIcon =
-        LoadResource("ATLab.Reporting.Assets.Pass.png");
+        LoadResource("ATLab.Assets.Pass.png");
 
     private static readonly byte[] FailIcon =
-        LoadResource("ATLab.Reporting.Assets.Fail.png");
+        LoadResource("ATLab.Assets.Fail.png");
 
     public TestReportComposer(List<TestStepViewModel> testResults, TestInfo info, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
     {

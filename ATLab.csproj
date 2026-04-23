@@ -38,13 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Reporting\Assets\Fail.png" />
     <EmbeddedResource Include="Assets\Fail.png" />
     <EmbeddedResource Include="Assets\Pass.png" />
-    <EmbeddedResource Include="Reporting\Assets\Fail.png" />
-    <None Remove="Reporting\Assets\Logo.png" />
-    <EmbeddedResource Include="Reporting\Assets\Logo.png" />
-    <None Remove="Reporting\Assets\Pass.png" />
-    <EmbeddedResource Include="Reporting\Assets\Pass.png" />
+    <EmbeddedResource Include="Assets\AppIcon.png" />
   </ItemGroup>
 </Project>
