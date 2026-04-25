@@ -55,10 +55,10 @@
                                 <TextBlock Text="Build" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}"/>
                                 <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}"/>
+                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
                                 <TextBlock Text="System" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding OSInfo}"/>
                                 <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}"/>
-                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=UI: Avalonia {0}}"/>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Spacing="5">
