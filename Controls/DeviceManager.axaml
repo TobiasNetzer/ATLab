@@ -188,15 +188,13 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
                     <Button Content="&#xF8AA;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="20"
-                            Width="40"
+                            FontSize="16"
                             ToolTip.Tip="Add new device"
                             Command="{Binding AddDeviceCommand}"/>
 
                     <Button Content="&#xF8AB;"
                             FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="20"
-                            Width="40"
+                            FontSize="16"
                             ToolTip.Tip="Remove device"
                             Command="{Binding RemoveDeviceCommand}"/>
                 </StackPanel>
