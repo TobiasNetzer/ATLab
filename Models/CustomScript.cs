@@ -9,6 +9,6 @@ public class CustomScript
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 
-    public List<ScriptVariable> Variables { get; set; } = new();
+    public List<CustomVariable> Variables { get; set; } = new();
     public List<ScriptCommand> Commands { get; set; } = new();
 }

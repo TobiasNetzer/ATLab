@@ -19,7 +19,7 @@ public partial class ScriptViewModel : ViewModelBase
     private bool _isDirty;
 
     public ObservableCollection<ScriptCommandViewModel> Commands { get; } = new();
-    public ObservableCollection<ScriptVariable> Variables { get; } = new();
+    public ObservableCollection<CustomVariable> Variables { get; } = new();
 
     [ObservableProperty]
     private int _selectedCommandIndex;
@@ -150,13 +150,13 @@ public partial class ScriptViewModel : ViewModelBase
     {
         if (e.OldItems != null)
         {
-            foreach (ScriptVariable old in e.OldItems)
+            foreach (CustomVariable old in e.OldItems)
                 old.PropertyChanged -= ChildChanged;
         }
 
         if (e.NewItems != null)
         {
-            foreach (ScriptVariable added in e.NewItems)
+            foreach (CustomVariable added in e.NewItems)
                 added.PropertyChanged += ChildChanged;
         }
 
@@ -198,7 +198,7 @@ public partial class ScriptViewModel : ViewModelBase
         var index = SelectedVariableIndex <= 0 ? 0 : SelectedVariableIndex + 1;
         if (index > Variables.Count) index = Variables.Count;
 
-        var newVar = new ScriptVariable();
+        var newVar = new CustomVariable();
         newVar.PropertyChanged += ChildChanged;
 
         Variables.Insert(index, newVar);

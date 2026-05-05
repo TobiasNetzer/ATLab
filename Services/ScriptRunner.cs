@@ -28,7 +28,7 @@ public class ScriptRunner : IScriptRunner
     public async Task<OperationResult> ExecuteAsync(
         string scriptId,
         string deviceId,
-        IEnumerable<ScriptVariable> variables,
+        IEnumerable<CustomVariable> variables,
         CancellationToken token)
     {
         var result = await RunCoreAsync(scriptId, deviceId, variables, token);
@@ -40,7 +40,7 @@ public class ScriptRunner : IScriptRunner
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         string scriptId,
         string deviceId,
-        IEnumerable<ScriptVariable> variables,
+        IEnumerable<CustomVariable> variables,
         CancellationToken token,
         ResponseMask? mask = null)
     {
@@ -72,7 +72,7 @@ public class ScriptRunner : IScriptRunner
     private async Task<OperationResult<string?>> RunCoreAsync(
         string scriptId,
         string deviceName,
-        IEnumerable<ScriptVariable> variables,
+        IEnumerable<CustomVariable> variables,
         CancellationToken token)
     {
         if (string.IsNullOrEmpty(scriptId) || string.IsNullOrEmpty(deviceName))
@@ -105,7 +105,7 @@ public class ScriptRunner : IScriptRunner
 
     private static ScriptCommand ApplyVariables(
         ScriptCommand original,
-        IEnumerable<ScriptVariable> variables)
+        IEnumerable<CustomVariable> variables)
     {
         var clone = new ScriptCommand(original);
 

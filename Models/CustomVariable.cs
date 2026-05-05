@@ -2,7 +2,7 @@
 
 namespace ATLab.Models;
 
-public partial class ScriptVariable : ObservableObject
+public partial class CustomVariable : ObservableObject
 {
     [ObservableProperty]
     private string _name = string.Empty;
@@ -10,5 +10,5 @@ public partial class ScriptVariable : ObservableObject
     [ObservableProperty]
     private string _value = string.Empty;
 
-    public ScriptVariable Clone() => new() { Name = Name, Value = Value };
+    public CustomVariable Clone() => new() { Name = Name, Value = Value };
 }

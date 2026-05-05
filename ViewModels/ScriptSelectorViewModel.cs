@@ -17,7 +17,7 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
-    private ObservableCollection<ScriptVariable>? _scriptVariables;
+    private ObservableCollection<CustomVariable>? _scriptVariables;
 
     [ObservableProperty]
     private Device? _selectedDevice;

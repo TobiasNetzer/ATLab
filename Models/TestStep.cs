@@ -100,7 +100,7 @@ public partial class TestStep : ObservableObject
 
     [ObservableProperty]
     [property: JsonPropertyOrder(20)]
-    private ObservableCollection<ScriptVariable> _scriptVariables = new();
+    private ObservableCollection<CustomVariable> _scriptVariables = new();
     
     [ObservableProperty]
     [property: JsonPropertyOrder(21)]
@@ -186,7 +186,7 @@ public partial class TestStep : ObservableObject
         newValue.PropertyChanged += Child_PropertyChanged;
     }
 
-    partial void OnScriptVariablesChanged(ObservableCollection<ScriptVariable>? oldValue, ObservableCollection<ScriptVariable> newValue)
+    partial void OnScriptVariablesChanged(ObservableCollection<CustomVariable>? oldValue, ObservableCollection<CustomVariable> newValue)
     {
         if (oldValue != null)
         {
@@ -203,12 +203,12 @@ public partial class TestStep : ObservableObject
     {
         if (e.OldItems != null)
         {
-            foreach (ScriptVariable item in e.OldItems) item.PropertyChanged -= Child_PropertyChanged;
+            foreach (CustomVariable item in e.OldItems) item.PropertyChanged -= Child_PropertyChanged;
         }
 
         if (e.NewItems != null)
         {
-            foreach (ScriptVariable item in e.NewItems) item.PropertyChanged += Child_PropertyChanged;
+            foreach (CustomVariable item in e.NewItems) item.PropertyChanged += Child_PropertyChanged;
         }
 
         OnPropertyChanged(nameof(ScriptVariables));
@@ -261,7 +261,7 @@ public partial class TestStep : ObservableObject
             ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null
         };
         
-        clone.ScriptVariables = new ObservableCollection<ScriptVariable>(
+        clone.ScriptVariables = new ObservableCollection<CustomVariable>(
             ScriptVariables.Select(v => v.Clone())
         );
 
