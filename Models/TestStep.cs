@@ -81,41 +81,49 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(15)]
     private bool _isExcludeFromExport;
-
+    
     [ObservableProperty]
     [property: JsonPropertyOrder(16)]
-    private PassFailAction _onPass = new();
+    private bool _isAssignResultToVariable;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(17)]
+    private string _variableName = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(18)]
+    private PassFailAction _onPass = new();
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(19)]
     private PassFailAction _onFail = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(18)]
+    [property: JsonPropertyOrder(20)]
     private string _targetDeviceId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(19)]
+    [property: JsonPropertyOrder(21)]
     private string _scriptId = string.Empty;
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(20)]
+    [property: JsonPropertyOrder(22)]
     private ObservableCollection<CustomVariable> _scriptVariables = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(21)]
+    [property: JsonPropertyOrder(23)]
     private ScriptCommand _command = new() { IsEvaluate = true }; // for single non-script commands, evaluate is always true
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(22)]
+    [property: JsonPropertyOrder(24)]
     private ShellCommand _shellCommand = new();
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(23)]
+    [property: JsonPropertyOrder(25)]
     private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(24)]
+    [property: JsonPropertyOrder(26)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -126,10 +134,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(25)]
+    [JsonPropertyOrder(27)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(26)]
+    [JsonPropertyOrder(28)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     private void HookEvents()
@@ -249,6 +257,8 @@ public partial class TestStep : ObservableObject
             CustomMessageBoxImagePath = CustomMessageBoxImagePath,
             IsIgnoreStep = IsIgnoreStep,
             IsExcludeFromExport = IsExcludeFromExport,
+            IsAssignResultToVariable = IsAssignResultToVariable,
+            VariableName = VariableName,
             OnPass = new PassFailAction(OnPass),
             OnFail = new PassFailAction(OnFail),
             TargetDeviceId = TargetDeviceId,

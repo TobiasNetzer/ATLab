@@ -225,6 +225,29 @@
                               TabIndex="14"
                               IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
                     
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10">
+                        
+                        <CheckBox Content="Assign Result to Variable"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding TestStepViewModel.TestStep.IsAssignResultToVariable, FallbackValue='False'}"/>
+                        <ComboBox
+                            Width="275"
+                            TabIndex="15"
+                            ItemsSource="{Binding RuntimeVariables}"
+                            SelectedItem="{Binding SelectedVariable, Mode=TwoWay}"
+                            IsEnabled="{Binding TestStepViewModel.TestStep.IsAssignResultToVariable, FallbackValue='False'}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextWrapping="NoWrap"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        
+                    </StackPanel>
+                    
                     
                     <Grid ColumnDefinitions="*,*">
                         
@@ -234,32 +257,32 @@
                                        Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
-                                      TabIndex="15"
+                                      TabIndex="16"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnPass.IsInvertResult, FallbackValue='False'}"/>
                         
                             <RadioButton Content="Continue"
-                                         TabIndex="16"
+                                         TabIndex="17"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE, FallbackValue='False'}"/>
 
                             <RadioButton Content="Repeat"
-                                         TabIndex="17"
+                                         TabIndex="18"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT, FallbackValue='False'}"/>
 
                             <RadioButton Content="End Test"
-                                         TabIndex="18"
+                                         TabIndex="19"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST, FallbackValue='False'}"/>
                             
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <RadioButton Content="Jump To"
-                                             TabIndex="19"
+                                             TabIndex="20"
                                              GroupName="PassAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}"/>
 
                                 <ComboBox Width="130"
-                                          TabIndex="20"
+                                          TabIndex="21"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedPassJumpTarget, Mode=TwoWay}"
                                           IsEnabled="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}">
@@ -282,32 +305,32 @@
                                        Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
-                                      TabIndex="21"
+                                      TabIndex="22"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnFail.IsInvertResult, FallbackValue='False'}"/>
                         
                             <RadioButton Content="Continue"
-                                         TabIndex="22"
+                                         TabIndex="23"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE, FallbackValue='False'}"/>
 
                             <RadioButton Content="Repeat"
-                                         TabIndex="23"
+                                         TabIndex="24"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT, FallbackValue='False'}"/>
 
                             <RadioButton Content="End Test"
-                                         TabIndex="24"
+                                         TabIndex="25"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST, FallbackValue='False'}"/>
                             
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <RadioButton Content="Jump To"
-                                             TabIndex="25"
+                                             TabIndex="26"
                                              GroupName="FailAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}"/>
 
                                 <ComboBox Width="130"
-                                          TabIndex="26"
+                                          TabIndex="27"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedFailJumpTarget, Mode=TwoWay}"
                                           IsEnabled="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}">

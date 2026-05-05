@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private readonly ISettingsService _settingsService;
     private readonly IFileDialogService _fileDialogService;
     private readonly ProjectSettings _projectSettings;
+    private readonly RuntimeVariableEditorViewModel _runtimeVariableEditorViewModel;
 
     public List<TestEvaluationSource> EvaluationSources { get; } = Enum.GetValues<TestEvaluationSource>().ToList();
         
@@ -41,6 +43,11 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isAdvancedExpanded;
+
+    public ObservableCollection<CustomVariable> RuntimeVariables => _runtimeVariableEditorViewModel.RuntimeVariables;
+    
+    [ObservableProperty]
+    private CustomVariable? _selectedVariable;
     
     [ObservableProperty]
     private List<JumpTargetDto> _jumpTargets = new();
@@ -54,11 +61,13 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
         IFileDialogService fileDialogService,
-        ProjectSettings projectSettings)
+        ProjectSettings projectSettings,
+        RuntimeVariableEditorViewModel runtimeVariableEditorViewModel)
     {
         _settingsService = settingsService;
         _fileDialogService = fileDialogService;
         _projectSettings = projectSettings;
+        _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
         
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
     }
@@ -77,6 +86,8 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         TestStepViewModel.TestStep.PropertyChanged += TestStepPropertyChanged;
         UpdateStringProperties();
         
+        SelectedVariable = RuntimeVariables.FirstOrDefault(v => v.Name == TestStepViewModel.TestStep.VariableName);
+            
         JumpTargets = allSteps
             .Select(s => new JumpTargetDto(s.TestStep.Id, s.TestStep.Number, s.TestStep.Name))
             .ToList();
@@ -213,6 +224,12 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsStepConfiguratorExpanded = value;
+    }
+
+    partial void OnSelectedVariableChanged(CustomVariable? value)
+    {
+        if (TestStepViewModel?.TestStep == null || value == null) return;
+        TestStepViewModel.TestStep.VariableName = value?.Name ?? string.Empty;
     }
     
     partial void OnSelectedPassJumpTargetChanged(JumpTargetDto? value)
