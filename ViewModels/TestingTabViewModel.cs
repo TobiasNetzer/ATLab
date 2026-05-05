@@ -24,6 +24,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
     private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
+    private readonly RuntimeVariableEditorViewModel _runtimeVariableEditor;
     
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps = new();
@@ -132,7 +133,8 @@ public partial class TestingTabViewModel : ViewModelBase
         DeviceManagerViewModel deviceManager,
         ProjectSettings projectSettings,
         ProjectDocumentation projectDocumentation,
-        DeviceUnderTestInfo deviceUnderTestInfo)
+        DeviceUnderTestInfo deviceUnderTestInfo,
+        RuntimeVariableEditorViewModel runtimeVariableEditor)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -149,6 +151,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectSettings = projectSettings;
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
+        _runtimeVariableEditor = runtimeVariableEditor;
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
@@ -159,6 +162,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _deviceManager.Devices.CollectionChanged += DevicesChanged;
         _projectDocumentation.DocumentationChanged += () => CheckForChanges();
         _deviceUnderTestInfo.DeviceUnderTestInfoChanged += () => CheckForChanges();
+        _runtimeVariableEditor.RuntimeVariables.CollectionChanged += RuntimeVariablesChanged;
         
         foreach (var device in _deviceManager.Devices)
             SubscribeToDevice(device);
@@ -228,6 +232,38 @@ public partial class TestingTabViewModel : ViewModelBase
 
         var value = prop.GetValue(source);
         prop.SetValue(target, value);
+    }
+    
+    private void RuntimeVariablesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (CustomVariable variable in e.NewItems)
+                SubscribeToVariable(variable);
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (CustomVariable variable in e.OldItems)
+                UnsubscribeFromVariable(variable);
+        }
+
+        CheckForChanges();
+    }
+    
+    private void SubscribeToVariable(CustomVariable variable)
+    {
+        variable.PropertyChanged += VariableChanged;
+    }
+
+    private void UnsubscribeFromVariable(CustomVariable variable)
+    {
+        variable.PropertyChanged -= VariableChanged;
+    }
+
+    private void VariableChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CheckForChanges();
     }
     
     private void DevicesChanged(object? sender, NotifyCollectionChangedEventArgs e)

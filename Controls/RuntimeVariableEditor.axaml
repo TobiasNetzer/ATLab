@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             x:Class="ATLab.Controls.RuntimeVariableEditor"
+             x:DataType="vm:RuntimeVariableEditorViewModel"
+             Width="780">
+    
+    <Grid RowDefinitions="Auto, *">
+        
+        <Border Grid.Row="0" Background="{DynamicResource PanelBorder}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            
+            <TextBlock Text="Runtime Variables"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        
+        <Border Grid.Row="1"
+            Background="{DynamicResource PanelBackground}"
+            CornerRadius="0 0 15 15"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource PanelBorder}">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                
+                <Grid RowDefinitions="Auto,*"
+                      Margin="10"
+                      RowSpacing="10">
+                    
+                    <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
+                            Spacing="5">
+                        
+                    <Button Content="&#xF8AA;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="16"
+                            ToolTip.Tip="Add a new variable"
+                            Command="{Binding AddVariableCommand}" />
+                        
+                    <Button Content="&#xF8AB;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="16"
+                            ToolTip.Tip="Remove variable"
+                            Command="{Binding RemoveVariableCommand}" />
+                            
+                </StackPanel>
+                
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding RuntimeVariables}"
+                          SelectedIndex="{Binding SelectedVariableIndex}"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="True"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="All"
+                          BorderThickness="1"
+                          BorderBrush="Gray"
+                          VerticalScrollBarVisibility="Auto">
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Variable Name" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Default Value" Binding="{Binding Value}" Width="200"/>
+                    </DataGrid.Columns>
+                    
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add" Command="{Binding AddVariableCommand}"/>
+                            <MenuItem Header="Remove" Command="{Binding RemoveVariableCommand}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

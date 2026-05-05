@@ -209,6 +209,7 @@ public class App : Application
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();
         services.AddSingleton<TestHardwareDiagnosticsViewModel>();
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
+        services.AddSingleton<RuntimeVariableEditorViewModel>();
 
         // Windows
         services.AddTransient<MainWindow>();

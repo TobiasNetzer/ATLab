@@ -17,6 +17,7 @@ public class ProjectController
     private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly RuntimeVariableEditorViewModel _runtimeVariableEditorViewModel;
 
     public ProjectController(
         IProjectService projectService,
@@ -25,7 +26,8 @@ public class ProjectController
         ProjectDocumentation projectDocumentation,
         DeviceUnderTestInfo deviceUnderTestInfo,
         DeviceManagerViewModel deviceManager,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        RuntimeVariableEditorViewModel runtimeVariableEditorViewModel)
     {
         _projectService = projectService;
         _errorService = errorService;
@@ -34,6 +36,7 @@ public class ProjectController
         _deviceUnderTestInfo = deviceUnderTestInfo;
         _deviceManager = deviceManager;
         _messageBoxService = messageBoxService;
+        _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
     }
 
     public async Task NewProjectAsync(TestingTabViewModel vm)
@@ -49,6 +52,7 @@ public class ProjectController
             _projectDocumentation.ResetToDefault();
             _deviceUnderTestInfo.ResetToDefault();
             _deviceManager.Devices.Clear();
+            _runtimeVariableEditorViewModel.RuntimeVariables.Clear();
 
             _projectService.UpdateLastSavedState(CaptureCurrentState(vm));
 
@@ -137,6 +141,10 @@ public class ProjectController
             _deviceManager.Devices.Clear();
             foreach (var device in dto.Devices)
                 _deviceManager.Devices.Add(device);
+            
+            _runtimeVariableEditorViewModel.RuntimeVariables.Clear();
+            foreach (var variable in dto.RuntimeVariables)
+                _runtimeVariableEditorViewModel.RuntimeVariables.Add(variable);
 
             vm.SelectedStepIndex = 0;
         }
@@ -153,6 +161,7 @@ public class ProjectController
             StimChannelNames = vm.TestHardwareRelayChannels.GetStimNames(),
             ExtStimChannelNames = vm.TestHardwareRelayChannels.GetExtStimNames(),
             MeasChannelNames = vm.TestHardwareRelayChannels.GetMeasNames(),
+            RuntimeVariables = _runtimeVariableEditorViewModel.RuntimeVariables.ToList(),
             Devices = _deviceManager.Devices.ToList(),
             ProjectSettings = _projectSettings,
             ProjectDocumentation = _projectDocumentation,
