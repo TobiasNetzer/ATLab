@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -79,7 +80,7 @@ public class TestExecutor : ITestExecutor
         }
     }
     
-    public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
+    public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex, List<CustomVariable> runtimeVariables)
     {
         if (steps.Count == 0)
         {
@@ -106,7 +107,7 @@ public class TestExecutor : ITestExecutor
 
         try
         {
-            await ExecuteAsync(steps, startIndex, _cts.Token);
+            await ExecuteAsync(steps, startIndex, runtimeVariables, _cts.Token);
         }
         catch (OperationCanceledException)
         {
@@ -126,18 +127,18 @@ public class TestExecutor : ITestExecutor
         }
     }
 
-    public async Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex)
+    public async Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex, List<CustomVariable> runtimeVariables)
     {
         _repeatTest = true;
 
         while (_repeatTest)
         {
             OnTestRepeated();
-            await StartTestAsync(steps, startIndex);
+            await StartTestAsync(steps, startIndex, runtimeVariables);
         }
     }
     
-    public async Task StartSingleStepTest(TestStepViewModel step)
+    public async Task StartSingleStepTest(TestStepViewModel step, List<CustomVariable> runtimeVariables)
     {
         _cts = new CancellationTokenSource();
 
@@ -145,7 +146,7 @@ public class TestExecutor : ITestExecutor
         
         try
         {
-            var result = await _runner.ExecuteAsync(step, _cts.Token);
+            var result = await _runner.ExecuteAsync(step, runtimeVariables, _cts.Token);
 
             if (_cts.Token.IsCancellationRequested)
                 return;
@@ -153,15 +154,15 @@ public class TestExecutor : ITestExecutor
             switch (result.Status)
             {
                 case OperationStatus.SUCCESS:
-                    EvaluateTestStep(step, result.Value);
+                    EvaluateTestStep(step, result.Value, runtimeVariables);
                     break;
                 
                 case OperationStatus.TIMEOUT:
-                    TestStepExecutionTimedOut(step);
+                    TestStepExecutionTimedOut(step, runtimeVariables);
                     break;
                 
                 case OperationStatus.FAILURE:
-                    TestStepExecutionFailed(step, result);
+                    TestStepExecutionFailed(step, result, runtimeVariables);
                     break;
                 
                 default:
@@ -196,6 +197,7 @@ public class TestExecutor : ITestExecutor
     private async Task ExecuteAsync(
         IReadOnlyList<TestStepViewModel> steps,
         int startIndex,
+        List<CustomVariable> runtimeVariables,
         CancellationToken token)
     {
         for (var i = startIndex; i < steps.Count; i++)
@@ -220,22 +222,22 @@ public class TestExecutor : ITestExecutor
                     throw new OperationCanceledException();
             }
             
-            stepExecutionResult = await _runner.ExecuteAsync(step, token);
+            stepExecutionResult = await _runner.ExecuteAsync(step, runtimeVariables, token);
 
             token.ThrowIfCancellationRequested();
 
             switch (stepExecutionResult.Status)
             {
                 case OperationStatus.SUCCESS:
-                    EvaluateTestStep(step, stepExecutionResult.Value);
+                    EvaluateTestStep(step, stepExecutionResult.Value, runtimeVariables);
                     break;
             
                 case OperationStatus.TIMEOUT:
-                    TestStepExecutionTimedOut(step);
+                    TestStepExecutionTimedOut(step, runtimeVariables);
                     break;
             
                 case OperationStatus.FAILURE:
-                    TestStepExecutionFailed(step, stepExecutionResult);
+                    TestStepExecutionFailed(step, stepExecutionResult, runtimeVariables);
                     break;
             
                 default:
@@ -261,14 +263,17 @@ public class TestExecutor : ITestExecutor
         }
     }
 
-    private void EvaluateTestStep(TestStepViewModel step, double value)
+    private void EvaluateTestStep(TestStepViewModel step, double value, List<CustomVariable> runtimeVariables)
     {
+        var variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
+        
         if (IsOverflow(value))
         {
             step.Result = "Overflow";
             step.ResultNoFormatting = "Overflow";
             step.IsPassed = false;
             step.Deviation = string.Empty;
+            variable?.Value = "Overflow";
             return;
         }
 
@@ -278,6 +283,7 @@ public class TestExecutor : ITestExecutor
             step.ResultNoFormatting = string.Empty;
             step.IsPassed = true;
             step.Deviation = string.Empty;
+            variable?.Value = string.Empty;
             return;
         }
 
@@ -293,17 +299,21 @@ public class TestExecutor : ITestExecutor
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";
         step.IsPassed = evaluation.IsValid;
+        variable?.Value = step.ResultNoFormatting;
     }
     
-    private void TestStepExecutionTimedOut(TestStepViewModel step)
+    private void TestStepExecutionTimedOut(TestStepViewModel step, List<CustomVariable> runtimeVariables)
     {
         step.Result = "Timeout";
         step.ResultNoFormatting = "Timeout";
         step.IsPassed = false;
         step.Deviation = string.Empty;
+        
+        var variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
+        variable?.Value = "Timeout";
     }
 
-    private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result)
+    private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result, List<CustomVariable> runtimeVariables)
     {
         if (!string.IsNullOrEmpty(result.ErrorMessage))
             _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");

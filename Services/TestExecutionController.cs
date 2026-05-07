@@ -120,7 +120,7 @@ public class TestExecutionController
             vm.SelectedStepIndex = 0;
 
             vm.AllowResultSave = true;
-            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex);
+            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
             vm.AllowResultSave = false;
         }
     }
@@ -140,7 +140,7 @@ public class TestExecutionController
             vm.SelectedStepIndex = 0;
 
             vm.AllowResultSave = true;
-            await _testExecutor.StartRepeatTestAsync(vm.TestSteps, vm.SelectedStepIndex);
+            await _testExecutor.StartRepeatTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
         }
     }
 
@@ -153,7 +153,7 @@ public class TestExecutionController
             vm.TestStatus = TestStatus.RUNNING;
             vm.TestProgress = 0;
 
-            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex);
+            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
         }
     }
 
@@ -169,7 +169,7 @@ public class TestExecutionController
             vm.TestDuration = string.Empty;
             vm.TestStatus = TestStatus.RUNNING;
 
-            await _testExecutor.StartSingleStepTest(vm.SelectedStep);
+            await _testExecutor.StartSingleStepTest(vm.SelectedStep, vm.RuntimeVariables);
 
             vm.TestStatus = TestStatus.IDLE;
         }

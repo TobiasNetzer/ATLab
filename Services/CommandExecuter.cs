@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -33,15 +34,17 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
     public Task<OperationResult<string?>> ExecuteAsync(
         ScriptCommand command,
         string targetDeviceId,
-        CancellationToken token)
+        CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null)
     {
-        return ExecuteAsync(new[] { command }, targetDeviceId, token);
+        return ExecuteAsync(new[] { command }, targetDeviceId, token, runtimeVariables);
     }
 
     public async Task<OperationResult<string?>> ExecuteAsync(
         IEnumerable<ScriptCommand> commands,
         string targetDeviceId,
-        CancellationToken token)
+        CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null)
     {
         if (string.IsNullOrWhiteSpace(targetDeviceId))
             return OperationResult<string?>.Failure("Device is required.");
@@ -95,6 +98,8 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 var commandText = command.Command;
                 if (string.IsNullOrWhiteSpace(commandText))
                     continue;
+                
+                var parsedCommand = VariableResolver.Resolve(commandText, runtimeVariables);
 
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
@@ -102,13 +107,13 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 switch (command.IsExpectResponse)
                 {
                     case true when command.IsEvaluate:
-                        queryResult = await client.QueryAsync(commandText, command.TimeoutMs);
+                        queryResult = await client.QueryAsync(parsedCommand, command.TimeoutMs);
                         break;
                     case true:
-                        await client.QueryAsync(commandText, command.TimeoutMs);
+                        await client.QueryAsync(parsedCommand, command.TimeoutMs);
                         break;
                     default:
-                        await client.WriteAsync(commandText);
+                        await client.WriteAsync(parsedCommand);
                         break;
                 }
             }
@@ -141,9 +146,10 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         ScriptCommand command,
         string targetDeviceId,
         CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null,
         ResponseMask? mask = null)
     {
-        var result = await ExecuteAsync(command, targetDeviceId, token);
+        var result = await ExecuteAsync(command, targetDeviceId, token, runtimeVariables);
 
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);

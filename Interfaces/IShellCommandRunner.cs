@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -10,5 +11,6 @@ public interface IShellCommandRunner
     Task<OperationResult<double>> RunAsync(
         string command,
         ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        List<CustomVariable>? runtimeVariables = null);
 }

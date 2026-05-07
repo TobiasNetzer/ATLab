@@ -8,11 +8,6 @@ public partial class RuntimeVariableEditorViewModel
 {
     public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
     public int SelectedVariableIndex { get; set; }
-
-    public RuntimeVariableEditorViewModel()
-    {
-
-    }
     
     [RelayCommand]
     private void AddVariable()

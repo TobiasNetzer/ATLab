@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -31,7 +32,7 @@ public class TestStepRunner : ITestStepRunner
         _messageBoxService = messageBoxService;
     }
     
-    public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, CancellationToken token)
+    public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
     {
         try
         {
@@ -65,9 +66,9 @@ public class TestStepRunner : ITestStepRunner
                         step.TestStep.ScriptVariables, token, mask);
                 
                 case TestEvaluationSource.COMMAND:
-                    return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, mask);
+                    return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);
 
-                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token);
+                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token, runtimeVariables);
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -28,6 +29,8 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps = new();
+
+    public List<CustomVariable> RuntimeVariables { get; } = new();
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
@@ -247,6 +250,12 @@ public partial class TestingTabViewModel : ViewModelBase
             foreach (CustomVariable variable in e.OldItems)
                 UnsubscribeFromVariable(variable);
         }
+        
+        RuntimeVariables.Clear();
+        foreach (var v in _runtimeVariableEditor.RuntimeVariables)
+        {
+            RuntimeVariables.Add(v.Clone());
+        }
 
         CheckForChanges();
     }
@@ -263,6 +272,12 @@ public partial class TestingTabViewModel : ViewModelBase
 
     private void VariableChanged(object? sender, PropertyChangedEventArgs e)
     {
+        RuntimeVariables.Clear();
+        foreach (var v in _runtimeVariableEditor.RuntimeVariables)
+        {
+            RuntimeVariables.Add(v.Clone());
+        }
+        
         CheckForChanges();
     }
     

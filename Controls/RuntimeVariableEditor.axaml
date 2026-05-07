@@ -60,7 +60,7 @@
                     
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Variable Name" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                        <DataGridTextColumn Header="Default Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
+                        <DataGridTextColumn Header="Init Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
                     </DataGrid.Columns>
                     
                     <DataGrid.ContextMenu>

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -14,11 +16,13 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
     public async Task<OperationResult<double>> RunAsync(
         string command,
         ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        List<CustomVariable>? runtimeVariables = null)
     {
         try
         {
-            var psi = BuildStartInfo(command, mode);
+            var parsedCommand = VariableResolver.Resolve(command, runtimeVariables);
+            var psi = BuildStartInfo(parsedCommand, mode);
 
             using var process = Process.Start(psi);
 

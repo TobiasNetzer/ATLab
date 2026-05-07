@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -13,12 +15,14 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
     public async Task<OperationResult<double>> RunAsync(
         string command,
         ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        List<CustomVariable>? runtimeVariables = null)
     {
         try
         {
+            var parsedCommand = VariableResolver.Resolve(command, runtimeVariables);
             var (exe, argsFormat) = GetLinuxTerminal(mode);
-            var args = string.Format(argsFormat, command);
+            var args = string.Format(argsFormat, parsedCommand);
 
             var psi = new ProcessStartInfo
             {

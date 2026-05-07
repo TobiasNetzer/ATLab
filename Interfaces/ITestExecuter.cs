@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Interfaces;
@@ -14,8 +15,8 @@ public interface ITestExecutor
     event Action? TestCancelled;
     event Action? TestRepeated;
 
-    Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index);
-    Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex);
-    Task StartSingleStepTest(TestStepViewModel step);
+    Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index, List<CustomVariable> runtimeVariables);
+    Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex, List<CustomVariable> runtimeVariables);
+    Task StartSingleStepTest(TestStepViewModel step, List<CustomVariable> runtimeVariables);
     Task CancelTest();
 }
