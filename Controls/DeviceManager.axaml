@@ -183,7 +183,7 @@
                 CornerRadius="0 0 15 0"
                 Padding="10">
 
-            <Grid RowDefinitions="Auto, *" RowSpacing="5">
+            <Grid RowDefinitions="Auto, *" RowSpacing="10">
                 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
                     <Button Content="&#xF8AA;"
