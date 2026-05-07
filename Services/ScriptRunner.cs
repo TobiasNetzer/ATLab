@@ -28,10 +28,11 @@ public class ScriptRunner : IScriptRunner
     public async Task<OperationResult> ExecuteAsync(
         string scriptId,
         string deviceId,
-        IEnumerable<CustomVariable> variables,
-        CancellationToken token)
+        IEnumerable<CustomVariable> scriptVariables,
+        CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null)
     {
-        var result = await RunCoreAsync(scriptId, deviceId, variables, token);
+        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables);
         return result.IsSuccess
             ? OperationResult.Success()
             : OperationResult.Failure(result.ErrorMessage);
@@ -40,11 +41,12 @@ public class ScriptRunner : IScriptRunner
     public async Task<OperationResult<T>> ExecuteAsync<T>(
         string scriptId,
         string deviceId,
-        IEnumerable<CustomVariable> variables,
+        IEnumerable<CustomVariable> scriptVariables,
         CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null,
         ResponseMask? mask = null)
     {
-        var result = await RunCoreAsync(scriptId, deviceId, variables, token);
+        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables);
         
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);
@@ -72,8 +74,9 @@ public class ScriptRunner : IScriptRunner
     private async Task<OperationResult<string?>> RunCoreAsync(
         string scriptId,
         string deviceName,
-        IEnumerable<CustomVariable> variables,
-        CancellationToken token)
+        IEnumerable<CustomVariable> scriptVariables,
+        CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null)
     {
         if (string.IsNullOrEmpty(scriptId) || string.IsNullOrEmpty(deviceName))
             return OperationResult<string?>.Failure("Script and Device are required.");
@@ -88,10 +91,10 @@ public class ScriptRunner : IScriptRunner
 
             // Clone and apply variables to commands
             var preparedCommands = script.Commands
-                .Select(c => ApplyVariables(c, variables))
+                .Select(c => ApplyVariables(c, scriptVariables))
                 .ToList();
 
-            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceName, token);
+            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceName, token, runtimeVariables);
         }
         catch (OperationCanceledException)
         {

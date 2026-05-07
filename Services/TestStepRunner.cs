@@ -63,7 +63,7 @@ public class TestStepRunner : ITestStepRunner
                 
                 case TestEvaluationSource.SCRIPT:
                     return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDeviceId,
-                        step.TestStep.ScriptVariables, token, mask);
+                        step.TestStep.ScriptVariables, token, runtimeVariables, mask);
                 
                 case TestEvaluationSource.COMMAND:
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);
