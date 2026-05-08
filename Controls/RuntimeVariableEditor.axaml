@@ -22,56 +22,53 @@
             CornerRadius="0 0 15 15"
             BorderThickness="2"
             BorderBrush="{DynamicResource PanelBorder}">
-
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            
+            <Grid RowDefinitions="Auto,*"
+                  Margin="10"
+                  RowSpacing="10">
                 
-                <Grid RowDefinitions="Auto,*"
-                      Margin="10"
-                      RowSpacing="10">
+                <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        Spacing="5">
                     
-                    <StackPanel Grid.Row="0"
-                            Orientation="Horizontal"
-                            Spacing="5">
+                <Button Content="&#xF8AA;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="16"
+                        ToolTip.Tip="Add a new variable"
+                        Command="{Binding AddVariableCommand}" />
+                    
+                <Button Content="&#xF8AB;"
+                        FontFamily="{StaticResource FluentIconsFont}"
+                        FontSize="16"
+                        ToolTip.Tip="Remove variable"
+                        Command="{Binding RemoveVariableCommand}" />
                         
-                    <Button Content="&#xF8AA;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="16"
-                            ToolTip.Tip="Add a new variable"
-                            Command="{Binding AddVariableCommand}" />
-                        
-                    <Button Content="&#xF8AB;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="16"
-                            ToolTip.Tip="Remove variable"
-                            Command="{Binding RemoveVariableCommand}" />
-                            
-                </StackPanel>
+            </StackPanel>
+            
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding RuntimeVariables}"
+                      SelectedIndex="{Binding SelectedVariableIndex}"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="True"
+                      CanUserSortColumns="False"
+                      GridLinesVisibility="All"
+                      BorderThickness="1"
+                      BorderBrush="Gray"
+                      VerticalScrollBarVisibility="Auto">
                 
-                <DataGrid Grid.Row="1"
-                          ItemsSource="{Binding RuntimeVariables}"
-                          SelectedIndex="{Binding SelectedVariableIndex}"
-                          AutoGenerateColumns="False"
-                          CanUserReorderColumns="True"
-                          CanUserSortColumns="False"
-                          GridLinesVisibility="All"
-                          BorderThickness="1"
-                          BorderBrush="Gray"
-                          VerticalScrollBarVisibility="Auto">
-                    
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Variable Name" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                        <DataGridTextColumn Header="Init Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
-                    </DataGrid.Columns>
-                    
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Add" Command="{Binding AddVariableCommand}"/>
-                            <MenuItem Header="Remove" Command="{Binding RemoveVariableCommand}"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-                </Grid>
-            </ScrollViewer>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Variable Name" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                    <DataGridTextColumn Header="Init Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
+                </DataGrid.Columns>
+                
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add" Command="{Binding AddVariableCommand}"/>
+                        <MenuItem Header="Remove" Command="{Binding RemoveVariableCommand}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
