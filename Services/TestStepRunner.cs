@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -80,6 +82,14 @@ public class TestStepRunner : ITestStepRunner
                         "Fail");
 
                     return OperationResult<double>.Success(Convert.ToDouble(operatorResponse));
+                }
+                
+                case TestEvaluationSource.EXPRESSION: 
+                {
+                    var resolved = VariableResolver.Resolve(step.TestStep.Expression, runtimeVariables);
+                    return double.TryParse(resolved, CultureInfo.CurrentCulture, out var doubleResult)
+                        ? OperationResult<double>.Success(doubleResult)
+                        : OperationResult<double>.Failure($"Failed to evaluate expression: {step.TestStep.Expression}. Resolved to: {resolved}");
                 }
                 
                 default: return OperationResult<double>.Failure("Unknown evaluation source");

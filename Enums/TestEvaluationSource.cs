@@ -17,5 +17,8 @@ public enum TestEvaluationSource
     SHELL_COMMAND,
     
     [Description("User Response")]
-    USER_RESPONSE
+    USER_RESPONSE,
+    
+    [Description("Expression")]
+    EXPRESSION
 }

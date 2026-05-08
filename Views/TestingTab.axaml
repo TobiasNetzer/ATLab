@@ -431,6 +431,10 @@
                 <controls:ShellCommandEditor
                     ShellCommandEditorVm="{Binding ShellCommandEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND}"/>
+                
+                <controls:ExpressionEditor
+                    ExpressionEditorVm="{Binding ExpressionEditor}"
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXPRESSION}"/>
 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding ResponseMaskEditor}"

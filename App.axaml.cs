@@ -204,6 +204,7 @@ public class App : Application
         services.AddSingleton<CommandEditorViewModel>();
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
         services.AddSingleton<ShellCommandEditorViewModel>();
+        services.AddSingleton<ExpressionEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();

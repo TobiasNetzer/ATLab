@@ -60,6 +60,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private ShellCommandEditorViewModel _shellCommandEditor;
     
     [ObservableProperty]
+    private ExpressionEditorViewModel _expressionEditor;
+    
+    [ObservableProperty]
     private bool _isDevelopmentMode;
     
     [ObservableProperty]
@@ -130,6 +133,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ScriptSelectorViewModel scriptSelector,
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
+        ExpressionEditorViewModel expressionEditor,
         ProjectController projectController,
         TestStepEditor testStepEditor,
         TestExecutionController testExecutionController,
@@ -147,6 +151,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ScriptSelector = scriptSelector;
         CommandEditor = commandEditor;
         ShellCommandEditor = shellCommandEditor;
+        ExpressionEditor = expressionEditor;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
         _testExecutionController = testExecutionController;
@@ -334,6 +339,7 @@ public partial class TestingTabViewModel : ViewModelBase
             ScriptSelector.LoadTestStep(value);
             CommandEditor.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
+            ExpressionEditor.LoadTestStep(value.TestStep);
             ResponseMaskEditor.LoadTestStep(value);
         }
         catch (Exception ex)
