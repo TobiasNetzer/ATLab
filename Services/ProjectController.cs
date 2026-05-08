@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -145,7 +146,12 @@ public class ProjectController
             _runtimeVariableEditorViewModel.RuntimeVariables.Clear();
             foreach (var variable in dto.RuntimeVariables)
                 _runtimeVariableEditorViewModel.RuntimeVariables.Add(variable);
-
+            
+            foreach (var stepVm in vm.TestSteps)
+            {
+                TestStepRuntimeInitializer.InitializeRuntimeValues(stepVm.TestStep);
+            }
+            
             vm.SelectedStepIndex = 0;
         }
     }

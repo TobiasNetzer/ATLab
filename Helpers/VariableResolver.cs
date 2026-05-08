@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,12 +15,15 @@ public static class VariableResolver
         @"\{([A-Za-z0-9_]+)(?:\|([A-Za-z0-9_]+)(?:=([^}]+))?)?\}",
         RegexOptions.Compiled
     );
-
+    
     public static string Resolve(
-        string commandText,
+        string expression,
         IEnumerable<CustomVariable>? runtimeVariables)
     {
-        return _regex.Replace(commandText, match =>
+        if (string.IsNullOrWhiteSpace(expression))
+            return string.Empty;
+        
+        var substituted = _regex.Replace(expression, match =>
         {
             var name = match.Groups[1].Value;
             var format = match.Groups[2].Success ? match.Groups[2].Value : null;
@@ -27,10 +32,28 @@ public static class VariableResolver
             var variable = runtimeVariables?.FirstOrDefault(v => v.Name == name);
 
             var value = variable?.Value ?? defaultValue;
-            return value == null
-                ? match.Value
-                : ApplyFormat(value, format);
+
+            if (value == null)
+                return "0.0"; // undefined → treat as zero for math
+
+            return ApplyFormat(value, format);
         });
+        
+        try
+        {
+            var normalizedExpr = EnsureDoublePrecision(substituted);
+            var result = EvaluateMath(normalizedExpr);
+            return result.ToString(CultureInfo.CurrentCulture);
+        }
+        catch
+        {
+            return substituted;
+        }
+    }
+
+    private static string EnsureDoublePrecision(string expr)
+    {
+        return Regex.Replace(expr, @"(?<![\d\.])(\d+)(?![\d\.])", "$1.0");
     }
 
     private static string ApplyFormat(string value, string? format)
@@ -66,5 +89,14 @@ public static class VariableResolver
     {
         var bytes = Encoding.UTF8.GetBytes(value);
         return "[" + string.Join(", ", bytes) + "]";
+    }
+    
+    private static double EvaluateMath(string expr)
+    {
+        var dt = new DataTable();
+        dt.Locale = CultureInfo.InvariantCulture;
+
+        var result = dt.Compute(expr, string.Empty);
+        return Convert.ToDouble(result, CultureInfo.InvariantCulture);
     }
 }

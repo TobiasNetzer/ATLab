@@ -17,7 +17,7 @@ public static class UnitParser
             input = input.Substring(0, input.Length - unit.Length).Trim();
         }
 
-        double multiplier = 1.0;
+        var multiplier = 1.0;
         
         if (input.EndsWith("p"))
         {
@@ -52,7 +52,7 @@ public static class UnitParser
 
         if (double.TryParse(input, CultureInfo.CurrentCulture, out double value))
         {
-            result = Math.Round(value * multiplier, 13);
+            result = value * multiplier;
             return true;
         }
 
@@ -61,9 +61,9 @@ public static class UnitParser
 
     public static string Format(double value, string? unit = null, int precision = 6)
     {
-        double absValue = Math.Abs(value);
-        string suffix = "";
-        double displayValue = value;
+        var absValue = Math.Abs(value);
+        var suffix = "";
+        var displayValue = value;
 
         if (absValue >= 1e6)
         {
@@ -101,7 +101,8 @@ public static class UnitParser
             suffix = "p";
         }
 
-        string format = "0." + new string('#', precision);
-        return $"{Math.Round(displayValue, precision).ToString(format, CultureInfo.CurrentCulture)}{suffix}{unit ?? ""}";
+        var format = "0." + new string('#', precision);
+        var formattedValue = displayValue.ToString(format, CultureInfo.CurrentCulture);
+        return $"{formattedValue}{suffix}{unit ?? ""}";
     }
 }

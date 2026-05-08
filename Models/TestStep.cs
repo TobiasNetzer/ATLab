@@ -36,14 +36,26 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(4)]
+    private string _nominalValueExpression = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(5)]
+    private string _lowerLimitExpression = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(6)]
+    private string _upperLimitExpression = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonIgnore]
     private double _nominalValue;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(5)]
+    [property: JsonIgnore]
     private double _lowerLimit;
     
     [ObservableProperty]
-    [property: JsonPropertyOrder(6)]
+    [property: JsonIgnore]
     private double _upperLimit;
     
     [ObservableProperty]
@@ -52,6 +64,10 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(8)]
+    private string _delayExpression = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonIgnore]
     private int _delay;
     
     [ObservableProperty]
@@ -245,10 +261,14 @@ public partial class TestStep : ObservableObject
         {
             Number = Number,
             Name = Name,
+            NominalValueExpression = NominalValueExpression,
             NominalValue = NominalValue,
+            LowerLimitExpression = LowerLimitExpression,
             LowerLimit = LowerLimit,
+            UpperLimitExpression = UpperLimitExpression,
             UpperLimit = UpperLimit,
             Unit = Unit,
+            DelayExpression = DelayExpression,
             Delay = Delay,
             EvaluationSource = EvaluationSource,
             IsCustomMask = IsCustomMask,

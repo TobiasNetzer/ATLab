@@ -146,6 +146,37 @@ public class TestExecutor : ITestExecutor
         
         try
         {
+            var stepModel = step.TestStep;
+            
+            var nominal = ResolveNumeric(
+                stepModel.NominalValueExpression,
+                stepModel.NominalValue,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var lower = ResolveNumeric(
+                stepModel.LowerLimitExpression,
+                stepModel.LowerLimit,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var upper = ResolveNumeric(
+                stepModel.UpperLimitExpression,
+                stepModel.UpperLimit,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var delaySeconds = ResolveNumeric(
+                stepModel.DelayExpression,
+                stepModel.Delay / 1000.0,
+                "s",
+                runtimeVariables);
+            
+            stepModel.NominalValue = nominal;
+            stepModel.LowerLimit = lower;
+            stepModel.UpperLimit = upper;
+            stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
+            
             var result = await _runner.ExecuteAsync(step, runtimeVariables, _cts.Token);
 
             if (_cts.Token.IsCancellationRequested)
@@ -221,6 +252,37 @@ public class TestExecutor : ITestExecutor
                 if (!result)
                     throw new OperationCanceledException();
             }
+            
+            var stepModel = step.TestStep;
+            
+            var nominal = ResolveNumeric(
+                stepModel.NominalValueExpression,
+                stepModel.NominalValue,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var lower = ResolveNumeric(
+                stepModel.LowerLimitExpression,
+                stepModel.LowerLimit,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var upper = ResolveNumeric(
+                stepModel.UpperLimitExpression,
+                stepModel.UpperLimit,
+                stepModel.Unit,
+                runtimeVariables);
+
+            var delaySeconds = ResolveNumeric(
+                stepModel.DelayExpression,
+                stepModel.Delay / 1000.0,
+                "s",
+                runtimeVariables);
+            
+            stepModel.NominalValue = nominal;
+            stepModel.LowerLimit = lower;
+            stepModel.UpperLimit = upper;
+            stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
             
             stepExecutionResult = await _runner.ExecuteAsync(step, runtimeVariables, token);
 
@@ -376,6 +438,30 @@ public class TestExecutor : ITestExecutor
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+    
+    private double ResolveNumeric(
+        string expression,
+        double runtimeFallback,
+        string unit,
+        List<CustomVariable> runtimeVariables)
+    {
+        if (string.IsNullOrWhiteSpace(expression))
+            return runtimeFallback;
+        
+        if (expression.Contains("{"))
+        {
+            var resolved = VariableResolver.Resolve(expression, runtimeVariables);
+            if (UnitParser.TryParse(resolved, out var result, unit))
+                return result;
+
+            return runtimeFallback;
+        }
+        
+        if (UnitParser.TryParse(expression, out var litResult, unit))
+            return litResult;
+        
+        return runtimeFallback;
     }
 
     private bool IsOverflow(double value) =>
