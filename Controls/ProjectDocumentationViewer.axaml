@@ -112,8 +112,7 @@
                                                 <StackPanel>
                                                     
                                                     <Button Classes="no-effects"
-                                                            x:CompileBindings="False" 
-                                                            Command="{Binding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                            Command="{ReflectionBinding $parent[UserControl].DataContext.OpenPreviewCommand}"
                                                             CommandParameter="{Binding}"
                                                             Padding="0"
                                                             BorderThickness="0"
@@ -128,7 +127,6 @@
                                                     </Button>
                                                     
                                                     <Button Classes="no-effects"
-                                                            x:CompileBindings="False" 
                                                             Content="&#xE8BB;"
                                                             FontFamily="{StaticResource FluentIconsFont}"
                                                             HorizontalAlignment="Center"
@@ -139,7 +137,7 @@
                                                             FontWeight="Bold"
                                                             Padding="0"
                                                             Cursor="Hand"
-                                                            Command="{Binding $parent[UserControl].DataContext.RemoveImageCommand}"
+                                                            Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveImageCommand}"
                                                             CommandParameter="{Binding Path}"/>
                                                 </StackPanel>
                                             </Border>
@@ -176,8 +174,7 @@
                                                   Margin="5">
 
                                                 <Button Grid.Column="0" Classes="no-effects"
-                                                        x:CompileBindings="False"
-                                                        Command="{Binding $parent[UserControl].DataContext.OpenDocumentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.OpenDocumentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"
@@ -199,10 +196,9 @@
                                                 </Button>
                                                 
                                                 <Button Grid.Column="2" Classes="no-effects"
-                                                        x:CompileBindings="False"
                                                         Content="&#xE8BB;"
                                                         FontFamily="{StaticResource FluentIconsFont}"
-                                                        Command="{Binding $parent[UserControl].DataContext.RemoveDocumentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveDocumentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"
