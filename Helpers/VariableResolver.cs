@@ -38,10 +38,13 @@ public static class VariableResolver
 
             return ApplyFormat(value, format);
         });
+
+        // If it looks like a math expression, we need to normalize separators to dot for DataTable.Compute
+        var mathReady = substituted.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".");
         
         try
         {
-            var normalizedExpr = EnsureDoublePrecision(substituted);
+            var normalizedExpr = EnsureDoublePrecision(mathReady);
             var result = EvaluateMath(normalizedExpr);
             return result.ToString(CultureInfo.CurrentCulture);
         }
@@ -53,6 +56,7 @@ public static class VariableResolver
 
     private static string EnsureDoublePrecision(string expr)
     {
+        // DataTable.Compute always expects '.' as decimal separator
         return Regex.Replace(expr, @"(?<![\d\.])(\d+)(?![\d\.])", "$1.0");
     }
 
