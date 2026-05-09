@@ -154,7 +154,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.NominalValueExpression) && 
             UnitParser.TryParse(step.NominalValueExpression, out var nominal, step.Unit))
         {
-            NominalValueText = UnitParser.Format(nominal, step.Unit);
+            NominalValueText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(nominal, step.Unit) : step.NominalValueExpression;
         }
         else
         {
@@ -164,7 +164,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.LowerLimitExpression) &&
             UnitParser.TryParse(step.LowerLimitExpression, out var lower, step.Unit))
         {
-            LowerLimitText = UnitParser.Format(lower, step.Unit);
+            LowerLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(lower, step.Unit) : step.LowerLimitExpression;
         }
         else
         {
@@ -174,7 +174,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.UpperLimitExpression) &&
             UnitParser.TryParse(step.UpperLimitExpression, out var upper, step.Unit))
         {
-            UpperLimitText = UnitParser.Format(upper, step.Unit);
+            UpperLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(upper, step.Unit) : step.UpperLimitExpression;
         }
         else
         {
