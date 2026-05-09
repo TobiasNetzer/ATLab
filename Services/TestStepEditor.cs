@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class TestStepEditor
+public class TestStepEditor : ITestStepEditor
 {
     private readonly TestHardwareRelayChannelsViewModel _hardware;
 
@@ -203,7 +204,7 @@ public class TestStepEditor
         vm.SelectedStepIndex = newIndex;
     }
 
-    private int ComputeInsertIndex(TestingTabViewModel vm)
+    public int ComputeInsertIndex(TestingTabViewModel vm)
     {
         if (vm.SelectedStep == null)
             return 0;
@@ -216,7 +217,7 @@ public class TestStepEditor
             .Max() + 1;
     }
 
-    private void Renumber(TestingTabViewModel vm)
+    public void Renumber(TestingTabViewModel vm)
     {
         for (var i = 0; i < vm.TestSteps.Count; i++)
             vm.TestSteps[i].TestStep.Number = i + 1;

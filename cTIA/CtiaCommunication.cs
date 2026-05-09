@@ -6,7 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.CTIA
 {
-    public class CtiaCommunication: IDisposable
+    public class CtiaCommunication: ICtiaCommunication
     {
         private readonly ICommunication _communication;
         private readonly IErrorService _errorService;

@@ -146,8 +146,8 @@ public enum DbgCmd : ushort
 
 public class CtiaCommand
 {
-    private readonly CtiaCommunication _ctia;
-    public CtiaCommand(CtiaCommunication cTia) => _ctia = cTia;
+    private readonly ICtiaCommunication _ctia;
+    public CtiaCommand(ICtiaCommunication cTia) => _ctia = cTia;
 
     #region SET_CMD
     

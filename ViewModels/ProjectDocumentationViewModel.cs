@@ -15,7 +15,7 @@ namespace ATLab.ViewModels;
 public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly DocumentLauncherService _documentLauncherService;
+    private readonly IDocumentLauncherService _documentLauncherService;
     private readonly IErrorService _errorService;
 
     public ProjectDocumentation ProjectDocumentation { get; }
@@ -25,7 +25,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     public ProjectDocumentationViewModel(
         IFileDialogService fileDialogService,
         ProjectDocumentation projectDocumentation,
-        DocumentLauncherService documentLauncherService,
+        IDocumentLauncherService documentLauncherService,
         IErrorService errorService)
     {
         _fileDialogService = fileDialogService;

@@ -10,7 +10,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class TestResultExportService
+public class TestResultExportService : ITestResultExportService
 {
     private readonly ProjectSettings _settings;
     private readonly ICsvExportService _csvExportService;

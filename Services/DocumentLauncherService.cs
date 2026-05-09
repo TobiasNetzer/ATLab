@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-
+using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
-public class DocumentLauncherService
+public class DocumentLauncherService : IDocumentLauncherService
 {
     public Task OpenDocumentAsync(string path)
     {

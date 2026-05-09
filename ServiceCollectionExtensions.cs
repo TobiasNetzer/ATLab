@@ -29,23 +29,24 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IResponseProcessor, ResponseProcessor>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<IPdfExportService, PdfExportService>();
-        services.AddSingleton<TestResultExportService>();
-        services.AddSingleton<ProjectController>();
-        services.AddSingleton<TestExecutionController>();
-        services.AddSingleton<TestStepEditor>();
+        services.AddSingleton<ITestResultExportService, TestResultExportService>();
+        services.AddSingleton<IProjectController, ProjectController>();
+        services.AddSingleton<ITestExecutionController, TestExecutionController>();
+        services.AddSingleton<ITestStepEditor, TestStepEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();
-        services.AddSingleton<DocumentLauncherService>();
+        services.AddSingleton<IDocumentLauncherService, DocumentLauncherService>();
         services.AddSingleton<DeviceUnderTestInfo>();
         
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
 
-        services.AddTransient<CtiaCommunication>();
+        services.AddTransient<ICtiaCommunication, CtiaCommunication>();
         services.AddTransient<CtiaHardware>();
         services.AddSingleton<TestHardwareSimulator>();
+        services.AddSingleton<IHardwareProvider, HardwareProvider>();
         
         services.AddSingleton<IHardwareAccessor, HardwareAccessor>();
         services.AddSingleton<ITestHardware>(sp => sp.GetRequiredService<IHardwareAccessor>().Hardware ?? throw new InvalidOperationException("Hardware not initialized"));

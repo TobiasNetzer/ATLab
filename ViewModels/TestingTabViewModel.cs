@@ -18,9 +18,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ISettingsService _settingsService;
     private readonly IErrorService _errorService;
 
-    private readonly ProjectController _projectController;
-    private readonly TestStepEditor _testStepEditor;
-    private readonly TestExecutionController _testExecutionController;
+    private readonly IProjectController _projectController;
+    private readonly ITestStepEditor _testStepEditor;
+    private readonly ITestExecutionController _testExecutionController;
     private readonly DeviceManagerViewModel _deviceManager;
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
@@ -134,9 +134,9 @@ public partial class TestingTabViewModel : ViewModelBase
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
         ExpressionEditorViewModel expressionEditor,
-        ProjectController projectController,
-        TestStepEditor testStepEditor,
-        TestExecutionController testExecutionController,
+        IProjectController projectController,
+        ITestStepEditor testStepEditor,
+        ITestExecutionController testExecutionController,
         DeviceManagerViewModel deviceManager,
         ProjectSettings projectSettings,
         ProjectDocumentation projectDocumentation,

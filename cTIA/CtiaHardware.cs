@@ -22,7 +22,7 @@ public class CtiaHardware : ITestHardware
     
     private readonly SemaphoreSlim _ioLock = new(1, 1);
 
-    public CtiaHardware(CtiaCommunication communication)
+    public CtiaHardware(ICtiaCommunication communication)
     {
         HardwareInfo = new HardwareInfo();
         StimChannelStates = [];

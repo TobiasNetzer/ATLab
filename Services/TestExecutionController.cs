@@ -7,11 +7,11 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class TestExecutionController
+public class TestExecutionController : ITestExecutionController
 {
     private readonly ITestExecutor _testExecutor;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
-    private readonly TestResultExportService _testResultExportService;
+    private readonly ITestResultExportService _testResultExportService;
     private readonly ProjectSettings _projectSettings;
     private readonly IProjectService _projectService;
     private readonly DeviceUnderTestInfoPanelViewModel _deviceUnderTestInfoPanelViewModel;
@@ -19,7 +19,7 @@ public class TestExecutionController
     public TestExecutionController(
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
-        TestResultExportService testResultExportService,
+        ITestResultExportService testResultExportService,
         ProjectSettings projectSettings,
         IProjectService projectService,
         DeviceUnderTestInfoPanelViewModel deviceUnderTestInfoPanelViewModel)
@@ -177,13 +177,13 @@ public class TestExecutionController
 
     public Task CancelAsync() => _testExecutor.CancelTest();
 
-    private void ResetAllResults(TestingTabViewModel vm)
+    public void ResetAllResults(TestingTabViewModel vm)
     {
         foreach (var step in vm.TestSteps)
             step.ResetResults();
     }
 
-    private async Task<bool> RequestSerialNumber(TestingTabViewModel vm)
+    public async Task<bool> RequestSerialNumber(TestingTabViewModel vm)
     {
         if (_projectSettings.IsUseSerialNumber)
         {
@@ -207,7 +207,7 @@ public class TestExecutionController
     
     private Task _exportQueue = Task.CompletedTask;
 
-    private Task EnqueueExport(Func<Task> work)
+    public Task EnqueueExport(Func<Task> work)
     {
         return _exportQueue = _exportQueue.ContinueWith(_ => work()).Unwrap();
     }

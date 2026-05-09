@@ -9,7 +9,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class ProjectController
+public class ProjectController : IProjectController
 {
     private readonly IProjectService _projectService;
     private readonly IErrorService _errorService;
@@ -117,7 +117,7 @@ public class ProjectController
         vm.ResetTestCounters();
     }
 
-    private void ApplyDto(TestingTabViewModel vm, AtlabFileDto dto)
+    public void ApplyDto(TestingTabViewModel vm, AtlabFileDto dto)
     {
         using (vm.SuppressDirtyTracking())
         {
@@ -156,7 +156,7 @@ public class ProjectController
         }
     }
 
-    private AtlabFileDto CaptureCurrentState(TestingTabViewModel vm)
+    public AtlabFileDto CaptureCurrentState(TestingTabViewModel vm)
     {
         foreach (var stepVm in vm.TestSteps)
             stepVm.TestStep.UpdateDtos();
@@ -175,7 +175,7 @@ public class ProjectController
         };
     }
 
-    private async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)
+    public async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)
     {
         List<string> warnings = [];
 
