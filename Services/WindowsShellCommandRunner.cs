@@ -28,14 +28,13 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
 
             if (process is null)
                 return OperationResult<double>.Failure("Failed to start process");
+
+            if (!psi.FileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                return OperationResult<double>.Success(0);
             
-            if (psi.FileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-            {
-                await process.WaitForExitAsync(cancellationToken);
-                return OperationResult<double>.Success(process.ExitCode);
-            }
-            
-            return OperationResult<double>.Success(0);
+            await process.WaitForExitAsync(cancellationToken);
+            return OperationResult<double>.Success(process.ExitCode);
+
         }
         catch (Exception ex)
         {
@@ -67,8 +66,6 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
             WindowStyle = ProcessWindowStyle.Normal
         };
     }
-
-
     
     private static bool IsDirectLaunch(string command, out string exe, out string args)
     {
@@ -79,7 +76,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         
         if (command.StartsWith("\""))
         {
-            int endQuote = command.IndexOf('"', 1);
+            var endQuote = command.IndexOf('"', 1);
             if (endQuote > 0)
             {
                 exe = command.Substring(1, endQuote - 1);
@@ -97,11 +94,6 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         if (exe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (File.Exists(exe) || Directory.Exists(exe))
-            return true;
-
-        return false;
+        return File.Exists(exe) || Directory.Exists(exe);
     }
-
-
 }
