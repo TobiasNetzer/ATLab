@@ -438,7 +438,7 @@
 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.IsCustomMask}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND'}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />

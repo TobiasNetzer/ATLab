@@ -65,55 +65,59 @@
                 BorderThickness="2"
                 BorderBrush="{DynamicResource PanelBorder}"
                 IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}">
-
+            
             <StackPanel Margin="10" Spacing="10">
                 
-                <StackPanel Spacing="2">
-                    <TextBlock Text="Mask"/>
-                    <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
-                </StackPanel>
+                <CheckBox Content="Enable Custom Response Mask"
+                          IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsCustomMaskEnabled, Mode=TwoWay}"/>
                 
-                <StackPanel Orientation="Horizontal" Spacing="20">
-
+                <StackPanel Spacing="10"
+                            IsEnabled="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsCustomMaskEnabled}">
+                
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Skip"/>
-                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                 Width="100"
-                                 HorizontalAlignment="Left"/>
-                    </StackPanel>
-
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Length"/>
-                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                 Width="100"/>
+                        <TextBlock Text="Mask"/>
+                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                     </StackPanel>
                     
-                    <CheckBox Content="Only Numeric Characters"
-                              IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsOnlyNumeric, Mode=TwoWay}"
-                              Margin="0 20 0 0"/>
+                    <StackPanel Orientation="Horizontal" Spacing="20">
+
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Skip"/>
+                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Width="100"
+                                     HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Length"/>
+                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Width="100"/>
+                        </StackPanel>
+                        
+                        <CheckBox Content="Only Numeric Characters"
+                                  IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsOnlyNumeric, Mode=TwoWay}"
+                                  Margin="0 20 0 0"/>
+
+                    </StackPanel>
+
+                    <Border BorderBrush="{DynamicResource PanelBorder}"
+                            BorderThickness="1"/>
+
+                    <Grid ColumnDefinitions="Auto, *"
+                          RowDefinitions="Auto, Auto, Auto, Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Response Processing" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 10"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Original:" FontWeight="SemiBold" Margin="0,0,10,5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}" TextWrapping="Wrap"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Processed:" FontWeight="SemiBold" Margin="0,0,10,5"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput}" TextWrapping="Wrap"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Result:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult}"/>
+                    </Grid>
 
                 </StackPanel>
-
-                <Border BorderBrush="{DynamicResource PanelBorder}"
-                        BorderThickness="1"/>
-
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Response Processing" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 10"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Original:" FontWeight="SemiBold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}" TextWrapping="Wrap"/>
-
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Processed:" FontWeight="SemiBold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput}" TextWrapping="Wrap"/>
-
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Result:" FontWeight="SemiBold" Margin="0,0,10,0"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult}"/>
-                </Grid>
-
             </StackPanel>
-
         </Border>
-
     </StackPanel>
-
 </UserControl>

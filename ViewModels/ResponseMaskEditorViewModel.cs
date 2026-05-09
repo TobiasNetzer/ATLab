@@ -12,6 +12,9 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isExpanded;
+    
+    [ObservableProperty]
+    private bool _isCustomMaskEnabled;
 
     [ObservableProperty]
     private string _mask = string.Empty;
@@ -45,6 +48,12 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsResponseMaskEditorExpanded = value;
+    }
+
+    partial void OnIsCustomMaskEnabledChanged(bool value)
+    {
+        if (_currentTestStep?.ResponseMask != null)
+            _currentTestStep.IsCustomMask = value;
     }
 
     partial void OnMaskChanged(string value)
@@ -95,7 +104,8 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     {
         if (_currentTestStep == null)
             return;
-
+    
+        IsCustomMaskEnabled = _currentTestStep.IsCustomMask;
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
@@ -122,14 +132,6 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
 
         if (_currentTestStep == null)
             return;
-
-        Mask = _currentTestStep.ResponseMask.Mask;
-        Length = _currentTestStep.ResponseMask.Length.ToString();
-        SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
-        IsOnlyNumeric = _currentTestStep.ResponseMask.IsOnlyNumeric;
-        LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
-        LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
-        LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;
         
         _currentTestStep.ResponseMask.PropertyChanged += ResponseMaskChanged;
 
@@ -140,5 +142,4 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     {
         UpdateStringProperties();
     }
-
 }
