@@ -261,25 +261,25 @@ public class TestReportComposer
             // Header
             table.Header(header =>
             {
-                header.Cell().Element(HeaderCell).Text("Step");
-                header.Cell().Element(HeaderCell).Text("Name");
-                header.Cell().Element(HeaderCell).Text("Lower Limit");
-                header.Cell().Element(HeaderCell).Text("Measured");
-                header.Cell().Element(HeaderCell).Text("Upper Limit");
-                header.Cell().Element(HeaderCell).Text("Result");
+                header.Cell().Element(HeaderCell).Text("Step").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text("Name").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text("Lower Limit").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text("Measured").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text("Upper Limit").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text("Result").LineHeight(1.3f);
             });
 
             // Rows
             foreach (var row in _testResults)
             {
-                table.Cell().Element(BodyCell).Text(row.TestStep.Number.ToString()).FontSize(10);
-                table.Cell().Element(BodyCell).Text(row.TestStep.Name).FontSize(10);
+                table.Cell().Element(BodyCell).Text(row.TestStep.Number.ToString()).FontSize(10).LineHeight(1.3f);
+                table.Cell().Element(BodyCell).Text(row.TestStep.Name).FontSize(10).LineHeight(1.3f);
 
                 var lower = row.TestStep.EvaluationSource == TestEvaluationSource.NONE
                     ? "-"
                     : $"{row.TestStep.LowerLimit} {row.TestStep.Unit}";
                 
-                table.Cell().Element(BodyCell).Text(lower).FontSize(10);
+                table.Cell().Element(BodyCell).Text(lower).FontSize(10).LineHeight(1.3f);
 
                 string measured;
 
@@ -298,13 +298,13 @@ public class TestReportComposer
                         : $"{row.ResultNoFormatting} {row.TestStep.Unit}";
                 }
 
-                table.Cell().Element(BodyCell).Text(measured).FontSize(10);
+                table.Cell().Element(BodyCell).Text(measured).FontSize(10).LineHeight(1.3f);
                 
                 var upper = row.TestStep.EvaluationSource == TestEvaluationSource.NONE
                     ? "-"
                     : $"{row.TestStep.UpperLimit} {row.TestStep.Unit}";
                 
-                table.Cell().Element(BodyCell).Text(upper).FontSize(10);
+                table.Cell().Element(BodyCell).Text(upper).FontSize(10).LineHeight(1.3f);
 
                 // Result icon
                 table.Cell().Element(BodyCell)
