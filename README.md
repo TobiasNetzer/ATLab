@@ -7,14 +7,21 @@ Built with **Avalonia UI** and **.NET**, it offers a modern environment for deve
 
 ## Features
 
--   **Custom Test Sequences**: Test steps can perform various actions:
+-   **Custom Test Sequences**: Test steps can be configured to perform various actions:
     -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
     -   **Response Validation**: Use response masking to verify hardware output.
     -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
+    -   **Custom Variables**:
+        -   **Dynamic Configuration**: Define and use custom variables within test scripts for dynamic test configurations.
+        -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic values.
+    -   **User Responses**: Capture user input during test execution for dynamic test configurations.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
+    -   **Pass/Fail Criteria**:
+        -   **Test Outcome Evaluation**: Define pass/fail criteria based on test results and conditions.
+        -   **Conditional Execution**: Use pass/fail criteria to conditionally execute test steps or skip tests based on previous results.
 -   **Test Instrument Interfacing**: Support for both **Serial Port (VCOM/RS232/UART)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
--   **Scripting Engine**: Create test sequences with predefined multi-step scripts.
+-   **Scripting Engine**: Create test sequences with predefined multistep scripts.
 -   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
 -   **Test Report Generation**: Automatically generate a test report with detailed test results.
 -   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
@@ -62,6 +69,7 @@ Alternatively, you can open the `ATLab.sln` file in **JetBrains Rider**, **Visua
 -   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232/UART)** or **VISA** devices, with custom connection parameters.
 -   **Project Settings**: Configure project-wide settings such as default tolerances, serial number requirements, and test result export options.
 -   **Optional:** Add custom channel names for the various relay channels.
+-   **Optional:** Add Runtime Variables to use within the test.
 
 ![image](docs/Configuration_Tab.png)
 
