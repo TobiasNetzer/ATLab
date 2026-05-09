@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Avalonia.Controls;
 using Avalonia;
 using ATLab.Interfaces;
@@ -33,14 +33,14 @@ public partial class MainWindow : Window
         var s = _settingsService.Settings;
 
         var screens = Screens.Primary;
-        double screenWidth = screens?.Bounds.Width ?? 800;
-        double screenHeight = screens?.Bounds.Height ?? 600;
+        var screenWidth = screens?.Bounds.Width ?? 800;
+        var screenHeight = screens?.Bounds.Height ?? 600;
 
         Width = Math.Min(s?.WindowWidth > 0 ? s.WindowWidth : Width, screenWidth);
         Height = Math.Min(s?.WindowHeight > 0 ? s.WindowHeight : Height, screenHeight);
 
-        double windowX = s?.WindowX ?? 0;
-        double windowY = s?.WindowY ?? 0;
+        var windowX = s?.WindowX ?? 0;
+        var windowY = s?.WindowY ?? 0;
 
         Position = new PixelPoint(
             (int)Math.Max(0, Math.Min(windowX, screenWidth - Width)),
@@ -52,6 +52,11 @@ public partial class MainWindow : Window
             WindowState = s.WindowState;
         }
 
+    }
+
+    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectService projectService) : this(settingsService, projectService)
+    {
+        DataContext = vm;
     }
 
     private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)

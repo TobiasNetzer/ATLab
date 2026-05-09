@@ -14,15 +14,16 @@ namespace ATLab.ViewModels;
 
 public partial class TestHardwareConnectWindowViewModel : ViewModelBase
 {
-    public ITestHardware? TestHardware;
+    private readonly IHardwareAccessor _hardwareAccessor;
+    public ITestHardware? TestHardware => _hardwareAccessor.Hardware;
 
     [ObservableProperty]
-    private string _selectedPort = "";
+    private string _selectedPort = string.Empty;
 
     public ObservableCollection<string> AvailablePorts { get; } = new();
 
     [ObservableProperty]
-    private string _statusText = "";
+    private string _statusText = string.Empty;
 
     [ObservableProperty]
     private ConnectionStatus _status = ConnectionStatus.DISCONNECTED;
@@ -36,10 +37,11 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
     
     private ICommunication? _currentComm;
 
-    public TestHardwareConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider)
+    public TestHardwareConnectWindowViewModel(ISettingsService settingsService, IServiceProvider serviceProvider, IHardwareAccessor hardwareAccessor)
     {
         _settingsService = settingsService;
         _serviceProvider = serviceProvider;
+        _hardwareAccessor = hardwareAccessor;
         RefreshPorts();
     }
 
@@ -107,7 +109,7 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
         }
         
         _currentComm = comm;
-        TestHardware = hardware;
+        _hardwareAccessor.Hardware = hardware;
 
         StatusText = $"Connected to {SelectedPort}";
         Status = ConnectionStatus.CONNECTED;

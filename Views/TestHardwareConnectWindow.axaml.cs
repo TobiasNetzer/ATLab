@@ -1,4 +1,4 @@
-using ATLab.ViewModels;
+﻿using ATLab.ViewModels;
 using Avalonia.Controls;
 
 namespace ATLab.Views;
@@ -16,5 +16,10 @@ public partial class TestHardwareConnectWindow : Window
                 vm.RequestClose += () => this.Close();
             }
         };
+    }
+
+    public TestHardwareConnectWindow(TestHardwareConnectWindowViewModel vm) : this()
+    {
+        DataContext = vm;
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -18,8 +18,6 @@ namespace ATLab;
 public class App : Application
 {
     private IServiceProvider? _services;
-
-    private ITestHardware? _testHardware;
 
     public override void Initialize()
     {
@@ -46,6 +44,7 @@ public class App : Application
             var openConnectWindow = false;
             var lastPort = settingsService.Settings.LastComPort;
             var factory = _services.GetRequiredService<ICommunicationFactory>();
+            var hardwareAccessor = _services.GetRequiredService<IHardwareAccessor>();
 
             if (string.IsNullOrEmpty(lastPort))
             {
@@ -64,15 +63,19 @@ public class App : Application
                 else
                 {
                     var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_services!, testHardwareInterface);
-                    _testHardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_services!, communication);
-                    var initResult = await _testHardware.InitializeAsync();
+                    var hardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_services!, communication);
+                    var initResult = await hardware.InitializeAsync();
                     if (!initResult.IsSuccess)
                     {
                         await testHardwareInterface.DisconnectAsync();
                         (testHardwareInterface as IDisposable)?.Dispose();
                         openConnectWindow = true;
                     }
-                    else initSuccess = true;
+                    else 
+                    {
+                        hardwareAccessor.Hardware = hardware;
+                        initSuccess = true;
+                    }
                 }
             }
 
@@ -81,15 +84,12 @@ public class App : Application
                 var serialPortWindow = _services.GetRequiredService<TestHardwareConnectWindow>();
                 var tcs = new TaskCompletionSource<bool?>();
 
-                var vm = _services.GetRequiredService<TestHardwareConnectWindowViewModel>();
-                serialPortWindow.DataContext = vm;
+                var vm = (TestHardwareConnectWindowViewModel)serialPortWindow.DataContext!;
                 vm.Connected += connectionStatus =>
                 {
                     tcs.TrySetResult(connectionStatus);
                     serialPortWindow.Close();
                 };
-
-                vm.RequestClose += () => serialPortWindow.Close();
 
                 serialPortWindow.Closed += (_, _) => tcs.TrySetResult(null);
 
@@ -101,15 +101,14 @@ public class App : Application
                 {
                     initSuccess = true;
 
-                    if (result == true)
+                    if (result == false)
                     {
-                        _testHardware = vm.TestHardware!;
-                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
+                        hardwareAccessor.Hardware = _services.GetRequiredService<TestHardwareSimulator>();
+                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
                     }
                     else
                     {
-                        _testHardware = _services.GetRequiredService<TestHardwareSimulator>();
-                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
+                        _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
                     }
                 }
             }
@@ -120,9 +119,8 @@ public class App : Application
                 return;
             }
 
-            var mainVm = _services.GetRequiredService<MainWindowViewModel>();
             var window = _services.GetRequiredService<MainWindow>();
-            window.DataContext = mainVm;
+            var mainVm = (MainWindowViewModel)window.DataContext!;
             window.Opened += async (_, __) => await mainVm.OnWindowOpened();
             
             desktop.Exit += async (_, __) => await OnExitAsync();
@@ -145,75 +143,8 @@ public class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
-        // Services
-        services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IFileService, FileService>();
-        services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
-        services.AddSingleton<IMessageBoxService, MessageBoxService>();
-        services.AddSingleton<ISimulationService, SimulationStateService>();
-        services.AddSingleton<IErrorService, ErrorService>();
-        services.AddSingleton<IFileDialogService, FileDialogService>();
-        services.AddSingleton<IProjectService, ProjectService>();
-        services.AddSingleton<IScriptRepository, FileScriptRepository>();
-        services.AddSingleton<IScriptService, ScriptService>();
-        services.AddSingleton<IScriptRunner, ScriptRunner>();
-        services.AddSingleton<ICommandExecutor, CommandExecutor>();
-        services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
-        services.AddSingleton<IResponseProcessor, ResponseProcessor>();
-        services.AddSingleton<ICsvExportService, CsvExportService>();
-        services.AddSingleton<IPdfExportService, PdfExportService>();
-        services.AddSingleton<TestResultExportService>();
-        services.AddSingleton<ProjectController>();
-        services.AddSingleton<TestExecutionController>();
-        services.AddSingleton<TestStepEditor>();
-        services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
-        
-        services.AddSingleton<ProjectSettings>();
-        services.AddSingleton<ProjectDocumentation>();
-        services.AddSingleton<DocumentLauncherService>();
-        services.AddSingleton<DeviceUnderTestInfo>();
-        
-        // Register the runner and executor
-        services.AddSingleton<ITestStepRunner, TestStepRunner>();
-        services.AddSingleton<ITestExecutor, TestExecutor>();
-
-        services.AddTransient<CtiaCommunication>();
-        services.AddTransient<CtiaHardware>();
-        services.AddSingleton<TestHardwareSimulator>();
-        
-        // Factory for ITestHardware since it's initialized later
-        services.AddSingleton<ITestHardware>(sp => _testHardware ?? throw new InvalidOperationException("Hardware not initialized"));
-        services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
-        services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
-        services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
-        
-        // ViewModels
-        services.AddSingleton<TestHardwareRelayChannelsViewModel>();
-        services.AddSingleton<TestStepConfiguratorViewModel>();
-        services.AddSingleton<DeviceManagerViewModel>();
-        services.AddSingleton<ProjectSettingsViewModel>();
-        services.AddSingleton<MainWindowViewModel>();
-        services.AddSingleton<TestingTabViewModel>();
-        services.AddSingleton<ConfigTabViewModel>();
-        services.AddSingleton<ScriptingTabViewModel>();
-        services.AddSingleton<AboutTabViewModel>();
-        services.AddSingleton<HardwareTabViewModel>();
-        services.AddSingleton<DocumentationTabViewModel>();
-        services.AddSingleton<TestHardwareInfoViewModel>();
-        services.AddSingleton<ScriptSelectorViewModel>();
-        services.AddSingleton<CommandEditorViewModel>();
-        services.AddSingleton<TestHardwareConnectWindowViewModel>();
-        services.AddSingleton<ShellCommandEditorViewModel>();
-        services.AddSingleton<ExpressionEditorViewModel>();
-        services.AddSingleton<ResponseMaskEditorViewModel>();
-        services.AddSingleton<ProjectDocumentationViewModel>();
-        services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();
-        services.AddSingleton<TestHardwareDiagnosticsViewModel>();
-        services.AddSingleton<SerialNumberEntryWindowViewModel>();
-        services.AddSingleton<RuntimeVariableEditorViewModel>();
-
-        // Windows
-        services.AddTransient<MainWindow>();
-        services.AddTransient<TestHardwareConnectWindow>();
+        services.AddBackendServices();
+        services.AddViewModels();
+        services.AddViews();
     }
 }
