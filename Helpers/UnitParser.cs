@@ -50,9 +50,9 @@ public static class UnitParser
             input = input.Substring(0, input.Length - 1);
         }
 
-        if (double.TryParse(input, CultureInfo.CurrentCulture, out double value))
+        if (double.TryParse(input, CultureInfo.CurrentCulture, out var value))
         {
-            result = value * multiplier;
+            result = Math.Round((value * multiplier), 13);
             return true;
         }
 
