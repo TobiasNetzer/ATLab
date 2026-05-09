@@ -7,8 +7,21 @@ namespace ATLab.Services;
 
 public class TestStepEvaluator : ITestStepEvaluator
 {
+    
+    private readonly IErrorService _errorService;
+
+    public TestStepEvaluator(IErrorService errorService)
+    {
+        _errorService = errorService;
+    }
+    
     public TestEvaluationResult Evaluate(TestStep testStep, double value)
     {
+        if (testStep.LowerLimit > testStep.UpperLimit)
+        {
+            _errorService.AddError($"Step {testStep.Number}: Lower limit is greater than upper limit");
+        }
+        
         var isValid = Math.Round(value, 15) >= testStep.LowerLimit && value <= testStep.UpperLimit;
 
         double deviation = 0;
