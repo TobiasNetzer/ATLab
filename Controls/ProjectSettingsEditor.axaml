@@ -113,19 +113,19 @@
 
                             <NumericUpDown Grid.Row="1"
                                            Grid.Column="1"
-                                           Value="{Binding Settings.ToleranceValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Value="{Binding ToleranceString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                            Minimum="0"
                                            Maximum="100"
                                            Width="120"/>
                             
                             <TextBlock Grid.Row="2"
                                        Grid.Column="0"
-                                       Text="Result Precision (Digits)"
+                                       Text="Displayed Decimal Places"
                                        VerticalAlignment="Center"/>
 
                             <NumericUpDown Grid.Row="2"
                                            Grid.Column="1"
-                                           Value="{Binding Settings.ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Value="{Binding ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                            Minimum="0"
                                            Maximum="10"
                                            Increment="1"

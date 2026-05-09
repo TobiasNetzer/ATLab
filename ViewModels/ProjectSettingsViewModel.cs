@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,6 +15,12 @@ public partial class ProjectSettingsViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _serialNumberValidationLengthString = string.Empty;
+    
+    [ObservableProperty]
+    private string? _toleranceString = string.Empty;
+    
+    [ObservableProperty]
+    private string? _resultPrecision = string.Empty;
 
     public bool CanSaveTestResult =>
         Settings.IsUseSerialNumber && Settings.IsSaveTestResult;
@@ -24,6 +31,9 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     {
         _fileDialogService = fileDialogService;
         Settings = settings;
+        
+        ToleranceString = Settings.ToleranceValue.ToString(CultureInfo.CurrentCulture);
+        ResultPrecision = Settings.ResultPrecision.ToString(CultureInfo.CurrentCulture);
         
         Settings.PropertyChanged += (_, e) =>
         {
@@ -45,7 +55,23 @@ public partial class ProjectSettingsViewModel : ViewModelBase
             }
         };
     }
-    
+
+    partial void OnToleranceStringChanged(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return;
+        
+        Settings.ToleranceValue = double.Parse(value);
+    }
+
+    partial void OnResultPrecisionChanged(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return;
+        
+        Settings.ResultPrecision = int.Parse(value);
+    }
+
     partial void OnSerialNumberValidationLengthStringChanged(string value)
     {
         if (int.TryParse(value, out var parsed))
