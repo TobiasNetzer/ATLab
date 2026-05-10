@@ -11,5 +11,8 @@ public enum MessageFramingMode
     LF_TERMINATED,
     
     [Description("CRLF Terminated")]
-    CR_LF_TERMINATED
+    CR_LF_TERMINATED,
+    
+    [Description("Timeout Based")]
+    TIMEOUT_BASED
 }

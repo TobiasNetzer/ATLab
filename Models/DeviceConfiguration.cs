@@ -8,17 +8,33 @@ namespace ATLab.Models;
 public partial class DeviceConfiguration : ObservableObject
 {
     // Serial settings
-    [ObservableProperty] private int _baudRate = 115200;
-    [ObservableProperty] private int _dataBits = 8;
-    [ObservableProperty] private Parity _parity = Parity.None;
-    [ObservableProperty] private StopBits _stopBits = StopBits.One;
-    [ObservableProperty] private Handshake _handshake = Handshake.None;
-    [ObservableProperty] private MessageFramingMode _framingMode = MessageFramingMode.CHUNK;
-
+    [ObservableProperty]
+    private int _baudRate = 115200;
+    
+    [ObservableProperty]
+    private int _dataBits = 8;
+    
+    [ObservableProperty]
+    private Parity _parity = Parity.None;
+    
+    [ObservableProperty]
+    private StopBits _stopBits = StopBits.One;
+    
+    [ObservableProperty]
+    private Handshake _handshake = Handshake.None;
+    
+    [ObservableProperty]
+    private MessageFramingMode _framingMode = MessageFramingMode.CHUNK;
+    
+    [ObservableProperty]
+    private int _framingTimeoutMs = 100;
 
     // VISA settings
-    [ObservableProperty] private int _visaTimeoutMs = 2000;
-    [ObservableProperty] private VisaTerminationMode _visaTerminationMode = VisaTerminationMode.LF;
+    [ObservableProperty]
+    private int _visaTimeoutMs = 2000;
+    
+    [ObservableProperty]
+    private VisaTerminationMode _visaTerminationMode = VisaTerminationMode.LF;
     
     public override bool Equals(object? obj)
     {
@@ -31,15 +47,24 @@ public partial class DeviceConfiguration : ObservableObject
                && StopBits == other.StopBits
                && Handshake == other.Handshake
                && FramingMode == other.FramingMode
+               && FramingTimeoutMs == other.FramingTimeoutMs
                && VisaTimeoutMs == other.VisaTimeoutMs
                && VisaTerminationMode == other.VisaTerminationMode;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(
-            BaudRate, DataBits, Parity, StopBits, Handshake,
-            FramingMode, VisaTimeoutMs, VisaTerminationMode);
+        var hash = new HashCode();
+        hash.Add(BaudRate);
+        hash.Add(DataBits);
+        hash.Add(Parity);
+        hash.Add(StopBits);
+        hash.Add(Handshake);
+        hash.Add(FramingMode);
+        hash.Add(FramingTimeoutMs);
+        hash.Add(VisaTimeoutMs);
+        hash.Add(VisaTerminationMode);
+        return hash.ToHashCode();
     }
 
     public DeviceConfiguration Clone()

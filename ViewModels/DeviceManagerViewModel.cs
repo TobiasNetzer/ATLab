@@ -115,16 +115,7 @@ public partial class DeviceManagerViewModel : ViewModelBase
             Type = DeviceType.SERIAL,
             ResourceString = string.Empty,
 
-            Configuration = new DeviceConfiguration
-            {
-                BaudRate = 115200,
-                DataBits = 8,
-                Parity = Parity.None,
-                StopBits = StopBits.One,
-                Handshake = Handshake.None,
-                VisaTimeoutMs = 2000,
-                VisaTerminationMode = VisaTerminationMode.LF
-            }
+            Configuration = new DeviceConfiguration()
         };
 
         Devices.Add(newDevice);

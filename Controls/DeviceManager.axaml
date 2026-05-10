@@ -149,6 +149,16 @@
                                       DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                         </StackPanel>
                         
+                        <StackPanel Spacing="2"
+                                    IsVisible="{Binding SelectedDevice.Configuration.FramingMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TIMEOUT_BASED}">
+                            <TextBlock Text="Timeout (ms)"/>
+                            <NumericUpDown Width="210"
+                                           Minimum="10"
+                                           Maximum="10000"
+                                           HorizontalAlignment="Left"
+                                           Value="{Binding SelectedDevice.Configuration.FramingTimeoutMs}"/>
+                        </StackPanel>
+                        
                     </StackPanel>
                     
                     <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"

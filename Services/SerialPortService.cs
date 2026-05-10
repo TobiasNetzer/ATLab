@@ -32,13 +32,15 @@ public class SerialPortService : ICommunication, IDisposable
         Parity parity,
         StopBits stopBits,
         Handshake handshake,
-        MessageFramingMode framingMode)
+        MessageFramingMode framingMode,
+        int framingTimeoutMs = 100)
     {
         _framer = framingMode switch
         {
             MessageFramingMode.LF_TERMINATED => new LfMessageFramer(),
             MessageFramingMode.CHUNK => new ChunkMessageFramer(),
             MessageFramingMode.CR_LF_TERMINATED => new CrLfMessageFramer(),
+            MessageFramingMode.TIMEOUT_BASED => new TimeoutMessageFramer(framingTimeoutMs, _rxBuffer, _lock, ProcessTimeoutMessage),
             _ => new ChunkMessageFramer()
         };
         
@@ -132,6 +134,27 @@ public class SerialPortService : ICommunication, IDisposable
         catch (Exception ex)
         {
             return OperationResult.Failure($"Reconnect failed: {ex.Message}");
+        }
+    }
+
+    private void ProcessTimeoutMessage()
+    {
+        lock (_lock)
+        {
+            if (_rxBuffer.Count == 0) return;
+
+            var msg = _rxBuffer.ToArray();
+            _rxBuffer.Clear();
+
+            if (_pendingTcs != null)
+            {
+                _pendingTcs.TrySetResult(msg);
+                _pendingTcs = null;
+            }
+            else
+            {
+                _incomingQueue.Enqueue(msg);
+            }
         }
     }
 
@@ -255,6 +278,7 @@ public class SerialPortService : ICommunication, IDisposable
         _disposed = true;
 
         _port.DataReceived -= SerialPort_DataReceived;
+        if (_framer is IDisposable disposableFramer) disposableFramer.Dispose();
         if (_port.IsOpen) _port.Close();
         _port.Dispose();
     }
