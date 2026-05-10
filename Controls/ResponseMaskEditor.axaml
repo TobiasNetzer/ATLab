@@ -102,20 +102,37 @@
 
                     <Border BorderBrush="{DynamicResource PanelBorder}"
                             BorderThickness="1"/>
-
-                    <Grid ColumnDefinitions="Auto, *"
-                          RowDefinitions="Auto, Auto, Auto, Auto">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Response Processing" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 10"/>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Original:" FontWeight="SemiBold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}" TextWrapping="Wrap"/>
-
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Processed:" FontWeight="SemiBold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput}" TextWrapping="Wrap"/>
-
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Result:" FontWeight="SemiBold" Margin="0,0,10,0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult}"/>
-                    </Grid>
-
+                    
+                    <StackPanel Spacing="10">
+                        
+                        <TextBlock Text="Response Processing"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                            
+                        <TextBlock Text="Original:"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}"
+                                   TextWrapping="Wrap"
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse, Converter={StaticResource StringNotEmptyConverter}}"/>
+                        
+                        <Border BorderBrush="{DynamicResource PanelBorder}"
+                                BorderThickness="1"/>
+                        
+                        <TextBlock Text="Processed:"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput}"
+                                   TextWrapping="Wrap"
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput, Converter={StaticResource StringNotEmptyConverter}}"/>
+                        
+                        <Border BorderBrush="{DynamicResource PanelBorder}"
+                                BorderThickness="1"/>
+                        
+                        <TextBlock Text="Result:"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult}"
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>
+                            
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Border>
