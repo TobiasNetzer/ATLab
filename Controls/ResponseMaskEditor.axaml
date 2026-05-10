@@ -111,26 +111,26 @@
                             
                         <TextBlock Text="Original:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse}"
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.OriginalResponse}"
                                    TextWrapping="Wrap"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastOriginalResponse, Converter={StaticResource StringNotEmptyConverter}}"/>
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.OriginalResponse, Converter={StaticResource StringNotEmptyConverter}}"/>
                         
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
                         <TextBlock Text="Processed:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput}"
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ProcessedInput}"
                                    TextWrapping="Wrap"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastProcessedInput, Converter={StaticResource StringNotEmptyConverter}}"/>
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ProcessedInput, Converter={StaticResource StringNotEmptyConverter}}"/>
                         
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
                         <TextBlock Text="Result:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult}"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.LastFinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.FinalResult}"
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.FinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>
                             
                     </StackPanel>
                 </StackPanel>

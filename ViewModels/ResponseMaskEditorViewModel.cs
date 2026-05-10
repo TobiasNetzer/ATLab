@@ -29,13 +29,13 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     private bool _isOnlyNumeric;
 
     [ObservableProperty]
-    private string _lastOriginalResponse = string.Empty;
+    private string _originalResponse = string.Empty;
 
     [ObservableProperty]
-    private string _lastProcessedInput = string.Empty;
+    private string _processedInput = string.Empty;
 
     [ObservableProperty]
-    private string _lastFinalResult = string.Empty;
+    private string _finalResult = string.Empty;
     
     private TestStep? _currentTestStep;
 
@@ -110,17 +110,17 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
         IsOnlyNumeric = _currentTestStep.ResponseMask.IsOnlyNumeric;
-        LastOriginalResponse = _currentTestStep.ResponseMask.LastOriginalResponse;
-        LastProcessedInput = _currentTestStep.ResponseMask.LastProcessedInput;
-        LastFinalResult = _currentTestStep.ResponseMask.LastFinalResult;
+        OriginalResponse = _currentTestStep.ResponseMask.OriginalResponse;
+        ProcessedInput = _currentTestStep.ResponseMask.ProcessedInput;
+        FinalResult = _currentTestStep.ResponseMask.FinalResult;
         
         OnPropertyChanged(nameof(Mask));
         OnPropertyChanged(nameof(Length));
         OnPropertyChanged(nameof(SkipCharacters));
         OnPropertyChanged(nameof(IsOnlyNumeric));
-        OnPropertyChanged(nameof(LastOriginalResponse));
-        OnPropertyChanged(nameof(LastProcessedInput));
-        OnPropertyChanged(nameof(LastFinalResult));
+        OnPropertyChanged(nameof(OriginalResponse));
+        OnPropertyChanged(nameof(ProcessedInput));
+        OnPropertyChanged(nameof(FinalResult));
     }
 
     public void LoadTestStep(TestStepViewModel? testStepViewModel)

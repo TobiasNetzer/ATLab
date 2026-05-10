@@ -12,7 +12,7 @@ public class ResponseProcessor : IResponseProcessor
         if (mask == null || string.IsNullOrEmpty(input))
             return input ?? string.Empty;
 
-        mask.LastOriginalResponse = input;
+        mask.OriginalResponse = input;
 
         // Process Input (Skip and Length)
         var processedInput = input;
@@ -57,7 +57,7 @@ public class ResponseProcessor : IResponseProcessor
             processedInput = Regex.Replace(processedInput, @"[^0-9\.\+\-Ee]", "");
         }
 
-        mask.LastProcessedInput = processedInput;
+        mask.ProcessedInput = processedInput;
 
         string finalResult;
 
@@ -109,7 +109,7 @@ public class ResponseProcessor : IResponseProcessor
             finalResult = isMatch ? "1" : "0";
         }
 
-        mask.LastFinalResult = finalResult;
+        mask.FinalResult = finalResult;
 
         return finalResult;
     }

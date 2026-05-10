@@ -19,15 +19,15 @@ public partial class ResponseMask : ObservableObject
 
     [ObservableProperty]
     [property: JsonIgnore]
-    private string _lastOriginalResponse = string.Empty;
+    private string _originalResponse = string.Empty;
 
     [ObservableProperty]
     [property: JsonIgnore]
-    private string _lastProcessedInput = string.Empty;
+    private string _processedInput = string.Empty;
 
     [ObservableProperty]
     [property: JsonIgnore]
-    private string _lastFinalResult = string.Empty;
+    private string _finalResult = string.Empty;
     
     public ResponseMask()
     {
