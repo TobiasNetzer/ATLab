@@ -43,31 +43,31 @@
                         ToolTip.Tip="Remove variable"
                         Command="{Binding RemoveVariableCommand}" />
                         
-            </StackPanel>
-            
-            <DataGrid Grid.Row="1"
-                      ItemsSource="{Binding RuntimeVariables}"
-                      SelectedIndex="{Binding SelectedVariableIndex}"
-                      AutoGenerateColumns="False"
-                      CanUserReorderColumns="True"
-                      CanUserSortColumns="False"
-                      GridLinesVisibility="All"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      VerticalScrollBarVisibility="Auto">
+                </StackPanel>
                 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Variable Name" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                    <DataGridTextColumn Header="Initial Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
-                </DataGrid.Columns>
-                
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add" Command="{Binding AddVariableCommand}"/>
-                        <MenuItem Header="Remove" Command="{Binding RemoveVariableCommand}"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding RuntimeVariables}"
+                          SelectedItem="{Binding SelectedVariable}"
+                          AutoGenerateColumns="False"
+                          CanUserReorderColumns="True"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="All"
+                          BorderThickness="1"
+                          BorderBrush="Gray"
+                          VerticalScrollBarVisibility="Auto">
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Variable Name" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                        <DataGridTextColumn Header="Initial Value" Binding="{Binding Value, UpdateSourceTrigger=LostFocus}" Width="200"/>
+                    </DataGrid.Columns>
+                    
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add" Command="{Binding AddVariableCommand}"/>
+                            <MenuItem Header="Remove" Command="{Binding RemoveVariableCommand}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
             </Grid>
         </Border>
     </Grid>

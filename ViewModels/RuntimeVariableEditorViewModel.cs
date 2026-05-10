@@ -1,34 +1,33 @@
 using System.Collections.ObjectModel;
 using ATLab.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class RuntimeVariableEditorViewModel
+public partial class RuntimeVariableEditorViewModel : ViewModelBase
 {
     public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
-    public int SelectedVariableIndex { get; set; }
+
+    [ObservableProperty]
+    private CustomVariable? _selectedVariable;
     
     [RelayCommand]
     private void AddVariable()
     {
-        var index = SelectedVariableIndex <= 0 ? 0 : SelectedVariableIndex + 1;
-        if (index > RuntimeVariables.Count) index = RuntimeVariables.Count;
-
         var newVar = new CustomVariable();
 
-        RuntimeVariables.Insert(index, newVar);
-        SelectedVariableIndex = index;
+        RuntimeVariables.Add(newVar);
+        SelectedVariable = newVar;
     }
 
     [RelayCommand]
     private void RemoveVariable()
     {
-        if (SelectedVariableIndex < 0 || SelectedVariableIndex >= RuntimeVariables.Count)
+        if (SelectedVariable is null)
             return;
-        
-        var v = RuntimeVariables[SelectedVariableIndex];
 
-        RuntimeVariables.RemoveAt(SelectedVariableIndex);
+        RuntimeVariables.Remove(SelectedVariable);
+        SelectedVariable = null;
     }
 }
