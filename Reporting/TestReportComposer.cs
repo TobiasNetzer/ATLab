@@ -150,13 +150,13 @@ public class TestReportComposer
             col.Item().Row(r =>
             {
                 r.ConstantItem(70).Text("Date:");
-                r.RelativeItem().Text(info.Date ?? "-").SemiBold();
+                r.RelativeItem().Text(info.Date).SemiBold();
             });
             
             col.Item().Row(r =>
             {
                 r.ConstantItem(70).Text("Time:");
-                r.RelativeItem().Text(info.Time ?? "-").SemiBold();
+                r.RelativeItem().Text(info.Time).SemiBold();
             });
 
             col.Item().Row(r =>
@@ -326,8 +326,6 @@ public class TestReportComposer
     
     private void ComposeEquipmentSection(IContainer container)
     {
-        var info = _info;
-
         container.Padding(5).Column(col =>
         {
             col.Spacing(5);
@@ -349,19 +347,19 @@ public class TestReportComposer
                 col.Item().Row(r =>
                 {
                     r.ConstantItem(120).Text("Device Name:");
-                    r.RelativeItem().Text(_hardwareInfo.DeviceName ?? "-").SemiBold();
+                    r.RelativeItem().Text(_hardwareInfo.DeviceName).SemiBold();
                 });
                 
                 col.Item().Row(r =>
                 {
                     r.ConstantItem(120).Text("Serial Number:");
-                    r.RelativeItem().Text(_hardwareInfo.SerialNumber ?? "-").SemiBold();
+                    r.RelativeItem().Text(_hardwareInfo.SerialNumber).SemiBold();
                 });
                 
                 col.Item().Row(r =>
                 {
                     r.ConstantItem(120).Text("Firmware Version:");
-                    r.RelativeItem().Text(_hardwareInfo.FirmwareVersion ?? "-").SemiBold();
+                    r.RelativeItem().Text(_hardwareInfo.FirmwareVersion).SemiBold();
                 });
             }
 
