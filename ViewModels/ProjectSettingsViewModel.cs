@@ -17,10 +17,10 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     private string _serialNumberValidationLengthString = string.Empty;
     
     [ObservableProperty]
-    private string? _toleranceString = string.Empty;
+    private string? _toleranceString = "10";
     
     [ObservableProperty]
-    private string? _resultPrecision = string.Empty;
+    private string? _displayedDecimalPlacesString = "3";
 
     public bool CanSaveTestResult =>
         Settings.IsUseSerialNumber && Settings.IsSaveTestResult;
@@ -31,9 +31,6 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     {
         _fileDialogService = fileDialogService;
         Settings = settings;
-        
-        ToleranceString = Settings.ToleranceValue.ToString(CultureInfo.CurrentCulture);
-        ResultPrecision = Settings.ResultPrecision.ToString(CultureInfo.CurrentCulture);
         
         Settings.PropertyChanged += (_, e) =>
         {
@@ -52,6 +49,19 @@ public partial class ProjectSettingsViewModel : ViewModelBase
                         : Settings.SerialNumberValidationLength.ToString();
                     
                     break;
+                
+                case nameof(Settings.DisplayedDecimalPlaces):
+                    
+                    DisplayedDecimalPlacesString = Settings.DisplayedDecimalPlaces.ToString();
+                    
+                    break;
+                
+                case nameof(Settings.ToleranceValue):
+                    
+                    ToleranceString = Settings.ToleranceValue.ToString(CultureInfo.CurrentCulture);
+                    
+                    break;
+                
             }
         };
     }
@@ -64,12 +74,12 @@ public partial class ProjectSettingsViewModel : ViewModelBase
         Settings.ToleranceValue = double.Parse(value);
     }
 
-    partial void OnResultPrecisionChanged(string? value)
+    partial void OnDisplayedDecimalPlacesStringChanged(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return;
         
-        Settings.ResultPrecision = int.Parse(value);
+        Settings.DisplayedDecimalPlaces = int.Parse(value);
     }
 
     partial void OnSerialNumberValidationLengthStringChanged(string value)
@@ -81,7 +91,7 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     [RelayCommand]
     private async Task SelectSaveTestResultFilePath()
     {
-        var result = await _fileDialogService.OpenFolderAsync("Select folder to save test result");
+        var result = await _fileDialogService.OpenFolderAsync("Select folder for export");
         if (result == null) return;
 
         Settings.SaveTestResultFilePath = result.Path.LocalPath;

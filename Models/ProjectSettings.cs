@@ -14,9 +14,9 @@ public partial class ProjectSettings : ObservableObject
     partial void OnToleranceValueChanged(double value) => OnSettingsChanged();
 
     [ObservableProperty]
-    private int _resultPrecision = 3;
+    private int _displayedDecimalPlaces = 3;
 
-    partial void OnResultPrecisionChanged(int value) => OnSettingsChanged();
+    partial void OnDisplayedDecimalPlacesChanged(int value) => OnSettingsChanged();
 
     [ObservableProperty]
     private bool _isUseSerialNumber;
@@ -76,7 +76,7 @@ public partial class ProjectSettings : ObservableObject
     public void ResetToDefault()
     {
         ToleranceValue = 10;
-        ResultPrecision = 3;
+        DisplayedDecimalPlaces = 3;
         IsUseSerialNumber = false;
         IsSaveTestResult = false;
         IsExportCsv = false;
@@ -95,7 +95,7 @@ public partial class ProjectSettings : ObservableObject
     public void CopyFrom(ProjectSettings other)
     {
         ToleranceValue = other.ToleranceValue;
-        ResultPrecision = other.ResultPrecision;
+        DisplayedDecimalPlaces = other.DisplayedDecimalPlaces;
         IsUseSerialNumber = other.IsUseSerialNumber;
         IsSaveTestResult = other.IsSaveTestResult;
         IsExportCsv = other.IsExportCsv;

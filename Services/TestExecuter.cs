@@ -349,7 +349,7 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
-        var precision = _projectSettings.ResultPrecision;
+        var precision = _projectSettings.DisplayedDecimalPlaces;
         var format = "0." + new string('#', precision);
 
         step.Result = string.IsNullOrEmpty(step.TestStep.Unit)

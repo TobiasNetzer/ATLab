@@ -125,7 +125,7 @@
 
                             <NumericUpDown Grid.Row="2"
                                            Grid.Column="1"
-                                           Value="{Binding ResultPrecision, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                           Value="{Binding DisplayedDecimalPlacesString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                            Minimum="0"
                                            Maximum="10"
                                            Increment="1"
