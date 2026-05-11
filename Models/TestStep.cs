@@ -36,15 +36,15 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(4)]
-    private string _nominalValueExpression = string.Empty;
+    private string _nominalValueExpression = "0";
 
     [ObservableProperty]
     [property: JsonPropertyOrder(5)]
-    private string _lowerLimitExpression = string.Empty;
+    private string _lowerLimitExpression = "0";
 
     [ObservableProperty]
     [property: JsonPropertyOrder(6)]
-    private string _upperLimitExpression = string.Empty;
+    private string _upperLimitExpression = "0";
     
     [ObservableProperty]
     [property: JsonIgnore]
@@ -64,7 +64,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(8)]
-    private string _delayExpression = string.Empty;
+    private string _delayExpression = "0";
     
     [ObservableProperty]
     [property: JsonIgnore]
