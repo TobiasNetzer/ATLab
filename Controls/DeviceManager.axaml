@@ -156,7 +156,8 @@
                                            Minimum="10"
                                            Maximum="10000"
                                            HorizontalAlignment="Left"
-                                           Value="{Binding SelectedDevice.Configuration.FramingTimeoutMs}"/>
+                                           FormatString="0"
+                                           Value="{Binding FramingTimeoutMsString}"/>
                         </StackPanel>
                         
                     </StackPanel>
@@ -170,7 +171,8 @@
                                            Minimum="10"
                                            Maximum="10000"
                                            HorizontalAlignment="Left"
-                                           Value="{Binding SelectedDevice.Configuration.VisaTimeoutMs}"/>
+                                           FormatString="0"
+                                           Value="{Binding VisaTimeoutMsString}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2">

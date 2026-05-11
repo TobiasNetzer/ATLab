@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO.Ports;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -19,6 +20,12 @@ public partial class DeviceManagerViewModel : ViewModelBase
 
     [ObservableProperty]
     private Device? _selectedDevice;
+    
+    [ObservableProperty]
+    private string _framingTimeoutMsString = "100";
+    
+    [ObservableProperty]
+    private string _visaTimeoutMsString = "2000";
 
     public ObservableCollection<string> AvailableSerialPorts { get; } = new();
     public ObservableCollection<string> AvailableVisaResources { get; } = new();
@@ -106,6 +113,43 @@ public partial class DeviceManagerViewModel : ViewModelBase
         }
     }
     
+    partial void OnSelectedDeviceChanged(Device? value)
+    {
+        if (value == null)
+            return;
+        
+        FramingTimeoutMsString = SelectedDevice?.Configuration.FramingTimeoutMs.ToString() ?? "";
+        VisaTimeoutMsString = SelectedDevice?.Configuration.VisaTimeoutMs.ToString() ?? "";
+    }
+
+    partial void OnFramingTimeoutMsStringChanged(string? oldValue, string newValue)
+    {
+        if (oldValue == newValue)
+            return;
+
+        if (SelectedDevice == null)
+            return;
+        
+        if (string.IsNullOrWhiteSpace(newValue))
+            return;
+        
+        SelectedDevice.Configuration.FramingTimeoutMs = (int) double.Parse(newValue, CultureInfo.CurrentCulture);
+    }
+
+    partial void OnVisaTimeoutMsStringChanged(string? oldValue, string newValue)
+    {
+        if (oldValue == newValue)
+            return;
+
+        if (SelectedDevice == null)
+            return;
+        
+        if (string.IsNullOrWhiteSpace(newValue))
+            return;
+        
+        SelectedDevice.Configuration.VisaTimeoutMs = (int) double.Parse(newValue, CultureInfo.CurrentCulture);
+    }
+
     [RelayCommand]
     private void AddDevice()
     {
