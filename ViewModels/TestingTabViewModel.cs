@@ -73,6 +73,9 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private int _numberPassedTests;
+
+    [ObservableProperty]
+    private double _passedPercentage;
     
     [ObservableProperty]
     private TestStatus _testStatus = TestStatus.IDLE;

@@ -64,7 +64,10 @@ public class TestExecutionController : ITestExecutionController
             vm.NumberRunTests++;
 
             if (vm.TestStatus == TestStatus.CANCELLED)
+            {
+                UpdatePassedPercentage(vm);
                 return;
+            }
 
             if (vm.AllowResultSave)
             {
@@ -83,11 +86,13 @@ public class TestExecutionController : ITestExecutionController
             if (vm.NumberFailedSteps > 0)
             {
                 vm.TestStatus = TestStatus.FAILED;
+                UpdatePassedPercentage(vm);
                 return;
             }
 
             vm.TestStatus = TestStatus.PASSED;
             vm.NumberPassedTests++;
+            UpdatePassedPercentage(vm);
         };
 
         _testExecutor.TestCancelled += () =>
@@ -211,5 +216,12 @@ public class TestExecutionController : ITestExecutionController
     {
         return _exportQueue = _exportQueue.ContinueWith(_ => work()).Unwrap();
     }
-
+    
+    private void UpdatePassedPercentage(TestingTabViewModel vm)
+    {
+        if (vm.NumberRunTests > 0)
+            vm.PassedPercentage = Math.Round((double)vm.NumberPassedTests / vm.NumberRunTests * 100, 2);
+        else
+            vm.PassedPercentage = 0;
+    }
 }

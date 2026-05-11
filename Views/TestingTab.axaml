@@ -390,9 +390,10 @@
                        FontSize="16"
                        HorizontalAlignment="Center">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="Passed Tests: {0}/{1}">
+                    <MultiBinding StringFormat="Passed Tests: {0}/{1} ({2}%)">
                         <Binding Path="NumberPassedTests"/>
                         <Binding Path="NumberRunTests"/>
+                        <Binding Path="PassedPercentage"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
