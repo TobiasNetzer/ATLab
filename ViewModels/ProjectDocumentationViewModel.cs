@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
-using ATLab.Services;
 using ATLab.Models;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -15,7 +14,7 @@ namespace ATLab.ViewModels;
 public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly IDocumentLauncherService _documentLauncherService;
+    private readonly IAttachmentLauncherService _attachmentLauncherService;
     private readonly IErrorService _errorService;
 
     public ProjectDocumentation ProjectDocumentation { get; }
@@ -25,12 +24,12 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     public ProjectDocumentationViewModel(
         IFileDialogService fileDialogService,
         ProjectDocumentation projectDocumentation,
-        IDocumentLauncherService documentLauncherService,
+        IAttachmentLauncherService attachmentLauncherService,
         IErrorService errorService)
     {
         _fileDialogService = fileDialogService;
         ProjectDocumentation = projectDocumentation;
-        _documentLauncherService = documentLauncherService;
+        _attachmentLauncherService = attachmentLauncherService;
         _errorService = errorService;
         
         ProjectDocumentation.ImagePaths.CollectionChanged += OnImagePathsChanged;
@@ -122,32 +121,32 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private async Task AddDocument()
+    private async Task AddAttachment()
     {
         var file = await _fileDialogService.OpenFileAsync(
-            "Select Document",
+            "Select File",
             new[] { "*" }
         );
 
         if (file != null)
         {
             var path = file.Path.LocalPath;
-            ProjectDocumentation.Documents.Add(new DocumentEntry { Path = path });
+            ProjectDocumentation.Attachments.Add(new CustomAttachment { Path = path });
         }
     }
     
     [RelayCommand]
-    private void RemoveDocument(DocumentEntry entry)
+    private void RemoveAttachment(CustomAttachment entry)
     {
-        ProjectDocumentation.Documents.Remove(entry);
+        ProjectDocumentation.Attachments.Remove(entry);
     }
     
     [RelayCommand]
-    private async Task OpenDocument(DocumentEntry entry)
+    private async Task OpenAttachment(CustomAttachment entry)
     {
         if (!File.Exists(entry.Path))
             _errorService.AddError($"File not found: {entry.Path}");
         
-        await _documentLauncherService.OpenDocumentAsync(entry.Path);
+        await _attachmentLauncherService.OpenAttachmentAsync(entry.Path);
     }
 }

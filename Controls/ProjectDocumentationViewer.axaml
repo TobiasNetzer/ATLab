@@ -157,24 +157,24 @@
                             
                             <StackPanel>
                                 
-                                <TextBlock Text="Documents"
+                                <TextBlock Text="Attachments"
                                            FontSize="16"
                                            FontWeight="Bold"
                                            Margin="0 0 0 10"/>
 
-                                <Button Content="Add Document"
-                                        Command="{Binding AddDocumentCommand}"
+                                <Button Content="Add Attachment"
+                                        Command="{Binding AddAttachmentCommand}"
                                         HorizontalAlignment="Left"
                                         Margin="0 0 0 10"/>
                                 
-                                <ItemsControl ItemsSource="{Binding ProjectDocumentation.Documents}">
+                                <ItemsControl ItemsSource="{Binding ProjectDocumentation.Attachments}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Grid ColumnDefinitions="Auto,10,Auto"
                                                   Margin="5">
 
                                                 <Button Grid.Column="0" Classes="no-effects"
-                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.OpenDocumentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.OpenAttachmentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"
@@ -198,7 +198,7 @@
                                                 <Button Grid.Column="2" Classes="no-effects"
                                                         Content="&#xE8BB;"
                                                         FontFamily="{StaticResource FluentIconsFont}"
-                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveDocumentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveAttachmentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"

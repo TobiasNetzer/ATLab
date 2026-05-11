@@ -5,9 +5,9 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
-public class DocumentLauncherService : IDocumentLauncherService
+public class AttachmentLauncherService : IAttachmentLauncherService
 {
-    public Task OpenDocumentAsync(string path)
+    public Task OpenAttachmentAsync(string path)
     {
         if (!File.Exists(path))
             return Task.CompletedTask;

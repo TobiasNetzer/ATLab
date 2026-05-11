@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();
-        services.AddSingleton<IDocumentLauncherService, DocumentLauncherService>();
+        services.AddSingleton<IAttachmentLauncherService, AttachmentLauncherService>();
         services.AddSingleton<DeviceUnderTestInfo>();
         
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
