@@ -75,7 +75,7 @@
 
                     <DockPanel>
 
-                        <Button Content="&#xF8AB;"
+                        <Button Content="&#xE711;"
                                 FontFamily="{StaticResource FluentIconsFont}"
                                 FontSize="18"
                                 ToolTip.Tip="Remove selected device"
