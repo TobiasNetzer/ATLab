@@ -86,8 +86,8 @@ public class TestStepRunner : ITestStepRunner
                 
                 case TestEvaluationSource.EXPRESSION: 
                 {
-                    var resolved = VariableResolver.Resolve(step.TestStep.Expression, runtimeVariables);
-                    return double.TryParse(resolved, CultureInfo.CurrentCulture, out var doubleResult)
+                    var resolved = CommandCompiler.EvaluateExpression(step.TestStep.Expression, runtimeVariables);
+                    return double.TryParse(resolved, CultureInfo.InvariantCulture, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
                         : OperationResult<double>.Failure($"Failed to evaluate expression: {step.TestStep.Expression}. Resolved to: {resolved}");
                 }

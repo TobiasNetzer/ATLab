@@ -99,7 +99,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 if (string.IsNullOrWhiteSpace(commandText))
                     continue;
                 
-                var parsedCommand = VariableResolver.Resolve(commandText, runtimeVariables);
+                var compiledCommand = CommandCompiler.CompileToBytes(commandText, runtimeVariables);
 
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
@@ -107,13 +107,13 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 switch (command.IsExpectResponse)
                 {
                     case true when command.IsEvaluate:
-                        queryResult = await client.QueryAsync(parsedCommand, command.TimeoutMs);
+                        queryResult = await client.QueryAsync(compiledCommand, command.TimeoutMs);
                         break;
                     case true:
-                        await client.QueryAsync(parsedCommand, command.TimeoutMs);
+                        await client.QueryAsync(compiledCommand, command.TimeoutMs);
                         break;
                     default:
-                        await client.WriteAsync(parsedCommand);
+                        await client.WriteAsync(compiledCommand);
                         break;
                 }
             }

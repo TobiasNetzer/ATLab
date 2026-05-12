@@ -20,7 +20,7 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
     {
         try
         {
-            var parsedCommand = VariableResolver.Resolve(command, runtimeVariables);
+            var parsedCommand = CommandCompiler.CompileToString(command, runtimeVariables);
             var (exe, argsFormat) = GetLinuxTerminal(mode);
             var args = string.Format(argsFormat, parsedCommand);
 
