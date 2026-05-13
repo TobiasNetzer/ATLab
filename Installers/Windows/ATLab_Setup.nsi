@@ -1,8 +1,11 @@
 !define PRODUCT_NAME "ATLab"
-!define ATLAB_VERSION "1.0.0"
 !define PRODUCT_PUBLISHER "Tobias Netzer"
 
+!getdllversion "..\..\bin\Publish\ATLab.exe" ATLAB_VER_
+!define ATLAB_VERSION "${ATLAB_VER_1}.${ATLAB_VER_2}.${ATLAB_VER_3}.${ATLAB_VER_4}"
+
 !include "MUI2.nsh"
+!include "FileFunc.nsh"
 
 !define MUI_ABORTWARNING
 !define MUI_ICON "install.ico"
@@ -37,7 +40,7 @@ InstallDir "$PROGRAMFILES64\${PRODUCT_NAME}"
 RequestExecutionLevel admin
 BrandingText "${PRODUCT_NAME} Installer"
 
-VIProductVersion "1.0.0.0"
+VIProductVersion "${ATLAB_VERSION}"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey "CompanyName" "${PRODUCT_PUBLISHER}"
 VIAddVersionKey "FileDescription" "${PRODUCT_NAME} Installer"
@@ -52,8 +55,9 @@ FunctionEnd
 Section "Install ATLab"
 
   SetOutPath "$INSTDIR"
-
   File /r "..\..\bin\Publish\*.*"
+
+  ${GetFileVersion} "$INSTDIR\ATLab.exe" $R0
 
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}.exe"
@@ -66,16 +70,22 @@ Section "Install ATLab"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayName" "${PRODUCT_NAME}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayVersion" "${ATLAB_VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayVersion" "$R0"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "Publisher" "${PRODUCT_PUBLISHER}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "DisplayIcon" "$INSTDIR\${PRODUCT_NAME}.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "UninstallString" "$INSTDIR\Uninstall.exe"
 
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "EstimatedSize" 105677
-
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
+
+SectionEnd
+
+Section -Post
+
+    ${GetSize} "$INSTDIR" "/S=0B" $0 $1 $2
+    IntOp $0 $0 / 1024
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "EstimatedSize" $0
 
 SectionEnd
 
@@ -83,13 +93,9 @@ Section "Uninstall"
 
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
   RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
-
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
-
   RMDir /r "$INSTDIR"
-
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
-
   DeleteRegKey HKLM "Software\Classes\.atlab"
   DeleteRegKey HKLM "Software\Classes\${PRODUCT_NAME}File"
 
