@@ -18,6 +18,7 @@ public class SerialPortService : ICommunication, IDisposable
     private readonly Queue<byte[]> _incomingQueue = new();
     private readonly IMessageFramer _framer;
     private readonly List<byte> _rxBuffer = new();
+    private readonly byte[] _terminationBytes;
 
 
     private bool _disposed;
@@ -33,8 +34,17 @@ public class SerialPortService : ICommunication, IDisposable
         StopBits stopBits,
         Handshake handshake,
         MessageFramingMode framingMode,
-        int framingTimeoutMs = 100)
+        int framingTimeoutMs = 100,
+        SerialTerminationMode terminationMode = SerialTerminationMode.NONE)
     {
+        _terminationBytes = terminationMode switch
+        {
+            SerialTerminationMode.LF => new[] { (byte)'\n' },
+            SerialTerminationMode.CR => new[] { (byte)'\r' },
+            SerialTerminationMode.CRLF => new[] { (byte)'\r', (byte)'\n' },
+            _ => Array.Empty<byte>()
+        };
+
         _framer = framingMode switch
         {
             MessageFramingMode.LF_TERMINATED => new LfMessageFramer(),
@@ -200,12 +210,31 @@ public class SerialPortService : ICommunication, IDisposable
     public void SendRaw(byte[] data)
     {
         if (data == null) throw new ArgumentNullException(nameof(data));
-        _port.Write(data, 0, data.Length);
+
+        if (_terminationBytes.Length > 0)
+        {
+            var combined = new byte[data.Length + _terminationBytes.Length];
+            Buffer.BlockCopy(data, 0, combined, 0, data.Length);
+            Buffer.BlockCopy(_terminationBytes, 0, combined, data.Length, _terminationBytes.Length);
+            _port.Write(combined, 0, combined.Length);
+        }
+        else
+        {
+            _port.Write(data, 0, data.Length);
+        }
     }
 
     public async Task<byte[]> SendAsync(byte[] data, int timeoutMs = 1000)
     {
         if (data == null) throw new ArgumentNullException(nameof(data));
+
+        var dataToSend = data;
+        if (_terminationBytes.Length > 0)
+        {
+            dataToSend = new byte[data.Length + _terminationBytes.Length];
+            Buffer.BlockCopy(data, 0, dataToSend, 0, data.Length);
+            Buffer.BlockCopy(_terminationBytes, 0, dataToSend, data.Length, _terminationBytes.Length);
+        }
 
         Task<byte[]> waitTask;
         lock (_lock)
@@ -219,7 +248,7 @@ public class SerialPortService : ICommunication, IDisposable
 
         try
         {
-            _port.Write(data, 0, data.Length);
+            _port.Write(dataToSend, 0, dataToSend.Length);
 
             using var cts = new CancellationTokenSource(timeoutMs);
             var completed = await Task.WhenAny(waitTask, Task.Delay(Timeout.Infinite, cts.Token));

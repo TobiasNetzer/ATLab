@@ -4,6 +4,6 @@ namespace ATLab.Interfaces;
 
 public interface ICommunicationFactory
 {
-    ICommunication CreateSerial(string port, DeviceConfiguration config);
+    ICommunication CreateSerial(string portName, DeviceConfiguration config);
     ICommunication CreateVisa(string resource, DeviceConfiguration config);
 }

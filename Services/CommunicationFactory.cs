@@ -14,7 +14,8 @@ public class CommunicationFactory : ICommunicationFactory
             config.StopBits,
             config.Handshake,
             config.FramingMode,
-            config.FramingTimeoutMs);
+            config.FramingTimeoutMs,
+            config.SerialTerminationMode);
 
     public ICommunication CreateVisa(string resourceString, DeviceConfiguration config)
         => new NiVisaService(

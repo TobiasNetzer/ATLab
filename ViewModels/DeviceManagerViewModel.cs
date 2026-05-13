@@ -48,6 +48,9 @@ public partial class DeviceManagerViewModel : ViewModelBase
     public ObservableCollection<Handshake> AvailableHandshakes { get; } =
         new(Enum.GetValues<Handshake>());
     
+    public ObservableCollection<SerialTerminationMode> AvailableSerialTermination { get; } =
+        new(Enum.GetValues<SerialTerminationMode>());
+    
     public ObservableCollection<MessageFramingMode> AvailableFramingModes { get; } =
         new(Enum.GetValues<MessageFramingMode>());
 

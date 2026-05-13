@@ -142,6 +142,13 @@
                         </StackPanel>
                         
                         <StackPanel Spacing="2">
+                            <TextBlock Text="Termination Character"/>
+                            <ComboBox Width="210"
+                                      ItemsSource="{Binding AvailableSerialTermination}"
+                                      SelectedItem="{Binding SelectedDevice.Configuration.SerialTerminationMode}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
                             <TextBlock Text="Framing Mode"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableFramingModes}"

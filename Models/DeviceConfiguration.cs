@@ -28,6 +28,9 @@ public partial class DeviceConfiguration : ObservableObject
     
     [ObservableProperty]
     private int _framingTimeoutMs = 100;
+    
+    [ObservableProperty]
+    private SerialTerminationMode _serialTerminationMode = SerialTerminationMode.NONE;
 
     // VISA settings
     [ObservableProperty]
@@ -48,6 +51,7 @@ public partial class DeviceConfiguration : ObservableObject
                && Handshake == other.Handshake
                && FramingMode == other.FramingMode
                && FramingTimeoutMs == other.FramingTimeoutMs
+               && SerialTerminationMode == other.SerialTerminationMode
                && VisaTimeoutMs == other.VisaTimeoutMs
                && VisaTerminationMode == other.VisaTerminationMode;
     }
@@ -62,6 +66,7 @@ public partial class DeviceConfiguration : ObservableObject
         hash.Add(Handshake);
         hash.Add(FramingMode);
         hash.Add(FramingTimeoutMs);
+        hash.Add(SerialTerminationMode);
         hash.Add(VisaTimeoutMs);
         hash.Add(VisaTerminationMode);
         return hash.ToHashCode();
