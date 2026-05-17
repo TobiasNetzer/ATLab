@@ -155,7 +155,7 @@ public static class CommandCompiler
                 expr = EnsureDoublePrecision(expr);
 
                 var result = EvaluateMathExpression(expr);
-                block.Value = result.ToString(CultureInfo.CurrentCulture);
+                block.Value = result.ToString(CultureInfo.InvariantCulture);
             }
             catch
             {
