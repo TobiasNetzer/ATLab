@@ -154,7 +154,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.NominalValueExpression) && 
             UnitParser.TryParse(step.NominalValueExpression, out var nominal, step.Unit))
         {
-            NominalValueText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(nominal, step.Unit) : step.NominalValueExpression;
+            NominalValueText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(nominal, step.Unit) : nominal.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
@@ -164,7 +164,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.LowerLimitExpression) &&
             UnitParser.TryParse(step.LowerLimitExpression, out var lower, step.Unit))
         {
-            LowerLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(lower, step.Unit) : step.LowerLimitExpression;
+            LowerLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(lower, step.Unit) : lower.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
@@ -174,7 +174,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.UpperLimitExpression) &&
             UnitParser.TryParse(step.UpperLimitExpression, out var upper, step.Unit))
         {
-            UpperLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(upper, step.Unit) : step.UpperLimitExpression;
+            UpperLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(upper, step.Unit) : upper.ToString(CultureInfo.CurrentCulture);
         }
         else
         {
@@ -238,16 +238,17 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private static bool IsVariableExpression(string text)
         => text.Contains("{");
 
-    partial void OnNominalValueTextChanged(string value)
+    partial void OnNominalValueTextChanged(string? oldValue, string newValue)
     {
         if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
+        if (newValue == oldValue) return;
         var step = TestStepViewModel.TestStep;
 
-        step.NominalValueExpression = value;
+        step.NominalValueExpression = newValue;
         
-        if (!IsVariableExpression(value))
+        if (!IsVariableExpression(newValue))
         {
-            if (UnitParser.TryParse(value, out var result, step.Unit))
+            if (UnitParser.TryParse(newValue, out var result, step.Unit))
             {
                 step.NominalValue = result;
                 step.NominalValueExpression = result.ToString(CultureInfo.InvariantCulture);
