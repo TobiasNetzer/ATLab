@@ -16,19 +16,16 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
 {
     private readonly ICommunicationFactory _communicationFactory;
     private readonly DeviceManagerViewModel _deviceManager;
-    private readonly IResponseProcessor _responseProcessor;
 
     private ICommunication? _deviceInterface;
     private DeviceConfiguration? _lastConfig;
 
     public CommandExecutor(
         ICommunicationFactory communicationFactory,
-        DeviceManagerViewModel deviceManager,
-        IResponseProcessor responseProcessor)
+        DeviceManagerViewModel deviceManager)
     {
         _communicationFactory = communicationFactory;
         _deviceManager = deviceManager;
-        _responseProcessor = responseProcessor;
     }
 
     public Task<OperationResult<string?>> ExecuteAsync(
@@ -99,7 +96,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 if (string.IsNullOrWhiteSpace(commandText))
                     continue;
                 
-                var compiledCommand = CommandCompiler.CompileToBytes(commandText, runtimeVariables);
+                var compiledCommand = CommandProcessor.CompileToBytes(commandText, runtimeVariables);
 
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
@@ -160,7 +157,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
-        var processedValue = _responseProcessor.ApplyMask(result.Value, mask);
+        var processedValue = ResponseProcessor.ApplyMask(result.Value, mask);
 
         try
         {

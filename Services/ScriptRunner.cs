@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -13,16 +14,13 @@ public class ScriptRunner : IScriptRunner
 {
     private readonly IScriptRepository _scriptRepository;
     private readonly ICommandExecutor _commandExecutor;
-    private readonly IResponseProcessor _responseProcessor;
 
     public ScriptRunner(
         IScriptRepository scriptRepository,
-        ICommandExecutor commandExecutor,
-        IResponseProcessor responseProcessor)
+        ICommandExecutor commandExecutor)
     {
         _scriptRepository = scriptRepository;
         _commandExecutor = commandExecutor;
-        _responseProcessor = responseProcessor;
     }
 
     public async Task<OperationResult> ExecuteAsync(
@@ -57,7 +55,7 @@ public class ScriptRunner : IScriptRunner
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
-        var processedValue = _responseProcessor.ApplyMask(result.Value, mask);
+        var processedValue = ResponseProcessor.ApplyMask(result.Value, mask);
 
         try
         {

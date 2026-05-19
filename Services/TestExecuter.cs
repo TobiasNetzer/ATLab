@@ -451,7 +451,7 @@ public class TestExecutor : ITestExecutor
         
         if (expression.Contains("{"))
         {
-            var resolved = CommandCompiler.CompileToString(expression, runtimeVariables);
+            var resolved = CommandProcessor.CompileToString(expression, runtimeVariables);
             if (UnitParser.TryParse(resolved, out var result, unit))
                 return result;
 

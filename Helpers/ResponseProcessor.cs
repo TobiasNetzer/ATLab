@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using ATLab.Interfaces;
 using ATLab.Models;
 
-namespace ATLab.Services;
+namespace ATLab.Helpers;
 
-public class ResponseProcessor : IResponseProcessor
+public static class ResponseProcessor
 {
-    public string ApplyMask(string? input, ResponseMask? mask)
+    public static string ApplyMask(string? input, ResponseMask? mask)
     {
         if (mask == null || string.IsNullOrEmpty(input))
             return input ?? string.Empty;

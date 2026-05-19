@@ -26,7 +26,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IScriptRunner, ScriptRunner>();
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
-        services.AddSingleton<IResponseProcessor, ResponseProcessor>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<IPdfExportService, PdfExportService>();
         services.AddSingleton<ITestResultExportService, TestResultExportService>();

@@ -9,7 +9,7 @@ using ATLab.Models;
 
 namespace ATLab.Helpers;
 
-public static class CommandCompiler
+public static class CommandProcessor
 {
     private static readonly Regex VarRegex =
         new(@"\{([A-Za-z0-9_]+)\}", RegexOptions.Compiled);

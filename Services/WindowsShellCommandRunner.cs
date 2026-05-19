@@ -21,7 +21,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
     {
         try
         {
-            var parsedCommand = CommandCompiler.CompileToString(command, runtimeVariables);
+            var parsedCommand = CommandProcessor.CompileToString(command, runtimeVariables);
             var psi = BuildStartInfo(parsedCommand, mode);
 
             using var process = Process.Start(psi);
