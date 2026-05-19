@@ -50,7 +50,9 @@ public static class UnitParser
             input = input.Substring(0, input.Length - 1);
         }
 
-        if (double.TryParse(input, CultureInfo.CurrentCulture, out var value))
+        // Try CurrentCulture first (User Input), then InvariantCulture (Internal/Saved)
+        if (double.TryParse(input, CultureInfo.CurrentCulture, out var value) ||
+            double.TryParse(input, CultureInfo.InvariantCulture, out value))
         {
             result = Math.Round((value * multiplier), 13);
             return true;
@@ -59,7 +61,7 @@ public static class UnitParser
         return false;
     }
 
-    public static string Format(double value, string? unit = null, int precision = 6)
+    public static string Format(double value, string? unit = null, int precision = 6, bool useInvariantCulture = false)
     {
         var absValue = Math.Abs(value);
         var suffix = "";
@@ -102,7 +104,8 @@ public static class UnitParser
         }
 
         var format = "0." + new string('#', precision);
-        var formattedValue = displayValue.ToString(format, CultureInfo.CurrentCulture);
+        var culture = useInvariantCulture ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
+        var formattedValue = displayValue.ToString(format, culture);
         return $"{formattedValue}{suffix}{unit ?? ""}";
     }
 }

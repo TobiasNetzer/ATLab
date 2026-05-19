@@ -250,7 +250,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             if (UnitParser.TryParse(value, out var result, step.Unit))
             {
                 step.NominalValue = result;
-                step.NominalValueExpression = result.ToString(CultureInfo.CurrentCulture);
+                step.NominalValueExpression = result.ToString(CultureInfo.InvariantCulture);
             }
             else
             {
@@ -275,7 +275,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 if (UnitParser.TryParse(value, out var parsed, step.Unit))
                 {
                     step.LowerLimit = parsed;
-                    step.LowerLimitExpression = parsed.ToString(CultureInfo.CurrentCulture);
+                    step.LowerLimitExpression = parsed.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -288,7 +288,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 {
                     var nominal = step.NominalValue;
                     step.LowerLimit = Math.Min(result, nominal);
-                    step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.CurrentCulture);
+                    step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -315,7 +315,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 if (UnitParser.TryParse(value, out var parsed, step.Unit))
                 {
                     step.UpperLimit = parsed;
-                    step.UpperLimitExpression = parsed.ToString(CultureInfo.CurrentCulture);
+                    step.UpperLimitExpression = parsed.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -328,7 +328,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 {
                     var nominal = step.NominalValue;
                     step.UpperLimit = Math.Max(result, nominal);
-                    step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.CurrentCulture);
+                    step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -353,7 +353,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             {
                 if (result < 0) result = 0;
                 step.Delay = (int)Math.Round(result * 1000);
-                step.DelayExpression = result.ToString(CultureInfo.CurrentCulture);
+                step.DelayExpression = result.ToString(CultureInfo.InvariantCulture);
             }
             else
             {
@@ -372,14 +372,14 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         if (!IsVariableExpression(step.LowerLimitExpression) && step.LowerLimit > nominal)
         {
             step.LowerLimit = nominal;
-            step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.CurrentCulture);
+            step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.InvariantCulture);
             changed = true;
         }
 
         if (!IsVariableExpression(step.UpperLimitExpression) && step.UpperLimit < nominal)
         {
             step.UpperLimit = nominal;
-            step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.CurrentCulture);
+            step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.InvariantCulture);
             changed = true;
         }
         
@@ -402,8 +402,8 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         step.UpperLimit = Math.Max(Math.Max(v1, v2), nominal);
         step.LowerLimit = Math.Min(Math.Min(v1, v2), nominal);
         
-        step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.CurrentCulture);
-        step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.CurrentCulture);
+        step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.InvariantCulture);
+        step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.InvariantCulture);
     }
 
     partial void OnIsExpandedChanged(bool value)

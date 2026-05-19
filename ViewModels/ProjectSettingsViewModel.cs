@@ -71,7 +71,11 @@ public partial class ProjectSettingsViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(value))
             return;
         
-        Settings.ToleranceValue = double.Parse(value);
+        if (double.TryParse(value, CultureInfo.CurrentCulture, out var result) ||
+            double.TryParse(value, CultureInfo.InvariantCulture, out result))
+        {
+            Settings.ToleranceValue = result;
+        }
     }
 
     partial void OnDisplayedDecimalPlacesStringChanged(string? value)

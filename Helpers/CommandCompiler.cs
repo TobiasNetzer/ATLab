@@ -147,10 +147,6 @@ public static class CommandCompiler
                 expr = expr.Replace(
                     CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator,
                     ".");
-                
-                // Also ensure we handle cases where a dot might already be present regardless of culture
-                // (e.g. user manually typed a dot on a comma system, or variables from different sources)
-                // However, dot is the target separator.
 
                 expr = EnsureDoublePrecision(expr);
 

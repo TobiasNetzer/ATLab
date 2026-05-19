@@ -356,7 +356,7 @@ public class TestExecutor : ITestExecutor
             ? Math.Round(value, precision).ToString(format, CultureInfo.CurrentCulture)
             : UnitParser.Format(value, step.TestStep.Unit, precision);
 
-        step.ResultNoFormatting = Math.Round(value, 12).ToString(CultureInfo.CurrentCulture);
+        step.ResultNoFormatting = Math.Round(value, 12).ToString(CultureInfo.InvariantCulture);
 
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";

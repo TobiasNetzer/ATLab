@@ -121,8 +121,8 @@ public partial class DeviceManagerViewModel : ViewModelBase
         if (value == null)
             return;
         
-        FramingTimeoutMsString = SelectedDevice?.Configuration.FramingTimeoutMs.ToString() ?? "";
-        VisaTimeoutMsString = SelectedDevice?.Configuration.VisaTimeoutMs.ToString() ?? "";
+        FramingTimeoutMsString = SelectedDevice?.Configuration.FramingTimeoutMs.ToString(CultureInfo.CurrentCulture) ?? "";
+        VisaTimeoutMsString = SelectedDevice?.Configuration.VisaTimeoutMs.ToString(CultureInfo.CurrentCulture) ?? "";
     }
 
     partial void OnFramingTimeoutMsStringChanged(string? oldValue, string newValue)
@@ -136,7 +136,7 @@ public partial class DeviceManagerViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(newValue))
             return;
         
-        SelectedDevice.Configuration.FramingTimeoutMs = (int) double.Parse(newValue, CultureInfo.CurrentCulture);
+        SelectedDevice.Configuration.FramingTimeoutMs = (int) double.Parse(newValue, CultureInfo.InvariantCulture);
     }
 
     partial void OnVisaTimeoutMsStringChanged(string? oldValue, string newValue)
@@ -150,7 +150,7 @@ public partial class DeviceManagerViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(newValue))
             return;
         
-        SelectedDevice.Configuration.VisaTimeoutMs = (int) double.Parse(newValue, CultureInfo.CurrentCulture);
+        SelectedDevice.Configuration.VisaTimeoutMs = (int) double.Parse(newValue, CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]
