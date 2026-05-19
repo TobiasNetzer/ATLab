@@ -238,17 +238,14 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private static bool IsVariableExpression(string text)
         => text.Contains("{");
 
-    partial void OnNominalValueTextChanged(string? oldValue, string newValue)
+    partial void OnNominalValueTextChanged(string value)
     {
         if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
-        if (newValue == oldValue) return;
         var step = TestStepViewModel.TestStep;
-
-        step.NominalValueExpression = newValue;
         
-        if (!IsVariableExpression(newValue))
+        if (!IsVariableExpression(value))
         {
-            if (UnitParser.TryParse(newValue, out var result, step.Unit))
+            if (UnitParser.TryParse(value, out var result, step.Unit))
             {
                 step.NominalValue = result;
                 step.NominalValueExpression = result.ToString(CultureInfo.InvariantCulture);
@@ -258,6 +255,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 step.NominalValue = 0;
             }
         }
+        else
+        {
+            step.NominalValueExpression = value;
+        }
         
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
@@ -266,8 +267,6 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
         var step = TestStepViewModel.TestStep;
-
-        step.LowerLimitExpression = value;
         
         if (!IsVariableExpression(value))
         {
@@ -297,6 +296,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 }
             }
         }
+        else
+        {
+            step.LowerLimitExpression = value;
+        }
 
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
@@ -306,8 +309,6 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
         var step = TestStepViewModel.TestStep;
-
-        step.UpperLimitExpression = value;
         
         if (!IsVariableExpression(value))
         {
@@ -337,6 +338,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 }
             }
         }
+        else
+        {
+            step.UpperLimitExpression = value;
+        }
 
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
@@ -345,8 +350,6 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
         var step = TestStepViewModel.TestStep;
-        
-        step.DelayExpression = value;
 
         if (!IsVariableExpression(value))
         {
@@ -360,6 +363,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             {
                 step.Delay = 0;
             }
+        }
+        else
+        {
+            step.DelayExpression = value;
         }
 
         Dispatcher.UIThread.Post(UpdateStringProperties);
