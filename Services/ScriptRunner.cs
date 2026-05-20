@@ -65,7 +65,7 @@ public class ScriptRunner : IScriptRunner
         catch (Exception ex)
         {
             return OperationResult<T>.Failure(
-                $"Failed to convert result '{processedValue}' (original: '{result.Value}') to type {typeof(T).Name}: {ex.Message}");
+                $"Failed to convert result '{processedValue}': {ex.Message}");
         }
     }
 

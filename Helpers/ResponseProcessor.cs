@@ -9,10 +9,13 @@ namespace ATLab.Helpers;
 
 public static class ResponseProcessor
 {
-    public static string? Process(byte[] input, ResponseMask? mask)
+    public static string Process(byte[] input, ResponseMask? mask)
     {
         if (mask == null)
             return Encoding.ASCII.GetString(input);
+        
+        mask.FinalResult = "";
+        mask.ProcessedInput = "";
 
         mask.OriginalResponse = Encoding.ASCII.GetString(input);
 
@@ -20,7 +23,7 @@ public static class ResponseProcessor
         mask.ProcessedInput = Encoding.ASCII.GetString(processedInput);
 
         if (processedInput.Length == 0)
-            return null;
+            return string.Empty;
 
         if (string.IsNullOrWhiteSpace(mask.Mask))
             return Encoding.ASCII.GetString(processedInput);
