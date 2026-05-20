@@ -1,7 +1,10 @@
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+
+namespace ATLab.Services;
 
 public class DeviceIdentificationService : IDeviceIdentificationService
 {
@@ -31,7 +34,10 @@ public class DeviceIdentificationService : IDeviceIdentificationService
         var result = await _executor.ExecuteAsync(cmd, device.Id, token);
 
         await _executor.ReleaseDeviceAsync();
+        
+        if (result.Value == null || !result.IsSuccess)
+            return null;
 
-        return result.IsSuccess ? result.Value : null;
+        return Encoding.ASCII.GetString(result.Value);
     }
 }

@@ -55,7 +55,7 @@ public class ScriptRunner : IScriptRunner
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
-        var processedValue = ResponseProcessor.ApplyMask(result.Value, mask);
+        var processedValue = ResponseProcessor.Process(result.Value, mask);
 
         try
         {
@@ -69,7 +69,7 @@ public class ScriptRunner : IScriptRunner
         }
     }
 
-    private async Task<OperationResult<string?>> RunCoreAsync(
+    private async Task<OperationResult<byte[]>> RunCoreAsync(
         string scriptId,
         string deviceName,
         IEnumerable<CustomVariable> scriptVariables,
@@ -77,14 +77,14 @@ public class ScriptRunner : IScriptRunner
         List<CustomVariable>? runtimeVariables = null)
     {
         if (string.IsNullOrEmpty(scriptId) || string.IsNullOrEmpty(deviceName))
-            return OperationResult<string?>.Failure("Script and Device are required.");
+            return OperationResult<byte[]>.Failure("Script and Device are required.");
 
         try
         {
             var script = await _scriptRepository.LoadAsync(scriptId, token);
             if (script == null)
             {
-                return OperationResult<string?>.Failure($"Script with ID {scriptId} not found.");
+                return OperationResult<byte[]>.Failure($"Script with ID {scriptId} not found.");
             }
 
             // Clone and apply variables to commands
@@ -96,11 +96,11 @@ public class ScriptRunner : IScriptRunner
         }
         catch (OperationCanceledException)
         {
-            return OperationResult<string?>.Failure(string.Empty);
+            return OperationResult<byte[]>.Failure(string.Empty);
         }
         catch (Exception ex)
         {
-            return OperationResult<string?>.Failure(ex.Message);
+            return OperationResult<byte[]>.Failure(ex.Message);
         }
     }
 

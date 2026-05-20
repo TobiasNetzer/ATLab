@@ -14,13 +14,12 @@ public class ScriptClient
         _transport = transport;
     }
 
-    public async Task<string> QueryAsync(byte[] command, int timeoutMs = 1000)
+    public async Task<byte[]> QueryAsync(byte[] command, int timeoutMs = 1000)
     {
-        var responseBytes = await _transport.SendAsync(command, timeoutMs);
-        return _encoding.GetString(responseBytes).Trim();
+        return await _transport.SendAsync(command, timeoutMs);
     }
 
-    public Task<string> QueryAsync(string command, int timeoutMs = 1000)
+    public Task<byte[]> QueryAsync(string command, int timeoutMs = 1000)
     {
         var bytes = _encoding.GetBytes(command);
         return QueryAsync(bytes, timeoutMs);

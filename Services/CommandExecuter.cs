@@ -28,7 +28,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         _deviceManager = deviceManager;
     }
 
-    public Task<OperationResult<string?>> ExecuteAsync(
+    public Task<OperationResult<byte[]>> ExecuteAsync(
         ScriptCommand command,
         string targetDeviceId,
         CancellationToken token,
@@ -37,23 +37,23 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         return ExecuteAsync(new[] { command }, targetDeviceId, token, runtimeVariables);
     }
 
-    public async Task<OperationResult<string?>> ExecuteAsync(
+    public async Task<OperationResult<byte[]>> ExecuteAsync(
         IEnumerable<ScriptCommand> commands,
         string targetDeviceId,
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null)
     {
         if (string.IsNullOrWhiteSpace(targetDeviceId))
-            return OperationResult<string?>.Failure("Device is required.");
+            return OperationResult<byte[]>.Failure("Device is required.");
 
-        string? queryResult = null;
+        byte[] queryResult = [];
 
         try
         {
             var device = _deviceManager.Devices.FirstOrDefault(d => d.Id == targetDeviceId);
             if (device == null)
             {
-                return OperationResult<string?>.Failure($"Target Device ID {targetDeviceId} not found.");
+                return OperationResult<byte[]>.Failure($"Target Device ID {targetDeviceId} not found.");
             }
 
             var resource = device.ResourceString;
@@ -82,7 +82,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
 
                 var connectResult = await _deviceInterface.ConnectAsync();
                 if (!connectResult.IsSuccess)
-                    return OperationResult<string?>.Failure(connectResult.ErrorMessage);
+                    return OperationResult<byte[]>.Failure(connectResult.ErrorMessage);
             }
 
             var client = new ScriptClient(_deviceInterface);
@@ -115,27 +115,27 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 }
             }
 
-            return OperationResult<string?>.Success(queryResult);
+            return OperationResult<byte[]>.Success(queryResult);
         }
         catch (TimeoutException tex)
         {
-            return OperationResult<string?>.Timeout(tex.Message);
+            return OperationResult<byte[]>.Timeout(tex.Message);
         }
         catch (TaskCanceledException)
         {
             return token.IsCancellationRequested
-                ? OperationResult<string?>.Failure("Operation cancelled by user")
-                : OperationResult<string?>.Timeout("Operation timed out");
+                ? OperationResult<byte[]>.Failure("Operation cancelled by user")
+                : OperationResult<byte[]>.Timeout("Operation timed out");
         }
         catch (OperationCanceledException)
         {
             return token.IsCancellationRequested
-                ? OperationResult<string?>.Failure("Operation cancelled by user")
-                : OperationResult<string?>.Timeout("Operation timed out");
+                ? OperationResult<byte[]>.Failure("Operation cancelled by user")
+                : OperationResult<byte[]>.Timeout("Operation timed out");
         }
         catch (Exception ex)
         {
-            return OperationResult<string?>.Failure(ex.Message);
+            return OperationResult<byte[]>.Failure(ex.Message);
         }
     }
 
@@ -157,7 +157,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         if (result.Value == null)
             return OperationResult<T>.Success(default!);
 
-        var processedValue = ResponseProcessor.ApplyMask(result.Value, mask);
+        var processedValue = ResponseProcessor.Process(result.Value, mask);
 
         try
         {
