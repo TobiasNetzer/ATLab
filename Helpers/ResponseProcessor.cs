@@ -148,7 +148,7 @@ public static class ResponseProcessor
                 if (ascii.Length == 0)
                     return null;
 
-                if (float.TryParse(ascii, NumberStyles.Float, CultureInfo.InvariantCulture, out float f))
+                if (double.TryParse(ascii, NumberStyles.Float, CultureInfo.InvariantCulture, out var f))
                     return Convert.ToDouble(f);
                 
                 return null;

@@ -15,9 +15,6 @@ public partial class ResponseMask : ObservableObject
     private int _skip;
 
     [ObservableProperty]
-    private bool _isOnlyNumeric;
-
-    [ObservableProperty]
     [property: JsonIgnore]
     private string _originalResponse = string.Empty;
 
@@ -39,6 +36,5 @@ public partial class ResponseMask : ObservableObject
         Mask = other.Mask;
         Length = other.Length;
         Skip = other.Skip;
-        IsOnlyNumeric = other.IsOnlyNumeric;
     }
 }

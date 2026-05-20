@@ -26,9 +26,6 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     private string _skipCharacters = string.Empty;
 
     [ObservableProperty]
-    private bool _isOnlyNumeric;
-
-    [ObservableProperty]
     private string _originalResponse = string.Empty;
 
     [ObservableProperty]
@@ -94,12 +91,6 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
-    partial void OnIsOnlyNumericChanged(bool value)
-    {
-        if (_currentTestStep?.ResponseMask != null)
-            _currentTestStep.ResponseMask.IsOnlyNumeric = value;
-    }
-
     private void UpdateStringProperties()
     {
         if (_currentTestStep == null)
@@ -109,7 +100,6 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
-        IsOnlyNumeric = _currentTestStep.ResponseMask.IsOnlyNumeric;
         OriginalResponse = _currentTestStep.ResponseMask.OriginalResponse;
         ProcessedInput = _currentTestStep.ResponseMask.ProcessedInput;
         FinalResult = _currentTestStep.ResponseMask.FinalResult;
@@ -117,7 +107,6 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         OnPropertyChanged(nameof(Mask));
         OnPropertyChanged(nameof(Length));
         OnPropertyChanged(nameof(SkipCharacters));
-        OnPropertyChanged(nameof(IsOnlyNumeric));
         OnPropertyChanged(nameof(OriginalResponse));
         OnPropertyChanged(nameof(ProcessedInput));
         OnPropertyChanged(nameof(FinalResult));
