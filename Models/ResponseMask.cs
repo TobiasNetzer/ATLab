@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Text.Json.Serialization;
+using ATLab.Enums;
 
 namespace ATLab.Models;
 
@@ -13,6 +14,9 @@ public partial class ResponseMask : ObservableObject
     
     [ObservableProperty]
     private int _skip;
+    
+    [ObservableProperty] 
+    private ResponseDisplayMode _responseDisplayMode = ResponseDisplayMode.ASCII;
 
     [ObservableProperty]
     [property: JsonIgnore]
@@ -24,7 +28,15 @@ public partial class ResponseMask : ObservableObject
 
     [ObservableProperty]
     [property: JsonIgnore]
-    private string _finalResult = string.Empty;
+    private string _result = string.Empty;
+
+    [ObservableProperty]
+    [property: JsonIgnore]
+    private byte[]? _rawOriginal;
+
+    [ObservableProperty] 
+    [property: JsonIgnore]
+    private byte[]? _rawProcessed;
     
     public ResponseMask()
     {
@@ -36,5 +48,6 @@ public partial class ResponseMask : ObservableObject
         Mask = other.Mask;
         Length = other.Length;
         Skip = other.Skip;
+        ResponseDisplayMode = other.ResponseDisplayMode;
     }
 }

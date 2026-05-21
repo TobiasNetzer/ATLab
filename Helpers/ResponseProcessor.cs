@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ATLab.Enums;
 
 namespace ATLab.Helpers;
 
@@ -13,14 +14,17 @@ public static class ResponseProcessor
     {
         if (mask == null)
             return Encoding.ASCII.GetString(input);
-        
-        mask.FinalResult = "";
+
+        mask.Result = "";
         mask.ProcessedInput = "";
 
-        mask.OriginalResponse = Encoding.ASCII.GetString(input);
+        mask.RawOriginal = input.ToArray();
+        mask.OriginalResponse = Format(mask.RawOriginal, mask.ResponseDisplayMode);
 
         var processedInput = ApplySkipAndLength(input, mask.Skip, mask.Length);
-        mask.ProcessedInput = Encoding.ASCII.GetString(processedInput);
+
+        mask.RawProcessed = processedInput.ToArray();
+        mask.ProcessedInput = Format(mask.RawProcessed, mask.ResponseDisplayMode);
 
         if (processedInput.Length == 0)
             return string.Empty;
@@ -34,35 +38,56 @@ public static class ResponseProcessor
 
         var asciiCursor = 0;
         var byteCursor = 0;
-        
+
+        var resultString = "";
+
+        var matched = true;
+
         foreach (var rule in parsed.MatchRules)
         {
             switch (rule)
             {
                 case AsciiMatchRule ar when !ar.IsMatch(ascii, ref asciiCursor):
+
                 case ByteSequenceMatchRule br when !br.IsMatch(processedInput, ref byteCursor):
-                    mask.FinalResult = "0";
-                    return "0";
+                    matched = false;
+                    break;
             }
+
+            if (!matched)
+                break;
         }
-        
-        if (parsed.NumericExtraction != null)
+
+        if (!matched)
+        {
+            resultString = "0";
+        }
+        else if (parsed.NumericExtraction != null)
         {
             var result = ExtractNumeric(processedInput, ascii, parsed.NumericExtraction);
 
-            if (result == null)
-            {
-                mask.FinalResult = "0";
-                return "0";
-            }
-
-            var s = result.Value.ToString(CultureInfo.InvariantCulture);
-            mask.FinalResult = s;
-            return s;
+            resultString = result?.ToString(CultureInfo.InvariantCulture) ?? "0";
         }
-        
-        mask.FinalResult = "1";
-        return "1";
+        else
+        {
+            resultString = "1";
+        }
+
+        mask.Result = resultString;
+        return resultString;
+    }
+    
+    public static string Format(byte[]? data, ResponseDisplayMode mode)
+    {
+        if (data == null)
+            return string.Empty;
+
+        return mode switch
+        {
+            ResponseDisplayMode.ASCII => Encoding.ASCII.GetString(data),
+            ResponseDisplayMode.HEX   => BitConverter.ToString(data).Replace("-", " "),
+            _ => throw new NotSupportedException()
+        };
     }
 
     private static byte[] ApplySkipAndLength(byte[] input, int skip, int length)

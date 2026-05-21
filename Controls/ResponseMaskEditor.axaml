@@ -93,6 +93,15 @@
                             <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                      Width="100"/>
                         </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            
+                            <TextBlock Text="Display Mode"/>
+                            <ComboBox ItemsSource="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.DisplayModes}"
+                                      SelectedItem="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ResponseDisplayMode}"
+                                      Width="100"/>
+                            
+                        </StackPanel>
 
                     </StackPanel>
 

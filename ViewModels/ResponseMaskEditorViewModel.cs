@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Threading;
@@ -35,7 +40,12 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     private string _finalResult = string.Empty;
     
     private TestStep? _currentTestStep;
-
+    
+    [ObservableProperty]
+    private ResponseDisplayMode _responseDisplayMode = ResponseDisplayMode.ASCII;
+    
+    public List<ResponseDisplayMode> DisplayModes { get; } = Enum.GetValues<ResponseDisplayMode>().ToList();
+    
     public ResponseMaskEditorViewModel(ISettingsService settingsService)
     {
         _settingsService = settingsService;
@@ -64,14 +74,10 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         if (_currentTestStep?.ResponseMask == null)
             return;
 
-        if (int.TryParse(value, out var parsed))
-        {
-            _currentTestStep.ResponseMask.Length = parsed;
-        }
-        else
-        {
-            _currentTestStep.ResponseMask.Length = 0;
-        }
+        _currentTestStep.ResponseMask.Length = int.TryParse(value, out var parsed)
+            ? parsed
+            : 0;
+        
         Dispatcher.UIThread.Post(UpdateStringProperties);
     }
 
@@ -80,15 +86,21 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         if (_currentTestStep?.ResponseMask == null)
             return;
 
-        if (int.TryParse(value, out var parsed))
-        {
-            _currentTestStep.ResponseMask.Skip = parsed;
-        }
-        else
-        {
-            _currentTestStep.ResponseMask.Skip = 0;
-        }
+        _currentTestStep.ResponseMask.Skip = int.TryParse(value, out var parsed)
+            ? parsed
+            : 0;
+        
         Dispatcher.UIThread.Post(UpdateStringProperties);
+    }
+
+    partial void OnResponseDisplayModeChanged(ResponseDisplayMode value)
+    {
+        if (_currentTestStep?.ResponseMask == null)
+            return;
+        
+        _currentTestStep.ResponseMask.ResponseDisplayMode = value;
+        _currentTestStep.ResponseMask.OriginalResponse = ResponseProcessor.Format(_currentTestStep.ResponseMask.RawOriginal, _currentTestStep.ResponseMask.ResponseDisplayMode);
+        _currentTestStep.ResponseMask.ProcessedInput = ResponseProcessor.Format(_currentTestStep.ResponseMask.RawProcessed, _currentTestStep.ResponseMask.ResponseDisplayMode);
     }
 
     private void UpdateStringProperties()
@@ -102,7 +114,8 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();
         OriginalResponse = _currentTestStep.ResponseMask.OriginalResponse;
         ProcessedInput = _currentTestStep.ResponseMask.ProcessedInput;
-        FinalResult = _currentTestStep.ResponseMask.FinalResult;
+        FinalResult = _currentTestStep.ResponseMask.Result;
+        ResponseDisplayMode = _currentTestStep.ResponseMask.ResponseDisplayMode;
         
         OnPropertyChanged(nameof(Mask));
         OnPropertyChanged(nameof(Length));
@@ -110,6 +123,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         OnPropertyChanged(nameof(OriginalResponse));
         OnPropertyChanged(nameof(ProcessedInput));
         OnPropertyChanged(nameof(FinalResult));
+        OnPropertyChanged(nameof(ResponseDisplayMode));
     }
 
     public void LoadTestStep(TestStepViewModel? testStepViewModel)
