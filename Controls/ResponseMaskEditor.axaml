@@ -24,7 +24,7 @@
 
             <DockPanel>
 
-                <TextBlock Text="Response Masking"
+                <TextBlock Text="Response Processing"
                            FontSize="18"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
@@ -68,7 +68,7 @@
             
             <StackPanel Margin="10" Spacing="10">
                 
-                <CheckBox Content="Enable Custom Response Mask"
+                <CheckBox Content="Enable Custom Response Processing"
                           IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsCustomMaskEnabled, Mode=TwoWay}"/>
                 
                 <StackPanel Spacing="10"

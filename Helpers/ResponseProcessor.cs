@@ -13,7 +13,9 @@ public static class ResponseProcessor
     public static string Process(byte[] input, ResponseMask? mask)
     {
         if (mask == null)
-            return Encoding.ASCII.GetString(input);
+            return "0";
+        
+        var resultString = "0";
 
         mask.Result = "";
         mask.ProcessedInput = "";
@@ -30,7 +32,10 @@ public static class ResponseProcessor
             return string.Empty;
 
         if (string.IsNullOrWhiteSpace(mask.Mask))
-            return Encoding.ASCII.GetString(processedInput);
+        {
+            mask.Result = resultString;
+            return resultString;
+        }
 
         var parsed = MaskParser.Parse(mask.Mask);
 
@@ -38,8 +43,6 @@ public static class ResponseProcessor
 
         var asciiCursor = 0;
         var byteCursor = 0;
-
-        var resultString = "";
 
         var matched = true;
 
@@ -181,9 +184,14 @@ public static class ResponseProcessor
                 
                 return null;
             }
-
+            case NumericExtractionType.ASCII:
             default:
-                throw new ArgumentOutOfRangeException();
+                if (ascii.Length == 0)
+                    return null;
+
+                var bytes = Encoding.ASCII.GetBytes(ascii);
+
+                return bytes.Aggregate(0, (current, b) => (current << 8) | b);
         }
     }
 }
@@ -193,6 +201,7 @@ public static class ResponseProcessor
 internal enum NumericExtractionType
 {
     BYTE,
+    ASCII,
     HEX_ASCII,
     BIN_ASCII,
     DEC_ASCII,
@@ -387,6 +396,7 @@ internal static class MaskParser
         if (!content.StartsWith("byte:", StringComparison.OrdinalIgnoreCase))
             return content.ToLowerInvariant() switch
             {
+                "ascii" => new NumericExtractionSpec(NumericExtractionType.ASCII),
                 "hex" => new NumericExtractionSpec(NumericExtractionType.HEX_ASCII),
                 "bin" => new NumericExtractionSpec(NumericExtractionType.BIN_ASCII),
                 "dec" => new NumericExtractionSpec(NumericExtractionType.DEC_ASCII),
