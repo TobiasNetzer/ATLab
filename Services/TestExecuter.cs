@@ -465,7 +465,7 @@ public class TestExecutor : ITestExecutor
     }
 
     private bool IsOverflow(double value) =>
-        value >= 1E9;
+        value >= 9.9E37;
 
     private void OnTestStarted() =>
         TestStarted?.Invoke();

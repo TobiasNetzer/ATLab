@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestExecutionController, TestExecutionController>();
         services.AddSingleton<ITestStepEditor, TestStepEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
+        services.AddSingleton<IFileContentReader, FileContentReader>();
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectDocumentation>();
@@ -76,6 +77,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
         services.AddSingleton<ShellCommandEditorViewModel>();
         services.AddSingleton<ExpressionEditorViewModel>();
+        services.AddSingleton<FilePathEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();

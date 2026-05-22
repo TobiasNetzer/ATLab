@@ -1,0 +1,77 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.FilePathEditor"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             x:DataType="controls:FilePathEditor"
+             Width="500">
+
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel>
+        
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"
+                Background="{DynamicResource PanelBorder}"
+                Padding="10">
+
+            <DockPanel>
+                <TextBlock Text="File Path"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <ToggleButton IsChecked="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+
+                                    <TextBlock Text="&#xE70D;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded,
+                                                                   Converter={StaticResource InverseBoolConverter}}"/>
+
+                                    <TextBlock Text="&#xE70E;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"/>
+
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource PanelBackground}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource PanelBorder}"
+                IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}">
+
+            <StackPanel Margin="10" Spacing="10" Orientation="Horizontal">
+
+                <TextBox Text="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.TestStep.FilePath, UpdateSourceTrigger=LostFocus}"
+                         Width="435"/>
+                <Button Content="..."
+                        Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.SelectFilePathCommand}"/>
+
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
+    
+</UserControl>

@@ -140,10 +140,14 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(26)]
+    private string _filePath = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(27)]
     private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(27)]
+    [property: JsonPropertyOrder(28)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -154,10 +158,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(28)]
+    [JsonPropertyOrder(29)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(29)]
+    [JsonPropertyOrder(30)]
     public RelayGroupDto? ExtStimState { get; set; }
 
     private void HookEvents()
@@ -290,6 +294,7 @@ public partial class TestStep : ObservableObject
             Command = new ScriptCommand(Command),
             ShellCommand = new ShellCommand(ShellCommand),
             Expression = Expression,
+            FilePath = FilePath,
             ResponseMask = new ResponseMask(ResponseMask),
             MatrixState = new RelayMatrix(MatrixState),
             StimState = StimState != null ? new RelayGroupDto(StimState) : null,

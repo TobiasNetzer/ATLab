@@ -19,19 +19,22 @@ public class TestStepRunner : ITestStepRunner
     private readonly ICommandExecutor _commandExecutor;
     private readonly IShellCommandRunner _shellCommandRunner;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly IFileContentReader _fileContentReader;
 
     public TestStepRunner(
         ITestHardware testHardware,
         IScriptRunner scriptRunner,
         ICommandExecutor commandExecutor,
         IShellCommandRunner shellCommandRunner,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        IFileContentReader fileContentReader)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
         _commandExecutor = commandExecutor;
         _shellCommandRunner = shellCommandRunner;
         _messageBoxService = messageBoxService;
+        _fileContentReader = fileContentReader;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
@@ -90,6 +93,20 @@ public class TestStepRunner : ITestStepRunner
                     return double.TryParse(resolved, CultureInfo.InvariantCulture, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
                         : OperationResult<double>.Failure($"Failed to evaluate expression: {step.TestStep.Expression}. Resolved to: {resolved}");
+                }
+
+                case TestEvaluationSource.FILE:
+                {
+                    var fileResult = await _fileContentReader.ReadAsync(step.TestStep.FilePath, token);
+
+                    if (!fileResult.IsSuccess)
+                        return OperationResult<double>.Failure(fileResult.ErrorMessage);
+
+                    var processed = ResponseProcessor.Process(fileResult.Value!, mask);
+
+                    return double.TryParse(processed, CultureInfo.InvariantCulture, out var doubleResult)
+                        ? OperationResult<double>.Success(doubleResult)
+                        : OperationResult<double>.Failure($"Failed to parse file content to double: {processed}");
                 }
                 
                 default: return OperationResult<double>.Failure("Unknown evaluation source");

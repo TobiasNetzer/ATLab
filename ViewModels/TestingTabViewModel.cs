@@ -21,7 +21,6 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IProjectController _projectController;
     private readonly ITestStepEditor _testStepEditor;
     private readonly ITestExecutionController _testExecutionController;
-    private readonly DeviceManagerViewModel _deviceManager;
     private readonly ProjectSettings _projectSettings;
     private readonly ProjectDocumentation _projectDocumentation;
     private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
@@ -61,6 +60,9 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private ExpressionEditorViewModel _expressionEditor;
+    
+    [ObservableProperty]
+    private FilePathEditorViewModel _filePathEditor;
     
     [ObservableProperty]
     private bool _isDevelopmentMode;
@@ -137,6 +139,7 @@ public partial class TestingTabViewModel : ViewModelBase
         CommandEditorViewModel commandEditor,
         ShellCommandEditorViewModel shellCommandEditor,
         ExpressionEditorViewModel expressionEditor,
+        FilePathEditorViewModel filePathEditor,
         IProjectController projectController,
         ITestStepEditor testStepEditor,
         ITestExecutionController testExecutionController,
@@ -155,10 +158,10 @@ public partial class TestingTabViewModel : ViewModelBase
         CommandEditor = commandEditor;
         ShellCommandEditor = shellCommandEditor;
         ExpressionEditor = expressionEditor;
+        FilePathEditor = filePathEditor;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
         _testExecutionController = testExecutionController;
-        _deviceManager = deviceManager;
         _projectSettings = projectSettings;
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
@@ -170,12 +173,12 @@ public partial class TestingTabViewModel : ViewModelBase
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
         TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettings.SettingsChanged += () => CheckForChanges();
-        _deviceManager.Devices.CollectionChanged += DevicesChanged;
+        deviceManager.Devices.CollectionChanged += DevicesChanged;
         _projectDocumentation.DocumentationChanged += () => CheckForChanges();
         _deviceUnderTestInfo.DeviceUnderTestInfoChanged += () => CheckForChanges();
         _runtimeVariableEditor.RuntimeVariables.CollectionChanged += RuntimeVariablesChanged;
         
-        foreach (var device in _deviceManager.Devices)
+        foreach (var device in deviceManager.Devices)
             SubscribeToDevice(device);
         _testExecutionController.HookExecutorEvents(this);
     }
@@ -344,6 +347,7 @@ public partial class TestingTabViewModel : ViewModelBase
             CommandEditor.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
             ExpressionEditor.LoadTestStep(value.TestStep);
+            FilePathEditor.LoadTestStep(value.TestStep);
             ResponseMaskEditor.LoadTestStep(value);
         }
         catch (Exception ex)

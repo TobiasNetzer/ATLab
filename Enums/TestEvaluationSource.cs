@@ -20,5 +20,8 @@ public enum TestEvaluationSource
     USER_RESPONSE,
     
     [Description("Expression")]
-    EXPRESSION
+    EXPRESSION,
+    
+    [Description("File Content")]
+    FILE
 }

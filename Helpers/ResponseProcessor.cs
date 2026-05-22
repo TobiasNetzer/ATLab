@@ -13,7 +13,7 @@ public static class ResponseProcessor
     public static string Process(byte[] input, ResponseMask? mask)
     {
         if (mask == null)
-            return "0";
+            return Encoding.ASCII.GetString(input);
         
         var resultString = "0";
 

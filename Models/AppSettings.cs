@@ -22,5 +22,6 @@ public class AppSettings
     public bool IsShellCommandEditorExpanded { get; set; } = false;
     public bool IsResponseMaskEditorExpanded { get; set; } = false;
     public bool IsExpressionEditorExpanded { get; set; } = false;
+    public bool IsFilePathEditorExpanded { get; set; } = false;
     public bool IsDarkMode { get; set; } = true;
 }
