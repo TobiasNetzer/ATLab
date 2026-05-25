@@ -46,7 +46,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ICtiaCommunication, CtiaCommunication>();
         services.AddTransient<CtiaHardware>();
         services.AddSingleton<TestHardwareSimulator>();
-        services.AddSingleton<IHardwareProvider, HardwareProvider>();
         
         services.AddSingleton<IHardwareAccessor, HardwareAccessor>();
         services.AddSingleton<ITestHardware>(sp => sp.GetRequiredService<IHardwareAccessor>().Hardware ?? throw new InvalidOperationException("Hardware not initialized"));
