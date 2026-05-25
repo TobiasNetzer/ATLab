@@ -56,6 +56,14 @@ public class TestExecutionController : ITestExecutionController
             
             step.IsExecuted = true;
         };
+        
+        _testExecutor.StepRepeated += () =>
+        {
+            vm.TestDuration = $"{vm.Elapsed.TotalSeconds:F2}s";
+            vm.TestProgress = vm.TestSteps.Count == 0
+                ? 0
+                : (int)Math.Round((double)(vm.SelectedStepIndex + 1) / vm.TestSteps.Count * 100);
+        };
 
         _testExecutor.TestCompleted += () =>
         {

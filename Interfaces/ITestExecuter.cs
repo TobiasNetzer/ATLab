@@ -11,6 +11,7 @@ public interface ITestExecutor
     event Action? TestStarted;
     event Action<int, TestStepViewModel>? StepStarted;
     event Action<int, TestStepViewModel>? StepCompleted;
+    event Action? StepRepeated;
     event Action? TestCompleted;
     event Action? TestCancelled;
     event Action? TestRepeated;

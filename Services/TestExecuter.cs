@@ -31,6 +31,7 @@ public class TestExecutor : ITestExecutor
     public event Action? TestStarted;
     public event Action<int, TestStepViewModel>? StepStarted;
     public event Action<int, TestStepViewModel>? StepCompleted;
+    public event Action? StepRepeated;
     public event Action? TestCompleted;
     public event Action? TestCancelled;
     public event Action? TestRepeated;
@@ -308,7 +309,10 @@ public class TestExecutor : ITestExecutor
             
             var nextIndex = EvaluateNextStepIndex(steps, i, step);
             
-            OnStepCompleted(i, step);
+            if (i == nextIndex)
+                OnStepRepeated();
+            else
+                OnStepCompleted(i, step);
             
             if (stepExecutionResult.IsFailure)
                 break; // END_TEST
@@ -475,6 +479,9 @@ public class TestExecutor : ITestExecutor
 
     private void OnStepCompleted(int index, TestStepViewModel step) =>
         StepCompleted?.Invoke(index, step);
+    
+    private void OnStepRepeated() =>
+        StepRepeated?.Invoke();
 
     private void OnTestCompleted() =>
         TestCompleted?.Invoke();
