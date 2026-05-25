@@ -4,7 +4,7 @@ namespace ATLab.Models;
 
 public class DummyHardwareInfo : IHardwareInfo
 {
-    public string DeviceName { get; set; } = "No Device";
+    public string DeviceName { get; set; } = "Simulator";
     public string SerialNumber { get; set; } = "N/A";
     public string FirmwareVersion { get; set; } = "N/A";
     public string BuildDate { get; set; } = "N/A";
