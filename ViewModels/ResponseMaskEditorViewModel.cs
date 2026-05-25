@@ -60,7 +60,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     partial void OnIsCustomMaskEnabledChanged(bool value)
     {
         if (_currentTestStep?.ResponseMask != null)
-            _currentTestStep.IsCustomMask = value;
+            _currentTestStep.IsCustomResponseMask = value;
     }
 
     partial void OnMaskChanged(string value)
@@ -108,7 +108,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
         if (_currentTestStep == null)
             return;
     
-        IsCustomMaskEnabled = _currentTestStep.IsCustomMask;
+        IsCustomMaskEnabled = _currentTestStep.IsCustomResponseMask;
         Mask = _currentTestStep.ResponseMask.Mask;
         Length = _currentTestStep.ResponseMask.Length.ToString();
         SkipCharacters = _currentTestStep.ResponseMask.Skip.ToString();

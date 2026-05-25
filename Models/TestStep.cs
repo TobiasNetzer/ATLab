@@ -76,7 +76,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(10)]
-    private bool _isCustomMask;
+    private bool _isCustomResponseMask;
 
     [ObservableProperty]
     [property: JsonPropertyOrder(11)]
@@ -279,7 +279,7 @@ public partial class TestStep : ObservableObject
             DelayExpression = DelayExpression,
             Delay = Delay,
             EvaluationSource = EvaluationSource,
-            IsCustomMask = IsCustomMask,
+            IsCustomResponseMask = IsCustomResponseMask,
             Comment = Comment,
             IsShowComment = IsShowComment,
             CustomMessageBoxImagePath = CustomMessageBoxImagePath,

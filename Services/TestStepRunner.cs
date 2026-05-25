@@ -60,7 +60,7 @@ public class TestStepRunner : ITestStepRunner
 
             await Task.Delay(step.TestStep.Delay, token);
             
-            var mask = step.TestStep.IsCustomMask ? step.TestStep.ResponseMask : null;
+            var mask = step.TestStep.IsCustomResponseMask ? step.TestStep.ResponseMask : null;
 
             switch (step.TestStep.EvaluationSource)
             {
