@@ -9,12 +9,13 @@ Built with **Avalonia UI** and **.NET**, it offers a modern environment for deve
 
 -   **Custom Test Sequences**: Test steps can be configured to perform various actions:
     -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
-    -   **Response Validation**: Use response masking to verify hardware output.
+    -   **Response Validation**: Use custom response processing to verify incoming data.
     -   **Shell Commands**: Execute local system commands or scripts as part of the test flow.
     -   **Custom Variables**:
         -   **Dynamic Configuration**: Define and use custom variables within test scripts for dynamic test configurations.
         -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic values.
     -   **User Responses**: Capture user input during test execution for dynamic test configurations.
+    -   **File Content**: Read and validate file contents from the local file system.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
     -   **Pass/Fail Criteria**:
         -   **Test Outcome Evaluation**: Define pass/fail criteria based on test results and conditions.
