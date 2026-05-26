@@ -6,10 +6,10 @@ public enum DeviceType
 {
     [Description("Serial Port")]
     SERIAL,
-    
-    [Description("VISA")]
-    VISA,
 
     [Description("TCP/IP")]
-    TCP_IP
+    TCP_IP,
+    
+    [Description("VISA")]
+    VISA
 }
