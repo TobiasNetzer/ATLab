@@ -58,7 +58,14 @@
                     </StackPanel>
                     
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Resource"/>
+                        <TextBlock Text="Port"
+                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL, FallbackValue='TRUE'}"/>
+                        
+                        <TextBlock Text="Resource"
+                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"/>
+                        
+                        <TextBlock Text="IP-Address"
+                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
 
                         <StackPanel Spacing="5" Orientation="Horizontal">
 
@@ -91,6 +98,9 @@
                                         </ComboBox.Styles>
                                     </ComboBox>
 
+                                    <TextBox Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
+                                             Width="210"
+                                             IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
                                 </StackPanel>
                             </StackPanel>
 
@@ -99,7 +109,8 @@
                                     FontSize="18"
                                     ToolTip.Tip="Reload resources"
                                     VerticalAlignment="Top"
-                                    Command="{Binding RefreshResourcesCommand}"/>
+                                    Command="{Binding RefreshResourcesCommand}"
+                                    IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"/>
                         </StackPanel>
                     </StackPanel>
                     
@@ -187,6 +198,37 @@
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableVisaTerminations}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.VisaTerminationMode}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
+                                Spacing="10">
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Port"/>
+                            <NumericUpDown Width="210"
+                                           Minimum="1"
+                                           Maximum="65535"
+                                           HorizontalAlignment="Left"
+                                           FormatString="0"
+                                           Value="{Binding SelectedDevice.Configuration.TcpPort}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Timeout (ms)"/>
+                            <NumericUpDown Width="210"
+                                           Minimum="10"
+                                           Maximum="10000"
+                                           HorizontalAlignment="Left"
+                                           FormatString="0"
+                                           Value="{Binding TcpTimeoutMsString}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Termination Character"/>
+                            <ComboBox Width="210"
+                                      ItemsSource="{Binding AvailableTcpTerminations}"
+                                      SelectedItem="{Binding SelectedDevice.Configuration.TcpTerminationMode}"/>
                         </StackPanel>
                     </StackPanel>
 

@@ -4,12 +4,12 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
-public class ScriptClient
+public class TransportService
 {
     private readonly ICommunication _transport;
     private readonly Encoding _encoding = Encoding.ASCII;
 
-    public ScriptClient(ICommunication transport)
+    public TransportService(ICommunication transport)
     {
         _transport = transport;
     }

@@ -8,5 +8,8 @@ public enum DeviceType
     SERIAL,
     
     [Description("VISA")]
-    VISA
+    VISA,
+
+    [Description("TCP/IP")]
+    TCP_IP
 }

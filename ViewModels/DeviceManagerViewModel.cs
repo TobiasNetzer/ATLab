@@ -27,6 +27,9 @@ public partial class DeviceManagerViewModel : ViewModelBase
     [ObservableProperty]
     private string _visaTimeoutMsString = "2000";
 
+    [ObservableProperty]
+    private string _tcpTimeoutMsString = "2000";
+
     public ObservableCollection<string> AvailableSerialPorts { get; } = new();
     public ObservableCollection<string> AvailableVisaResources { get; } = new();
 
@@ -57,6 +60,9 @@ public partial class DeviceManagerViewModel : ViewModelBase
     public ObservableCollection<VisaTerminationMode> AvailableVisaTerminations { get; } =
         new(Enum.GetValues<VisaTerminationMode>());
 
+    public ObservableCollection<TcpTerminationMode> AvailableTcpTerminations { get; } =
+        new(Enum.GetValues<TcpTerminationMode>());
+
     public DeviceManagerViewModel(IErrorService errorService)
     {
         _errorService = errorService;
@@ -70,6 +76,8 @@ public partial class DeviceManagerViewModel : ViewModelBase
             case DeviceType.SERIAL: RefreshSerialPorts();
                 break;
             case DeviceType.VISA: RefreshVisaResources();
+                break;
+            case DeviceType.TCP_IP:
                 break;
             case null:
                 break;
@@ -123,6 +131,7 @@ public partial class DeviceManagerViewModel : ViewModelBase
         
         FramingTimeoutMsString = SelectedDevice?.Configuration.FramingTimeoutMs.ToString(CultureInfo.CurrentCulture) ?? "";
         VisaTimeoutMsString = SelectedDevice?.Configuration.VisaTimeoutMs.ToString(CultureInfo.CurrentCulture) ?? "";
+        TcpTimeoutMsString = SelectedDevice?.Configuration.TcpTimeoutMs.ToString(CultureInfo.CurrentCulture) ?? "";
     }
 
     partial void OnFramingTimeoutMsStringChanged(string? oldValue, string newValue)
@@ -151,6 +160,20 @@ public partial class DeviceManagerViewModel : ViewModelBase
             return;
         
         SelectedDevice.Configuration.VisaTimeoutMs = (int) double.Parse(newValue, CultureInfo.InvariantCulture);
+    }
+
+    partial void OnTcpTimeoutMsStringChanged(string? oldValue, string newValue)
+    {
+        if (oldValue == newValue)
+            return;
+
+        if (SelectedDevice == null)
+            return;
+        
+        if (string.IsNullOrWhiteSpace(newValue))
+            return;
+        
+        SelectedDevice.Configuration.TcpTimeoutMs = (int) double.Parse(newValue, CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]

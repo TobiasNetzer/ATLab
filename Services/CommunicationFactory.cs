@@ -22,4 +22,11 @@ public class CommunicationFactory : ICommunicationFactory
             resourceString,
             config.VisaTimeoutMs,
             config.VisaTerminationMode);
+
+    public ICommunication CreateTcp(string ipAddress, DeviceConfiguration config)
+        => new TcpService(
+            ipAddress,
+            config.TcpPort,
+            config.TcpTimeoutMs,
+            config.TcpTerminationMode);
 }

@@ -75,6 +75,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 {
                     DeviceType.SERIAL => _communicationFactory.CreateSerial(device.ResourceString, device.Configuration),
                     DeviceType.VISA   => _communicationFactory.CreateVisa(device.ResourceString, device.Configuration),
+                    DeviceType.TCP_IP    => _communicationFactory.CreateTcp(device.ResourceString, device.Configuration),
                     _ => throw new NotSupportedException($"Device type {device.Type} is not supported.")
                 };
                 
@@ -85,7 +86,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                     return OperationResult<byte[]>.Failure(connectResult.ErrorMessage);
             }
 
-            var client = new ScriptClient(_deviceInterface);
+            var client = new TransportService(_deviceInterface);
 
             foreach (var command in commands)
             {

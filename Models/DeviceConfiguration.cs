@@ -38,6 +38,16 @@ public partial class DeviceConfiguration : ObservableObject
     
     [ObservableProperty]
     private VisaTerminationMode _visaTerminationMode = VisaTerminationMode.LF;
+
+    // TCP settings
+    [ObservableProperty]
+    private int _tcpPort = 5025;
+
+    [ObservableProperty]
+    private int _tcpTimeoutMs = 2000;
+
+    [ObservableProperty]
+    private TcpTerminationMode _tcpTerminationMode = TcpTerminationMode.LF;
     
     public override bool Equals(object? obj)
     {
@@ -53,7 +63,10 @@ public partial class DeviceConfiguration : ObservableObject
                && FramingTimeoutMs == other.FramingTimeoutMs
                && SerialTerminationMode == other.SerialTerminationMode
                && VisaTimeoutMs == other.VisaTimeoutMs
-               && VisaTerminationMode == other.VisaTerminationMode;
+               && VisaTerminationMode == other.VisaTerminationMode
+               && TcpPort == other.TcpPort
+               && TcpTimeoutMs == other.TcpTimeoutMs
+               && TcpTerminationMode == other.TcpTerminationMode;
     }
 
     public override int GetHashCode()
@@ -69,6 +82,9 @@ public partial class DeviceConfiguration : ObservableObject
         hash.Add(SerialTerminationMode);
         hash.Add(VisaTimeoutMs);
         hash.Add(VisaTerminationMode);
+        hash.Add(TcpPort);
+        hash.Add(TcpTimeoutMs);
+        hash.Add(TcpTerminationMode);
         return hash.ToHashCode();
     }
 
