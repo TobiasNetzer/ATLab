@@ -14,13 +14,13 @@ Built with **Avalonia UI** and **.NET**, it offers a modern environment for deve
     -   **Custom Variables**:
         -   **Dynamic Configuration**: Define and use custom variables within test scripts for dynamic test configurations.
         -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic values.
-    -   **User Responses**: Capture user input during test execution for dynamic test configurations.
+    -   **User Responses**: Capture user input during test execution.
     -   **File Content**: Read and validate file contents from the local file system.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
     -   **Pass/Fail Criteria**:
         -   **Test Outcome Evaluation**: Define pass/fail criteria based on test results and conditions.
         -   **Conditional Execution**: Use pass/fail criteria to conditionally execute test steps or skip tests based on previous results.
--   **Test Instrument Interfacing**: Support for both **Serial Port (VCOM/RS232/UART)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
+-   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232/UART)**, **TCPIP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
 -   **Scripting Engine**: Create test sequences with predefined multistep scripts.
 -   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
@@ -67,7 +67,7 @@ Alternatively, you can open the `ATLab.sln` file in **JetBrains Rider**, **Visua
 ## Usage
 
 ### 1. Configure Devices and Settings
--   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232/UART)** or **VISA** devices, with custom connection parameters.
+-   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232/UART)** , **TCPIP** or **VISA** devices, with custom connection parameters.
 -   **Project Settings**: Configure project-wide settings such as default tolerances, serial number requirements, and test result export options.
 -   **Optional:** Add custom channel names for the various relay channels.
 -   **Optional:** Add Runtime Variables to use within the test.
