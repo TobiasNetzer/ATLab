@@ -147,54 +147,62 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     private void UpdateStringProperties()
     {
-        if (TestStepViewModel?.TestStep == null) return;
-        var step = TestStepViewModel.TestStep;
+        _isInternalChange = true;
+        try
+        {
+            if (TestStepViewModel?.TestStep == null) return;
+            var step = TestStepViewModel.TestStep;
 
-       
-        if (!IsVariableExpression(step.NominalValueExpression) && 
-            UnitParser.TryParse(step.NominalValueExpression, out var nominal, step.Unit))
-        {
-            NominalValueText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(nominal, step.Unit) : nominal.ToString(CultureInfo.CurrentCulture);
+           
+            if (!IsVariableExpression(step.NominalValueExpression) && 
+                UnitParser.TryParse(step.NominalValueExpression, out var nominal, step.Unit))
+            {
+                NominalValueText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(nominal, step.Unit) : nominal.ToString(CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                NominalValueText = step.NominalValueExpression;
+            }
+            
+            if (!IsVariableExpression(step.LowerLimitExpression) &&
+                UnitParser.TryParse(step.LowerLimitExpression, out var lower, step.Unit))
+            {
+                LowerLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(lower, step.Unit) : lower.ToString(CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                LowerLimitText = step.LowerLimitExpression;
+            }
+            
+            if (!IsVariableExpression(step.UpperLimitExpression) &&
+                UnitParser.TryParse(step.UpperLimitExpression, out var upper, step.Unit))
+            {
+                UpperLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(upper, step.Unit) : upper.ToString(CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                UpperLimitText = step.UpperLimitExpression;
+            }
+            
+            if (!IsVariableExpression(step.DelayExpression) &&
+                UnitParser.TryParse(step.DelayExpression, out var delaySec, "s"))
+            {
+                DelayText = UnitParser.Format(delaySec, "s");
+            }
+            else
+            {
+                DelayText = step.DelayExpression;
+            }
+            
+            OnPropertyChanged(nameof(NominalValueText));
+            OnPropertyChanged(nameof(LowerLimitText));
+            OnPropertyChanged(nameof(UpperLimitText));
+            OnPropertyChanged(nameof(DelayText));
         }
-        else
+        finally
         {
-            NominalValueText = step.NominalValueExpression;
+            _isInternalChange = false;
         }
-        
-        if (!IsVariableExpression(step.LowerLimitExpression) &&
-            UnitParser.TryParse(step.LowerLimitExpression, out var lower, step.Unit))
-        {
-            LowerLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(lower, step.Unit) : lower.ToString(CultureInfo.CurrentCulture);
-        }
-        else
-        {
-            LowerLimitText = step.LowerLimitExpression;
-        }
-        
-        if (!IsVariableExpression(step.UpperLimitExpression) &&
-            UnitParser.TryParse(step.UpperLimitExpression, out var upper, step.Unit))
-        {
-            UpperLimitText = !string.IsNullOrWhiteSpace(step.Unit) ? UnitParser.Format(upper, step.Unit) : upper.ToString(CultureInfo.CurrentCulture);
-        }
-        else
-        {
-            UpperLimitText = step.UpperLimitExpression;
-        }
-        
-        if (!IsVariableExpression(step.DelayExpression) &&
-            UnitParser.TryParse(step.DelayExpression, out var delaySec, "s"))
-        {
-            DelayText = UnitParser.Format(delaySec, "s");
-        }
-        else
-        {
-            DelayText = step.DelayExpression;
-        }
-        
-        OnPropertyChanged(nameof(NominalValueText));
-        OnPropertyChanged(nameof(LowerLimitText));
-        OnPropertyChanged(nameof(UpperLimitText));
-        OnPropertyChanged(nameof(DelayText));
     }
 
     private void TestStepPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
