@@ -71,6 +71,10 @@ public static class ResponseProcessor
 
             resultString = result?.ToString(CultureInfo.InvariantCulture) ?? "0";
         }
+        else if (parsed.MatchRules.Count == 0)
+        {
+            resultString = "0";
+        }
         else
         {
             resultString = "1";

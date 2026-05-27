@@ -52,15 +52,15 @@ public class ScriptRunner : IScriptRunner
         if (result.IsFailure)
             return OperationResult<T>.Failure(result.ErrorMessage);
 
-        if (result.Value == null)
+        if (result.Value == null || result.Value.Length == 0)
             return OperationResult<T>.Success(default!);
 
         var processedValue = ResponseProcessor.Process(result.Value, mask);
 
         try
         {
-            var converted = (T?)Convert.ChangeType(processedValue, typeof(T), CultureInfo.InvariantCulture);
-            return OperationResult<T>.Success(converted!);
+            var converted = (T)Convert.ChangeType(processedValue, typeof(T), CultureInfo.InvariantCulture);
+            return OperationResult<T>.Success(converted);
         }
         catch (Exception ex)
         {
