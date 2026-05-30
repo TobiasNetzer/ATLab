@@ -1,10 +1,11 @@
+using System;
 using ATLab.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ATLab.Interfaces;
 
-public interface ICommunication
+public interface ICommunication : IDisposable, IAsyncDisposable
 {
     bool IsConnected { get; }
     string Resource { get; }

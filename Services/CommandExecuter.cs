@@ -12,13 +12,15 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
-public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
+public class CommandExecutor : ICommandExecutor
 {
     private readonly ICommunicationFactory _communicationFactory;
     private readonly DeviceManagerViewModel _deviceManager;
 
     private ICommunication? _deviceInterface;
     private DeviceConfiguration? _lastConfig;
+
+    private bool _disposed;
 
     public CommandExecutor(
         ICommunicationFactory communicationFactory,
@@ -43,6 +45,9 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null)
     {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(CommandExecutor));
+
         if (string.IsNullOrWhiteSpace(targetDeviceId))
             return OperationResult<byte[]>.Failure("Device is required.");
 
@@ -68,7 +73,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
                 if (_deviceInterface != null)
                 {
                     await _deviceInterface.DisconnectAsync();
-                    (_deviceInterface as IDisposable)?.Dispose();
+                    await _deviceInterface.DisposeAsync();
                 }
 
                 _deviceInterface = device.Type switch
@@ -177,7 +182,7 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
         if (_deviceInterface != null)
         {
             await _deviceInterface.DisconnectAsync();
-            (_deviceInterface as IDisposable)?.Dispose();
+            await _deviceInterface.DisposeAsync();
             _deviceInterface = null;
         }
 
@@ -186,16 +191,31 @@ public class CommandExecutor : ICommandExecutor, IDisposable, IAsyncDisposable
     
     public async ValueTask DisposeAsync()
     {
-        if (_deviceInterface != null)
-        {
-            await _deviceInterface.DisconnectAsync();
-            (_deviceInterface as IDisposable)?.Dispose();
-            _deviceInterface = null;
-        }
+        if (_disposed) return;
+        
+        await ReleaseDeviceAsync();
+        
+        _disposed = true;
+        GC.SuppressFinalize(this);
     }
 
     public void Dispose()
     {
-        DisposeAsync().AsTask().GetAwaiter().GetResult();
+        if (_disposed) return;
+        _disposed = true;
+
+        if (_deviceInterface != null)
+        {
+            try
+            {
+                _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
+                _deviceInterface.Dispose();
+            }
+            catch
+            {
+                //
+            }
+            _deviceInterface = null;
+        }
     }
 }

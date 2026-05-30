@@ -9,7 +9,7 @@ using NationalInstruments.Visa;
 
 namespace ATLab.Services;
 
-public class NiVisaService : ICommunication, IDisposable
+public class NiVisaService : ICommunication
 {
     private MessageBasedSession? _session;
     private bool _disposed;
@@ -137,6 +137,12 @@ public class NiVisaService : ICommunication, IDisposable
             cancellationToken.ThrowIfCancellationRequested();
             return _session.RawIO.Read();
         }, cancellationToken);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisconnectAsync();
+        Dispose();
     }
 
     public void Dispose()

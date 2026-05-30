@@ -8,7 +8,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class TcpService : ICommunication, IDisposable
+public class TcpService : ICommunication
 {
     private TcpClient? _client;
     private NetworkStream? _stream;
@@ -152,6 +152,12 @@ public class TcpService : ICommunication, IDisposable
         var result = new byte[read];
         Buffer.BlockCopy(buffer, 0, result, 0, read);
         return result;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisconnectAsync();
+        Dispose();
     }
 
     public void Dispose()

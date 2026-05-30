@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -5,7 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
-public interface ICommandExecutor
+public interface ICommandExecutor : IAsyncDisposable , IDisposable
 {
     Task<OperationResult<byte[]>> ExecuteAsync(
         ScriptCommand command,
@@ -27,6 +28,4 @@ public interface ICommandExecutor
         ResponseMask? mask = null);
 
     Task ReleaseDeviceAsync();
-    
-    void Dispose();
 }

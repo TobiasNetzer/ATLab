@@ -10,7 +10,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class SerialPortService : ICommunication, IDisposable
+public class SerialPortService : ICommunication
 {
     private readonly SerialPort _port;
     private readonly object _lock = new();
@@ -299,6 +299,12 @@ public class SerialPortService : ICommunication, IDisposable
 
             return _pendingTcs.Task;
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisconnectAsync();
+        Dispose();
     }
 
     public void Dispose()
