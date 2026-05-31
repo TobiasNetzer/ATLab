@@ -57,7 +57,7 @@ public class App : Application
                 if (!openResult.IsSuccess)
                 {
                     await testHardwareInterface.DisconnectAsync();
-                    (testHardwareInterface as IDisposable)?.Dispose();
+                    await testHardwareInterface.DisposeAsync();
                     openConnectWindow = true;
                 }
                 else
@@ -68,7 +68,7 @@ public class App : Application
                     if (!initResult.IsSuccess)
                     {
                         await testHardwareInterface.DisconnectAsync();
-                        (testHardwareInterface as IDisposable)?.Dispose();
+                        await testHardwareInterface.DisposeAsync();
                         openConnectWindow = true;
                     }
                     else 
@@ -134,11 +134,10 @@ public class App : Application
 
     private async Task OnExitAsync()
     {
-        var executor = _services?.GetService<ICommandExecutor>();
-        if (executor is IAsyncDisposable asyncDisposable)
+        if (_services is IAsyncDisposable asyncDisposable)
             await asyncDisposable.DisposeAsync();
-        else
-            executor?.Dispose();
+        else if (_services is IDisposable disposable)
+            disposable.Dispose();
     }
 
     private void ConfigureServices(IServiceCollection services)
