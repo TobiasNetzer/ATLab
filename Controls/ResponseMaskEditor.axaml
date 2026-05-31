@@ -110,7 +110,7 @@
                     
                     <StackPanel Spacing="10">
                         
-                        <TextBlock Text="Response Processing"
+                        <TextBlock Text="Received Sequence"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                             
