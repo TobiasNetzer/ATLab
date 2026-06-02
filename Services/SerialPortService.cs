@@ -64,67 +64,64 @@ public class SerialPortService : ICommunication
         _port.DataReceived += SerialPort_DataReceived;
     }
 
-    public async Task<OperationResult> ConnectAsync()
+    public Task<OperationResult> ConnectAsync()
     {
         if (_port.IsOpen)
-            return OperationResult.Success();
-        
+            return Task.FromResult(OperationResult.Success());
+
         try
         {
-            await Task.Run(() => _port.Open());
-            return OperationResult.Success();
+            _port.Open();
+            return Task.FromResult(OperationResult.Success());
         }
         catch (UnauthorizedAccessException ex)
         {
-            return OperationResult.Failure($"Access denied: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"Access denied: {ex.Message}"));
         }
         catch (IOException ex)
         {
-            return OperationResult.Failure($"I/O error: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"I/O error: {ex.Message}"));
         }
         catch (ArgumentException ex)
         {
-            return OperationResult.Failure($"Invalid argument: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"Invalid argument: {ex.Message}"));
         }
         catch (Exception ex)
         {
-            return OperationResult.Failure($"Unexpected error: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"Unexpected error: {ex.Message}"));
         }
     }
     
-    public async Task<OperationResult> DisconnectAsync()
+    public Task<OperationResult> DisconnectAsync()
     {
         try
         {
-            await Task.Run(() =>
+            lock (_lock)
             {
-                lock (_lock)
+                // Cancel pending receive
+                if (_pendingTcs != null && !_pendingTcs.Task.IsCompleted)
                 {
-                    // Cancel any pending receive
-                    if (_pendingTcs != null && !_pendingTcs.Task.IsCompleted)
-                    {
-                        _pendingTcs.TrySetCanceled();
-                        _pendingTcs = null;
-                    }
-
-                    _incomingQueue.Clear();
-
-                    if (_port.IsOpen)
-                    {
-                        _port.Close();
-                    }
+                    _pendingTcs.TrySetCanceled();
+                    _pendingTcs = null;
                 }
-            });
 
-            return OperationResult.Success();
+                _incomingQueue.Clear();
+
+                if (_port.IsOpen)
+                    _port.Close();
+            }
+
+            return Task.FromResult(OperationResult.Success());
         }
         catch (IOException ex)
         {
-            return OperationResult.Failure($"I/O error while disconnecting: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure(
+                $"I/O error while disconnecting: {ex.Message}"));
         }
         catch (Exception ex)
         {
-            return OperationResult.Failure($"Unexpected error while disconnecting: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure(
+                $"Unexpected error while disconnecting: {ex.Message}"));
         }
     }
 

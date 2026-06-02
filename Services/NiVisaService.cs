@@ -28,43 +28,44 @@ public class NiVisaService : ICommunication
         _terminationMode = terminationMode;
     }
 
-    public async Task<OperationResult> ConnectAsync()
+    public Task<OperationResult> ConnectAsync()
     {
         if (_disposed)
-            return OperationResult.Failure("Instance already disposed.");
+            return Task.FromResult(OperationResult.Failure("Instance already disposed."));
 
         if (_connected)
-            return OperationResult.Success();
+            return Task.FromResult(OperationResult.Success());
 
         try
         {
-            await Task.Run(() =>
-            {
-                var rm = new ResourceManager();
-                _session = (MessageBasedSession)rm.Open(Resource);
-                _session.TimeoutMilliseconds = _timeoutMs;
-                var termByte = ToTerminationByte(_terminationMode);
-                _session.TerminationCharacterEnabled = _terminationMode != VisaTerminationMode.NONE;
-                _session.TerminationCharacter = termByte;
+            var rm = new ResourceManager();
+            _session = (MessageBasedSession)rm.Open(Resource);
 
-                _connected = true;
-            });
+            _session.TimeoutMilliseconds = _timeoutMs;
 
-            return OperationResult.Success();
+            var termByte = ToTerminationByte(_terminationMode);
+            _session.TerminationCharacterEnabled = _terminationMode != VisaTerminationMode.NONE;
+            _session.TerminationCharacter = termByte;
+
+            _connected = true;
+
+            return Task.FromResult(OperationResult.Success());
         }
         catch (VisaException ex)
         {
             _connected = false;
             _session?.Dispose();
             _session = null;
-            return OperationResult.Failure($"VISA error: {ex.Message}");
+
+            return Task.FromResult(OperationResult.Failure($"VISA error: {ex.Message}"));
         }
         catch (Exception ex)
         {
             _connected = false;
             _session?.Dispose();
             _session = null;
-            return OperationResult.Failure($"Unexpected error: {ex.Message}");
+
+            return Task.FromResult(OperationResult.Failure($"Unexpected error: {ex.Message}"));
         }
     }
 
@@ -81,25 +82,22 @@ public class NiVisaService : ICommunication
         }
     }
 
-    public async Task<OperationResult> DisconnectAsync()
+    public Task<OperationResult> DisconnectAsync()
     {
         if (_disposed)
-            return OperationResult.Failure("Instance already disposed.");
+            return Task.FromResult(OperationResult.Failure("Instance already disposed."));
 
         try
         {
-            await Task.Run(() =>
-            {
-                _session?.Dispose();
-                _session = null;
-                _connected = false;
-            });
+            _session?.Dispose();
+            _session = null;
+            _connected = false;
 
-            return OperationResult.Success();
+            return Task.FromResult(OperationResult.Success());
         }
         catch (Exception ex)
         {
-            return OperationResult.Failure($"Disconnect failed: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"Disconnect failed: {ex.Message}"));
         }
     }
 

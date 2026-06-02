@@ -48,23 +48,25 @@ public class TcpService : ICommunication
             var port = int.Parse(parts[1]);
 
             _client = new TcpClient();
-            var connectTask = _client.ConnectAsync(ip, port);
-            
-            if (await Task.WhenAny(connectTask, Task.Delay(_timeoutMs)) == connectTask)
-            {
-                await connectTask;
-                _stream = _client.GetStream();
-                _stream.ReadTimeout = _timeoutMs;
-                _stream.WriteTimeout = _timeoutMs;
-                _connected = true;
-                return OperationResult.Success();
-            }
-            else
-            {
-                _client.Dispose();
-                _client = null;
-                return OperationResult.Failure("Connection timed out.");
-            }
+
+            using var cts = new CancellationTokenSource(_timeoutMs);
+
+            var connectTask = _client.ConnectAsync(ip, port, cts.Token);
+
+            await connectTask;
+
+            _stream = _client.GetStream();
+            _stream.ReadTimeout = _timeoutMs;
+            _stream.WriteTimeout = _timeoutMs;
+
+            _connected = true;
+            return OperationResult.Success();
+        }
+        catch (OperationCanceledException)
+        {
+            _client?.Dispose();
+            _client = null;
+            return OperationResult.Failure("Connection timed out.");
         }
         catch (Exception ex)
         {
@@ -74,23 +76,26 @@ public class TcpService : ICommunication
         }
     }
 
-    public async Task<OperationResult> DisconnectAsync()
+    public Task<OperationResult> DisconnectAsync()
     {
         if (_disposed)
-            return OperationResult.Failure("Instance already disposed.");
+            return Task.FromResult(OperationResult.Failure("Instance already disposed."));
 
         try
         {
             _stream?.Dispose();
             _stream = null;
+
             _client?.Dispose();
             _client = null;
+
             _connected = false;
-            return OperationResult.Success();
+
+            return Task.FromResult(OperationResult.Success());
         }
         catch (Exception ex)
         {
-            return OperationResult.Failure($"Disconnect failed: {ex.Message}");
+            return Task.FromResult(OperationResult.Failure($"Disconnect failed: {ex.Message}"));
         }
     }
 
