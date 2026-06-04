@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Views;
 using ATLab.ViewModels;
@@ -13,9 +14,13 @@ namespace ATLab.Services;
 public class MessageBoxService : IMessageBoxService
 {
     private readonly IErrorService _errorService;
-    public MessageBoxService(IErrorService errorService)
+    private readonly ControlModuleService _controlModuleService;
+    
+    public MessageBoxService(IErrorService errorService,
+        ControlModuleService controlModuleService)
     {
         _errorService = errorService;
+        _controlModuleService = controlModuleService;
     }
     
     private Window? GetMainWindow()
@@ -24,19 +29,24 @@ public class MessageBoxService : IMessageBoxService
         return desktop?.MainWindow;
     }
 
-    public async Task<bool> ShowConfirmationAsync(string title, string message, string okText = "Ok", string cancelText = "Cancel")
+    public async Task<bool> ShowConfirmationAsync(string title, string message, string okText = "Ok", string cancelText = "Cancel", bool useControlModule = false)
     {
         var owner = GetMainWindow();
         if (owner == null) return false;
 
-        var vm = new MessageBoxViewModel
+        if (useControlModule)
         {
-            Title = title,
-            Message = message,
-            OkText = okText,
-            CancelText = cancelText,
-            ShowCancel = true
-        };
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
+            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
+            _controlModuleService.SetUserResponseMode(true);
+        }
+
+        using var vm = new MessageBoxViewModel(_controlModuleService);
+        vm.Title = title;
+        vm.Message = message;
+        vm.OkText = okText;
+        vm.CancelText = cancelText;
+        vm.ShowCancel = true;
 
         var mb = new MessageBox
         {
@@ -44,10 +54,18 @@ public class MessageBoxService : IMessageBoxService
         };
 
         await mb.ShowDialog(owner);
+
+        if (useControlModule)
+        {
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
+            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
+            _controlModuleService.SetUserResponseMode(false);
+        }
+
         return mb.Result == MessageBox.MessageBoxResult.Ok;
     }
     
-    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, string okText = "Ok", string cancelText = "Cancel")
+    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, string okText = "Ok", string cancelText = "Cancel", bool useControlModule = false)
     {
         var owner = GetMainWindow();
         if (owner == null) return false;
@@ -61,15 +79,21 @@ public class MessageBoxService : IMessageBoxService
                 _errorService.AddError($"Image not found: {imagePath}");
         }
 
-        var vm = new MessageBoxViewModel
+        if (useControlModule)
         {
-            Title = title,
-            Message = message,
-            OkText = okText,
-            CancelText = cancelText,
-            ShowCancel = true,
-            Bitmap = bitmap
-        };
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
+            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
+            _controlModuleService.SetUserResponseMode(true);
+        }
+        
+
+        using var vm = new MessageBoxViewModel(_controlModuleService);
+        vm.Title = title;
+        vm.Message = message;
+        vm.OkText = okText;
+        vm.CancelText = cancelText;
+        vm.ShowCancel = true;
+        vm.Bitmap = bitmap;
 
         var mb = new MessageBox
         {
@@ -77,20 +101,32 @@ public class MessageBoxService : IMessageBoxService
         };
 
         await mb.ShowDialog(owner);
+
+        if (useControlModule)
+        {
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
+            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
+            _controlModuleService.SetUserResponseMode(false);
+        }
+        
         return mb.Result == MessageBox.MessageBoxResult.Ok;
     }
 
-    public async Task ShowMessageAsync(string title, string message)
+    public async Task ShowMessageAsync(string title, string message, bool useControlModule = false)
     {
         var owner = GetMainWindow();
         if (owner == null) return;
 
-        var vm = new MessageBoxViewModel
+        if (useControlModule)
         {
-            Title = title,
-            Message = message,
-            ShowCancel = false
-        };
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
+            _controlModuleService.SetUserResponseMode(true);
+        }
+        
+        using var vm = new MessageBoxViewModel(_controlModuleService);
+        vm.Title = title;
+        vm.Message = message;
+        vm.ShowCancel = false;
 
         var mb = new MessageBox
         {
@@ -98,5 +134,11 @@ public class MessageBoxService : IMessageBoxService
         };
 
         await mb.ShowDialog(owner);
+
+        if (useControlModule)
+        {
+            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
+            _controlModuleService.SetUserResponseMode(false);
+        }
     }
 }

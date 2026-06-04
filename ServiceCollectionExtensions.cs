@@ -53,6 +53,8 @@ public static class ServiceCollectionExtensions
         
         services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
+        
+        services.AddSingleton<ControlModuleService>();
 
         return services;
     }

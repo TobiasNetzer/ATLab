@@ -25,183 +25,218 @@
             BorderBrush="{DynamicResource PanelBorder}">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <Grid ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto"
-                      ColumnSpacing="10"
-                      RowSpacing="10"
-                      Margin="10">
+                
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="10"
+                            Margin="10">
                     
-                    <Border Grid.Column="0"
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
-                            VerticalAlignment="Top"
-                            BorderThickness="2"
-                            CornerRadius="5"
-                            BorderBrush="{DynamicResource PanelBorder}"
-                            Padding="10">
+                    <StackPanel Spacing="10"
+                                Width="370">
+                        
+                        <Border BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
 
-                        <StackPanel>
-                            <TextBlock Text="Test Execution Settings"
-                                       HorizontalAlignment="Center"
-                                       FontWeight="Bold"
-                                       Margin="0 0 0 10"/>
+                            <StackPanel>
+                                <TextBlock Text="Test Execution Settings"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 10"/>
 
-                            <CheckBox Content="Request Serial Number"
-                                      IsChecked="{Binding Settings.IsUseSerialNumber, Mode=TwoWay}"/>
+                                <CheckBox Content="Request Serial Number"
+                                          IsChecked="{Binding Settings.IsUseSerialNumber, Mode=TwoWay}"/>
 
-                            <CheckBox Content="Save Test Result"
-                                      IsChecked="{Binding Settings.IsSaveTestResult, Mode=TwoWay}"
-                                      IsEnabled="{Binding Settings.IsUseSerialNumber}"/>
-                            
-                            <RadioButton Content="Always"
-                                         Margin="30 0 0 0"
-                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ALWAYS}"
-                                         IsEnabled="{Binding CanSaveTestResult}"/>
+                                <CheckBox Content="Save Test Result"
+                                          IsChecked="{Binding Settings.IsSaveTestResult, Mode=TwoWay}"
+                                          IsEnabled="{Binding Settings.IsUseSerialNumber}"/>
+                                
+                                <RadioButton Content="Always"
+                                             Margin="30 0 0 0"
+                                             IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ALWAYS}"
+                                             IsEnabled="{Binding CanSaveTestResult}"/>
 
-                            <RadioButton Content="Passed Only"
-                                         Margin="30 0 0 0"
-                                         IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
-                                         IsEnabled="{Binding CanSaveTestResult}"/>
-                            
-                            <CheckBox Content="Export Test Data (CSV)"
-                                      IsChecked="{Binding Settings.IsExportCsv}"
-                                      IsEnabled="{Binding CanSaveTestResult}"/>
+                                <RadioButton Content="Passed Only"
+                                             Margin="30 0 0 0"
+                                             IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
+                                             IsEnabled="{Binding CanSaveTestResult}"/>
+                                
+                                <CheckBox Content="Export Test Data (CSV)"
+                                          IsChecked="{Binding Settings.IsExportCsv}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
 
-                            <CheckBox Content="Export Test Report (PDF)"
-                                      IsChecked="{Binding Settings.IsExportPdf}"
-                                      IsEnabled="{Binding CanSaveTestResult}"/>
-                            
-                            <TextBlock
-                                Text="Output Path"
-                                Margin="0 5 0 2"/>
+                                <CheckBox Content="Export Test Report (PDF)"
+                                          IsChecked="{Binding Settings.IsExportPdf}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
+                                
+                                <TextBlock
+                                    Text="Output Path"
+                                    Margin="0 5 0 2"/>
 
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <TextBox Width="315"
-                                         Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"/>
-                                <Button Content="..."
-                                        Command="{Binding SelectSaveTestResultFilePathCommand}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBox Width="315"
+                                             Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"/>
+                                    <Button Content="..."
+                                            Command="{Binding SelectSaveTestResultFilePathCommand}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
+                        
+                        <Border BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
+
+                            <Grid RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="Auto, Auto"
+                                  ColumnSpacing="10"
+                                  RowSpacing="10"
+                                  HorizontalAlignment="Center">
+                            
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="Control Devices"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"/>
+                            
+                                <StackPanel Grid.Row="1" Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="10">
+                                
+                                    <CheckBox Content="Enable Control Module"
+                                              IsChecked="{Binding Settings.IsControlModuleEnabled}"/>
+                                
+                                    <Image Source="avares://ATLab/Assets/ControlModule.png"
+                                           Height="60"/>
+                                
+                                </StackPanel>
+                            
+                            </Grid>
+                        </Border>
+                        
+                    </StackPanel>
                     
-                    <Border Grid.Column="1"
-                            Grid.Row="0"
-                            VerticalAlignment="Top"
-                            BorderThickness="2"
-                            CornerRadius="5"
-                            BorderBrush="{DynamicResource PanelBorder}"
-                            Padding="10">
+                    <StackPanel Spacing="10"
+                                Width="370">
+                        
+                        <Border BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
 
-                        <Grid RowDefinitions="Auto,Auto,Auto"
-                              ColumnDefinitions="Auto, Auto"
-                              ColumnSpacing="10"
-                              RowSpacing="10"
-                              HorizontalAlignment="Center">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                  ColumnDefinitions="Auto, Auto"
+                                  ColumnSpacing="10"
+                                  RowSpacing="10"
+                                  HorizontalAlignment="Center">
+                                
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="Serial Number Validation"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"/>
+                                
+                                <CheckBox Grid.Row="1"
+                                          Grid.Column="0"
+                                          Grid.ColumnSpan="2"
+                                          Content="Enable Serial Number Validation"
+                                          IsChecked="{Binding Settings.IsEnableSerialNumberValidation}"/>
+                                
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Text="Length"
+                                           VerticalAlignment="Center"/>
                             
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="General Settings"
-                                       HorizontalAlignment="Center"
-                                       FontWeight="Bold"
-                                       Margin="0 0 0 10"/>
+                                <TextBox Grid.Row="2"
+                                         Grid.Column="1"
+                                         Width="120"
+                                         Text="{Binding SerialNumberValidationLengthString}"/>
+                                
+                                <TextBlock Grid.Row="3"
+                                           Grid.Column="0"
+                                           Text="Starts With"
+                                           VerticalAlignment="Center"/>
                             
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="Default Tolerance (%)"
-                                       VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="3"
+                                         Grid.Column="1"
+                                         Width="120"
+                                         Text="{Binding Settings.SerialNumberValidationStartsWith}"/>
+                                
+                                <TextBlock Grid.Row="4"
+                                           Grid.Column="0"
+                                           Text="Ends With"
+                                           VerticalAlignment="Center"/>
+                            
+                                <TextBox Grid.Row="4"
+                                         Grid.Column="1"
+                                         Width="120"
+                                         Text="{Binding Settings.SerialNumberValidationEndsWith}"/>
+                            
+                                <TextBlock Grid.Row="5"
+                                           Grid.Column="0"
+                                           Text="Contains"
+                                           VerticalAlignment="Center"/>
+                            
+                                <TextBox Grid.Row="5"
+                                         Grid.Column="1"
+                                         Width="120"
+                                         Text="{Binding Settings.SerialNumberValidationContains}"/>
+                            
+                            </Grid>
+                        </Border>
+                        
+                        <Border BorderThickness="2"
+                                CornerRadius="5"
+                                BorderBrush="{DynamicResource PanelBorder}"
+                                Padding="10">
 
-                            <NumericUpDown Grid.Row="1"
-                                           Grid.Column="1"
-                                           Value="{Binding ToleranceString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                           Minimum="0"
-                                           Maximum="100"
-                                           Width="120"/>
-                            
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="0"
-                                       Text="Displayed Decimal Places"
-                                       VerticalAlignment="Center"/>
+                            <Grid RowDefinitions="Auto,Auto,Auto"
+                                  ColumnDefinitions="Auto, Auto"
+                                  ColumnSpacing="10"
+                                  RowSpacing="10"
+                                  HorizontalAlignment="Center">
+                                
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="General Settings"
+                                           HorizontalAlignment="Center"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 10"/>
+                                
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="Default Tolerance (%)"
+                                           VerticalAlignment="Center"/>
 
-                            <NumericUpDown Grid.Row="2"
-                                           Grid.Column="1"
-                                           Value="{Binding DisplayedDecimalPlacesString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                           Minimum="0"
-                                           Maximum="10"
-                                           Increment="1"
-                                           Width="120"/>
-                        </Grid>
-                    </Border>
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="1"
+                                               Value="{Binding ToleranceString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                               Minimum="0"
+                                               Maximum="100"
+                                               Width="120"/>
+                                
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Text="Displayed Decimal Places"
+                                           VerticalAlignment="Center"/>
+
+                                <NumericUpDown Grid.Row="2"
+                                               Grid.Column="1"
+                                               Value="{Binding DisplayedDecimalPlacesString, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                               Minimum="0"
+                                               Maximum="10"
+                                               Increment="1"
+                                               Width="120"/>
+                            </Grid>
+                        </Border>
+                        
+                    </StackPanel>
                     
-                    <Border Grid.Column="1"
-                            Grid.Row="1"
-                            BorderThickness="2"
-                            CornerRadius="5"
-                            BorderBrush="{DynamicResource PanelBorder}"
-                            Padding="10">
-
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                              ColumnDefinitions="Auto, Auto"
-                              ColumnSpacing="10"
-                              RowSpacing="10"
-                              HorizontalAlignment="Center">
-                            
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="Serial Number Validation"
-                                       HorizontalAlignment="Center"
-                                       FontWeight="Bold"/>
-                            
-                            <CheckBox Grid.Row="1"
-                                      Grid.Column="0"
-                                      Grid.ColumnSpan="2"
-                                      Content="Enable Serial Number Validation"
-                                      IsChecked="{Binding Settings.IsEnableSerialNumberValidation}"/>
-                            
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="0"
-                                       Text="Length"
-                                       VerticalAlignment="Center"/>
-                        
-                            <TextBox Grid.Row="2"
-                                     Grid.Column="1"
-                                     Width="120"
-                                     Text="{Binding SerialNumberValidationLengthString}"/>
-                            
-                            <TextBlock Grid.Row="3"
-                                       Grid.Column="0"
-                                       Text="Starts With"
-                                       VerticalAlignment="Center"/>
-                        
-                            <TextBox Grid.Row="3"
-                                     Grid.Column="1"
-                                     Width="120"
-                                     Text="{Binding Settings.SerialNumberValidationStartsWith}"/>
-                            
-                            <TextBlock Grid.Row="4"
-                                       Grid.Column="0"
-                                       Text="Ends With"
-                                       VerticalAlignment="Center"/>
-                        
-                            <TextBox Grid.Row="4"
-                                     Grid.Column="1"
-                                     Width="120"
-                                     Text="{Binding Settings.SerialNumberValidationEndsWith}"/>
-                        
-                            <TextBlock Grid.Row="5"
-                                       Grid.Column="0"
-                                       Text="Contains"
-                                       VerticalAlignment="Center"/>
-                        
-                            <TextBox Grid.Row="5"
-                                     Grid.Column="1"
-                                     Width="120"
-                                     Text="{Binding Settings.SerialNumberValidationContains}"/>
-                            
-                        </Grid>
-                    </Border>
-                </Grid>
+                </StackPanel>
             </ScrollViewer>
         </Border>
     </Grid>

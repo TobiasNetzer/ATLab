@@ -25,6 +25,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ProjectDocumentation _projectDocumentation;
     private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
     private readonly RuntimeVariableEditorViewModel _runtimeVariableEditor;
+    private readonly ControlModuleService _controlModuleService;
     
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _testSteps = new();
@@ -147,7 +148,8 @@ public partial class TestingTabViewModel : ViewModelBase
         ProjectSettings projectSettings,
         ProjectDocumentation projectDocumentation,
         DeviceUnderTestInfo deviceUnderTestInfo,
-        RuntimeVariableEditorViewModel runtimeVariableEditor)
+        RuntimeVariableEditorViewModel runtimeVariableEditor,
+        ControlModuleService controlModuleService)
     {
         _settingsService = settingsService;
         _errorService = errorService;
@@ -166,6 +168,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
         _runtimeVariableEditor = runtimeVariableEditor;
+        _controlModuleService = controlModuleService;
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
@@ -181,6 +184,25 @@ public partial class TestingTabViewModel : ViewModelBase
         foreach (var device in deviceManager.Devices)
             SubscribeToDevice(device);
         _testExecutionController.HookExecutorEvents(this);
+        
+        _projectSettings.ControlModuleSettingChanged += _controlModuleService.Initialize;
+
+        _controlModuleService.StartPressed += async () =>
+        {
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (StartTestCommand.CanExecute(null))
+                    await StartTestCommand.ExecuteAsync(null);
+            });
+        };
+        
+        _controlModuleService.StopPressed += () =>
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                CancelTestCommand.ExecuteAsync(null);
+            });
+        };
     }
 
     public IDisposable SuppressDirtyTracking()
@@ -378,6 +400,9 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
         StartSingleStepTestCommand.NotifyCanExecuteChanged();
+
+        if (_projectSettings.IsControlModuleEnabled)
+            _controlModuleService.SetStatus(value);
     }
     
     partial void OnIsDevelopmentModeChanged(bool value)

@@ -82,7 +82,8 @@ public class TestStepRunner : ITestStepRunner
                         step.TestStep.Comment,
                         step.TestStep.CustomMessageBoxImagePath,
                         "Pass",
-                        "Fail");
+                        "Fail",
+                        true);
 
                     return OperationResult<double>.Success(Convert.ToDouble(operatorResponse));
                 }

@@ -7,6 +7,7 @@ namespace ATLab.Models;
 public partial class ProjectSettings : ObservableObject
 {
     public event Action? SettingsChanged;
+    public event Action? ControlModuleSettingChanged;
 
     [ObservableProperty]
     private double _toleranceValue = 10;
@@ -73,6 +74,15 @@ public partial class ProjectSettings : ObservableObject
 
     partial void OnSerialNumberValidationContainsChanged(string value) => OnSettingsChanged();
 
+    [ObservableProperty]
+    private bool _isControlModuleEnabled;
+
+    partial void OnIsControlModuleEnabledChanged(bool value)
+    {
+        ControlModuleSettingChanged?.Invoke();
+        OnSettingsChanged();
+    }
+
     public void ResetToDefault()
     {
         ToleranceValue = 10;
@@ -88,6 +98,7 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationStartsWith = string.Empty;
         SerialNumberValidationEndsWith = string.Empty;
         SerialNumberValidationContains = string.Empty;
+        IsControlModuleEnabled = false;
 
         OnSettingsChanged();
     }
@@ -107,8 +118,8 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationStartsWith = other.SerialNumberValidationStartsWith;
         SerialNumberValidationEndsWith = other.SerialNumberValidationEndsWith;
         SerialNumberValidationContains = other.SerialNumberValidationContains;
+        IsControlModuleEnabled = other.IsControlModuleEnabled;
     }
-
-
+    
     private void OnSettingsChanged() => SettingsChanged?.Invoke();
 }

@@ -1,0 +1,20 @@
+﻿namespace ATLab.Enums;
+
+public enum ControlModuleColors
+{
+    LED_MODE_OFF = 0,
+
+    LED_MODE_RED,
+    LED_MODE_GREEN,
+    LED_MODE_BLUE,
+
+    LED_MODE_BREATH_RED,
+    LED_MODE_BREATH_GREEN,
+    LED_MODE_BREATH_BLUE,
+
+    LED_MODE_TEST_IDLE,
+    LED_MODE_TEST_RUNNING,
+    LED_MODE_TEST_PASSED,
+    LED_MODE_TEST_FAILED,
+    LED_MODE_TEST_CANCELLED
+}
