@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using ATLab.Interfaces;
 
 namespace ATLab.Services;
@@ -23,10 +24,16 @@ public class ErrorService : IErrorService
         _logFilePath = Path.Combine(dir, "errors.log");
     }
 
-    public void AddError(string message)
+    public void AddError(
+        string message,
+        [CallerFilePath] string file = "",
+        [CallerMemberName] string member = "",
+        [CallerLineNumber] int line = 0)
     {
         var timestamp = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
-        var formattedMessage = $"[{timestamp}] {message}";
+
+        var formattedMessage =
+            $"[{timestamp}] {message} (at {Path.GetFileName(file)}:{line} in {member}())";
 
         Errors.Insert(0, formattedMessage);
 
@@ -34,7 +41,7 @@ public class ErrorService : IErrorService
         {
             try
             {
-                File.AppendAllLines(_logFilePath, [formattedMessage]);
+                File.AppendAllLines(_logFilePath, new[] { formattedMessage });
             }
             catch (Exception ex)
             {
