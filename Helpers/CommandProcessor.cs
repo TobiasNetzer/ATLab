@@ -30,10 +30,10 @@ public static class CommandProcessor
     {
         if (string.IsNullOrWhiteSpace(expression)) return "0";
         
-        var blocks = new List<Block> { new(BlockType.ENCODED, expression, "math") };
+        var blocks = new List<Block> { new(BlockType.ENCODED, expression, "expr") };
 
         ResolveVariables(blocks, vars);
-        EvaluateInlineMath(blocks);
+        EvaluateInlineExpression(blocks);
 
         return blocks[0].Value;
     }
@@ -44,7 +44,7 @@ public static class CommandProcessor
         
         ResolveVariables(blocks, vars);
         
-        EvaluateInlineMath(blocks);
+        EvaluateInlineExpression(blocks);
         
         ApplyFormatting(blocks);
 
@@ -132,11 +132,11 @@ public static class CommandProcessor
         }
     }
 
-    private static void EvaluateInlineMath(List<Block> blocks)
+    private static void EvaluateInlineExpression(List<Block> blocks)
     {
         foreach (var block in blocks)
         {
-            if (block.Encoding != "math")
+            if (block.Encoding != "expr")
                 continue;
 
             var expr = block.Value;
@@ -148,9 +148,7 @@ public static class CommandProcessor
                     CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator,
                     ".");
 
-                expr = EnsureDoublePrecision(expr);
-
-                var result = EvaluateMathExpression(expr);
+                var result = ExpressionEvaluator.Evaluate(expr);
                 block.Value = result.ToString(CultureInfo.InvariantCulture);
             }
             catch
@@ -158,18 +156,6 @@ public static class CommandProcessor
                 // if math fails, keep original block value
             }
         }
-    }
-
-    private static string EnsureDoublePrecision(string expr)
-    {
-        return Regex.Replace(expr, @"(?<![\d\.])(\d+)(?![\d\.])", "$1.0");
-    }
-
-    private static double EvaluateMathExpression(string expr)
-    {
-        var dt = new DataTable { Locale = CultureInfo.InvariantCulture };
-        var result = dt.Compute(expr, "");
-        return Convert.ToDouble(result, CultureInfo.InvariantCulture);
     }
 
     private static void ApplyFormatting(List<Block> blocks)
