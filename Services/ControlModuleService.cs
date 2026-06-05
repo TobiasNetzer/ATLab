@@ -153,11 +153,8 @@ public sealed class ControlModuleService : IDisposable
         }
     }
 
-    public void SetStatus(TestStatus status)
+    public void SetStatus(TestStatus? status)
     {
-        if (!_settings.IsControlModuleEnabled)
-            return;
-
         if (_stream == null)
             return;
         
@@ -196,6 +193,8 @@ public sealed class ControlModuleService : IDisposable
     {
         if (_disposed)
             return;
+        
+        SetStatus(null);
 
         _disposed = true;
 

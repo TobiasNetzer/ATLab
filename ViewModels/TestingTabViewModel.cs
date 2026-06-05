@@ -185,8 +185,14 @@ public partial class TestingTabViewModel : ViewModelBase
             SubscribeToDevice(device);
         _testExecutionController.HookExecutorEvents(this);
         
-        _projectSettings.ControlModuleSettingChanged += _controlModuleService.Initialize;
-
+        _projectSettings.ControlModuleSettingChanged += () => 
+        {
+            if (_projectSettings.IsControlModuleEnabled)
+                _controlModuleService.Initialize();
+            else
+                _controlModuleService.Dispose();
+        };
+ 
         _controlModuleService.StartPressed += async () =>
         {
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
