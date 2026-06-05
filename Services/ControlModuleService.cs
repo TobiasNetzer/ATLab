@@ -53,11 +53,13 @@ public sealed class ControlModuleService : IDisposable
         _device = DeviceList.Local.GetHidDevices(Vid, Pid).FirstOrDefault();
         if (_device == null)
         {
+            _errorService.AddError("No control module connected.");
             return;
         }
 
         if (!_device.TryOpen(out var stream))
         {
+            _errorService.AddError("Failed to connect to control module.");
             return;
         }
 
