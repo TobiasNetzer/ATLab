@@ -1,13 +1,15 @@
 ﻿using System;
 using ATLab.Models;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class SerialNumberEntryWindowViewModel : ViewModelBase
+public partial class SerialNumberEntryWindowViewModel : ViewModelBase, IDisposable
 {
     private readonly ProjectSettings _settings;
+    private readonly ControlModuleService _controlModuleService;
     
     [ObservableProperty]
     private string _serialNumber = string.Empty;
@@ -17,9 +19,32 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase
 
     public event Action<bool>? RequestClose;
     
-    public SerialNumberEntryWindowViewModel(ProjectSettings settings)
+    private event Action OkHandler;
+    private event Action CancelHandler;
+    
+    public SerialNumberEntryWindowViewModel(ProjectSettings settings,
+        ControlModuleService controlModuleService)
     { 
         _settings = settings;
+        _controlModuleService = controlModuleService;
+        
+        OkHandler += async () => 
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync( () =>
+            {
+                if (IsOkEnabled)
+                    RequestClose?.Invoke(true);
+                else
+                    _controlModuleService.SetUserResponseMode(true);
+            });
+            
+        CancelHandler += async () => 
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync( () =>
+            {
+                RequestClose?.Invoke(false);
+            });
+        
+        _controlModuleService.PassPressed += OkHandler;
+        _controlModuleService.FailPressed += CancelHandler;
     }
 
     partial void OnSerialNumberChanged(string value)
@@ -62,5 +87,11 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase
             return false;
 
         return true;
+    }
+    
+    public void Dispose()
+    {
+        _controlModuleService.PassPressed -= OkHandler;
+        _controlModuleService.FailPressed -= CancelHandler;
     }
 }

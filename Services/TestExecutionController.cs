@@ -192,6 +192,7 @@ public class TestExecutionController : ITestExecutionController
 
     public void ResetAllResults(TestingTabViewModel vm)
     {
+        vm.TestStatus = TestStatus.IDLE;
         foreach (var step in vm.TestSteps)
             step.ResetResults();
     }
