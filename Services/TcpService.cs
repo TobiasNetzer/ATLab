@@ -18,11 +18,13 @@ public class TcpService : ICommunication
     private readonly int _timeoutMs;
 
     public string Resource { get; }
+    private readonly int _port;
     public bool IsConnected => _connected && _client != null && _client.Connected;
 
     public TcpService(string ipAddress, int port, int timeoutMs, TcpTerminationMode terminationMode)
     {
-        Resource = $"{ipAddress}:{port}";
+        Resource = ipAddress;
+        _port = port;
         _timeoutMs = timeoutMs;
         _terminationBytes = terminationMode switch
         {
@@ -43,15 +45,11 @@ public class TcpService : ICommunication
 
         try
         {
-            var parts = Resource.Split(':');
-            var ip = parts[0];
-            var port = int.Parse(parts[1]);
-
             _client = new TcpClient();
 
             using var cts = new CancellationTokenSource(_timeoutMs);
 
-            var connectTask = _client.ConnectAsync(ip, port, cts.Token);
+            var connectTask = _client.ConnectAsync(Resource, _port, cts.Token);
 
             await connectTask;
 
