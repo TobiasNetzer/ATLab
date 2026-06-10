@@ -34,6 +34,10 @@
     <PackageReference Include="HidSharp" Version="2.6.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
     <PackageReference Include="NationalInstruments.Visa" Version="25.5.0.13" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="QuestPDF" Version="2026.5.0" />
     <PackageReference Include="System.IO.Ports" Version="10.0.7" />
   </ItemGroup>
