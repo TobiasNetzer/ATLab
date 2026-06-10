@@ -20,7 +20,6 @@ public sealed class ControlModuleService : IDisposable
     private HidDevice? _device;
     private HidStream? _stream;
     private CancellationTokenSource? _cts;
-    private Task? _readTask;
     private bool _disposed;
     
     private bool _userResponseMode;
@@ -71,7 +70,7 @@ public sealed class ControlModuleService : IDisposable
         _disposed = false;
 
         _cts = new CancellationTokenSource();
-        _readTask = Task.Run(() => ListenForInputReportsAsync(_stream, _cts.Token), _cts.Token);
+        Task.Run(() => ListenForInputReportsAsync(_stream, _cts.Token), _cts.Token);
     }
 
     private async Task ListenForInputReportsAsync(HidStream stream, CancellationToken token)
@@ -206,6 +205,5 @@ public sealed class ControlModuleService : IDisposable
         _stream = null;
         _device = null;
         _cts = null;
-        _readTask = null;
     }
 }
