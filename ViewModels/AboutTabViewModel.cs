@@ -17,6 +17,7 @@ public partial class AboutTabViewModel : ViewModelBase
         Assembly.GetEntryAssembly()?
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion
+            .Split('+')[0]
         ?? "Unknown";
 
     public static string Copyright =>
