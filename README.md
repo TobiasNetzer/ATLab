@@ -1,4 +1,7 @@
 # ATLab - Automated Testing Toolkit
+![Build](https://github.com/TobiasNetzer/ATLab/actions/workflows/dotnet.yml/badge.svg)
+![License](https://img.shields.io/github/license/TobiasNetzer/ATLab)
+![GitHub release](https://img.shields.io/github/v/release/TobiasNetzer/ATLab)
 
 ![image](https://github.com/TobiasNetzer/ATLab/releases/download/assets-v1/Example.gif)
 
