@@ -4,7 +4,7 @@ namespace ATLab.Models;
 
 public class OperationResult
 {
-    public OperationStatus Status { get; }
+    private OperationStatus Status { get; }
     public string ErrorMessage { get; }
 
     public bool IsSuccess => Status == OperationStatus.SUCCESS;

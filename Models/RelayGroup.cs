@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ATLab.Models;
 
-public partial class RelayGroup : ObservableObject
+public class RelayGroup : ObservableObject
 {
     public List<RelayChannelState> Channels { get; set; } = new();
 
@@ -43,5 +43,4 @@ public partial class RelayGroup : ObservableObject
         foreach (var channel in Channels)
             channel.IsEnabled = dto.EnabledChannels.Contains(channel.ChannelIndex);
     }
-
 }

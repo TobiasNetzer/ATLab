@@ -3,8 +3,8 @@
 public class JumpTargetDto
 {
     public string Id { get; }
-    public int Number { get; }
-    public string Name { get; }
+    private int Number { get; }
+    private string Name { get; }
     
     public string Display => $"{Number}: {Name}";
 

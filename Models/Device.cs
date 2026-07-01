@@ -19,7 +19,7 @@ public partial class Device : ObservableObject
         Id = id;
     }
     
-    public string Id { get; init; }
+    public string Id { get; }
     
     [ObservableProperty]
     private string _name = string.Empty;

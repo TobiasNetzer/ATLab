@@ -1,4 +1,4 @@
-﻿namespace ATLab.Models;
+﻿namespace ATLab.Records;
 
 public sealed record TestStepCsvRow(
     int Number,

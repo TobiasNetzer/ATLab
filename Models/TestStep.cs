@@ -24,7 +24,7 @@ public partial class TestStep : ObservableObject
     }
     
     [property: JsonPropertyOrder(1)]
-    public string Id { get; init; }
+    public string Id { get; }
 
     [ObservableProperty]
     [property: JsonPropertyOrder(2)]
@@ -159,10 +159,10 @@ public partial class TestStep : ObservableObject
     private RelayGroup _liveExtStimState = new(0);
 
     [JsonPropertyOrder(29)]
-    public RelayGroupDto? StimState { get; set; }
+    public RelayGroupDto? StimState { get; private set; }
     
     [JsonPropertyOrder(30)]
-    public RelayGroupDto? ExtStimState { get; set; }
+    public RelayGroupDto? ExtStimState { get; private set; }
 
     private void HookEvents()
     {

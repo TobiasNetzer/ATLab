@@ -1,4 +1,3 @@
-
 using System.ComponentModel;
 namespace ATLab.Models;
 
@@ -12,11 +11,11 @@ public class CustomRelayChannelName : INotifyPropertyChanged
         get => _channelName;
         set
         {
-            if (_channelName != value)
-            {
-                _channelName = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChannelName)));
-            }
+            if (_channelName == value)
+                return;
+            
+            _channelName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChannelName)));
         }
     }
 

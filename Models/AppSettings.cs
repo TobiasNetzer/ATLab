@@ -12,16 +12,16 @@ public class AppSettings
     public string? LastComPort { get; set; } = "";
     public string LastOpenedFile { get; set; } = "";
     public string ScriptRepositoryFolder { get; set; } = "";
-    public bool IsDevelopmentMode { get; set; } = false;
-    public bool IsStepConfiguratorExpanded { get; set; } = false;
-    public bool IsMeasSelectorExpanded { get; set; } = false;
-    public bool IsStimSelectorExpanded { get; set; } = false;
-    public bool IsExtStimSelectorExpanded { get; set; } = false;
-    public bool IsScriptSelectorExpanded { get; set; } = false;
-    public bool IsCommandEditorExpanded  { get; set; } = false;
-    public bool IsShellCommandEditorExpanded { get; set; } = false;
-    public bool IsResponseMaskEditorExpanded { get; set; } = false;
-    public bool IsExpressionEditorExpanded { get; set; } = false;
-    public bool IsFilePathEditorExpanded { get; set; } = false;
+    public bool IsDevelopmentMode { get; set; }
+    public bool IsStepConfiguratorExpanded { get; set; }
+    public bool IsMeasSelectorExpanded { get; set; }
+    public bool IsStimSelectorExpanded { get; set; }
+    public bool IsExtStimSelectorExpanded { get; set; }
+    public bool IsScriptSelectorExpanded { get; set; }
+    public bool IsCommandEditorExpanded  { get; set; }
+    public bool IsShellCommandEditorExpanded { get; set; }
+    public bool IsResponseMaskEditorExpanded { get; set; }
+    public bool IsExpressionEditorExpanded { get; set; }
+    public bool IsFilePathEditorExpanded { get; set; }
     public bool IsDarkMode { get; set; } = true;
 }
