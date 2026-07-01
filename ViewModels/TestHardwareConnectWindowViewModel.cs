@@ -15,7 +15,7 @@ namespace ATLab.ViewModels;
 public partial class TestHardwareConnectWindowViewModel : ViewModelBase
 {
     private readonly IHardwareAccessor _hardwareAccessor;
-    public ITestHardware? TestHardware => _hardwareAccessor.Hardware;
+    private ITestHardware? TestHardware => _hardwareAccessor.Hardware;
 
     [ObservableProperty]
     private string _selectedPort = string.Empty;
