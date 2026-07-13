@@ -1,0 +1,112 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-matrix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore
+      run: dotnet restore ATLab.sln
+
+    - name: Build
+      run: dotnet publish ATLab.sln -c Release -o out
+
+    # Linux packaging
+    - name: Package Linux build
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        tar -czf ATLab-linux.tar.gz -C out .
+      shell: bash
+
+    # Windows packaging + NSIS
+    - name: Install NSIS
+      if: matrix.os == 'windows-latest'
+      run: choco install nsis -y
+
+    - name: Build NSIS installer
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd Installers/Windows
+        makensis ATLab.nsis
+
+    - name: Package Windows build
+      if: matrix.os == 'windows-latest'
+      run: |
+        powershell Compress-Archive -Path out\* -DestinationPath ATLab-win.zip
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}-artifacts
+        path: |
+          ATLab-linux.tar.gz
+          ATLab-win.zip
+          Installers/Windows/ATLab-setup.exe
+        if-no-files-found: ignore
+
+  create-release:
+    needs: build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: artifacts/ubuntu-latest-artifacts/ATLab-linux.tar.gz
+        asset_name: ATLab-linux-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Windows ZIP artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: artifacts/windows-latest-artifacts/ATLab-win.zip
+        asset_name: ATLab-win-${{ github.ref_name }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Windows NSIS installer
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: artifacts/windows-latest-artifacts/ATLab-setup.exe
+        asset_name: ATLab-setup-${{ github.ref_name }}.exe
+        asset_content_type: application/octet-stream
