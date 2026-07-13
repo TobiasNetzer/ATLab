@@ -111,6 +111,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/windows-latest-artifacts/ATLab-setup.exe
+          asset_path: artifacts/windows-latest-artifacts/Installers/Windows/ATLab-setup.exe
           asset_name: ATLab-setup-${{ github.ref_name }}.exe
           asset_content_type: application/octet-stream
