@@ -1,7 +1,8 @@
 !define PRODUCT_NAME "ATLab"
 !define PRODUCT_PUBLISHER "Tobias Netzer"
 
-!getdllversion "..\..\bin\Publish\ATLab.exe" ATLAB_VER_
+; Extract version from published ATLab.exe
+!getdllversion "..\..\out\ATLab.exe" ATLAB_VER_
 !define ATLAB_VERSION "${ATLAB_VER_1}.${ATLAB_VER_2}.${ATLAB_VER_3}.${ATLAB_VER_4}"
 
 !include "MUI2.nsh"
@@ -35,7 +36,7 @@
 !insertmacro MUI_LANGUAGE "English"
 
 Name "${PRODUCT_NAME}"
-OutFile "..\..\bin\${PRODUCT_NAME}_Setup.exe"
+OutFile "..\..\Installers\Windows\ATLab-setup.exe"
 InstallDir "$PROGRAMFILES64\${PRODUCT_NAME}"
 RequestExecutionLevel admin
 BrandingText "${PRODUCT_NAME} Installer"
@@ -55,8 +56,8 @@ FunctionEnd
 Section "Install ATLab"
 
   SetOutPath "$INSTDIR"
-  File /r "..\..\bin\Publish\*.*"
 
+  File /r "..\..\out\*.*"
   ${GetFileVersion} "$INSTDIR\ATLab.exe" $R0
 
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
