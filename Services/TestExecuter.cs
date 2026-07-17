@@ -326,7 +326,10 @@ public class TestExecutor : ITestExecutor
                 }
             }
             else
+            {
+                _breakRepeatRequested = false;
                 OnStepCompleted(i, step);
+            }
             
             if (stepExecutionResult.IsFailure)
                 break; // END_TEST
