@@ -199,6 +199,8 @@ public partial class TestingTabViewModel : ViewModelBase
             {
                 if (StartTestCommand.CanExecute(null))
                     await StartTestCommand.ExecuteAsync(null);
+                
+                RequestBreakRepeatCommand.Execute(null);
             });
         };
         
