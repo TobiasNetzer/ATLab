@@ -473,4 +473,7 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [RelayCommand]
     private Task CancelTest() => _testExecutionController.CancelAsync();
+    
+    [RelayCommand]
+    private void RequestBreakRepeat() => _testExecutionController.RequestBreakRepeat();
 }

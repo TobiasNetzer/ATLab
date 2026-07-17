@@ -12,6 +12,7 @@ public interface ITestExecutionController
     Task StartFromSelectionAsync(TestingTabViewModel vm);
     Task StartSingleStepAsync(TestingTabViewModel vm);
     Task CancelAsync();
+    public void RequestBreakRepeat();
     void ResetAllResults(TestingTabViewModel vm);
     Task<bool> RequestSerialNumber(TestingTabViewModel vm);
     Task EnqueueExport(Func<Task> work);

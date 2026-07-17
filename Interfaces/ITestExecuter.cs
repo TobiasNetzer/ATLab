@@ -20,4 +20,5 @@ public interface ITestExecutor
     Task StartRepeatTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex, List<CustomVariable> runtimeVariables);
     Task StartSingleStepTest(TestStepViewModel step, List<CustomVariable> runtimeVariables);
     Task CancelTest();
+    public void RequestBreakRepeat();
 }

@@ -16,6 +16,8 @@
         <KeyBinding Gesture="Escape" Command="{Binding TestingTab.CancelTestCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
         <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
+        <KeyBinding Gesture="Enter" Command="{Binding TestingTab.RequestBreakRepeatCommand}" />
+
     </Window.KeyBindings>
 
     <Window.Styles>

@@ -37,6 +37,7 @@ public class TestExecutor : ITestExecutor
     public event Action? TestRepeated;
     
     private const int MinRepeatDelayMs = 5;
+    private volatile bool _breakRepeatRequested;
 
     public TestExecutor(
         ITestHardware testHardware,
@@ -226,6 +227,8 @@ public class TestExecutor : ITestExecutor
         await _commandExecutor.ReleaseDeviceAsync();
     }
     
+    public void RequestBreakRepeat() => _breakRepeatRequested = true;
+    
     private async Task ExecuteAsync(
         IReadOnlyList<TestStepViewModel> steps,
         int startIndex,
@@ -311,9 +314,17 @@ public class TestExecutor : ITestExecutor
             }
             
             var nextIndex = EvaluateNextStepIndex(steps, i, step);
-            
+
             if (i == nextIndex)
+            {
                 OnStepRepeated();
+                
+                if (_breakRepeatRequested)
+                {
+                    _breakRepeatRequested = false;
+                    nextIndex = i + 1;
+                }
+            }
             else
                 OnStepCompleted(i, step);
             

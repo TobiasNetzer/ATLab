@@ -190,6 +190,8 @@ public class TestExecutionController : ITestExecutionController
 
     public Task CancelAsync() => _testExecutor.CancelTest();
 
+    public void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
+
     public void ResetAllResults(TestingTabViewModel vm)
     {
         vm.TestStatus = TestStatus.IDLE;
