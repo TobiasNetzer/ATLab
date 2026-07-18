@@ -323,6 +323,7 @@ public class TestExecutor : ITestExecutor
                 {
                     _breakRepeatRequested = false;
                     nextIndex = i + 1;
+                    OnStepCompleted(i, step);
                 }
             }
             else
