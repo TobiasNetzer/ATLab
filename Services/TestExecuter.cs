@@ -315,7 +315,7 @@ public class TestExecutor : ITestExecutor
             
             var nextIndex = EvaluateNextStepIndex(steps, i, step);
 
-            if (i == nextIndex)
+            if (i == nextIndex && stepExecutionResult.IsSuccess)
             {
                 OnStepRepeated();
                 
