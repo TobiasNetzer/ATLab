@@ -419,6 +419,7 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
+    private bool IsTestRunning() => TestStatus == TestStatus.RUNNING;
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.HasClipboard;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -476,6 +477,6 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand]
     private Task CancelTest() => _testExecutionController.CancelAsync();
     
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void RequestBreakRepeat() => _testExecutionController.RequestBreakRepeat();
 }
