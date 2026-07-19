@@ -11,6 +11,7 @@ public interface IShellCommandRunner
     Task<OperationResult<double>> RunAsync(
         string command,
         ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
+        string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null);
 }

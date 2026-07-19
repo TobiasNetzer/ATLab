@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -20,6 +21,7 @@ public class TestStepRunner : ITestStepRunner
     private readonly IShellCommandRunner _shellCommandRunner;
     private readonly IMessageBoxService _messageBoxService;
     private readonly IFileContentReader _fileContentReader;
+    private readonly IProjectService _projectService;
 
     public TestStepRunner(
         ITestHardware testHardware,
@@ -27,7 +29,8 @@ public class TestStepRunner : ITestStepRunner
         ICommandExecutor commandExecutor,
         IShellCommandRunner shellCommandRunner,
         IMessageBoxService messageBoxService,
-        IFileContentReader fileContentReader)
+        IFileContentReader fileContentReader,
+        IProjectService projectService)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
@@ -35,6 +38,7 @@ public class TestStepRunner : ITestStepRunner
         _shellCommandRunner = shellCommandRunner;
         _messageBoxService = messageBoxService;
         _fileContentReader = fileContentReader;
+        _projectService = projectService;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
@@ -73,7 +77,7 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.COMMAND:
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);
 
-                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option, token, runtimeVariables);
+                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option,Path.GetDirectoryName(_projectService.CurrentFilePath), token, runtimeVariables);
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {

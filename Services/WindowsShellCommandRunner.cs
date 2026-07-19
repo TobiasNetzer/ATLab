@@ -16,13 +16,17 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
     public async Task<OperationResult<double>> RunAsync(
         string command,
         ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
+        string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null)
     {
         try
         {
             var parsedCommand = CommandProcessor.CompileToString(command, runtimeVariables);
-            var psi = BuildStartInfo(parsedCommand, mode);
+            
+            var workingDir = projectDirectory ?? AppContext.BaseDirectory;
+
+            var psi = BuildStartInfo(parsedCommand, mode, workingDir);
 
             using var process = Process.Start(psi);
 
@@ -34,7 +38,6 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
             
             await process.WaitForExitAsync(cancellationToken);
             return OperationResult<double>.Success(process.ExitCode);
-
         }
         catch (Exception ex)
         {
@@ -42,7 +45,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         }
     }
 
-    private static ProcessStartInfo BuildStartInfo(string command, ShellCommandOptions mode)
+    private static ProcessStartInfo BuildStartInfo(string command, ShellCommandOptions mode, string projectDirectory)
     {
         if (IsDirectLaunch(command, out var exe, out var args))
         {
@@ -50,6 +53,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
             {
                 FileName = exe,
                 Arguments = args,
+                WorkingDirectory = projectDirectory,
                 UseShellExecute = true,
                 CreateNoWindow = true
             };
@@ -61,6 +65,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         {
             FileName = "cmd.exe",
             Arguments = $"{flag} {command}",
+            WorkingDirectory = projectDirectory,
             UseShellExecute = true,
             CreateNoWindow = false,
             WindowStyle = ProcessWindowStyle.Normal
@@ -71,17 +76,21 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
     {
         exe = command;
         args = "";
-        
+
         command = command.Trim();
-        
+
         if (command.StartsWith("\""))
         {
             var endQuote = command.IndexOf('"', 1);
-            if (endQuote > 0)
+            if (endQuote <= 0)
             {
-                exe = command.Substring(1, endQuote - 1);
-                args = command.Substring(endQuote + 1).Trim();
+                var trimmedExe = exe.Trim('"');
+                return trimmedExe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                       || File.Exists(trimmedExe);
             }
+
+            exe = command.Substring(1, endQuote - 1);
+            args = command.Substring(endQuote + 1).Trim();
         }
         else
         {
@@ -90,10 +99,8 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
             if (parts.Length > 1)
                 args = parts[1];
         }
-        
-        if (exe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-            return true;
 
-        return File.Exists(exe) || Directory.Exists(exe);
+        return exe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+               || File.Exists(exe);
     }
 }
