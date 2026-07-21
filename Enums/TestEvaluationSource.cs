@@ -12,6 +12,9 @@ public enum TestEvaluationSource
     
     [Description("Command")]
     COMMAND,
+    
+    [Description("Interface")]
+    INTERFACE,
 
     [Description("Shell Command")]
     SHELL_COMMAND,

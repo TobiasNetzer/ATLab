@@ -66,6 +66,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private FilePathEditorViewModel _filePathEditor;
     
     [ObservableProperty]
+    private TestInterfaceCommunicationViewModel _testInterfaceCommunication;
+    
+    [ObservableProperty]
     private bool _isDevelopmentMode;
     
     [ObservableProperty]
@@ -149,6 +152,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ProjectDocumentation projectDocumentation,
         DeviceUnderTestInfo deviceUnderTestInfo,
         RuntimeVariableEditorViewModel runtimeVariableEditor,
+        TestInterfaceCommunicationViewModel testInterfaceCommunication,
         ControlModuleService controlModuleService)
     {
         _settingsService = settingsService;
@@ -168,6 +172,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
         _runtimeVariableEditor = runtimeVariableEditor;
+        _testInterfaceCommunication = testInterfaceCommunication;
         _controlModuleService = controlModuleService;
 
         Title = "Test Environment";

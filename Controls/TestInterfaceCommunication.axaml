@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ATLab.Controls.TestInterfaceCommunication"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             x:DataType="controls:TestInterfaceCommunication"
+             Width="500">
+    
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel>
+        
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"
+                Background="{DynamicResource PanelBorder}"
+                Padding="10">
+
+            <DockPanel>
+                <TextBlock Text="Interface Communication"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <ToggleButton IsChecked="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded, Mode=TwoWay}"
+                              DockPanel.Dock="Right"
+                              HorizontalAlignment="Right">
+
+                    <ToggleButton.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent" Padding="5">
+                                <Grid>
+
+                                    <TextBlock Text="&#xE70D;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded,
+                                                                   Converter={StaticResource InverseBoolConverter}}"/>
+
+                                    <TextBlock Text="&#xE70E;"
+                                               FontFamily="{StaticResource FluentIconsFont}"
+                                               FontSize="18"
+                                               IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"/>
+
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+
+                </ToggleButton>
+            </DockPanel>
+        </Border>
+        
+        <Border Background="{DynamicResource PanelBackground}"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource PanelBorder}"
+                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}">
+
+            <StackPanel Margin="10" Spacing="10" Orientation="Vertical">
+                
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    
+                    <TextBlock Text="Interface Type"
+                               VerticalAlignment="Center"/>
+                    
+                    <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.InterfaceType}"
+                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                              MinWidth="100"/>
+                    
+                </StackPanel>
+                
+                <Border BorderThickness="2"
+                        CornerRadius="5"
+                        BorderBrush="{DynamicResource PanelBorder}"
+                        Padding="10">
+                    
+                    <StackPanel Spacing="10">
+                        
+                        <TextBlock Text="Interface Configuration"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                    
+                            <TextBlock Text="Speed Mode"
+                                       VerticalAlignment="Center"/>
+                    
+                            <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.I2CSpeedMode}"
+                                      DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                                      MinWidth="100"/>
+                    
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="10">
+                            
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                    
+                                <TextBlock Text="Speed Mode"
+                                           VerticalAlignment="Center"/>
+                    
+                                <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.I2CSpeedMode}"
+                                          DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                                          MinWidth="100"/>
+                    
+                            </StackPanel>
+                            
+                        </StackPanel>
+                        
+                    </StackPanel>
+                    
+                </Border>
+                
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
+    
+</UserControl>
