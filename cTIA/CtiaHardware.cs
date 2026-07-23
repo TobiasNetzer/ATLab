@@ -212,6 +212,6 @@ public class CtiaHardware : ITestHardware
     {
         var commandResponse = await _command.SetExternalProbeIn(channel);
         
-        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
+        return commandResponse.IsSuccess ? OperationResult.Success() : OperationResult.Failure(commandResponse.ErrorMessage);
     }
 }
