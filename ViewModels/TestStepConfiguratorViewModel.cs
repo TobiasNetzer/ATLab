@@ -243,8 +243,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         }
     }
 
-    private static bool IsVariableExpression(string text)
-        => text.Contains("{");
+    private static bool IsVariableExpression(string text) => text.Contains("{");
 
     partial void OnNominalValueTextChanged(string value)
     {
@@ -261,6 +260,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             else
             {
                 step.NominalValue = 0;
+                step.NominalValueExpression = "0";
             }
         }
         else
@@ -288,6 +288,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 else
                 {
                     step.LowerLimit = 0;
+                    step.LowerLimitExpression = "0";
                 }
             }
             else
@@ -301,6 +302,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 else
                 {
                     step.LowerLimit = 0;
+                    step.LowerLimitExpression = "0";
                 }
             }
         }
@@ -330,6 +332,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 else
                 {
                     step.UpperLimit = 0;
+                    step.UpperLimitExpression = "0";
                 }
             }
             else
@@ -343,6 +346,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
                 else
                 {
                     step.UpperLimit = 0;
+                    step.UpperLimitExpression = "0";
                 }
             }
         }
