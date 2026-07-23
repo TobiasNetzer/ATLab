@@ -10,10 +10,10 @@ public enum TestEvaluationSource
     [Description("Script")]
     SCRIPT,
     
-    [Description("Command")]
+    [Description("Device Command")]
     COMMAND,
     
-    [Description("Interface")]
+    [Description("Interface Command")]
     INTERFACE,
 
     [Description("Shell Command")]
