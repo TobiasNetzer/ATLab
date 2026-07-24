@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using ATLab.Enums;
 using ATLab.Interfaces;
+using ATLab.Models;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
@@ -11,11 +14,39 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     
-    public List<CommunicationInterfaceType> InterfaceType { get; } = Enum.GetValues<CommunicationInterfaceType>().ToList();
-    public List<I2CSpeedMode> I2CSpeedMode { get; } = Enum.GetValues<I2CSpeedMode>().ToList();
+    public List<CommunicationInterfaceType> InterfaceTypes { get; } = Enum.GetValues<CommunicationInterfaceType>().ToList();
+    public List<SerialTerminationMode> SerialTerminationModes { get; } = Enum.GetValues<SerialTerminationMode>().ToList();
+    
+    public List<int> AvailableBaudRates { get; } = [9600, 19200, 38400, 57600, 115200, 230400];
+    public List<SerialParity> SerialParities { get; } = Enum.GetValues<SerialParity>().ToList();
+    public List<int> AvailableDataBits { get; } = [5, 6, 7, 8];
+    public List<SerialStopBits> SerialStopBits { get; } = Enum.GetValues<SerialStopBits>().ToList();
+    
+    public List<I2CSpeedMode> I2CSpeedModes { get; } =
+        Enum.GetValues<I2CSpeedMode>()
+            .Where(v =>
+            {
+                var fi = typeof(I2CSpeedMode).GetField(v.ToString());
+                return fi.GetCustomAttributes(typeof(DescriptionAttribute), false).Any();
+            })
+            .ToList();
+    
+    [ObservableProperty]
+    private TestInterfaceConfig _config = new();
+    
+    [ObservableProperty]
+    private string _timeoutMs = string.Empty;
+    
+    [ObservableProperty]
+    private string _i2CAddress = string.Empty;
+    
+    [ObservableProperty]
+    private string _bytesToRead = string.Empty;
     
     [ObservableProperty]
     private bool _isExpanded;
+    
+    private TestStep? _currentTestStep;
     
     public TestInterfaceCommunicationViewModel(ISettingsService settingsService)
     {
@@ -27,6 +58,69 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
     partial void OnIsExpandedChanged(bool value)
     {
         _settingsService.Settings.IsFilePathEditorExpanded = value;
+    }
+    
+    partial void OnTimeoutMsChanged(string value)
+    {
+        if (int.TryParse(value, out var result))
+        {
+            Config.TimeoutMs = result;
+        }
+        else
+        {
+            Config.TimeoutMs = 0;
+        }
+        Dispatcher.UIThread.Post(UpdateStringProperties);
+    }
+    
+    partial void OnI2CAddressChanged(string value)
+    {
+        if (int.TryParse(value, out var result) && result > 0 && result < 127)
+        {
+            Config.I2CAddress = result;
+        }
+        else
+        {
+            Config.I2CAddress = 0;
+        }
+        Dispatcher.UIThread.Post(UpdateStringProperties);
+    }
+    
+    partial void OnBytesToReadChanged(string value)
+    {
+        if (int.TryParse(value, out var result))
+        {
+            Config.BytesToRead = result;
+        }
+        else
+        {
+            Config.BytesToRead = 0;
+        }
+        Dispatcher.UIThread.Post(UpdateStringProperties);
+    }
+    
+    private void UpdateStringProperties()
+    {
+        if (_currentTestStep == null)
+            return;
+
+        TimeoutMs = _currentTestStep.Command.TimeoutMs.ToString();
+        I2CAddress = _currentTestStep.InterfaceConfig.I2CAddress.ToString();
+        BytesToRead = _currentTestStep.InterfaceConfig.BytesToRead.ToString();
+        OnPropertyChanged(nameof(TimeoutMs));
+        OnPropertyChanged(nameof(I2CAddress));
+        OnPropertyChanged(nameof(BytesToRead));
+    }
+    
+    public void LoadTestStep(TestStepViewModel? testStepViewModel)
+    {
+        _currentTestStep = testStepViewModel?.TestStep;
+
+        if (_currentTestStep == null)
+            return;
+        
+        Config =  _currentTestStep.InterfaceConfig;
+        UpdateStringProperties();
     }
     
 }

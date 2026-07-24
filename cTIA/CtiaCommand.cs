@@ -3,6 +3,7 @@ using ATLab.Models;
 using System;
 using System.Linq;
 using System.Text;
+using ATLab.Enums;
 
 namespace ATLab.CTIA;
 
@@ -30,6 +31,8 @@ public enum RespCmd : ushort
 {
     RESP_OK = 0x0101,
     RESP_ERROR,
+    RESP_TIMEOUT,
+    RESP_BUSY,
     RESP_DEVICE_ID,
     RESP_DEVICE_NAME,
     RESP_SERIAL_NUMBER,
@@ -46,6 +49,7 @@ public enum RespCmd : ushort
     RESP_EXT_PROBE_IN_STATE,
     RESP_EXT_TRIGGER_STATE,
     RESP_EXECUTE_SELFTEST,
+    RESP_EXECUTE_I2C_RECEIVE,
     RESP_END = 0x01FF
 }
 
@@ -122,6 +126,9 @@ public enum ConfCmd : ushort
     CONF_AVAILABLE_UART,
     CONF_AVAILABLE_I2C,
     CONF_AVAILABLE_RS485,
+    CONF_I2C_SETTINGS,
+    CONF_UART_SETTINGS,
+    CONF_RS485_SETTINGS,
     CONF_END = 0x05FF
 }
 
@@ -131,6 +138,8 @@ public enum ConfCmd : ushort
 public enum ExecCmd : ushort
 {
     EXECUTE_SELFTEST = 0x0601,
+    EXECUTE_I2C_TRANSMIT,
+    EXECUTE_I2C_RECEIVE,
     UART_TRANSMIT,
     EXEC_END = 0x06FF
 }
@@ -528,6 +537,35 @@ public class CtiaCommand
     
     #endregion
     
+    #region CONF_CMD
+
+    public async Task<OperationResult> ConfI2CSettings(I2CSpeedMode  speedMode)
+    {
+
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ConfCmd.CONF_I2C_SETTINGS,
+            PayloadSize = 1,
+            Payload     = [Convert.ToByte(speedMode)]
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+
+        if (responseFrame is null)
+            return OperationResult.Failure("Communication with test hardware failed.");
+        
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult.Success();
+
+        if (responseFrame.Payload.Length < 1)
+            return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    #endregion
+    
     #region EXEC_CMD
     
     public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
@@ -598,6 +636,74 @@ public class CtiaCommand
         }
 
         return OperationResult<TestHardwareDiagnostics>.Success(diagnostics);
+    }
+
+    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr, byte[] data)
+    {
+        if (data.Length == 0)
+            return OperationResult.Failure("Invalid payload.");
+        
+        var payload = new byte[data.Length + 1];
+        payload[0] = deviceAddr;
+        Array.Copy(data, 0, payload, 1, data.Length);
+
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ExecCmd.EXECUTE_I2C_TRANSMIT,
+            PayloadSize = (byte)payload.Length,
+            Payload     = payload
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+
+        if (responseFrame is null)
+            return OperationResult.Failure("Communication with test hardware failed.");
+        
+        switch ((RespCmd)responseFrame.Command)
+        {
+            case RespCmd.RESP_OK:
+                return OperationResult.Success();
+            case RespCmd.RESP_TIMEOUT:
+                return OperationResult.Timeout();
+        }
+
+        if (responseFrame.Payload.Length < 1)
+            return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte rxSize)
+    {
+        if (rxSize == 0)
+            return OperationResult<byte[]>.Failure("Invalid receive size.");
+
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ExecCmd.EXECUTE_I2C_RECEIVE,
+            PayloadSize = 2,
+            Payload = [deviceAddr,  rxSize]
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+
+        if (responseFrame is null)
+            return OperationResult<byte[]>.Failure("Communication with test hardware failed.");
+
+        switch ((RespCmd)responseFrame.Command)
+        {
+            case RespCmd.RESP_EXECUTE_I2C_RECEIVE:
+                return OperationResult<byte[]>.Success(responseFrame.Payload);
+            case RespCmd.RESP_TIMEOUT:
+                return OperationResult<byte[]>.Timeout();
+        }
+
+        if (responseFrame.Payload.Length < 1)
+            return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     #endregion

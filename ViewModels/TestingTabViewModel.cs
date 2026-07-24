@@ -380,6 +380,7 @@ public partial class TestingTabViewModel : ViewModelBase
             TestStepConfiguratorViewModel.LoadTestStep(value, TestSteps);
             ScriptSelector.LoadTestStep(value);
             CommandEditor.LoadTestStep(value);
+            TestInterfaceCommunication.LoadTestStep(value);
             ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
             ExpressionEditor.LoadTestStep(value.TestStep);
             FilePathEditor.LoadTestStep(value.TestStep);

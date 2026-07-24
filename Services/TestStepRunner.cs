@@ -22,6 +22,7 @@ public class TestStepRunner : ITestStepRunner
     private readonly IMessageBoxService _messageBoxService;
     private readonly IFileContentReader _fileContentReader;
     private readonly IProjectService _projectService;
+    private readonly IInterfaceCommandExecuter _interfaceCommandExecuter;
 
     public TestStepRunner(
         ITestHardware testHardware,
@@ -30,7 +31,8 @@ public class TestStepRunner : ITestStepRunner
         IShellCommandRunner shellCommandRunner,
         IMessageBoxService messageBoxService,
         IFileContentReader fileContentReader,
-        IProjectService projectService)
+        IProjectService projectService,
+        IInterfaceCommandExecuter interfaceCommandExecuter)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
@@ -39,6 +41,7 @@ public class TestStepRunner : ITestStepRunner
         _messageBoxService = messageBoxService;
         _fileContentReader = fileContentReader;
         _projectService = projectService;
+        _interfaceCommandExecuter = interfaceCommandExecuter;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
@@ -77,6 +80,9 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.COMMAND:
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);
 
+                case TestEvaluationSource.INTERFACE:
+                    return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
+                
                 case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option,Path.GetDirectoryName(_projectService.CurrentFilePath), token, runtimeVariables);
                 
                 case TestEvaluationSource.USER_RESPONSE:
