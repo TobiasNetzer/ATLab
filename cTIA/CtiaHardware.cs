@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -21,6 +22,8 @@ public class CtiaHardware : ITestHardware
     public byte UseExternalProbe { get; set; }
     
     private readonly SemaphoreSlim _ioLock = new(1, 1);
+
+    private I2CSpeedMode _speedMode = I2CSpeedMode.I2C_SPEED_UNDEFINED;
 
     public CtiaHardware(ICtiaCommunication communication)
     {
@@ -145,12 +148,56 @@ public class CtiaHardware : ITestHardware
         }
     }
     
+    public async Task<OperationResult> ConfigureI2CInterface(I2CSpeedMode speedMode)
+    {
+        if (_speedMode == speedMode)
+            return OperationResult.Success();
+        
+        _speedMode = speedMode;
+        
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ConfI2CSettings(speedMode);
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+    
     public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
     {
         await _ioLock.WaitAsync();
         try
         {
             return await _command.ExecuteSelfTest();
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+    
+    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr,byte[] data)
+    {
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ExecuteI2CTransmit(deviceAddr, data);
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+
+    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead)
+    {
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ExecuteI2CReceive(deviceAddr, bytesToRead);
         }
         finally
         {
@@ -212,6 +259,6 @@ public class CtiaHardware : ITestHardware
     {
         var commandResponse = await _command.SetExternalProbeIn(channel);
         
-        return !commandResponse.IsSuccess ? OperationResult.Failure(commandResponse.ErrorMessage) : OperationResult.Success();
+        return commandResponse.IsSuccess ? OperationResult.Success() : OperationResult.Failure(commandResponse.ErrorMessage);
     }
 }

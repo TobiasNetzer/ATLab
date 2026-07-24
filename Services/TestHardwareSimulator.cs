@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -44,10 +45,28 @@ public class TestHardwareSimulator : ITestHardware
         await Task.CompletedTask;
         return OperationResult.Success();
     }
+    
+    public async Task<OperationResult> ConfigureI2CInterface(I2CSpeedMode speedMode)
+    {
+        await Task.CompletedTask;
+        return OperationResult.Success();
+    }
 
     public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
     {
         await Task.CompletedTask;
         return OperationResult<TestHardwareDiagnostics>.Success(new TestHardwareDiagnostics());
+    }
+
+    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr, byte[] data)
+    {
+        await Task.CompletedTask;
+        return OperationResult.Success();
+    }
+
+    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead)
+    {
+        await Task.CompletedTask;
+        return OperationResult<byte[]>.Success([(byte)'0']);
     }
 }

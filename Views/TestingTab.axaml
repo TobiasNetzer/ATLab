@@ -441,9 +441,13 @@
                     FilePathEditorVm="{Binding FilePathEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FILE}"/>
                 
+                <controls:TestInterfaceCommunication
+                    TestInterfaceCommunicationVm="{Binding TestInterfaceCommunication}"
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INTERFACE}"/>
+                
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE'}"/>
+                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE'}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />

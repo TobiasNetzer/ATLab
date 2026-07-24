@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Models;
 
 namespace ATLab.Interfaces;
@@ -15,5 +16,8 @@ public interface ITestHardware
     Task<OperationResult> InitializeAsync();
     Task<OperationResult> UpdateRelayStates();
     Task<OperationResult> ClearRelayStates();
+    Task<OperationResult> ConfigureI2CInterface(I2CSpeedMode speedMode);
     Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest();
+    Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr, byte[] data);
+    Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead);
 }

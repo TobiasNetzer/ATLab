@@ -132,22 +132,26 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(24)]
-    private ShellCommand _shellCommand = new();
+    private TestInterfaceConfig _interfaceConfig = new();
     
     [ObservableProperty]
     [property: JsonPropertyOrder(25)]
-    private string _expression = string.Empty;
+    private ShellCommand _shellCommand = new();
     
     [ObservableProperty]
     [property: JsonPropertyOrder(26)]
-    private string _filePath = string.Empty;
+    private string _expression = string.Empty;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(27)]
+    private string _filePath = string.Empty;
+    
+    [ObservableProperty]
+    [property: JsonPropertyOrder(28)]
     private ResponseMask  _responseMask = new();
 
     [ObservableProperty]
-    [property: JsonPropertyOrder(28)]
+    [property: JsonPropertyOrder(29)]
     private RelayMatrix _matrixState = new ();
 
     [ObservableProperty]
@@ -158,10 +162,10 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(29)]
+    [JsonPropertyOrder(30)]
     public RelayGroupDto? StimState { get; private set; }
     
-    [JsonPropertyOrder(30)]
+    [JsonPropertyOrder(31)]
     public RelayGroupDto? ExtStimState { get; private set; }
 
     private void HookEvents()
@@ -183,6 +187,12 @@ public partial class TestStep : ObservableObject
     }
 
     partial void OnCommandChanged(ScriptCommand? oldValue, ScriptCommand newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+    
+    partial void OnInterfaceConfigChanged(TestInterfaceConfig? oldValue, TestInterfaceConfig newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -251,6 +261,8 @@ public partial class TestStep : ObservableObject
         OnPropertyChanged(nameof(OnPass));
         OnPropertyChanged(nameof(OnFail));
         OnPropertyChanged(nameof(ShellCommand));
+        OnPropertyChanged(nameof(InterfaceConfig));
+        OnPropertyChanged(nameof(Command));
         OnPropertyChanged(nameof(MatrixState));
         OnPropertyChanged(nameof(LiveStimState));
         OnPropertyChanged(nameof(LiveExtStimState));
@@ -265,7 +277,7 @@ public partial class TestStep : ObservableObject
     
     public TestStep Clone(bool preserveId = false)
     {
-        var clone = new TestStep(preserveId ? this.Id : Guid.NewGuid().ToString("N"))
+        var clone = new TestStep(preserveId ? Id : Guid.NewGuid().ToString("N"))
         {
             Number = Number,
             Name = Name,
@@ -292,6 +304,7 @@ public partial class TestStep : ObservableObject
             TargetDeviceId = TargetDeviceId,
             ScriptId = ScriptId,
             Command = new ScriptCommand(Command),
+            InterfaceConfig = new TestInterfaceConfig(InterfaceConfig),
             ShellCommand = new ShellCommand(ShellCommand),
             Expression = Expression,
             FilePath = FilePath,

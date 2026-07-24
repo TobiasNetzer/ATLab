@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO.Ports;
@@ -33,34 +34,34 @@ public partial class DeviceManagerViewModel : ViewModelBase
     public ObservableCollection<string> AvailableSerialPorts { get; } = new();
     public ObservableCollection<string> AvailableVisaResources { get; } = new();
 
-    public ObservableCollection<DeviceType> AvailableDeviceTypes { get; } =
+    public List<DeviceType> AvailableDeviceTypes { get; } =
         new(Enum.GetValues<DeviceType>());
 
-    public ObservableCollection<int> AvailableBaudRates { get; } =
+    public List<int> AvailableBaudRates { get; } =
         new() { 9600, 19200, 38400, 57600, 115200, 230400 };
 
-    public ObservableCollection<int> AvailableDataBits { get; } =
+    public List<int> AvailableDataBits { get; } =
         new() { 5, 6, 7, 8 };
 
-    public ObservableCollection<Parity> AvailableParities { get; } =
+    public List<Parity> AvailableParities { get; } =
         new(Enum.GetValues<Parity>());
 
-    public ObservableCollection<StopBits> AvailableStopBits { get; } =
+    public List<StopBits> AvailableStopBits { get; } =
         new(Enum.GetValues<StopBits>());
 
-    public ObservableCollection<Handshake> AvailableHandshakes { get; } =
+    public List<Handshake> AvailableHandshakes { get; } =
         new(Enum.GetValues<Handshake>());
     
-    public ObservableCollection<SerialTerminationMode> AvailableSerialTermination { get; } =
+    public List<SerialTerminationMode> AvailableSerialTermination { get; } =
         new(Enum.GetValues<SerialTerminationMode>());
     
-    public ObservableCollection<MessageFramingMode> AvailableFramingModes { get; } =
+    public List<MessageFramingMode> AvailableFramingModes { get; } =
         new(Enum.GetValues<MessageFramingMode>());
 
-    public ObservableCollection<VisaTerminationMode> AvailableVisaTerminations { get; } =
+    public List<VisaTerminationMode> AvailableVisaTerminations { get; } =
         new(Enum.GetValues<VisaTerminationMode>());
 
-    public ObservableCollection<TcpTerminationMode> AvailableTcpTerminations { get; } =
+    public List<TcpTerminationMode> AvailableTcpTerminations { get; } =
         new(Enum.GetValues<TcpTerminationMode>());
 
     public DeviceManagerViewModel(IErrorService errorService)

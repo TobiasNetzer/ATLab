@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
+        services.AddSingleton<IInterfaceCommandExecuter, InterfaceCommandExecuter>();
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<IPdfExportService, PdfExportService>();
@@ -85,6 +86,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TestHardwareDiagnosticsViewModel>();
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
         services.AddSingleton<RuntimeVariableEditorViewModel>();
+        services.AddSingleton<TestInterfaceCommunicationViewModel>();
 
         return services;
     }
