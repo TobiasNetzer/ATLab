@@ -27,7 +27,7 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
             .Where(v =>
             {
                 var fi = typeof(I2CSpeedMode).GetField(v.ToString());
-                return fi.GetCustomAttributes(typeof(DescriptionAttribute), false).Any();
+                return fi!.GetCustomAttributes(typeof(DescriptionAttribute), false).Length != 0;
             })
             .ToList();
     
@@ -104,7 +104,7 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
         if (_currentTestStep == null)
             return;
 
-        TimeoutMs = _currentTestStep.Command.TimeoutMs.ToString();
+        TimeoutMs = _currentTestStep.InterfaceConfig.TimeoutMs.ToString();
         I2CAddress = _currentTestStep.InterfaceConfig.I2CAddress.ToString();
         BytesToRead = _currentTestStep.InterfaceConfig.BytesToRead.ToString();
         OnPropertyChanged(nameof(TimeoutMs));
