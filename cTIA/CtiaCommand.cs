@@ -56,6 +56,8 @@ public enum RespCmd : ushort
     RESP_I2C_RECEIVE,
     RESP_I2C_NACK,
     RESP_I2C_TIMEOUT,
+    RESP_UART_TRANSCEIVE,
+    RESP_UART_TIMEOUT,
     RESP_END = 0x01FF
 }
 
@@ -149,7 +151,7 @@ public enum ExecCmd : ushort
     EXECUTE_SELFTEST = 0x0601,
     EXECUTE_I2C_TRANSMIT,
     EXECUTE_I2C_RECEIVE,
-    UART_TRANSMIT,
+    EXECUTE_UART_TRANSCEIVE,
     EXEC_END = 0x06FF
 }
 
@@ -630,6 +632,55 @@ public class CtiaCommand
         return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
+    public async Task<OperationResult> ConfUartSettings(int baud, int dataBits, SerialParity parity, SerialStopBits stopBits)
+    {
+
+        var payload = new byte[7];
+        
+        payload[0] = (byte)(baud & 0xFF);
+        payload[1] = (byte)((baud >> 8) & 0xFF);
+        payload[2] = (byte)((baud >> 16) & 0xFF);
+        payload[3] = (byte)((baud >> 24) & 0xFF);
+        
+        payload[4] = (byte)dataBits;
+        
+        payload[5] = stopBits switch
+        {
+            SerialStopBits.ONE => (byte)1,
+            SerialStopBits.TWO => (byte)2,
+            _ => throw new ArgumentException("Unsupported stop bits")
+        };
+        
+        payload[6] = parity switch
+        {
+            SerialParity.NONE => (byte)0,
+            SerialParity.EVEN => (byte)1,
+            SerialParity.ODD  => (byte)2,
+            _ => throw new ArgumentException("Unsupported parity")
+        };
+        
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ConfCmd.CONF_UART_SETTINGS,
+            PayloadSize = (byte)payload.Length,
+            Payload     = payload
+        };
+        
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+
+        if (responseFrame is null)
+            return OperationResult.Failure("Communication with test hardware failed.");
+        
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_OK)
+            return OperationResult.Success();
+
+        if (responseFrame.Payload.Length < 1)
+            return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
     #endregion
     
     #region EXEC_CMD
@@ -789,6 +840,46 @@ public class CtiaCommand
 
         var status = (CtiaStatus)responseFrame.Payload[0];
         return OperationResult<I2CResponse>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<byte[]>> ExecuteUartTransceive(byte[] data, byte rxSize, int timeoutMs)
+    {
+        
+        var payload = new byte[data.Length + 5];
+
+        payload[0] = rxSize;
+        payload[1] = (byte)timeoutMs;
+        payload[2] = (byte)(timeoutMs >> 8);
+        payload[3] = (byte)(timeoutMs >> 16);
+        payload[4] = (byte)(timeoutMs >> 24);
+        
+        Array.Copy(data, 0, payload, 5, data.Length);
+
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ExecCmd.EXECUTE_UART_TRANSCEIVE,
+            PayloadSize = (byte)payload.Length,
+            Payload = payload
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame, timeoutMs + 1000);
+
+        if (responseFrame is null)
+            return OperationResult<byte[]>.Failure("Communication with test hardware failed.");
+
+        switch ((RespCmd)responseFrame.Command)
+        {
+            case RespCmd.RESP_UART_TRANSCEIVE:
+                return OperationResult<byte[]>.Success(responseFrame.Payload);
+            case RespCmd.RESP_UART_TIMEOUT:
+                return OperationResult<byte[]>.Timeout();
+        }
+
+        if (responseFrame.Payload.Length < 1)
+            return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     #endregion

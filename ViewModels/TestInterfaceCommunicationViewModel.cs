@@ -17,10 +17,10 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
     public List<CommunicationInterfaceType> InterfaceTypes { get; } = Enum.GetValues<CommunicationInterfaceType>().ToList();
     public List<SerialTerminationMode> SerialTerminationModes { get; } = Enum.GetValues<SerialTerminationMode>().ToList();
     
-    public List<int> AvailableBaudRates { get; } = [9600, 19200, 38400, 57600, 115200, 230400];
+    public List<int> AvailableBaudRates { get; } = [110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 56000, 57600, 115200, 128000, 230400, 256000, 460800, 500000, 576000, 921600];
     public List<SerialParity> SerialParities { get; } = Enum.GetValues<SerialParity>().ToList();
-    public List<int> AvailableDataBits { get; } = [5, 6, 7, 8];
-    public List<SerialStopBits> SerialStopBits { get; } = Enum.GetValues<SerialStopBits>().ToList();
+    public List<int> AvailableDataBits { get; } = [7, 8];
+    public List<SerialStopBits> SerialStopBits { get; } = [Enums.SerialStopBits.ONE, Enums.SerialStopBits.TWO];
     
     public List<I2CSpeedMode> I2CSpeedModes { get; } =
         Enum.GetValues<I2CSpeedMode>()

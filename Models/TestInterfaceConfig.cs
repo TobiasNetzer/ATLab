@@ -36,9 +36,6 @@ public partial class TestInterfaceConfig : ObservableObject
     private string _command = string.Empty;
     
     [ObservableProperty]
-    private bool _expectResponse;
-    
-    [ObservableProperty]
     private int _bytesToRead = 0;
 
     public TestInterfaceConfig()
@@ -57,7 +54,6 @@ public partial class TestInterfaceConfig : ObservableObject
         StopBits = other.StopBits;
         TimeoutMs = other.TimeoutMs;
         Command = other.Command;
-        ExpectResponse = other.ExpectResponse;
         BytesToRead = other.BytesToRead;
     }
 }

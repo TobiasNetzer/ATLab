@@ -189,16 +189,9 @@
                                 Spacing="5"
                                 Margin="0 8 0 0">
                         
-                        <CheckBox Content="Expect Response"
-                                  Margin="0 0 135 0"
-                                  IsChecked="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.ExpectResponse}"
-                                  IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}"/>
-
-                        
                         <StackPanel Orientation="Horizontal"
                                     Spacing="5"
-                                    Margin="0 0 96 0"
-                                    IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='I2C'}">
+                                    Margin="0 0 96 0">
                             
                             <TextBlock Text="Read Bytes"
                                        VerticalAlignment="Center"/>

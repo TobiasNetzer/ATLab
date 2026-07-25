@@ -25,6 +25,14 @@ public class CtiaHardware : ITestHardware
     private readonly SemaphoreSlim _ioLock = new(1, 1);
 
     private I2CSpeedMode _speedMode = I2CSpeedMode.I2C_SPEED_UNDEFINED;
+    
+    private int _baudRate;
+    
+    private SerialParity _serialParity = SerialParity.NONE;
+    
+    private int _dataBits = 8;
+    
+    private SerialStopBits _stopBits = SerialStopBits.ONE;
 
     public CtiaHardware(ICtiaCommunication communication)
     {
@@ -100,12 +108,12 @@ public class CtiaHardware : ITestHardware
             var availableUartInterface = await _command.GetUartInterface();
             if (!availableUartInterface.IsSuccess)
                 return OperationResult.Failure(availableUartInterface.ErrorMessage);
-            HardwareInfo.InterfaceAvailableI2C = Convert.ToBoolean(availableUartInterface.Value);
+            HardwareInfo.InterfaceAvailableUART = Convert.ToBoolean(availableUartInterface.Value);
             
             var availableRs485Interface = await _command.GetRs485Interface();
             if (!availableRs485Interface.IsSuccess)
                 return OperationResult.Failure(availableRs485Interface.ErrorMessage);
-            HardwareInfo.InterfaceAvailableI2C = Convert.ToBoolean(availableRs485Interface.Value);
+            HardwareInfo.InterfaceAvailableRS485 = Convert.ToBoolean(availableRs485Interface.Value);
 
             StimChannelStates = new bool[HardwareInfo.StimChannelCount];
             ExtStimChannelStates = new bool[HardwareInfo.ExtStimChannelCount];
@@ -182,6 +190,30 @@ public class CtiaHardware : ITestHardware
         }
     }
     
+    public async Task<OperationResult> ConfigureUartInterface(int baudRate, int dataBits, SerialParity parity, SerialStopBits stopBits)
+    {
+        if (baudRate == _baudRate &&
+            dataBits == _dataBits &&
+            parity == _serialParity &&
+            stopBits == _stopBits)
+            return OperationResult.Success();
+        
+        _baudRate = baudRate;
+        _dataBits = dataBits;
+        _serialParity = parity;
+        _stopBits = stopBits;
+        
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ConfUartSettings(baudRate, dataBits, parity, stopBits);
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+    
     public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
     {
         await _ioLock.WaitAsync();
@@ -214,6 +246,19 @@ public class CtiaHardware : ITestHardware
         try
         {
             return await _command.ExecuteI2CReceive(deviceAddr, bytesToRead,  timeoutMs);
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+    
+    public async Task<OperationResult<byte[]>> ExecuteUartTransceive(byte[] data, byte bytesToRead,  int timeoutMs = 1000)
+    {
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.ExecuteUartTransceive(data, bytesToRead, timeoutMs);
         }
         finally
         {

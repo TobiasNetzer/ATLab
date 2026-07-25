@@ -52,6 +52,12 @@ public class TestHardwareSimulator : ITestHardware
         await Task.CompletedTask;
         return OperationResult.Success();
     }
+    
+    public async Task<OperationResult> ConfigureUartInterface(int baudRate, int dataBits, SerialParity parity, SerialStopBits stopBits)
+    {
+        await Task.CompletedTask;
+        return OperationResult.Success();
+    }
 
     public async Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest()
     {
@@ -59,15 +65,21 @@ public class TestHardwareSimulator : ITestHardware
         return OperationResult<TestHardwareDiagnostics>.Success(new TestHardwareDiagnostics());
     }
 
-    public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data,  int timeoutMs = 1000)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data, int timeoutMs = 1000)
     {
         await Task.CompletedTask;
         return OperationResult<I2CResponse>.Success(new I2CResponse(true));
     }
 
-    public async Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead,   int timeoutMs = 1000)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead, int timeoutMs = 1000)
     {
         await Task.CompletedTask;
         return OperationResult<I2CResponse>.Success(new I2CResponse(true, [(byte)'0']));
+    }
+    
+    public async Task<OperationResult<byte[]>> ExecuteUartTransceive(byte[] data, byte bytesToRead, int timeoutMs = 1000)
+    {
+        await Task.CompletedTask;
+        return OperationResult<byte[]>.Success([(byte)'0']);
     }
 }
