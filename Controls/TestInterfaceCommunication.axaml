@@ -210,7 +210,7 @@
                         
                         <TextBlock Text="Timeout (ms)"
                                    VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.TimeoutMs}"
+                        <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.TimeoutMs, UpdateSourceTrigger=LostFocus}"
                                  Width="100"/>
                         
                     </StackPanel>

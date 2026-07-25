@@ -2,6 +2,7 @@
 using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Records;
 
 namespace ATLab.Services;
 
@@ -58,15 +59,15 @@ public class TestHardwareSimulator : ITestHardware
         return OperationResult<TestHardwareDiagnostics>.Success(new TestHardwareDiagnostics());
     }
 
-    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr, byte[] data)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data,  int timeoutMs = 1000)
     {
         await Task.CompletedTask;
-        return OperationResult.Success();
+        return OperationResult<I2CResponse>.Success(new I2CResponse(true));
     }
 
-    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead,   int timeoutMs = 1000)
     {
         await Task.CompletedTask;
-        return OperationResult<byte[]>.Success([(byte)'0']);
+        return OperationResult<I2CResponse>.Success(new I2CResponse(true, [(byte)'0']));
     }
 }

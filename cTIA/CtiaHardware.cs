@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Records;
 
 namespace ATLab.CTIA;
 
@@ -90,6 +91,21 @@ public class CtiaHardware : ITestHardware
             if (!extStimChannelCount.IsSuccess)
                 return OperationResult.Failure(extStimChannelCount.ErrorMessage);
             HardwareInfo.ExtStimChannelCount = extStimChannelCount.Value;
+            
+            var availableI2CInterface = await _command.GetI2CInterface();
+            if (!availableI2CInterface.IsSuccess)
+                return OperationResult.Failure(availableI2CInterface.ErrorMessage);
+            HardwareInfo.InterfaceAvailableI2C = Convert.ToBoolean(availableI2CInterface.Value);
+            
+            var availableUartInterface = await _command.GetUartInterface();
+            if (!availableUartInterface.IsSuccess)
+                return OperationResult.Failure(availableUartInterface.ErrorMessage);
+            HardwareInfo.InterfaceAvailableI2C = Convert.ToBoolean(availableUartInterface.Value);
+            
+            var availableRs485Interface = await _command.GetRs485Interface();
+            if (!availableRs485Interface.IsSuccess)
+                return OperationResult.Failure(availableRs485Interface.ErrorMessage);
+            HardwareInfo.InterfaceAvailableI2C = Convert.ToBoolean(availableRs485Interface.Value);
 
             StimChannelStates = new bool[HardwareInfo.StimChannelCount];
             ExtStimChannelStates = new bool[HardwareInfo.ExtStimChannelCount];
@@ -179,12 +195,12 @@ public class CtiaHardware : ITestHardware
         }
     }
     
-    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr,byte[] data)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr,byte[] data,  int timeoutMs = 1000)
     {
         await _ioLock.WaitAsync();
         try
         {
-            return await _command.ExecuteI2CTransmit(deviceAddr, data);
+            return await _command.ExecuteI2CTransmit(deviceAddr, data, timeoutMs);
         }
         finally
         {
@@ -192,12 +208,12 @@ public class CtiaHardware : ITestHardware
         }
     }
 
-    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead, int timeoutMs = 1000)
     {
         await _ioLock.WaitAsync();
         try
         {
-            return await _command.ExecuteI2CReceive(deviceAddr, bytesToRead);
+            return await _command.ExecuteI2CReceive(deviceAddr, bytesToRead,  timeoutMs);
         }
         finally
         {

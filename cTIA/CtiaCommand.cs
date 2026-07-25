@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Text;
 using ATLab.Enums;
+using ATLab.Records;
 
 namespace ATLab.CTIA;
 
@@ -42,6 +43,9 @@ public enum RespCmd : ushort
     RESP_AVAILABLE_MEAS_CH,
     RESP_AVAILABLE_STIM_CH,
     RESP_AVAILABLE_EXT_STIM_CH,
+    RESP_AVAILABLE_I2C_INTERFACE,
+    RESP_AVAILABLE_UART_INTERFACE,
+    RESP_AVAILABLE_RS485_INTERFACE,
     RESP_BITFIELD_MEAS_H,
     RESP_BITFIELD_MEAS_L,
     RESP_BITFIELD_STIM,
@@ -49,7 +53,9 @@ public enum RespCmd : ushort
     RESP_EXT_PROBE_IN_STATE,
     RESP_EXT_TRIGGER_STATE,
     RESP_EXECUTE_SELFTEST,
-    RESP_EXECUTE_I2C_RECEIVE,
+    RESP_I2C_RECEIVE,
+    RESP_I2C_NACK,
+    RESP_I2C_TIMEOUT,
     RESP_END = 0x01FF
 }
 
@@ -105,6 +111,9 @@ public enum GetCmd : ushort
     GET_AVAILABLE_MEAS_CH,
     GET_AVAILABLE_STIM_CH,
     GET_AVAILABLE_EXT_STIM_CH,
+    GET_AVAILABLE_I2C_INTERFACE,
+    GET_AVAILABLE_UART_INTERFACE,
+    GET_AVAILABLE_RS485_INTERFACE,
     GET_BITFIELD_MEAS_H,
     GET_BITFIELD_MEAS_L,
     GET_BITFIELD_STIM,
@@ -123,8 +132,8 @@ public enum ConfCmd : ushort
     CONF_AVAILABLE_MEAS_CH,
     CONF_AVAILABLE_STIM_CH,
     CONF_AVAILABLE_EXT_STIM_CH,
-    CONF_AVAILABLE_UART,
     CONF_AVAILABLE_I2C,
+    CONF_AVAILABLE_UART,
     CONF_AVAILABLE_RS485,
     CONF_I2C_SETTINGS,
     CONF_UART_SETTINGS,
@@ -474,6 +483,63 @@ public class CtiaCommand
         return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
+    public async Task<OperationResult<int>> GetI2CInterface()
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)GetCmd.GET_AVAILABLE_I2C_INTERFACE
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_I2C_INTERFACE)
+            return OperationResult<int>.Success(responseFrame.Payload[0]);
+        
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<int>> GetUartInterface()
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)GetCmd.GET_AVAILABLE_UART_INTERFACE
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_UART_INTERFACE)
+            return OperationResult<int>.Success(responseFrame.Payload[0]);
+        
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
+    public async Task<OperationResult<int>> GetRs485Interface()
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)GetCmd.GET_AVAILABLE_RS485_INTERFACE
+        };
+
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<int>.Failure("Communication with test hardware failed.");
+
+        if ((RespCmd)responseFrame.Command == RespCmd.RESP_AVAILABLE_RS485_INTERFACE)
+            return OperationResult<int>.Success(responseFrame.Payload[0]);
+        
+        var status = (CtiaStatus)responseFrame.Payload[0];
+        return OperationResult<int>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+    }
+    
     #endregion
 
     #region CLR_CMD
@@ -638,14 +704,20 @@ public class CtiaCommand
         return OperationResult<TestHardwareDiagnostics>.Success(diagnostics);
     }
 
-    public async Task<OperationResult> ExecuteI2CTransmit(byte deviceAddr, byte[] data)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data, int timeoutMs)
     {
         if (data.Length == 0)
-            return OperationResult.Failure("Invalid payload.");
-        
-        var payload = new byte[data.Length + 1];
+            return OperationResult<I2CResponse>.Failure("Invalid payload.");
+
+        var payload = new byte[data.Length + 5];
+
         payload[0] = deviceAddr;
-        Array.Copy(data, 0, payload, 1, data.Length);
+        payload[1] = (byte)(timeoutMs);
+        payload[2] = (byte)(timeoutMs >> 8);
+        payload[3] = (byte)(timeoutMs >> 16);
+        payload[4] = (byte)(timeoutMs >> 24);
+        
+        Array.Copy(data, 0, payload, 5, data.Length);
 
         var frame = new CtiaCommandFrame
         {
@@ -654,56 +726,69 @@ public class CtiaCommand
             Payload     = payload
         };
 
-        var responseFrame = await _ctia.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame, timeoutMs + 1000);
 
         if (responseFrame is null)
-            return OperationResult.Failure("Communication with test hardware failed.");
+            return OperationResult<I2CResponse>.Failure("Communication with test hardware failed.");
         
         switch ((RespCmd)responseFrame.Command)
         {
             case RespCmd.RESP_OK:
-                return OperationResult.Success();
-            case RespCmd.RESP_TIMEOUT:
-                return OperationResult.Timeout();
+                return OperationResult<I2CResponse>.Success(new I2CResponse(true));
+            case RespCmd.RESP_I2C_TIMEOUT:
+                return OperationResult<I2CResponse>.Timeout();
+            case RespCmd.RESP_I2C_NACK:
+                return OperationResult<I2CResponse>.Success(new I2CResponse(false));
         }
 
         if (responseFrame.Payload.Length < 1)
-            return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+            return OperationResult<I2CResponse>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
 
         var status = (CtiaStatus)responseFrame.Payload[0];
-        return OperationResult.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+        return OperationResult<I2CResponse>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
-    public async Task<OperationResult<byte[]>> ExecuteI2CReceive(byte deviceAddr, byte rxSize)
+    public async Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte rxSize, int timeoutMs)
     {
         if (rxSize == 0)
-            return OperationResult<byte[]>.Failure("Invalid receive size.");
+            return OperationResult<I2CResponse>.Failure("Invalid receive size.");
+
+        var payload = new byte[6];
+
+        payload[0] = deviceAddr;
+        payload[1] = (byte)timeoutMs;
+        payload[2] = (byte)(timeoutMs >> 8);
+        payload[3] = (byte)(timeoutMs >> 16);
+        payload[4] = (byte)(timeoutMs >> 24);
+        payload[5] = rxSize;
 
         var frame = new CtiaCommandFrame
         {
             Command     = (ushort)ExecCmd.EXECUTE_I2C_RECEIVE,
-            PayloadSize = 2,
-            Payload = [deviceAddr,  rxSize]
+            PayloadSize = (byte)payload.Length,
+            Payload = payload
         };
 
-        var responseFrame = await _ctia.SendCommandAsync(frame);
+        var responseFrame = await _ctia.SendCommandAsync(frame, timeoutMs + 1000);
 
         if (responseFrame is null)
-            return OperationResult<byte[]>.Failure("Communication with test hardware failed.");
+            return OperationResult<I2CResponse>.Failure("Communication with test hardware failed.");
 
         switch ((RespCmd)responseFrame.Command)
         {
-            case RespCmd.RESP_EXECUTE_I2C_RECEIVE:
-                return OperationResult<byte[]>.Success(responseFrame.Payload);
-            case RespCmd.RESP_TIMEOUT:
-                return OperationResult<byte[]>.Timeout();
+            case RespCmd.RESP_I2C_RECEIVE:
+                return OperationResult<I2CResponse>.Success(new I2CResponse(true, responseFrame.Payload));
+            case RespCmd.RESP_I2C_TIMEOUT:
+                return OperationResult<I2CResponse>.Timeout();
+            case RespCmd.RESP_I2C_NACK:
+                return OperationResult<I2CResponse>.Success(new I2CResponse(false));
         }
 
         if (responseFrame.Payload.Length < 1)
-            return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
+            return OperationResult<I2CResponse>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} (no status byte)");
 
         var status = (CtiaStatus)responseFrame.Payload[0];
-        return OperationResult<byte[]>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
+        return OperationResult<I2CResponse>.Failure($"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
     
     #endregion
