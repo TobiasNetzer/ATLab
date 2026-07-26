@@ -96,6 +96,7 @@ public class ProjectDocumentService : IProjectDocumentService
                 "Cancel");
             if (!result) return false;
         }
+        _projectModel.MarkSaved();
         return true;
     }
 }
