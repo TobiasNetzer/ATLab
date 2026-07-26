@@ -4,6 +4,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,11 +14,12 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
-    private readonly ISimulationService _simulationService;
-    private readonly IProjectService _projectService;
+    private readonly IProjectDocumentService _projectDocumentService;
     private readonly ISettingsService _settingsService;
+    private readonly ProjectModel _projectModel;
+    private readonly ApplicationState _applicationState;
 
-    public string WindowTitle => $"ATLab - Project: {_projectService.ProjectName}{(_projectService.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - Project: {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -36,7 +38,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<string> Errors => _errorService.Errors;
     
-    public bool IsSimulation => _simulationService.IsSimulationMode;
+    public bool IsSimulation => _applicationState.IsSimulationMode;
 
     [ObservableProperty]
     private int _errorCount;
@@ -48,8 +50,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isErrorFlyoutOpen;
 
     public MainWindowViewModel(IErrorService errorService,
-        ISimulationService simulationService,
-        IProjectService projectService,
+        IProjectDocumentService projectDocumentService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
@@ -57,13 +58,16 @@ public partial class MainWindowViewModel : ViewModelBase
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ProjectModel projectModel,
+        ApplicationState applicationState)
     {
         _errorService = errorService;
-        _simulationService = simulationService;
-        _projectService = projectService;
+        _projectDocumentService = projectDocumentService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
+        _projectModel = projectModel;
+        _applicationState = applicationState;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -87,9 +91,10 @@ public partial class MainWindowViewModel : ViewModelBase
             HasErrors = ErrorCount > 0;
         };
 
-        _projectService.PropertyChanged += (s, e) =>
+        _projectModel.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName is nameof(IProjectService.CurrentFilePath) or nameof(IProjectService.IsDirty))
+            if (e.PropertyName is nameof(ProjectModel.FilePath) or
+                nameof(ProjectModel.IsDirty))
             {
                 OnPropertyChanged(nameof(WindowTitle));
             }
@@ -105,7 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
         HasErrors = false;
     }
     
-    private async Task NewFile() => await TestingTab.NewFile();
+    private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
     
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
@@ -114,7 +119,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Close()
     {
-        if (await _projectService.ConfirmAndContinueIfDirtyAsync())
+        if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
         {
             RequestClose?.Invoke();
         }

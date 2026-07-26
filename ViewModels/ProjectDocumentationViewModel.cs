@@ -23,12 +23,12 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     
     public ProjectDocumentationViewModel(
         IFileDialogService fileDialogService,
-        ProjectDocumentation projectDocumentation,
+        ProjectModel projectModel,
         IAttachmentLauncherService attachmentLauncherService,
         IErrorService errorService)
     {
         _fileDialogService = fileDialogService;
-        ProjectDocumentation = projectDocumentation;
+        ProjectDocumentation = projectModel.Documentation;
         _attachmentLauncherService = attachmentLauncherService;
         _errorService = errorService;
         

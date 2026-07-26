@@ -124,15 +124,13 @@ public class App : Application
             {
                 initSuccess = true;
 
-                if (result == false)
+                var applicationState = _services.GetRequiredService<ApplicationState>();
+
+                applicationState.IsSimulationMode = result != true;
+
+                if (result != true)
                 {
                     hardwareAccessor.Hardware = _services.GetRequiredService<TestHardwareSimulator>();
-
-                    _services.GetRequiredService<ISimulationService>().IsSimulationMode = true;
-                }
-                else
-                {
-                    _services.GetRequiredService<ISimulationService>().IsSimulationMode = false;
                 }
             }
         }

@@ -12,23 +12,20 @@ public class TestExecutionController : ITestExecutionController
     private readonly ITestExecutor _testExecutor;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly ITestResultExportService _testResultExportService;
-    private readonly ProjectSettings _projectSettings;
-    private readonly IProjectService _projectService;
+    private readonly ProjectModel _projectModel;
     private readonly DeviceUnderTestInfoPanelViewModel _deviceUnderTestInfoPanelViewModel;
 
     public TestExecutionController(
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
         ITestResultExportService testResultExportService,
-        ProjectSettings projectSettings,
-        IProjectService projectService,
+        ProjectModel projectModel,
         DeviceUnderTestInfoPanelViewModel deviceUnderTestInfoPanelViewModel)
     {
         _testExecutor = testExecutor;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
-        _projectSettings = projectSettings;
-        _projectService = projectService;
+        _projectModel = projectModel;
         _deviceUnderTestInfoPanelViewModel = deviceUnderTestInfoPanelViewModel;
     }
 
@@ -81,7 +78,7 @@ public class TestExecutionController : ITestExecutionController
             {
                 var testInfo = new TestInfo()
                 {
-                    ProjectName = _projectService.ProjectName,
+                    ProjectName = _projectModel.ProjectName,
                     Operator = vm.User,
                     Duration = vm.TestDuration,
                     SerialNumber = vm.SerialNumber,
@@ -120,7 +117,7 @@ public class TestExecutionController : ITestExecutionController
 
     public async Task StartTestAsync(TestingTabViewModel vm)
     {
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
             ResetAllResults(vm);
 
@@ -140,7 +137,7 @@ public class TestExecutionController : ITestExecutionController
 
     public async Task StartRepeatAsync(TestingTabViewModel vm)
     {
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
             ResetAllResults(vm);
 
@@ -159,7 +156,7 @@ public class TestExecutionController : ITestExecutionController
 
     public async Task StartFromSelectionAsync(TestingTabViewModel vm)
     {
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
             ResetAllResults(vm);
             vm.NumberFailedSteps = 0;
@@ -175,7 +172,7 @@ public class TestExecutionController : ITestExecutionController
         if (vm.SelectedStep == null)
             return;
 
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
             vm.NumberFailedSteps = 0;
             vm.TestProgress = 0;
@@ -201,7 +198,7 @@ public class TestExecutionController : ITestExecutionController
 
     public async Task<bool> RequestSerialNumber(TestingTabViewModel vm)
     {
-        if (_projectSettings.IsUseSerialNumber)
+        if (_projectModel.Settings.IsUseSerialNumber)
         {
             var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
 

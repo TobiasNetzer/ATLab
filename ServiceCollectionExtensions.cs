@@ -14,13 +14,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBackendServices(this IServiceCollection services)
     {
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<IProjectStorage, ProjectStorage>();
         services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
         services.AddSingleton<IMessageBoxService, MessageBoxService>();
-        services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
-        services.AddSingleton<IProjectService, ProjectService>();
+        services.AddSingleton<IProjectDocumentService, ProjectDocumentService>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
@@ -35,11 +34,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestStepEditor, TestStepEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         services.AddSingleton<IFileContentReader, FileContentReader>();
-        
-        services.AddSingleton<ProjectSettings>();
-        services.AddSingleton<ProjectDocumentation>();
         services.AddSingleton<IAttachmentLauncherService, AttachmentLauncherService>();
-        services.AddSingleton<DeviceUnderTestInfo>();
         
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
@@ -56,6 +51,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
         
         services.AddSingleton<ControlModuleService>();
+
+        services.AddSingleton<ProjectModel>();
+        services.AddSingleton<ApplicationState>();
 
         return services;
     }
@@ -87,6 +85,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
         services.AddSingleton<RuntimeVariableEditorViewModel>();
         services.AddSingleton<TestInterfaceCommunicationViewModel>();
+        services.AddSingleton<WorkspaceEditorViewModel>();
 
         return services;
     }

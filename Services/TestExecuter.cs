@@ -45,7 +45,7 @@ public class TestExecutor : ITestExecutor
         IErrorService errorService,
         ITestStepEvaluator evaluator,
         IMessageBoxService messageBoxService,
-        ProjectSettings projectSettings,
+        ProjectModel projectModel,
         ICommandExecutor commandExecutor)
     {
         _testHardware = testHardware;
@@ -53,7 +53,7 @@ public class TestExecutor : ITestExecutor
         _errorService = errorService;
         _evaluator = evaluator;
         _messageBoxService = messageBoxService;
-        _projectSettings = projectSettings;
+        _projectSettings = projectModel.Settings;
         _commandExecutor = commandExecutor;
     }
 

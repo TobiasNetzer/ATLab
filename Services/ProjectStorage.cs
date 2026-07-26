@@ -7,17 +7,17 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class FileService : IFileService
+public class ProjectStorage : IProjectStorage
 {
     private readonly JsonSerializerOptions _options = new() { WriteIndented = true };
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    public string Serialize(AtlabFileDto dto)
+    private string Serialize(AtlabFileDto dto)
     {
         return JsonSerializer.Serialize(dto, _options);
     }
 
-    public AtlabFileDto? Deserialize(string json)
+    private AtlabFileDto? Deserialize(string json)
     {
         return JsonSerializer.Deserialize<AtlabFileDto>(json);
     }

@@ -19,8 +19,8 @@ public class PdfExportService : IPdfExportService
     private readonly IFileDialogService _fileDialogService;
     private readonly IErrorService _errorService;
     private readonly IHardwareInfo _hardwareInfo;
-    private readonly DeviceManagerViewModel _deviceManager;
     private readonly IDeviceIdentificationService _deviceIdentificationService;
+    private readonly ProjectModel _projectModel;
 
     private readonly List<DeviceIdentification> _devices = new();
 
@@ -28,14 +28,14 @@ public class PdfExportService : IPdfExportService
         IFileDialogService fileDialogService,
         IErrorService errorService,
         IHardwareInfo hardwareInfo,
-        DeviceManagerViewModel deviceManager,
-        IDeviceIdentificationService deviceIdentificationService)
+        IDeviceIdentificationService deviceIdentificationService,
+        ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
         _errorService = errorService;
         _hardwareInfo = hardwareInfo;
-        _deviceManager = deviceManager;
         _deviceIdentificationService = deviceIdentificationService;
+        _projectModel = projectModel;
     }
 
     public async Task ExportWithDialogAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo)
@@ -85,7 +85,7 @@ public class PdfExportService : IPdfExportService
     {
         _devices.Clear();
         
-        foreach (var device in _deviceManager.Devices)
+        foreach (var device in _projectModel.Devices)
         {
             if (!device.IsIncludeInReport)
                 continue;

@@ -15,9 +15,9 @@ namespace ATLab.ViewModels;
 public partial class DeviceManagerViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
-
-    [ObservableProperty]
-    private ObservableCollection<Device> _devices = new();
+    private readonly ProjectModel _projectModel;
+    
+    public ObservableCollection<Device> Devices => _projectModel.Devices;
 
     [ObservableProperty]
     private Device? _selectedDevice;
@@ -63,9 +63,10 @@ public partial class DeviceManagerViewModel : ViewModelBase
     public List<TcpTerminationMode> AvailableTcpTerminations { get; } =
         new(Enum.GetValues<TcpTerminationMode>());
 
-    public DeviceManagerViewModel(IErrorService errorService)
+    public DeviceManagerViewModel(IErrorService errorService, ProjectModel projectModel)
     {
         _errorService = errorService;
+        _projectModel = projectModel;
     }
     
     [RelayCommand]

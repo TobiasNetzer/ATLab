@@ -10,10 +10,10 @@ namespace ATLab.ViewModels;
 
 public partial class CommandEditorViewModel : ViewModelBase
 {
-    private readonly DeviceManagerViewModel _deviceManager;
     private readonly ISettingsService _settingsService;
+    private readonly ProjectModel _projectModel;
     
-    public ObservableCollection<Device> Devices => _deviceManager.Devices;
+    public ObservableCollection<Device> Devices => _projectModel.Devices;
 
     [ObservableProperty]
     private Device? _selectedDevice;
@@ -31,10 +31,10 @@ public partial class CommandEditorViewModel : ViewModelBase
     
     public CommandEditorViewModel(
         ISettingsService settingsService,
-        DeviceManagerViewModel deviceManager)
+        ProjectModel projectModel)
     {
         _settingsService = settingsService;
-        _deviceManager = deviceManager;
+        _projectModel = projectModel;
         
         IsExpanded = settingsService.Settings.IsCommandEditorExpanded;
     }

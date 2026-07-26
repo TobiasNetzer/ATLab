@@ -27,10 +27,10 @@ public partial class ProjectSettingsViewModel : ViewModelBase
 
     public ProjectSettingsViewModel(
         IFileDialogService fileDialogService,
-        ProjectSettings settings)
+        ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
-        Settings = settings;
+        Settings = projectModel.Settings;
         
         Settings.PropertyChanged += (_, e) =>
         {

@@ -1,39 +1,29 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Services;
 
-public partial class ProjectService : ObservableObject, IProjectService
+public class ProjectDocumentService : IProjectDocumentService
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly IFileService _fileService;
+    private readonly IProjectStorage _projectStorage;
     private readonly ISettingsService _settingsService;
     private readonly IMessageBoxService _messageBoxService;
-
-    [ObservableProperty]
-    private string? _currentFilePath;
-
-    [ObservableProperty]
-    private bool _isDirty;
-
-    public string ProjectName =>
-        string.IsNullOrEmpty(CurrentFilePath)
-            ? "Untitled"
-            : Path.GetFileNameWithoutExtension(CurrentFilePath);
-
-    public ProjectService(
+    private readonly ProjectModel _projectModel;
+    
+    public ProjectDocumentService(
         IFileDialogService fileDialogService,
-        IFileService fileService,
+        IProjectStorage projectStorage,
         ISettingsService settingsService,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
-        _fileService = fileService;
+        _projectStorage = projectStorage;
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
+        _projectModel = projectModel;
     }
 
     public async Task<AtlabFileDto?> OpenFileAsync()
@@ -45,31 +35,31 @@ public partial class ProjectService : ObservableObject, IProjectService
 
         if (file is not null)
         {
-            return await LoadAsync(file.Path.LocalPath);
+            return await OpenAsync(file.Path.LocalPath);
         }
 
         return null;
     }
 
-    public async Task<AtlabFileDto?> LoadAsync(string path)
+    public async Task<AtlabFileDto?> OpenAsync(string path)
     {
-        var dto = await _fileService.LoadAsync(path);
+        var dto = await _projectStorage.LoadAsync(path);
         if (dto == null)
             return dto;
         
-        CurrentFilePath = path;
+        _projectModel.MarkSaved(path);
         _settingsService.Settings.LastOpenedFile = path;
-        IsDirty = false;
         return dto;
     }
 
     public async Task<bool> SaveAsync(AtlabFileDto dto)
     {
-        if (string.IsNullOrWhiteSpace(CurrentFilePath))
+        if (string.IsNullOrWhiteSpace(_projectModel.FilePath))
             return await SaveAsAsync(dto);
         
-        await _fileService.SaveAsync(CurrentFilePath, dto);
-        IsDirty = false;
+        await _projectStorage.SaveAsync(_projectModel.FilePath, dto);
+        _projectModel.MarkSaved();
+        _settingsService.Settings.LastOpenedFile = _projectModel.FilePath;
         return true;
     }
 
@@ -80,10 +70,9 @@ public partial class ProjectService : ObservableObject, IProjectService
         if (file is null)
             return false;
         
-        await _fileService.SaveAsync(file.Path.LocalPath, dto);
-        CurrentFilePath = file.Path.LocalPath;
+        await _projectStorage.SaveAsync(file.Path.LocalPath, dto);
+        _projectModel.MarkSaved(file.Path.LocalPath);
         _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
-        IsDirty = false;
         return true;
     }
 
@@ -92,14 +81,13 @@ public partial class ProjectService : ObservableObject, IProjectService
         if (!await ConfirmAndContinueIfDirtyAsync())
             return false;
 
-        CurrentFilePath = null;
-        IsDirty = false;
+        _projectModel.Reset();
         return true;
     }
 
     public async Task<bool> ConfirmAndContinueIfDirtyAsync()
     {
-        if (IsDirty)
+        if (_projectModel.IsDirty)
         {
             var result = await _messageBoxService.ShowConfirmationAsync(
                 "Unsaved Changes", 
@@ -108,13 +96,7 @@ public partial class ProjectService : ObservableObject, IProjectService
                 "Cancel");
             if (!result) return false;
         }
-
-        IsDirty = false;
+        _projectModel.MarkSaved();
         return true;
-    }
-
-    public void UpdateLastSavedState(AtlabFileDto dto)
-    {
-        IsDirty = false;
     }
 }
