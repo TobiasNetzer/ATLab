@@ -17,7 +17,6 @@ public partial class TestingTabViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     private readonly IErrorService _errorService;
-
     private readonly IProjectController _projectController;
     private readonly ITestStepEditor _testStepEditor;
     private readonly ITestExecutionController _testExecutionController;
@@ -33,9 +32,6 @@ public partial class TestingTabViewModel : ViewModelBase
     public List<CustomVariable> RuntimeVariables { get; } = new();
     
     [ObservableProperty]
-    private TestHardwareRelayChannelsViewModel _testHardwareRelayChannels;
-    
-    [ObservableProperty]
     private TestStepViewModel? _selectedStep;
     
     [ObservableProperty]
@@ -45,28 +41,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private int _selectedStepIndex;
     
     [ObservableProperty]
-    private TestStepConfiguratorViewModel _testStepConfiguratorViewModel;
-    
-    [ObservableProperty]
-    private ResponseMaskEditorViewModel _responseMaskEditor;
-    
-    [ObservableProperty]
-    private ScriptSelectorViewModel _scriptSelector;
-    
-    [ObservableProperty]
-    private CommandEditorViewModel _commandEditor;
-    
-    [ObservableProperty]
-    private ShellCommandEditorViewModel _shellCommandEditor;
-    
-    [ObservableProperty]
-    private ExpressionEditorViewModel _expressionEditor;
-    
-    [ObservableProperty]
-    private FilePathEditorViewModel _filePathEditor;
-    
-    [ObservableProperty]
-    private TestInterfaceCommunicationViewModel _testInterfaceCommunication;
+    private EditorWorkspaceViewModel _editorWorkspace;
     
     [ObservableProperty]
     private bool _isDevelopmentMode;
@@ -136,14 +111,7 @@ public partial class TestingTabViewModel : ViewModelBase
     public TestingTabViewModel(
         ISettingsService settingsService,
         IErrorService errorService,
-        TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
-        TestStepConfiguratorViewModel testStepConfiguratorViewModel,
-        ResponseMaskEditorViewModel responseMaskEditor,
-        ScriptSelectorViewModel scriptSelector,
-        CommandEditorViewModel commandEditor,
-        ShellCommandEditorViewModel shellCommandEditor,
-        ExpressionEditorViewModel expressionEditor,
-        FilePathEditorViewModel filePathEditor,
+        EditorWorkspaceViewModel editorWorkspace,
         IProjectController projectController,
         ITestStepEditor testStepEditor,
         ITestExecutionController testExecutionController,
@@ -152,19 +120,11 @@ public partial class TestingTabViewModel : ViewModelBase
         ProjectDocumentation projectDocumentation,
         DeviceUnderTestInfo deviceUnderTestInfo,
         RuntimeVariableEditorViewModel runtimeVariableEditor,
-        TestInterfaceCommunicationViewModel testInterfaceCommunication,
         ControlModuleService controlModuleService)
     {
         _settingsService = settingsService;
         _errorService = errorService;
-        TestHardwareRelayChannels = testHardwareRelayChannels;
-        TestStepConfiguratorViewModel = testStepConfiguratorViewModel;
-        ResponseMaskEditor = responseMaskEditor;
-        ScriptSelector = scriptSelector;
-        CommandEditor = commandEditor;
-        ShellCommandEditor = shellCommandEditor;
-        ExpressionEditor = expressionEditor;
-        FilePathEditor = filePathEditor;
+        EditorWorkspace = editorWorkspace;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
         _testExecutionController = testExecutionController;
@@ -172,14 +132,13 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectDocumentation = projectDocumentation;
         _deviceUnderTestInfo = deviceUnderTestInfo;
         _runtimeVariableEditor = runtimeVariableEditor;
-        _testInterfaceCommunication = testInterfaceCommunication;
         _controlModuleService = controlModuleService;
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
 
         TestSteps.CollectionChanged += (_, _) => CheckForChanges();
-        TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
+        EditorWorkspace.TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
         _projectSettings.SettingsChanged += () => CheckForChanges();
         deviceManager.Devices.CollectionChanged += DevicesChanged;
         _projectDocumentation.DocumentationChanged += () => CheckForChanges();
@@ -374,17 +333,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _suppressChangesCount++;
         try
         {
-            TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(value.TestStep.MatrixState);
-            TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(value.TestStep.LiveStimState);
-            TestHardwareRelayChannels.ExtStimChannelViewModel.LoadRelayStates(value.TestStep.LiveExtStimState);
-            TestStepConfiguratorViewModel.LoadTestStep(value, TestSteps);
-            ScriptSelector.LoadTestStep(value);
-            CommandEditor.LoadTestStep(value);
-            TestInterfaceCommunication.LoadTestStep(value);
-            ShellCommandEditor.LoadTestStep(value.TestStep.ShellCommand);
-            ExpressionEditor.LoadTestStep(value.TestStep);
-            FilePathEditor.LoadTestStep(value.TestStep);
-            ResponseMaskEditor.LoadTestStep(value);
+            EditorWorkspace.LoadTestStep(value, TestSteps);
         }
         catch (Exception ex)
         {

@@ -48,7 +48,7 @@ public class ProjectController : IProjectController
         using (vm.SuppressDirtyTracking())
         {
             vm.TestSteps.Clear();
-            vm.TestHardwareRelayChannels.ResetToDefault();
+            vm.EditorWorkspace.TestHardwareRelayChannels.ResetToDefault();
             _projectSettings.ResetToDefault();
             _projectDocumentation.ResetToDefault();
             _deviceUnderTestInfo.ResetToDefault();
@@ -82,7 +82,7 @@ public class ProjectController : IProjectController
             var dto = await _projectService.OpenFileAsync();
             if (dto != null)
             {
-                await CheckForHardwareCompatibility(vm.TestHardwareRelayChannels.HardwareInfo, dto);
+                await CheckForHardwareCompatibility(vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo, dto);
                 ApplyDto(vm, dto);
             }
         }
@@ -104,7 +104,7 @@ public class ProjectController : IProjectController
             var dto = await _projectService.LoadAsync(path);
             if (dto != null)
             {
-                await CheckForHardwareCompatibility(vm.TestHardwareRelayChannels.HardwareInfo, dto);
+                await CheckForHardwareCompatibility(vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo, dto);
                 ApplyDto(vm, dto);
             }
                 
@@ -125,7 +125,7 @@ public class ProjectController : IProjectController
 
             foreach (var step in dto.TestSteps)
             {
-                var vmStep = new TestStepViewModel(step, vm.TestHardwareRelayChannels.HardwareInfo);
+                var vmStep = new TestStepViewModel(step, vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo);
                 vmStep.PropertyChanged += vm.OnStepPropertyChanged;
                 vm.TestSteps.Add(vmStep);
             }
@@ -134,7 +134,7 @@ public class ProjectController : IProjectController
             _projectDocumentation.CopyFrom(dto.ProjectDocumentation);
             _deviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
 
-            vm.TestHardwareRelayChannels.ApplyChannelNames(
+            vm.EditorWorkspace.TestHardwareRelayChannels.ApplyChannelNames(
                 dto.StimChannelNames,
                 dto.ExtStimChannelNames,
                 dto.MeasChannelNames);
@@ -164,9 +164,9 @@ public class ProjectController : IProjectController
         return new AtlabFileDto
         {
             TestSteps = vm.TestSteps.Select(s => s.TestStep).ToList(),
-            StimChannelNames = vm.TestHardwareRelayChannels.GetStimNames(),
-            ExtStimChannelNames = vm.TestHardwareRelayChannels.GetExtStimNames(),
-            MeasChannelNames = vm.TestHardwareRelayChannels.GetMeasNames(),
+            StimChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetStimNames(),
+            ExtStimChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetExtStimNames(),
+            MeasChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetMeasNames(),
             RuntimeVariables = _runtimeVariableEditorViewModel.RuntimeVariables.ToList(),
             Devices = _deviceManager.Devices.ToList(),
             ProjectSettings = _projectSettings,

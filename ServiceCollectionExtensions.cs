@@ -87,6 +87,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
         services.AddSingleton<RuntimeVariableEditorViewModel>();
         services.AddSingleton<TestInterfaceCommunicationViewModel>();
+        services.AddSingleton<EditorWorkspaceViewModel>();
 
         return services;
     }

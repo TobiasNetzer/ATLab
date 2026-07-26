@@ -419,45 +419,45 @@
                         IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
                 
                 <controls:TestStepConfigurator 
-                    DataContext="{Binding TestStepConfiguratorViewModel}"/>
+                    DataContext="{Binding EditorWorkspace.TestStepConfigurator}"/>
 
                 <controls:ScriptSelector
-                    ScriptSelectorVm="{Binding ScriptSelector}"
+                    ScriptSelectorVm="{Binding EditorWorkspace.ScriptSelector}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SCRIPT}"/>
                 
                 <controls:CommandEditor
-                    CommandEditorVm="{Binding CommandEditor}"
+                    CommandEditorVm="{Binding EditorWorkspace.CommandEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND}"/>
                 
                 <controls:ShellCommandEditor
-                    ShellCommandEditorVm="{Binding ShellCommandEditor}"
+                    ShellCommandEditorVm="{Binding EditorWorkspace.ShellCommandEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND}"/>
                 
                 <controls:ExpressionEditor
-                    ExpressionEditorVm="{Binding ExpressionEditor}"
+                    ExpressionEditorVm="{Binding EditorWorkspace.ExpressionEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXPRESSION}"/>
 
                 <controls:FilePathEditor
-                    FilePathEditorVm="{Binding FilePathEditor}"
+                    FilePathEditorVm="{Binding EditorWorkspace.FilePathEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FILE}"/>
                 
                 <controls:TestInterfaceCommunication
-                    TestInterfaceCommunicationVm="{Binding TestInterfaceCommunication}"
+                    TestInterfaceCommunicationVm="{Binding EditorWorkspace.TestInterfaceCommunication}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INTERFACE}"/>
                 
                 <controls:ResponseMaskEditor
-                    ResponseMaskEditorVm="{Binding ResponseMaskEditor}"
+                    ResponseMaskEditorVm="{Binding EditorWorkspace.ResponseMaskEditor}"
                     IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE'}"/>
                 
                 <controls:MeasSelector
-                    DataContext="{Binding TestHardwareRelayChannels.MeasChannelViewModel}" />
+                    DataContext="{Binding EditorWorkspace.TestHardwareRelayChannels.MeasChannelViewModel}" />
 
                 <controls:StimSelector
-                    DataContext="{Binding TestHardwareRelayChannels.StimChannelViewModel}"
+                    DataContext="{Binding EditorWorkspace.TestHardwareRelayChannels.StimChannelViewModel}"
                     GridColumns="2" />
 
                 <controls:ExtStimSelector
-                    DataContext="{Binding TestHardwareRelayChannels.ExtStimChannelViewModel}"
+                    DataContext="{Binding EditorWorkspace.TestHardwareRelayChannels.ExtStimChannelViewModel}"
                     GridColumns="2" />
 
             </StackPanel>
