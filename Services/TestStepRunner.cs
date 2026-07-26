@@ -91,8 +91,8 @@ public class TestStepRunner : ITestStepRunner
                         "Awaiting User Response",
                         step.TestStep.Comment,
                         step.TestStep.CustomMessageBoxImagePath,
-                        "Pass",
-                        "Fail",
+                        "Yes",
+                        "No",
                         true);
 
                     return OperationResult<double>.Success(Convert.ToDouble(operatorResponse));
