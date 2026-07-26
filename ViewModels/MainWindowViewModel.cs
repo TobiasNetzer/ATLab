@@ -4,6 +4,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,10 +15,11 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
     private readonly ISimulationService _simulationService;
-    private readonly IProjectService _projectService;
+    private readonly IProjectFileService _projectFileService;
     private readonly ISettingsService _settingsService;
+    private readonly ProjectModel _projectModel;
 
-    public string WindowTitle => $"ATLab - Project: {_projectService.ProjectName}{(_projectService.IsDirty ? "*" : "")}";
+    public string WindowTitle => $"ATLab - Project: {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -49,7 +51,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(IErrorService errorService,
         ISimulationService simulationService,
-        IProjectService projectService,
+        IProjectFileService projectFileService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
@@ -57,13 +59,15 @@ public partial class MainWindowViewModel : ViewModelBase
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ProjectModel projectModel)
     {
         _errorService = errorService;
         _simulationService = simulationService;
-        _projectService = projectService;
+        _projectFileService = projectFileService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
+        _projectModel = projectModel;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -87,9 +91,10 @@ public partial class MainWindowViewModel : ViewModelBase
             HasErrors = ErrorCount > 0;
         };
 
-        _projectService.PropertyChanged += (s, e) =>
+        _projectModel.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName is nameof(IProjectService.CurrentFilePath) or nameof(IProjectService.IsDirty))
+            if (e.PropertyName is nameof(ProjectModel.FilePath) or
+                nameof(ProjectModel.IsDirty))
             {
                 OnPropertyChanged(nameof(WindowTitle));
             }
@@ -114,7 +119,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Close()
     {
-        if (await _projectService.ConfirmAndContinueIfDirtyAsync())
+        if (await _projectFileService.ConfirmAndContinueIfDirtyAsync())
         {
             RequestClose?.Invoke();
         }

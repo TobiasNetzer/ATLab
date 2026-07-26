@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -20,16 +21,12 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IProjectController _projectController;
     private readonly ITestStepEditor _testStepEditor;
     private readonly ITestExecutionController _testExecutionController;
-    private readonly ProjectSettings _projectSettings;
-    private readonly ProjectDocumentation _projectDocumentation;
-    private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
-    private readonly RuntimeVariableEditorViewModel _runtimeVariableEditor;
     private readonly ControlModuleService _controlModuleService;
+    private readonly ProjectModel _projectModel;
     
-    [ObservableProperty]
-    private ObservableCollection<TestStepViewModel> _testSteps = new();
+    public ObservableCollection<TestStepViewModel> TestSteps { get; } = new();
 
-    public List<CustomVariable> RuntimeVariables { get; } = new();
+    public List<CustomVariable> RuntimeVariables = new();
     
     [ObservableProperty]
     private TestStepViewModel? _selectedStep;
@@ -41,7 +38,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private int _selectedStepIndex;
     
     [ObservableProperty]
-    private EditorWorkspaceViewModel _editorWorkspace;
+    private WorkspaceEditorViewModel _workspaceEditor;
     
     [ObservableProperty]
     private bool _isDevelopmentMode;
@@ -73,8 +70,6 @@ public partial class TestingTabViewModel : ViewModelBase
     public bool AllowResultSave { get; set; }
     public DateTimeOffset StartTime { get; set; }
     public TimeSpan Elapsed => DateTimeOffset.Now - StartTime;
-
-    private int _suppressChangesCount;
     
     private bool _isAnimationEnabled = true;
     public bool IsAnimationEnabled
@@ -92,7 +87,6 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private int _testProgress;
-
     public int TestProgress
     {
         get => _testProgress;
@@ -111,47 +105,35 @@ public partial class TestingTabViewModel : ViewModelBase
     public TestingTabViewModel(
         ISettingsService settingsService,
         IErrorService errorService,
-        EditorWorkspaceViewModel editorWorkspace,
+        ProjectModel projectModel,
+        WorkspaceEditorViewModel workspaceEditor,
         IProjectController projectController,
         ITestStepEditor testStepEditor,
         ITestExecutionController testExecutionController,
-        DeviceManagerViewModel deviceManager,
-        ProjectSettings projectSettings,
-        ProjectDocumentation projectDocumentation,
-        DeviceUnderTestInfo deviceUnderTestInfo,
-        RuntimeVariableEditorViewModel runtimeVariableEditor,
         ControlModuleService controlModuleService)
     {
         _settingsService = settingsService;
         _errorService = errorService;
-        EditorWorkspace = editorWorkspace;
+        _projectModel = projectModel;
+        WorkspaceEditor = workspaceEditor;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
         _testExecutionController = testExecutionController;
-        _projectSettings = projectSettings;
-        _projectDocumentation = projectDocumentation;
-        _deviceUnderTestInfo = deviceUnderTestInfo;
-        _runtimeVariableEditor = runtimeVariableEditor;
+
         _controlModuleService = controlModuleService;
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
 
-        TestSteps.CollectionChanged += (_, _) => CheckForChanges();
-        EditorWorkspace.TestHardwareRelayChannels.ConfigurationChanged += () => CheckForChanges();
-        _projectSettings.SettingsChanged += () => CheckForChanges();
-        deviceManager.Devices.CollectionChanged += DevicesChanged;
-        _projectDocumentation.DocumentationChanged += () => CheckForChanges();
-        _deviceUnderTestInfo.DeviceUnderTestInfoChanged += () => CheckForChanges();
-        _runtimeVariableEditor.RuntimeVariables.CollectionChanged += RuntimeVariablesChanged;
+        _projectModel.TestSteps.CollectionChanged += ProjectTestStepsChanged;
         
-        foreach (var device in deviceManager.Devices)
-            SubscribeToDevice(device);
+        _projectModel.RuntimeVariables.CollectionChanged += SynchronizeRuntimeVariables;
+        
         _testExecutionController.HookExecutorEvents(this);
         
-        _projectSettings.ControlModuleSettingChanged += () => 
+        _projectModel.Settings.ControlModuleSettingChanged += () => 
         {
-            if (_projectSettings.IsControlModuleEnabled)
+            if (_projectModel.Settings.IsControlModuleEnabled)
                 _controlModuleService.Initialize();
             else
                 _controlModuleService.Dispose();
@@ -176,19 +158,54 @@ public partial class TestingTabViewModel : ViewModelBase
             });
         };
     }
-
-    public IDisposable SuppressDirtyTracking()
+    
+    private void ProjectTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _suppressChangesCount++;
-        return new ActionOnDispose(() => _suppressChangesCount--);
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            var index = e.NewStartingIndex;
+
+            foreach (TestStep step in e.NewItems!)
+            {
+                var vm = _testStepEditor.CreateViewModel(step);
+                vm.PropertyChanged += OnStepPropertyChanged;
+
+                TestSteps.Insert(index++, vm);
+            }
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            foreach (TestStep step in e.OldItems!)
+            {
+                var vm = TestSteps.First(x => ReferenceEquals(x.TestStep, step));
+
+                vm.PropertyChanged -= OnStepPropertyChanged;
+
+                TestSteps.Remove(vm);
+            }
+        }
+        
+        if (e.Action == NotifyCollectionChangedAction.Move)
+        {
+            TestSteps.Move(e.OldStartingIndex, e.NewStartingIndex);
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            foreach (var vm in TestSteps)
+                vm.PropertyChanged -= OnStepPropertyChanged;
+
+            TestSteps.Clear();
+        }
     }
-
-    private void CheckForChanges()
+    
+    private void SynchronizeRuntimeVariables(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
     {
-        if (_suppressChangesCount > 0)
-            return;
+        RuntimeVariables.Clear();
 
-        _projectController.MarkDirty();
+        foreach (var variable in _projectModel.RuntimeVariables)
+            RuntimeVariables.Add(variable.Clone());
     }
 
     public void AddInitialStep() => _testStepEditor.AddStep(this);
@@ -208,20 +225,14 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         if (sender is not TestStepViewModel changedVm)
             return;
-        
-        var isTestStepProperty = string.IsNullOrWhiteSpace(e.PropertyName) || 
+
+        var isTestStepProperty = string.IsNullOrWhiteSpace(e.PropertyName) ||
                                  typeof(TestStep).GetProperty(e.PropertyName) != null;
 
         if (isTestStepProperty)
-            CheckForChanges();
+            _projectModel.MarkDirty();
 
-        if (changedVm != SelectedStep)
-            return;
-        
-        if (string.IsNullOrWhiteSpace(e.PropertyName))
-            return;
-        
-        if (!isTestStepProperty)
+        if (changedVm != SelectedStep || !isTestStepProperty || string.IsNullOrWhiteSpace(e.PropertyName))
             return;
 
         foreach (var vm in SelectedSteps)
@@ -243,105 +254,20 @@ public partial class TestingTabViewModel : ViewModelBase
         prop.SetValue(target, value);
     }
     
-    private void RuntimeVariablesChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.NewItems != null)
-        {
-            foreach (CustomVariable variable in e.NewItems)
-                SubscribeToVariable(variable);
-        }
-
-        if (e.OldItems != null)
-        {
-            foreach (CustomVariable variable in e.OldItems)
-                UnsubscribeFromVariable(variable);
-        }
-        
-        RuntimeVariables.Clear();
-        foreach (var v in _runtimeVariableEditor.RuntimeVariables)
-        {
-            RuntimeVariables.Add(v.Clone());
-        }
-
-        CheckForChanges();
-    }
-    
-    private void SubscribeToVariable(CustomVariable variable)
-    {
-        variable.PropertyChanged += VariableChanged;
-    }
-
-    private void UnsubscribeFromVariable(CustomVariable variable)
-    {
-        variable.PropertyChanged -= VariableChanged;
-    }
-
-    private void VariableChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        RuntimeVariables.Clear();
-        foreach (var v in _runtimeVariableEditor.RuntimeVariables)
-        {
-            RuntimeVariables.Add(v.Clone());
-        }
-        
-        CheckForChanges();
-    }
-    
-    private void DevicesChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (e.NewItems != null)
-        {
-            foreach (Device device in e.NewItems)
-                SubscribeToDevice(device);
-        }
-
-        if (e.OldItems != null)
-        {
-            foreach (Device device in e.OldItems)
-                UnsubscribeFromDevice(device);
-        }
-
-        CheckForChanges();
-    }
-
-    private void SubscribeToDevice(Device device)
-    {
-        device.PropertyChanged += DeviceChanged;
-        device.Configuration.PropertyChanged += DeviceConfigurationChanged;
-    }
-
-    private void UnsubscribeFromDevice(Device device)
-    {
-        device.PropertyChanged -= DeviceChanged;
-        device.Configuration.PropertyChanged -= DeviceConfigurationChanged;
-    }
-
-    private void DeviceChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        CheckForChanges();
-    }
-
-    private void DeviceConfigurationChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        CheckForChanges();
-    }
-    
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
         if (value?.TestStep == null) return;
         
-        _suppressChangesCount++;
-        try
+        using (_projectModel.SuppressDirtyTracking())
         {
-            EditorWorkspace.LoadTestStep(value, TestSteps);
-        }
-        catch (Exception ex)
-        {
-            _errorService.AddError("Exception: " + ex.Message);
-        }
-        finally
-        {
-            _suppressChangesCount--;
+            try
+            {
+                WorkspaceEditor.LoadTestStep(value, TestSteps);
+            }
+            catch (Exception ex)
+            {
+                _errorService.AddError("Exception: " + ex.Message);
+            }
         }
     }
 
@@ -364,7 +290,7 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestCommand.NotifyCanExecuteChanged();
         StartSingleStepTestCommand.NotifyCanExecuteChanged();
 
-        if (_projectSettings.IsControlModuleEnabled)
+        if (_projectModel.Settings.IsControlModuleEnabled)
             _controlModuleService.SetStatus(value);
     }
     
@@ -381,10 +307,10 @@ public partial class TestingTabViewModel : ViewModelBase
     public Task NewFile() => _projectController.NewProjectAsync(this);
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task SaveFile() => _projectController.SaveFileAsync(this);
+    private Task SaveFile() => _projectController.SaveFileAsync();
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task SaveFileAs() => _projectController.SaveFileAsAsync(this);
+    private Task SaveFileAs() => _projectController.SaveFileAsAsync();
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private Task LoadFileWithDialog() => _projectController.LoadFileWithDialogAsync(this);
@@ -416,7 +342,6 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void MoveStepDown() => _testStepEditor.MoveStepDown(this);
     
-
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private Task StartTest() => _testExecutionController.StartTestAsync(this);
     

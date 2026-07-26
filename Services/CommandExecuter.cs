@@ -8,14 +8,13 @@ using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
 public class CommandExecutor : ICommandExecutor
 {
     private readonly ICommunicationFactory _communicationFactory;
-    private readonly DeviceManagerViewModel _deviceManager;
+    private readonly ProjectModel _projectModel;
 
     private ICommunication? _deviceInterface;
     private DeviceConfiguration? _lastConfig;
@@ -24,10 +23,10 @@ public class CommandExecutor : ICommandExecutor
 
     public CommandExecutor(
         ICommunicationFactory communicationFactory,
-        DeviceManagerViewModel deviceManager)
+        ProjectModel projectModel)
     {
         _communicationFactory = communicationFactory;
-        _deviceManager = deviceManager;
+        _projectModel = projectModel;
     }
 
     public Task<OperationResult<byte[]>> ExecuteAsync(
@@ -55,7 +54,7 @@ public class CommandExecutor : ICommandExecutor
 
         try
         {
-            var device = _deviceManager.Devices.FirstOrDefault(d => d.Id == targetDeviceId);
+            var device = _projectModel.Devices.FirstOrDefault(d => d.Id == targetDeviceId);
             if (device == null)
             {
                 return OperationResult<byte[]>.Failure($"Target Device ID {targetDeviceId} not found.");

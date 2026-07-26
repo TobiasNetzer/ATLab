@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -18,12 +17,12 @@ public class TestResultExportService : ITestResultExportService
     private readonly IErrorService _errorService;
 
     public TestResultExportService(
-        ProjectSettings settings,
+        ProjectModel projectModel,
         ICsvExportService csvExportService,
         IPdfExportService pdfExportService,
         IErrorService errorService)
     {
-        _settings = settings;
+        _settings = projectModel.Settings;
         _csvExportService = csvExportService;
         _pdfExportService = pdfExportService;
         _errorService = errorService;

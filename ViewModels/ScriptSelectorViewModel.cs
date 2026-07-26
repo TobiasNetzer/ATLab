@@ -9,11 +9,11 @@ namespace ATLab.ViewModels;
 
 public partial class ScriptSelectorViewModel : ViewModelBase
 {
-    private readonly DeviceManagerViewModel _deviceManager;
     private readonly IScriptService _scriptService;
     private readonly ISettingsService _settingsService;
+    private readonly ProjectModel _projectModel;
     
-    public ObservableCollection<Device> Devices => _deviceManager.Devices;
+    public ObservableCollection<Device> Devices => _projectModel.Devices;
     public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
     [ObservableProperty]
@@ -36,13 +36,13 @@ public partial class ScriptSelectorViewModel : ViewModelBase
     private bool _isSyncing;
     
     public ScriptSelectorViewModel(
-        DeviceManagerViewModel deviceManager,
         IScriptService scriptService,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ProjectModel projectModel)
     {
-        _deviceManager = deviceManager;
         _scriptService = scriptService;
         _settingsService = settingsService;
+        _projectModel = projectModel;
         
         IsExpanded = settingsService.Settings.IsScriptSelectorExpanded;
     }

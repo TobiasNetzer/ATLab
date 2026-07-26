@@ -7,10 +7,17 @@ namespace ATLab.ViewModels;
 
 public partial class RuntimeVariableEditorViewModel : ViewModelBase
 {
-    public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
+    private readonly ProjectModel _projectModel;
+    
+    public ObservableCollection<CustomVariable> RuntimeVariables => _projectModel.RuntimeVariables;
 
     [ObservableProperty]
     private CustomVariable? _selectedVariable;
+
+    public RuntimeVariableEditorViewModel(ProjectModel projectModel)
+    {
+        _projectModel = projectModel;
+    }
     
     [RelayCommand]
     private void AddVariable()

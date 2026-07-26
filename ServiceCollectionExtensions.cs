@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
-        services.AddSingleton<IProjectService, ProjectService>();
+        services.AddSingleton<IProjectFileService, ProjectFileService>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
@@ -35,11 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestStepEditor, TestStepEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         services.AddSingleton<IFileContentReader, FileContentReader>();
-        
-        services.AddSingleton<ProjectSettings>();
-        services.AddSingleton<ProjectDocumentation>();
         services.AddSingleton<IAttachmentLauncherService, AttachmentLauncherService>();
-        services.AddSingleton<DeviceUnderTestInfo>();
         
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
@@ -56,6 +52,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
         
         services.AddSingleton<ControlModuleService>();
+
+        services.AddSingleton<ProjectModel>();
 
         return services;
     }
@@ -87,7 +85,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<SerialNumberEntryWindowViewModel>();
         services.AddSingleton<RuntimeVariableEditorViewModel>();
         services.AddSingleton<TestInterfaceCommunicationViewModel>();
-        services.AddSingleton<EditorWorkspaceViewModel>();
+        services.AddSingleton<WorkspaceEditorViewModel>();
 
         return services;
     }

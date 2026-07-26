@@ -2,7 +2,7 @@
 
 namespace ATLab.ViewModels;
 
-public class EditorWorkspaceViewModel
+public class WorkspaceEditorViewModel
 {
     public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }
     public TestStepConfiguratorViewModel TestStepConfigurator { get; }
@@ -14,7 +14,7 @@ public class EditorWorkspaceViewModel
     public FilePathEditorViewModel FilePathEditor { get; }
     public TestInterfaceCommunicationViewModel TestInterfaceCommunication { get; }
 
-    public EditorWorkspaceViewModel(
+    public WorkspaceEditorViewModel(
         TestHardwareRelayChannelsViewModel testHardwareRelayChannels,
         TestStepConfiguratorViewModel testStepConfigurator,
         ResponseMaskEditorViewModel responseMaskEditor,

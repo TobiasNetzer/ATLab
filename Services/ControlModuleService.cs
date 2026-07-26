@@ -32,10 +32,10 @@ public sealed class ControlModuleService : IDisposable
     public bool IsConnected => _stream != null && _stream.CanRead && !_disposed;
 
     public ControlModuleService(IErrorService errorService,
-        ProjectSettings settings)
+        ProjectModel projectModel)
     {
         _errorService = errorService;
-        _settings = settings;
+        _settings = projectModel.Settings;
     }
 
     public void Initialize()

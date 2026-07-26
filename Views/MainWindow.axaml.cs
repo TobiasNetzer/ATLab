@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia;
 using ATLab.Interfaces;
+using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Views;
@@ -9,7 +10,8 @@ namespace ATLab.Views;
 public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;
-    private readonly IProjectService? _projectService;
+    private readonly IProjectFileService? _projectFileService;
+    private readonly ProjectModel? _projectModel;
 
     public MainWindow()
     {
@@ -25,10 +27,11 @@ public partial class MainWindow : Window
         };
     }
 
-    public MainWindow(ISettingsService settingsService, IProjectService projectService) : this()
+    public MainWindow(ISettingsService settingsService, IProjectFileService projectFileService, ProjectModel projectModel) : this()
     {
         _settingsService = settingsService;
-        _projectService = projectService;
+        _projectFileService = projectFileService;
+        _projectModel = projectModel;
 
         var s = _settingsService.Settings;
 
@@ -54,18 +57,18 @@ public partial class MainWindow : Window
 
     }
 
-    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectService projectService) : this(settingsService, projectService)
+    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectFileService projectFileService, ProjectModel projectModel) : this(settingsService, projectFileService, projectModel)
     {
         DataContext = vm;
     }
 
     private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (_projectService != null && _projectService.IsDirty)
+        if (_projectFileService != null && _projectModel != null && _projectModel.IsDirty)
         {
             e.Cancel = true;
 
-            if (await _projectService.ConfirmAndContinueIfDirtyAsync())
+            if (await _projectFileService.ConfirmAndContinueIfDirtyAsync())
             {
                 Close();
             }

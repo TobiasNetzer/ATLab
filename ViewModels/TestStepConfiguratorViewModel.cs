@@ -63,12 +63,12 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
         IFileDialogService fileDialogService,
-        ProjectSettings projectSettings,
+        ProjectModel projectModel,
         RuntimeVariableEditorViewModel runtimeVariableEditorViewModel)
     {
         _settingsService = settingsService;
         _fileDialogService = fileDialogService;
-        _projectSettings = projectSettings;
+        _projectSettings = projectModel.Settings;
         _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
         
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;

@@ -21,8 +21,8 @@ public class TestStepRunner : ITestStepRunner
     private readonly IShellCommandRunner _shellCommandRunner;
     private readonly IMessageBoxService _messageBoxService;
     private readonly IFileContentReader _fileContentReader;
-    private readonly IProjectService _projectService;
     private readonly IInterfaceCommandExecuter _interfaceCommandExecuter;
+    private readonly ProjectModel _projectModel;
 
     public TestStepRunner(
         ITestHardware testHardware,
@@ -31,8 +31,8 @@ public class TestStepRunner : ITestStepRunner
         IShellCommandRunner shellCommandRunner,
         IMessageBoxService messageBoxService,
         IFileContentReader fileContentReader,
-        IProjectService projectService,
-        IInterfaceCommandExecuter interfaceCommandExecuter)
+        IInterfaceCommandExecuter interfaceCommandExecuter,
+        ProjectModel projectModel)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
@@ -40,8 +40,8 @@ public class TestStepRunner : ITestStepRunner
         _shellCommandRunner = shellCommandRunner;
         _messageBoxService = messageBoxService;
         _fileContentReader = fileContentReader;
-        _projectService = projectService;
         _interfaceCommandExecuter = interfaceCommandExecuter;
+        _projectModel = projectModel;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
@@ -83,7 +83,7 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.INTERFACE:
                     return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
                 
-                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option,Path.GetDirectoryName(_projectService.CurrentFilePath), token, runtimeVariables);
+                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {

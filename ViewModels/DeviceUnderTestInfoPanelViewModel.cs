@@ -6,8 +6,8 @@ public class DeviceUnderTestInfoPanelViewModel
 {
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; set; }
     
-    public DeviceUnderTestInfoPanelViewModel(DeviceUnderTestInfo deviceUnderTestInfo)
+    public DeviceUnderTestInfoPanelViewModel(ProjectModel projectModel)
     {
-        DeviceUnderTestInfo = deviceUnderTestInfo;
+        DeviceUnderTestInfo = projectModel.DeviceUnderTestInfo;
     }
 }

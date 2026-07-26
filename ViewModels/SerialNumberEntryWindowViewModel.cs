@@ -22,10 +22,10 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase, IDisposab
     private event Action OkHandler;
     private event Action CancelHandler;
     
-    public SerialNumberEntryWindowViewModel(ProjectSettings settings,
+    public SerialNumberEntryWindowViewModel(ProjectModel projectModel,
         ControlModuleService controlModuleService)
     { 
-        _settings = settings;
+        _settings = projectModel.Settings;
         _controlModuleService = controlModuleService;
         
         OkHandler += async () => 

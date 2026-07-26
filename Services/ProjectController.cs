@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -11,79 +10,64 @@ namespace ATLab.Services;
 
 public class ProjectController : IProjectController
 {
-    private readonly IProjectService _projectService;
+    private readonly IProjectFileService _projectFileService;
     private readonly IErrorService _errorService;
-    private readonly ProjectSettings _projectSettings;
-    private readonly ProjectDocumentation _projectDocumentation;
-    private readonly DeviceUnderTestInfo _deviceUnderTestInfo;
-    private readonly DeviceManagerViewModel _deviceManager;
+    private readonly IHardwareInfo _hardwareInfo;
+    private readonly ProjectModel _projectModel;
     private readonly IMessageBoxService _messageBoxService;
-    private readonly RuntimeVariableEditorViewModel _runtimeVariableEditorViewModel;
 
     public ProjectController(
-        IProjectService projectService,
+        IProjectFileService projectFileService,
         IErrorService errorService,
-        ProjectSettings projectSettings,
-        ProjectDocumentation projectDocumentation,
-        DeviceUnderTestInfo deviceUnderTestInfo,
-        DeviceManagerViewModel deviceManager,
-        IMessageBoxService messageBoxService,
-        RuntimeVariableEditorViewModel runtimeVariableEditorViewModel)
+        IHardwareInfo hardwareInfo,
+        ProjectModel projectModel,
+        IMessageBoxService messageBoxService)
     {
-        _projectService = projectService;
+        _projectFileService = projectFileService;
         _errorService = errorService;
-        _projectSettings = projectSettings;
-        _projectDocumentation = projectDocumentation;
-        _deviceUnderTestInfo = deviceUnderTestInfo;
-        _deviceManager = deviceManager;
+        _hardwareInfo = hardwareInfo;
+        _projectModel = projectModel;
         _messageBoxService = messageBoxService;
-        _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
     }
 
     public async Task NewProjectAsync(TestingTabViewModel vm)
     {
-        if (!await _projectService.NewProjectAsync())
+        if (!await _projectFileService.NewProjectAsync())
             return;
 
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
             vm.TestSteps.Clear();
-            vm.EditorWorkspace.TestHardwareRelayChannels.ResetToDefault();
-            _projectSettings.ResetToDefault();
-            _projectDocumentation.ResetToDefault();
-            _deviceUnderTestInfo.ResetToDefault();
-            _deviceManager.Devices.Clear();
-            _runtimeVariableEditorViewModel.RuntimeVariables.Clear();
-
-            _projectService.UpdateLastSavedState(CaptureCurrentState(vm));
-
+            _projectModel.Reset();
+            
             vm.SelectedStepIndex = -1;
             vm.AddInitialStep();
             vm.ResetTestCounters();
         }
     }
 
-    public async Task SaveFileAsync(TestingTabViewModel vm)
+    public async Task SaveFileAsync()
     {
-        var dto = CaptureCurrentState(vm);
-        await _projectService.SaveAsync(dto);
+        var dto = CaptureCurrentState();
+        await _projectFileService.SaveAsync(dto);
     }
 
-    public async Task SaveFileAsAsync(TestingTabViewModel vm)
+    public async Task SaveFileAsAsync()
     {
-        var dto = CaptureCurrentState(vm);
-        await _projectService.SaveAsAsync(dto);
+        var dto = CaptureCurrentState();
+        await _projectFileService.SaveAsAsync(dto);
     }
 
     public async Task LoadFileWithDialogAsync(TestingTabViewModel vm)
     {
         try
         {
-            var dto = await _projectService.OpenFileAsync();
+            var dto = await _projectFileService.OpenFileAsync();
             if (dto != null)
             {
-                await CheckForHardwareCompatibility(vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo, dto);
-                ApplyDto(vm, dto);
+                await CheckForHardwareCompatibility(_hardwareInfo, dto);
+                ApplyDto(dto);
+                vm.SelectedStepIndex = 0;
             }
         }
         catch (Exception ex)
@@ -98,14 +82,15 @@ public class ProjectController : IProjectController
     {
         try
         {
-            if (!await _projectService.ConfirmAndContinueIfDirtyAsync())
+            if (!await _projectFileService.ConfirmAndContinueIfDirtyAsync())
                 return;
 
-            var dto = await _projectService.LoadAsync(path);
+            var dto = await _projectFileService.LoadAsync(path);
             if (dto != null)
             {
-                await CheckForHardwareCompatibility(vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo, dto);
-                ApplyDto(vm, dto);
+                await CheckForHardwareCompatibility(_hardwareInfo, dto);
+                ApplyDto(dto);
+                vm.SelectedStepIndex = 0;
             }
                 
         }
@@ -117,65 +102,34 @@ public class ProjectController : IProjectController
         vm.ResetTestCounters();
     }
 
-    public void ApplyDto(TestingTabViewModel vm, AtlabFileDto dto)
+    private void ApplyDto(AtlabFileDto dto)
     {
-        using (vm.SuppressDirtyTracking())
+        using (_projectModel.SuppressDirtyTracking())
         {
-            vm.TestSteps.Clear();
-
-            foreach (var step in dto.TestSteps)
-            {
-                var vmStep = new TestStepViewModel(step, vm.EditorWorkspace.TestHardwareRelayChannels.HardwareInfo);
-                vmStep.PropertyChanged += vm.OnStepPropertyChanged;
-                vm.TestSteps.Add(vmStep);
-            }
-
-            _projectSettings.CopyFrom(dto.ProjectSettings);
-            _projectDocumentation.CopyFrom(dto.ProjectDocumentation);
-            _deviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
-
-            vm.EditorWorkspace.TestHardwareRelayChannels.ApplyChannelNames(
-                dto.StimChannelNames,
-                dto.ExtStimChannelNames,
-                dto.MeasChannelNames);
-
-            _deviceManager.Devices.Clear();
-            foreach (var device in dto.Devices)
-                _deviceManager.Devices.Add(device);
-            
-            _runtimeVariableEditorViewModel.RuntimeVariables.Clear();
-            foreach (var variable in dto.RuntimeVariables)
-                _runtimeVariableEditorViewModel.RuntimeVariables.Add(variable);
-            
-            foreach (var stepVm in vm.TestSteps)
-            {
-                TestStepRuntimeInitializer.InitializeRuntimeValues(stepVm.TestStep);
-            }
-            
-            vm.SelectedStepIndex = 0;
+            _projectModel.Load(dto);
         }
     }
 
-    public AtlabFileDto CaptureCurrentState(TestingTabViewModel vm)
+    private AtlabFileDto CaptureCurrentState()
     {
-        foreach (var stepVm in vm.TestSteps)
-            stepVm.TestStep.UpdateDtos();
+        foreach (var step in _projectModel.TestSteps)
+            step.UpdateDtos();
 
         return new AtlabFileDto
         {
-            TestSteps = vm.TestSteps.Select(s => s.TestStep).ToList(),
-            StimChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetStimNames(),
-            ExtStimChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetExtStimNames(),
-            MeasChannelNames = vm.EditorWorkspace.TestHardwareRelayChannels.GetMeasNames(),
-            RuntimeVariables = _runtimeVariableEditorViewModel.RuntimeVariables.ToList(),
-            Devices = _deviceManager.Devices.ToList(),
-            ProjectSettings = _projectSettings,
-            ProjectDocumentation = _projectDocumentation,
-            DeviceUnderTestInfo = _deviceUnderTestInfo
+            TestSteps = _projectModel.TestSteps.ToList(),
+            StimChannelNames = _projectModel.StimChannelNames.ToList(),
+            ExtStimChannelNames = _projectModel.ExtStimChannelNames.ToList(),
+            MeasChannelNames = _projectModel.MeasChannelNames.ToList(),
+            RuntimeVariables = _projectModel.RuntimeVariables.ToList(),
+            Devices = _projectModel.Devices.ToList(),
+            ProjectSettings = _projectModel.Settings,
+            ProjectDocumentation = _projectModel.Documentation,
+            DeviceUnderTestInfo = _projectModel.DeviceUnderTestInfo
         };
     }
 
-    public async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)
+    private async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)
     {
         List<string> warnings = [];
 
@@ -218,10 +172,5 @@ public class ProjectController : IProjectController
             var message = string.Join(Environment.NewLine, warnings);
             await _messageBoxService.ShowMessageAsync("Warning", message);
         }
-    }
-    
-    public void MarkDirty()
-    {
-        _projectService.IsDirty = true;
     }
 }
