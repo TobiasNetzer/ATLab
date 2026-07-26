@@ -14,13 +14,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBackendServices(this IServiceCollection services)
     {
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<IProjectStorage, ProjectStorage>();
         services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
         services.AddSingleton<IMessageBoxService, MessageBoxService>();
-        services.AddSingleton<ISimulationService, SimulationStateService>();
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
-        services.AddSingleton<IProjectFileService, ProjectFileService>();
+        services.AddSingleton<IProjectDocumentService, ProjectDocumentService>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();
         services.AddSingleton<IScriptService, ScriptService>();
         services.AddSingleton<IScriptRunner, ScriptRunner>();
@@ -54,6 +53,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ControlModuleService>();
 
         services.AddSingleton<ProjectModel>();
+        services.AddSingleton<ApplicationState>();
 
         return services;
     }

@@ -14,10 +14,10 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly IErrorService _errorService;
-    private readonly ISimulationService _simulationService;
-    private readonly IProjectFileService _projectFileService;
+    private readonly IProjectDocumentService _projectDocumentService;
     private readonly ISettingsService _settingsService;
     private readonly ProjectModel _projectModel;
+    private readonly ApplicationState _applicationState;
 
     public string WindowTitle => $"ATLab - Project: {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
     
@@ -38,7 +38,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<string> Errors => _errorService.Errors;
     
-    public bool IsSimulation => _simulationService.IsSimulationMode;
+    public bool IsSimulation => _applicationState.IsSimulationMode;
 
     [ObservableProperty]
     private int _errorCount;
@@ -50,8 +50,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isErrorFlyoutOpen;
 
     public MainWindowViewModel(IErrorService errorService,
-        ISimulationService simulationService,
-        IProjectFileService projectFileService,
+        IProjectDocumentService projectDocumentService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
@@ -60,14 +59,15 @@ public partial class MainWindowViewModel : ViewModelBase
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
         ISettingsService settingsService,
-        ProjectModel projectModel)
+        ProjectModel projectModel,
+        ApplicationState applicationState)
     {
         _errorService = errorService;
-        _simulationService = simulationService;
-        _projectFileService = projectFileService;
+        _projectDocumentService = projectDocumentService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
         _projectModel = projectModel;
+        _applicationState = applicationState;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -119,7 +119,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task Close()
     {
-        if (await _projectFileService.ConfirmAndContinueIfDirtyAsync())
+        if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
         {
             RequestClose?.Invoke();
         }

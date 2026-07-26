@@ -10,20 +10,20 @@ namespace ATLab.Services;
 
 public class ProjectController : IProjectController
 {
-    private readonly IProjectFileService _projectFileService;
+    private readonly IProjectDocumentService _projectDocumentService;
     private readonly IErrorService _errorService;
     private readonly IHardwareInfo _hardwareInfo;
     private readonly ProjectModel _projectModel;
     private readonly IMessageBoxService _messageBoxService;
 
     public ProjectController(
-        IProjectFileService projectFileService,
+        IProjectDocumentService projectDocumentService,
         IErrorService errorService,
         IHardwareInfo hardwareInfo,
         ProjectModel projectModel,
         IMessageBoxService messageBoxService)
     {
-        _projectFileService = projectFileService;
+        _projectDocumentService = projectDocumentService;
         _errorService = errorService;
         _hardwareInfo = hardwareInfo;
         _projectModel = projectModel;
@@ -32,7 +32,7 @@ public class ProjectController : IProjectController
 
     public async Task NewProjectAsync(TestingTabViewModel vm)
     {
-        if (!await _projectFileService.NewProjectAsync())
+        if (!await _projectDocumentService.NewProjectAsync())
             return;
 
         using (_projectModel.SuppressDirtyTracking())
@@ -49,20 +49,20 @@ public class ProjectController : IProjectController
     public async Task SaveFileAsync()
     {
         var dto = CaptureCurrentState();
-        await _projectFileService.SaveAsync(dto);
+        await _projectDocumentService.SaveAsync(dto);
     }
 
     public async Task SaveFileAsAsync()
     {
         var dto = CaptureCurrentState();
-        await _projectFileService.SaveAsAsync(dto);
+        await _projectDocumentService.SaveAsAsync(dto);
     }
 
     public async Task LoadFileWithDialogAsync(TestingTabViewModel vm)
     {
         try
         {
-            var dto = await _projectFileService.OpenFileAsync();
+            var dto = await _projectDocumentService.OpenFileAsync();
             if (dto != null)
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
@@ -82,10 +82,10 @@ public class ProjectController : IProjectController
     {
         try
         {
-            if (!await _projectFileService.ConfirmAndContinueIfDirtyAsync())
+            if (!await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
                 return;
 
-            var dto = await _projectFileService.LoadAsync(path);
+            var dto = await _projectDocumentService.OpenAsync(path);
             if (dto != null)
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);

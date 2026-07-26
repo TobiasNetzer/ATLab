@@ -10,7 +10,7 @@ namespace ATLab.Views;
 public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;
-    private readonly IProjectFileService? _projectFileService;
+    private readonly IProjectDocumentService? _projectDocumentService;
     private readonly ProjectModel? _projectModel;
 
     public MainWindow()
@@ -27,10 +27,10 @@ public partial class MainWindow : Window
         };
     }
 
-    public MainWindow(ISettingsService settingsService, IProjectFileService projectFileService, ProjectModel projectModel) : this()
+    public MainWindow(ISettingsService settingsService, IProjectDocumentService projectDocumentService, ProjectModel projectModel) : this()
     {
         _settingsService = settingsService;
-        _projectFileService = projectFileService;
+        _projectDocumentService = projectDocumentService;
         _projectModel = projectModel;
 
         var s = _settingsService.Settings;
@@ -57,18 +57,18 @@ public partial class MainWindow : Window
 
     }
 
-    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectFileService projectFileService, ProjectModel projectModel) : this(settingsService, projectFileService, projectModel)
+    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectDocumentService projectDocumentService, ProjectModel projectModel) : this(settingsService, projectDocumentService, projectModel)
     {
         DataContext = vm;
     }
 
     private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (_projectFileService != null && _projectModel != null && _projectModel.IsDirty)
+        if (_projectDocumentService != null && _projectModel != null && _projectModel.IsDirty)
         {
             e.Cancel = true;
 
-            if (await _projectFileService.ConfirmAndContinueIfDirtyAsync())
+            if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
             {
                 Close();
             }

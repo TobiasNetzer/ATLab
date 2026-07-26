@@ -4,23 +4,23 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public class ProjectFileService : IProjectFileService
+public class ProjectDocumentService : IProjectDocumentService
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly IFileService _fileService;
+    private readonly IProjectStorage _projectStorage;
     private readonly ISettingsService _settingsService;
     private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectModel _projectModel;
     
-    public ProjectFileService(
+    public ProjectDocumentService(
         IFileDialogService fileDialogService,
-        IFileService fileService,
+        IProjectStorage projectStorage,
         ISettingsService settingsService,
         IMessageBoxService messageBoxService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
-        _fileService = fileService;
+        _projectStorage = projectStorage;
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
         _projectModel = projectModel;
@@ -35,21 +35,20 @@ public class ProjectFileService : IProjectFileService
 
         if (file is not null)
         {
-            return await LoadAsync(file.Path.LocalPath);
+            return await OpenAsync(file.Path.LocalPath);
         }
 
         return null;
     }
 
-    public async Task<AtlabFileDto?> LoadAsync(string path)
+    public async Task<AtlabFileDto?> OpenAsync(string path)
     {
-        var dto = await _fileService.LoadAsync(path);
+        var dto = await _projectStorage.LoadAsync(path);
         if (dto == null)
             return dto;
         
-        _projectModel.FilePath = path;
+        _projectModel.MarkSaved(path);
         _settingsService.Settings.LastOpenedFile = path;
-        _projectModel.IsDirty = false;
         return dto;
     }
 
@@ -58,8 +57,9 @@ public class ProjectFileService : IProjectFileService
         if (string.IsNullOrWhiteSpace(_projectModel.FilePath))
             return await SaveAsAsync(dto);
         
-        await _fileService.SaveAsync(_projectModel.FilePath, dto);
-        _projectModel.IsDirty = false;
+        await _projectStorage.SaveAsync(_projectModel.FilePath, dto);
+        _projectModel.MarkSaved();
+        _settingsService.Settings.LastOpenedFile = _projectModel.FilePath;
         return true;
     }
 
@@ -70,10 +70,9 @@ public class ProjectFileService : IProjectFileService
         if (file is null)
             return false;
         
-        await _fileService.SaveAsync(file.Path.LocalPath, dto);
-        _projectModel.FilePath = file.Path.LocalPath;
+        await _projectStorage.SaveAsync(file.Path.LocalPath, dto);
+        _projectModel.MarkSaved(file.Path.LocalPath);
         _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
-        _projectModel.IsDirty = false;
         return true;
     }
 
@@ -82,8 +81,7 @@ public class ProjectFileService : IProjectFileService
         if (!await ConfirmAndContinueIfDirtyAsync())
             return false;
 
-        _projectModel.FilePath = null;
-        _projectModel.IsDirty = false;
+        _projectModel.Reset();
         return true;
     }
 
@@ -98,8 +96,6 @@ public class ProjectFileService : IProjectFileService
                 "Cancel");
             if (!result) return false;
         }
-
-        _projectModel.IsDirty = false;
         return true;
     }
 }

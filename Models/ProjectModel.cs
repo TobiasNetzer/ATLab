@@ -143,6 +143,17 @@ public partial class ProjectModel : ObservableObject
         IsDirty = true;
     }
     
+    public void MarkSaved()
+    {
+        IsDirty = false;
+    }
+    
+    public void MarkSaved(string? path)
+    {
+        FilePath = path;
+        IsDirty = false;
+    }
+    
     private void TestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.NewItems != null)
