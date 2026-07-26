@@ -32,6 +32,7 @@ public class TestReportComposer
         Assembly.GetEntryAssembly()?
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion
+            .Split('+')[0]
         ?? "Unknown";
     
     private static readonly byte[] LogoImage =
