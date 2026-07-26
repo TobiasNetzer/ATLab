@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
@@ -30,35 +29,25 @@ public class ProjectController : IProjectController
         _messageBoxService = messageBoxService;
     }
 
-    public async Task NewProjectAsync(TestingTabViewModel vm)
+    public async Task NewProjectAsync()
     {
         if (!await _projectDocumentService.NewProjectAsync())
             return;
-
-        using (_projectModel.SuppressDirtyTracking())
-        {
-            vm.TestSteps.Clear();
-            _projectModel.Reset();
-            
-            vm.SelectedStepIndex = -1;
-            vm.AddInitialStep();
-            vm.ResetTestCounters();
-        }
+        
+        _projectModel.CreateEmptyProject();
     }
 
     public async Task SaveFileAsync()
     {
-        var dto = CaptureCurrentState();
-        await _projectDocumentService.SaveAsync(dto);
+        await _projectDocumentService.SaveAsync(_projectModel.ToDto());
     }
 
     public async Task SaveFileAsAsync()
     {
-        var dto = CaptureCurrentState();
-        await _projectDocumentService.SaveAsAsync(dto);
+        await _projectDocumentService.SaveAsAsync(_projectModel.ToDto());
     }
 
-    public async Task LoadFileWithDialogAsync(TestingTabViewModel vm)
+    public async Task LoadFileWithDialogAsync()
     {
         try
         {
@@ -67,18 +56,15 @@ public class ProjectController : IProjectController
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
-                vm.SelectedStepIndex = 0;
             }
         }
         catch (Exception ex)
         {
             _errorService.AddError("Failed to load file: " + ex.Message);
         }
-
-        vm.ResetTestCounters();
     }
 
-    public async Task LoadFileAsync(TestingTabViewModel vm, string path)
+    public async Task LoadFileAsync(string path)
     {
         try
         {
@@ -90,7 +76,6 @@ public class ProjectController : IProjectController
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
-                vm.SelectedStepIndex = 0;
             }
                 
         }
@@ -98,8 +83,6 @@ public class ProjectController : IProjectController
         {
             _errorService.AddError($"Failed to load file {path}: " + ex.Message);
         }
-
-        vm.ResetTestCounters();
     }
 
     private void ApplyDto(AtlabFileDto dto)
@@ -108,25 +91,6 @@ public class ProjectController : IProjectController
         {
             _projectModel.Load(dto);
         }
-    }
-
-    private AtlabFileDto CaptureCurrentState()
-    {
-        foreach (var step in _projectModel.TestSteps)
-            step.UpdateDtos();
-
-        return new AtlabFileDto
-        {
-            TestSteps = _projectModel.TestSteps.ToList(),
-            StimChannelNames = _projectModel.StimChannelNames.ToList(),
-            ExtStimChannelNames = _projectModel.ExtStimChannelNames.ToList(),
-            MeasChannelNames = _projectModel.MeasChannelNames.ToList(),
-            RuntimeVariables = _projectModel.RuntimeVariables.ToList(),
-            Devices = _projectModel.Devices.ToList(),
-            ProjectSettings = _projectModel.Settings,
-            ProjectDocumentation = _projectModel.Documentation,
-            DeviceUnderTestInfo = _projectModel.DeviceUnderTestInfo
-        };
     }
 
     private async Task CheckForHardwareCompatibility(IHardwareInfo hardwareInfo, AtlabFileDto dto)

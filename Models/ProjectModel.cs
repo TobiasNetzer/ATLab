@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using ATLab.Helpers;
 using ATLab.Services;
 using ATLab.Interfaces;
@@ -99,6 +100,37 @@ public partial class ProjectModel : ObservableObject
         }
 
         IsDirty = false;
+    }
+    
+    public AtlabFileDto ToDto()
+    {
+        foreach (var step in TestSteps)
+            step.UpdateDtos();
+
+        return new AtlabFileDto
+        {
+            TestSteps = TestSteps.ToList(),
+            StimChannelNames = StimChannelNames.ToList(),
+            ExtStimChannelNames = ExtStimChannelNames.ToList(),
+            MeasChannelNames = MeasChannelNames.ToList(),
+            RuntimeVariables = RuntimeVariables.ToList(),
+            Devices = Devices.ToList(),
+            ProjectSettings = Settings,
+            ProjectDocumentation = Documentation,
+            DeviceUnderTestInfo = DeviceUnderTestInfo
+        };
+    }
+    
+    public void CreateEmptyProject()
+    {
+        using (SuppressDirtyTracking())
+        {
+            Reset();
+
+            TestSteps.Add(new TestStep());
+
+            MarkSaved(null);
+        }
     }
     
     public void Load(AtlabFileDto dto)

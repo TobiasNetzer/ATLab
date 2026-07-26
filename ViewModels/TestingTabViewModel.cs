@@ -304,7 +304,13 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.HasClipboard;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public Task NewFile() => _projectController.NewProjectAsync(this);
+    private async Task NewFile()
+    {
+        await _projectController.NewProjectAsync();
+
+        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        ResetTestCounters();
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private Task SaveFile() => _projectController.SaveFileAsync();
@@ -313,10 +319,22 @@ public partial class TestingTabViewModel : ViewModelBase
     private Task SaveFileAs() => _projectController.SaveFileAsAsync();
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task LoadFileWithDialog() => _projectController.LoadFileWithDialogAsync(this);
+    private async Task LoadFileWithDialog()
+    {
+        await _projectController.LoadFileWithDialogAsync();
+
+        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        ResetTestCounters();
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    public Task LoadFile(string path) => _projectController.LoadFileAsync(this, path);
+    public async Task LoadFile(string path)
+    {
+        await _projectController.LoadFileAsync(path);
+
+        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        ResetTestCounters();
+    }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private void AddTestStep() => _testStepEditor.AddStep(this);

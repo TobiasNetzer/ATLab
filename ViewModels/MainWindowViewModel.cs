@@ -110,7 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
         HasErrors = false;
     }
     
-    private async Task NewFile() => await TestingTab.NewFile();
+    private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
     
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
