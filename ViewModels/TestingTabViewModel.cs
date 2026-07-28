@@ -101,6 +101,8 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(200) : TimeSpan.Zero;
+    
+    public bool CanPaste => _testStepEditor.CanPaste;
 
     public TestingTabViewModel(
         ISettingsService settingsService,
@@ -207,9 +209,42 @@ public partial class TestingTabViewModel : ViewModelBase
         foreach (var variable in _projectModel.RuntimeVariables)
             RuntimeVariables.Add(variable.Clone());
     }
+    
+    private int ComputeInsertIndex()
+    {
+        if (SelectedSteps.Count == 0)
+            return TestSteps.Count;
 
-    public void AddInitialStep() => _testStepEditor.AddStep(this);
+        return SelectedSteps
+            .Select(x => TestSteps.IndexOf(x))
+            .Max() + 1;
+    }
+    
+    public TestStepViewModel FindViewModel(TestStep model)
+    {
+        return TestSteps.First(x => ReferenceEquals(x.TestStep, model));
+    }
+    
+    public void Select(TestStep model)
+    {
+        SelectedSteps.Clear();
 
+        var vm = FindViewModel(model);
+
+        SelectedSteps.Add(vm);
+        SelectedStep = vm;
+    }
+    
+    public void Select(IEnumerable<TestStep> models)
+    {
+        SelectedSteps.Clear();
+
+        foreach (var model in models)
+            SelectedSteps.Add(FindViewModel(model));
+
+        SelectedStep = SelectedSteps.LastOrDefault();
+    }
+    
     public void ResetTestCounters()
     {
         NumberPassedTests = 0;
@@ -219,7 +254,11 @@ public partial class TestingTabViewModel : ViewModelBase
         TestStatus = TestStatus.IDLE;
     }
 
-    public void NotifyPasteChanged() => PasteTestStepsCommand.NotifyCanExecuteChanged();
+    private void NotifyPasteChanged()
+    {
+        PasteTestStepsCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanPaste));
+    }
 
     public void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -301,7 +340,7 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
     private bool IsTestRunning() => TestStatus == TestStatus.RUNNING;
-    private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.HasClipboard;
+    private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.CanPaste;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task NewFile()
@@ -337,28 +376,116 @@ public partial class TestingTabViewModel : ViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void AddTestStep() => _testStepEditor.AddStep(this);
+    private void AddTestStep()
+    {
+        var step = _testStepEditor.AddStep(ComputeInsertIndex());
+
+        Select(step);
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void DuplicateTestSteps() => _testStepEditor.DuplicateSteps(this);
+    private void DuplicateTestSteps()
+    {
+        if (SelectedSteps.Count == 0)
+            return;
+
+        var models = SelectedSteps
+            .Select(x => x.TestStep)
+            .ToList();
+
+        var inserted = _testStepEditor.DuplicateSteps(
+            models,
+            ComputeInsertIndex());
+
+        Select(inserted);
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void CopyTestSteps() => _testStepEditor.CopySteps(this);
+    private void CopyTestSteps()
+    {
+        if (SelectedSteps.Count == 0)
+            return;
+
+        _testStepEditor.CopySteps(
+            SelectedSteps.Select(x => x.TestStep));
+
+        NotifyPasteChanged();
+    }
     
     [RelayCommand(CanExecute = nameof(CanPasteTestStep))]
-    private void PasteTestSteps() => _testStepEditor.PasteSteps(this);
+    private void PasteTestSteps()
+    {
+        var inserted = _testStepEditor.PasteSteps(ComputeInsertIndex());
+
+        if (inserted.Count == 0)
+            return;
+
+        Select(inserted);
+
+        NotifyPasteChanged();
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void CutTestSteps() => _testStepEditor.CutSteps(this);
+    private void CutTestSteps()
+    {
+        var removed = _testStepEditor.CutSteps(
+            SelectedSteps.Select(x => x.TestStep));
+
+        if (removed.Count == 0)
+            return;
+
+        SelectedSteps.Clear();
+        SelectedStep = null;
+
+        NotifyPasteChanged();
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void RemoveTestSteps() => _testStepEditor.RemoveSteps(this);
+    private void RemoveTestSteps()
+    {
+        if (SelectedSteps.Count == 0)
+            return;
+
+        var models = SelectedSteps
+            .Select(x => x.TestStep)
+            .ToList();
+
+        var index = _testStepEditor.RemoveSteps(models);
+
+        if (index >= 0)
+        {
+            Select(TestSteps[index].TestStep);
+        }
+        else
+        {
+            SelectedSteps.Clear();
+            SelectedStep = null;
+        }
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void MoveStepUp() => _testStepEditor.MoveStepUp(this);
-    
+    private void MoveStepUp()
+    {
+        if (SelectedStep == null)
+            return;
+
+        var step = SelectedStep.TestStep;
+
+        if (_testStepEditor.MoveStepUp(step))
+            Select(step);
+    }
+
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private void MoveStepDown() => _testStepEditor.MoveStepDown(this);
+    private void MoveStepDown()
+    {
+        if (SelectedStep == null)
+            return;
+
+        var step = SelectedStep.TestStep;
+
+        if (_testStepEditor.MoveStepDown(step))
+            Select(step);
+    }
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private Task StartTest() => _testExecutionController.StartTestAsync(this);

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ATLab.Enums;
+using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
@@ -28,7 +29,7 @@ public partial class TestStep : ObservableObject
 
     [ObservableProperty]
     [property: JsonPropertyOrder(2)]
-    private int _number;
+    private int _number = 1;
     
     [ObservableProperty]
     [property: JsonPropertyOrder(3)]
@@ -273,6 +274,15 @@ public partial class TestStep : ObservableObject
     {
         StimState = LiveStimState.ToDto();
         ExtStimState = LiveExtStimState.ToDto();
+    }
+    
+    public void InitializeRuntimeState(IHardwareInfo hardwareInfo)
+    {
+        LiveStimState = new RelayGroup(hardwareInfo.StimChannelCount);
+        LiveStimState.ApplyDto(StimState ?? new RelayGroupDto());
+
+        LiveExtStimState = new RelayGroup(hardwareInfo.ExtStimChannelCount);
+        LiveExtStimState.ApplyDto(ExtStimState ?? new RelayGroupDto());
     }
     
     public TestStep Clone(bool preserveId = false)

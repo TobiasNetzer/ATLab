@@ -1,18 +1,19 @@
-﻿using ATLab.Models;
+﻿using System.Collections.Generic;
+using ATLab.Models;
 using ATLab.ViewModels;
 
 namespace ATLab.Interfaces;
 
 public interface ITestStepEditor
 {
-    bool HasClipboard { get; }
-    void AddStep(TestingTabViewModel vm);
+    bool CanPaste { get; }
+    TestStep AddStep(int insertIndex);
     TestStepViewModel CreateViewModel(TestStep step);
-    void DuplicateSteps(TestingTabViewModel vm);
-    void CopySteps(TestingTabViewModel vm);
-    void PasteSteps(TestingTabViewModel vm);
-    void CutSteps(TestingTabViewModel vm);
-    void RemoveSteps(TestingTabViewModel vm);
-    void MoveStepUp(TestingTabViewModel vm);
-    void MoveStepDown(TestingTabViewModel vm);
+    IReadOnlyList<TestStep> DuplicateSteps(IEnumerable<TestStep> steps, int insertIndex);
+    void CopySteps(IEnumerable<TestStep> steps);
+    IReadOnlyList<TestStep> PasteSteps(int insertIndex);
+    IReadOnlyList<TestStep> CutSteps(IEnumerable<TestStep> steps);
+    int RemoveSteps(IEnumerable<TestStep> steps);
+    bool MoveStepUp(TestStep step);
+    bool MoveStepDown(TestStep step);
 }
