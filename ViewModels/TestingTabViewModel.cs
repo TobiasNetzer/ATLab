@@ -129,7 +129,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _projectModel.TestSteps.CollectionChanged += ProjectTestStepsChanged;
         
-        _projectModel.RuntimeVariables.CollectionChanged += SynchronizeRuntimeVariables;
+        _projectModel.RuntimeVariableChanged += SynchronizeRuntimeVariables;
         
         _testExecutionController.HookExecutorEvents(this);
         
@@ -214,7 +214,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
-    private void SynchronizeRuntimeVariables(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+    private void SynchronizeRuntimeVariables()
     {
         RuntimeVariables.Clear();
 
@@ -231,13 +231,13 @@ public partial class TestingTabViewModel : ViewModelBase
             .Select(x => TestSteps.IndexOf(x))
             .Max() + 1;
     }
-    
-    public TestStepViewModel FindViewModel(TestStep model)
+
+    private TestStepViewModel FindViewModel(TestStep model)
     {
         return TestSteps.First(x => ReferenceEquals(x.TestStep, model));
     }
-    
-    public void Select(TestStep model)
+
+    private void Select(TestStep model)
     {
         SelectedSteps.Clear();
 
@@ -246,8 +246,8 @@ public partial class TestingTabViewModel : ViewModelBase
         SelectedSteps.Add(vm);
         SelectedStep = vm;
     }
-    
-    public void Select(IEnumerable<TestStep> models)
+
+    private void Select(IEnumerable<TestStep> models)
     {
         SelectedSteps.Clear();
 
@@ -256,8 +256,8 @@ public partial class TestingTabViewModel : ViewModelBase
 
         SelectedStep = SelectedSteps.LastOrDefault();
     }
-    
-    public void ResetTestCounters()
+
+    private void ResetTestCounters()
     {
         NumberPassedTests = 0;
         NumberRunTests = 0;
@@ -272,7 +272,7 @@ public partial class TestingTabViewModel : ViewModelBase
         OnPropertyChanged(nameof(CanPaste));
     }
 
-    public void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (sender is not TestStepViewModel changedVm)
             return;
