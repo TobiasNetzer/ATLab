@@ -187,7 +187,19 @@ public partial class TestingTabViewModel : ViewModelBase
         
         if (e.Action == NotifyCollectionChangedAction.Move)
         {
-            TestSteps.Move(e.OldStartingIndex, e.NewStartingIndex);
+            var selected = SelectedStep;
+            var selectedList = SelectedSteps.ToList();
+            
+            var item = TestSteps[e.OldStartingIndex];
+            TestSteps.RemoveAt(e.OldStartingIndex);
+            TestSteps.Insert(e.NewStartingIndex, item);
+
+            SelectedStep = selected;
+            SelectedSteps.Clear();
+            foreach (var s in selectedList)
+            {
+                SelectedSteps.Add(s);
+            }
         }
 
         if (e.Action == NotifyCollectionChangedAction.Reset)
