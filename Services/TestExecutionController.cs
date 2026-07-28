@@ -38,7 +38,7 @@ public class TestExecutionController : ITestExecutionController
 
         _testExecutor.StepStarted += (index, step) =>
         {
-            vm.SelectedStepIndex = index;
+            vm.SelectedStep = vm.TestSteps[index];
         };
 
         _testExecutor.StepCompleted += (index, step) =>
@@ -46,7 +46,7 @@ public class TestExecutionController : ITestExecutionController
             vm.TestDuration = $"{vm.Elapsed.TotalSeconds:F2}s";
             vm.TestProgress = vm.TestSteps.Count == 0
                 ? 0
-                : (int)Math.Round((double)(vm.SelectedStepIndex + 1) / vm.TestSteps.Count * 100);
+                : (int)Math.Round((double)(index + 1) / vm.TestSteps.Count * 100);
 
             if (!step.IsPassed)
                 vm.NumberFailedSteps++;
@@ -57,9 +57,10 @@ public class TestExecutionController : ITestExecutionController
         _testExecutor.StepRepeated += () =>
         {
             vm.TestDuration = $"{vm.Elapsed.TotalSeconds:F2}s";
-            vm.TestProgress = vm.TestSteps.Count == 0
+            var index = vm.SelectedStep != null ? vm.TestSteps.IndexOf(vm.SelectedStep) : -1;
+            vm.TestProgress = vm.TestSteps.Count == 0 || index == -1
                 ? 0
-                : (int)Math.Round((double)(vm.SelectedStepIndex + 1) / vm.TestSteps.Count * 100);
+                : (int)Math.Round((double)(index + 1) / vm.TestSteps.Count * 100);
         };
 
         _testExecutor.TestCompleted += () =>
@@ -110,7 +111,7 @@ public class TestExecutionController : ITestExecutionController
             ResetAllResults(vm);
             vm.TestProgress = 0;
             vm.NumberFailedSteps = 0;
-            vm.SelectedStepIndex = 0;
+            vm.SelectedStep = vm.TestSteps.Count > 0 ? vm.TestSteps[0] : null;
             vm.TestStatus = TestStatus.RUNNING;
         };
     }
@@ -127,10 +128,10 @@ public class TestExecutionController : ITestExecutionController
             vm.TestStatus = TestStatus.RUNNING;
             vm.NumberFailedSteps = 0;
             vm.TestProgress = 0;
-            vm.SelectedStepIndex = 0;
+            vm.SelectedStep = vm.TestSteps.Count > 0 ? vm.TestSteps[0] : null;
 
             vm.AllowResultSave = true;
-            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
+            await _testExecutor.StartTestAsync(vm.TestSteps, 0, vm.RuntimeVariables);
             vm.AllowResultSave = false;
         }
     }
@@ -147,10 +148,10 @@ public class TestExecutionController : ITestExecutionController
             vm.NumberFailedSteps = 0;
             vm.TestStatus = TestStatus.RUNNING;
             vm.TestProgress = 0;
-            vm.SelectedStepIndex = 0;
+            vm.SelectedStep = vm.TestSteps.Count > 0 ? vm.TestSteps[0] : null;
 
             vm.AllowResultSave = true;
-            await _testExecutor.StartRepeatTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
+            await _testExecutor.StartRepeatTestAsync(vm.TestSteps, 0, vm.RuntimeVariables);
         }
     }
 
@@ -163,7 +164,8 @@ public class TestExecutionController : ITestExecutionController
             vm.TestStatus = TestStatus.RUNNING;
             vm.TestProgress = 0;
 
-            await _testExecutor.StartTestAsync(vm.TestSteps, vm.SelectedStepIndex, vm.RuntimeVariables);
+            var index = vm.SelectedStep != null ? vm.TestSteps.IndexOf(vm.SelectedStep) : 0;
+            await _testExecutor.StartTestAsync(vm.TestSteps, index, vm.RuntimeVariables);
         }
     }
 

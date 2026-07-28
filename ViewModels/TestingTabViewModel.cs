@@ -35,9 +35,6 @@ public partial class TestingTabViewModel : ViewModelBase
     private ObservableCollection<TestStepViewModel> _selectedSteps = new();
     
     [ObservableProperty]
-    private int _selectedStepIndex;
-    
-    [ObservableProperty]
     private WorkspaceEditorViewModel _workspaceEditor;
     
     [ObservableProperty]
@@ -347,7 +344,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.NewProjectAsync();
 
-        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        if (TestSteps.Count > 0)
+            SelectedStep = TestSteps[0];
+        else
+            SelectedStep = null;
         ResetTestCounters();
     }
     
@@ -362,7 +362,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.LoadFileWithDialogAsync();
 
-        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        if (TestSteps.Count > 0)
+            SelectedStep = TestSteps[0];
+        else
+            SelectedStep = null;
         ResetTestCounters();
     }
     
@@ -371,7 +374,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.LoadFileAsync(path);
 
-        SelectedStepIndex = TestSteps.Count > 0 ? 0 : -1;
+        if (TestSteps.Count > 0)
+            SelectedStep = TestSteps[0];
+        else
+            SelectedStep = null;
         ResetTestCounters();
     }
 
