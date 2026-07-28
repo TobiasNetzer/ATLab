@@ -37,6 +37,8 @@ public partial class ProjectModel : ObservableObject
     public ObservableCollection<CustomRelayChannelName> ExtStimChannelNames { get; } = new();
     public ObservableCollection<CustomRelayChannelName> MeasChannelNames { get; } = new();
     
+    public Action? RuntimeVariableChanged;
+    
     private int _suppressChangesCount;
     
     public ProjectModel(IHardwareInfo hardwareInfo)
@@ -227,7 +229,8 @@ public partial class ProjectModel : ObservableObject
         if (e.OldItems != null)
             foreach (CustomVariable variable in e.OldItems)
                 UnsubscribeFromVariable(variable);
-
+        
+        RuntimeVariableChanged?.Invoke();
         MarkDirty();
     }
     
@@ -243,6 +246,7 @@ public partial class ProjectModel : ObservableObject
 
     private void VariableChanged(object? sender, PropertyChangedEventArgs e)
     {
+        RuntimeVariableChanged?.Invoke();
         MarkDirty();
     }
     

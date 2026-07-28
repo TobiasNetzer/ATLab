@@ -141,7 +141,7 @@ public partial class MainWindowViewModel : ViewModelBase
         switch (value)
         {
             case TestingTabViewModel:
-                TestingTab.SelectedStepIndex = 0;
+                TestingTab.SelectedStep = TestingTab.TestSteps.Count > 0 ? TestingTab.TestSteps[0] : null;
                 break;
         }
     }

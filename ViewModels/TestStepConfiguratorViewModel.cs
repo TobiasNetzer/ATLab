@@ -419,8 +419,8 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         var v1 = nominal * (1 + tolerance);
         var v2 = nominal * (1 - tolerance);
         
-        step.UpperLimit = Math.Max(Math.Max(v1, v2), nominal);
-        step.LowerLimit = Math.Min(Math.Min(v1, v2), nominal);
+        step.UpperLimit = Math.Round(Math.Max(Math.Max(v1, v2), nominal), 13);
+        step.LowerLimit = Math.Round(Math.Min(Math.Min(v1, v2), nominal), 13);
         
         step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.InvariantCulture);
         step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.InvariantCulture);

@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
@@ -13,6 +13,8 @@ public class TestStepEditor : ITestStepEditor
 
     private List<TestStep>? _clipboard;
     private bool _clipboardIsCut;
+    
+    public bool CanPaste => _clipboard != null && _clipboard.Count > 0;
 
     public TestStepEditor(
         IHardwareInfo hardwareInfo,
@@ -22,222 +24,165 @@ public class TestStepEditor : ITestStepEditor
         _projectModel = projectModel;
     }
 
-    public bool HasClipboard => _clipboard != null && _clipboard.Count > 0;
-
-    public void AddStep(TestingTabViewModel vm)
+    public TestStep AddStep(int insertIndex)
     {
-        var index = ComputeInsertIndex(vm);
-
         var step = new TestStep();
 
-        _projectModel.TestSteps.Insert(index, step);
+        _projectModel.TestSteps.Insert(insertIndex, step);
 
         Renumber();
 
-        vm.SelectedStep = vm.TestSteps[index];
+        return step;
     }
 
-    public TestStepViewModel CreateViewModel(TestStep step)
+    public IReadOnlyList<TestStep> DuplicateSteps(
+        IEnumerable<TestStep> steps,
+        int insertIndex)
     {
-        var vm = new TestStepViewModel(step, _hardwareInfo);
-        return vm;
-    }
-
-    public void DuplicateSteps(TestingTabViewModel vm)
-    {
-        if (vm.SelectedSteps.Count == 0)
-            return;
-
-        var insertIndex = vm.SelectedSteps
-            .Select(s => vm.TestSteps.IndexOf(s))
-            .Max() + 1;
-
-        var ordered = vm.SelectedSteps
-            .OrderBy(s => vm.TestSteps.IndexOf(s))
+        var ordered = steps
+            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
             .ToList();
 
-        foreach (var vmStep in ordered)
-        {
-            vmStep.TestStep.UpdateDtos();
+        var clones = new List<TestStep>();
 
-            var clone = vmStep.TestStep.Clone();
+        foreach (var step in ordered)
+        {
+            step.UpdateDtos();
+
+            var clone = step.Clone();
 
             _projectModel.TestSteps.Insert(insertIndex++, clone);
+
+            clones.Add(clone);
         }
 
         Renumber();
 
-        vm.SelectedSteps.Clear();
-
-        for (int i = insertIndex - ordered.Count; i < insertIndex; i++)
-            vm.SelectedSteps.Add(vm.TestSteps[i]);
-
-        vm.SelectedStep = vm.SelectedSteps.Last();
+        return clones;
     }
 
-    public void CopySteps(TestingTabViewModel vm)
+    public void CopySteps(IEnumerable<TestStep> steps)
     {
-        if (vm.SelectedSteps.Count == 0)
-            return;
+        var ordered = steps
+            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .ToList();
 
-        foreach (var step in vm.SelectedSteps)
-            step.TestStep.UpdateDtos();
+        foreach (var step in ordered)
+            step.UpdateDtos();
 
-        _clipboard = vm.SelectedSteps
-            .OrderBy(s => vm.TestSteps.IndexOf(s))
-            .Select(s => s.TestStep.Clone(false))
+        _clipboard = ordered
+            .Select(step => step.Clone(false))
             .ToList();
 
         _clipboardIsCut = false;
-
-        vm.NotifyPasteChanged();
     }
 
-    public void PasteSteps(TestingTabViewModel vm)
+    public IReadOnlyList<TestStep> PasteSteps(int insertIndex)
     {
-        if (_clipboard == null || _clipboard.Count == 0)
-            return;
+        if (!CanPaste)
+            return [];
 
-        var insertIndex = vm.SelectedSteps.Count == 0
-            ? 0
-            : vm.SelectedSteps
-                .Select(s => vm.TestSteps.IndexOf(s))
-                .Max() + 1;
+        var pasted = new List<TestStep>();
 
-        var startIndex = insertIndex;
-
-        foreach (var model in _clipboard)
+        foreach (var model in _clipboard!)
         {
             var clone = model.Clone(_clipboardIsCut);
 
             _projectModel.TestSteps.Insert(insertIndex++, clone);
+
+            pasted.Add(clone);
         }
 
         Renumber();
-
-        vm.SelectedSteps.Clear();
-
-        for (int i = startIndex; i < insertIndex; i++)
-            vm.SelectedSteps.Add(vm.TestSteps[i]);
-
-        vm.SelectedStep = vm.SelectedSteps.Last();
 
         if (_clipboardIsCut)
         {
             _clipboard = null;
             _clipboardIsCut = false;
-            vm.NotifyPasteChanged();
         }
+
+        return pasted;
     }
     
-        public void CutSteps(TestingTabViewModel vm)
+    public IReadOnlyList<TestStep> CutSteps(IEnumerable<TestStep> steps)
     {
-        if (vm.SelectedSteps.Count == 0)
-            return;
+        var ordered = steps
+            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .ToList();
 
-        foreach (var step in vm.SelectedSteps)
-            step.TestStep.UpdateDtos();
+        if (ordered.Count == 0)
+            return [];
 
-        _clipboard = vm.SelectedSteps
-            .OrderBy(s => vm.TestSteps.IndexOf(s))
-            .Select(s => s.TestStep.Clone(preserveId: true))
+        foreach (var step in ordered)
+            step.UpdateDtos();
+
+        _clipboard = ordered
+            .Select(step => step.Clone(preserveId: true))
             .ToList();
 
         _clipboardIsCut = true;
 
-        var toRemove = vm.SelectedSteps
-            .OrderByDescending(s => vm.TestSteps.IndexOf(s))
-            .Select(s => s.TestStep)
-            .ToList();
-
-        foreach (var step in toRemove)
+        foreach (var step in ordered.OrderByDescending(s => _projectModel.TestSteps.IndexOf(s)))
             _projectModel.TestSteps.Remove(step);
 
         Renumber();
 
-        vm.SelectedSteps.Clear();
-        vm.SelectedStep = null;
-
-        vm.NotifyPasteChanged();
+        return ordered;
     }
 
-    public void RemoveSteps(TestingTabViewModel vm)
+    public int RemoveSteps(IEnumerable<TestStep> steps)
     {
-        if (vm.SelectedSteps.Count == 0)
-            return;
-
-        var toRemove = vm.SelectedSteps
-            .OrderByDescending(s => vm.TestSteps.IndexOf(s))
-            .Select(s => s.TestStep)
+        var ordered = steps
+            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
             .ToList();
 
-        foreach (var step in toRemove)
+        if (ordered.Count == 0)
+            return -1;
+
+        var selectionIndex = _projectModel.TestSteps.IndexOf(ordered.First());
+
+        foreach (var step in ordered.AsEnumerable().Reverse())
             _projectModel.TestSteps.Remove(step);
 
         Renumber();
 
-        vm.SelectedSteps.Clear();
+        if (_projectModel.TestSteps.Count == 0)
+            return -1;
 
-        if (vm.TestSteps.Count > 0)
-        {
-            var index = System.Math.Min(vm.SelectedStepIndex, vm.TestSteps.Count - 1);
-            vm.SelectedStep = vm.TestSteps[index];
-        }
-        else
-        {
-            vm.SelectedStep = null;
-        }
+        return Math.Min(selectionIndex, _projectModel.TestSteps.Count - 1);
     }
 
-    public void MoveStepUp(TestingTabViewModel vm)
+    public bool MoveStepUp(TestStep step)
     {
-        if (vm.SelectedStep == null)
-            return;
+        var index = _projectModel.TestSteps.IndexOf(step);
 
-        var oldIndex = vm.SelectedStepIndex;
+        if (index <= 0)
+            return false;
 
-        if (oldIndex <= 0)
-            return;
-
-        _projectModel.TestSteps.Move(oldIndex, oldIndex - 1);
+        _projectModel.TestSteps.Move(index, index - 1);
 
         Renumber();
 
-        vm.SelectedStepIndex = oldIndex - 1;
-        vm.SelectedStep = vm.TestSteps[oldIndex - 1];
+        return true;
     }
 
-    public void MoveStepDown(TestingTabViewModel vm)
+    public bool MoveStepDown(TestStep step)
     {
-        if (vm.SelectedStep == null)
-            return;
+        var index = _projectModel.TestSteps.IndexOf(step);
 
-        var oldIndex = vm.SelectedStepIndex;
+        if (index < 0 || index >= _projectModel.TestSteps.Count - 1)
+            return false;
 
-        if (oldIndex >= _projectModel.TestSteps.Count - 1)
-            return;
-
-        _projectModel.TestSteps.Move(oldIndex, oldIndex + 1);
+        _projectModel.TestSteps.Move(index, index + 1);
 
         Renumber();
 
-        vm.SelectedStepIndex = oldIndex + 1;
-        vm.SelectedStep = vm.TestSteps[oldIndex + 1];
-    }
-
-    private int ComputeInsertIndex(TestingTabViewModel vm)
-    {
-        if (vm.SelectedSteps.Count == 0)
-            return _projectModel.TestSteps.Count;
-
-        return vm.SelectedSteps
-            .Select(s => vm.TestSteps.IndexOf(s))
-            .Max() + 1;
+        return true;
     }
 
     private void Renumber()
     {
-        for (int i = 0; i < _projectModel.TestSteps.Count; i++)
+        for (var i = 0; i < _projectModel.TestSteps.Count; i++)
             _projectModel.TestSteps[i].Number = i + 1;
     }
 }

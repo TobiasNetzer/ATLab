@@ -163,7 +163,6 @@
                   x:Name="TestStepPresenter"
                   ItemsSource="{Binding TestSteps}"
                   SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
-                  SelectedIndex="{Binding SelectedStepIndex, Mode=TwoWay}"
                   Margin="10"
                   IsReadOnly="True"
                   CanUserReorderColumns="True"
