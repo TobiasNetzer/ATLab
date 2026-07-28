@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
-using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
@@ -34,11 +33,6 @@ public class TestStepEditor : ITestStepEditor
         Renumber();
 
         return step;
-    }
-
-    public TestStepViewModel CreateViewModel(TestStep step)
-    {
-        return new TestStepViewModel(step, _hardwareInfo);
     }
 
     public IReadOnlyList<TestStep> DuplicateSteps(

@@ -16,6 +16,7 @@ namespace ATLab.ViewModels;
 
 public partial class TestingTabViewModel : ViewModelBase
 {
+    private readonly IHardwareInfo _hardwareInfo;
     private readonly ISettingsService _settingsService;
     private readonly IErrorService _errorService;
     private readonly IProjectController _projectController;
@@ -109,8 +110,10 @@ public partial class TestingTabViewModel : ViewModelBase
         IProjectController projectController,
         ITestStepEditor testStepEditor,
         ITestExecutionController testExecutionController,
-        ControlModuleService controlModuleService)
+        ControlModuleService controlModuleService,
+        IHardwareInfo hardwareInfo)
     {
+        _hardwareInfo = hardwareInfo;
         _settingsService = settingsService;
         _errorService = errorService;
         _projectModel = projectModel;
@@ -166,7 +169,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
             foreach (TestStep step in e.NewItems!)
             {
-                var vm = _testStepEditor.CreateViewModel(step);
+                var vm = CreateViewModel(step);
                 vm.PropertyChanged += OnStepPropertyChanged;
 
                 TestSteps.Insert(index++, vm);
@@ -522,4 +525,9 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void RequestBreakRepeat() => _testExecutionController.RequestBreakRepeat();
+
+    private TestStepViewModel CreateViewModel(TestStep step)
+    {
+        return new TestStepViewModel(step, _hardwareInfo);
+    }
 }
