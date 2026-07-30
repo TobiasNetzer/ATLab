@@ -1,0 +1,70 @@
+﻿<UserControl
+    x:Class="ATLab.Controls.MeasurementPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Height="60" x:Name="Root">
+
+        <!-- Background bar -->
+        <Border x:Name="Bar"
+                Height="6"
+                Background="LightGray"
+                CornerRadius="3"
+                VerticalAlignment="Center"
+                Margin="20,0"/>
+
+        <Canvas x:Name="Overlay">
+
+            <Rectangle x:Name="LowerRect" Width="2" Height="16" Fill="Black">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <TextBlock x:Name="LowerText" FontSize="10">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+            <Rectangle x:Name="NominalRect" Width="2" Height="22" Fill="ForestGreen">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <TextBlock x:Name="NominalText" FontSize="10">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+            <Rectangle x:Name="UpperRect" Width="2" Height="16" Fill="Black">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <TextBlock x:Name="UpperText" FontSize="10">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+            <Ellipse x:Name="MeasuredMarker" Width="12" Height="12">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <TextBlock x:Name="MeasuredText" FontSize="10">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+        </Canvas>
+
+
+    </Grid>
+</UserControl>

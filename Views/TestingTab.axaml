@@ -6,7 +6,7 @@
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
         
-    <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto, *, auto">
+    <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto,*,auto,auto">
         
         <Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource ToolbarBackground}"
                 CornerRadius="5"
@@ -276,6 +276,20 @@
         </DataGrid>
         
         <Border Grid.Column="0" Grid.Row="2"
+                Background="{DynamicResource ToolbarBackground}"
+                CornerRadius="5"
+                Margin="10 0 10 10">
+            
+            
+            <controls:MeasurementPanel
+                Nominal="{Binding SelectedStep.TestStep.NominalValue}"
+                LowerLimit="{Binding SelectedStep.TestStep.LowerLimit}"
+                UpperLimit="{Binding SelectedStep.TestStep.UpperLimit}"
+                MeasuredValue="{Binding SelectedStep.Result}" />
+            
+        </Border>
+        
+        <Border Grid.Column="0" Grid.Row="3"
                 Background="{DynamicResource ToolbarBackground}"
                 CornerRadius="5"
                 Margin="10 0 10 10">
