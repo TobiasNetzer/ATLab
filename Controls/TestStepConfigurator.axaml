@@ -159,28 +159,6 @@
                     
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal"
-                            Spacing="10">
-                    
-                    <CheckBox
-                        Content="Show Comment"
-                        TabIndex="8"
-                        IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
-                        IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
-                    
-                    <Button Content="&#xE8B9;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="20"
-                            ToolTip.Tip="Add image to message box"
-                            TabIndex="9"
-                            Command="{Binding OpenImagePickerCommand}"/>
-                    
-                    <TextBox TabIndex="10"
-                             Width="285"
-                             Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
-                    
-                </StackPanel>
-                
                 <StackPanel Orientation="Horizontal">
                     
                     <TextBlock Text="Advanced Settings"
@@ -211,6 +189,28 @@
                 
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
+                    
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10">
+                    
+                        <CheckBox
+                            Content="Show Comment"
+                            TabIndex="8"
+                            IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
+                            IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
+                    
+                        <Button Content="&#xE8B9;"
+                                FontFamily="{StaticResource FluentIconsFont}"
+                                FontSize="20"
+                                ToolTip.Tip="Add image to message box"
+                                TabIndex="9"
+                                Command="{Binding OpenImagePickerCommand}"/>
+                    
+                        <TextBox TabIndex="10"
+                                 Width="285"
+                                 Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
+                    
+                    </StackPanel>
                         
                     <CheckBox Content="Ignore Step"
                               TabIndex="12"
