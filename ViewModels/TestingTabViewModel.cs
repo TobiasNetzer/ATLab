@@ -163,54 +163,61 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private void ProjectTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.Action == NotifyCollectionChangedAction.Add)
+        switch (e.Action)
         {
-            var index = e.NewStartingIndex;
-
-            foreach (TestStep step in e.NewItems!)
+            case NotifyCollectionChangedAction.Add:
             {
-                var vm = CreateViewModel(step);
-                vm.PropertyChanged += OnStepPropertyChanged;
+                var index = e.NewStartingIndex;
 
-                TestSteps.Insert(index++, vm);
+                foreach (TestStep step in e.NewItems!)
+                {
+                    var vm = CreateViewModel(step);
+                    vm.PropertyChanged += OnStepPropertyChanged;
+
+                    TestSteps.Insert(index++, vm);
+                }
+
+                break;
             }
-        }
-
-        if (e.Action == NotifyCollectionChangedAction.Remove)
-        {
-            foreach (TestStep step in e.OldItems!)
+            case NotifyCollectionChangedAction.Remove:
             {
-                var vm = TestSteps.First(x => ReferenceEquals(x.TestStep, step));
+                foreach (TestStep step in e.OldItems!)
+                {
+                    var vm = TestSteps.First(x => ReferenceEquals(x.TestStep, step));
 
-                vm.PropertyChanged -= OnStepPropertyChanged;
+                    vm.PropertyChanged -= OnStepPropertyChanged;
 
-                TestSteps.Remove(vm);
+                    TestSteps.Remove(vm);
+                }
+
+                break;
             }
-        }
-        
-        if (e.Action == NotifyCollectionChangedAction.Move)
-        {
-            var selected = SelectedStep;
-            var selectedList = SelectedSteps.ToList();
+            case NotifyCollectionChangedAction.Move:
+            {
+                var selected = SelectedStep;
+                var selectedList = SelectedSteps.ToList();
             
-            var item = TestSteps[e.OldStartingIndex];
-            TestSteps.RemoveAt(e.OldStartingIndex);
-            TestSteps.Insert(e.NewStartingIndex, item);
+                var item = TestSteps[e.OldStartingIndex];
+                TestSteps.RemoveAt(e.OldStartingIndex);
+                TestSteps.Insert(e.NewStartingIndex, item);
 
-            SelectedStep = selected;
-            SelectedSteps.Clear();
-            foreach (var s in selectedList)
-            {
-                SelectedSteps.Add(s);
+                SelectedStep = selected;
+                SelectedSteps.Clear();
+                foreach (var s in selectedList)
+                {
+                    SelectedSteps.Add(s);
+                }
+
+                break;
             }
-        }
+            case NotifyCollectionChangedAction.Reset:
+            {
+                foreach (var vm in TestSteps)
+                    vm.PropertyChanged -= OnStepPropertyChanged;
 
-        if (e.Action == NotifyCollectionChangedAction.Reset)
-        {
-            foreach (var vm in TestSteps)
-                vm.PropertyChanged -= OnStepPropertyChanged;
-
-            TestSteps.Clear();
+                TestSteps.Clear();
+                break;
+            }
         }
     }
     
