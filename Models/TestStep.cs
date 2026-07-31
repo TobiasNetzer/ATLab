@@ -164,10 +164,10 @@ public partial class TestStep : ObservableObject
     private RelayGroup _liveExtStimState = new(0);
 
     [JsonPropertyOrder(30)]
-    public RelayGroupDto? StimState { get; private set; }
+    public RelayGroupDto? StimState { get; set; }
     
     [JsonPropertyOrder(31)]
-    public RelayGroupDto? ExtStimState { get; private set; }
+    public RelayGroupDto? ExtStimState { get; set; }
 
     private void HookEvents()
     {
