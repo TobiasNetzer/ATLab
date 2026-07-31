@@ -8,7 +8,6 @@ namespace ATLab.Services;
 
 public class TestStepEditor : ITestStepEditor
 {
-    private readonly IHardwareInfo _hardwareInfo;
     private readonly ProjectModel _projectModel;
 
     private List<TestStep>? _clipboard;
@@ -16,11 +15,8 @@ public class TestStepEditor : ITestStepEditor
     
     public bool CanPaste => _clipboard != null && _clipboard.Count > 0;
 
-    public TestStepEditor(
-        IHardwareInfo hardwareInfo,
-        ProjectModel projectModel)
+    public TestStepEditor(ProjectModel projectModel)
     {
-        _hardwareInfo = hardwareInfo;
         _projectModel = projectModel;
     }
 
