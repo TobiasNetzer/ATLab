@@ -419,8 +419,8 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         var v1 = nominal * (1 + tolerance);
         var v2 = nominal * (1 - tolerance);
         
-        step.UpperLimit = Math.Round(Math.Max(Math.Max(v1, v2), nominal), 13);
-        step.LowerLimit = Math.Round(Math.Min(Math.Min(v1, v2), nominal), 13);
+        step.UpperLimit = NormalizeDouble(Math.Max(Math.Max(v1, v2), nominal));
+        step.LowerLimit = NormalizeDouble(Math.Min(Math.Min(v1, v2), nominal));
         
         step.LowerLimitExpression = step.LowerLimit.ToString(CultureInfo.InvariantCulture);
         step.UpperLimitExpression = step.UpperLimit.ToString(CultureInfo.InvariantCulture);
@@ -447,6 +447,15 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     {
         if (TestStepViewModel?.TestStep == null || value == null) return;
         TestStepViewModel.TestStep.OnFail.JumpToId = value.Id;
+    }
+    
+    private static double NormalizeDouble(double value)
+    {
+        var integer = Math.Round(value);
+
+        return Math.Abs(value - integer) < 1e-12 * Math.Max(1.0, Math.Abs(value))
+            ? integer
+            : value;
     }
 
     [RelayCommand]
