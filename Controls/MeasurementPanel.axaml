@@ -11,53 +11,54 @@
                 Background="LightGray"
                 CornerRadius="3"
                 VerticalAlignment="Center"
+                MinWidth="400"
                 Margin="20,0"/>
 
         <Canvas x:Name="Overlay">
 
-            <Rectangle x:Name="LowerRect" Width="2" Height="16" Fill="Black">
+            <Rectangle x:Name="LowerRect" Width="3" Height="16" Fill="LightGray">
                 <Rectangle.RenderTransform>
                     <TranslateTransform />
                 </Rectangle.RenderTransform>
             </Rectangle>
 
-            <TextBlock x:Name="LowerText" FontSize="10">
+            <TextBlock x:Name="LowerText" FontSize="16">
                 <TextBlock.RenderTransform>
                     <TranslateTransform />
                 </TextBlock.RenderTransform>
             </TextBlock>
 
-            <Rectangle x:Name="NominalRect" Width="2" Height="22" Fill="ForestGreen">
+            <Rectangle x:Name="NominalRect" Width="3" Height="22" Fill="ForestGreen">
                 <Rectangle.RenderTransform>
                     <TranslateTransform />
                 </Rectangle.RenderTransform>
             </Rectangle>
 
-            <TextBlock x:Name="NominalText" FontSize="10">
+            <TextBlock x:Name="NominalText" FontSize="16">
                 <TextBlock.RenderTransform>
                     <TranslateTransform />
                 </TextBlock.RenderTransform>
             </TextBlock>
 
-            <Rectangle x:Name="UpperRect" Width="2" Height="16" Fill="Black">
+            <Rectangle x:Name="UpperRect" Width="3" Height="16" Fill="LightGray">
                 <Rectangle.RenderTransform>
                     <TranslateTransform />
                 </Rectangle.RenderTransform>
             </Rectangle>
 
-            <TextBlock x:Name="UpperText" FontSize="10">
+            <TextBlock x:Name="UpperText" FontSize="16">
                 <TextBlock.RenderTransform>
                     <TranslateTransform />
                 </TextBlock.RenderTransform>
             </TextBlock>
 
-            <Ellipse x:Name="MeasuredMarker" Width="12" Height="12">
+            <Ellipse x:Name="MeasuredMarker" Width="16" Height="16">
                 <Ellipse.RenderTransform>
                     <TranslateTransform />
                 </Ellipse.RenderTransform>
             </Ellipse>
 
-            <TextBlock x:Name="MeasuredText" FontSize="10">
+            <TextBlock x:Name="MeasuredText" FontSize="16">
                 <TextBlock.RenderTransform>
                     <TranslateTransform />
                 </TextBlock.RenderTransform>
