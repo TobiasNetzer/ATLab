@@ -279,53 +279,101 @@ public partial class TestingTabViewModel : ViewModelBase
         OnPropertyChanged(nameof(CanPaste));
     }
 
+    private bool _isUpdatingMultipleSteps;
+    
     private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not TestStepViewModel changedVm)
+        if (_isUpdatingMultipleSteps || _isChangingSelection || sender is not TestStepViewModel changedVm)
             return;
 
         var isTestStepProperty = string.IsNullOrWhiteSpace(e.PropertyName) ||
                                  typeof(TestStep).GetProperty(e.PropertyName) != null;
-
+        
         if (isTestStepProperty)
             _projectModel.MarkDirty();
 
         if (changedVm != SelectedStep || !isTestStepProperty || string.IsNullOrWhiteSpace(e.PropertyName))
             return;
 
-        foreach (var vm in SelectedSteps)
+        _isUpdatingMultipleSteps = true;
+        try
         {
-            if (vm == changedVm)
-                continue;
+            foreach (var vm in SelectedSteps)
+            {
+                if (vm == changedVm)
+                    continue;
 
-            CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+                CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+            }
+        }
+        finally
+        {
+            _isUpdatingMultipleSteps = false;
         }
     }
     
     private static void CopyChangedProperty(TestStep source, TestStep target, string propertyName)
     {
         var prop = typeof(TestStep).GetProperty(propertyName);
-        if (prop == null || !prop.CanWrite)
+        if (prop == null)
             return;
 
-        var value = prop.GetValue(source);
-        prop.SetValue(target, value);
+        var sourceValue = prop.GetValue(source);
+        var targetValue = prop.GetValue(target);
+
+        if (prop.CanWrite)
+        {
+            if (Equals(sourceValue, targetValue))
+                return;
+
+            var newValue = sourceValue switch
+            {
+                PassFailAction p => new PassFailAction(p),
+                ScriptCommand s => new ScriptCommand(s),
+                ResponseMask r => new ResponseMask(r),
+                ShellCommand sc => new ShellCommand(sc),
+                RelayMatrix rm => new RelayMatrix(rm),
+                RelayGroup rg => new RelayGroup(rg),
+                _ => sourceValue
+            };
+
+            prop.SetValue(target, newValue);
+        }
+        else if (sourceValue is ObservableCollection<CustomVariable> sourceCollection &&
+                 targetValue is ObservableCollection<CustomVariable> targetCollection)
+        {
+            targetCollection.Clear();
+            foreach (var item in sourceCollection)
+            {
+                targetCollection.Add(item.Clone());
+            }
+        }
     }
+    
+    private bool _isChangingSelection;
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
         if (value?.TestStep == null) return;
         
-        using (_projectModel.SuppressDirtyTracking())
+        _isChangingSelection = true;
+        try
         {
-            try
+            using (_projectModel.SuppressDirtyTracking())
             {
-                WorkspaceEditor.LoadTestStep(value, TestSteps);
+                try
+                {
+                    WorkspaceEditor.LoadTestStep(value, TestSteps);
+                }
+                catch (Exception ex)
+                {
+                    _errorService.AddError("Exception: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                _errorService.AddError("Exception: " + ex.Message);
-            }
+        }
+        finally
+        {
+            _isChangingSelection = false;
         }
     }
 
