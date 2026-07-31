@@ -349,7 +349,10 @@ public class TestExecutor : ITestExecutor
 
     private void EvaluateTestStep(TestStepViewModel step, double value, List<CustomVariable> runtimeVariables)
     {
-        var variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
+        CustomVariable? variable = null;
+        
+        if (step.TestStep.IsAssignResultToVariable)
+            variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
         
         if (IsOverflow(value))
         {
@@ -392,9 +395,12 @@ public class TestExecutor : ITestExecutor
         step.ResultNoFormatting = "Timeout";
         step.IsPassed = false;
         step.Deviation = string.Empty;
+
+        if (!step.TestStep.IsAssignResultToVariable)
+            return;
         
         var variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
-        variable?.Value = "Timeout";
+            variable?.Value = "Timeout";
     }
 
     private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result, List<CustomVariable> runtimeVariables)
