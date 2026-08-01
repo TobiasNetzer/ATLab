@@ -79,7 +79,10 @@ public partial class MeasurementPanel : UserControl
         }
         else
         {
-            MeasuredText.Text = UnitParser.Format(measured, Unit);
+            MeasuredText.Text = !string.IsNullOrWhiteSpace(Unit)
+                ? UnitParser.Format(measured, Unit)
+                : measured.ToString(CultureInfo.CurrentCulture);
+            
             var measuredX = Scale(measured);
             MeasuredMarker.IsVisible = true;
             Canvas.SetTop(MeasuredMarker, barCenterY - MeasuredMarker.Height / 2);
@@ -92,8 +95,13 @@ public partial class MeasurementPanel : UserControl
         Canvas.SetLeft(LowerRect, lowerX - LowerRect.Width / 2);
         Canvas.SetLeft(UpperRect, upperX - UpperRect.Width / 2);
         
-        LowerText.Text = UnitParser.Format(LowerLimit, Unit);
-        UpperText.Text = UnitParser.Format(UpperLimit, Unit);
+        LowerText.Text = !string.IsNullOrWhiteSpace(Unit)
+            ? UnitParser.Format(LowerLimit, Unit)
+            : LowerLimit.ToString(CultureInfo.CurrentCulture);
+        
+        UpperText.Text = !string.IsNullOrWhiteSpace(Unit)
+            ? UnitParser.Format(UpperLimit, Unit)
+            : UpperLimit.ToString(CultureInfo.CurrentCulture);
         
         var inside = measured >= LowerLimit && measured <= UpperLimit;
         MeasuredMarker.Fill = inside ? Brushes.LimeGreen : Brushes.Red;
