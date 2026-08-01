@@ -1,4 +1,6 @@
-﻿using Avalonia;
+﻿using System.Globalization;
+using ATLab.Helpers;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
@@ -6,22 +8,22 @@ namespace ATLab.Controls;
 
 public partial class MeasurementPanel : UserControl
 {
-    public static readonly StyledProperty<double> NominalProperty =
-        AvaloniaProperty.Register<MeasurementPanel, double>(nameof(Nominal));
-
     public static readonly StyledProperty<double> LowerLimitProperty =
         AvaloniaProperty.Register<MeasurementPanel, double>(nameof(LowerLimit));
 
     public static readonly StyledProperty<double> UpperLimitProperty =
         AvaloniaProperty.Register<MeasurementPanel, double>(nameof(UpperLimit));
 
-    public static readonly StyledProperty<double> MeasuredValueProperty =
-        AvaloniaProperty.Register<MeasurementPanel, double>(nameof(MeasuredValue));
+    public static readonly StyledProperty<string> MeasuredValueProperty =
+        AvaloniaProperty.Register<MeasurementPanel, string>(nameof(MeasuredValue));
+    
+    public static readonly StyledProperty<string> UnitProperty =
+        AvaloniaProperty.Register<MeasurementPanel, string>(nameof(Unit));
 
-    public double Nominal
+    public string Unit
     {
-        get => GetValue(NominalProperty);
-        set => SetValue(NominalProperty, value);
+        get => GetValue(UnitProperty);
+        set => SetValue(UnitProperty, value);
     }
 
     public double LowerLimit
@@ -36,7 +38,7 @@ public partial class MeasurementPanel : UserControl
         set => SetValue(UpperLimitProperty, value);
     }
 
-    public double MeasuredValue
+    public string MeasuredValue
     {
         get => GetValue(MeasuredValueProperty);
         set => SetValue(MeasuredValueProperty, value);
@@ -46,7 +48,7 @@ public partial class MeasurementPanel : UserControl
     {
         InitializeComponent();
 
-        NominalProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
+        UnitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         LowerLimitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         UpperLimitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         MeasuredValueProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
@@ -55,65 +57,70 @@ public partial class MeasurementPanel : UserControl
         Root.SizeChanged += (_, __) => UpdateVisuals();
     }
 
-private void UpdateVisuals()
-{
-    if (Bar.Bounds.Width <= 0)
+    private void UpdateVisuals()
+    {
+        if (Bar.Bounds.Width <= 0)
+            return;
+
+        var barLeft = Bar.Bounds.X;
+        var barWidth = Bar.Bounds.Width;
+        var barCenterY = Bar.Bounds.Y + Bar.Bounds.Height / 2;
+
+        const int edgePadding = 120;
+
+        var lowerX = barLeft + edgePadding;
+        var upperX = barLeft + barWidth - edgePadding;
+
+        if (!double.TryParse(MeasuredValue, NumberStyles.Any, CultureInfo.CurrentCulture, out var measured))
+        {
+            measured = 0;
+            MeasuredMarker.IsVisible = false;
+            MeasuredText.Text = string.Empty;
+        }
+        else
+        {
+            MeasuredText.Text = UnitParser.Format(measured, Unit);
+            var measuredX = Scale(measured);
+            MeasuredMarker.IsVisible = true;
+            Canvas.SetTop(MeasuredMarker, barCenterY - MeasuredMarker.Height / 2);
+            Canvas.SetLeft(MeasuredMarker, measuredX - MeasuredMarker.Width / 2);
+        }
+        
+        Canvas.SetTop(LowerRect, barCenterY - LowerRect.Height / 2);
+        Canvas.SetTop(UpperRect, barCenterY - UpperRect.Height / 2);
+        
+        Canvas.SetLeft(LowerRect, lowerX - LowerRect.Width / 2);
+        Canvas.SetLeft(UpperRect, upperX - UpperRect.Width / 2);
+        
+        LowerText.Text = UnitParser.Format(LowerLimit, Unit);
+        UpperText.Text = UnitParser.Format(UpperLimit, Unit);
+        
+        var inside = measured >= LowerLimit && measured <= UpperLimit;
+        MeasuredMarker.Fill = inside ? Brushes.LimeGreen : Brushes.Red;
+        MeasuredText.Foreground = inside ? Brushes.LimeGreen : Brushes.Red;
         return;
 
-    double barLeft = Bar.Bounds.X;
-    double barWidth = Bar.Bounds.Width;
+        double Scale(double v)
+        {
+            var barRight = barLeft + barWidth;
 
-    double padding = (UpperLimit - LowerLimit) * 0.15;
-    double visualMin = LowerLimit - padding;
-    double visualMax = UpperLimit + padding;
+            var usableLeft  = barLeft + edgePadding;
+            var usableRight = barRight - edgePadding;
+            var usableWidth = usableRight - usableLeft;
+            
+            if (UpperLimit.Equals(LowerLimit))
+                return barLeft + barWidth / 2;
+            
+            if (v <= LowerLimit)
+                return barLeft;
 
-    double scale(double v)
-    {
-        double t = (v - visualMin) / (visualMax - visualMin);
-        return barLeft + t * barWidth;
+            if (v >= UpperLimit)
+                return barRight;
+            
+            var t = (v - LowerLimit) / (UpperLimit - LowerLimit);
+            return usableLeft + t * usableWidth;
+        }
+
     }
-
-    double lowerX = scale(LowerLimit);
-    double nominalX = scale(Nominal);
-    double upperX = scale(UpperLimit);
-    double measuredX = scale(MeasuredValue);
-
-    double barCenterY = Bar.Bounds.Y + Bar.Bounds.Height / 2;
-
-    // Vertical positions
-    Canvas.SetTop(LowerRect, barCenterY - LowerRect.Height / 2);
-    Canvas.SetTop(NominalRect, barCenterY - NominalRect.Height / 2);
-    Canvas.SetTop(UpperRect, barCenterY - UpperRect.Height / 2);
-    Canvas.SetTop(MeasuredMarker, barCenterY - MeasuredMarker.Height / 2);
-
-    double textAbove = barCenterY - 30;
-
-    Canvas.SetTop(LowerText, textAbove);
-    Canvas.SetTop(NominalText, textAbove);
-    Canvas.SetTop(UpperText, textAbove);
-    Canvas.SetTop(MeasuredText, textAbove);
-
-    // Horizontal positions (centered)
-    Canvas.SetLeft(LowerRect, lowerX - LowerRect.Width / 2);
-    Canvas.SetLeft(NominalRect, nominalX - NominalRect.Width / 2);
-    Canvas.SetLeft(UpperRect, upperX - UpperRect.Width / 2);
-    Canvas.SetLeft(MeasuredMarker, measuredX - MeasuredMarker.Width / 2);
-
-    Canvas.SetLeft(LowerText, lowerX - LowerText.Bounds.Width / 2);
-    Canvas.SetLeft(NominalText, nominalX - NominalText.Bounds.Width / 2);
-    Canvas.SetLeft(UpperText, upperX - UpperText.Bounds.Width / 2);
-    Canvas.SetLeft(MeasuredText, measuredX - MeasuredText.Bounds.Width / 2);
-
-    // Text
-    LowerText.Text = LowerLimit.ToString("0.###");
-    NominalText.Text = Nominal.ToString("0.###");
-    UpperText.Text = UpperLimit.ToString("0.###");
-    MeasuredText.Text = MeasuredValue.ToString("0.###");
-
-    bool inside = MeasuredValue >= LowerLimit && MeasuredValue <= UpperLimit;
-    MeasuredMarker.Fill = inside ? Brushes.ForestGreen : Brushes.Red;
-}
-
-
 
 }

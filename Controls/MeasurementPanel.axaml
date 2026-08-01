@@ -4,68 +4,56 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Height="60" x:Name="Root">
-
-        <!-- Background bar -->
+        
+        <TextBlock x:Name="MeasuredText"
+                   FontSize="30"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"/>
+        
         <Border x:Name="Bar"
                 Height="6"
                 Background="LightGray"
                 CornerRadius="3"
-                VerticalAlignment="Center"
                 MinWidth="400"
-                Margin="20,0"/>
-
+                VerticalAlignment="Center"
+                Margin="60,30,60,0"/>
+        
         <Canvas x:Name="Overlay">
-
-            <Rectangle x:Name="LowerRect" Width="3" Height="16" Fill="LightGray">
-                <Rectangle.RenderTransform>
-                    <TranslateTransform />
-                </Rectangle.RenderTransform>
-            </Rectangle>
-
-            <TextBlock x:Name="LowerText" FontSize="16">
-                <TextBlock.RenderTransform>
-                    <TranslateTransform />
-                </TextBlock.RenderTransform>
-            </TextBlock>
-
-            <Rectangle x:Name="NominalRect" Width="3" Height="22" Fill="ForestGreen">
-                <Rectangle.RenderTransform>
-                    <TranslateTransform />
-                </Rectangle.RenderTransform>
-            </Rectangle>
-
-            <TextBlock x:Name="NominalText" FontSize="16">
-                <TextBlock.RenderTransform>
-                    <TranslateTransform />
-                </TextBlock.RenderTransform>
-            </TextBlock>
-
-            <Rectangle x:Name="UpperRect" Width="3" Height="16" Fill="LightGray">
-                <Rectangle.RenderTransform>
-                    <TranslateTransform />
-                </Rectangle.RenderTransform>
-            </Rectangle>
-
-            <TextBlock x:Name="UpperText" FontSize="16">
-                <TextBlock.RenderTransform>
-                    <TranslateTransform />
-                </TextBlock.RenderTransform>
-            </TextBlock>
-
-            <Ellipse x:Name="MeasuredMarker" Width="16" Height="16">
-                <Ellipse.RenderTransform>
-                    <TranslateTransform />
-                </Ellipse.RenderTransform>
-            </Ellipse>
-
-            <TextBlock x:Name="MeasuredText" FontSize="16">
-                <TextBlock.RenderTransform>
-                    <TranslateTransform />
-                </TextBlock.RenderTransform>
-            </TextBlock>
+            
+            <Rectangle x:Name="LowerRect"
+                       Width="4"
+                       Height="16"
+                       Fill="LightGray"/>
+            
+            <Border Width="120"
+                    Canvas.Left="120"
+                    Canvas.Top="10">
+                <TextBlock x:Name="LowerText"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+            </Border>
+            
+            <Rectangle x:Name="UpperRect"
+                       Width="4"
+                       Height="16"
+                       Fill="LightGray"/>
+            
+            <Border Width="120"
+                    Canvas.Right="120"
+                    Canvas.Top="10">
+                <TextBlock x:Name="UpperText"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+            </Border>
+            
+            <Ellipse x:Name="MeasuredMarker"
+                     Width="16"
+                     Height="16"/>
 
         </Canvas>
 
-
     </Grid>
+
 </UserControl>

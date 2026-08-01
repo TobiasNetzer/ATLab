@@ -42,6 +42,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool _isDevelopmentMode;
     
     [ObservableProperty]
+    private bool _isShowMeasurementPanel;
+    
+    [ObservableProperty]
     private int _numberFailedSteps;
     
     [ObservableProperty]
@@ -126,6 +129,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
+        IsShowMeasurementPanel = settingsService.Settings.IsShowMeasurementPanel;
 
         _projectModel.TestSteps.CollectionChanged += ProjectTestStepsChanged;
         
@@ -403,6 +407,11 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsDevelopmentModeChanged(bool value)
     {
         _settingsService.Settings.IsDevelopmentMode = value;
+    }
+    
+    partial void OnIsShowMeasurementPanelChanged(bool value)
+    {
+        _settingsService.Settings.IsShowMeasurementPanel = value;
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
