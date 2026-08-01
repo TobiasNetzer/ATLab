@@ -66,7 +66,7 @@ public partial class MeasurementPanel : UserControl
         var barWidth = Bar.Bounds.Width;
         var barCenterY = Bar.Bounds.Y + Bar.Bounds.Height / 2;
 
-        const int edgePadding = 120;
+        const int edgePadding = 180;
 
         var lowerX = barLeft + edgePadding;
         var upperX = barLeft + barWidth - edgePadding;

@@ -16,7 +16,7 @@
                 CornerRadius="3"
                 MinWidth="400"
                 VerticalAlignment="Center"
-                Margin="60,30,60,0"/>
+                Margin="10,30,10,0"/>
         
         <Canvas x:Name="Overlay">
             
@@ -26,7 +26,7 @@
                        Fill="LightGray"/>
             
             <Border Width="120"
-                    Canvas.Left="120"
+                    Canvas.Left="130"
                     Canvas.Top="10">
                 <TextBlock x:Name="LowerText"
                            FontSize="16"
@@ -40,7 +40,7 @@
                        Fill="LightGray"/>
             
             <Border Width="120"
-                    Canvas.Right="120"
+                    Canvas.Right="130"
                     Canvas.Top="10">
                 <TextBlock x:Name="UpperText"
                            FontSize="16"
