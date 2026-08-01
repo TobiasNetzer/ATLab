@@ -13,6 +13,7 @@ public class AppSettings
     public string LastOpenedFile { get; set; } = "";
     public string ScriptRepositoryFolder { get; set; } = "";
     public bool IsDevelopmentMode { get; set; }
+    public bool IsShowMeasurementPanel { get; set; }
     public bool IsStepConfiguratorExpanded { get; set; }
     public bool IsMeasSelectorExpanded { get; set; }
     public bool IsStimSelectorExpanded { get; set; }

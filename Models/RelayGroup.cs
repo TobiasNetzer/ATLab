@@ -22,6 +22,16 @@ public class RelayGroup : ObservableObject
         }
     }
     
+    public RelayGroup(RelayGroup other)
+    {
+        foreach (var channel in other.Channels)
+        {
+            var newChannel = new RelayChannelState(channel);
+            newChannel.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Channels));
+            Channels.Add(newChannel);
+        }
+    }
+    
     public bool[] ToBoolArray()
     {
         return Channels.Select(c => c.IsEnabled).ToArray();

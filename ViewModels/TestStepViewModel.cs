@@ -12,7 +12,8 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private string? _result;
     
-    public string? ResultNoFormatting;
+    [ObservableProperty]
+    private string? _resultNoFormatting;
     
     [ObservableProperty]
     private bool _isPassed;

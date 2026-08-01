@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
@@ -276,34 +277,29 @@ public class TestReportComposer
                 table.Cell().Element(BodyCell).Text(row.TestStep.Number.ToString()).FontSize(10).LineHeight(1.3f);
                 table.Cell().Element(BodyCell).Text(row.TestStep.Name).FontSize(10).LineHeight(1.3f);
 
+                var lowerLimit = !string.IsNullOrWhiteSpace(row.TestStep.Unit)
+                    ? UnitParser.Format(row.TestStep.LowerLimit, row.TestStep.Unit)
+                    : row.TestStep.LowerLimit.ToString(CultureInfo.CurrentCulture);
+
                 var lower = row.TestStep.EvaluationSource == TestEvaluationSource.NONE
                     ? "-"
-                    : $"{row.TestStep.LowerLimit} {row.TestStep.Unit}";
+                    : $"{lowerLimit}";
                 
                 table.Cell().Element(BodyCell).Text(lower).FontSize(10).LineHeight(1.3f);
 
-                string measured;
-
-                if (string.IsNullOrWhiteSpace(row.ResultNoFormatting))
-                {
-                    measured = "-";
-                }
-                else if (!double.TryParse(row.ResultNoFormatting, NumberStyles.Any, CultureInfo.CurrentCulture, out _))
-                {
-                    measured = row.ResultNoFormatting ?? "-";
-                }
-                else
-                {
-                    measured = string.IsNullOrWhiteSpace(row.TestStep.Unit)
-                        ? row.ResultNoFormatting
-                        : $"{row.ResultNoFormatting} {row.TestStep.Unit}";
-                }
+                var measured = row.TestStep.EvaluationSource == TestEvaluationSource.NONE
+                    ? "-"
+                    : $"{row.Result}";
 
                 table.Cell().Element(BodyCell).Text(measured).FontSize(10).LineHeight(1.3f);
                 
+                var upperLimit = !string.IsNullOrWhiteSpace(row.TestStep.Unit)
+                    ? UnitParser.Format(row.TestStep.UpperLimit, row.TestStep.Unit)
+                    : row.TestStep.UpperLimit.ToString(CultureInfo.CurrentCulture);
+                
                 var upper = row.TestStep.EvaluationSource == TestEvaluationSource.NONE
                     ? "-"
-                    : $"{row.TestStep.UpperLimit} {row.TestStep.Unit}";
+                    : $"{upperLimit}";
                 
                 table.Cell().Element(BodyCell).Text(upper).FontSize(10).LineHeight(1.3f);
 

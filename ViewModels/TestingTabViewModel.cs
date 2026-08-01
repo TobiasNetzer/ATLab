@@ -42,6 +42,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool _isDevelopmentMode;
     
     [ObservableProperty]
+    private bool _isShowMeasurementPanel;
+    
+    [ObservableProperty]
     private int _numberFailedSteps;
     
     [ObservableProperty]
@@ -126,6 +129,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         Title = "Test Environment";
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
+        IsShowMeasurementPanel = settingsService.Settings.IsShowMeasurementPanel;
 
         _projectModel.TestSteps.CollectionChanged += ProjectTestStepsChanged;
         
@@ -163,54 +167,61 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private void ProjectTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.Action == NotifyCollectionChangedAction.Add)
+        switch (e.Action)
         {
-            var index = e.NewStartingIndex;
-
-            foreach (TestStep step in e.NewItems!)
+            case NotifyCollectionChangedAction.Add:
             {
-                var vm = CreateViewModel(step);
-                vm.PropertyChanged += OnStepPropertyChanged;
+                var index = e.NewStartingIndex;
 
-                TestSteps.Insert(index++, vm);
+                foreach (TestStep step in e.NewItems!)
+                {
+                    var vm = CreateViewModel(step);
+                    vm.PropertyChanged += OnStepPropertyChanged;
+
+                    TestSteps.Insert(index++, vm);
+                }
+
+                break;
             }
-        }
-
-        if (e.Action == NotifyCollectionChangedAction.Remove)
-        {
-            foreach (TestStep step in e.OldItems!)
+            case NotifyCollectionChangedAction.Remove:
             {
-                var vm = TestSteps.First(x => ReferenceEquals(x.TestStep, step));
+                foreach (TestStep step in e.OldItems!)
+                {
+                    var vm = TestSteps.First(x => ReferenceEquals(x.TestStep, step));
 
-                vm.PropertyChanged -= OnStepPropertyChanged;
+                    vm.PropertyChanged -= OnStepPropertyChanged;
 
-                TestSteps.Remove(vm);
+                    TestSteps.Remove(vm);
+                }
+
+                break;
             }
-        }
-        
-        if (e.Action == NotifyCollectionChangedAction.Move)
-        {
-            var selected = SelectedStep;
-            var selectedList = SelectedSteps.ToList();
+            case NotifyCollectionChangedAction.Move:
+            {
+                var selected = SelectedStep;
+                var selectedList = SelectedSteps.ToList();
             
-            var item = TestSteps[e.OldStartingIndex];
-            TestSteps.RemoveAt(e.OldStartingIndex);
-            TestSteps.Insert(e.NewStartingIndex, item);
+                var item = TestSteps[e.OldStartingIndex];
+                TestSteps.RemoveAt(e.OldStartingIndex);
+                TestSteps.Insert(e.NewStartingIndex, item);
 
-            SelectedStep = selected;
-            SelectedSteps.Clear();
-            foreach (var s in selectedList)
-            {
-                SelectedSteps.Add(s);
+                SelectedStep = selected;
+                SelectedSteps.Clear();
+                foreach (var s in selectedList)
+                {
+                    SelectedSteps.Add(s);
+                }
+
+                break;
             }
-        }
+            case NotifyCollectionChangedAction.Reset:
+            {
+                foreach (var vm in TestSteps)
+                    vm.PropertyChanged -= OnStepPropertyChanged;
 
-        if (e.Action == NotifyCollectionChangedAction.Reset)
-        {
-            foreach (var vm in TestSteps)
-                vm.PropertyChanged -= OnStepPropertyChanged;
-
-            TestSteps.Clear();
+                TestSteps.Clear();
+                break;
+            }
         }
     }
     
@@ -272,53 +283,101 @@ public partial class TestingTabViewModel : ViewModelBase
         OnPropertyChanged(nameof(CanPaste));
     }
 
+    private bool _isUpdatingMultipleSteps;
+    
     private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not TestStepViewModel changedVm)
+        if (_isUpdatingMultipleSteps || _isChangingSelection || sender is not TestStepViewModel changedVm)
             return;
 
         var isTestStepProperty = string.IsNullOrWhiteSpace(e.PropertyName) ||
                                  typeof(TestStep).GetProperty(e.PropertyName) != null;
-
+        
         if (isTestStepProperty)
             _projectModel.MarkDirty();
 
         if (changedVm != SelectedStep || !isTestStepProperty || string.IsNullOrWhiteSpace(e.PropertyName))
             return;
 
-        foreach (var vm in SelectedSteps)
+        _isUpdatingMultipleSteps = true;
+        try
         {
-            if (vm == changedVm)
-                continue;
+            foreach (var vm in SelectedSteps)
+            {
+                if (vm == changedVm)
+                    continue;
 
-            CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+                CopyChangedProperty(changedVm.TestStep, vm.TestStep, e.PropertyName);
+            }
+        }
+        finally
+        {
+            _isUpdatingMultipleSteps = false;
         }
     }
     
     private static void CopyChangedProperty(TestStep source, TestStep target, string propertyName)
     {
         var prop = typeof(TestStep).GetProperty(propertyName);
-        if (prop == null || !prop.CanWrite)
+        if (prop == null)
             return;
 
-        var value = prop.GetValue(source);
-        prop.SetValue(target, value);
+        var sourceValue = prop.GetValue(source);
+        var targetValue = prop.GetValue(target);
+
+        if (prop.CanWrite)
+        {
+            if (Equals(sourceValue, targetValue))
+                return;
+
+            var newValue = sourceValue switch
+            {
+                PassFailAction p => new PassFailAction(p),
+                ScriptCommand s => new ScriptCommand(s),
+                ResponseMask r => new ResponseMask(r),
+                ShellCommand sc => new ShellCommand(sc),
+                RelayMatrix rm => new RelayMatrix(rm),
+                RelayGroup rg => new RelayGroup(rg),
+                _ => sourceValue
+            };
+
+            prop.SetValue(target, newValue);
+        }
+        else if (sourceValue is ObservableCollection<CustomVariable> sourceCollection &&
+                 targetValue is ObservableCollection<CustomVariable> targetCollection)
+        {
+            targetCollection.Clear();
+            foreach (var item in sourceCollection)
+            {
+                targetCollection.Add(item.Clone());
+            }
+        }
     }
+    
+    private bool _isChangingSelection;
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
         if (value?.TestStep == null) return;
         
-        using (_projectModel.SuppressDirtyTracking())
+        _isChangingSelection = true;
+        try
         {
-            try
+            using (_projectModel.SuppressDirtyTracking())
             {
-                WorkspaceEditor.LoadTestStep(value, TestSteps);
+                try
+                {
+                    WorkspaceEditor.LoadTestStep(value, TestSteps);
+                }
+                catch (Exception ex)
+                {
+                    _errorService.AddError("Exception: " + ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                _errorService.AddError("Exception: " + ex.Message);
-            }
+        }
+        finally
+        {
+            _isChangingSelection = false;
         }
     }
 
@@ -348,6 +407,11 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsDevelopmentModeChanged(bool value)
     {
         _settingsService.Settings.IsDevelopmentMode = value;
+    }
+    
+    partial void OnIsShowMeasurementPanelChanged(bool value)
+    {
+        _settingsService.Settings.IsShowMeasurementPanel = value;
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;

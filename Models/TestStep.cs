@@ -164,10 +164,10 @@ public partial class TestStep : ObservableObject
     private RelayGroup _liveExtStimState = new(0);
 
     [JsonPropertyOrder(30)]
-    public RelayGroupDto? StimState { get; private set; }
+    public RelayGroupDto? StimState { get; set; }
     
     [JsonPropertyOrder(31)]
-    public RelayGroupDto? ExtStimState { get; private set; }
+    public RelayGroupDto? ExtStimState { get; set; }
 
     private void HookEvents()
     {
@@ -259,15 +259,15 @@ public partial class TestStep : ObservableObject
 
     private void Child_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(OnPass));
-        OnPropertyChanged(nameof(OnFail));
-        OnPropertyChanged(nameof(ShellCommand));
-        OnPropertyChanged(nameof(InterfaceConfig));
-        OnPropertyChanged(nameof(Command));
-        OnPropertyChanged(nameof(MatrixState));
-        OnPropertyChanged(nameof(LiveStimState));
-        OnPropertyChanged(nameof(LiveExtStimState));
-        OnPropertyChanged(nameof(ScriptVariables));
+        if (ReferenceEquals(sender, OnPass)) OnPropertyChanged(nameof(OnPass));
+        else if (ReferenceEquals(sender, OnFail)) OnPropertyChanged(nameof(OnFail));
+        else if (ReferenceEquals(sender, ShellCommand)) OnPropertyChanged(nameof(ShellCommand));
+        else if (ReferenceEquals(sender, InterfaceConfig)) OnPropertyChanged(nameof(InterfaceConfig));
+        else if (ReferenceEquals(sender, Command)) OnPropertyChanged(nameof(Command));
+        else if (ReferenceEquals(sender, MatrixState)) OnPropertyChanged(nameof(MatrixState));
+        else if (ReferenceEquals(sender, LiveStimState)) OnPropertyChanged(nameof(LiveStimState));
+        else if (ReferenceEquals(sender, LiveExtStimState)) OnPropertyChanged(nameof(LiveExtStimState));
+        else if (sender is CustomVariable) OnPropertyChanged(nameof(ScriptVariables));
     }
 
     public void UpdateDtos()

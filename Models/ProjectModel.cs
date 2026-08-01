@@ -129,7 +129,9 @@ public partial class ProjectModel : ObservableObject
         {
             Reset();
 
-            TestSteps.Add(new TestStep());
+            var step = new TestStep();
+            step.InitializeRuntimeState(_hardwareInfo);
+            TestSteps.Add(step);
 
             MarkSaved(null);
         }
@@ -141,6 +143,7 @@ public partial class ProjectModel : ObservableObject
         foreach (var step in dto.TestSteps)
         {
             TestStepRuntimeInitializer.InitializeRuntimeValues(step);
+            step.InitializeRuntimeState(_hardwareInfo);
             TestSteps.Add(step);
         }
         

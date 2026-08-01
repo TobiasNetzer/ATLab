@@ -8,25 +8,25 @@ namespace ATLab.Services;
 
 public class TestStepEditor : ITestStepEditor
 {
-    private readonly IHardwareInfo _hardwareInfo;
     private readonly ProjectModel _projectModel;
+    private readonly IHardwareInfo _hardwareInfo;
 
     private List<TestStep>? _clipboard;
     private bool _clipboardIsCut;
     
     public bool CanPaste => _clipboard != null && _clipboard.Count > 0;
 
-    public TestStepEditor(
-        IHardwareInfo hardwareInfo,
-        ProjectModel projectModel)
+    public TestStepEditor(ProjectModel projectModel,
+        IHardwareInfo hardwareInfo)
     {
-        _hardwareInfo = hardwareInfo;
         _projectModel = projectModel;
+        _hardwareInfo = hardwareInfo;
     }
 
     public TestStep AddStep(int insertIndex)
     {
         var step = new TestStep();
+        step.InitializeRuntimeState(_hardwareInfo);
 
         _projectModel.TestSteps.Insert(insertIndex, step);
 
@@ -50,6 +50,7 @@ public class TestStepEditor : ITestStepEditor
             step.UpdateDtos();
 
             var clone = step.Clone();
+            clone.InitializeRuntimeState(_hardwareInfo);
 
             _projectModel.TestSteps.Insert(insertIndex++, clone);
 
@@ -87,6 +88,7 @@ public class TestStepEditor : ITestStepEditor
         foreach (var model in _clipboard!)
         {
             var clone = model.Clone(_clipboardIsCut);
+            clone.InitializeRuntimeState(_hardwareInfo);
 
             _projectModel.TestSteps.Insert(insertIndex++, clone);
 
