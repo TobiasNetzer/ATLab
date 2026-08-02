@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ATLab.Interfaces;
 
-public interface ICommunication : IDisposable, IAsyncDisposable
+public interface ICommunication : IAsyncDisposable
 {
     bool IsConnected { get; }
     string Resource { get; }

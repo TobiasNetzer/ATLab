@@ -6,7 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
-public interface ICommandExecutor : IAsyncDisposable , IDisposable
+public interface ICommandExecutor : IAsyncDisposable
 {
     Task<OperationResult<byte[]>> ExecuteAsync(
         ScriptCommand command,

@@ -146,7 +146,10 @@ public class App : Application
         
         window.Opened += async (_, _) => await mainVm.OnWindowOpened();
 
-        desktop.Exit += async (_, _) => await OnExitAsync();
+        desktop.Exit += (_, _) =>
+        {
+            OnExitAsync().GetAwaiter().GetResult();
+        };
 
         desktop.MainWindow = window;
         window.Show();
@@ -158,10 +161,22 @@ public class App : Application
 
     private async Task OnExitAsync()
     {
-        if (_services is IAsyncDisposable asyncDisposable)
-            await asyncDisposable.DisposeAsync();
-        else if (_services is IDisposable disposable)
-            disposable.Dispose();
+        var hardwareAccessor = _services?.GetService<IHardwareAccessor>();
+        
+        if (hardwareAccessor?.Hardware is IAsyncDisposable asyncHardware)
+        {
+            await asyncHardware.DisposeAsync();
+        }
+        
+        switch (_services)
+        {
+            case IAsyncDisposable asyncDisposable:
+                await asyncDisposable.DisposeAsync();
+                break;
+            case IDisposable disposable:
+                disposable.Dispose();
+                break;
+        }
     }
 
     private void ConfigureServices(IServiceCollection services)

@@ -11,6 +11,7 @@ namespace ATLab.CTIA;
 
 public class CtiaHardware : ITestHardware
 {
+    private readonly ICtiaCommunication _communication;
     private readonly CtiaCommand _command;
     public IHardwareInfo HardwareInfo { get; }
     
@@ -33,6 +34,8 @@ public class CtiaHardware : ITestHardware
     private int _dataBits = 8;
     
     private SerialStopBits _stopBits = SerialStopBits.ONE;
+    
+    private bool _isDisposed;
 
     public CtiaHardware(ICtiaCommunication communication)
     {
@@ -46,6 +49,7 @@ public class CtiaHardware : ITestHardware
         UseExternalProbe = 0;
         
         _command = new CtiaCommand(communication);
+        _communication = communication;
     }
 
     public async Task<OperationResult> InitializeAsync()
@@ -118,6 +122,10 @@ public class CtiaHardware : ITestHardware
             StimChannelStates = new bool[HardwareInfo.StimChannelCount];
             ExtStimChannelStates = new bool[HardwareInfo.ExtStimChannelCount];
             MeasChannelStates = new bool[HardwareInfo.MeasChannelCount];
+            
+            var reset = await _command.ClrAllRelayStates();
+            if (!reset.IsSuccess)
+                return OperationResult.Failure(reset.ErrorMessage);
 
             return OperationResult.Success();
         }
@@ -321,5 +329,15 @@ public class CtiaHardware : ITestHardware
         var commandResponse = await _command.SetExternalProbeIn(channel);
         
         return commandResponse.IsSuccess ? OperationResult.Success() : OperationResult.Failure(commandResponse.ErrorMessage);
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        if (_isDisposed)
+            return;
+        
+        await _communication.DisposeAsync();
+        _ioLock.Dispose();
+        _isDisposed = true;
     }
 }

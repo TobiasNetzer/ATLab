@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Models;
@@ -5,7 +6,7 @@ using ATLab.Records;
 
 namespace ATLab.Interfaces;
 
-public interface ITestHardware
+public interface ITestHardware : IAsyncDisposable
 {
     bool[] StimChannelStates {get; set; }
     bool[] ExtStimChannelStates { get; set; }

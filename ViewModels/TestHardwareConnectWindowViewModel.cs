@@ -69,10 +69,9 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
         if (!CanConnect) 
             return false;
         
-        if (_currentComm is IDisposable oldDisposable)
+        if (_currentComm != null)
         {
-            await _currentComm.DisconnectAsync();
-            oldDisposable.Dispose();
+            await _currentComm.DisposeAsync();
             _currentComm = null;
         }
         
@@ -85,9 +84,8 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
             StatusText = $"Failed to connect to {SelectedPort}";
             Status = ConnectionStatus.FAILED;
 
-            await comm.DisconnectAsync();
-            (comm as IDisposable)?.Dispose();
 
+            await comm.DisposeAsync();
             ConnectCommand.NotifyCanExecuteChanged();
             return false;
         }
@@ -102,7 +100,7 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
             Status = ConnectionStatus.FAILED;
 
             await comm.DisconnectAsync();
-            (comm as IDisposable)?.Dispose();
+            await comm.DisposeAsync();
 
             ConnectCommand.NotifyCanExecuteChanged();
             return false;

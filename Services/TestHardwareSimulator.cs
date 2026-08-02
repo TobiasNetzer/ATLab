@@ -82,4 +82,9 @@ public class TestHardwareSimulator : ITestHardware
         await Task.CompletedTask;
         return OperationResult<byte[]>.Success([(byte)'0']);
     }
+    
+    public async ValueTask DisposeAsync()
+    {
+        await Task.CompletedTask;
+    }
 }

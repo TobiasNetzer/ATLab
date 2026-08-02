@@ -301,11 +301,7 @@ public class SerialPortService : ICommunication
     public async ValueTask DisposeAsync()
     {
         await DisconnectAsync();
-        Dispose();
-    }
-
-    public void Dispose()
-    {
+        
         if (_disposed) return;
         _disposed = true;
 

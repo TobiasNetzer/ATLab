@@ -10,6 +10,7 @@ namespace ATLab.CTIA
     {
         private readonly ICommunication _communication;
         private readonly IErrorService _errorService;
+        private bool _isDisposed;
 
         public CtiaCommunication(ICommunication communication, IErrorService errorService)
         {
@@ -60,9 +61,13 @@ namespace ATLab.CTIA
             return CtiaCommandFrame.Parse(receivedData);
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            if (_communication is IDisposable d) d.Dispose();
+            if (_isDisposed)
+                return;
+
+            await _communication.DisposeAsync();
+            _isDisposed = true;
         }
     }
 }

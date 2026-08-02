@@ -196,24 +196,4 @@ public class CommandExecutor : ICommandExecutor
         
         _disposed = true;
     }
-
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-
-        if (_deviceInterface != null)
-        {
-            try
-            {
-                _deviceInterface.DisconnectAsync().GetAwaiter().GetResult();
-                _deviceInterface.Dispose();
-            }
-            catch
-            {
-                //
-            }
-            _deviceInterface = null;
-        }
-    }
 }

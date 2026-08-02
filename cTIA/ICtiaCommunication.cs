@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ATLab.Models;
 namespace ATLab.CTIA;
 
-public interface ICtiaCommunication : IDisposable
+public interface ICtiaCommunication : IAsyncDisposable
 {
     Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000);
     Task<OperationResult> ReconnectAsync();
