@@ -7,7 +7,7 @@ public class CtiaCommandFrame
 {
     private ushort Header { get; } = 0xAA55;
     public ushort Command { get; set; } = 0x00;
-    private byte ControlByte { get; set; } = 0x00;
+    public byte ControlByte { get; set; } = 0x00;
     public byte PayloadSize { get; set; } = 0x00;
     public byte[] Payload { get; set; } = Array.Empty<byte>();
     public byte Crc { get; set; } = 0x00;

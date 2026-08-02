@@ -8,6 +8,11 @@ using ATLab.Records;
 
 namespace ATLab.CTIA;
 
+public enum CtiaControlByte : byte {
+    CONTROL_BYTE_IGNORE_CRC_BYTE = 1,
+    CONTROL_BYTE_DONT_SEND_RESPONSE = 2
+}
+
 // -------------------------
 // Status codes
 // -------------------------

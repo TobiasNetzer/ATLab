@@ -7,6 +7,7 @@ namespace ATLab.CTIA;
 public interface ICtiaCommunication : IAsyncDisposable
 {
     Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000);
+    void WriteCommand(CtiaCommandFrame frame);
     Task<OperationResult> ReconnectAsync();
     Task<CtiaCommandFrame> ReceiveCommandAsync(CancellationToken cancellationToken = default);
 }

@@ -336,6 +336,13 @@ public class CtiaHardware : ITestHardware
         if (_isDisposed)
             return;
         
+        var frame = new CtiaCommandFrame
+        {
+            Command = (ushort)ClrCmd.CLR_ALL_RELAYS,
+            ControlByte = (byte)CtiaControlByte.CONTROL_BYTE_DONT_SEND_RESPONSE,
+        };
+        _communication.WriteCommand(frame);
+        
         await _communication.DisposeAsync();
         _ioLock.Dispose();
         _isDisposed = true;

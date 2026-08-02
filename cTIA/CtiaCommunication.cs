@@ -50,6 +50,11 @@ namespace ATLab.CTIA
             }
         }
 
+        public void WriteCommand(CtiaCommandFrame frame)
+        {
+            _communication.SendAsync(frame.ToByteArray());
+        }
+
         public async Task<OperationResult> ReconnectAsync()
         {
             return await _communication.ReconnectAsync();
