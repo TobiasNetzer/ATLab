@@ -273,6 +273,7 @@ public partial class TestingTabViewModel : ViewModelBase
         NumberPassedTests = 0;
         NumberRunTests = 0;
         NumberFailedSteps = 0;
+        PassedPercentage = 100;
         TestDuration = string.Empty;
         TestStatus = TestStatus.IDLE;
     }
