@@ -68,6 +68,16 @@ public static class ExpressionEvaluator
                 while (i < expr.Length && (char.IsDigit(expr[i]) || expr[i] == '.'))
                     i++;
 
+                if (i < expr.Length && (expr[i] == 'e' || expr[i] == 'E'))
+                {
+                    i++;
+                    if (i < expr.Length && (expr[i] == '+' || expr[i] == '-'))
+                        i++;
+
+                    while (i < expr.Length && char.IsDigit(expr[i]))
+                        i++;
+                }
+
                 tokens.Add(new Token(TokenType.NUMBER, expr[start..i]));
                 continue;
             }
