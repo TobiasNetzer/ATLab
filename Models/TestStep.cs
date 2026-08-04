@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ATLab.Enums;
 using ATLab.Interfaces;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
@@ -270,10 +271,22 @@ public partial class TestStep : ObservableObject
         else if (sender is CustomVariable) OnPropertyChanged(nameof(ScriptVariables));
     }
 
-    public void UpdateDtos()
+    public void UpdateDtos(PathService? pathService = null)
     {
         StimState = LiveStimState.ToDto();
         ExtStimState = LiveExtStimState.ToDto();
+
+        if (pathService != null)
+        {
+            CustomMessageBoxImagePath = pathService.ToRelative(CustomMessageBoxImagePath);
+            FilePath = pathService.ToRelative(FilePath);
+        }
+    }
+    
+    public void RestoreAfterLoad(PathService pathService)
+    {
+        CustomMessageBoxImagePath = pathService.ToAbsolute(CustomMessageBoxImagePath);
+        FilePath = pathService.ToAbsolute(FilePath);
     }
     
     public void InitializeRuntimeState(IHardwareInfo hardwareInfo)

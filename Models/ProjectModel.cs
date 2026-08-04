@@ -106,19 +106,33 @@ public partial class ProjectModel : ObservableObject
     
     public AtlabFileDto ToDto()
     {
-        foreach (var step in TestSteps)
-            step.UpdateDtos();
+        var pathService = string.IsNullOrWhiteSpace(FilePath) 
+            ? null 
+            : new PathService(FilePath);
+
+        var testStepsClone = TestSteps.Select(step => step.Clone(true)).ToList();
+        var documentationClone = Documentation.Clone();
+        var settingsClone = Settings.Clone();
+
+        foreach (var step in testStepsClone)
+            step.UpdateDtos(pathService);
+
+        if (pathService != null)
+        {
+            documentationClone.PrepareForSave(pathService);
+            settingsClone.PrepareForSave(pathService);
+        }
 
         return new AtlabFileDto
         {
-            TestSteps = TestSteps.ToList(),
+            TestSteps = testStepsClone,
             StimChannelNames = StimChannelNames.ToList(),
             ExtStimChannelNames = ExtStimChannelNames.ToList(),
             MeasChannelNames = MeasChannelNames.ToList(),
             RuntimeVariables = RuntimeVariables.ToList(),
             Devices = Devices.ToList(),
-            ProjectSettings = Settings,
-            ProjectDocumentation = Documentation,
+            ProjectSettings = settingsClone,
+            ProjectDocumentation = documentationClone,
             DeviceUnderTestInfo = DeviceUnderTestInfo
         };
     }
@@ -139,9 +153,16 @@ public partial class ProjectModel : ObservableObject
     
     public void Load(AtlabFileDto dto)
     {
+        var pathService = !string.IsNullOrWhiteSpace(FilePath)
+            ? new PathService(FilePath)
+            : null;
+
         TestSteps.Clear();
         foreach (var step in dto.TestSteps)
         {
+            if (pathService != null)
+                step.RestoreAfterLoad(pathService);
+
             TestStepRuntimeInitializer.InitializeRuntimeValues(step);
             step.InitializeRuntimeState(_hardwareInfo);
             TestSteps.Add(step);
@@ -159,6 +180,12 @@ public partial class ProjectModel : ObservableObject
         ApplyRelayChannelNames(ExtStimChannelNames, dto.ExtStimChannelNames);
         ApplyRelayChannelNames(MeasChannelNames, dto.MeasChannelNames);
         
+        if (pathService != null)
+        {
+            dto.ProjectSettings.RestoreAfterLoad(pathService);
+            dto.ProjectDocumentation.RestoreAfterLoad(pathService);
+        }
+
         Settings.CopyFrom(dto.ProjectSettings);
         Documentation.CopyFrom(dto.ProjectDocumentation);
         DeviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
@@ -294,13 +321,13 @@ public partial class ProjectModel : ObservableObject
     
     private void InitializeRelayChannels()
     {
-        for (int i = 1; i <= _hardwareInfo.StimChannelCount; i++)
+        for (var i = 1; i <= _hardwareInfo.StimChannelCount; i++)
             StimChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
 
-        for (int i = 1; i <= _hardwareInfo.ExtStimChannelCount; i++)
+        for (var i = 1; i <= _hardwareInfo.ExtStimChannelCount; i++)
             ExtStimChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
 
-        for (int i = 1; i <= _hardwareInfo.MeasChannelCount; i++)
+        for (var i = 1; i <= _hardwareInfo.MeasChannelCount; i++)
             MeasChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
     }
     
@@ -340,7 +367,7 @@ public partial class ProjectModel : ObservableObject
         ObservableCollection<CustomRelayChannelName> target,
         IReadOnlyList<CustomRelayChannelName> source)
     {
-        for (int i = 0; i < Math.Min(target.Count, source.Count); i++)
+        for (var i = 0; i < Math.Min(target.Count, source.Count); i++)
         {
             target[i].ChannelName = source[i].ChannelName;
         }

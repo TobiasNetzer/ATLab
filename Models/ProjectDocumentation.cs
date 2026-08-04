@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
@@ -48,6 +49,13 @@ public partial class ProjectDocumentation : ObservableObject
             Attachments.Add(path);
     }
 
+    public ProjectDocumentation Clone()
+    {
+        var clone = new ProjectDocumentation();
+        clone.CopyFrom(this);
+        return clone;
+    }
+
     public void ResetToDefault()
     {
         TestDocumentation = string.Empty;
@@ -55,5 +63,31 @@ public partial class ProjectDocumentation : ObservableObject
         KnownIssuesDocumentation = string.Empty;
         ImagePaths.Clear();
         Attachments.Clear();
+    }
+
+    public void PrepareForSave(PathService pathService)
+    {
+        for (var i = 0; i < ImagePaths.Count; i++)
+        {
+            ImagePaths[i] = pathService.ToRelative(ImagePaths[i]);
+        }
+
+        foreach (var attachment in Attachments)
+        {
+            attachment.Path = pathService.ToRelative(attachment.Path);
+        }
+    }
+
+    public void RestoreAfterLoad(PathService pathService)
+    {
+        for (var i = 0; i < ImagePaths.Count; i++)
+        {
+            ImagePaths[i] = pathService.ToAbsolute(ImagePaths[i]);
+        }
+
+        foreach (var attachment in Attachments)
+        {
+            attachment.Path = pathService.ToAbsolute(attachment.Path);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using ATLab.Enums;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
@@ -103,6 +104,13 @@ public partial class ProjectSettings : ObservableObject
         OnSettingsChanged();
     }
     
+    public ProjectSettings Clone()
+    {
+        var clone = new ProjectSettings();
+        clone.CopyFrom(this);
+        return clone;
+    }
+    
     public void CopyFrom(ProjectSettings other)
     {
         ToleranceValue = other.ToleranceValue;
@@ -119,6 +127,16 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationEndsWith = other.SerialNumberValidationEndsWith;
         SerialNumberValidationContains = other.SerialNumberValidationContains;
         IsControlModuleEnabled = other.IsControlModuleEnabled;
+    }
+
+    public void PrepareForSave(PathService pathService)
+    {
+        SaveTestResultFilePath = pathService.ToRelative(SaveTestResultFilePath);
+    }
+
+    public void RestoreAfterLoad(PathService pathService)
+    {
+        SaveTestResultFilePath = pathService.ToAbsolute(SaveTestResultFilePath);
     }
     
     private void OnSettingsChanged() => SettingsChanged?.Invoke();
