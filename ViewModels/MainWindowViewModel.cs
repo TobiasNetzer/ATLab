@@ -148,7 +148,6 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public async Task OnWindowOpened()
     {
-        await ScriptTab.ReloadScriptsCommand.ExecuteAsync(null);
         
         var args = Environment.GetCommandLineArgs();
         var fileFromArgs = args.Length > 1 ? args[1] : null;

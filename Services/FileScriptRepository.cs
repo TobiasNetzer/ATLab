@@ -12,18 +12,27 @@ namespace ATLab.Services;
 
 public sealed class FileScriptRepository : IScriptRepository
 {
-    private readonly ISettingsService _settingsService;
+    public event EventHandler<string?>? RepositoryFolderChanged;
     private readonly IFileDialogService _fileDialogService;
+    private string? _explicitFolder;
     private string? _folder;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly Dictionary<string, CustomScript> _cache = new();
 
-    public FileScriptRepository(
-        ISettingsService settingsService,
-        IFileDialogService fileDialogService)
+    public FileScriptRepository(IFileDialogService fileDialogService)
     {
-        _settingsService = settingsService;
         _fileDialogService = fileDialogService;
+    }
+
+    public void SetRepositoryFolder(string? folderPath)
+    {
+        _explicitFolder = folderPath;
+        _folder = null;
+        lock (_cache)
+        {
+            _cache.Clear();
+        }
+        RepositoryFolderChanged?.Invoke(this, folderPath);
     }
 
     private async Task<string> GetFolderAsync()
@@ -36,9 +45,9 @@ public sealed class FileScriptRepository : IScriptRepository
                 return _folder;
             }
 
-            var folderPath = _settingsService.Settings.ScriptRepositoryFolder;
+            var folderPath = _explicitFolder;
 
-            if (!Directory.Exists(folderPath))
+            if (!string.IsNullOrWhiteSpace(folderPath) && !Directory.Exists(folderPath))
             {
                 if (!string.IsNullOrWhiteSpace(folderPath))
                 {
@@ -56,9 +65,10 @@ public sealed class FileScriptRepository : IScriptRepository
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
                 folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ATLab", "Scripts");
-                _settingsService.Settings.ScriptRepositoryFolder = folderPath;
-                _settingsService.Save();
-                Directory.CreateDirectory(folderPath);
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
             }
 
             _folder = folderPath;
@@ -188,10 +198,10 @@ public sealed class FileScriptRepository : IScriptRepository
             if (storageFolder != null)
             {
                 var folderPath = storageFolder.Path.LocalPath;
-                _settingsService.Settings.ScriptRepositoryFolder = folderPath;
-                _settingsService.Save();
-                Directory.CreateDirectory(folderPath);
+                _explicitFolder = folderPath;
                 _folder = folderPath;
+                
+                RepositoryFolderChanged?.Invoke(this, folderPath);
                 
                 lock (_cache)
                 {

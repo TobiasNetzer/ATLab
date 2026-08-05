@@ -14,19 +14,27 @@ public class ProjectController : IProjectController
     private readonly IHardwareInfo _hardwareInfo;
     private readonly ProjectModel _projectModel;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly IScriptRepository _scriptRepository;
 
     public ProjectController(
         IProjectDocumentService projectDocumentService,
         IErrorService errorService,
         IHardwareInfo hardwareInfo,
         ProjectModel projectModel,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        IScriptRepository scriptRepository)
     {
         _projectDocumentService = projectDocumentService;
         _errorService = errorService;
         _hardwareInfo = hardwareInfo;
         _projectModel = projectModel;
         _messageBoxService = messageBoxService;
+        _scriptRepository = scriptRepository;
+        
+        _scriptRepository.RepositoryFolderChanged += (_, folderPath) =>
+        {
+            _projectModel.ScriptRepositoryPath = folderPath;
+        };
     }
 
     public async Task NewProjectAsync()
@@ -35,6 +43,7 @@ public class ProjectController : IProjectController
             return;
         
         _projectModel.CreateEmptyProject();
+        _scriptRepository.SetRepositoryFolder(null);
     }
 
     public async Task SaveFileAsync()
@@ -90,6 +99,7 @@ public class ProjectController : IProjectController
         using (_projectModel.SuppressDirtyTracking())
         {
             _projectModel.Load(dto);
+            _scriptRepository.SetRepositoryFolder(_projectModel.ScriptRepositoryPath);
         }
     }
 

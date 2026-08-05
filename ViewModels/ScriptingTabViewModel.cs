@@ -29,6 +29,11 @@ public partial class ScriptingTabViewModel : ViewModelBase
         _messageBoxService = messageBoxService;
 
         Title = "Scripting";
+        
+        _repository.RepositoryFolderChanged += async (_, folderPath) =>
+        {
+            await ReloadScripts();
+        };
     }
 
     private bool CanExecute() => SelectedScript != null;

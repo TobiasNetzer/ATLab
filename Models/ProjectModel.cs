@@ -21,6 +21,9 @@ public partial class ProjectModel : ObservableObject
     
     [ObservableProperty]
     private string? _filePath;
+    
+    [ObservableProperty]
+    private string? _scriptRepositoryPath;
 
     public string ProjectName =>
         string.IsNullOrEmpty(FilePath)
@@ -58,6 +61,12 @@ public partial class ProjectModel : ObservableObject
         StimChannelNames.CollectionChanged += RelayChannelNamesChanged;
         ExtStimChannelNames.CollectionChanged += RelayChannelNamesChanged;
         MeasChannelNames.CollectionChanged += RelayChannelNamesChanged;
+
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ScriptRepositoryPath))
+                MarkDirty();
+        };
 
         foreach (var device in Devices)
             SubscribeToDevice(device);
@@ -99,6 +108,7 @@ public partial class ProjectModel : ObservableObject
                 channel.ChannelName = string.Empty;
 
             FilePath = null;
+            ScriptRepositoryPath = null;
         }
 
         IsDirty = false;
@@ -125,6 +135,7 @@ public partial class ProjectModel : ObservableObject
 
         return new AtlabFileDto
         {
+            ScriptRepositoryPath = pathService?.ToRelative(ScriptRepositoryPath ?? string.Empty) ?? ScriptRepositoryPath,
             TestSteps = testStepsClone,
             StimChannelNames = StimChannelNames.ToList(),
             ExtStimChannelNames = ExtStimChannelNames.ToList(),
@@ -180,6 +191,10 @@ public partial class ProjectModel : ObservableObject
         ApplyRelayChannelNames(ExtStimChannelNames, dto.ExtStimChannelNames);
         ApplyRelayChannelNames(MeasChannelNames, dto.MeasChannelNames);
         
+        ScriptRepositoryPath = pathService != null && !string.IsNullOrWhiteSpace(dto.ScriptRepositoryPath)
+            ? pathService.ToAbsolute(dto.ScriptRepositoryPath)
+            : dto.ScriptRepositoryPath;
+
         if (pathService != null)
         {
             dto.ProjectSettings.RestoreAfterLoad(pathService);

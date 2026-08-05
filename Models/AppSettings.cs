@@ -11,7 +11,6 @@ public class AppSettings
     public WindowState WindowState { get; set; } = WindowState.Normal;
     public string? LastComPort { get; set; } = "";
     public string LastOpenedFile { get; set; } = "";
-    public string ScriptRepositoryFolder { get; set; } = "";
     public bool IsDevelopmentMode { get; set; }
     public bool IsShowMeasurementPanel { get; set; }
     public bool IsStepConfiguratorExpanded { get; set; }
