@@ -292,7 +292,8 @@
                 LowerLimit="{Binding SelectedStep.TestStep.LowerLimit}"
                 UpperLimit="{Binding SelectedStep.TestStep.UpperLimit}"
                 MeasuredValue="{Binding SelectedStep.ResultNoFormatting}"
-                Unit="{Binding SelectedStep.TestStep.Unit}"/>
+                Unit="{Binding SelectedStep.TestStep.Unit}"
+                Valid="{Binding SelectedStep.IsPassed}"/>
             
         </Border>
         

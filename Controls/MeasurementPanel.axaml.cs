@@ -19,7 +19,16 @@ public partial class MeasurementPanel : UserControl
     
     public static readonly StyledProperty<string> UnitProperty =
         AvaloniaProperty.Register<MeasurementPanel, string>(nameof(Unit));
-
+    
+    public static readonly StyledProperty<bool> ValidProperty =
+        AvaloniaProperty.Register<MeasurementPanel, bool>(nameof(Valid));
+    
+    public bool Valid
+    {
+        get => GetValue(ValidProperty);
+        set => SetValue(ValidProperty, value);
+    }
+    
     public string Unit
     {
         get => GetValue(UnitProperty);
@@ -48,12 +57,12 @@ public partial class MeasurementPanel : UserControl
     {
         InitializeComponent();
 
+        ValidProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         UnitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         LowerLimitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         UpperLimitProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
         MeasuredValueProperty.Changed.AddClassHandler<MeasurementPanel>((panel, _) => panel.UpdateVisuals());
-
-
+        
         Root.SizeChanged += (_, __) => UpdateVisuals();
     }
 
@@ -73,7 +82,6 @@ public partial class MeasurementPanel : UserControl
 
         if (!double.TryParse(MeasuredValue, NumberStyles.Any, CultureInfo.CurrentCulture, out var measured))
         {
-            measured = 0;
             MeasuredMarker.IsVisible = false;
             MeasuredText.Text = string.Empty;
         }
@@ -103,9 +111,8 @@ public partial class MeasurementPanel : UserControl
             ? UnitParser.Format(UpperLimit, Unit)
             : UpperLimit.ToString(CultureInfo.CurrentCulture);
         
-        var inside = measured >= LowerLimit && measured <= UpperLimit;
-        MeasuredMarker.Fill = inside ? Brushes.LimeGreen : Brushes.Red;
-        MeasuredText.Foreground = inside ? Brushes.LimeGreen : Brushes.Red;
+        MeasuredMarker.Fill = Valid ? Brushes.LimeGreen : Brushes.Red;
+        MeasuredText.Foreground = Valid ? Brushes.LimeGreen : Brushes.Red;
         return;
 
         double Scale(double v)
