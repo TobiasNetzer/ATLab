@@ -334,7 +334,9 @@ public partial class TestStep : ObservableObject
             ResponseMask = new ResponseMask(ResponseMask),
             MatrixState = new RelayMatrix(MatrixState),
             StimState = StimState != null ? new RelayGroupDto(StimState) : null,
-            ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null
+            ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null,
+            LiveStimState = new RelayGroup(LiveStimState),
+            LiveExtStimState = new RelayGroup(LiveExtStimState)
         };
         
         clone.ScriptVariables = new ObservableCollection<CustomVariable>(
