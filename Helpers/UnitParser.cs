@@ -64,6 +64,15 @@ public static class UnitParser
 
     public static string Format(double value, string? unit = null, int precision = 6, bool useInvariantCulture = false)
     {
+        var culture = useInvariantCulture ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
+
+        if (unit != null && unit.StartsWith('{') && unit.EndsWith('}'))
+        {
+            var trimmedUnit = unit.Trim('{', '}');
+            var valueString = value.ToString(culture);
+            return $"{valueString}{trimmedUnit}";
+        }
+        
         var absValue = Math.Abs(value);
         var suffix = "";
         var displayValue = value;
@@ -105,7 +114,6 @@ public static class UnitParser
         }
 
         var format = "0." + new string('#', precision);
-        var culture = useInvariantCulture ? CultureInfo.InvariantCulture : CultureInfo.CurrentCulture;
         var formattedValue = displayValue.ToString(format, culture);
         return $"{formattedValue}{suffix}{unit ?? ""}";
     }
