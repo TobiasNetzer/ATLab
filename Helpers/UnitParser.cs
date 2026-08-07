@@ -19,32 +19,32 @@ public static class UnitParser
 
         var multiplier = 1.0;
         
-        if (input.EndsWith("p"))
+        if (input.EndsWith('p'))
         {
             multiplier = 1e-12;
             input = input.Substring(0, input.Length - 1);
         }
-        else if (input.EndsWith("n"))
+        else if (input.EndsWith('n'))
         {
             multiplier = 1e-9;
             input = input.Substring(0, input.Length - 1);
         }
-        else if (input.EndsWith("u"))
+        else if (input.EndsWith('u'))
         {
             multiplier = 1e-6;
             input = input.Substring(0, input.Length - 1);
         }
-        else if (input.EndsWith("m"))
+        else if (input.EndsWith('m'))
         {
             multiplier = 1e-3;
             input = input.Substring(0, input.Length - 1);
         }
-        else if (input.EndsWith("k"))
+        else if (input.EndsWith('k'))
         {
             multiplier = 1e3;
             input = input.Substring(0, input.Length - 1);
         }
-        else if (input.EndsWith("M"))
+        else if (input.EndsWith('M'))
         {
             multiplier = 1e6;
             input = input.Substring(0, input.Length - 1);
@@ -77,40 +77,37 @@ public static class UnitParser
         var suffix = "";
         var displayValue = value;
 
-        if (absValue >= 1e6)
+        switch (absValue)
         {
-            displayValue = value / 1e6;
-            suffix = "M";
-        }
-        else if (absValue >= 1e3)
-        {
-            displayValue = value / 1e3;
-            suffix = "k";
-        }
-        else if (absValue >= 1 || absValue == 0)
-        {
-            displayValue = value;
-            suffix = "";
-        }
-        else if (absValue >= 1e-3)
-        {
-            displayValue = value / 1e-3;
-            suffix = "m";
-        }
-        else if (absValue >= 1e-6)
-        {
-            displayValue = value / 1e-6;
-            suffix = "u";
-        }
-        else if (absValue >= 1e-9)
-        {
-            displayValue = value / 1e-9;
-            suffix = "n";
-        }
-        else if (absValue >= 1e-12)
-        {
-            displayValue = value / 1e-12;
-            suffix = "p";
+            case >= 1e6:
+                displayValue = value / 1e6;
+                suffix = "M";
+                break;
+            case >= 1e3:
+                displayValue = value / 1e3;
+                suffix = "k";
+                break;
+            case >= 1:
+            case 0:
+                displayValue = value;
+                suffix = "";
+                break;
+            case >= 1e-3:
+                displayValue = value / 1e-3;
+                suffix = "m";
+                break;
+            case >= 1e-6:
+                displayValue = value / 1e-6;
+                suffix = "u";
+                break;
+            case >= 1e-9:
+                displayValue = value / 1e-9;
+                suffix = "n";
+                break;
+            case >= 1e-12:
+                displayValue = value / 1e-12;
+                suffix = "p";
+                break;
         }
 
         var format = "0." + new string('#', precision);
