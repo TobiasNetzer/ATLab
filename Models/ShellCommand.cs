@@ -11,6 +11,9 @@ public partial class ShellCommand : ObservableObject
     [ObservableProperty]
     private ShellCommandOptions _option;
     
+    [ObservableProperty]
+    private bool _isDirectLaunch;
+    
     public ShellCommand()
     {
 
@@ -20,5 +23,6 @@ public partial class ShellCommand : ObservableObject
     {
         Command = other.Command;
         Option = other.Option;
+        IsDirectLaunch = other.IsDirectLaunch;
     }
 }

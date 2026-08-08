@@ -14,19 +14,18 @@ namespace ATLab.Services;
 public sealed class WindowsShellCommandRunner : IShellCommandRunner
 {
     public async Task<OperationResult<double>> RunAsync(
-        string command,
-        ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
+        ShellCommand shellCommand,
         string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null)
     {
         try
         {
-            var parsedCommand = CommandProcessor.CompileToString(command, runtimeVariables);
+            var parsedCommand = CommandProcessor.CompileToString(shellCommand.Command, runtimeVariables);
             
             var workingDir = projectDirectory ?? AppContext.BaseDirectory;
 
-            var psi = BuildStartInfo(parsedCommand, mode, workingDir);
+            var psi = BuildStartInfo(parsedCommand, shellCommand.Option, workingDir, shellCommand.IsDirectLaunch);
 
             using var process = Process.Start(psi);
 
@@ -45,10 +44,11 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         }
     }
 
-    private static ProcessStartInfo BuildStartInfo(string command, ShellCommandOptions mode, string projectDirectory)
+    private static ProcessStartInfo BuildStartInfo(string command, ShellCommandOptions mode, string projectDirectory, bool isDirectLaunch = false)
     {
-        if (IsDirectLaunch(command, out var exe, out var args))
+        if (isDirectLaunch)
         {
+            ParseExeAndArgs(command, out var exe, out var args);
             return new ProcessStartInfo
             {
                 FileName = exe,
@@ -72,21 +72,18 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         };
     }
     
-    private static bool IsDirectLaunch(string command, out string exe, out string args)
+    private static void ParseExeAndArgs(string command, out string exe, out string args)
     {
-        exe = command;
-        args = "";
-
         command = command.Trim();
 
         if (command.StartsWith("\""))
         {
             var endQuote = command.IndexOf('"', 1);
-            if (endQuote <= 0)
+            if (endQuote < 0)
             {
-                var trimmedExe = exe.Trim('"');
-                return trimmedExe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
-                       || File.Exists(trimmedExe);
+                exe = command.Trim('"');
+                args = "";
+                return;
             }
 
             exe = command.Substring(1, endQuote - 1);
@@ -96,11 +93,7 @@ public sealed class WindowsShellCommandRunner : IShellCommandRunner
         {
             var parts = command.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
             exe = parts[0];
-            if (parts.Length > 1)
-                args = parts[1];
+            args = parts.Length > 1 ? parts[1] : "";
         }
-
-        return exe.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
-               || File.Exists(exe);
     }
 }

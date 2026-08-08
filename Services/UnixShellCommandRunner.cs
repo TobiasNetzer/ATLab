@@ -14,15 +14,14 @@ namespace ATLab.Services;
 public sealed class UnixShellCommandRunner : IShellCommandRunner
 {
     public async Task<OperationResult<double>> RunAsync(
-        string command,
-        ShellCommandOptions mode = ShellCommandOptions.CLOSE_WHEN_DONE,
+        ShellCommand shellCommand,
         string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null)
     {
         try
         {
-            var parsedCommand = CommandProcessor.CompileToString(command, runtimeVariables);
+            var parsedCommand = CommandProcessor.CompileToString(shellCommand.Command, runtimeVariables);
             var workingDir = projectDirectory ?? AppContext.BaseDirectory;
             
             if (IsDirectLaunch(parsedCommand, out var exe, out var args))
@@ -43,7 +42,7 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
                 return OperationResult<double>.Success(process.ExitCode);
             }
             
-            var (terminalExe, argsFormat) = GetLinuxTerminal(mode);
+            var (terminalExe, argsFormat) = GetLinuxTerminal(shellCommand.Option);
             var escaped = parsedCommand.Replace("\"", "\\\"");
             var terminalArgs = string.Format(argsFormat, escaped);
 

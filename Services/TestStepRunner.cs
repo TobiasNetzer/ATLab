@@ -83,7 +83,7 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.INTERFACE:
                     return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
                 
-                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand.Command,step.TestStep.ShellCommand.Option,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
+                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {

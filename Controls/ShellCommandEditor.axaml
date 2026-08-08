@@ -66,14 +66,17 @@
 
                 <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
 
-                <StackPanel Orientation="Horizontal" Spacing="10"
-                            HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    
+                    <CheckBox Content="Direct Launch"
+                              IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
+                              Margin="0 0 90 0"/>
                     
                     <TextBlock Text="Window Behavior"
                                VerticalAlignment="Center"/>
 
                     <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
-                              MinWidth="100"
+                              Width="130"
                               SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
                               DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                 </StackPanel>
