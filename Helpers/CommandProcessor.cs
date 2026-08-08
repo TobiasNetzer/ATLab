@@ -63,7 +63,7 @@ public static class CommandProcessor
                 var end = input.IndexOf('"', i + 1);
                 if (end < 0) end = input.Length;
 
-                var text = input.Substring(i + 1, end - i - 1);
+                var text = input.Substring(i, end - i + 1);
                 blocks.Add(new Block(BlockType.ASCII, text, "ascii"));
                 i = Math.Min(end + 1, input.Length);
             }
