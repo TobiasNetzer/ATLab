@@ -24,8 +24,9 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
             var parsedCommand = CommandProcessor.CompileToString(shellCommand.Command, runtimeVariables);
             var workingDir = projectDirectory ?? AppContext.BaseDirectory;
             
-            if (IsDirectLaunch(parsedCommand, out var exe, out var args))
+            if (shellCommand.IsDirectLaunch)
             {
+                ParseExeAndArgs(parsedCommand, out var exe, out var args);
                 var psi = new ProcessStartInfo
                 {
                     FileName = exe,
@@ -67,20 +68,18 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
         }
     }
 
-    private static bool IsDirectLaunch(string command, out string exe, out string args)
+    private static void ParseExeAndArgs(string command, out string exe, out string args)
     {
-        exe = command;
-        args = "";
-
         command = command.Trim();
-        
+
         if (command.StartsWith("\""))
         {
             var endQuote = command.IndexOf('"', 1);
-            if (endQuote <= 0)
+            if (endQuote < 0)
             {
-                var trimmed = exe.Trim('"');
-                return File.Exists(trimmed) || trimmed.Contains('/');
+                exe = command.Trim('"');
+                args = "";
+                return;
             }
 
             exe = command.Substring(1, endQuote - 1);
@@ -90,11 +89,8 @@ public sealed class UnixShellCommandRunner : IShellCommandRunner
         {
             var parts = command.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
             exe = parts[0];
-            if (parts.Length > 1)
-                args = parts[1];
+            args = parts.Length > 1 ? parts[1] : "";
         }
-        
-        return File.Exists(exe) || exe.StartsWith("./") || exe.Contains('/');
     }
 
     private static bool CommandExists(string command)
