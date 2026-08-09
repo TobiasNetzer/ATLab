@@ -45,8 +45,8 @@ public partial class ProjectDocumentation : ObservableObject
             ImagePaths.Add(path);
         
         Attachments.Clear();
-        foreach (var path in other.Attachments)
-            Attachments.Add(path);
+        foreach (var attachment in other.Attachments)
+            Attachments.Add(attachment.Clone());
     }
 
     public ProjectDocumentation Clone()
