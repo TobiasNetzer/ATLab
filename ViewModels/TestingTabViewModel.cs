@@ -21,22 +21,22 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IErrorService _errorService;
     private readonly IProjectController _projectController;
     private readonly ITestStepEditor _testStepEditor;
-    private readonly ITestExecutionController _testExecutionController;
     private readonly ControlModuleService _controlModuleService;
     private readonly ProjectModel _projectModel;
+    private readonly ITestExecutor _testExecutor;
+    private readonly ISerialNumberDialogService _serialNumberDialogService;
+    private readonly ITestResultExportService _testResultExportService;
+    
+    private readonly List<CustomVariable> _runtimeVariables = new();
     
     public ObservableCollection<TestStepViewModel> TestSteps { get; } = new();
-
-    public List<CustomVariable> RuntimeVariables = new();
+    public WorkspaceEditorViewModel WorkspaceEditor { get; }
     
     [ObservableProperty]
     private TestStepViewModel? _selectedStep;
     
     [ObservableProperty]
     private ObservableCollection<TestStepViewModel> _selectedSteps = new();
-    
-    [ObservableProperty]
-    private WorkspaceEditorViewModel _workspaceEditor;
     
     [ObservableProperty]
     private bool _isDevelopmentMode;
@@ -68,9 +68,9 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private string _user = Environment.UserName;
 
-    public bool AllowResultSave { get; set; }
-    public DateTimeOffset StartTime { get; set; }
-    public TimeSpan Elapsed => DateTimeOffset.Now - StartTime;
+    private bool _allowResultSave;
+    private DateTimeOffset _startTime;
+    private TimeSpan Elapsed => DateTimeOffset.Now - _startTime;
     
     private bool _isAnimationEnabled = true;
     public bool IsAnimationEnabled
@@ -102,8 +102,6 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(200) : TimeSpan.Zero;
-    
-    public bool CanPaste => _testStepEditor.CanPaste;
 
     public TestingTabViewModel(
         ISettingsService settingsService,
@@ -112,9 +110,11 @@ public partial class TestingTabViewModel : ViewModelBase
         WorkspaceEditorViewModel workspaceEditor,
         IProjectController projectController,
         ITestStepEditor testStepEditor,
-        ITestExecutionController testExecutionController,
         ControlModuleService controlModuleService,
-        IHardwareInfo hardwareInfo)
+        IHardwareInfo hardwareInfo,
+        ITestExecutor testExecutor,
+        ISerialNumberDialogService serialNumberDialogService,
+        ITestResultExportService testResultExportService)
     {
         _hardwareInfo = hardwareInfo;
         _settingsService = settingsService;
@@ -123,7 +123,9 @@ public partial class TestingTabViewModel : ViewModelBase
         WorkspaceEditor = workspaceEditor;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
-        _testExecutionController = testExecutionController;
+        _testExecutor = testExecutor;
+        _serialNumberDialogService = serialNumberDialogService;
+        _testResultExportService = testResultExportService;
 
         _controlModuleService = controlModuleService;
 
@@ -135,7 +137,7 @@ public partial class TestingTabViewModel : ViewModelBase
         
         _projectModel.RuntimeVariableChanged += SynchronizeRuntimeVariables;
         
-        _testExecutionController.HookExecutorEvents(this);
+        HookTestEvents();
         
         _projectModel.Settings.ControlModuleSettingChanged += () => 
         {
@@ -227,10 +229,10 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private void SynchronizeRuntimeVariables()
     {
-        RuntimeVariables.Clear();
+        _runtimeVariables.Clear();
 
         foreach (var variable in _projectModel.RuntimeVariables)
-            RuntimeVariables.Add(variable.Clone());
+            _runtimeVariables.Add(variable.Clone());
     }
     
     private int ComputeInsertIndex()
@@ -281,7 +283,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private void NotifyPasteChanged()
     {
         PasteTestStepsCommand.NotifyCanExecuteChanged();
-        OnPropertyChanged(nameof(CanPaste));
+        OnPropertyChanged(nameof(_testStepEditor.CanPaste));
     }
 
     private bool _isUpdatingMultipleSteps;
@@ -424,10 +426,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.NewProjectAsync();
 
-        if (TestSteps.Count > 0)
-            SelectedStep = TestSteps[0];
-        else
-            SelectedStep = null;
+        SelectedStep = TestSteps.Count > 0
+            ? TestSteps[0]
+            : null;
+        
         ResetTestCounters();
     }
     
@@ -442,10 +444,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.LoadFileWithDialogAsync();
 
-        if (TestSteps.Count > 0)
-            SelectedStep = TestSteps[0];
-        else
-            SelectedStep = null;
+        SelectedStep = TestSteps.Count > 0
+            ? TestSteps[0]
+            : null;
+        
         ResetTestCounters();
     }
     
@@ -454,10 +456,10 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         await _projectController.LoadFileAsync(path);
 
-        if (TestSteps.Count > 0)
-            SelectedStep = TestSteps[0];
-        else
-            SelectedStep = null;
+        SelectedStep = TestSteps.Count > 0
+            ? TestSteps[0]
+            : null;
+        
         ResetTestCounters();
     }
 
@@ -572,27 +574,221 @@ public partial class TestingTabViewModel : ViewModelBase
         if (_testStepEditor.MoveStepDown(step))
             Select(step);
     }
-    
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task StartTest() => _testExecutionController.StartTestAsync(this);
-    
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task StartTestRepeat() => _testExecutionController.StartRepeatAsync(this);
-    
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task StartTestFromSelection() => _testExecutionController.StartFromSelectionAsync(this);
-    
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
-    private Task StartSingleStepTest() => _testExecutionController.StartSingleStepAsync(this);
-    
-    [RelayCommand]
-    private Task CancelTest() => _testExecutionController.CancelAsync();
-    
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
-    private void RequestBreakRepeat() => _testExecutionController.RequestBreakRepeat();
 
     private TestStepViewModel CreateViewModel(TestStep step)
     {
         return new TestStepViewModel(step, _hardwareInfo);
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private async Task StartTestAsync()
+    {
+        using (_projectModel.SuppressDirtyTracking())
+        {
+            ResetAllResults();
+
+            if (!await RequestSerialNumber())
+                return;
+
+            TestStatus = TestStatus.RUNNING;
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
+
+            _allowResultSave = true;
+            await _testExecutor.StartTestAsync(TestSteps, 0, _runtimeVariables);
+            _allowResultSave = false;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private async Task StartTestRepeat()
+    {
+        using (_projectModel.SuppressDirtyTracking())
+        {
+            ResetAllResults();
+
+            if (!await RequestSerialNumber())
+                return;
+
+            NumberFailedSteps = 0;
+            TestStatus = TestStatus.RUNNING;
+            TestProgress = 0;
+            SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
+
+            _allowResultSave = true;
+            await _testExecutor.StartRepeatTestAsync(TestSteps, 0, _runtimeVariables);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private async Task StartTestFromSelection()
+    {
+        using (_projectModel.SuppressDirtyTracking())
+        {
+            ResetAllResults();
+            NumberFailedSteps = 0;
+            TestStatus = TestStatus.RUNNING;
+            TestProgress = 0;
+
+            var index = SelectedStep != null ? TestSteps.IndexOf(SelectedStep) : 0;
+            await _testExecutor.StartTestAsync(TestSteps, index, _runtimeVariables);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private async Task StartSingleStepTest()
+    {
+        if (SelectedStep == null)
+            return;
+
+        using (_projectModel.SuppressDirtyTracking())
+        {
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            TestDuration = string.Empty;
+            TestStatus = TestStatus.RUNNING;
+
+            await _testExecutor.StartSingleStepTest(SelectedStep, _runtimeVariables);
+
+            TestStatus = TestStatus.IDLE;
+        }
+    }
+
+    [RelayCommand]
+    private Task CancelTest() => _testExecutor.CancelTest();
+
+    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    private void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
+
+    private void ResetAllResults()
+    {
+        TestStatus = TestStatus.IDLE;
+        foreach (var step in TestSteps)
+            step.ResetResults();
+    }
+
+    private async Task<bool> RequestSerialNumber()
+    {
+        if (_projectModel.Settings.IsUseSerialNumber)
+        {
+            var serial = await _serialNumberDialogService.AskForSerialNumberAsync();
+
+            if (serial == null)
+            {
+                SerialNumber = string.Empty;
+                return false;
+            }
+
+            SerialNumber = serial;
+        }
+        else
+        {
+            SerialNumber = string.Empty;
+        }
+
+        return true;
+    }
+    
+    private Task _exportQueue = Task.CompletedTask;
+
+    private Task EnqueueExport(Func<Task> work)
+    {
+        return _exportQueue = _exportQueue.ContinueWith(_ => work()).Unwrap();
+    }
+    
+    private void UpdatePassedPercentage()
+    {
+        if (NumberRunTests > 0)
+            PassedPercentage = Math.Round((double)NumberPassedTests / NumberRunTests * 100, 2);
+        else
+            PassedPercentage = 0;
+    }
+    
+    private void HookTestEvents()
+    {
+        _testExecutor.TestStarted += () =>
+        {
+            _startTime = DateTimeOffset.Now;
+        };
+
+        _testExecutor.StepStarted += (index, step) =>
+        {
+            SelectedStep = TestSteps[index];
+        };
+
+        _testExecutor.StepCompleted += (index, step) =>
+        {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
+            TestProgress = TestSteps.Count == 0
+                ? 0
+                : (int)Math.Round((double)(index + 1) / TestSteps.Count * 100);
+
+            if (!step.IsPassed)
+                NumberFailedSteps++;
+            
+            step.IsExecuted = true;
+        };
+        
+        _testExecutor.StepRepeated += () =>
+        {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
+            var index = SelectedStep != null ? TestSteps.IndexOf(SelectedStep) : -1;
+            TestProgress = TestSteps.Count == 0 || index == -1
+                ? 0
+                : (int)Math.Round((double)(index + 1) / TestSteps.Count * 100);
+        };
+
+        _testExecutor.TestCompleted += () =>
+        {
+            TestDuration = $"{Elapsed.TotalSeconds:F2}s";
+            TestProgress = 100;
+            NumberRunTests++;
+
+            if (TestStatus == TestStatus.CANCELLED)
+            {
+                UpdatePassedPercentage();
+                return;
+            }
+
+            if (_allowResultSave)
+            {
+                var testInfo = new TestInfo()
+                {
+                    ProjectName = _projectModel.ProjectName,
+                    Operator = User,
+                    Duration = TestDuration,
+                    SerialNumber = SerialNumber,
+                    DeviceUnderTestInfo = _projectModel.DeviceUnderTestInfo
+                };
+                
+                EnqueueExport(() => _testResultExportService.SaveAsync(TestSteps, testInfo, NumberFailedSteps));
+            }
+
+            if (NumberFailedSteps > 0)
+            {
+                TestStatus = TestStatus.FAILED;
+                UpdatePassedPercentage();
+                return;
+            }
+
+            TestStatus = TestStatus.PASSED;
+            NumberPassedTests++;
+            UpdatePassedPercentage();
+        };
+
+        _testExecutor.TestCancelled += () =>
+        {
+            TestStatus = TestStatus.CANCELLED;
+        };
+
+        _testExecutor.TestRepeated += () =>
+        {
+            ResetAllResults();
+            TestProgress = 0;
+            NumberFailedSteps = 0;
+            SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
+            TestStatus = TestStatus.RUNNING;
+        };
     }
 }

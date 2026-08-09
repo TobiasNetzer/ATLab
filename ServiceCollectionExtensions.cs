@@ -30,7 +30,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPdfExportService, PdfExportService>();
         services.AddSingleton<ITestResultExportService, TestResultExportService>();
         services.AddSingleton<IProjectController, ProjectController>();
-        services.AddSingleton<ITestExecutionController, TestExecutionController>();
         services.AddSingleton<ITestStepEditor, TestStepEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         services.AddSingleton<IFileContentReader, FileContentReader>();
