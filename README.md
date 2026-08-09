@@ -1,13 +1,14 @@
-# ATLab - Automated Testing Toolkit
+# ATLab - Automated Testing Framework
 ![Build](https://github.com/TobiasNetzer/ATLab/actions/workflows/dotnet.yml/badge.svg)
 ![License](https://img.shields.io/github/license/TobiasNetzer/ATLab)
 ![GitHub release](https://img.shields.io/github/v/release/TobiasNetzer/ATLab)
 
 ![image](https://github.com/TobiasNetzer/ATLab/releases/download/assets-v1/Example.gif)
 
-ATLab is a cross‑platform automated testing toolkit for interfacing with hardware through the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter) and controlling external test instruments through remote control interfaces.
+ATLab is a cross‑platform automated testing framework for interfacing with hardware through the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter) and controlling external test instruments through remote control interfaces.
 Built with **Avalonia UI** and **.NET**, it offers a modern environment for developing and running automated test sequences.
 
+A example project developed with ATLab can be found [here](https://github.com/TobiasNetzer/ATLab-Examples).
 ## Features
 
 -   **Custom Test Sequences**: Test steps can be configured to perform various actions:
@@ -16,20 +17,20 @@ Built with **Avalonia UI** and **.NET**, it offers a modern environment for deve
     -   **Shell Commands**: Execute local system commands or scripts.
     -   **Runtime Variables**:
         -   **Dynamic Configuration**: Define and use custom variables within test scripts for dynamic test configurations.
-        -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic values.
+        -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic or calculated values.
     -   **User Responses**: Capture user input during test execution.
     -   **File Content**: Read and validate file contents from the local file system.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
     -   **Pass/Fail Criteria**:
         -   **Test Step Evaluation**: Define pass/fail criteria based on step results and conditions.
         -   **Conditional Execution**: Use pass/fail criteria to conditionally execute test steps or skip tests based on previous results.
--   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232/UART)**, **TCP/IP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
+-   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232)**, **TCP/IP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
 -   **Scripting Engine**: Create test sequences with predefined multicommand scripts.
 -   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
 -   **Test Report Generation**: Automatically generate test reports with detailed test results.
 -   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
--   **JSON File Format**: All project and script files use a standard JSON file format, perfect for tracking changes with version control.
+-   **JSON File Format**: All project and script files use a standard JSON file format, perfect for tracking changes through version control.
 -   **Cross-Platform Support**: Runs on Windows & Linux.
 -   **Themes**: Light and Dark theme available.
 
@@ -70,7 +71,7 @@ Alternatively, you can open the `ATLab.sln` file in **JetBrains Rider**, **Visua
 ## Usage
 
 ### 1. Configure Devices and Settings
--   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232/UART)** , **TCP/IP** or **VISA** devices, with custom connection parameters.
+-   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232)** , **TCP/IP** or **VISA** devices, with custom connection parameters.
 -   **Project Settings**: Configure project-wide settings such as default tolerances, serial number requirements, and test result export options.
 -   **Optional:** Add custom channel names for the various relay channels.
 -   **Optional:** Add Runtime Variables to use within the test.

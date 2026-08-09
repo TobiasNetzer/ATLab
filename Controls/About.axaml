@@ -38,7 +38,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
 
-                        <TextBlock Text="A cross‑platform automated testing toolkit for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces."
+                        <TextBlock Text="A cross‑platform automated testing framework for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces."
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
                                    HorizontalAlignment="Center"/>
