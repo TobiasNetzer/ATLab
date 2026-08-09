@@ -79,7 +79,7 @@ public class CsvExportService : ICsvExportService
                 LowerLimit: vm.TestStep.LowerLimit,
                 UpperLimit: vm.TestStep.UpperLimit,
                 Result: vm.ResultNoFormatting,
-                Unit: vm.TestStep.Unit,
+                Unit: vm.TestStep.Unit.Trim('{', '}'),
                 IsPassed: vm.IsPassed ? "Pass" : "Fail",
                 Deviation: vm.Deviation?.Replace("%", "")
             ));
