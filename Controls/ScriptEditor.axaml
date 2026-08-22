@@ -60,8 +60,22 @@
                             <Button Content="&#xED25;"
                                     FontFamily="{StaticResource FluentIconsFont}"
                                     FontSize="20"
-                                    ToolTip.Tip="Change repository folder"
-                                    Command="{Binding ChangeRepositoryCommand}"/>
+                                    Command="{Binding ChangeRepositoryCommand}">
+                                <Button.Styles>
+                                    <Style Selector="ToolTip">
+                                        <Setter Property="MaxWidth" Value="1500"/>
+                                    </Style>
+                                </Button.Styles>
+                                <ToolTip.Tip>
+                                    <StackPanel>
+                                        <TextBlock Text="Change repository folder"/>
+                                        <TextBlock Text="{Binding RepositoryPath}"
+                                                   TextWrapping="NoWrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </ToolTip.Tip>
+                            </Button>
                         
                             <Button Content="&#xE72C;"
                                     FontFamily="{StaticResource FluentIconsFont}"

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
+using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -13,6 +14,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
     private readonly IScriptService _scriptService;
     private readonly IScriptRepository _repository;
     private readonly IMessageBoxService _messageBoxService;
+    public string? RepositoryPath { get; private set; }
 
     public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
@@ -22,17 +24,20 @@ public partial class ScriptingTabViewModel : ViewModelBase
     public ScriptingTabViewModel(
         IScriptService scriptService,
         IScriptRepository repository,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        ProjectModel projectModel)
     {
         _scriptService = scriptService;
         _repository = repository;
         _messageBoxService = messageBoxService;
+        RepositoryPath = projectModel.ScriptRepositoryPath;
 
         Title = "Scripting";
         
         _repository.RepositoryFolderChanged += async (_, folderPath) =>
         {
             await ReloadScripts();
+            RepositoryPath = projectModel.ScriptRepositoryPath;
         };
     }
 
