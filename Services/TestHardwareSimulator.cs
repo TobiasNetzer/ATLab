@@ -64,6 +64,12 @@ public class TestHardwareSimulator : ITestHardware
         await Task.CompletedTask;
         return OperationResult<TestHardwareDiagnostics>.Success(new TestHardwareDiagnostics());
     }
+    
+    public async Task<OperationResult<byte>> FindMeasChannel()
+    {
+        await Task.CompletedTask;
+        return OperationResult<byte>.Success(0);
+    }
 
     public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data, int timeoutMs = 1000)
     {

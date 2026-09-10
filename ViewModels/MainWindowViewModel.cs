@@ -13,6 +13,7 @@ namespace ATLab.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private readonly ITestHardware _testHardware;
     private readonly IErrorService _errorService;
     private readonly IProjectDocumentService _projectDocumentService;
     private readonly ISettingsService _settingsService;
@@ -49,7 +50,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isErrorFlyoutOpen;
 
-    public MainWindowViewModel(IErrorService errorService,
+    [ObservableProperty]
+    private string? _matrixChannel;
+
+    public MainWindowViewModel(ITestHardware testHardware,
+        IErrorService errorService,
         IProjectDocumentService projectDocumentService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
@@ -62,6 +67,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ProjectModel projectModel,
         ApplicationState applicationState)
     {
+        _testHardware = testHardware;
         _errorService = errorService;
         _projectDocumentService = projectDocumentService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
@@ -122,6 +128,22 @@ public partial class MainWindowViewModel : ViewModelBase
         if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
         {
             RequestClose?.Invoke();
+        }
+    }
+    
+    [RelayCommand]
+    private async Task FindMatrixChannel()
+    {
+        var result = await _testHardware.FindMeasChannel();
+
+        if (result.IsSuccess)
+        {
+            MatrixChannel = result.Value == 0 ? "-" : result.Value.ToString();
+        }
+        else
+        {
+            _errorService.AddError(result.ErrorMessage);
+            MatrixChannel = "External probe not detected";
         }
     }
 

@@ -21,6 +21,7 @@ public interface ITestHardware : IAsyncDisposable
     Task<OperationResult> ConfigureI2CInterface(I2CSpeedMode speedMode);
     Task<OperationResult> ConfigureUartInterface(int baudRate, int dataBits, SerialParity parity, SerialStopBits stopBits);
     Task<OperationResult<TestHardwareDiagnostics>> ExecuteSelfTest();
+    Task<OperationResult<byte>> FindMeasChannel();
     Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data, int timeoutMs = 1000);
     Task<OperationResult<I2CResponse>> ExecuteI2CReceive(byte deviceAddr, byte bytesToRead,  int timeoutMs = 1000);
     Task<OperationResult<byte[]>> ExecuteUartTransceive(byte[] data, byte bytesToRead, int timeoutMs = 1000);

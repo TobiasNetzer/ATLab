@@ -58,6 +58,7 @@ public enum RespCmd : ushort
     RESP_EXT_PROBE_IN_STATE,
     RESP_EXT_TRIGGER_STATE,
     RESP_EXECUTE_SELFTEST,
+    RESP_EXECUTE_EXT_PROBE_FIND_CHANNEL,
     RESP_I2C_RECEIVE,
     RESP_I2C_NACK,
     RESP_I2C_TIMEOUT,
@@ -154,6 +155,7 @@ public enum ConfCmd : ushort
 public enum ExecCmd : ushort
 {
     EXECUTE_SELFTEST = 0x0601,
+    EXECUTE_EXT_PROBE_FIND_CHANNEL,
     EXECUTE_I2C_TRANSMIT,
     EXECUTE_I2C_RECEIVE,
     EXECUTE_UART_TRANSCEIVE,
@@ -758,6 +760,27 @@ public class CtiaCommand
         }
 
         return OperationResult<TestHardwareDiagnostics>.Success(diagnostics);
+    }
+
+    public async Task<OperationResult<byte>> FindMeasChannel()
+    {
+        var frame = new CtiaCommandFrame
+        {
+            Command     = (ushort)ExecCmd.EXECUTE_EXT_PROBE_FIND_CHANNEL,
+        };
+        var responseFrame = await _ctia.SendCommandAsync(frame);
+        
+        if (responseFrame is null)
+            return OperationResult<byte>.Failure("Communication with test hardware failed.");
+        
+        if (responseFrame.Payload.Length == 1 && (RespCmd)responseFrame.Command == RespCmd.RESP_EXECUTE_EXT_PROBE_FIND_CHANNEL)
+            return OperationResult<byte>.Success(responseFrame.Payload[0]);
+        
+        var status = (CtiaStatus)responseFrame.Payload[0];
+
+        return OperationResult<byte>.Failure(status == CtiaStatus.CTIA_UNAVAILABLE
+            ? "External Probe not detected."
+            : $"Unexpected response: CMD:{responseFrame.Command:X4} MSG:{status}");
     }
 
     public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr, byte[] data, int timeoutMs)

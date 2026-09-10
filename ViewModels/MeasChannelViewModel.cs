@@ -51,20 +51,17 @@ public partial class MeasChannelViewModel : ViewModelBase
 
     partial void OnIsSelectedHChanged(int value)
     {
-        if (_relayMatrixState != null)
-            _relayMatrixState.ActiveChannelHigh = value;
+        _relayMatrixState?.ActiveChannelHigh = value;
     }
 
     partial void OnIsSelectedLChanged(int value)
     {
-        if (_relayMatrixState != null)
-            _relayMatrixState.ActiveChannelLow = value;
+        _relayMatrixState?.ActiveChannelLow = value;
     }
 
     partial void OnIsExternalProbeEnabledChanged(bool value)
     {
-        if (_relayMatrixState != null)
-            _relayMatrixState.IsExternalProbe = value;
+        _relayMatrixState?.IsExternalProbe = value;
     }
 
     public void LoadActiveMeasChannels(RelayMatrix relayMatrixState)

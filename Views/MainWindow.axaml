@@ -15,6 +15,7 @@
         <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding TestingTab.SaveFileAsCommand}" />
         <KeyBinding Gesture="Escape" Command="{Binding TestingTab.CancelTestCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
+        <KeyBinding Gesture="F6" Command="{Binding FindMatrixChannelCommand}" />
         <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
         <KeyBinding Gesture="Enter" Command="{Binding TestingTab.RequestBreakRepeatCommand}" />
 
@@ -69,9 +70,9 @@
         Background="{DynamicResource MainWindowToolbarBackground}"
         Height="40">
 
-            <Grid ColumnDefinitions="Auto,*">
+            <Grid ColumnDefinitions="Auto,*,Auto">
                 
-                <StackPanel Orientation="Horizontal"
+                <StackPanel Grid.Column="0" Orientation="Horizontal"
                             Spacing="10"
                             VerticalAlignment="Center"
                             Margin="5">
@@ -121,15 +122,34 @@
                                VerticalAlignment="Center"
                                IsVisible="{Binding IsSimulation}"/>
                 </StackPanel>
-
-                <Button Grid.Column="1"
-                        Content="&#xE793;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="18"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Margin="10,0"
-                        Command="{Binding ToggleThemeCommand}"/>
+                
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                            Spacing="10"
+                            VerticalAlignment="Center"
+                            Margin="5">
+                    
+                    <Button Content="&#xE71E;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="18"
+                            ToolTip.Tip="Determine matrix channel via external probe"
+                            Command="{Binding FindMatrixChannelCommand}"/>
+                    
+                    <TextBlock Text="{Binding MatrixChannel, StringFormat='Matrix Channel: {0}'}"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding MatrixChannel, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    
+                    <Separator Width="2"
+                               Height="25"
+                               Margin="5 0 5 0"
+                               CornerRadius="1"/>
+                    
+                    <Button Content="&#xE793;"
+                            FontFamily="{StaticResource FluentIconsFont}"
+                            FontSize="18"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Command="{Binding ToggleThemeCommand}"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

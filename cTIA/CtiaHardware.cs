@@ -235,6 +235,19 @@ public class CtiaHardware : ITestHardware
         }
     }
     
+    public async Task<OperationResult<byte>> FindMeasChannel()
+    {
+        await _ioLock.WaitAsync();
+        try
+        {
+            return await _command.FindMeasChannel();
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+    
     public async Task<OperationResult<I2CResponse>> ExecuteI2CTransmit(byte deviceAddr,byte[] data,  int timeoutMs = 1000)
     {
         await _ioLock.WaitAsync();
