@@ -44,4 +44,7 @@ public partial class FilePathEditorViewModel : ViewModelBase
         
         TestStep?.FilePath = result.Path.LocalPath;
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

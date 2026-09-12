@@ -7,20 +7,19 @@
     
     <Grid RowDefinitions="Auto, *">
     
-        <Border Grid.Row="0" Background="{DynamicResource PanelBorder}"
+        <Border Grid.Row="0" Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
                 
             <TextBlock Text="Custom Relay Channel Naming"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
         
-        <Border Grid.Row="1" Background="{DynamicResource PanelBackground}"
+        <Border Grid.Row="1" Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}">
+                BorderBrush="{DynamicResource OutlineColor}">
         <StackPanel 
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
@@ -31,7 +30,7 @@
                 <TextBlock Grid.Row="0"
                            Text="Matrix Channels"
                            HorizontalAlignment="Center"
-                           FontSize="16"/>
+                           Classes="Small"/>
                 
                 <ScrollViewer Grid.Row="1" Margin="0 2 10 0">
                     <ItemsControl ItemsSource="{Binding MeasChannelViewModel.CustomChannelNames}">
@@ -58,7 +57,7 @@
                 <TextBlock Grid.Row="0"
                            Text="Stimulation Channels"
                            HorizontalAlignment="Center"
-                           FontSize="16"/>
+                           Classes="Small"/>
                 
                 <ScrollViewer Grid.Row="1" Margin="0 2 10 0">
                     <ItemsControl ItemsSource="{Binding StimChannelViewModel.StimChannels}">
@@ -85,7 +84,7 @@
                 <TextBlock Grid.Row="0"
                            Text="Ext Stimulation Channels"
                            HorizontalAlignment="Center"
-                           FontSize="16"/>
+                           Classes="Small"/>
                 
                     <ScrollViewer Grid.Row="1" Margin="0 2 10 0">
                         <ItemsControl ItemsSource="{Binding ExtStimChannelViewModel.ExtStimChannels}">

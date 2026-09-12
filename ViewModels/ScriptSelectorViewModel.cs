@@ -186,5 +186,8 @@ public partial class ScriptSelectorViewModel : ViewModelBase
         _currentTestStep.ScriptId = string.Empty;
         _currentTestStep.ScriptVariables.Clear();
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 
 }

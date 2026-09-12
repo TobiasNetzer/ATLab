@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.FilePathEditor"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:DataType="controls:FilePathEditor"
@@ -18,58 +19,54 @@
         
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
             <DockPanel>
                 <TextBlock Text="File Path"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"/>
-
-                <ToggleButton IsChecked="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-
-                                    <TextBlock Text="&#xE70D;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded,
-                                                                   Converter={StaticResource InverseBoolConverter}}"/>
-
-                                    <TextBlock Text="&#xE70E;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"/>
-
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                </ToggleButton>
+                
+                <Button Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}">
 
-            <StackPanel Margin="10" Spacing="10" Orientation="Horizontal">
+            <DockPanel Margin="10" LastChildFill="False">
 
                 <TextBox Text="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.TestStep.FilePath, UpdateSourceTrigger=LostFocus}"
-                         Width="435"/>
-                <Button Content="..."
-                        Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.SelectFilePathCommand}"/>
+                         Width="430"/>
+                
+                <Button
+                    Background="{DynamicResource BorderColor}"
+                    Classes="Icon"
+                    Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.SelectFilePathCommand}"
+                    Width="35"
+                    Height="35"
+                    DockPanel.Dock="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Ellipsis}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
 
-            </StackPanel>
+            </DockPanel>
         </Border>
 
     </StackPanel>

@@ -8,19 +8,18 @@
     <Grid RowDefinitions="Auto,*">
             
         <Border Grid.Row="0"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Test Hardware Info"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
             
         <Border Grid.Row="1"
-                Background="{DynamicResource PanelBackground}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2">
                     
             <StackPanel Margin="10"
@@ -29,7 +28,7 @@
                         HorizontalAlignment="Stretch">
 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Connected Test Hardware" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="Connected Test Hardware" Classes="Small" FontWeight="Bold"/>
                     <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
                     <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
                     <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
@@ -41,7 +40,7 @@
                         BorderThickness="1"/>
 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Available Relay Channels" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="Available Relay Channels" Classes="Small" FontWeight="Bold"/>
                     <TextBlock Text="{Binding MeasChannelCount, StringFormat=Matrix Channels: {0}}"/>
                     <TextBlock Text="{Binding StimChannelCount, StringFormat=Stimulation Channels: {0}}"/>
                     <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stimulation Channels: {0}}"/>
@@ -51,7 +50,7 @@
                         BorderThickness="1"/>
                 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Available Interfaces" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="Available Interfaces" Classes="Small" FontWeight="Bold"/>
                     <TextBlock Text="{Binding InterfaceAvailableI2C, StringFormat=Isolated I2C: {0}}"/>
                     <TextBlock Text="{Binding InterfaceAvailableUART, StringFormat=Isolated UART: {0}}"/>
                     <TextBlock Text="{Binding InterfaceAvailableRS485, StringFormat=Isolated RS485: {0}}"/>

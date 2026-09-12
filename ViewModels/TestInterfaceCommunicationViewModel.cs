@@ -7,6 +7,7 @@ using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -122,5 +123,8 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
         Config =  _currentTestStep.InterfaceConfig;
         UpdateStringProperties();
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
     
 }

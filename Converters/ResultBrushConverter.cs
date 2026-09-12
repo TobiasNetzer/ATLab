@@ -7,18 +7,28 @@ namespace ATLab.Converters;
 
 public class ResultBrushConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is bool isValid)
-        {
-            return isValid ? new SolidColorBrush(Color.Parse("#FF00C853")) : new SolidColorBrush(Color.Parse("#FFFF1744"));
-        }
+    public IBrush? ValidBrush { get; set; }
+    public IBrush? InvalidBrush { get; set; }
+    public IBrush? UnknownBrush { get; set; }
 
-        return new SolidColorBrush(Color.Parse("#FF2C2C30"));
+    public object? Convert(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
+    {
+        if (value is not bool isValid)
+            return UnknownBrush;
+
+        return isValid ? ValidBrush : InvalidBrush;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 }

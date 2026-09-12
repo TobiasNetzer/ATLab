@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ResponseMaskEditor"
              x:DataType="controls:ResponseMaskEditor"
@@ -19,51 +20,37 @@
         
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
             <DockPanel>
 
                 <TextBlock Text="Response Processing"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
-
-                <ToggleButton IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-                                    
-                                    <TextBlock Text="&#xE70D;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded,
-                                                                   Converter={StaticResource InverseBoolConverter}}"/>
-                                    
-                                    <TextBlock Text="&#xE70E;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"/>
-
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                </ToggleButton>
+                
+                <Button Command="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
 
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}">
             
             <StackPanel Margin="10" Spacing="10">
@@ -111,7 +98,7 @@
                     <StackPanel Spacing="10">
                         
                         <TextBlock Text="Received Sequence"
-                                   FontWeight="Bold"
+                                   Classes="Small"
                                    HorizontalAlignment="Center"/>
                             
                         <TextBlock Text="Original:"

@@ -11,19 +11,18 @@
         <Grid RowDefinitions="Auto,*">
 
             <Border Grid.Row="0"
-                    Background="{DynamicResource PanelBorder}"
+                    Background="{DynamicResource OutlineColor}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
                 <TextBlock Text="Project Documentation"
-                           FontSize="20"
-                           FontWeight="Bold"
+                           Classes="h4"
                            HorizontalAlignment="Center"/>
             </Border>
 
             <Border Grid.Row="1"
-                    Background="{DynamicResource PanelBackground}"
+                    Background="{DynamicResource TabItemsBackgroundColor}"
                     CornerRadius="0 0 15 15"
-                    BorderBrush="{DynamicResource PanelBorder}"
+                    BorderBrush="{DynamicResource OutlineColor}"
                     BorderThickness="2">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -77,22 +76,24 @@
                         <Border Grid.Row="2"
                                 Grid.Column="0"
                                 Grid.RowSpan="2"
+                                CornerRadius="10"
+                                BorderBrush="{DynamicResource OutlineColor}"
                                 BorderThickness="2"
-                                CornerRadius="5"
-                                BorderBrush="{DynamicResource PanelBorder}"
                                 Padding="10">
                         
                             <StackPanel>
                             
                                 <TextBlock Text="Images"
-                                           FontSize="16"
-                                           FontWeight="Bold"
+                                           Classes="Large"
                                            Margin="0 0 0 10"/>
-
-                                <Button Content="Add Image"
-                                        Command="{Binding AddImageCommand}"
-                                        HorizontalAlignment="Left"
-                                        Margin="0 0 0 10"/>
+                                
+                                <Button
+                                    Background="{DynamicResource BorderColor}"
+                                    Classes="Secondary"
+                                    Content="Add Image"
+                                    Command="{Binding AddImageCommand}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0 0 0 10"/>
                                 
                                 <ItemsControl ItemsSource="{Binding Images}">
                                     <ItemsControl.ItemsPanel>
@@ -105,8 +106,8 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray"
-                                                    BorderThickness="1"
+                                            <Border BorderBrush="{DynamicResource OutlineColor}"
+                                                    BorderThickness="2"
                                                     Padding="5"
                                                     CornerRadius="5">
                                                 <StackPanel>
@@ -133,7 +134,7 @@
                                                             Margin="0 5 0 0"
                                                             Background="Transparent"
                                                             BorderThickness="0"
-                                                            Foreground="Crimson"
+                                                            Foreground="{DynamicResource DestructiveColor}"
                                                             FontWeight="Bold"
                                                             Padding="0"
                                                             Cursor="Hand"
@@ -150,22 +151,24 @@
                         <Border Grid.Row="2"
                                 Grid.Column="1"
                                 Grid.RowSpan="2"
+                                CornerRadius="10"
+                                BorderBrush="{DynamicResource OutlineColor}"
                                 BorderThickness="2"
-                                CornerRadius="5"
-                                BorderBrush="{DynamicResource PanelBorder}"
                                 Padding="10">
                             
                             <StackPanel>
                                 
                                 <TextBlock Text="Attachments"
-                                           FontSize="16"
-                                           FontWeight="Bold"
+                                           Classes="Large"
                                            Margin="0 0 0 10"/>
 
-                                <Button Content="Add Attachment"
-                                        Command="{Binding AddAttachmentCommand}"
-                                        HorizontalAlignment="Left"
-                                        Margin="0 0 0 10"/>
+                                <Button 
+                                    Background="{DynamicResource BorderColor}"
+                                    Classes="Secondary"
+                                    Content="Add Attachment"
+                                    Command="{Binding AddAttachmentCommand}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0 0 0 10"/>
                                 
                                 <ItemsControl ItemsSource="{Binding ProjectDocumentation.Attachments}">
                                     <ItemsControl.ItemTemplate>
@@ -203,7 +206,7 @@
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"
                                                         BorderThickness="0"
-                                                        Foreground="Crimson"
+                                                        Foreground="{DynamicResource DestructiveColor}"
                                                         FontWeight="Bold"
                                                         Padding="0"
                                                         Cursor="Hand"

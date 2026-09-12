@@ -35,16 +35,62 @@
         <FontFamily x:Key="FluentIconsFont">avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
         <FontFamily x:Key="LucideIcon">avares://ATLab/Assets/lucide.ttf#lucide</FontFamily>
         
+        <SolidColorBrush x:Key="EnabledBrush"
+                         Color="{DynamicResource InfoColor}" />
+
+        <SolidColorBrush x:Key="DisabledBrush"
+                         Color="{DynamicResource BorderColor}" />
+        
+        <SolidColorBrush x:Key="TestStatusIdleBrush"
+                         Color="{DynamicResource SecondaryColor}" />
+
+        <SolidColorBrush x:Key="TestStatusRunningBrush"
+                         Color="{DynamicResource InfoColor}" />
+
+        <SolidColorBrush x:Key="TestStatusPassedBrush"
+                         Color="#FF00C853" />
+
+        <SolidColorBrush x:Key="TestStatusFailedBrush"
+                         Color="#FFFF1744" />
+
+        <SolidColorBrush x:Key="TestStatusCancelledBrush"
+                         Color="Orange" />
+        
+        <SolidColorBrush x:Key="ResultValidBrush"
+                         Color="#FF00C853" />
+
+        <SolidColorBrush x:Key="ResultInvalidBrush"
+                         Color="#FFFF1744" />
+
+        <SolidColorBrush x:Key="ResultUnknownBrush"
+                         Color="{DynamicResource SecondaryColor}" />
+        
         <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
-        <converters:ResultBrushConverter x:Key="ResultBrushConverter" />
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <converters:UnitFormatConverter x:Key="UnitFormatConverter" />
         <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
         <converters:InvertedEnumToBoolConverter x:Key="InvertedEnumToBoolConverter"/>
-        <converters:TestStatusToBrushConverter x:Key="TestStatusToBrushConverter"/>
         <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
         <converters:PassFailConverter x:Key="PassFailConverter"/>
+        <converters:BoolToValueConverter
+            x:Key="ButtonEnabledConverter"
+            TrueValue="{StaticResource EnabledBrush}"
+            FalseValue="{StaticResource DisabledBrush}" />
+        
+        <converters:TestStatusToBrushConverter
+            x:Key="TestStatusToBrushConverter"
+            IdleBrush="{StaticResource TestStatusIdleBrush}"
+            RunningBrush="{StaticResource TestStatusRunningBrush}"
+            PassedBrush="{StaticResource TestStatusPassedBrush}"
+            FailedBrush="{StaticResource TestStatusFailedBrush}"
+            CancelledBrush="{StaticResource TestStatusCancelledBrush}" />
+        
+        <converters:ResultBrushConverter
+            x:Key="ResultBrushConverter"
+            ValidBrush="{StaticResource ResultValidBrush}"
+            InvalidBrush="{StaticResource ResultInvalidBrush}"
+            UnknownBrush="{StaticResource ResultUnknownBrush}" />
     </Application.Resources>
     
     <Application.Styles>

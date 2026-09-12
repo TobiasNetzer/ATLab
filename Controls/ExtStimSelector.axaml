@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.ExtStimSelector"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
@@ -17,45 +18,36 @@
     
     <StackPanel>
         
-        <Border Background="{DynamicResource PanelBorder}"
+        <Border Background="{DynamicResource OutlineColor}"
                 Classes="Header"
                 Classes.expanded="{Binding IsExpanded}"
-                Padding="10"
-                Margin="0">
+                Padding="10">
             <DockPanel>
                 <TextBlock Text="External Stimulation Channels"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
 
-                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-                                    <TextBlock Text="&#xE70D;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded}"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-                </ToggleButton>
+                <Button Command="{Binding ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding IsExpanded}">
         
             <ItemsControl ItemsSource="{Binding ExtStimChannels}">
@@ -63,14 +55,15 @@
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=controls:ExtStimSelector}}"
                                      HorizontalAlignment="Center"
-                                     ColumnSpacing="10"/>
+                                     ColumnSpacing="10"
+                                     RowSpacing="20"
+                                     Margin="10"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:RelayChannelViewModel">
-                        <CheckBox Margin="5"
-                                  IsChecked="{Binding State.IsEnabled, Mode=TwoWay}">
+                        <CheckBox IsChecked="{Binding State.IsEnabled, Mode=TwoWay}">
                             <CheckBox.Content>
                                 <Border Width="180">
                                     <TextBlock TextWrapping="NoWrap"

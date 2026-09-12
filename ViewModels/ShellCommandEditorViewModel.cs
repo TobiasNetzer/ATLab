@@ -5,6 +5,7 @@ using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -36,4 +37,7 @@ public partial class ShellCommandEditorViewModel : ViewModelBase
     {
         ShellCommand = shellCommand;
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

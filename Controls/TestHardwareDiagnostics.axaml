@@ -8,19 +8,18 @@
     <Grid RowDefinitions="Auto,*">
             
         <Border Grid.Row="0"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Test Hardware Diagnostics"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
             
         <Border Grid.Row="1"
-                Background="{DynamicResource PanelBackground}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2">
             
             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -32,7 +31,8 @@
                     <StackPanel>
                         
                         <TextBlock Text="Warning:"
-                                   FontWeight="Bold"/>
+                                   Classes="Large"
+                                   Margin="0 0 0 5"/>
                                         
                         <TextBlock Text="Ensure that everything is disconnected from the relay matrix before running the test. Leaving devices connected may cause permanent damage to the test hardware or the connected equipment."
                                    TextWrapping="Wrap"/>
@@ -43,12 +43,13 @@
                               IsChecked="{Binding IsAcknowledged}"/>
                     
                     <Button Content="Run Relay Matrix Test"
+                            Background="{DynamicResource BorderColor}"
+                            Classes="Secondary"
                             HorizontalAlignment="Center"
                             Command="{Binding RunSelfTestCommand}"/>
                     
                     <ProgressBar IsIndeterminate="True"
                                  IsVisible="{Binding IsSelfTestRunning}"
-                                 Height="4"
                                  Margin="10"/>
                     
                     <TextBlock Text="{Binding SelfTestResult}"
@@ -66,13 +67,13 @@
                         <TextBlock Grid.Column="1"
                                    Grid.Row="0"
                                    Text="Matrix H"
-                                   FontWeight="Bold"
+                                   Classes="Small"
                                    HorizontalAlignment="Center"/>
                         
                         <TextBlock Grid.Column="3"
                                    Grid.Row="0"
                                    Text="Matrix L"
-                                   FontWeight="Bold"
+                                   Classes="Small"
                                    HorizontalAlignment="Center"/>
                         
                         <ItemsControl Grid.Column="1"

@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.TestInterfaceCommunication"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:DataType="controls:TestInterfaceCommunication"
@@ -18,48 +19,34 @@
         
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
             <DockPanel>
                 <TextBlock Text="Interface Command"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"/>
-
-                <ToggleButton IsChecked="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-
-                                    <TextBlock Text="&#xE70D;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded,
-                                                                   Converter={StaticResource InverseBoolConverter}}"/>
-
-                                    <TextBlock Text="&#xE70E;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"/>
-
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                </ToggleButton>
+                
+                <Button Command="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}">
 
             <StackPanel Margin="10" Spacing="10" Orientation="Vertical">
@@ -185,13 +172,12 @@
                     
                     <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.Command}"/>
                     
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="5"
-                                Margin="0 8 0 0">
+                    <DockPanel Margin="0 8 0 0"
+                               LastChildFill="False">
                         
                         <StackPanel Orientation="Horizontal"
                                     Spacing="5"
-                                    Margin="0 0 96 0">
+                                    DockPanel.Dock="Left">
                             
                             <TextBlock Text="Read Bytes"
                                        VerticalAlignment="Center"/>
@@ -201,12 +187,15 @@
                             
                         </StackPanel>
                         
-                        <TextBlock Text="Timeout (ms)"
-                                   VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.TimeoutMs, UpdateSourceTrigger=LostFocus}"
-                                 Width="100"/>
-                        
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="5"
+                                    DockPanel.Dock="Right">
+                            <TextBlock Text="Timeout (ms)"
+                                       VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.TimeoutMs, UpdateSourceTrigger=LostFocus}"
+                                     Width="100"/>
+                        </StackPanel>
+                    </DockPanel>
                     
                 </StackPanel>
                 

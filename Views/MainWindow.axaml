@@ -34,7 +34,8 @@
         <TabControl Grid.Row="0"
                     ItemsSource="{Binding Tabs}" 
                     SelectedItem="{Binding SelectedTab}"
-                    shadui:TabControlBehaviors.UseSlidingPill="True">
+                    shadui:TabControlBehaviors.UseSlidingPill="True"
+                    Background="{DynamicResource TabItemsBackgroundColor}">
             
             <TabControl.Resources>
                 <SolidColorBrush x:Key="TabItemsBackgroundColor"
@@ -73,7 +74,7 @@
         </TabControl>
         
         <Border Grid.Row="1"
-        Background="{DynamicResource WindowButtonHoverColor}"
+        Background="{DynamicResource OutlineColor}"
         Height="45">
 
             <Grid ColumnDefinitions="Auto,*,Auto">
@@ -90,7 +91,7 @@
                         Classes.error="{Binding HasErrors}">
                         <Button.Styles>
                             <Style Selector="Button.Icon">
-                                <Setter Property="Background" Value="{DynamicResource SecondaryColor75}" />
+                                <Setter Property="Background" Value="{DynamicResource BorderColor}" />
                             </Style>
                             <Style Selector="Button.error">
                                 <Setter Property="Background" Value="{DynamicResource ErrorColor}" />
@@ -131,7 +132,7 @@
                     </Button>
 
                     <TextBlock Text="Software is working without test hardware!"
-                               FontSize="16"
+                               Classes="Large"
                                Foreground="{DynamicResource ErrorColor}"
                                VerticalAlignment="Center"
                                IsVisible="{Binding IsSimulation}"/>
@@ -143,7 +144,7 @@
                             Margin="5">
                     
                     <Button Classes="Icon"
-                            Background="{DynamicResource SecondaryColor75}"
+                            Background="{DynamicResource BorderColor}"
                             ToolTip.Tip="Determine matrix channel via external probe"
                             Command="{Binding FindMatrixChannelCommand}">
                         <shadui:ButtonAssist.Icon>
@@ -162,7 +163,7 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button Classes="Icon"
-                            Background="{DynamicResource SecondaryColor75}"
+                            Background="{DynamicResource BorderColor}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{Binding ToggleThemeCommand}">

@@ -9,22 +9,36 @@ using System.Globalization;
 
 public class TestStatusToBrushConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public IBrush? IdleBrush { get; set; }
+    public IBrush? RunningBrush { get; set; }
+    public IBrush? PassedBrush { get; set; }
+    public IBrush? FailedBrush { get; set; }
+    public IBrush? CancelledBrush { get; set; }
+
+    public object? Convert(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
     {
         if (value is not TestStatus status)
-            return new SolidColorBrush(Color.Parse("#FF2C2C30"));
+            return IdleBrush;
 
         return status switch
         {
-            TestStatus.IDLE      => new SolidColorBrush(Color.Parse("#FF2C2C30")),
-            TestStatus.RUNNING   => new SolidColorBrush(Color.Parse("#992979FF")),
-            TestStatus.PASSED    => new SolidColorBrush(Color.Parse("#FF00C853")),
-            TestStatus.FAILED    => new SolidColorBrush(Color.Parse("#FFFF1744")),
-            TestStatus.CANCELLED => Brushes.Orange,
-            _ => new SolidColorBrush(Color.Parse("#FF2C2C30"))
+            TestStatus.IDLE      => IdleBrush,
+            TestStatus.RUNNING   => RunningBrush,
+            TestStatus.PASSED    => PassedBrush,
+            TestStatus.FAILED    => FailedBrush,
+            TestStatus.CANCELLED => CancelledBrush,
+            _                    => IdleBrush
         };
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+    public object ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
+        => throw new NotSupportedException();
 }

@@ -6,19 +6,18 @@
     <Grid RowDefinitions="Auto,*">
             
         <Border Grid.Row="0"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Test Hardware Interface"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
             
         <Border Grid.Row="1"
-                Background="{DynamicResource PanelBackground}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">

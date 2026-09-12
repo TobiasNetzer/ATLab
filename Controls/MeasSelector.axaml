@@ -1,15 +1,16 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.MeasSelector"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:MeasChannelViewModel"
              Width="500">
     
     <UserControl.Styles>
-        <Style Selector="Border.Header">
+        <Style Selector="Border.WithDynamicCorner">
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
-        <Style Selector="Border.Header.expanded">
+        <Style Selector="Border.WithDynamicCorner.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
         
@@ -19,45 +20,36 @@
     </UserControl.Styles>
     
     <StackPanel>
-        <Border Classes="Header"
+        <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
-                Padding="10"
-                Margin="0">
+                Background="{DynamicResource OutlineColor}"
+                Padding="10">
             <DockPanel>
                 <TextBlock Text="Matrix Channels"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
-
-                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-                                    <TextBlock Text="&#xE70D;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded}"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-                </ToggleButton>
+                
+                <Button Command="{Binding ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
             CornerRadius="0 0 15 15"
             BorderThickness="2"
-            BorderBrush="{DynamicResource PanelBorder}"
+            BorderBrush="{DynamicResource OutlineColor}"
             IsVisible="{Binding IsExpanded}">
             
             <StackPanel HorizontalAlignment="Center"
@@ -88,12 +80,18 @@
                     </ComboBox>
                 </StackPanel>
                 
-                <Button Content="&#xF1CB;"
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="20"
-                        ToolTip.Tip="Swap channels"
-                        VerticalAlignment="Bottom"
-                        Command="{Binding ToggleChannelsCommand}"/>
+                <Button
+                    Background="{DynamicResource BorderColor}"
+                    Classes="Icon"
+                    ToolTip.Tip="Swap channels"
+                    Command="{Binding ToggleChannelsCommand}"
+                    Width="35"
+                    Height="35"
+                    VerticalAlignment="Bottom">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent ArrowLeftRight}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
                 
                 <StackPanel>
                     <TextBlock Text="Matrix L"
@@ -118,12 +116,18 @@
                     </ComboBox>
                 </StackPanel>
                 
-                <ToggleButton Content="&#xE95F;"
-                              VerticalAlignment="Bottom"
-                              FontFamily="{StaticResource FluentIconsFont}"
-                              FontSize="20"
-                              ToolTip.Tip="Enable external probe"
-                              IsChecked="{Binding IsExternalProbeEnabled, Mode=TwoWay}"/>
+                <Button
+                    Background="{Binding IsExternalProbeEnabled, Converter={StaticResource ButtonEnabledConverter}}"
+                    Classes="Icon"
+                    ToolTip.Tip="Enable external probe"
+                    Command="{Binding ToggleExternalProbeCommand}"
+                    Width="35"
+                    Height="35"
+                    VerticalAlignment="Bottom">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Cable}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
                 
             </StackPanel>
         </Border>

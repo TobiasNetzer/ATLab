@@ -1,6 +1,7 @@
 ﻿using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -30,4 +31,7 @@ public partial class ExpressionEditorViewModel : ViewModelBase
     {
         TestStep = step;
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

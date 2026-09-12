@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
@@ -22,51 +23,37 @@
         
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
             <DockPanel>
 
                 <TextBlock Text="Script Configuration"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
-
-                <ToggleButton IsChecked="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-                                    
-                                    <TextBlock Text="&#xE70D;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded,
-                                                                   Converter={StaticResource InverseBoolConverter}}"/>
-                                    
-                                    <TextBlock Text="&#xE70E;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"/>
-
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                </ToggleButton>
+                
+                <Button Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
 
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}">
 
             <StackPanel Margin="10" Spacing="15">
@@ -75,14 +62,20 @@
                     <TextBlock Text="Target Device"/>
 
                     <DockPanel>
-
-                        <Button Content="&#xE711;"
-                                FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
-                                ToolTip.Tip="Remove selected device"
-                                DockPanel.Dock="Right"
-                                Margin="5 0 0 0"
-                                Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveDeviceCommand}"/>
+                        
+                        <Button
+                            Background="{DynamicResource BorderColor}"
+                            Classes="Icon"
+                            ToolTip.Tip="Remove selected device"
+                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveDeviceCommand}"
+                            Width="35"
+                            Height="35"
+                            Margin="5 0 0 0"
+                            DockPanel.Dock="Right">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent X}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
 
                         <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Devices}"
                                   SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedDevice, Mode=TwoWay}"
@@ -108,14 +101,20 @@
                     <TextBlock Text="Script"/>
 
                     <DockPanel>
-
-                        <Button Content="&#xE711;"
-                                FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="18"
-                                ToolTip.Tip="Remove selected script"
-                                DockPanel.Dock="Right"
-                                Margin="5 0 0 0"
-                                Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveScriptCommand}"/>
+                        
+                        <Button
+                            Background="{DynamicResource BorderColor}"
+                            Classes="Icon"
+                            ToolTip.Tip="Remove selected script"
+                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveScriptCommand}"
+                            Width="35"
+                            Height="35"
+                            Margin="5 0 0 0"
+                            DockPanel.Dock="Right">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent X}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
 
                         <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Scripts}"
                                   SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedScript, Mode=TwoWay}"
@@ -140,9 +139,15 @@
                           CanUserSortColumns="False"
                           CanUserResizeColumns="True"
                           GridLinesVisibility="All"
-                          BorderThickness="1"
-                          BorderBrush="Gray"
+                          BorderBrush="{DynamicResource OutlineColor}"
+                          BorderThickness="2"
                           MaxHeight="200">
+                    
+                    <DataGrid.Styles>
+                        <Style Selector="DataGridRow:selected">
+                            <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                        </Style>
+                    </DataGrid.Styles>
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Variable"

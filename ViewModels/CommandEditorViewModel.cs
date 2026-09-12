@@ -95,4 +95,7 @@ public partial class CommandEditorViewModel : ViewModelBase
         if (_currentTestStep != null)
             _currentTestStep.TargetDeviceId = string.Empty;
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

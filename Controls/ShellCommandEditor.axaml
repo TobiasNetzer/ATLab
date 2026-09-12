@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:Class="ATLab.Controls.ShellCommandEditor"
              x:DataType="controls:ShellCommandEditor"
@@ -18,68 +19,62 @@
         
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
             <DockPanel>
                 <TextBlock Text="Shell Command"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"/>
-
-                <ToggleButton IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-
-                                    <TextBlock Text="&#xE70D;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded,
-                                                                   Converter={StaticResource InverseBoolConverter}}"/>
-
-                                    <TextBlock Text="&#xE70E;"
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"/>
-
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                </ToggleButton>
+                
+                <Button Command="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}">
 
             <StackPanel Margin="10" Spacing="15">
 
                 <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
 
-                <StackPanel Orientation="Horizontal" Spacing="10">
+                <DockPanel LastChildFill="False">
                     
                     <CheckBox Content="Direct Launch"
                               IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
-                              Margin="0 0 90 0"/>
+                              DockPanel.Dock="Left"/>
                     
-                    <TextBlock Text="Window Behavior"
-                               VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10"
+                                DockPanel.Dock="Right">
+                        
+                        <TextBlock Text="Window Behavior"
+                                   Classes="Small"
+                                   VerticalAlignment="Center"/>
 
-                    <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
-                              Width="130"
-                              SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
-                              DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
-                </StackPanel>
+                        <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
+                                  Width="130"
+                                  SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
+                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                        
+                    </StackPanel>
+                    
+                </DockPanel>
 
             </StackPanel>
         </Border>

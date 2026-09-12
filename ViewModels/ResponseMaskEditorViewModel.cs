@@ -8,6 +8,7 @@ using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -145,4 +146,7 @@ public partial class ResponseMaskEditorViewModel : ViewModelBase
     {
         UpdateStringProperties();
     }
+    
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

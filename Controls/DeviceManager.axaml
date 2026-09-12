@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.DeviceManager"
              x:DataType="vm:DeviceManagerViewModel"
@@ -10,19 +11,18 @@
         <Border Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Device Manager"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
         
         <Border Grid.Row="1"
                 Grid.Column="0"
-                Background="{DynamicResource PanelBackground}"
-                BorderBrush="{DynamicResource PanelBorder}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2"
                 CornerRadius="0 0 0 15">
 
@@ -31,25 +31,26 @@
                 <StackPanel Spacing="10"
                             Margin="10">
                     
-                    <StackPanel Spacing="2">
+                    <StackPanel Spacing="2"
+                                HorizontalAlignment="Left">
                         <TextBlock Text="Device Name"/>
                         <TextBox Text="{Binding SelectedDevice.Name}"
-                                 Width="210"
-                                 HorizontalAlignment="Left"/>
+                                 Width="210"/>
                     </StackPanel>
                     
                     <CheckBox Content="Include in Test Report"
                               IsChecked="{Binding SelectedDevice.IsIncludeInReport}"/>
                     
                     <StackPanel Spacing="2"
+                                HorizontalAlignment="Left"
                                 IsVisible="{Binding SelectedDevice.IsIncludeInReport}">
                         <TextBlock Text="Identification Query"/>
                         <TextBox Text="{Binding SelectedDevice.IdentificationQuery}"
-                                 Width="210"
-                                 HorizontalAlignment="Left"/>
+                                 Width="210"/>
                     </StackPanel>
                     
-                    <StackPanel Spacing="2">
+                    <StackPanel Spacing="2"
+                                HorizontalAlignment="Left">
                         <TextBlock Text="Interface"/>
                         <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
                                   SelectedItem="{Binding SelectedDevice.Type}"
@@ -57,7 +58,8 @@
                                   Width="210"/>
                     </StackPanel>
                     
-                    <StackPanel Spacing="2">
+                    <StackPanel Spacing="2"
+                                HorizontalAlignment="Left">
                         <TextBlock Text="Port"
                                    IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL, FallbackValue='TRUE'}"/>
                         
@@ -103,63 +105,75 @@
                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
                                 </StackPanel>
                             </StackPanel>
-
-                            <Button Content="&#xE72C;"
-                                    FontFamily="{StaticResource FluentIconsFont}"
-                                    FontSize="18"
-                                    ToolTip.Tip="Reload resources"
-                                    VerticalAlignment="Top"
-                                    Command="{Binding RefreshResourcesCommand}"
-                                    IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"/>
+                            
+                            <Button
+                                Background="{DynamicResource BorderColor}"
+                                Classes="Icon"
+                                ToolTip.Tip="Reload resources"
+                                Command="{Binding RefreshResourcesCommand}"
+                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"
+                                Width="35"
+                                Height="35">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent RotateCcw}"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                     
                     <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
                                 Spacing="10">
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Baud Rate"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableBaudRates}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.BaudRate}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Data Bits"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableDataBits}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.DataBits}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Parity"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableParities}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.Parity}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Stop Bits"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableStopBits}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.StopBits}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Handshake"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableHandshakes}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.Handshake}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableSerialTermination}"
                                       SelectedItem="{Binding SelectedDevice.Configuration.SerialTerminationMode}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Framing Mode"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableFramingModes}"
@@ -168,6 +182,7 @@
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left"
                                     IsVisible="{Binding SelectedDevice.Configuration.FramingMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TIMEOUT_BASED}">
                             <TextBlock Text="Timeout (ms)"/>
                             <NumericUpDown Width="210"
@@ -183,7 +198,8 @@
                     <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
                                 Spacing="10">
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Timeout (ms)"/>
                             <NumericUpDown Width="210"
                                            Minimum="10"
@@ -193,7 +209,8 @@
                                            Value="{Binding VisaTimeoutMsString}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableVisaTerminations}"
@@ -204,7 +221,8 @@
                     <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
                                 Spacing="10">
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Port"/>
                             <NumericUpDown Width="210"
                                            Minimum="1"
@@ -214,7 +232,8 @@
                                            Value="{Binding SelectedDevice.Configuration.TcpPort}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Timeout (ms)"/>
                             <NumericUpDown Width="210"
                                            Minimum="10"
@@ -224,7 +243,8 @@
                                            Value="{Binding TcpTimeoutMsString}"/>
                         </StackPanel>
                         
-                        <StackPanel Spacing="2">
+                        <StackPanel Spacing="2"
+                                    HorizontalAlignment="Left">
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableTcpTerminations}"
@@ -238,8 +258,8 @@
         
         <Border Grid.Row="1"
                 Grid.Column="1"
-                Background="{DynamicResource PanelBackground}"
-                BorderBrush="{DynamicResource PanelBorder}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2"
                 CornerRadius="0 0 15 0"
                 Padding="10">
@@ -247,17 +267,30 @@
             <Grid RowDefinitions="Auto, *" RowSpacing="10">
                 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
-                    <Button Content="&#xF8AA;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="16"
-                            ToolTip.Tip="Add new device"
-                            Command="{Binding AddDeviceCommand}"/>
-
-                    <Button Content="&#xF8AB;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="16"
-                            ToolTip.Tip="Remove device"
-                            Command="{Binding RemoveDeviceCommand}"/>
+                    
+                    <Button
+                        Background="{DynamicResource BorderColor}"
+                        Classes="Icon"
+                        ToolTip.Tip="Add new device"
+                        Command="{Binding AddDeviceCommand}"
+                        Width="35"
+                        Height="35">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Plus}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Button
+                        Background="{DynamicResource BorderColor}"
+                        Classes="Icon"
+                        ToolTip.Tip="Remove device"
+                        Command="{Binding RemoveDeviceCommand}"
+                        Width="35"
+                        Height="35">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Minus}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                 </StackPanel>
                 
                 <DataGrid Grid.Row="1" ItemsSource="{Binding Devices}"
@@ -265,9 +298,15 @@
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           GridLinesVisibility="All"
-                          BorderThickness="1"
-                          BorderBrush="Gray"
+                          BorderThickness="2"
+                          BorderBrush="{DynamicResource OutlineColor}"
                           VerticalScrollBarVisibility="Auto">
+                    
+                    <DataGrid.Styles>
+                        <Style Selector="DataGridRow:selected">
+                            <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                        </Style>
+                    </DataGrid.Styles>
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>

@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.About"
              x:DataType="vm:AboutTabViewModel"
@@ -9,19 +10,18 @@
         <Grid RowDefinitions="Auto,*">
             
             <Border Grid.Row="0"
-                    Background="{DynamicResource PanelBorder}"
+                    Background="{DynamicResource OutlineColor}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
                 <TextBlock Text="About"
-                           FontSize="20"
-                           FontWeight="Bold"
+                           Classes="h4"
                            HorizontalAlignment="Center"/>
             </Border>
             
             <Border Grid.Row="1"
-                    Background="{DynamicResource PanelBackground}"
+                    Background="{DynamicResource TabItemsBackgroundColor}"
                     CornerRadius="0 0 15 15"
-                    BorderBrush="{DynamicResource PanelBorder}"
+                    BorderBrush="{DynamicResource OutlineColor}"
                     BorderThickness="2">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -33,49 +33,50 @@
                                Height="100"/>
                         
                         <TextBlock Text="ATLab"
-                                   FontSize="32"
-                                   FontWeight="Bold"
+                                   Classes="h2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
 
                         <TextBlock Text="A cross‑platform automated testing framework for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces."
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
-                                   HorizontalAlignment="Center"/>
+                                   HorizontalAlignment="Center"
+                                   Classes="Small"/>
 
-                        <Border BorderBrush="{DynamicResource PanelBorder}"
+                        <Border Background="{DynamicResource MutedColor}"
                                 BorderThickness="1"/>
                         
-                        <Grid ColumnDefinitions="*,*">
+                        <Grid ColumnDefinitions="*,Auto">
                             
                             <StackPanel Grid.Column="0" Spacing="5">
-                                <TextBlock Text="{Binding AppName}" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding AppName}" Classes="Large"/>
                                 <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
                                 <TextBlock Text="{Binding Copyright}"/>
-                                <TextBlock Text="Build" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="Build" Classes="Large" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}"/>
                                 <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}"/>
                                 <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
-                                <TextBlock Text="System" FontSize="16" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <TextBlock Text="System" Classes="Large" Margin="0 5 0 0"/>
                                 <TextBlock Text="{Binding OSInfo}"/>
                                 <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}"/>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Spacing="5">
                                 
-                                <TextBlock HorizontalAlignment="Right">
-                                    <Button Command="{Binding OpenLinkCommand}"
-                                            CommandParameter="https://github.com/TobiasNetzer/ATLab">
-                                        View project on GitHub
-                                    </Button>
-                                </TextBlock>
-
-                                <TextBlock HorizontalAlignment="Right">
-                                    <Button Command="{Binding OpenLinkCommand}"
-                                            CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE">
-                                        License
-                                    </Button>
-                                </TextBlock>
+                                <Button
+                                    Content="View project on GitHub"
+                                    Background="{DynamicResource BorderColor}"
+                                    Classes="Secondary"
+                                    Command="{Binding OpenLinkCommand}"
+                                    CommandParameter="https://github.com/TobiasNetzer/ATLab"/>
+                                
+                                <Button
+                                    Content="License"
+                                    Background="{DynamicResource BorderColor}"
+                                    Classes="Secondary"
+                                    Command="{Binding OpenLinkCommand}"
+                                    CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE"/>
+                                
                             </StackPanel>
                         </Grid>
                     </StackPanel>

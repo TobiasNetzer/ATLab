@@ -9,7 +9,10 @@
         
     <Grid ColumnDefinitions="*,Auto" RowDefinitions="auto,*,auto,auto">
         
-        <Border Grid.Column="0" Grid.Row="0" Background="{DynamicResource WindowButtonHoverColor}"
+        <Border Grid.Column="0" Grid.Row="0" 
+                BorderBrush="{DynamicResource OutlineColor}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
+                BorderThickness="2"
                 CornerRadius="10"
                 Margin="10 10 10 0">
             
@@ -19,7 +22,7 @@
                             Spacing="5">
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="New file"
                         Command="{Binding NewFileCommand}"
@@ -32,7 +35,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Open file"
                         Command="{Binding LoadFileWithDialogCommand}"
@@ -44,7 +47,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Save file"
                         Command="{Binding SaveFileCommand}"
@@ -57,7 +60,7 @@
                     </Button>
 
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Save file as"
                         Command="{Binding SaveFileAsCommand}"
@@ -76,7 +79,7 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Add a new test step"
                         Command="{Binding AddTestStepCommand}"
@@ -89,7 +92,7 @@
                     </Button>
 
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Remove selected test steps"
                         Command="{Binding RemoveTestStepsCommand}"
@@ -102,7 +105,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Move selected test step up"
                         Command="{Binding MoveStepUpCommand}"
@@ -115,7 +118,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Move selected test step down"
                         Command="{Binding MoveStepDownCommand}"
@@ -128,7 +131,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Duplicate selected test steps"
                         Command="{Binding DuplicateTestStepsCommand}"
@@ -141,7 +144,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Cut selected test steps"
                         Command="{Binding CutTestStepsCommand}"
@@ -154,7 +157,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Copy selected test steps"
                         Command="{Binding CopyTestStepsCommand}"
@@ -167,7 +170,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Paste test steps"
                         Command="{Binding PasteTestStepsCommand}"
@@ -186,7 +189,7 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Execute single step"
                         Command="{Binding StartSingleStepTestCommand}"
@@ -200,7 +203,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Start test execution from selected step"
                         Command="{Binding StartTestFromSelectionCommand}"
@@ -214,7 +217,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Start continuous test execution"
                         Command="{Binding StartTestRepeatCommand}"
@@ -228,7 +231,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Start test execution"
                         Command="{Binding StartTestCommand}"
@@ -241,7 +244,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{DynamicResource BorderColor}"
                         Classes="Icon"
                         ToolTip.Tip="Stop test execution"
                         Command="{Binding CancelTestCommand}"
@@ -259,7 +262,7 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{Binding IsShowMeasurementPanel, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
                         ToolTip.Tip="Show measurement panel"
                         Command="{Binding ToggleMeasurementPanelCommand}"
@@ -271,7 +274,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource SecondaryColor75}"
+                        Background="{Binding IsDevelopmentMode, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
                         ToolTip.Tip="Enable development mode"
                         Command="{Binding ToggleDevelopmentModeCommand}"
@@ -279,7 +282,7 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent Toolbox}"/>
+                            <ContentControl Content="{LucideIconContent Construction}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
                     
@@ -300,6 +303,9 @@
                   HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
                   SelectionMode="Extended"
+                  BorderThickness="2"
+                  BorderBrush="{DynamicResource OutlineColor}"
+                  Background="{DynamicResource TabItemsBackgroundColor}"
                   behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
                   IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
             
@@ -408,7 +414,9 @@
         </DataGrid>
         
         <Border Grid.Column="0" Grid.Row="2"
-                Background="{DynamicResource WindowButtonHoverColor}"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10"
                 IsVisible="{Binding IsShowMeasurementPanel}">
@@ -424,7 +432,9 @@
         </Border>
         
         <Border Grid.Column="0" Grid.Row="3"
-                Background="{DynamicResource WindowButtonHoverColor}"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10">
             

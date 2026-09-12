@@ -3,6 +3,7 @@ using System.Linq;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
@@ -40,4 +41,7 @@ public partial class StimChannelViewModel : ViewModelBase
     {
         _settingsService.Settings.IsStimSelectorExpanded = value;
     }
+
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

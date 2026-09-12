@@ -8,19 +8,18 @@
     <Grid RowDefinitions="Auto,*">
             
         <Border Grid.Row="0"
-                Background="{DynamicResource PanelBorder}"
+                Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
             <TextBlock Text="Device Under Test"
-                       FontSize="20"
-                       FontWeight="Bold"
+                       Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
             
         <Border Grid.Row="1"
-                Background="{DynamicResource PanelBackground}"
+                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2">
                     
             <StackPanel Margin="10"
@@ -29,7 +28,8 @@
                         HorizontalAlignment="Stretch">
                 
                 <TextBlock Text="Device‑specific information to be included in the generated test report"
-                           TextWrapping="Wrap"/>
+                           TextWrapping="Wrap"
+                           Classes="Caption"/>
 
                 <StackPanel Spacing="2">
                     <TextBlock Text="Name"/>

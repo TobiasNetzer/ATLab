@@ -82,6 +82,12 @@ public partial class MeasChannelViewModel : ViewModelBase
     {
         (IsSelectedH, IsSelectedL) = (IsSelectedL, IsSelectedH);
     }
+
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
+    
+    [RelayCommand]
+    private void ToggleExternalProbe() => IsExternalProbeEnabled = !IsExternalProbeEnabled;
 }
 
 public class MeasChannelOff : CustomRelayChannelName
