@@ -12,26 +12,6 @@
 
     <Application.Resources>
         
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <Color x:Key="PanelBackground">White</Color>
-                    <Color x:Key="PanelBorder">#FFE0E0E0</Color>
-                    <Color x:Key="MainWindowToolbarBackground">#FFF0F0F0</Color>
-                    <Color x:Key="ToolbarBackground">#FFF0F0F0</Color>
-                    <Color x:Key="ImageBackground">White</Color>
-                </ResourceDictionary>
-                
-                <ResourceDictionary x:Key="Dark">
-                    <Color x:Key="PanelBackground">#FF2D2D2D</Color>
-                    <Color x:Key="PanelBorder">#FF5A5A5A</Color>
-                    <Color x:Key="MainWindowToolbarBackground">#FF2D2D2D</Color>
-                    <Color x:Key="ToolbarBackground">#FF3D3D3D</Color>
-                    <Color x:Key="ImageBackground">Black</Color>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
-        
         <FontFamily x:Key="FluentIconsFont">avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
         <FontFamily x:Key="LucideIcon">avares://ATLab/Assets/lucide.ttf#lucide</FontFamily>
         
