@@ -11,10 +11,10 @@ public class ResultBrushConverter : IValueConverter
     {
         if (value is bool isValid)
         {
-            return isValid ? Brushes.LimeGreen : Brushes.Red;
+            return isValid ? new SolidColorBrush(Color.Parse("#FF00C853")) : new SolidColorBrush(Color.Parse("#FFFF1744"));
         }
 
-        return Brushes.Gray;
+        return new SolidColorBrush(Color.Parse("#FF2C2C30"));
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

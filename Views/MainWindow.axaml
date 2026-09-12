@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
         xmlns:vm="clr-namespace:ATLab.ViewModels"
         xmlns:views="clr-namespace:ATLab.Views"
         x:Class="ATLab.Views.MainWindow"
@@ -30,18 +31,23 @@
 
     <Grid RowDefinitions="*,Auto">
         
-        <Border Grid.Row="0" 
-                Background="{DynamicResource MainWindowToolbarBackground}"
-                Height="50"
-                VerticalAlignment="Top"/>
-        
         <TabControl Grid.Row="0"
                     ItemsSource="{Binding Tabs}" 
-                    SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
-                    Padding="0">
+                    SelectedItem="{Binding SelectedTab}"
+                    shadui:TabControlBehaviors.UseSlidingPill="True">
+            
+            <TabControl.Resources>
+                <SolidColorBrush x:Key="TabItemsBackgroundColor"
+                                 Color="{DynamicResource BackgroundColor}"/>
+
+                <SolidColorBrush x:Key="TabItemSelectedColor"
+                                 Color="{DynamicResource InfoColor}"/>
+            </TabControl.Resources>
+            
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}"/>
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="28"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.DataTemplates>
@@ -67,34 +73,37 @@
         </TabControl>
         
         <Border Grid.Row="1"
-        Background="{DynamicResource MainWindowToolbarBackground}"
-        Height="40">
+        Background="{DynamicResource WindowButtonHoverColor}"
+        Height="45">
 
             <Grid ColumnDefinitions="Auto,*,Auto">
                 
-                <StackPanel Grid.Column="0" Orientation="Horizontal"
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
                             Spacing="10"
                             VerticalAlignment="Center"
                             Margin="5">
                     
-                    <Button Classes.error="{Binding HasErrors}">
+                    <Button
+                        Classes="Icon"
+                        Width="60"
+                        Classes.error="{Binding HasErrors}">
                         <Button.Styles>
-                            <Style Selector="Button">
-                                <Setter Property="Background" Value="{DynamicResource PanelBorder}" />
+                            <Style Selector="Button.Icon">
+                                <Setter Property="Background" Value="{DynamicResource SecondaryColor75}" />
                             </Style>
-
                             <Style Selector="Button.error">
-                                <Setter Property="Background" Value="Red" />
+                                <Setter Property="Background" Value="{DynamicResource ErrorColor}" />
                             </Style>
                         </Button.Styles>
 
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Spacing="5">
-                                <TextBlock Text="&#xE7BA;"
-                                           FontFamily="{StaticResource FluentIconsFont}"
-                                           FontSize="18"/>
+                                <ContentControl Content="{LucideIconContent TriangleAlert}"/>
                                 <TextBlock Text="{Binding ErrorCount}"
-                                           FontSize="14"/>
+                                           FontSize="14"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding HasErrors}"/>
                             </StackPanel>
                         </Button.Content>
 
@@ -105,6 +114,11 @@
                                 <ListBox ItemsSource="{Binding Errors}"
                                          Width="800"
                                          Height="500">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem:selected /template/ PathIcon#CheckSelected">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </Style>
+                                    </ListBox.Styles>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding}"
@@ -118,7 +132,7 @@
 
                     <TextBlock Text="Software is working without test hardware!"
                                FontSize="16"
-                               Foreground="Red"
+                               Foreground="{DynamicResource ErrorColor}"
                                VerticalAlignment="Center"
                                IsVisible="{Binding IsSimulation}"/>
                 </StackPanel>
@@ -128,11 +142,14 @@
                             VerticalAlignment="Center"
                             Margin="5">
                     
-                    <Button Content="&#xE71E;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                    <Button Classes="Icon"
+                            Background="{DynamicResource SecondaryColor75}"
                             ToolTip.Tip="Determine matrix channel via external probe"
-                            Command="{Binding FindMatrixChannelCommand}"/>
+                            Command="{Binding FindMatrixChannelCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Search}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                     
                     <TextBlock Text="{Binding MatrixChannel, StringFormat='Matrix Channel: {0}'}"
                                VerticalAlignment="Center"
@@ -141,14 +158,18 @@
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
-                               CornerRadius="1"/>
+                               CornerRadius="1"
+                               Background="{DynamicResource MutedColor}"/>
                     
-                    <Button Content="&#xE793;"
-                            FontFamily="{StaticResource FluentIconsFont}"
-                            FontSize="18"
+                    <Button Classes="Icon"
+                            Background="{DynamicResource SecondaryColor75}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Command="{Binding ToggleThemeCommand}"/>
+                            Command="{Binding ToggleThemeCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent SunMoon}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

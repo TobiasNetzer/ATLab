@@ -12,7 +12,7 @@
         
         <Border x:Name="Bar"
                 Height="6"
-                Background="LightGray"
+                Background="{DynamicResource ForegroundColor}"
                 CornerRadius="3"
                 MinWidth="400"
                 VerticalAlignment="Center"
@@ -23,7 +23,7 @@
             <Rectangle x:Name="LowerRect"
                        Width="4"
                        Height="16"
-                       Fill="LightGray"/>
+                       Fill="{DynamicResource ForegroundColor}"/>
             
             <Border Width="120"
                     Canvas.Left="130"
@@ -37,7 +37,7 @@
             <Rectangle x:Name="UpperRect"
                        Width="4"
                        Height="16"
-                       Fill="LightGray"/>
+                       Fill="{DynamicResource ForegroundColor}"/>
             
             <Border Width="120"
                     Canvas.Right="130"

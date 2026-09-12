@@ -67,6 +67,18 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _user = Environment.UserName;
+    
+    [ObservableProperty]
+    private bool _startTestBusy;
+    
+    [ObservableProperty]
+    private bool _startFromStepBusy;
+    
+    [ObservableProperty]
+    private bool _startRepeatTestBusy;
+    
+    [ObservableProperty]
+    private bool _startSingleStepBusy;
 
     private bool _allowResultSave;
     private DateTimeOffset _startTime;
@@ -585,10 +597,14 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         using (_projectModel.SuppressDirtyTracking())
         {
+            StartTestBusy = true;
             ResetAllResults();
 
             if (!await RequestSerialNumber())
+            {
+                StartTestBusy = false;
                 return;
+            }
 
             TestStatus = TestStatus.RUNNING;
             NumberFailedSteps = 0;
@@ -598,6 +614,7 @@ public partial class TestingTabViewModel : ViewModelBase
             _allowResultSave = true;
             await _testExecutor.StartTestAsync(TestSteps, 0, _runtimeVariables);
             _allowResultSave = false;
+            StartTestBusy = false;
         }
     }
 
@@ -606,10 +623,14 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         using (_projectModel.SuppressDirtyTracking())
         {
+            StartRepeatTestBusy = true;
             ResetAllResults();
 
             if (!await RequestSerialNumber())
+            {
+                StartRepeatTestBusy = false;
                 return;
+            }
 
             NumberFailedSteps = 0;
             TestStatus = TestStatus.RUNNING;
@@ -618,6 +639,8 @@ public partial class TestingTabViewModel : ViewModelBase
 
             _allowResultSave = true;
             await _testExecutor.StartRepeatTestAsync(TestSteps, 0, _runtimeVariables);
+            _allowResultSave = false;
+            StartRepeatTestBusy = false;
         }
     }
 
@@ -626,6 +649,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         using (_projectModel.SuppressDirtyTracking())
         {
+            StartFromStepBusy = true;
             ResetAllResults();
             NumberFailedSteps = 0;
             TestStatus = TestStatus.RUNNING;
@@ -633,6 +657,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
             var index = SelectedStep != null ? TestSteps.IndexOf(SelectedStep) : 0;
             await _testExecutor.StartTestAsync(TestSteps, index, _runtimeVariables);
+            StartFromStepBusy = false;
         }
     }
 
@@ -644,6 +669,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         using (_projectModel.SuppressDirtyTracking())
         {
+            StartSingleStepBusy = true;
             NumberFailedSteps = 0;
             TestProgress = 0;
             TestDuration = string.Empty;
@@ -652,6 +678,7 @@ public partial class TestingTabViewModel : ViewModelBase
             await _testExecutor.StartSingleStepTest(SelectedStep, _runtimeVariables);
 
             TestStatus = TestStatus.IDLE;
+            StartSingleStepBusy = false;
         }
     }
 
@@ -660,6 +687,12 @@ public partial class TestingTabViewModel : ViewModelBase
 
     [RelayCommand(CanExecute = nameof(IsTestRunning))]
     private void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
+    
+    [RelayCommand]
+    private void ToggleMeasurementPanel() => IsShowMeasurementPanel = !IsShowMeasurementPanel;
+    
+    [RelayCommand]
+    private void ToggleDevelopmentMode() => IsDevelopmentMode = !IsDevelopmentMode;
 
     private void ResetAllResults()
     {

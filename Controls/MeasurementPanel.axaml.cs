@@ -111,8 +111,8 @@ public partial class MeasurementPanel : UserControl
             ? UnitParser.Format(UpperLimit, Unit)
             : UpperLimit.ToString(CultureInfo.CurrentCulture);
         
-        MeasuredMarker.Fill = Valid ? Brushes.LimeGreen : Brushes.Red;
-        MeasuredText.Foreground = Valid ? Brushes.LimeGreen : Brushes.Red;
+        MeasuredMarker.Fill = Valid ? new SolidColorBrush(Color.Parse("#FF00C853")) : new SolidColorBrush(Color.Parse("#FFFF1744"));
+        MeasuredText.Foreground = Valid ? new SolidColorBrush(Color.Parse("#FF00C853")) : new SolidColorBrush(Color.Parse("#FFFF1744"));
         return;
 
         double Scale(double v)
