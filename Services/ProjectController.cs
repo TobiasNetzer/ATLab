@@ -37,13 +37,14 @@ public class ProjectController : IProjectController
         };
     }
 
-    public async Task NewProjectAsync()
+    public async Task<bool> NewProjectAsync()
     {
         if (!await _projectDocumentService.NewProjectAsync())
-            return;
+            return false;
         
         _projectModel.CreateEmptyProject();
         _scriptRepository.SetRepositoryFolder(null);
+        return true;
     }
 
     public async Task SaveFileAsync()
@@ -58,6 +59,9 @@ public class ProjectController : IProjectController
 
     public async Task LoadFileWithDialogAsync()
     {
+        if (!await NewProjectAsync())
+            return;
+        
         try
         {
             var dto = await _projectDocumentService.OpenFileAsync();
@@ -66,11 +70,7 @@ public class ProjectController : IProjectController
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
             }
-            else
-            {
-                await NewProjectAsync(); // create new project if user cancelled the dialog
-            }
-                
+            
         }
         catch (Exception ex)
         {
@@ -82,7 +82,7 @@ public class ProjectController : IProjectController
     {
         try
         {
-            if (!await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
+            if (!await NewProjectAsync())
                 return;
 
             var dto = await _projectDocumentService.OpenAsync(path);

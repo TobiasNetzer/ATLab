@@ -6,6 +6,7 @@ using ATLab.Services;
 using ATLab.ViewModels;
 using ATLab.Views;
 using Microsoft.Extensions.DependencyInjection;
+using ShadUI;
 
 namespace ATLab;
 
@@ -54,6 +55,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ProjectModel>();
         services.AddSingleton<ApplicationState>();
 
+        services.AddSingleton<DialogManager>();
+
         return services;
     }
 
@@ -85,6 +88,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<RuntimeVariableEditorViewModel>();
         services.AddSingleton<TestInterfaceCommunicationViewModel>();
         services.AddSingleton<WorkspaceEditorViewModel>();
+        services.AddSingleton<MessageBoxViewModel>();
 
         return services;
     }

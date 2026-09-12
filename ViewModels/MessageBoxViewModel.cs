@@ -1,14 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using ATLab.Enums;
 using ATLab.Services;
 using Avalonia.Media.Imaging;
+using ShadUI;
 
 namespace ATLab.ViewModels;
 
 public partial class MessageBoxViewModel : ViewModelBase, IDisposable
 {
     private readonly ControlModuleService _controlModuleService;
+    private readonly DialogManager _dialogManager;
     
     [ObservableProperty]
     private string _title = string.Empty;
@@ -23,23 +26,23 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
     private string _cancelText = "Cancel";
 
     [ObservableProperty]
-    private bool _showCancel = true;
+    private DialogFunction _dialogFunction = DialogFunction.INFORMATION;
 
     public Bitmap? Bitmap { get; set; }
-
-    public event Action<bool>? CloseRequested;
     
     private event Action PassHandler;
     private event Action CancelHandler;
     
-    public MessageBoxViewModel(ControlModuleService controlModuleService)
+    public MessageBoxViewModel(ControlModuleService controlModuleService,
+        DialogManager dialogManager)
     {
         _controlModuleService = controlModuleService;
+        _dialogManager = dialogManager;
         
         PassHandler += async () => 
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                OkCommand.Execute(null);
+                SubmitCommand.Execute(null);
             });
             
         CancelHandler += async () => 
@@ -52,16 +55,26 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
         _controlModuleService.FailPressed += CancelHandler;
     }
 
-    [RelayCommand]
-    private void Ok()
+    public void Initialize(string title, string message, string okText = "Continue", string cancelText = "Cancel", DialogFunction dialogFunction = DialogFunction.INFORMATION, Bitmap? bitmap = null)
     {
-        CloseRequested?.Invoke(true);
+        Title = title;
+        Message = message;
+        OkText = okText;
+        CancelText = cancelText;
+        DialogFunction = dialogFunction;
+        Bitmap = bitmap;
+    }
+
+    [RelayCommand]
+    private void Submit()
+    {
+        _dialogManager.Close(this, new CloseDialogOptions { Success = true });
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        CloseRequested?.Invoke(false);
+        _dialogManager.Close(this);
     }
     
     public void Dispose()

@@ -94,7 +94,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
     {
         if (SelectedScript is null) return;
 
-        var confirm = await _messageBoxService.ShowConfirmationAsync(
+        var confirm = await _messageBoxService.ShowConfirmationDestructiveAsync(
             "Delete Script",
             "The selected script will be permanently deleted.");
 

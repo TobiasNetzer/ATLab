@@ -1,15 +1,23 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
-        xmlns:vm="clr-namespace:ATLab.ViewModels"
-        xmlns:views="clr-namespace:ATLab.Views"
-        x:Class="ATLab.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Title="{Binding WindowTitle}"
-        MinWidth="1300"
-        MinHeight="600">
+<shadui:Window xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:vm="clr-namespace:ATLab.ViewModels"
+               xmlns:views="clr-namespace:ATLab.Views"
+               x:Class="ATLab.Views.MainWindow"
+               x:DataType="vm:MainWindowViewModel"
+               Title="{Binding WindowTitle}"
+               MinWidth="1300"
+               MinHeight="600"
+               Background="{DynamicResource TabItemsBackgroundColor}"
+               ShowTitlebarBackground="False">
     
-    <Window.KeyBindings>
+    <shadui:Window.Hosts>
+        <shadui:DialogHost
+            Manager="{Binding DialogManager}"
+            x:Name="PART_DialogHost"/>
+    </shadui:Window.Hosts>
+    
+    <shadui:Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+N" Command="{Binding TestingTab.NewFileCommand}"/>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding TestingTab.LoadFileWithDialogCommand}" />
         <KeyBinding Gesture="Ctrl+S" Command="{Binding TestingTab.SaveFileCommand}" />
@@ -20,14 +28,14 @@
         <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
         <KeyBinding Gesture="Enter" Command="{Binding TestingTab.RequestBreakRepeatCommand}" />
 
-    </Window.KeyBindings>
+    </shadui:Window.KeyBindings>
 
-    <Window.Styles>
+    <shadui:Window.Styles>
         <Style Selector="FlyoutPresenter.LargeFlyout">
             <Setter Property="MaxWidth" Value="1000" />
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
-    </Window.Styles>
+    </shadui:Window.Styles>
 
     <Grid RowDefinitions="*,Auto">
         
@@ -175,4 +183,4 @@
             </Grid>
         </Border>
     </Grid>
-</Window>
+</shadui:Window>

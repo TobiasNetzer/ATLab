@@ -8,6 +8,7 @@ using ATLab.Models;
 using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ShadUI;
 
 namespace ATLab.ViewModels;
 
@@ -52,6 +53,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _matrixChannel;
+    
+    [ObservableProperty]
+    private DialogManager _dialogManager;
 
     public MainWindowViewModel(ITestHardware testHardware,
         IErrorService errorService,
@@ -65,7 +69,8 @@ public partial class MainWindowViewModel : ViewModelBase
         DocumentationTabViewModel documentationTab,
         ISettingsService settingsService,
         ProjectModel projectModel,
-        ApplicationState applicationState)
+        ApplicationState applicationState,
+        DialogManager dialogManager)
     {
         _testHardware = testHardware;
         _errorService = errorService;
@@ -74,6 +79,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _settingsService = settingsService;
         _projectModel = projectModel;
         _applicationState = applicationState;
+        _dialogManager = dialogManager;
 
         TestingTab = testingTab;
         ConfigTab = configTab;
@@ -119,17 +125,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
     
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
-    
-    public event Action? RequestClose;
-    
-    [RelayCommand]
-    private async Task Close()
-    {
-        if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
-        {
-            RequestClose?.Invoke();
-        }
-    }
     
     [RelayCommand]
     private async Task FindMatrixChannel()

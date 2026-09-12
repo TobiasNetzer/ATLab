@@ -249,12 +249,9 @@ public class TestExecutor : ITestExecutor
             if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
             {
                 var result = await _messageBoxService.ShowConfirmationImageAsync(
-                    "Awaiting User Response",
+                    "User Information",
                     step.TestStep.Comment,
-                    step.TestStep.CustomMessageBoxImagePath,
-                    "Ok",
-                    "Cancel",
-                    true);
+                    step.TestStep.CustomMessageBoxImagePath);
 
                 if (!result)
                     throw new OperationCanceledException();

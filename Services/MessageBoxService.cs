@@ -2,73 +2,83 @@
 using System.Threading.Tasks;
 using ATLab.Enums;
 using ATLab.Interfaces;
-using ATLab.Views;
 using ATLab.ViewModels;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ShadUI;
 
 namespace ATLab.Services;
 
-public class MessageBoxService : IMessageBoxService
+public partial class MessageBoxService : ObservableObject, IMessageBoxService
 {
     private readonly IErrorService _errorService;
     private readonly ControlModuleService _controlModuleService;
+    private readonly MessageBoxViewModel _messageBoxViewModel;
+    
+    [ObservableProperty]
+    private DialogManager _dialogManager;
     
     public MessageBoxService(IErrorService errorService,
-        ControlModuleService controlModuleService)
+        ControlModuleService controlModuleService,
+        MessageBoxViewModel messageBoxViewModel,
+        DialogManager dialogManager)
     {
         _errorService = errorService;
         _controlModuleService = controlModuleService;
+        _messageBoxViewModel = messageBoxViewModel;
+        _dialogManager = dialogManager;
+    }
+
+    public async Task<bool> ShowConfirmationDestructiveAsync(
+        string title,
+        string message)
+    {
+        _messageBoxViewModel.Initialize(
+            title,
+            message,
+            "Continue",
+            "Cancel",
+            DialogFunction.CONFIRMATION_DESTRUCTIVE);
+
+        var tcs = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        DialogManager
+            .CreateDialog(_messageBoxViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .WithSuccessCallback(() =>
+            {
+                tcs.TrySetResult(true);
+            })
+            .WithCancelCallback(() =>{
+                tcs.TrySetResult(false);
+            })
+            .Show();
+
+        return await tcs.Task;
+        
     }
     
-    private Window? GetMainWindow()
+    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, DialogFunction dialogFunction = DialogFunction.CONFIRMATION)
     {
-        var desktop = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
-        return desktop?.MainWindow;
-    }
-
-    public async Task<bool> ShowConfirmationAsync(string title, string message, string okText = "Ok", string cancelText = "Cancel", bool useControlModule = false)
-    {
-        var owner = GetMainWindow();
-        if (owner == null) return false;
-
-        if (useControlModule)
+        string okText;
+        string cancelText;
+        
+        switch (dialogFunction)
         {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
-            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
-            _controlModuleService.SetUserResponseMode(true);
+            case DialogFunction.CONFIRMATION:
+                okText = "Continue";
+                cancelText = "Cancel";
+                break;
+            case DialogFunction.USER_INPUT:
+                okText = "Pass";
+                cancelText = "Fail";
+                break;
+            default:
+                return false;
         }
-
-        using var vm = new MessageBoxViewModel(_controlModuleService);
-        vm.Title = title;
-        vm.Message = message;
-        vm.OkText = okText;
-        vm.CancelText = cancelText;
-        vm.ShowCancel = true;
-
-        var mb = new MessageBox
-        {
-            DataContext = vm
-        };
-
-        await mb.ShowDialog(owner);
-
-        if (useControlModule)
-        {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
-            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
-            _controlModuleService.SetUserResponseMode(false);
-        }
-
-        return mb.Result == MessageBox.MessageBoxResult.Ok;
-    }
-    
-    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, string okText = "Ok", string cancelText = "Cancel", bool useControlModule = false)
-    {
-        var owner = GetMainWindow();
-        if (owner == null) return false;
         
         var bitmap = null as Bitmap;
         if (!string.IsNullOrWhiteSpace(imagePath))
@@ -78,67 +88,56 @@ public class MessageBoxService : IMessageBoxService
             else
                 _errorService.AddError($"Image not found: {imagePath}");
         }
-
-        if (useControlModule)
-        {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
-            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
-            _controlModuleService.SetUserResponseMode(true);
-        }
         
+        _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
+        _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
+        _controlModuleService.SetUserResponseMode(true);
+            
+        _messageBoxViewModel.Initialize(
+            title,
+            message,
+            okText,
+            cancelText,
+            dialogFunction,
+            bitmap);
 
-        using var vm = new MessageBoxViewModel(_controlModuleService);
-        vm.Title = title;
-        vm.Message = message;
-        vm.OkText = okText;
-        vm.CancelText = cancelText;
-        vm.ShowCancel = true;
-        vm.Bitmap = bitmap;
+        var tcs = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
 
-        var mb = new MessageBox
-        {
-            DataContext = vm
-        };
+        DialogManager
+            .CreateDialog(_messageBoxViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .WithSuccessCallback(() =>
+            {
+                tcs.TrySetResult(true);
+            })
+            .WithCancelCallback(() =>{
+                tcs.TrySetResult(false);
+            })
+            .Show();
 
-        await mb.ShowDialog(owner);
-
-        if (useControlModule)
-        {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
-            _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
-            _controlModuleService.SetUserResponseMode(false);
-        }
+        var result = await tcs.Task;
         
-        return mb.Result == MessageBox.MessageBoxResult.Ok;
+        _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
+        _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
+        _controlModuleService.SetUserResponseMode(false);
+        
+        return result;
     }
 
-    public async Task ShowMessageAsync(string title, string message, bool useControlModule = false)
+    public async Task ShowMessageAsync(string title, string message)
     {
-        var owner = GetMainWindow();
-        if (owner == null) return;
+        _messageBoxViewModel.Initialize(
+            title,
+            message);
 
-        if (useControlModule)
-        {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
-            _controlModuleService.SetUserResponseMode(true);
-        }
-        
-        using var vm = new MessageBoxViewModel(_controlModuleService);
-        vm.Title = title;
-        vm.Message = message;
-        vm.ShowCancel = false;
-
-        var mb = new MessageBox
-        {
-            DataContext = vm
-        };
-
-        await mb.ShowDialog(owner);
-
-        if (useControlModule)
-        {
-            _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
-            _controlModuleService.SetUserResponseMode(false);
-        }
+        DialogManager
+            .CreateDialog(_messageBoxViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .Show();
     }
 }

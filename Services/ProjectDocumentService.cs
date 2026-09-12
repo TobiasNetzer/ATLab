@@ -28,9 +28,6 @@ public class ProjectDocumentService : IProjectDocumentService
 
     public async Task<AtlabFileDto?> OpenFileAsync()
     {
-        if (!await ConfirmAndContinueIfDirtyAsync())
-            return null;
-
         var file = await _fileDialogService.OpenFileAsync("ATLab files", new[] { "atlab" });
 
         if (file is not null)
@@ -89,11 +86,9 @@ public class ProjectDocumentService : IProjectDocumentService
     {
         if (_projectModel.IsDirty)
         {
-            var result = await _messageBoxService.ShowConfirmationAsync(
+            var result = await _messageBoxService.ShowConfirmationDestructiveAsync(
                 "Unsaved Changes", 
-                "You have unsaved changes. Continue without saving?",
-                "Continue",
-                "Cancel");
+                "You have unsaved changes. Continue without saving?");
             if (!result) return false;
         }
         _projectModel.MarkSaved();

@@ -12,6 +12,7 @@ using ATLab.Models;
 using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
+using ShadUI;
 
 namespace ATLab;
 
@@ -23,14 +24,25 @@ public class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
+    
+    private static void RegisterDialogs(IServiceProvider service)
+    {
+        var dialogService = service.GetRequiredService<DialogManager>();
+
+        dialogService.Register<MessageBox, MessageBoxViewModel>();
+    }
 
     public override async void OnFrameworkInitializationCompleted()
     {
         QuestPDF.Settings.License = LicenseType.Community;
         
         var serviceCollection = new ServiceCollection();
+
         ConfigureServices(serviceCollection);
+
         _services = serviceCollection.BuildServiceProvider();
+
+        RegisterDialogs(_services);
         
         var settingsService = _services.GetRequiredService<ISettingsService>();
         

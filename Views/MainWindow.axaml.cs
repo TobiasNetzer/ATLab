@@ -4,6 +4,8 @@ using Avalonia;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
+using ShadUI;
+using Window = ShadUI.Window;
 
 namespace ATLab.Views;
 
@@ -16,15 +18,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        this.Closing += MainWindow_Closing;
-        
-        DataContextChanged += (sender, args) =>
-        {
-            if (DataContext is MainWindowViewModel vm)
-            {
-                vm.RequestClose += () => this.Close();
-            }
-        };
+        Closing += MainWindow_Closing;
     }
 
     public MainWindow(ISettingsService settingsService, IProjectDocumentService projectDocumentService, ProjectModel projectModel) : this()
@@ -62,13 +56,21 @@ public partial class MainWindow : Window
         DataContext = vm;
     }
 
-    private async void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    private async void MainWindow_Closing(
+        object? sender,
+        System.ComponentModel.CancelEventArgs e)
     {
-        if (_projectDocumentService != null && _projectModel != null && _projectModel.IsDirty)
+
+        if (_projectDocumentService != null &&
+            _projectModel != null &&
+            _projectModel.IsDirty)
         {
             e.Cancel = true;
 
-            if (await _projectDocumentService.ConfirmAndContinueIfDirtyAsync())
+            var shouldClose =
+                await _projectDocumentService.ConfirmAndContinueIfDirtyAsync();
+
+            if (shouldClose)
             {
                 Close();
             }
@@ -93,5 +95,22 @@ public partial class MainWindow : Window
             settings.WindowY = Position.Y;
         }
         _settingsService.Save();
+    }
+    
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+        
+        if (this.FindControl<DialogHost>("PART_DialogHost") is { } dialogHost)
+        {
+            dialogHost.Dispose();
+        }
+        
+        if (DataContext is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+        
+        DataContext = null;
     }
 }
