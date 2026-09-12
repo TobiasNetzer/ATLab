@@ -29,7 +29,7 @@
                 
                 <TextBlock Text="Device‑specific information to be included in the generated test report"
                            TextWrapping="Wrap"
-                           Classes="Caption"/>
+                           Classes="Small"/>
 
                 <StackPanel Spacing="2">
                     <TextBlock Text="Name"/>
