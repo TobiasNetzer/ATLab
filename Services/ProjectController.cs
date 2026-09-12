@@ -66,6 +66,11 @@ public class ProjectController : IProjectController
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
             }
+            else
+            {
+                await NewProjectAsync(); // create new project if user cancelled the dialog
+            }
+                
         }
         catch (Exception ex)
         {
