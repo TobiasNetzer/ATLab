@@ -84,7 +84,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();
         services.AddSingleton<TestHardwareDiagnosticsViewModel>();
-        services.AddSingleton<SerialNumberEntryWindowViewModel>();
+        services.AddSingleton<SerialNumberEntryDialogViewModel>();
         services.AddSingleton<RuntimeVariableEditorViewModel>();
         services.AddSingleton<TestInterfaceCommunicationViewModel>();
         services.AddSingleton<WorkspaceEditorViewModel>();

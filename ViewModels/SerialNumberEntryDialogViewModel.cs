@@ -3,13 +3,15 @@ using ATLab.Models;
 using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ShadUI;
 
 namespace ATLab.ViewModels;
 
-public partial class SerialNumberEntryWindowViewModel : ViewModelBase, IDisposable
+public partial class SerialNumberEntryDialogViewModel : ViewModelBase, IDisposable
 {
     private readonly ProjectSettings _settings;
     private readonly ControlModuleService _controlModuleService;
+    private readonly DialogManager _dialogManager;
     
     [ObservableProperty]
     private string _serialNumber = string.Empty;
@@ -22,11 +24,13 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase, IDisposab
     private event Action OkHandler;
     private event Action CancelHandler;
     
-    public SerialNumberEntryWindowViewModel(ProjectModel projectModel,
-        ControlModuleService controlModuleService)
+    public SerialNumberEntryDialogViewModel(ProjectModel projectModel,
+        ControlModuleService controlModuleService,
+        DialogManager dialogManager)
     { 
         _settings = projectModel.Settings;
         _controlModuleService = controlModuleService;
+        _dialogManager = dialogManager;
         
         OkHandler += async () => 
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync( () =>
@@ -53,10 +57,16 @@ public partial class SerialNumberEntryWindowViewModel : ViewModelBase, IDisposab
     }
 
     [RelayCommand]
-    private void Ok() => RequestClose?.Invoke(true);
+    private void Submit()
+    {
+        _dialogManager.Close(this, new CloseDialogOptions { Success = true });
+    }
 
     [RelayCommand]
-    private void Cancel() => RequestClose?.Invoke(false);
+    private void Cancel()
+    {
+        _dialogManager.Close(this);
+    }
     
     private bool ValidateSerialNumber(string serial)
     {

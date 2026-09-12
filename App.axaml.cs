@@ -31,6 +31,7 @@ public class App : Application
         var dialogService = service.GetRequiredService<DialogManager>();
 
         dialogService.Register<MessageBox, MessageBoxViewModel>();
+        dialogService.Register<SerialNumberEntryDialog, SerialNumberEntryDialogViewModel>();
     }
 
     public override async void OnFrameworkInitializationCompleted()

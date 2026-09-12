@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:vm="using:ATLab.ViewModels"
+            x:Class="ATLab.Controls.SerialNumberEntryDialog"
+            x:DataType="vm:SerialNumberEntryDialogViewModel">
+        
+    <Grid Margin="20"
+            RowDefinitions="Auto,Auto,Auto">
+
+        <TextBlock Text="Enter Serial Number"
+                        Margin="0,0,0,10"
+                        Classes="Large"/>
+
+        <TextBox Grid.Row="1"
+                 x:Name="SerialNoTextBox"
+                 Width="300"
+                 MaxLength="100"
+                 Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" />
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0"
+                    Spacing="10">
+            
+            <Button
+                Content="Cancel"
+                Classes="Outline"
+                Command="{Binding CancelCommand}"
+                HotKey="Escape"
+                Width="145"/>
+            
+            <Button
+                Content="Start"
+                Classes="Primary"
+                Command="{Binding SubmitCommand}"
+                IsEnabled="{Binding IsOkEnabled}"
+                HotKey="Enter"
+                Width="145"/>
+            
+        </StackPanel>
+    </Grid>
+</UserControl>

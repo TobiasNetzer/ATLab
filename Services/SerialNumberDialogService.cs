@@ -1,55 +1,64 @@
 ﻿using System.Threading.Tasks;
 using ATLab.Enums;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using ATLab.ViewModels;
-using ATLab.Views;
 using ATLab.Interfaces;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ShadUI;
 
 namespace ATLab.Services;
 
-public class SerialNumberDialogService : ISerialNumberDialogService
+public partial class SerialNumberDialogService : ObservableObject, ISerialNumberDialogService
 {
-    private readonly SerialNumberEntryWindowViewModel _serialNumberEntryWindowViewModel;
+    private readonly SerialNumberEntryDialogViewModel _serialNumberEntryDialogViewModel;
     private readonly ControlModuleService _controlModuleService;
+    
+    [ObservableProperty]
+    private DialogManager _dialogManager;
 
     public SerialNumberDialogService(
-        SerialNumberEntryWindowViewModel serialNumberEntryWindowViewModel,
-        ControlModuleService controlModuleService)
+        SerialNumberEntryDialogViewModel serialNumberEntryDialogViewModel,
+        ControlModuleService controlModuleService,
+        DialogManager dialogManager)
     {
-        _serialNumberEntryWindowViewModel = serialNumberEntryWindowViewModel;
+        _serialNumberEntryDialogViewModel = serialNumberEntryDialogViewModel;
         _controlModuleService = controlModuleService;
-    }
-    private Window? GetMainWindow()
-    {
-        var desktop = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
-        return desktop?.MainWindow;
+        DialogManager = dialogManager;
     }
 
     public async Task<string?> AskForSerialNumberAsync()
     {
-        var owner = GetMainWindow();
-        if (owner == null) return null;
         
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
         _controlModuleService.SetUserResponseMode(true);
-
-        var dialog = new SerialNumberEntryWindow
-        {
-            DataContext = _serialNumberEntryWindowViewModel
-        };
-
-        var result = await dialog.ShowDialog<bool?>(owner);
+        
+        var tcs = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        
+        DialogManager
+            .CreateDialog(_serialNumberEntryDialogViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .WithSuccessCallback(() =>
+            {
+                tcs.TrySetResult(true);
+            })
+            .WithCancelCallback(() =>
+            {
+                tcs.TrySetResult(false);
+            })
+            .Show();
+        
+        var result = await tcs.Task;
         
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetUserResponseMode(false);
 
-        var serialNumber = _serialNumberEntryWindowViewModel.SerialNumber;
-        _serialNumberEntryWindowViewModel.SerialNumber = string.Empty;
+        var serialNumber = _serialNumberEntryDialogViewModel.SerialNumber;
+        _serialNumberEntryDialogViewModel.SerialNumber = string.Empty;
 
-        return result == true ? serialNumber : null;
+        return result ? serialNumber : null;
     }
 }
