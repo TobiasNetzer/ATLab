@@ -468,4 +468,10 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
         TestStepViewModel.TestStep.CustomMessageBoxImagePath = result.Path.LocalPath;
     }
+
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
+    
+    [RelayCommand]
+    private void ToggleAdvancedSettings() => IsAdvancedExpanded = !IsAdvancedExpanded;
 }

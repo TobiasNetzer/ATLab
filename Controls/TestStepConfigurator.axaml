@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.TestStepConfigurator"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
@@ -21,45 +22,37 @@
     
     <StackPanel>
         
-        <Border Background="{DynamicResource PanelBorder}"
+        <Border Background="{DynamicResource WindowButtonHoverColor}"
                 Classes="WithDynamicCorner"
                 Classes.expanded="{Binding IsExpanded}"
                 Padding="10"
                 Margin="0">
             <DockPanel>
                 <TextBlock Text="Test Step Configuration"
-                           FontSize="18"
-                           FontWeight="Bold"
+                           Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
 
-                <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                              DockPanel.Dock="Right"
-                              HorizontalAlignment="Right">
-                    <ToggleButton.Template>
-                        <ControlTemplate>
-                            <Border Background="Transparent" Padding="5">
-                                <Grid>
-                                    <TextBlock Text="&#xE70D;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                    <TextBlock Text="&#xE70E;" 
-                                               FontFamily="{StaticResource FluentIconsFont}"
-                                               FontSize="18"
-                                               IsVisible="{Binding IsExpanded}"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-                </ToggleButton>
+                <Button Command="{Binding ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding IsExpanded}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource PanelBackground}"
+        <Border Background="{DynamicResource BackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
-                BorderBrush="{DynamicResource PanelBorder}"
+                BorderBrush="{DynamicResource WindowButtonHoverColor}"
                 IsVisible="{Binding IsExpanded}">
             
             <StackPanel Margin="10"
@@ -159,36 +152,39 @@
                     
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Spacing="10">
                     
                     <TextBlock Text="Advanced Settings"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center"
+                               Classes="Small"/>
                     
-                    <Separator Width="300"/>
+                    <Separator Width="270"
+                               Background="{DynamicResource MutedColor}"/>
 
-                    <ToggleButton IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}"
-                                  TabIndex="11">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border Background="Transparent" Padding="5">
-                                    <Grid>
-                                        <TextBlock Text="&#xE70D;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsAdvancedExpanded, Converter={StaticResource InverseBoolConverter}}"/>
-                                        <TextBlock Text="&#xE70E;" 
-                                                   FontFamily="{StaticResource FluentIconsFont}"
-                                                   FontSize="18"
-                                                   IsVisible="{Binding IsAdvancedExpanded}"/>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
+                    <Button Command="{Binding ToggleAdvancedSettingsCommand}"
+                            Classes="Ghost"
+                            TabIndex="11">
+                        <shadui:ButtonAssist.Icon>
+                            <Grid>
+                                <ContentControl Content="{LucideIconContent ChevronDown}"
+                                                IsVisible="{Binding IsAdvancedExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                <ContentControl Content="{LucideIconContent ChevronUp}"
+                                                IsVisible="{Binding IsAdvancedExpanded}"/>
+                            </Grid>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                 </StackPanel>
                 
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
+                        
+                    <CheckBox Content="Ignore Step"
+                              TabIndex="12"
+                              IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
+            
+                    <CheckBox Content="Exclude from Export"
+                              TabIndex="13"
+                              IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
@@ -198,27 +194,24 @@
                             TabIndex="8"
                             IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
                             IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
-                    
-                        <Button Content="&#xE8B9;"
-                                FontFamily="{StaticResource FluentIconsFont}"
-                                FontSize="20"
-                                ToolTip.Tip="Add image to message box"
-                                TabIndex="9"
-                                Command="{Binding OpenImagePickerCommand}"/>
+                        
+                        <Button
+                            Classes="Icon"
+                            ToolTip.Tip="Add image to message box"
+                            TabIndex="9"
+                            Command="{Binding OpenImagePickerCommand}"
+                            Width="40"
+                            Height="40">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent ImagePlus}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
                     
                         <TextBox TabIndex="10"
                                  Width="285"
                                  Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
                     
                     </StackPanel>
-                        
-                    <CheckBox Content="Ignore Step"
-                              TabIndex="12"
-                              IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
-            
-                    <CheckBox Content="Exclude from Export"
-                              TabIndex="13"
-                              IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
@@ -246,9 +239,11 @@
                     
                     <Grid ColumnDefinitions="*,*">
                         
-                        <StackPanel Grid.Column="0">
+                        <StackPanel Grid.Column="0"
+                                    Spacing="10">
                         
-                            <TextBlock Text="Pass-Action" FontWeight="Bold"
+                            <TextBlock Text="Pass-Action"
+                                       Classes="Large"
                                        Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
@@ -294,9 +289,11 @@
                         </StackPanel>
                     
                         <StackPanel Grid.Column="1"
-                                    HorizontalAlignment="Right">
+                                    HorizontalAlignment="Right"
+                                    Spacing="10">
                         
-                            <TextBlock Text="Fail-Action" FontWeight="Bold"
+                            <TextBlock Text="Fail-Action"
+                                       Classes="Large"
                                        Margin="0 0 0 5"/>
                             
                             <CheckBox Content="Invert Result"
