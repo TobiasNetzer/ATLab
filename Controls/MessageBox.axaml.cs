@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 
-namespace ATLab.Views;
+namespace ATLab.Controls;
 
 public partial class MessageBox : UserControl
 {

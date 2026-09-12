@@ -18,6 +18,9 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
     [ObservableProperty]
     private DialogManager _dialogManager;
     
+    [ObservableProperty]
+    private bool _isDialogOpen;
+    
     public MessageBoxService(IErrorService errorService,
         ControlModuleService controlModuleService,
         MessageBoxViewModel messageBoxViewModel,
@@ -42,22 +45,28 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
 
         var tcs = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);
+        
+        IsDialogOpen = true;
 
         DialogManager
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
-            .Dismissible()
             .WithSuccessCallback(() =>
             {
                 tcs.TrySetResult(true);
             })
-            .WithCancelCallback(() =>{
+            .WithCancelCallback(() =>
+            {
                 tcs.TrySetResult(false);
             })
             .Show();
-
-        return await tcs.Task;
+    
+        var result = await tcs.Task;
+        
+        IsDialogOpen = false;
+        
+        return result;
         
     }
     
@@ -103,22 +112,26 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
 
         var tcs = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-
+        
+        IsDialogOpen = true;
+        
         DialogManager
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
-            .Dismissible()
             .WithSuccessCallback(() =>
             {
                 tcs.TrySetResult(true);
             })
-            .WithCancelCallback(() =>{
+            .WithCancelCallback(() =>
+            {
                 tcs.TrySetResult(false);
             })
             .Show();
 
         var result = await tcs.Task;
+        
+        IsDialogOpen = false;
         
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
@@ -132,12 +145,28 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         _messageBoxViewModel.Initialize(
             title,
             message);
+        
+        var tcs = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        
+        IsDialogOpen = true;
 
         DialogManager
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
-            .Dismissible()
+            .WithSuccessCallback(() =>
+            {
+                tcs.TrySetResult(true);
+            })
+            .WithCancelCallback(() =>
+            {
+                tcs.TrySetResult(false);
+            })
             .Show();
+        
+        await tcs.Task;
+        
+        IsDialogOpen = false;
     }
 }

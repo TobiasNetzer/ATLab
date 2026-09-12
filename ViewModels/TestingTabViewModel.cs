@@ -26,6 +26,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ITestExecutor _testExecutor;
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly ITestResultExportService _testResultExportService;
+    private readonly IMessageBoxService _messageBoxService;
     
     private readonly List<CustomVariable> _runtimeVariables = new();
     
@@ -126,7 +127,8 @@ public partial class TestingTabViewModel : ViewModelBase
         IHardwareInfo hardwareInfo,
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
-        ITestResultExportService testResultExportService)
+        ITestResultExportService testResultExportService,
+        IMessageBoxService messageBoxService)
     {
         _hardwareInfo = hardwareInfo;
         _settingsService = settingsService;
@@ -138,6 +140,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor = testExecutor;
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
+        _messageBoxService = messageBoxService;
 
         _controlModuleService = controlModuleService;
 
@@ -431,6 +434,7 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
     private bool IsTestRunning() => TestStatus == TestStatus.RUNNING;
+    private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING;
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.CanPaste;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -682,10 +686,10 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsDialogClosed))]
     private Task CancelTest() => _testExecutor.CancelTest();
 
-    [RelayCommand(CanExecute = nameof(IsTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDialogClosed))]
     private void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
     
     [RelayCommand]

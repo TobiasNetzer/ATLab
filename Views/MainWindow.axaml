@@ -8,8 +8,8 @@
                Title="{Binding WindowTitle}"
                MinWidth="1300"
                MinHeight="600"
-               Background="{DynamicResource TabItemsBackgroundColor}"
-               ShowTitlebarBackground="False">
+               ShowTitlebarBackground="False"
+               Background="{DynamicResource PrimaryForegroundColor}">
     
     <shadui:Window.Hosts>
         <shadui:DialogHost
