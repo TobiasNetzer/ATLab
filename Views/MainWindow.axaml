@@ -9,7 +9,7 @@
                MinWidth="1300"
                MinHeight="600"
                ShowTitlebarBackground="False"
-               Background="{DynamicResource PrimaryForegroundColor}">
+               Background="{DynamicResource WindowBackground}">
     
     <shadui:Window.Hosts>
         <shadui:DialogHost

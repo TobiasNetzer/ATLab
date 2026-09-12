@@ -12,6 +12,18 @@
 
     <Application.Resources>
         
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="WindowBackground">#FFFAFAFA</Color>
+                </ResourceDictionary>
+                
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="WindowBackground">#FF27272A</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        
         <FontFamily x:Key="FluentIconsFont">avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
         <FontFamily x:Key="LucideIcon">avares://ATLab/Assets/lucide.ttf#lucide</FontFamily>
         
