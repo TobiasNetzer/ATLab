@@ -434,7 +434,8 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
     private bool IsTestRunning() => TestStatus == TestStatus.RUNNING;
-    private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING;
+    private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen;
+    private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING;
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.CanPaste;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -689,7 +690,7 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsDialogClosed))]
     private Task CancelTest() => _testExecutor.CancelTest();
 
-    [RelayCommand(CanExecute = nameof(IsDialogClosed))]
+    [RelayCommand(CanExecute = nameof(CanRequestBreakRepeat))]
     private void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
     
     [RelayCommand]
