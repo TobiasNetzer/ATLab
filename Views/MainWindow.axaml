@@ -33,6 +33,7 @@
         <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
         <KeyBinding Gesture="F6" Command="{Binding FindMatrixChannelCommand}" />
         <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
+        <KeyBinding Gesture="F10" Command="{Binding TestingTab.RequestSingleStepContinueCommand}" />
         <KeyBinding Gesture="Enter" Command="{Binding TestingTab.RequestBreakRepeatCommand}" />
 
     </shadui:Window.KeyBindings>

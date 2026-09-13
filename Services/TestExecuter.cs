@@ -35,9 +35,12 @@ public class TestExecutor : ITestExecutor
     public event Action? TestCompleted;
     public event Action? TestCancelled;
     public event Action? TestRepeated;
+    public event Action<bool> SingleStepContinueRequestedChanged;
     
     private const int MinRepeatDelayMs = 5;
     private volatile bool _breakRepeatRequested;
+    private volatile bool _singleStepContinueRequested;
+    private volatile bool _isDebugMode;
 
     public TestExecutor(
         ITestHardware testHardware,
@@ -228,6 +231,10 @@ public class TestExecutor : ITestExecutor
     }
     
     public void RequestBreakRepeat() => _breakRepeatRequested = true;
+
+    public void RequestSingleStepContinue() => SetRequestSingleStepContinueState(true);
+    
+    public void SetDebugMode(bool state) => _isDebugMode = state;
     
     private async Task ExecuteAsync(
         IReadOnlyList<TestStepViewModel> steps,
@@ -237,109 +244,123 @@ public class TestExecutor : ITestExecutor
     {
         for (var i = startIndex; i < steps.Count; i++)
         {
-            var step = steps[i];
-
-            if (step.TestStep.IsIgnoreStep)
-                continue;
-
-            OnStepStarted(i, step);
-
-            OperationResult<double> stepExecutionResult;
-
-            if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
+            try
             {
-                var result = await _messageBoxService.ShowConfirmationImageAsync(
-                    "User Information",
-                    step.TestStep.Comment,
-                    step.TestStep.CustomMessageBoxImagePath);
-
-                if (!result)
-                    throw new OperationCanceledException();
-            }
-            
-            var stepModel = step.TestStep;
-            
-            var nominal = ResolveNumeric(
-                stepModel.NominalValueExpression,
-                stepModel.NominalValue,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var lower = ResolveNumeric(
-                stepModel.LowerLimitExpression,
-                stepModel.LowerLimit,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var upper = ResolveNumeric(
-                stepModel.UpperLimitExpression,
-                stepModel.UpperLimit,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var delaySeconds = ResolveNumeric(
-                stepModel.DelayExpression,
-                stepModel.Delay / 1000.0,
-                "s",
-                runtimeVariables);
-            
-            stepModel.NominalValue = nominal;
-            stepModel.LowerLimit = lower;
-            stepModel.UpperLimit = upper;
-            stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
-            
-            stepExecutionResult = await _runner.ExecuteAsync(step, runtimeVariables, token);
-
-            token.ThrowIfCancellationRequested();
-
-            switch (stepExecutionResult.Status)
-            {
-                case OperationStatus.SUCCESS:
-                    EvaluateTestStep(step, stepExecutionResult.Value, runtimeVariables);
-                    break;
-            
-                case OperationStatus.TIMEOUT:
-                    TestStepExecutionTimedOut(step, runtimeVariables);
-                    break;
-            
-                case OperationStatus.FAILURE:
-                    TestStepExecutionFailed(step, stepExecutionResult, runtimeVariables);
-                    break;
-            
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
-            var nextIndex = EvaluateNextStepIndex(steps, i, step);
-
-            if (i == nextIndex && stepExecutionResult.IsSuccess)
-            {
-                OnStepRepeated();
+                while (_isDebugMode &&
+                   !token.IsCancellationRequested &&
+                   !_singleStepContinueRequested)
+                {
+                    await Task.Delay(10, token);
+                }
                 
-                if (_breakRepeatRequested)
+                var step = steps[i];
+
+                if (step.TestStep.IsIgnoreStep)
+                    continue;
+
+                OnStepStarted(i, step);
+
+                OperationResult<double> stepExecutionResult;
+
+                if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
+                {
+                    var result = await _messageBoxService.ShowConfirmationImageAsync(
+                        "User Information",
+                        step.TestStep.Comment,
+                        step.TestStep.CustomMessageBoxImagePath);
+
+                    if (!result)
+                        throw new OperationCanceledException();
+                }
+                
+                var stepModel = step.TestStep;
+                
+                var nominal = ResolveNumeric(
+                    stepModel.NominalValueExpression,
+                    stepModel.NominalValue,
+                    stepModel.Unit,
+                    runtimeVariables);
+
+                var lower = ResolveNumeric(
+                    stepModel.LowerLimitExpression,
+                    stepModel.LowerLimit,
+                    stepModel.Unit,
+                    runtimeVariables);
+
+                var upper = ResolveNumeric(
+                    stepModel.UpperLimitExpression,
+                    stepModel.UpperLimit,
+                    stepModel.Unit,
+                    runtimeVariables);
+
+                var delaySeconds = ResolveNumeric(
+                    stepModel.DelayExpression,
+                    stepModel.Delay / 1000.0,
+                    "s",
+                    runtimeVariables);
+                
+                stepModel.NominalValue = nominal;
+                stepModel.LowerLimit = lower;
+                stepModel.UpperLimit = upper;
+                stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
+                
+                stepExecutionResult = await _runner.ExecuteAsync(step, runtimeVariables, token);
+
+                token.ThrowIfCancellationRequested();
+
+                switch (stepExecutionResult.Status)
+                {
+                    case OperationStatus.SUCCESS:
+                        EvaluateTestStep(step, stepExecutionResult.Value, runtimeVariables);
+                        break;
+                
+                    case OperationStatus.TIMEOUT:
+                        TestStepExecutionTimedOut(step, runtimeVariables);
+                        break;
+                
+                    case OperationStatus.FAILURE:
+                        TestStepExecutionFailed(step, stepExecutionResult, runtimeVariables);
+                        break;
+                
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                var nextIndex = EvaluateNextStepIndex(steps, i, step);
+
+                if (i == nextIndex && stepExecutionResult.IsSuccess)
+                {
+                    OnStepRepeated();
+                    
+                    if (_breakRepeatRequested)
+                    {
+                        _breakRepeatRequested = false;
+                        nextIndex = i + 1;
+                        OnStepCompleted(i, step);
+                    }
+                }
+                else
                 {
                     _breakRepeatRequested = false;
-                    nextIndex = i + 1;
                     OnStepCompleted(i, step);
                 }
-            }
-            else
-            {
-                _breakRepeatRequested = false;
-                OnStepCompleted(i, step);
-            }
-            
-            if (stepExecutionResult.IsFailure)
-                break; // END_TEST
-            
-            if (nextIndex == null)
-                break; // END_TEST
+                
+                if (stepExecutionResult.IsFailure)
+                    break; // END_TEST
+                
+                if (nextIndex == null)
+                    break; // END_TEST
 
-            i = nextIndex.Value - 1;
-            
-            if ((step.TestStep.OnPass.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0) || (step.TestStep.OnFail.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0))
+                i = nextIndex.Value - 1;
+                
+                if ((step.TestStep.OnPass.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0) || (step.TestStep.OnFail.Mode == PassFailMode.REPEAT && step.TestStep.Delay <= 0))
+                {
+                    await Task.Delay(MinRepeatDelayMs, token); // minimum delay between repeats to prevent UI lockup
+                }
+            }
+            finally
             {
-                await Task.Delay(MinRepeatDelayMs, token); // minimum delay between repeats to prevent UI lockup
+                SetRequestSingleStepContinueState(false);
             }
         }
     }
@@ -515,4 +536,13 @@ public class TestExecutor : ITestExecutor
     
     private void OnTestRepeated() =>
         TestRepeated?.Invoke();
+    
+    private void SetRequestSingleStepContinueState(bool value)
+    {
+        if (_singleStepContinueRequested == value)
+            return;
+
+        _singleStepContinueRequested = value;
+        SingleStepContinueRequestedChanged?.Invoke(value);
+    }
 }

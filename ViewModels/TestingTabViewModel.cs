@@ -43,6 +43,13 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool _isDevelopmentMode;
     
     [ObservableProperty]
+    private bool _isDebugMode;
+    
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RequestSingleStepContinueCommand))]
+    private bool _isSingleStepContinueRequested;
+    
+    [ObservableProperty]
     private bool _isShowMeasurementPanel;
     
     [ObservableProperty]
@@ -180,6 +187,8 @@ public partial class TestingTabViewModel : ViewModelBase
                 CancelTestCommand.ExecuteAsync(null);
             });
         };
+        
+        _testExecutor.SingleStepContinueRequestedChanged += OnSingleStepContinueRequestedChanged;
     }
     
     private void ProjectTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -417,6 +426,10 @@ public partial class TestingTabViewModel : ViewModelBase
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
         StartSingleStepTestCommand.NotifyCanExecuteChanged();
+        RequestBreakRepeatCommand.NotifyCanExecuteChanged();
+        RequestSingleStepContinueCommand.NotifyCanExecuteChanged();
+        ToggleDebugModeCommand.NotifyCanExecuteChanged();
+        ToggleDevelopmentModeCommand.NotifyCanExecuteChanged();
 
         if (_projectModel.Settings.IsControlModuleEnabled)
             _controlModuleService.SetStatus(value);
@@ -432,9 +445,18 @@ public partial class TestingTabViewModel : ViewModelBase
         _settingsService.Settings.IsShowMeasurementPanel = value;
     }
     
+    private void OnSingleStepContinueRequestedChanged(bool value)
+    {
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            IsSingleStepContinueRequested = value;
+        });
+    }
+    
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
     private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen && !_serialNumberDialogService.IsDialogOpen;
     private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING && !_serialNumberDialogService.IsDialogOpen;
+    private bool CanRequestSingleStepContinue() => IsDebugMode && TestStatus == TestStatus.RUNNING && !IsSingleStepContinueRequested;
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.CanPaste;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -692,11 +714,21 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanRequestBreakRepeat))]
     private void RequestBreakRepeat() => _testExecutor.RequestBreakRepeat();
     
+    [RelayCommand(CanExecute = nameof(CanRequestSingleStepContinue))]
+    private void RequestSingleStepContinue() => _testExecutor.RequestSingleStepContinue();
+    
     [RelayCommand]
     private void ToggleMeasurementPanel() => IsShowMeasurementPanel = !IsShowMeasurementPanel;
     
     [RelayCommand]
     private void ToggleDevelopmentMode() => IsDevelopmentMode = !IsDevelopmentMode;
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private void ToggleDebugMode()
+    {
+        IsDebugMode = !IsDebugMode;
+        _testExecutor.SetDebugMode(IsDebugMode);
+    }
 
     private void ResetAllResults()
     {

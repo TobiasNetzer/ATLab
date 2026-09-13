@@ -262,6 +262,40 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button
+                        Background="{Binding IsDebugMode, Converter={StaticResource ButtonEnabledConverter}}"
+                        Classes="Icon"
+                        ToolTip.Tip="Enable debug mode"
+                        Command="{Binding ToggleDebugModeCommand}"
+                        IsEnabled="{Binding IsDevelopmentMode}"
+                        IsVisible="{Binding IsDevelopmentMode}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Bug}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="Advance single step"
+                        Command="{Binding RequestSingleStepContinueCommand}"
+                        IsVisible="{Binding IsDevelopmentMode}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent StepForward}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Separator Width="2"
+                               Height="25"
+                               Margin="5 0 5 0"
+                               CornerRadius="1"
+                               IsVisible="{Binding IsDevelopmentMode}"
+                               Background="{DynamicResource MutedColor}"/>
+                    
+                    <Button
                         Background="{Binding IsShowMeasurementPanel, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
                         ToolTip.Tip="Show measurement panel"
@@ -269,7 +303,7 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent Search}"/>
+                            <ContentControl Content="{LucideIconContent SearchAlert}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
                     
