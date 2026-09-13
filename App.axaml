@@ -26,7 +26,6 @@
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
         
-        <FontFamily x:Key="FluentIconsFont">avares://ATLab/Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
         <FontFamily x:Key="LucideIcon">avares://ATLab/Assets/lucide.ttf#lucide</FontFamily>
         
         <SolidColorBrush x:Key="EnabledBrush"
