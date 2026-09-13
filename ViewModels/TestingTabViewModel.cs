@@ -433,9 +433,8 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
-    private bool IsTestRunning() => TestStatus == TestStatus.RUNNING;
-    private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen;
-    private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING;
+    private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen && !_serialNumberDialogService.IsDialogOpen;
+    private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING && !_serialNumberDialogService.IsDialogOpen;
     private bool CanPasteTestStep() => IsNotTestRunning() && _testStepEditor.CanPaste;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]

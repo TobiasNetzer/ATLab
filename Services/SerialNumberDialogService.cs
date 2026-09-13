@@ -14,6 +14,9 @@ public partial class SerialNumberDialogService : ObservableObject, ISerialNumber
     
     [ObservableProperty]
     private DialogManager _dialogManager;
+    
+    [ObservableProperty]
+    private bool _isDialogOpen;
 
     public SerialNumberDialogService(
         SerialNumberEntryDialogViewModel serialNumberEntryDialogViewModel,
@@ -31,6 +34,8 @@ public partial class SerialNumberDialogService : ObservableObject, ISerialNumber
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
         _controlModuleService.SetUserResponseMode(true);
+        
+        IsDialogOpen = true;
         
         var tcs = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);
@@ -51,6 +56,8 @@ public partial class SerialNumberDialogService : ObservableObject, ISerialNumber
             .Show();
         
         var result = await tcs.Task;
+        
+        IsDialogOpen = false;
         
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
