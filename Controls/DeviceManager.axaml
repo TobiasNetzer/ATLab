@@ -74,31 +74,37 @@
                             <StackPanel>
                                 <StackPanel>
                                     
-                                    <ComboBox ItemsSource="{Binding AvailableSerialPorts}"
-                                              Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
-                                              IsEditable="True"
-                                              Width="170"
-                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}">
-                                        <ComboBox.Styles>
-                                            <Style Selector="TextBox#PART_EditableTextBox">
-                                                <Setter Property="Padding" Value="0"/>
-                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                            </Style>
-                                        </ComboBox.Styles>
-                                    </ComboBox>
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="5"
+                                                IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
+                                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}">
+                                        
+                                        <TextBox
+                                            Width="120"
+                                            Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}" />
+                                        
+                                        <ComboBox
+                                            Width="40"
+                                            ItemsSource="{Binding AvailableSerialPorts}"
+                                            SelectedItem="{Binding SelectedDevice.ResourceString, Mode=OneWayToSource}" />
+
+                                    </StackPanel>
                                     
-                                    <ComboBox ItemsSource="{Binding AvailableVisaResources}"
-                                              Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
-                                              IsEditable="True"
-                                              Width="170"
-                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}">
-                                        <ComboBox.Styles>
-                                            <Style Selector="TextBox#PART_EditableTextBox">
-                                                <Setter Property="Padding" Value="0"/>
-                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                            </Style>
-                                        </ComboBox.Styles>
-                                    </ComboBox>
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="5"
+                                                IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
+                                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}">
+                                        
+                                        <TextBox
+                                            Width="120"
+                                            Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}" />
+                                        
+                                        <ComboBox
+                                            Width="40"
+                                            ItemsSource="{Binding AvailableVisaResources}"
+                                            SelectedItem="{Binding SelectedDevice.ResourceString, Mode=OneWayToSource}" />
+
+                                    </StackPanel>
 
                                     <TextBox Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
                                              Width="210"

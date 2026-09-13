@@ -93,13 +93,6 @@ public partial class DeviceManagerViewModel : ViewModelBase
 
         foreach (var port in SerialPort.GetPortNames())
             AvailableSerialPorts.Add(port);
-
-        if (SelectedDevice != null &&
-            string.IsNullOrWhiteSpace(SelectedDevice.ResourceString) &&
-            AvailableSerialPorts.Count > 0)
-        {
-            SelectedDevice.ResourceString = AvailableSerialPorts[0];
-        }
     }
 
     private void RefreshVisaResources()
@@ -115,13 +108,6 @@ public partial class DeviceManagerViewModel : ViewModelBase
         catch (Exception ex)
         {
             _errorService.AddError($"An unexpected error occurred while accessing VISA: {ex.Message}");
-        }
-
-        if (SelectedDevice != null &&
-            string.IsNullOrWhiteSpace(SelectedDevice.ResourceString) &&
-            AvailableVisaResources.Count > 0)
-        {
-            SelectedDevice.ResourceString = AvailableVisaResources[0];
         }
     }
     
