@@ -234,8 +234,9 @@
                                   Height="130">
                             
                             <DataGrid.Styles>
-                                <Style Selector="DataGridRow:selected">
-                                    <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                    <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
+                                    <Setter Property="Opacity" Value="1" />
                                 </Style>
                             </DataGrid.Styles>
                             
@@ -304,8 +305,9 @@
                                   VerticalScrollBarVisibility="Auto">
                             
                             <DataGrid.Styles>
-                                <Style Selector="DataGridRow:selected">
-                                    <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                    <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
+                                    <Setter Property="Opacity" Value="1" />
                                 </Style>
                             </DataGrid.Styles>
                             
