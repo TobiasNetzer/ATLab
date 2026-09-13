@@ -43,9 +43,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsSimulation => _applicationState.IsSimulationMode;
 
     [ObservableProperty]
-    private int _errorCount;
-
-    [ObservableProperty]
     private bool _hasErrors;
     
     [ObservableProperty]
@@ -104,8 +101,7 @@ public partial class MainWindowViewModel : ViewModelBase
         
         _errorService.Errors.CollectionChanged += (_, __) =>
         {
-            ErrorCount += 1; // Only show number of new errors
-            HasErrors = ErrorCount > 0;
+            HasErrors = true;
         };
 
         _projectModel.PropertyChanged += (s, e) =>
@@ -123,7 +119,6 @@ public partial class MainWindowViewModel : ViewModelBase
         if (!value)
             return;
         
-        ErrorCount = 0;
         HasErrors = false;
     }
     

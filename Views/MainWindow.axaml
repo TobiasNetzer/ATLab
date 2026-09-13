@@ -105,7 +105,6 @@
                     
                     <Button
                         Classes="Icon"
-                        Width="60"
                         Classes.error="{Binding HasErrors}">
                         <Button.Styles>
                             <Style Selector="Button.Icon">
@@ -115,16 +114,10 @@
                                 <Setter Property="Background" Value="{DynamicResource ErrorColor}" />
                             </Style>
                         </Button.Styles>
-
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <ContentControl Content="{LucideIconContent TriangleAlert}"/>
-                                <TextBlock Text="{Binding ErrorCount}"
-                                           FontSize="14"
-                                           VerticalAlignment="Center"
-                                           IsVisible="{Binding HasErrors}"/>
-                            </StackPanel>
-                        </Button.Content>
+                        
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent TriangleAlert}"/>
+                        </shadui:ButtonAssist.Icon>
 
                         <Button.Flyout>
                             <Flyout Placement="TopEdgeAlignedLeft"
