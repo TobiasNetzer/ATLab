@@ -35,7 +35,7 @@ public class TestExecutor : ITestExecutor
     public event Action? TestCompleted;
     public event Action? TestCancelled;
     public event Action? TestRepeated;
-    public event Action<bool> SingleStepContinueRequestedChanged;
+    public event Action<bool>? SingleStepContinueRequestedChanged;
     
     private const int MinRepeatDelayMs = 5;
     private volatile bool _breakRepeatRequested;
