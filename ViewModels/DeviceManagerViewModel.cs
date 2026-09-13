@@ -23,6 +23,12 @@ public partial class DeviceManagerViewModel : ViewModelBase
     private Device? _selectedDevice;
     
     [ObservableProperty]
+    private string? _selectedSerialPort;
+    
+    [ObservableProperty]
+    private string? _selectedVisaResource;
+    
+    [ObservableProperty]
     private string _framingTimeoutMsString = "100";
     
     [ObservableProperty]
@@ -161,6 +167,24 @@ public partial class DeviceManagerViewModel : ViewModelBase
             return;
         
         SelectedDevice.Configuration.TcpTimeoutMs = (int) double.Parse(newValue, CultureInfo.InvariantCulture);
+    }
+
+    partial void OnSelectedSerialPortChanged(string? oldValue, string? newValue)
+    {
+        if (SelectedDevice is null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(newValue))
+            SelectedDevice.ResourceString = newValue;
+    }
+
+    partial void OnSelectedVisaResourceChanged(string? oldValue, string? newValue)
+    {
+        if (SelectedDevice is null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(newValue))
+            SelectedDevice.ResourceString = newValue;
     }
 
     [RelayCommand]

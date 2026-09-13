@@ -81,12 +81,13 @@
                                         
                                         <TextBox
                                             Width="120"
-                                            Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}" />
+                                            Text="{Binding SelectedDevice.ResourceString}" />
                                         
                                         <ComboBox
                                             Width="40"
                                             ItemsSource="{Binding AvailableSerialPorts}"
-                                            SelectedItem="{Binding SelectedDevice.ResourceString, Mode=OneWayToSource}" />
+                                            SelectedItem="{Binding SelectedSerialPort}" />
+
 
                                     </StackPanel>
                                     
@@ -97,17 +98,18 @@
                                         
                                         <TextBox
                                             Width="120"
-                                            Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}" />
+                                            Text="{Binding SelectedDevice.ResourceString}" />
                                         
                                         <ComboBox
                                             Width="40"
                                             ItemsSource="{Binding AvailableVisaResources}"
-                                            SelectedItem="{Binding SelectedDevice.ResourceString, Mode=OneWayToSource}" />
+                                            SelectedItem="{Binding SelectedVisaResource}" />
 
                                     </StackPanel>
 
-                                    <TextBox Text="{Binding SelectedDevice.ResourceString, Mode=TwoWay}"
+                                    <TextBox Text="{Binding SelectedDevice.ResourceString}"
                                              Width="210"
+                                             IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
                                              IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
                                 </StackPanel>
                             </StackPanel>
