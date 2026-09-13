@@ -10,7 +10,14 @@
                MinHeight="600"
                ShowTitlebarBackground="False"
                Background="{DynamicResource WindowBackground}">
-    
+    <shadui:Window.LogoContent>
+        <Image
+            Source="avares://ATLab/Assets/AppIcon.ico"
+            Width="20"
+            Height="20"
+            Margin="8,8,0,8"
+            Stretch="Uniform"/>
+    </shadui:Window.LogoContent>
     <shadui:Window.Hosts>
         <shadui:DialogHost
             Manager="{Binding DialogManager}"
@@ -99,7 +106,7 @@
                         Classes.error="{Binding HasErrors}">
                         <Button.Styles>
                             <Style Selector="Button.Icon">
-                                <Setter Property="Background" Value="{DynamicResource BorderColor}" />
+                                <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
                             </Style>
                             <Style Selector="Button.error">
                                 <Setter Property="Background" Value="{DynamicResource ErrorColor}" />
@@ -152,7 +159,7 @@
                             Margin="5">
                     
                     <Button Classes="Icon"
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             ToolTip.Tip="Determine matrix channel via external probe"
                             Command="{Binding FindMatrixChannelCommand}">
                         <shadui:ButtonAssist.Icon>
@@ -171,7 +178,7 @@
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button Classes="Icon"
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{Binding ToggleThemeCommand}">

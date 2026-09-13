@@ -35,7 +35,8 @@
                                    Margin="0 0 0 5"/>
                                         
                         <TextBlock Text="Ensure that everything is disconnected from the relay matrix before running the test. Leaving devices connected may cause permanent damage to the test hardware or the connected equipment."
-                                   TextWrapping="Wrap"/>
+                                   TextWrapping="Wrap"
+                                   FontSize="14"/>
                         
                     </StackPanel>
                     
@@ -43,7 +44,7 @@
                               IsChecked="{Binding IsAcknowledged}"/>
                     
                     <Button Content="Run Relay Matrix Test"
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             Classes="Secondary"
                             HorizontalAlignment="Center"
                             Command="{Binding RunSelfTestCommand}"/>

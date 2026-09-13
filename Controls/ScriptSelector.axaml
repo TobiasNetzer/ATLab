@@ -64,7 +64,7 @@
                     <DockPanel>
                         
                         <Button
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected device"
                             Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveDeviceCommand}"
@@ -103,7 +103,7 @@
                     <DockPanel>
                         
                         <Button
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected script"
                             Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveScriptCommand}"

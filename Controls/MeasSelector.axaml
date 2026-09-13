@@ -81,7 +81,7 @@
                 </StackPanel>
                 
                 <Button
-                    Background="{DynamicResource BorderColor}"
+                    Background="{DynamicResource ButtonBackground}"
                     Classes="Icon"
                     ToolTip.Tip="Swap channels"
                     Command="{Binding ToggleChannelsCommand}"

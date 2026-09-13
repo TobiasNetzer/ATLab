@@ -16,10 +16,12 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="WindowBackground">#FFFAFAFA</Color>
+                    <Color x:Key="ButtonBackground">#FFF2F2F2</Color>
                 </ResourceDictionary>
                 
                 <ResourceDictionary x:Key="Dark">
                     <Color x:Key="WindowBackground">#FF27272A</Color>
+                    <Color x:Key="ButtonBackground">#FF353535</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -31,7 +33,7 @@
                          Color="{DynamicResource InfoColor}" />
 
         <SolidColorBrush x:Key="DisabledBrush"
-                         Color="{DynamicResource BorderColor}" />
+                         Color="{DynamicResource ButtonBackground}" />
         
         <SolidColorBrush x:Key="TestStatusIdleBrush"
                          Color="{DynamicResource SecondaryColor}" />

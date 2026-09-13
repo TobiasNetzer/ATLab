@@ -65,15 +65,13 @@
                                 
                                 <Button
                                     Content="View project on GitHub"
-                                    Background="{DynamicResource BorderColor}"
-                                    Classes="Secondary"
+                                    Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
                                     CommandParameter="https://github.com/TobiasNetzer/ATLab"/>
                                 
                                 <Button
                                     Content="License"
-                                    Background="{DynamicResource BorderColor}"
-                                    Classes="Secondary"
+                                    Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
                                     CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE"/>
                                 

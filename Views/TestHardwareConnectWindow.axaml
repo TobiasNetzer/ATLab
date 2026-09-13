@@ -1,32 +1,46 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:ATLab.ViewModels"
-        x:Class="ATLab.Views.TestHardwareConnectWindow"
-        x:DataType="vm:TestHardwareConnectWindowViewModel"
-        Title="Test Hardware Selector"
-        SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterScreen"
-        CanResize="False">
+<shadui:Window xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:vm="clr-namespace:ATLab.ViewModels"
+               x:Class="ATLab.Views.TestHardwareConnectWindow"
+               x:DataType="vm:TestHardwareConnectWindowViewModel"
+               Title="Test Hardware Selector"
+               SizeToContent="WidthAndHeight"
+               WindowStartupLocation="CenterScreen"
+               CanResize="False"
+               ShowTitlebarBackground="False"
+               Background="{DynamicResource WindowBackground}">
+    
+    <shadui:Window.LogoContent>
+        <Image
+            Source="avares://ATLab/Assets/AppIcon.ico"
+            Width="20"
+            Height="20"
+            Margin="8,8,0,8"
+            Stretch="Uniform"/>
+    </shadui:Window.LogoContent>
 
-    <StackPanel Margin="15" Spacing="10">
+    <StackPanel Margin="10" Spacing="10">
         
-        <TextBlock Text="Select Test Hardware" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+        <TextBlock Text="Select Test Hardware"
+                   Classes="Large"
+                   HorizontalAlignment="Center"/>
         
         <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
             <ComboBox Width="150"
                       Margin="35 0 0 0"
                       ItemsSource="{Binding AvailablePorts}"
                       SelectedItem="{Binding SelectedPort, Mode=TwoWay}"/>
-            <Button Command="{Binding RefreshPortsCommand}" Width="30" Height="30">
-                <Button.Content>
-                    <TextBlock 
-                        Text="&#xE72C;" 
-                        FontFamily="{StaticResource FluentIconsFont}"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-                </Button.Content>
+            
+            <Button
+                Background="{DynamicResource ButtonBackground}"
+                Classes="Icon"
+                Command="{Binding RefreshPortsCommand}"
+                Width="35"
+                Height="35">
+                <shadui:ButtonAssist.Icon>
+                    <ContentControl Content="{LucideIconContent RotateCcw}"/>
+                </shadui:ButtonAssist.Icon>
             </Button>
 
         </StackPanel>
@@ -40,10 +54,26 @@
                    IsVisible="{Binding StatusText, Converter={StaticResource StringNotEmptyConverter}}"/>
         
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-            <Button Content="Connect" Width="120" HorizontalContentAlignment="Center" Command="{Binding ConnectCommand}"/>
-            <Button Content="Simulation" Width="120" HorizontalContentAlignment="Center" Command="{Binding SimulationModeCommand}"/>
-            <Button Content="Exit" Width="120" HorizontalContentAlignment="Center" Command="{Binding CloseCommand}"/>
+            
+            <Button Content="Connect"
+                    Classes="Outline"
+                    Width="120"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ConnectCommand}"/>
+            
+            <Button Content="Simulation"
+                    Classes="Outline"
+                    Width="120"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SimulationModeCommand}"/>
+            
+            <Button Content="Exit"
+                    Classes="Outline"
+                    Width="120"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding CloseCommand}"/>
+            
         </StackPanel>
         
     </StackPanel>
-</Window>
+</shadui:Window>

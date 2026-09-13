@@ -1,5 +1,5 @@
 ﻿using ATLab.ViewModels;
-using Avalonia.Controls;
+using Window = ShadUI.Window;
 
 namespace ATLab.Views;
 

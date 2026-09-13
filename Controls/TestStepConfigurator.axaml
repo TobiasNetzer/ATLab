@@ -195,7 +195,7 @@
                             IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                         
                         <Button
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Add image to message box"
                             TabIndex="9"

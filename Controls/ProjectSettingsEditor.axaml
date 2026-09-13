@@ -87,7 +87,7 @@
                                     </StackPanel>
                                     
                                     <Button
-                                        Background="{DynamicResource BorderColor}"
+                                        Background="{DynamicResource ButtonBackground}"
                                         Classes="Icon"
                                         Command="{Binding SelectSaveTestResultFilePathCommand}"
                                         Width="35"

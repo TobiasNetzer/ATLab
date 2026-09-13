@@ -62,7 +62,7 @@
                     <DockPanel>
                         
                         <Button
-                            Background="{DynamicResource BorderColor}"
+                            Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected device"
                             Command="{Binding $parent[controls:CommandEditor].CommandEditorVm.RemoveDeviceCommand}"

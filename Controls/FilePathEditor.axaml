@@ -55,7 +55,7 @@
                          Width="430"/>
                 
                 <Button
-                    Background="{DynamicResource BorderColor}"
+                    Background="{DynamicResource ButtonBackground}"
                     Classes="Icon"
                     Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.SelectFilePathCommand}"
                     Width="35"

@@ -107,7 +107,7 @@
                             </StackPanel>
                             
                             <Button
-                                Background="{DynamicResource BorderColor}"
+                                Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
                                 ToolTip.Tip="Reload resources"
                                 Command="{Binding RefreshResourcesCommand}"
@@ -269,7 +269,7 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
                     
                     <Button
-                        Background="{DynamicResource BorderColor}"
+                        Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
                         ToolTip.Tip="Add new device"
                         Command="{Binding AddDeviceCommand}"
@@ -281,7 +281,7 @@
                     </Button>
                     
                     <Button
-                        Background="{DynamicResource BorderColor}"
+                        Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
                         ToolTip.Tip="Remove device"
                         Command="{Binding RemoveDeviceCommand}"
