@@ -49,7 +49,7 @@
                    HorizontalAlignment="Center"
                    MaxWidth="400"
                    TextWrapping="Wrap"
-                   FontWeight="Bold"
+                   Classes="Small"
                    Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"
                    IsVisible="{Binding StatusText, Converter={StaticResource StringNotEmptyConverter}}"/>
         
