@@ -57,6 +57,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ApplicationState>();
 
         services.AddSingleton<DialogManager>();
+        services.AddSingleton<ToastManager>();
 
         return services;
     }

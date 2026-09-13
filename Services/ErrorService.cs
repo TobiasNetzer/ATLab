@@ -3,18 +3,25 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using ATLab.Interfaces;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ShadUI;
 
 namespace ATLab.Services;
 
-public class ErrorService : IErrorService
+public partial class ErrorService : ObservableObject, IErrorService
 {
     private readonly string _logFilePath;
     private readonly object _lock = new();
 
     public ObservableCollection<string> Errors { get; } = new();
 
-    public ErrorService()
+    [ObservableProperty]
+    private ToastManager _toastManager;
+
+    public ErrorService(ToastManager toastManager)
     {
+        ToastManager = toastManager;
         var dir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "ATLab"
@@ -34,6 +41,12 @@ public class ErrorService : IErrorService
 
         var formattedMessage =
             $"[{timestamp}] {message} (at {Path.GetFileName(file)}:{line} in {member}())";
+        
+        ToastManager.CreateToast("Error")
+            .WithContent(message)
+            .OnBottomLeft()
+            .WithDelay(5)
+            .ShowError();
 
         Errors.Insert(0, formattedMessage);
 

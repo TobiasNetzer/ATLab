@@ -56,6 +56,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private DialogManager _dialogManager;
+    
+    [ObservableProperty]
+    private ToastManager _toastManager;
 
     public MainWindowViewModel(ITestHardware testHardware,
         IErrorService errorService,
@@ -70,7 +73,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ISettingsService settingsService,
         ProjectModel projectModel,
         ApplicationState applicationState,
-        DialogManager dialogManager)
+        DialogManager dialogManager,
+        ToastManager toastManager)
     {
         _testHardware = testHardware;
         _errorService = errorService;
@@ -79,7 +83,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _settingsService = settingsService;
         _projectModel = projectModel;
         _applicationState = applicationState;
-        _dialogManager = dialogManager;
+        DialogManager = dialogManager;
+        ToastManager = toastManager;
 
         TestingTab = testingTab;
         ConfigTab = configTab;

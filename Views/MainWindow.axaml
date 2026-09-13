@@ -43,50 +43,53 @@
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
     </shadui:Window.Styles>
-
+        
     <Grid RowDefinitions="*,Auto">
         
-        <TabControl Grid.Row="0"
-                    ItemsSource="{Binding Tabs}" 
-                    SelectedItem="{Binding SelectedTab}"
-                    shadui:TabControlBehaviors.UseSlidingPill="True"
-                    Background="{DynamicResource TabItemsBackgroundColor}">
+        <Panel Grid.Row="0">
             
-            <TabControl.Resources>
-                <SolidColorBrush x:Key="TabItemsBackgroundColor"
-                                 Color="{DynamicResource BackgroundColor}"/>
+            <TabControl ItemsSource="{Binding Tabs}" 
+                        SelectedItem="{Binding SelectedTab}"
+                        shadui:TabControlBehaviors.UseSlidingPill="True"
+                        Background="{DynamicResource TabItemsBackgroundColor}">
+            
+                <TabControl.Resources>
+                    <SolidColorBrush x:Key="TabItemsBackgroundColor"
+                                     Color="{DynamicResource BackgroundColor}"/>
 
-                <SolidColorBrush x:Key="TabItemSelectedColor"
-                                 Color="{DynamicResource InfoColor}"/>
-            </TabControl.Resources>
+                    <SolidColorBrush x:Key="TabItemSelectedColor"
+                                     Color="{DynamicResource InfoColor}"/>
+                </TabControl.Resources>
             
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Title}"
-                               FontSize="28"/>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.DataTemplates>
-                <DataTemplate DataType="vm:TestingTabViewModel">
-                    <views:TestingTab/>
-                </DataTemplate>
-                <DataTemplate DataType="vm:ConfigTabViewModel">
-                    <views:ConfigTab/>
-                </DataTemplate>
-                <DataTemplate DataType="vm:DocumentationTabViewModel">
-                    <views:DocumentationTab/>
-                </DataTemplate>
-                <DataTemplate DataType="vm:ScriptingTabViewModel">
-                    <views:ScriptTab/>
-                </DataTemplate>
-                <DataTemplate DataType="vm:HardwareTabViewModel">
-                    <views:HardwareTab/>
-                </DataTemplate>
-                <DataTemplate DataType="vm:AboutTabViewModel">
-                    <views:AboutTab/>
-                </DataTemplate>
-            </TabControl.DataTemplates>
-        </TabControl>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"
+                                   FontSize="28"/>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.DataTemplates>
+                    <DataTemplate DataType="vm:TestingTabViewModel">
+                        <views:TestingTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:ConfigTabViewModel">
+                        <views:ConfigTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:DocumentationTabViewModel">
+                        <views:DocumentationTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:ScriptingTabViewModel">
+                        <views:ScriptTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:HardwareTabViewModel">
+                        <views:HardwareTab/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:AboutTabViewModel">
+                        <views:AboutTab/>
+                    </DataTemplate>
+                </TabControl.DataTemplates>
+            </TabControl>
+            <shadui:ToastHost Manager="{Binding ToastManager}" />
+        </Panel>
         
         <Border Grid.Row="1"
         Background="{DynamicResource OutlineColor}"
