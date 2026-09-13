@@ -6,14 +6,12 @@ using ATLab.ViewModels;
 using ATLab.Views;
 using ATLab.Services;
 using System.Threading.Tasks;
-using ATLab.Controls;
 using ATLab.CTIA;
 using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
-using ShadUI;
 
 namespace ATLab;
 
@@ -25,14 +23,6 @@ public class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
-    
-    private static void RegisterDialogs(IServiceProvider service)
-    {
-        var dialogService = service.GetRequiredService<DialogManager>();
-
-        dialogService.Register<MessageBox, MessageBoxViewModel>();
-        dialogService.Register<SerialNumberEntryDialog, SerialNumberEntryDialogViewModel>();
-    }
 
     public override async void OnFrameworkInitializationCompleted()
     {
@@ -43,8 +33,8 @@ public class App : Application
         ConfigureServices(serviceCollection);
 
         _services = serviceCollection.BuildServiceProvider();
-
-        RegisterDialogs(_services);
+        
+        ServiceCollectionExtensions.RegisterDialogs(_services);
         
         var settingsService = _services.GetRequiredService<ISettingsService>();
         

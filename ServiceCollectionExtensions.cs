@@ -7,6 +7,7 @@ using ATLab.ViewModels;
 using ATLab.Views;
 using Microsoft.Extensions.DependencyInjection;
 using ShadUI;
+using ATLab.Controls;
 
 namespace ATLab;
 
@@ -98,5 +99,13 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MainWindow>();
         services.AddTransient<TestHardwareConnectWindow>();
         return services;
+    }
+    
+    public static void RegisterDialogs(IServiceProvider service)
+    {
+        var dialogService = service.GetRequiredService<DialogManager>();
+
+        dialogService.Register<MessageBox, MessageBoxViewModel>();
+        dialogService.Register<SerialNumberEntryDialog, SerialNumberEntryDialogViewModel>();
     }
 }
