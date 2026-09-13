@@ -41,7 +41,8 @@
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
                                    HorizontalAlignment="Center"
-                                   Classes="Small"/>
+                                   Classes="Caption"
+                                   FontSize="14"/>
 
                         <Border Background="{DynamicResource MutedColor}"
                                 BorderThickness="1"/>
@@ -50,15 +51,15 @@
                             
                             <StackPanel Grid.Column="0" Spacing="5">
                                 <TextBlock Text="{Binding AppName}" Classes="Large"/>
-                                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}"/>
-                                <TextBlock Text="{Binding Copyright}"/>
+                                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}" FontSize="14"/>
+                                <TextBlock Text="{Binding Copyright}" FontSize="14"/>
                                 <TextBlock Text="Build" Classes="Large" Margin="0 5 0 0"/>
-                                <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}"/>
-                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}"/>
-                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}"/>
+                                <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}" FontSize="14"/>
+                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}" FontSize="14"/>
+                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}" FontSize="14"/>
                                 <TextBlock Text="System" Classes="Large" Margin="0 5 0 0"/>
-                                <TextBlock Text="{Binding OSInfo}"/>
-                                <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}"/>
+                                <TextBlock Text="{Binding OSInfo}" FontSize="14"/>
+                                <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}" FontSize="14"/>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Spacing="5">
