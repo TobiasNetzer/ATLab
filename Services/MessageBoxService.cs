@@ -52,6 +52,7 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
+            .Dismissible()
             .WithSuccessCallback(() =>
             {
                 tcs.TrySetResult(true);
@@ -119,6 +120,7 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
+            .Dismissible()
             .WithSuccessCallback(() =>
             {
                 tcs.TrySetResult(true);
@@ -155,6 +157,7 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
+            .Dismissible()
             .WithSuccessCallback(() =>
             {
                 tcs.TrySetResult(true);
