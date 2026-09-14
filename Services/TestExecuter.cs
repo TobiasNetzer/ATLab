@@ -246,19 +246,19 @@ public class TestExecutor : ITestExecutor
         {
             try
             {
-                while (_isDebugMode &&
-                   !token.IsCancellationRequested &&
-                   !_singleStepContinueRequested)
-                {
-                    await Task.Delay(10, token);
-                }
-                
                 var step = steps[i];
+                
+                OnStepStarted(i, step);
 
                 if (step.TestStep.IsIgnoreStep)
                     continue;
-
-                OnStepStarted(i, step);
+                
+                while (_isDebugMode &&
+                       !token.IsCancellationRequested &&
+                       !_singleStepContinueRequested)
+                {
+                    await Task.Delay(10, token);
+                }
 
                 OperationResult<double> stepExecutionResult;
 
