@@ -18,8 +18,6 @@ public partial class SerialNumberEntryDialogViewModel : ViewModelBase, IDisposab
     
     [ObservableProperty]
     private bool _isOkEnabled;
-
-    public event Action<bool>? RequestClose;
     
     private event Action OkHandler;
     private event Action CancelHandler;
@@ -36,7 +34,7 @@ public partial class SerialNumberEntryDialogViewModel : ViewModelBase, IDisposab
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync( () =>
             {
                 if (IsOkEnabled)
-                    RequestClose?.Invoke(true);
+                    SubmitCommand.Execute(null);
                 else
                     _controlModuleService.SetUserResponseMode(true);
             });
@@ -44,7 +42,7 @@ public partial class SerialNumberEntryDialogViewModel : ViewModelBase, IDisposab
         CancelHandler += async () => 
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync( () =>
             {
-                RequestClose?.Invoke(false);
+                CancelCommand.Execute(null);
             });
         
         _controlModuleService.PassPressed += OkHandler;
