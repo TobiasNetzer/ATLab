@@ -72,17 +72,54 @@ public class CsvExportService : ICsvExportService
     private IEnumerable<TestStepCsvRow> ToCsvRows(IEnumerable<TestStepViewModel> steps)
     {
         return steps
-            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport && vm.IsExecuted)
-            .Select(vm => new TestStepCsvRow(
-                Number: vm.TestStep.Number,
-                Name: vm.TestStep.Name,
-                LowerLimit: vm.TestStep.LowerLimit,
-                UpperLimit: vm.TestStep.UpperLimit,
-                Result: vm.ResultNoFormatting,
-                Unit: vm.TestStep.Unit.Trim('{', '}'),
-                IsPassed: vm.IsPassed ? "Pass" : "Fail",
-                Deviation: vm.Deviation?.Replace("%", "")
-            ));
+            .Where(vm => !vm.TestStep.IsIgnoreStep &&
+                         !vm.TestStep.IsExcludeFromExport &&
+                         vm.IsExecuted)
+            .Select(vm =>
+            {
+                var ts = vm.TestStep;
+                
+                string? normalizedResult;
+                if (double.TryParse(vm.ResultNoFormatting,
+                                    NumberStyles.Any,
+                                    CultureInfo.CurrentCulture,
+                                    out var numericResult))
+                {
+                    normalizedResult = numericResult.ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    normalizedResult = vm.ResultNoFormatting;
+                }
+                
+                string? normalizedDeviation = null;
+                if (!string.IsNullOrWhiteSpace(vm.Deviation))
+                {
+                    var raw = vm.Deviation.Replace("%", "");
+                    if (double.TryParse(raw,
+                                        NumberStyles.Any,
+                                        CultureInfo.CurrentCulture,
+                                        out double dev))
+                    {
+                        normalizedDeviation = dev.ToString(CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        normalizedDeviation = raw;
+                    }
+                }
+
+                return new TestStepCsvRow(
+                    Number: ts.Number,
+                    Name: ts.Name,
+                    LowerLimit: ts.LowerLimit.ToString(CultureInfo.InvariantCulture),
+                    UpperLimit: ts.UpperLimit.ToString(CultureInfo.InvariantCulture),
+                    Result: normalizedResult,
+                    Unit: ts.Unit.Trim('{', '}'),
+                    IsPassed: vm.IsPassed ? "Pass" : "Fail",
+                    Deviation: normalizedDeviation
+                );
+            });
     }
 
     private string BuildCsv(IEnumerable<TestStepViewModel> steps)
