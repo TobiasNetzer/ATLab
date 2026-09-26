@@ -3,9 +3,11 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json.Serialization;
+using ATLab.Converters;
 using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Services;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
@@ -164,11 +166,24 @@ public partial class TestStep : ObservableObject
     [property: JsonIgnore]
     private RelayGroup _liveExtStimState = new(0);
 
-    [JsonPropertyOrder(30)]
+    [property: JsonPropertyOrder(30)]
     public RelayGroupDto? StimState { get; set; }
     
-    [JsonPropertyOrder(31)]
+    [property: JsonPropertyOrder(31)]
     public RelayGroupDto? ExtStimState { get; set; }
+
+    [ObservableProperty]
+    [property: JsonConverter(typeof(ColorJsonConverter))]
+    [property: JsonPropertyOrder(32)]
+    private Color _stepColor;
+    
+    [JsonIgnore]
+    public IBrush StepBrush => new SolidColorBrush(StepColor);
+    
+    partial void OnStepColorChanged(Color value)
+    {
+        OnPropertyChanged(nameof(StepBrush));
+    }
 
     private void HookEvents()
     {
@@ -336,7 +351,8 @@ public partial class TestStep : ObservableObject
             StimState = StimState != null ? new RelayGroupDto(StimState) : null,
             ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null,
             LiveStimState = new RelayGroup(LiveStimState),
-            LiveExtStimState = new RelayGroup(LiveExtStimState)
+            LiveExtStimState = new RelayGroup(LiveExtStimState),
+            StepColor = StepColor
         };
         
         clone.ScriptVariables = new ObservableCollection<CustomVariable>(

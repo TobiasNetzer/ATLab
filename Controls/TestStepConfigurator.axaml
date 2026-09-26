@@ -176,14 +176,33 @@
                 
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
+                    
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="30">
                         
-                    <CheckBox Content="Ignore Step"
-                              TabIndex="12"
-                              IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
+                        <StackPanel Spacing="20">
+                            
+                            <CheckBox Content="Ignore Step"
+                                      TabIndex="12"
+                                      IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
             
-                    <CheckBox Content="Exclude from Export"
-                              TabIndex="13"
-                              IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
+                            <CheckBox Content="Exclude from Export"
+                                      TabIndex="13"
+                                      IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
+                            
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Vertical"
+                                    Spacing="2"
+                                    VerticalAlignment="Top">
+                            <TextBlock Text="Color Theme"/>
+                            <ColorPicker
+                                Width="285"
+                                HorizontalAlignment="Left"
+                                Color="{Binding TestStepViewModel.TestStep.StepColor, Mode=TwoWay}"/>
+                        </StackPanel>
+                        
+                    </StackPanel>
                     
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
@@ -235,7 +254,6 @@
                         </ComboBox>
                         
                     </StackPanel>
-                    
                     
                     <Grid ColumnDefinitions="*,*">
                         

@@ -64,6 +64,7 @@
         <converters:InvertedEnumToBoolConverter x:Key="InvertedEnumToBoolConverter"/>
         <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
         <converters:PassFailConverter x:Key="PassFailConverter"/>
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
         <converters:BoolToValueConverter
             x:Key="ButtonEnabledConverter"
             TrueValue="{StaticResource EnabledBrush}"

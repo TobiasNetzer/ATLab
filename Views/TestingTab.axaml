@@ -348,10 +348,36 @@
                     <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
                     <Setter Property="Opacity" Value="1" />
                 </Style>
+                
+                <Style Selector="DataGridRow">
+                    <Setter Property="Opacity"
+                            Value="{ReflectionBinding DataContext.TestStep.IsIgnoreStep,
+                            RelativeSource={RelativeSource Self},
+                            Converter={StaticResource BoolToOpacityConverter}}" />
+                </Style>
             </DataGrid.Styles>
             
             <DataGrid.Columns>
-                <DataGridTextColumn Header="No." Binding="{Binding TestStep.Number}" MinWidth="70" />
+                <DataGridTemplateColumn Header="No." MinWidth="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="vm:TestStepViewModel">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                
+                                <Border Width="4"
+                                        Height="35"
+                                        Background="{Binding TestStep.StepBrush}"
+                                        VerticalAlignment="Top"
+                                        Margin="-19 -8 0 -8"/>
+
+                                <TextBlock Text="{Binding TestStep.Number}"
+                                           VerticalAlignment="Center"/>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
                 
                 <DataGridTemplateColumn Header="Lower Limit" MinWidth="140">
