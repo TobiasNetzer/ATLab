@@ -145,6 +145,9 @@ public class TestExecutor : ITestExecutor
     
     public async Task StartSingleStepTest(TestStepViewModel step, List<CustomVariable> runtimeVariables)
     {
+        if (step.TestStep.IsIgnoreStep)
+            return;
+        
         _cts = new CancellationTokenSource();
 
         ResetRelayClearFlag();
