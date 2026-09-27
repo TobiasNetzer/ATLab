@@ -34,7 +34,7 @@
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
                                             IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
