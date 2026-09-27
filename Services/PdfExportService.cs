@@ -17,7 +17,7 @@ namespace ATLab.Services;
 public class PdfExportService : IPdfExportService
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly IHardwareInfo _hardwareInfo;
     private readonly IDeviceIdentificationService _deviceIdentificationService;
     private readonly ProjectModel _projectModel;
@@ -26,13 +26,13 @@ public class PdfExportService : IPdfExportService
 
     public PdfExportService(
         IFileDialogService fileDialogService,
-        IErrorService errorService,
+        ILoggingService loggingService,
         IHardwareInfo hardwareInfo,
         IDeviceIdentificationService deviceIdentificationService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
-        _errorService = errorService;
+        _loggingService = loggingService;
         _hardwareInfo = hardwareInfo;
         _deviceIdentificationService = deviceIdentificationService;
         _projectModel = projectModel;
@@ -47,15 +47,22 @@ public class PdfExportService : IPdfExportService
             extensions: new[] { "pdf" });
 
         if (file == null)
+        {
+            _loggingService.Info("PDF export cancelled.");
             return;
+        }
 
         try
         {
             await ExportToFileAsync(steps, testInfo, file);
+
+            _loggingService.Info(
+                $"PDF export completed: {file.Name}");
         }
         catch (Exception ex)
         {
-            _errorService.AddError(ex.Message);
+            _loggingService.Error(
+                $"PDF export failed. {ex.Message}");
         }
     }
 
@@ -65,11 +72,16 @@ public class PdfExportService : IPdfExportService
         {
             var outputPath = $"{path}.pdf";
             var pdfBytes = await BuildPdf(steps, testInfo);
+
             await File.WriteAllBytesAsync(outputPath, pdfBytes);
+
+            _loggingService.Info(
+                $"PDF exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            _errorService.AddError(ex.Message);
+            _loggingService.Error(
+                $"Failed to export PDF to '{path}.pdf'. {ex.Message}");
         }
     }
 
@@ -80,24 +92,35 @@ public class PdfExportService : IPdfExportService
         await using var stream = await file.OpenWriteAsync();
         await stream.WriteAsync(pdfBytes);
     }
-    
+
     private async Task<byte[]> BuildPdf(IEnumerable<TestStepViewModel> steps, TestInfo testInfo)
     {
         _devices.Clear();
-        
+
         foreach (var device in _projectModel.Devices)
         {
             if (!device.IsIncludeInReport)
                 continue;
-            
-            var identification = await _deviceIdentificationService.GetIdentificationAsync(device, CancellationToken.None);
+
+            var identification = await _deviceIdentificationService.GetIdentificationAsync(
+                device,
+                CancellationToken.None);
+
             _devices.Add(new DeviceIdentification(device.Name, identification));
         }
-        
+
         var stepList = steps
-            .Where(vm => !vm.TestStep.IsIgnoreStep && !vm.TestStep.IsExcludeFromExport && vm.IsExecuted)
+            .Where(vm => !vm.TestStep.IsIgnoreStep &&
+                         !vm.TestStep.IsExcludeFromExport &&
+                         vm.IsExecuted)
             .ToList();
-        var document = new TestReportDocument(stepList, testInfo, _hardwareInfo, _devices);
+
+        var document = new TestReportDocument(
+            stepList,
+            testInfo,
+            _hardwareInfo,
+            _devices);
+
         return document.GeneratePdf();
     }
 }

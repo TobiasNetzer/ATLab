@@ -9,13 +9,13 @@ namespace ATLab.CTIA
     public class CtiaCommunication: ICtiaCommunication
     {
         private readonly ICommunication _communication;
-        private readonly IErrorService _errorService;
+        private readonly ILoggingService _loggingService;
         private bool _isDisposed;
 
-        public CtiaCommunication(ICommunication communication, IErrorService errorService)
+        public CtiaCommunication(ICommunication communication, ILoggingService loggingService)
         {
             _communication = communication;
-            _errorService = errorService;
+            _loggingService = loggingService;
         }
         
         public async Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
@@ -30,7 +30,7 @@ namespace ATLab.CTIA
                     var reconnectResult = await _communication.ReconnectAsync();
                     if (!reconnectResult.IsSuccess)
                     {
-                        _errorService.AddError("Test hardware is no longer connected. Reconnection attempt failed.");
+                        _loggingService.Error("Test hardware is no longer connected. Reconnection attempt failed.");
                         return null;
                     }
                 }
@@ -40,12 +40,12 @@ namespace ATLab.CTIA
             }
             catch (TimeoutException)
             {
-                _errorService.AddError("Timeout during communication with test hardware.");
+                _loggingService.Error("Timeout during communication with test hardware.");
                 return null;
             }
             catch (Exception ex)
             {
-                _errorService.AddError($"Unexpected error while sending command to test hardware: {ex.Message}");
+                _loggingService.Error($"Unexpected error while sending command to test hardware: {ex.Message}");
                 return null;
             }
         }

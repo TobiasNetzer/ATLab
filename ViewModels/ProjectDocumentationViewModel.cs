@@ -15,7 +15,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;
     private readonly IAttachmentLauncherService _attachmentLauncherService;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
 
     public ProjectDocumentation ProjectDocumentation { get; }
 
@@ -25,12 +25,12 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
         IFileDialogService fileDialogService,
         ProjectModel projectModel,
         IAttachmentLauncherService attachmentLauncherService,
-        IErrorService errorService)
+        ILoggingService loggingService)
     {
         _fileDialogService = fileDialogService;
         ProjectDocumentation = projectModel.Documentation;
         _attachmentLauncherService = attachmentLauncherService;
-        _errorService = errorService;
+        _loggingService = loggingService;
         
         ProjectDocumentation.ImagePaths.CollectionChanged += OnImagePathsChanged;
     }
@@ -107,7 +107,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     private void AddImageVm(string path)
     {
         if (!File.Exists(path))
-            _errorService.AddError($"Image not found: {path}");
+            _loggingService.Error($"Image not found: {path}");
 
         Images.Add(new ImagePreviewViewModel(path));
     }
@@ -145,7 +145,7 @@ public partial class ProjectDocumentationViewModel : ViewModelBase
     private async Task OpenAttachment(CustomAttachment entry)
     {
         if (!File.Exists(entry.Path))
-            _errorService.AddError($"File not found: {entry.Path}");
+            _loggingService.Error($"File not found: {entry.Path}");
         
         await _attachmentLauncherService.OpenAttachmentAsync(entry.Path);
     }

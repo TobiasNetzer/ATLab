@@ -18,7 +18,7 @@ public partial class TestingTabViewModel : ViewModelBase
 {
     private readonly IHardwareInfo _hardwareInfo;
     private readonly ISettingsService _settingsService;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly IProjectController _projectController;
     private readonly ITestStepEditor _testStepEditor;
     private readonly ControlModuleService _controlModuleService;
@@ -125,7 +125,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
     public TestingTabViewModel(
         ISettingsService settingsService,
-        IErrorService errorService,
+        ILoggingService loggingService,
         ProjectModel projectModel,
         WorkspaceEditorViewModel workspaceEditor,
         IProjectController projectController,
@@ -139,7 +139,7 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         _hardwareInfo = hardwareInfo;
         _settingsService = settingsService;
-        _errorService = errorService;
+        _loggingService = loggingService;
         _projectModel = projectModel;
         WorkspaceEditor = workspaceEditor;
         _projectController = projectController;
@@ -398,7 +398,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 }
                 catch (Exception ex)
                 {
-                    _errorService.AddError("Exception: " + ex.Message);
+                    _loggingService.Error("Exception: " + ex.Message);
                 }
             }
         }
@@ -759,13 +759,6 @@ public partial class TestingTabViewModel : ViewModelBase
         return true;
     }
     
-    private Task _exportQueue = Task.CompletedTask;
-
-    private Task EnqueueExport(Func<Task> work)
-    {
-        return _exportQueue = _exportQueue.ContinueWith(_ => work()).Unwrap();
-    }
-    
     private void UpdatePassedPercentage()
     {
         if (NumberRunTests > 0)
@@ -808,7 +801,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 : (int)Math.Round((double)(index + 1) / TestSteps.Count * 100);
         };
 
-        _testExecutor.TestCompleted += () =>
+        _testExecutor.TestCompleted += async () =>
         {
             TestDuration = $"{Elapsed.TotalSeconds:F2}s";
             TestProgress = 100;
@@ -831,7 +824,7 @@ public partial class TestingTabViewModel : ViewModelBase
                     DeviceUnderTestInfo = _projectModel.DeviceUnderTestInfo
                 };
                 
-                EnqueueExport(() => _testResultExportService.SaveAsync(TestSteps, testInfo, NumberFailedSteps));
+                await _testResultExportService.SaveAsync(TestSteps, testInfo, NumberFailedSteps);
             }
 
             if (NumberFailedSteps > 0)

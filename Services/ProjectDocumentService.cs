@@ -7,20 +7,20 @@ namespace ATLab.Services;
 public class ProjectDocumentService : IProjectDocumentService
 {
     private readonly IFileDialogService _fileDialogService;
-    private readonly IProjectStorage _projectStorage;
+    private readonly IProjectFileService _projectFileService;
     private readonly ISettingsService _settingsService;
     private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectModel _projectModel;
     
     public ProjectDocumentService(
         IFileDialogService fileDialogService,
-        IProjectStorage projectStorage,
+        IProjectFileService projectFileService,
         ISettingsService settingsService,
         IMessageBoxService messageBoxService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
-        _projectStorage = projectStorage;
+        _projectFileService = projectFileService;
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
         _projectModel = projectModel;
@@ -40,7 +40,7 @@ public class ProjectDocumentService : IProjectDocumentService
 
     public async Task<AtlabFileDto?> OpenAsync(string path)
     {
-        var dto = await _projectStorage.LoadAsync(path);
+        var dto = await _projectFileService.LoadAsync(path);
         if (dto == null)
             return dto;
         
@@ -54,7 +54,7 @@ public class ProjectDocumentService : IProjectDocumentService
         if (string.IsNullOrWhiteSpace(_projectModel.FilePath))
             return await SaveAsAsync(dto);
         
-        await _projectStorage.SaveAsync(_projectModel.FilePath, dto);
+        await _projectFileService.SaveAsync(_projectModel.FilePath, dto);
         _projectModel.MarkSaved();
         _settingsService.Settings.LastOpenedFile = _projectModel.FilePath;
         return true;
@@ -67,7 +67,7 @@ public class ProjectDocumentService : IProjectDocumentService
         if (file is null)
             return false;
         
-        await _projectStorage.SaveAsync(file.Path.LocalPath, dto);
+        await _projectFileService.SaveAsync(file.Path.LocalPath, dto);
         _projectModel.MarkSaved(file.Path.LocalPath);
         _settingsService.Settings.LastOpenedFile = file.Path.LocalPath;
         return true;

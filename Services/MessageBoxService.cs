@@ -11,7 +11,7 @@ namespace ATLab.Services;
 
 public partial class MessageBoxService : ObservableObject, IMessageBoxService
 {
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly ControlModuleService _controlModuleService;
     private readonly MessageBoxViewModel _messageBoxViewModel;
     
@@ -21,12 +21,12 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
     [ObservableProperty]
     private bool _isDialogOpen;
     
-    public MessageBoxService(IErrorService errorService,
+    public MessageBoxService(ILoggingService loggingService,
         ControlModuleService controlModuleService,
         MessageBoxViewModel messageBoxViewModel,
         DialogManager dialogManager)
     {
-        _errorService = errorService;
+        _loggingService = loggingService;
         _controlModuleService = controlModuleService;
         _messageBoxViewModel = messageBoxViewModel;
         _dialogManager = dialogManager;
@@ -96,7 +96,7 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             if (File.Exists(imagePath))
                 bitmap = new Bitmap(imagePath);
             else
-                _errorService.AddError($"Image not found: {imagePath}");
+                _loggingService.Error($"Image not found: {imagePath}");
         }
         
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);

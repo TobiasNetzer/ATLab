@@ -16,10 +16,10 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddBackendServices(this IServiceCollection services)
     {
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IProjectStorage, ProjectStorage>();
+        services.AddSingleton<IProjectFileService, ProjectFileService>();
         services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
         services.AddSingleton<IMessageBoxService, MessageBoxService>();
-        services.AddSingleton<IErrorService, ErrorService>();
+        services.AddSingleton<ILoggingService, LoggingService>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IProjectDocumentService, ProjectDocumentService>();
         services.AddSingleton<IScriptRepository, FileScriptRepository>();

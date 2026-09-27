@@ -16,7 +16,7 @@ public class TestExecutor : ITestExecutor
 {
     private readonly ITestHardware _testHardware;
     private readonly ITestStepRunner _runner;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly ITestStepEvaluator _evaluator;
     private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectSettings _projectSettings;
@@ -28,14 +28,14 @@ public class TestExecutor : ITestExecutor
     private readonly SemaphoreSlim _relaySemaphore = new(1, 1);
     private bool _relayStatesCleared;
 
-    public event Action? TestStarted;
-    public event Action<int, TestStepViewModel>? StepStarted;
-    public event Action<int, TestStepViewModel>? StepCompleted;
-    public event Action? StepRepeated;
-    public event Action? TestCompleted;
-    public event Action? TestCancelled;
-    public event Action? TestRepeated;
-    public event Action<bool>? SingleStepContinueRequestedChanged;
+    public event Action TestStarted = () => { };
+    public event Action<int, TestStepViewModel> StepStarted = (index, step) => { };
+    public event Action<int, TestStepViewModel> StepCompleted = (index, step) => { };
+    public event Action StepRepeated = () => { };
+    public event Func<Task> TestCompleted = () => Task.CompletedTask;
+    public event Action TestCancelled = () => { };
+    public event Action TestRepeated = () => { };
+    public event Action<bool> SingleStepContinueRequestedChanged = (continueRequested) => { };
     
     private const int MinRepeatDelayMs = 5;
     private volatile bool _breakRepeatRequested;
@@ -45,7 +45,7 @@ public class TestExecutor : ITestExecutor
     public TestExecutor(
         ITestHardware testHardware,
         ITestStepRunner runner,
-        IErrorService errorService,
+        ILoggingService loggingService,
         ITestStepEvaluator evaluator,
         IMessageBoxService messageBoxService,
         ProjectModel projectModel,
@@ -53,7 +53,7 @@ public class TestExecutor : ITestExecutor
     {
         _testHardware = testHardware;
         _runner = runner;
-        _errorService = errorService;
+        _loggingService = loggingService;
         _evaluator = evaluator;
         _messageBoxService = messageBoxService;
         _projectSettings = projectModel.Settings;
@@ -75,7 +75,7 @@ public class TestExecutor : ITestExecutor
 
             var result = await _testHardware.ClearRelayStates();
             if (!result.IsSuccess)
-                _errorService.AddError($"Error on resetting relay states: {result.ErrorMessage}");
+                _loggingService.Error($"Error on resetting relay states: {result.ErrorMessage}");
 
             _relayStatesCleared = true;
         }
@@ -89,14 +89,14 @@ public class TestExecutor : ITestExecutor
     {
         if (steps.Count == 0)
         {
-            _errorService.AddError("No test steps configured.");
+            _loggingService.Error("No test steps configured.");
             OnTestCancelled();
             return;
         }
 
         if (startIndex >= steps.Count || startIndex < 0)
         {
-            _errorService.AddError("Test step index out of range.");
+            _loggingService.Error("Test step index out of range.");
             OnTestCancelled();
             return;
         }
@@ -120,13 +120,13 @@ public class TestExecutor : ITestExecutor
         }
         catch (Exception ex)
         {
-            _errorService.AddError("Test execution failed: " + ex.Message);
+            _loggingService.Error("Test execution failed: " + ex.Message);
         }
         finally
         {
             await EnsureRelayStatesClearedAsync();
             await _commandExecutor.ReleaseDeviceAsync();
-            OnTestCompleted();
+            await OnTestCompleted();
             _cts?.Dispose();
             _cts = null;
         }
@@ -215,7 +215,7 @@ public class TestExecutor : ITestExecutor
         }
         catch (Exception ex)
         {
-            _errorService.AddError("Test execution failed: " + ex.Message);
+            _loggingService.Error("Test execution failed: " + ex.Message);
         }
         finally
         {
@@ -427,7 +427,7 @@ public class TestExecutor : ITestExecutor
     private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result, List<CustomVariable> runtimeVariables)
     {
         if (!string.IsNullOrEmpty(result.ErrorMessage))
-            _errorService.AddError($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+            _loggingService.Error($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
 
         step.Result = string.Empty;
         step.IsPassed = false;
@@ -469,14 +469,14 @@ public class TestExecutor : ITestExecutor
                 
                 if (targetIndex < 0)
                 {
-                    _errorService.AddError($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to a non-existent step.");
+                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to a non-existent step.");
                     step.IsPassed = false;
                     return null;
                 }
 
                 if (steps[targetIndex].TestStep.IsIgnoreStep)
                 {
-                    _errorService.AddError($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name}.");
+                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name}.");
                     step.IsPassed = false;
                     return null;
                 }
@@ -517,28 +517,28 @@ public class TestExecutor : ITestExecutor
         value >= 9.9E37;
 
     private void OnTestStarted() =>
-        TestStarted?.Invoke();
+        TestStarted.Invoke();
     
     private void OnStepStarted(int index, TestStepViewModel step) =>
-        StepStarted?.Invoke(index, step);
+        StepStarted.Invoke(index, step);
 
     private void OnStepCompleted(int index, TestStepViewModel step) =>
-        StepCompleted?.Invoke(index, step);
+        StepCompleted.Invoke(index, step);
     
     private void OnStepRepeated() =>
-        StepRepeated?.Invoke();
+        StepRepeated.Invoke();
 
-    private void OnTestCompleted() =>
-        TestCompleted?.Invoke();
+    private async Task OnTestCompleted() =>
+        await TestCompleted.Invoke();
 
     private void OnTestCancelled()
     {
-        TestCancelled?.Invoke();
+        TestCancelled.Invoke();
         _repeatTest = false;
     }
     
     private void OnTestRepeated() =>
-        TestRepeated?.Invoke();
+        TestRepeated.Invoke();
     
     private void SetRequestSingleStepContinueState(bool value)
     {

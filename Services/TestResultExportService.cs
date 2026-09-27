@@ -14,18 +14,18 @@ public class TestResultExportService : ITestResultExportService
     private readonly ProjectSettings _settings;
     private readonly ICsvExportService _csvExportService;
     private readonly IPdfExportService _pdfExportService;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
 
     public TestResultExportService(
         ProjectModel projectModel,
         ICsvExportService csvExportService,
         IPdfExportService pdfExportService,
-        IErrorService errorService)
+        ILoggingService loggingService)
     {
         _settings = projectModel.Settings;
         _csvExportService = csvExportService;
         _pdfExportService = pdfExportService;
-        _errorService = errorService;
+        _loggingService = loggingService;
     }
 
     public async Task SaveAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo, int failedSteps)
@@ -40,7 +40,7 @@ public class TestResultExportService : ITestResultExportService
 
             if (string.IsNullOrWhiteSpace(_settings.SaveTestResultFilePath))
             {
-                _errorService.AddError("No output path for test results provided.");
+                _loggingService.Error("No output path for test results provided.");
                 return;
             }
 
@@ -56,7 +56,7 @@ public class TestResultExportService : ITestResultExportService
         }
         catch (Exception ex)
         {
-            _errorService.AddError(ex.Message);
+            _loggingService.Error(ex.Message);
         }
     }
 }

@@ -53,7 +53,7 @@ public class ScriptService : IScriptService
 
     public async Task DeleteAsync(ScriptViewModel script)
     {
-        await _repository.DeleteAsync(script.Id);
+        await _repository.DeleteAsync(script.Id, script.Name);
         Scripts.Remove(script);
     }
 

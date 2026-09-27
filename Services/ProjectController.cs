@@ -10,7 +10,7 @@ namespace ATLab.Services;
 public class ProjectController : IProjectController
 {
     private readonly IProjectDocumentService _projectDocumentService;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly IHardwareInfo _hardwareInfo;
     private readonly ProjectModel _projectModel;
     private readonly IMessageBoxService _messageBoxService;
@@ -18,14 +18,14 @@ public class ProjectController : IProjectController
 
     public ProjectController(
         IProjectDocumentService projectDocumentService,
-        IErrorService errorService,
+        ILoggingService loggingService,
         IHardwareInfo hardwareInfo,
         ProjectModel projectModel,
         IMessageBoxService messageBoxService,
         IScriptRepository scriptRepository)
     {
         _projectDocumentService = projectDocumentService;
-        _errorService = errorService;
+        _loggingService = loggingService;
         _hardwareInfo = hardwareInfo;
         _projectModel = projectModel;
         _messageBoxService = messageBoxService;
@@ -74,7 +74,7 @@ public class ProjectController : IProjectController
         }
         catch (Exception ex)
         {
-            _errorService.AddError("Failed to load file: " + ex.Message);
+            _loggingService.Error("Failed to load file: " + ex.Message);
         }
     }
 
@@ -95,7 +95,7 @@ public class ProjectController : IProjectController
         }
         catch (Exception ex)
         {
-            _errorService.AddError($"Failed to load file {path}: " + ex.Message);
+            _loggingService.Error($"Failed to load file {path}: " + ex.Message);
         }
     }
 

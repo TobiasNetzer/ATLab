@@ -8,18 +8,18 @@ namespace ATLab.Services;
 public class TestStepEvaluator : ITestStepEvaluator
 {
     
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
 
-    public TestStepEvaluator(IErrorService errorService)
+    public TestStepEvaluator(ILoggingService loggingService)
     {
-        _errorService = errorService;
+        _loggingService = loggingService;
     }
     
     public TestEvaluationResult Evaluate(TestStep testStep, double value)
     {
         if (testStep.LowerLimit > testStep.UpperLimit)
         {
-            _errorService.AddError($"Step {testStep.Number}: Lower limit is greater than upper limit");
+            _loggingService.Error($"Step {testStep.Number}: Lower limit is greater than upper limit");
         }
         
         var isValid = Math.Round(value, 15) >= testStep.LowerLimit && value <= testStep.UpperLimit;

@@ -13,13 +13,13 @@ namespace ATLab.Services;
 public class InterfaceCommandExecuter : IInterfaceCommandExecuter
 {
     private readonly ITestHardware _testHardware;
-    private readonly IErrorService  _errorService;
+    private readonly ILoggingService  _loggingService;
 
     public InterfaceCommandExecuter(ITestHardware testHardware,
-        IErrorService  errorService)
+        ILoggingService  loggingService)
     {
         _testHardware = testHardware;
-        _errorService = errorService;
+        _loggingService = loggingService;
     }
 
     public async Task<OperationResult<double>> ExecuteAsync(
@@ -70,7 +70,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
             if (status.Value != null && !status.Value.Success)
             {
-                _errorService.AddError("I²C write failed: NACK received.");
+                _loggingService.Error("I²C write failed: NACK received.");
             }
             
             result = Convert.ToDouble(status.Value != null && status.Value.Success);
@@ -93,7 +93,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
         
             if (status.Value != null && !status.Value.Success)
             {
-                _errorService.AddError("I²C read failed: NACK received.");
+                _loggingService.Error("I²C read failed: NACK received.");
                 return OperationResult<double>.Success(0);
             }
 
@@ -141,7 +141,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
         if (status.Value != null && status.Value.Length != config.BytesToRead)
         {
-            _errorService.AddError("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
+            _loggingService.Error("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
         }
             
         var processed = ResponseProcessor.Process(status.Value ?? Array.Empty<byte>(), mask);

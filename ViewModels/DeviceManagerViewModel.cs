@@ -14,7 +14,7 @@ namespace ATLab.ViewModels;
 
 public partial class DeviceManagerViewModel : ViewModelBase
 {
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly ProjectModel _projectModel;
     
     public ObservableCollection<Device> Devices => _projectModel.Devices;
@@ -69,9 +69,9 @@ public partial class DeviceManagerViewModel : ViewModelBase
     public List<TcpTerminationMode> AvailableTcpTerminations { get; } =
         new(Enum.GetValues<TcpTerminationMode>());
 
-    public DeviceManagerViewModel(IErrorService errorService, ProjectModel projectModel)
+    public DeviceManagerViewModel(ILoggingService loggingService, ProjectModel projectModel)
     {
-        _errorService = errorService;
+        _loggingService = loggingService;
         _projectModel = projectModel;
     }
     
@@ -113,7 +113,7 @@ public partial class DeviceManagerViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _errorService.AddError($"An unexpected error occurred while accessing VISA: {ex.Message}");
+            _loggingService.Error($"An unexpected error occurred while accessing VISA: {ex.Message}");
         }
     }
     

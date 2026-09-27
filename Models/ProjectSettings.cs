@@ -77,6 +77,11 @@ public partial class ProjectSettings : ObservableObject
 
     [ObservableProperty]
     private bool _isControlModuleEnabled;
+    
+    [ObservableProperty]
+    private LogLevel _toastLogLevel = LogLevel.INFO;
+    
+    partial void OnToastLogLevelChanged(LogLevel value) => OnSettingsChanged();
 
     partial void OnIsControlModuleEnabledChanged(bool value)
     {
@@ -100,6 +105,7 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationEndsWith = string.Empty;
         SerialNumberValidationContains = string.Empty;
         IsControlModuleEnabled = false;
+        ToastLogLevel = LogLevel.INFO;
 
         OnSettingsChanged();
     }
@@ -127,6 +133,7 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationEndsWith = other.SerialNumberValidationEndsWith;
         SerialNumberValidationContains = other.SerialNumberValidationContains;
         IsControlModuleEnabled = other.IsControlModuleEnabled;
+        ToastLogLevel = other.ToastLogLevel;
     }
 
     public void PrepareForSave(PathService pathService)

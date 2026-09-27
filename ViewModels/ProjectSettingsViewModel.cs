@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +15,11 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     private readonly IFileDialogService _fileDialogService;
 
     public ProjectSettings Settings { get; }
-
+    public List<LogLevel> LogLevels { get; } = new(Enum.GetValues<LogLevel>());
+    
+    [ObservableProperty]
+    private LogLevel _selectedLogLevel = LogLevel.INFO;
+    
     [ObservableProperty]
     private string _serialNumberValidationLengthString = string.Empty;
     
@@ -62,6 +69,12 @@ public partial class ProjectSettingsViewModel : ViewModelBase
                     
                     break;
                 
+                case nameof(Settings.ToastLogLevel):
+
+                    SelectedLogLevel = Settings.ToastLogLevel;
+
+                    break;
+                
             }
         };
     }
@@ -90,6 +103,11 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     {
         if (int.TryParse(value, out var parsed))
             Settings.SerialNumberValidationLength = parsed;
+    }
+    
+    partial void OnSelectedLogLevelChanged(LogLevel value)
+    {
+        Settings.ToastLogLevel = value;
     }
 
     [RelayCommand]

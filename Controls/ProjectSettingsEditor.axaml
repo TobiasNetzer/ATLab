@@ -213,7 +213,7 @@
                                 CornerRadius="10"
                                 Padding="10">
 
-                            <Grid RowDefinitions="Auto,Auto,Auto"
+                            <Grid RowDefinitions="Auto,Auto,Auto, Auto"
                                   ColumnDefinitions="Auto, Auto"
                                   ColumnSpacing="10"
                                   RowSpacing="10"
@@ -251,6 +251,17 @@
                                                Maximum="10"
                                                Increment="1"
                                                Width="150"/>
+                                
+                                <TextBlock Grid.Row="3"
+                                           Grid.Column="0"
+                                           Text="Log Level"
+                                           VerticalAlignment="Center"/>
+                                
+                                <ComboBox Grid.Row="3"
+                                          Grid.Column="1"
+                                          ItemsSource="{Binding LogLevels}"
+                                          SelectedItem="{Binding SelectedLogLevel, Mode=TwoWay}"
+                                          DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                             </Grid>
                         </Border>
                         

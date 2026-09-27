@@ -13,6 +13,6 @@ public interface IScriptRepository
     Task<IReadOnlyList<CustomScript>> LoadAllAsync(CancellationToken ct = default);
     Task<CustomScript?> LoadAsync(string id, CancellationToken ct = default);
     Task SaveAsync(CustomScript script, CancellationToken ct = default);
-    Task DeleteAsync(string id, CancellationToken ct = default);
+    Task DeleteAsync(string id, string name, CancellationToken ct = default);
     Task ConfigureRepositoryFolderAsync();
 }

@@ -125,25 +125,17 @@
                     
                     <Button
                         Classes="Icon"
-                        Classes.error="{Binding HasErrors}">
-                        <Button.Styles>
-                            <Style Selector="Button.Icon">
-                                <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-                            </Style>
-                            <Style Selector="Button.error">
-                                <Setter Property="Background" Value="{DynamicResource ErrorColor}" />
-                            </Style>
-                        </Button.Styles>
+                        Background="{DynamicResource ButtonBackground}"
+                        ToolTip.Tip="Show event log">
                         
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent TriangleAlert}"/>
+                            <ContentControl Content="{LucideIconContent Info}"/>
                         </shadui:ButtonAssist.Icon>
 
                         <Button.Flyout>
                             <Flyout Placement="TopEdgeAlignedLeft"
-                                    IsOpen="{Binding IsErrorFlyoutOpen, Mode=TwoWay}"
                                     FlyoutPresenterClasses="LargeFlyout">
-                                <ListBox ItemsSource="{Binding Errors}"
+                                <ListBox ItemsSource="{Binding Events}"
                                          Width="800"
                                          Height="500">
                                     <ListBox.Styles>
@@ -153,7 +145,7 @@
                                     </ListBox.Styles>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding}"
+                                            <TextBlock Text="{Binding DisplayText}"
                                                        TextWrapping="Wrap"/>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>

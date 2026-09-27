@@ -1,17 +1,22 @@
 using System;
 using System.Collections.ObjectModel;
+using ATLab.Records;
 
 namespace ATLab.Interfaces;
 
-public interface IErrorService
+public interface ILoggingService
 {
-    void AddError(
+    void Error(
         string message,
         [System.Runtime.CompilerServices.CallerFilePath] string file = "",
         [System.Runtime.CompilerServices.CallerMemberName] string member = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int line = 0
     );
+    
+    void Success(string message);
+    void Info(string message);
+    void Warning(string message);
 
-    ObservableCollection<string> Errors { get; }
-    event EventHandler ErrorsChanged;
+    ObservableCollection<LogEntry> Events { get; }
+    event EventHandler EventAdded;
 }

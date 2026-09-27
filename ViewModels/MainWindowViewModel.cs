@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Records;
 using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -15,7 +16,7 @@ namespace ATLab.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly ISettingsService _settingsService;
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
@@ -44,15 +45,9 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsHardwareTabSelected => ReferenceEquals(SelectedTab, HardwareTab);
     public bool IsAboutTabSelected => ReferenceEquals(SelectedTab, AboutTab);
 
-    public ObservableCollection<string> Errors => _errorService.Errors;
+    public ObservableCollection<LogEntry> Events => _loggingService.Events;
     
     public bool IsSimulation => _applicationState.IsSimulationMode;
-
-    [ObservableProperty]
-    private bool _hasErrors;
-    
-    [ObservableProperty]
-    private bool _isErrorFlyoutOpen;
 
     [ObservableProperty]
     private string? _matrixChannel;
@@ -64,8 +59,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private ToastManager _toastManager;
 
     public MainWindowViewModel(ITestHardware testHardware,
-        IErrorService errorService,
-        IProjectDocumentService projectDocumentService,
+        ILoggingService loggingService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
         ConfigTabViewModel configTab,
@@ -80,7 +74,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ToastManager toastManager)
     {
         _testHardware = testHardware;
-        _errorService = errorService;
+        _loggingService = loggingService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
         _projectModel = projectModel;
@@ -103,11 +97,6 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(ScriptTab);
         Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);
-        
-        _errorService.Errors.CollectionChanged += (_, __) =>
-        {
-            HasErrors = true;
-        };
 
         _projectModel.PropertyChanged += (s, e) =>
         {
@@ -117,14 +106,6 @@ public partial class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(WindowTitle));
             }
         };
-    }
-    
-    partial void OnIsErrorFlyoutOpenChanged(bool value)
-    {
-        if (!value)
-            return;
-        
-        HasErrors = false;
     }
     
     private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
@@ -142,7 +123,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            _errorService.AddError(result.ErrorMessage);
+            _loggingService.Error(result.ErrorMessage);
             MatrixChannel = "External probe not detected";
         }
     }
@@ -183,7 +164,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                _errorService.Errors.Add(ex.ToString());
+                _loggingService.Error(ex.ToString());
                 await NewFile();
                 return;
             }
@@ -199,7 +180,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                _errorService.Errors.Add(ex.ToString());
+                _loggingService.Error(ex.ToString());
                 await NewFile();
             }
         }

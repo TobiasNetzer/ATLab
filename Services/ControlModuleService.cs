@@ -11,7 +11,7 @@ namespace ATLab.Services;
 
 public sealed class ControlModuleService : IDisposable
 {
-    private readonly IErrorService _errorService;
+    private readonly ILoggingService _loggingService;
     private readonly ProjectSettings _settings;
 
     private const int Vid = 0xCAFE;
@@ -31,10 +31,10 @@ public sealed class ControlModuleService : IDisposable
 
     public bool IsConnected => _stream != null && _stream.CanRead && !_disposed;
 
-    public ControlModuleService(IErrorService errorService,
+    public ControlModuleService(ILoggingService loggingService,
         ProjectModel projectModel)
     {
-        _errorService = errorService;
+        _loggingService = loggingService;
         _settings = projectModel.Settings;
     }
 
@@ -52,13 +52,13 @@ public sealed class ControlModuleService : IDisposable
         _device = DeviceList.Local.GetHidDevices(Vid, Pid).FirstOrDefault();
         if (_device == null)
         {
-            _errorService.AddError("No control module connected.");
+            _loggingService.Error("No control module connected.");
             return;
         }
 
         if (!_device.TryOpen(out var stream))
         {
-            _errorService.AddError("Failed to connect to control module.");
+            _loggingService.Error("Failed to connect to control module.");
             return;
         }
 
@@ -149,7 +149,7 @@ public sealed class ControlModuleService : IDisposable
         }
         catch
         {
-            _errorService.AddError("Lost connection to control module.");
+            _loggingService.Error("Lost connection to control module.");
             Dispose();
         }
     }
@@ -181,7 +181,7 @@ public sealed class ControlModuleService : IDisposable
         }
         catch
         {
-            _errorService.AddError("Lost connection to control module.");
+            _loggingService.Error("Lost connection to control module.");
         }
     }
     
