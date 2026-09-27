@@ -18,7 +18,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -27,36 +27,35 @@
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
-                <Button Command="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <StackPanel Margin="10" Spacing="15">
 
-                <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Command}"/>
+                <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.Command}"/>
 
                 <DockPanel LastChildFill="False">
                     
                     <CheckBox Content="Direct Launch"
-                              IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
+                              IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
                               DockPanel.Dock="Left"/>
                     
                     <StackPanel Orientation="Horizontal"
@@ -67,9 +66,9 @@
                                    Classes="Small"
                                    VerticalAlignment="Center"/>
 
-                        <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.CommandOptions}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.CommandOptions}"
                                   Width="130"
-                                  SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm.ShellCommand.Option}"
+                                  SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.Option}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                         
                     </StackPanel>

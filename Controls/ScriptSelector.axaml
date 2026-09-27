@@ -22,7 +22,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -33,16 +33,16 @@
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
                 
-                <Button Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
@@ -50,11 +50,10 @@
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <StackPanel Margin="10" Spacing="15">
                 
@@ -67,7 +66,7 @@
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected device"
-                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveDeviceCommand}"
+                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.RemoveDeviceCommand}"
                             Width="35"
                             Height="35"
                             Margin="5 0 0 0"
@@ -77,8 +76,8 @@
                             </shadui:ButtonAssist.Icon>
                         </Button>
 
-                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Devices}"
-                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedDevice, Mode=TwoWay}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.Devices}"
+                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.SelectedDevice, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch">
 
                             <ComboBox.ItemTemplate>
@@ -106,7 +105,7 @@
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected script"
-                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.RemoveScriptCommand}"
+                            Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.RemoveScriptCommand}"
                             Width="35"
                             Height="35"
                             Margin="5 0 0 0"
@@ -116,8 +115,8 @@
                             </shadui:ButtonAssist.Icon>
                         </Button>
 
-                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.Scripts}"
-                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.SelectedScript, Mode=TwoWay}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.Scripts}"
+                                  SelectedItem="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.SelectedScript, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch">
 
                             <ComboBox.ItemTemplate>
@@ -132,8 +131,8 @@
                     </DockPanel>
                 </StackPanel>
                 
-                <DataGrid ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ScriptVariables}"
-                          IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm.ScriptVariables,
+                <DataGrid ItemsSource="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.ScriptVariables}"
+                          IsVisible="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.ScriptVariables,
                                               Converter={x:Static ObjectConverters.IsNotNull}}"
                           AutoGenerateColumns="False"
                           CanUserSortColumns="False"

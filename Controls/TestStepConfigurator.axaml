@@ -24,7 +24,7 @@
         
         <Border Background="{DynamicResource OutlineColor}"
                 Classes="WithDynamicCorner"
-                Classes.expanded="{Binding IsExpanded}"
+                Classes.expanded="{Binding IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Padding="10">
             <DockPanel>
                 <TextBlock Text="Test Step Configuration"
@@ -39,20 +39,19 @@
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding IsExpanded}"/>
+                                            IsVisible="{Binding IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding IsExpanded}">
+                IsVisible="{Binding IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
             
             <StackPanel Margin="10"
                         Spacing="10">
@@ -199,7 +198,7 @@
                             <ColorPicker
                                 Width="285"
                                 HorizontalAlignment="Left"
-                                Color="{Binding TestStepViewModel.TestStep.StepColor, Mode=TwoWay}"/>
+                                Color="{Binding TestStepViewModel?.TestStep.StepColor, Mode=TwoWay}"/>
                         </StackPanel>
                         
                     </StackPanel>

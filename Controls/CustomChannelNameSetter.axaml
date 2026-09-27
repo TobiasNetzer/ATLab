@@ -16,7 +16,7 @@
                        HorizontalAlignment="Center"/>
         </Border>
         
-        <Border Grid.Row="1" Background="{DynamicResource TabItemsBackgroundColor}"
+        <Border Grid.Row="1" 
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}">

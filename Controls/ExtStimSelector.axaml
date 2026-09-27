@@ -44,8 +44,7 @@
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding IsExpanded}">

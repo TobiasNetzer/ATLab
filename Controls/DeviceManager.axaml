@@ -6,7 +6,7 @@
              x:DataType="vm:DeviceManagerViewModel"
              Width="780">
 
-    <Grid ColumnDefinitions="250,*" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,*">
         
         <Border Grid.Row="0"
                 Grid.Column="0"
@@ -21,10 +21,10 @@
         
         <Border Grid.Row="1"
                 Grid.Column="0"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2"
-                CornerRadius="0 0 0 15">
+                CornerRadius="0 0 0 15"
+                IsVisible="{Binding SelectedDevice, Converter={x:Static ObjectConverters.IsNotNull}}">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 
@@ -34,18 +34,18 @@
                     <StackPanel Spacing="2"
                                 HorizontalAlignment="Left">
                         <TextBlock Text="Device Name"/>
-                        <TextBox Text="{Binding SelectedDevice.Name}"
+                        <TextBox Text="{Binding SelectedDevice?.Name}"
                                  Width="210"/>
                     </StackPanel>
                     
                     <CheckBox Content="Include in Test Report"
-                              IsChecked="{Binding SelectedDevice.IsIncludeInReport}"/>
+                              IsChecked="{Binding SelectedDevice?.IsIncludeInReport}"/>
                     
                     <StackPanel Spacing="2"
                                 HorizontalAlignment="Left"
-                                IsVisible="{Binding SelectedDevice.IsIncludeInReport}">
+                                IsVisible="{Binding SelectedDevice?.IsIncludeInReport, TargetNullValue=False}">
                         <TextBlock Text="Identification Query"/>
-                        <TextBox Text="{Binding SelectedDevice.IdentificationQuery}"
+                        <TextBox Text="{Binding SelectedDevice?.IdentificationQuery}"
                                  Width="210"/>
                     </StackPanel>
                     
@@ -53,7 +53,7 @@
                                 HorizontalAlignment="Left">
                         <TextBlock Text="Interface"/>
                         <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
-                                  SelectedItem="{Binding SelectedDevice.Type}"
+                                  SelectedItem="{Binding SelectedDevice?.Type}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   Width="210"/>
                     </StackPanel>
@@ -61,13 +61,13 @@
                     <StackPanel Spacing="2"
                                 HorizontalAlignment="Left">
                         <TextBlock Text="Port"
-                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL, FallbackValue='TRUE'}"/>
+                                   IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL, FallbackValue='TRUE'}"/>
                         
                         <TextBlock Text="Resource"
-                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"/>
+                                   IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"/>
                         
                         <TextBlock Text="IP-Address"
-                                   IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
+                                   IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
 
                         <StackPanel Spacing="5" Orientation="Horizontal">
 
@@ -76,12 +76,12 @@
                                     
                                     <StackPanel Orientation="Horizontal"
                                                 Spacing="5"
-                                                IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
-                                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}">
+                                                IsEnabled="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
+                                                IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}">
                                         
                                         <TextBox
                                             Width="120"
-                                            Text="{Binding SelectedDevice.ResourceString}" />
+                                            Text="{Binding SelectedDevice?.ResourceString}" />
                                         
                                         <ComboBox
                                             Width="40"
@@ -93,12 +93,12 @@
                                     
                                     <StackPanel Orientation="Horizontal"
                                                 Spacing="5"
-                                                IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
-                                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}">
+                                                IsEnabled="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
+                                                IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}">
                                         
                                         <TextBox
                                             Width="120"
-                                            Text="{Binding SelectedDevice.ResourceString}" />
+                                            Text="{Binding SelectedDevice?.ResourceString}" />
                                         
                                         <ComboBox
                                             Width="40"
@@ -107,10 +107,10 @@
 
                                     </StackPanel>
 
-                                    <TextBox Text="{Binding SelectedDevice.ResourceString}"
+                                    <TextBox Text="{Binding SelectedDevice?.ResourceString}"
                                              Width="210"
-                                             IsEnabled="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
-                                             IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
+                                             IsEnabled="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
+                                             IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
                                 </StackPanel>
                             </StackPanel>
                             
@@ -119,7 +119,7 @@
                                 Classes="Icon"
                                 ToolTip.Tip="Reload resources"
                                 Command="{Binding RefreshResourcesCommand}"
-                                IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"
+                                IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"
                                 Width="35"
                                 Height="35">
                                 <shadui:ButtonAssist.Icon>
@@ -129,7 +129,7 @@
                         </StackPanel>
                     </StackPanel>
                     
-                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
+                    <StackPanel IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL}"
                                 Spacing="10">
                         
                         <StackPanel Spacing="2"
@@ -137,7 +137,7 @@
                             <TextBlock Text="Baud Rate"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableBaudRates}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.BaudRate}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.BaudRate}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -145,7 +145,7 @@
                             <TextBlock Text="Data Bits"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableDataBits}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.DataBits}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.DataBits}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -153,7 +153,7 @@
                             <TextBlock Text="Parity"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableParities}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.Parity}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.Parity}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -161,7 +161,7 @@
                             <TextBlock Text="Stop Bits"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableStopBits}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.StopBits}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.StopBits}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -169,7 +169,7 @@
                             <TextBlock Text="Handshake"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableHandshakes}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.Handshake}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.Handshake}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -177,7 +177,7 @@
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableSerialTermination}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.SerialTerminationMode}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.SerialTerminationMode}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -185,13 +185,13 @@
                             <TextBlock Text="Framing Mode"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableFramingModes}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.FramingMode}"
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.FramingMode}"
                                       DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
                                     HorizontalAlignment="Left"
-                                    IsVisible="{Binding SelectedDevice.Configuration.FramingMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TIMEOUT_BASED}">
+                                    IsVisible="{Binding SelectedDevice?.Configuration.FramingMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TIMEOUT_BASED}">
                             <TextBlock Text="Timeout (ms)"/>
                             <NumericUpDown Width="210"
                                            Minimum="10"
@@ -203,7 +203,7 @@
                         
                     </StackPanel>
                     
-                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
+                    <StackPanel IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"
                                 Spacing="10">
                         
                         <StackPanel Spacing="2"
@@ -222,11 +222,11 @@
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableVisaTerminations}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.VisaTerminationMode}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.VisaTerminationMode}"/>
                         </StackPanel>
                     </StackPanel>
                     
-                    <StackPanel IsVisible="{Binding SelectedDevice.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
+                    <StackPanel IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"
                                 Spacing="10">
                         
                         <StackPanel Spacing="2"
@@ -237,7 +237,7 @@
                                            Maximum="65535"
                                            HorizontalAlignment="Left"
                                            FormatString="0"
-                                           Value="{Binding SelectedDevice.Configuration.TcpPort}"/>
+                                           Value="{Binding SelectedDevice?.Configuration.TcpPort}"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
@@ -256,7 +256,7 @@
                             <TextBlock Text="Termination Character"/>
                             <ComboBox Width="210"
                                       ItemsSource="{Binding AvailableTcpTerminations}"
-                                      SelectedItem="{Binding SelectedDevice.Configuration.TcpTerminationMode}"/>
+                                      SelectedItem="{Binding SelectedDevice?.Configuration.TcpTerminationMode}"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -266,7 +266,6 @@
         
         <Border Grid.Row="1"
                 Grid.Column="1"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2"
                 CornerRadius="0 0 15 0"

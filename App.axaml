@@ -65,6 +65,7 @@
         <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
         <converters:PassFailConverter x:Key="PassFailConverter"/>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+        <converters:NullableBoolToBoolConverter x:Key="NullableBoolToBoolConverter"/>
         <converters:BoolToValueConverter
             x:Key="ButtonEnabledConverter"
             TrueValue="{StaticResource EnabledBrush}"

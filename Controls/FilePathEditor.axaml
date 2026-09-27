@@ -18,7 +18,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -27,37 +27,36 @@
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
-                <Button Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <DockPanel Margin="10" LastChildFill="False">
 
-                <TextBox Text="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.TestStep.FilePath, UpdateSourceTrigger=LostFocus}"
+                <TextBox Text="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.TestStep?.FilePath, UpdateSourceTrigger=LostFocus}"
                          Width="430"/>
                 
                 <Button
                     Background="{DynamicResource ButtonBackground}"
                     Classes="Icon"
-                    Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm.SelectFilePathCommand}"
+                    Command="{Binding $parent[controls:FilePathEditor].FilePathEditorVm?.SelectFilePathCommand}"
                     Width="35"
                     Height="35"
                     DockPanel.Dock="Right">

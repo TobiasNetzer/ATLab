@@ -19,7 +19,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -30,16 +30,16 @@
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
                 
-                <Button Command="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
@@ -47,45 +47,44 @@
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
             
             <StackPanel Margin="10" Spacing="10">
                 
                 <CheckBox Content="Enable Custom Response Processing"
-                          IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsCustomMaskEnabled, Mode=TwoWay}"/>
+                          IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsCustomMaskEnabled, Mode=TwoWay}"/>
                 
                 <StackPanel Spacing="10"
-                            IsEnabled="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.IsCustomMaskEnabled}">
+                            IsEnabled="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsCustomMaskEnabled, Converter={StaticResource NullableBoolToBoolConverter}}">
                 
                     <StackPanel Spacing="2">
                         <TextBlock Text="Mask"/>
-                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                        <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" Spacing="20">
 
                         <StackPanel Spacing="2">
                             <TextBlock Text="Skip"/>
-                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                      Width="100"
                                      HorizontalAlignment="Left"/>
                         </StackPanel>
 
                         <StackPanel Spacing="2">
                             <TextBlock Text="Length"/>
-                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                            <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                      Width="100"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2">
                             
                             <TextBlock Text="Display Mode"/>
-                            <ComboBox ItemsSource="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.DisplayModes}"
-                                      SelectedItem="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ResponseDisplayMode}"
+                            <ComboBox ItemsSource="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.DisplayModes}"
+                                      SelectedItem="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ResponseDisplayMode}"
                                       Width="100"/>
                             
                         </StackPanel>
@@ -103,26 +102,26 @@
                             
                         <TextBlock Text="Original:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.OriginalResponse}"
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.OriginalResponse}"
                                    TextWrapping="Wrap"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.OriginalResponse, Converter={StaticResource StringNotEmptyConverter}}"/>
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.OriginalResponse, Converter={StaticResource StringNotEmptyConverter}}"/>
                         
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
                         <TextBlock Text="Processed:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ProcessedInput}"
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ProcessedInput}"
                                    TextWrapping="Wrap"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.ProcessedInput, Converter={StaticResource StringNotEmptyConverter}}"/>
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ProcessedInput, Converter={StaticResource StringNotEmptyConverter}}"/>
                         
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
                         <TextBlock Text="Result:"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.FinalResult}"
-                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm.FinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>
+                        <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.FinalResult}"
+                                   IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.FinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>
                             
                     </StackPanel>
                 </StackPanel>

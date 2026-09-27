@@ -11,7 +11,6 @@
         
         <Border Grid.Column="0" Grid.Row="0" 
                 BorderBrush="{DynamicResource OutlineColor}"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 BorderThickness="2"
                 CornerRadius="10"
                 Margin="10 10 10 0">
@@ -339,7 +338,6 @@
                   SelectionMode="Extended"
                   BorderThickness="2"
                   BorderBrush="{DynamicResource OutlineColor}"
-                  Background="{DynamicResource TabItemsBackgroundColor}"
                   behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
                   IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
             
@@ -477,25 +475,23 @@
         <Border Grid.Column="0" Grid.Row="2"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10"
                 IsVisible="{Binding IsShowMeasurementPanel}">
             
             
             <controls:MeasurementPanel
-                LowerLimit="{Binding SelectedStep.TestStep.LowerLimit}"
-                UpperLimit="{Binding SelectedStep.TestStep.UpperLimit}"
-                MeasuredValue="{Binding SelectedStep.ResultNoFormatting}"
-                Unit="{Binding SelectedStep.TestStep.Unit}"
-                Valid="{Binding SelectedStep.IsPassed}"/>
+                LowerLimit="{Binding SelectedStep?.TestStep.LowerLimit, TargetNullValue=0}"
+                UpperLimit="{Binding SelectedStep?.TestStep.UpperLimit, TargetNullValue=0}"
+                MeasuredValue="{Binding SelectedStep?.ResultNoFormatting}"
+                Unit="{Binding SelectedStep?.TestStep.Unit}"
+                Valid="{Binding SelectedStep?.IsPassed, TargetNullValue=False}"/>
             
         </Border>
         
         <Border Grid.Column="0" Grid.Row="3"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10">
             
@@ -543,7 +539,7 @@
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RUNNING}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="Running Test: {0} / {1}">
-                        <Binding Path="SelectedStep.TestStep.Number" FallbackValue="" />
+                        <Binding Path="SelectedStep?.TestStep.Number" FallbackValue="" />
                         <Binding Path="TestSteps.Count" />
                     </MultiBinding>
                 </TextBlock.Text>
@@ -649,31 +645,31 @@
 
                 <controls:ScriptSelector
                     ScriptSelectorVm="{Binding WorkspaceEditor.ScriptSelector}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SCRIPT}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SCRIPT, TargetNullValue=False}"/>
                 
                 <controls:CommandEditor
                     CommandEditorVm="{Binding WorkspaceEditor.CommandEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND, TargetNullValue=False}"/>
                 
                 <controls:ShellCommandEditor
                     ShellCommandEditorVm="{Binding WorkspaceEditor.ShellCommandEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND, TargetNullValue=False}"/>
                 
                 <controls:ExpressionEditor
                     ExpressionEditorVm="{Binding WorkspaceEditor.ExpressionEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXPRESSION}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXPRESSION, TargetNullValue=False}"/>
 
                 <controls:FilePathEditor
                     FilePathEditorVm="{Binding WorkspaceEditor.FilePathEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FILE}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FILE, TargetNullValue=False}"/>
                 
                 <controls:TestInterfaceCommunication
                     TestInterfaceCommunicationVm="{Binding WorkspaceEditor.TestInterfaceCommunication}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INTERFACE}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INTERFACE, TargetNullValue=False}"/>
                 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding WorkspaceEditor.ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE'}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE', TargetNullValue=False}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding WorkspaceEditor.TestHardwareRelayChannels.MeasChannelViewModel}" />

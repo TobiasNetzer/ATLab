@@ -18,7 +18,6 @@
         </Border>
         
         <Border Grid.Row="1"
-            Background="{DynamicResource TabItemsBackgroundColor}"
             CornerRadius="0 0 15 15"
             BorderThickness="2"
             BorderBrush="{DynamicResource OutlineColor}">

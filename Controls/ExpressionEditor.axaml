@@ -18,7 +18,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -27,31 +27,30 @@
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
-                <Button Command="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <StackPanel Margin="10" Spacing="15">
 
-                <TextBox Text="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm.TestStep.Expression, Mode=TwoWay}"/>
+                <TextBox Text="{Binding $parent[controls:ExpressionEditor].ExpressionEditorVm?.TestStep?.Expression, Mode=TwoWay}"/>
 
             </StackPanel>
         </Border>

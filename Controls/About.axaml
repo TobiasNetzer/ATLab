@@ -1,6 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:Class="ATLab.Controls.About"
              x:DataType="vm:AboutTabViewModel"
@@ -19,7 +18,6 @@
             </Border>
             
             <Border Grid.Row="1"
-                    Background="{DynamicResource TabItemsBackgroundColor}"
                     CornerRadius="0 0 15 15"
                     BorderBrush="{DynamicResource OutlineColor}"
                     BorderThickness="2">

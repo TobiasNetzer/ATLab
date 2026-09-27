@@ -21,7 +21,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:CommandEditor].CommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -32,27 +32,26 @@
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
                 
-                <Button Command="{Binding $parent[controls:CommandEditor].CommandEditorVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:CommandEditor].CommandEditorVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:CommandEditor].CommandEditorVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <StackPanel Margin="10" Spacing="15">
                 
@@ -65,7 +64,7 @@
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
                             ToolTip.Tip="Remove selected device"
-                            Command="{Binding $parent[controls:CommandEditor].CommandEditorVm.RemoveDeviceCommand}"
+                            Command="{Binding $parent[controls:CommandEditor].CommandEditorVm?.RemoveDeviceCommand}"
                             Width="35"
                             Height="35"
                             Margin="5 0 0 0"
@@ -75,8 +74,8 @@
                             </shadui:ButtonAssist.Icon>
                         </Button>
 
-                        <ComboBox ItemsSource="{Binding $parent[controls:CommandEditor].CommandEditorVm.Devices}"
-                                  SelectedItem="{Binding $parent[controls:CommandEditor].CommandEditorVm.SelectedDevice, Mode=TwoWay}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:CommandEditor].CommandEditorVm?.Devices}"
+                                  SelectedItem="{Binding $parent[controls:CommandEditor].CommandEditorVm?.SelectedDevice, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch">
 
                             <ComboBox.ItemTemplate>
@@ -98,13 +97,13 @@
                 <StackPanel Spacing="2">
                     <TextBlock Text="Command"/>
                     
-                    <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.Command}"/>
+                    <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm?.Command.Command}"/>
                     
                     <DockPanel Margin="0 8 0 0"
                                LastChildFill="False">
                         
                         <CheckBox Content="Expect Response"
-                                  IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm.Command.IsExpectResponse}"/>
+                                  IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm?.Command.IsExpectResponse}"/>
                         
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10"
@@ -114,7 +113,7 @@
                                        VerticalAlignment="Center"
                                        Classes="Small"/>
                             
-                            <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm.TimeoutMs, Mode=TwoWay}"
+                            <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm?.TimeoutMs, Mode=TwoWay}"
                                      Width="100"/>
                             
                         </StackPanel>

@@ -20,7 +20,6 @@
             </Border>
 
             <Border Grid.Row="1"
-                    Background="{DynamicResource TabItemsBackgroundColor}"
                     CornerRadius="0 0 15 15"
                     BorderBrush="{DynamicResource OutlineColor}"
                     BorderThickness="2">
@@ -113,7 +112,7 @@
                                                 <StackPanel>
                                                     
                                                     <Button Classes="no-effects"
-                                                            Command="{ReflectionBinding $parent[UserControl].DataContext.OpenPreviewCommand}"
+                                                            Command="{ReflectionBinding $parent[UserControl].DataContext?.OpenPreviewCommand}"
                                                             CommandParameter="{Binding}"
                                                             Padding="0"
                                                             BorderThickness="0"
@@ -137,7 +136,7 @@
                                                             FontWeight="Bold"
                                                             Padding="0"
                                                             Cursor="Hand"
-                                                            Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveImageCommand}"
+                                                            Command="{ReflectionBinding $parent[UserControl].DataContext?.RemoveImageCommand}"
                                                             CommandParameter="{Binding Path}"/>
                                                 </StackPanel>
                                             </Border>
@@ -176,7 +175,7 @@
                                                   Margin="5">
 
                                                 <Button Grid.Column="0" Classes="no-effects"
-                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.OpenAttachmentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext?.OpenAttachmentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"
@@ -199,7 +198,7 @@
                                                 
                                                 <Button Grid.Column="2" Classes="no-effects"
                                                         Content="{LucideIconContent X}"
-                                                        Command="{ReflectionBinding $parent[UserControl].DataContext.RemoveAttachmentCommand,
+                                                        Command="{ReflectionBinding $parent[UserControl].DataContext?.RemoveAttachmentCommand,
                                                         RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Background="Transparent"

@@ -20,7 +20,6 @@
         
         
         <Border Grid.Row="1"
-                Background="{DynamicResource TabItemsBackgroundColor}"
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}">
@@ -32,7 +31,6 @@
                             Grid.Row="0">
                     
                     <Border BorderBrush="{DynamicResource OutlineColor}"
-                            Background="{DynamicResource TabItemsBackgroundColor}"
                             BorderThickness="2"
                             CornerRadius="10"
                             Margin="10 10 10 0">
@@ -131,7 +129,6 @@
                              SelectedItem="{Binding SelectedScript , Mode=TwoWay}"
                              Width="300"
                              BorderBrush="{DynamicResource OutlineColor}"
-                             Background="{DynamicResource TabItemsBackgroundColor}"
                              BorderThickness="2">
                         
                         <ListBox.Styles>
@@ -164,7 +161,7 @@
                         
                         <TextBlock Text="Name"/>
                         
-                        <TextBox Text="{Binding SelectedScript.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding SelectedScript?.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  MaxLength="50"/>
                         
                     </StackPanel>
@@ -175,7 +172,7 @@
                         
                         <TextBlock Text="Description"/>
                         
-                        <TextBox Text="{Binding SelectedScript.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding SelectedScript?.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"
                                  Height="80"/>
@@ -198,7 +195,7 @@
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
                                 ToolTip.Tip="Add a new variable"
-                                Command="{Binding SelectedScript.AddVariableCommand}"
+                                Command="{Binding SelectedScript?.AddVariableCommand}"
                                 Width="35"
                                 Height="35">
                                 <shadui:ButtonAssist.Icon>
@@ -210,7 +207,7 @@
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
                                 ToolTip.Tip="Remove variable"
-                                Command="{Binding SelectedScript.RemoveVariableCommand}"
+                                Command="{Binding SelectedScript?.RemoveVariableCommand}"
                                 Width="35"
                                 Height="35">
                                 <shadui:ButtonAssist.Icon>
@@ -221,15 +218,14 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
-                                  ItemsSource="{Binding SelectedScript.Variables}"
-                                  SelectedIndex="{Binding SelectedScript.SelectedVariableIndex}"
+                                  ItemsSource="{Binding SelectedScript?.Variables}"
+                                  SelectedIndex="{Binding SelectedScript?.SelectedVariableIndex}"
                                   AutoGenerateColumns="False"
                                   CanUserReorderColumns="True"
                                   CanUserSortColumns="False"
                                   GridLinesVisibility="All"
                                   BorderThickness="2"
                                   BorderBrush="{DynamicResource OutlineColor}"
-                                  Background="{DynamicResource TabItemsBackgroundColor}"
                                   VerticalScrollBarVisibility="Auto"
                                   Height="130">
                             
@@ -247,8 +243,8 @@
                         
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Add" Command="{Binding SelectedScript.AddVariableCommand}"/>
-                                    <MenuItem Header="Remove" Command="{Binding SelectedScript.RemoveVariableCommand}"/>
+                                    <MenuItem Header="Add" Command="{Binding SelectedScript?.AddVariableCommand}"/>
+                                    <MenuItem Header="Remove" Command="{Binding SelectedScript?.RemoveVariableCommand}"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
@@ -270,7 +266,7 @@
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
                                 ToolTip.Tip="Add a new command" 
-                                Command="{Binding SelectedScript.AddCommandCommand}"
+                                Command="{Binding SelectedScript?.AddCommandCommand}"
                                 Width="35"
                                 Height="35">
                                 <shadui:ButtonAssist.Icon>
@@ -282,7 +278,7 @@
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
                                 ToolTip.Tip="Remove command" 
-                                Command="{Binding SelectedScript.RemoveCommandCommand}"
+                                Command="{Binding SelectedScript?.RemoveCommandCommand}"
                                 Width="35"
                                 Height="35">
                                 <shadui:ButtonAssist.Icon>
@@ -293,15 +289,14 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
-                                  ItemsSource="{Binding SelectedScript.Commands}"
-                                  SelectedIndex="{Binding SelectedScript.SelectedCommandIndex, Mode=TwoWay}"
+                                  ItemsSource="{Binding SelectedScript?.Commands}"
+                                  SelectedIndex="{Binding SelectedScript?.SelectedCommandIndex, Mode=TwoWay}"
                                   AutoGenerateColumns="False"
                                   CanUserReorderColumns="False"
                                   CanUserSortColumns="False"
                                   GridLinesVisibility="All"
                                   BorderThickness="2"
                                   BorderBrush="{DynamicResource OutlineColor}"
-                                  Background="{DynamicResource TabItemsBackgroundColor}"
                                   VerticalScrollBarVisibility="Auto">
                             
                             <DataGrid.Styles>
@@ -339,8 +334,8 @@
                         
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Add" Command="{Binding SelectedScript.AddCommandCommand}"/>
-                                    <MenuItem Header="Remove" Command="{Binding SelectedScript.RemoveCommandCommand}"/>
+                                    <MenuItem Header="Add" Command="{Binding SelectedScript?.AddCommandCommand}"/>
+                                    <MenuItem Header="Remove" Command="{Binding SelectedScript?.RemoveCommandCommand}"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

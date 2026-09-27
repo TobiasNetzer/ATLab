@@ -18,7 +18,7 @@
     <StackPanel>
         
         <Border Classes="WithDynamicCorner"
-                Classes.expanded="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"
+                Classes.expanded="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
 
@@ -27,27 +27,26 @@
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
-                <Button Command="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.ToggleExpandedCommand}"
+                <Button Command="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
                         HorizontalAlignment="Right">
                     <shadui:ButtonAssist.Icon>
                         <Grid>
                             <ContentControl Content="{LucideIconContent ChevronDown}"
-                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded, Converter={StaticResource InverseBoolConverter}}"/>
+                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.IsExpanded, Converter={StaticResource InverseBoolConverter}, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                             <ContentControl Content="{LucideIconContent ChevronUp}"
-                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}"/>
+                                            IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"/>
                         </Grid>
                     </shadui:ButtonAssist.Icon>
                 </Button>
             </DockPanel>
         </Border>
         
-        <Border Background="{DynamicResource TabItemsBackgroundColor}"
-                CornerRadius="0 0 15 15"
+        <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
-                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.IsExpanded}">
+                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}">
 
             <StackPanel Margin="10" Spacing="10" Orientation="Vertical">
                 
@@ -62,8 +61,8 @@
                         
                         <TextBlock Text="Interface Type"/>
                     
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.InterfaceTypes}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.InterfaceTypes}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -72,11 +71,11 @@
                     <StackPanel Grid.Column="1"
                                 Grid.Row="0"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
                         
                         <TextBlock Text="Address 0-127"/>
                 
-                        <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.I2CAddress, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.I2CAddress, UpdateSourceTrigger=LostFocus}"
                                  Width="100"/>
                         
                     </StackPanel>
@@ -84,12 +83,12 @@
                     <StackPanel Grid.Column="2"
                                 Grid.Row="0"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
                         <TextBlock Text="Termination"/>
                 
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.SerialTerminationModes}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.SerialTerminationMode}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialTerminationModes}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.SerialTerminationMode}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -98,12 +97,12 @@
                     <StackPanel Grid.Column="2"
                                 Grid.Row="0"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
                         
                         <TextBlock Text="Speed Mode"/>
                 
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.I2CSpeedModes}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.I2CSpeedMode}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.I2CSpeedModes}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.I2CSpeedMode}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -112,12 +111,12 @@
                     <StackPanel Grid.Column="1"
                                 Grid.Row="0"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
                         <TextBlock Text="Baud Rate"/>
                         
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.AvailableBaudRates}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.BaudRate}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.AvailableBaudRates}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.BaudRate}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -126,12 +125,12 @@
                     <StackPanel Grid.Column="0"
                                 Grid.Row="1"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
                         <TextBlock Text="Data Bits"/>
                         
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.AvailableDataBits}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.DataBits}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.AvailableDataBits}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.DataBits}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -140,12 +139,12 @@
                     <StackPanel Grid.Column="1"
                                 Grid.Row="1"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
                         <TextBlock Text="Parity"/>
                         
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.SerialParities}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.SerialParity}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialParities}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.SerialParity}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -154,12 +153,12 @@
                     <StackPanel Grid.Column="2"
                                 Grid.Row="1"
                                 Spacing="2"
-                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
+                                IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
                         <TextBlock Text="Stop Bits"/>
                         
-                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.SerialStopBits}"
-                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.StopBits}"
+                        <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialStopBits}"
+                                  SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.StopBits}"
                                   DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
                                   MinWidth="100"/>
                         
@@ -170,7 +169,7 @@
                 <StackPanel Spacing="2">
                     <TextBlock Text="Command"/>
                     
-                    <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.Config.Command}"/>
+                    <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.Command}"/>
                     
                     <DockPanel Margin="0 8 0 0"
                                LastChildFill="False">
@@ -182,7 +181,7 @@
                             <TextBlock Text="Read Bytes"
                                        VerticalAlignment="Center"/>
                             
-                            <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.BytesToRead}"
+                            <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.BytesToRead}"
                                      Width="100"/>
                             
                         </StackPanel>
@@ -192,7 +191,7 @@
                                     DockPanel.Dock="Right">
                             <TextBlock Text="Timeout (ms)"
                                        VerticalAlignment="Center"/>
-                            <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm.TimeoutMs, UpdateSourceTrigger=LostFocus}"
+                            <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.TimeoutMs, UpdateSourceTrigger=LostFocus}"
                                      Width="100"/>
                         </StackPanel>
                     </DockPanel>

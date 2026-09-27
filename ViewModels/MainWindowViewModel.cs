@@ -16,7 +16,6 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;
     private readonly IErrorService _errorService;
-    private readonly IProjectDocumentService _projectDocumentService;
     private readonly ISettingsService _settingsService;
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
@@ -37,6 +36,13 @@ public partial class MainWindowViewModel : ViewModelBase
     public DocumentationTabViewModel DocumentationTab { get; }
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
+    
+    public bool IsTestingTabSelected => ReferenceEquals(SelectedTab, TestingTab);
+    public bool IsConfigTabSelected => ReferenceEquals(SelectedTab, ConfigTab);
+    public bool IsDocumentationTabSelected => ReferenceEquals(SelectedTab, DocumentationTab);
+    public bool IsScriptTabSelected => ReferenceEquals(SelectedTab, ScriptTab);
+    public bool IsHardwareTabSelected => ReferenceEquals(SelectedTab, HardwareTab);
+    public bool IsAboutTabSelected => ReferenceEquals(SelectedTab, AboutTab);
 
     public ObservableCollection<string> Errors => _errorService.Errors;
     
@@ -75,7 +81,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _testHardware = testHardware;
         _errorService = errorService;
-        _projectDocumentService = projectDocumentService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
         _projectModel = projectModel;
@@ -155,12 +160,12 @@ public partial class MainWindowViewModel : ViewModelBase
     
     partial void OnSelectedTabChanged(ViewModelBase value)
     {
-        switch (value)
-        {
-            case TestingTabViewModel:
-                TestingTab.SelectedStep = TestingTab.TestSteps.Count > 0 ? TestingTab.TestSteps[0] : null;
-                break;
-        }
+        OnPropertyChanged(nameof(IsTestingTabSelected));
+        OnPropertyChanged(nameof(IsConfigTabSelected));
+        OnPropertyChanged(nameof(IsDocumentationTabSelected));
+        OnPropertyChanged(nameof(IsScriptTabSelected));
+        OnPropertyChanged(nameof(IsHardwareTabSelected));
+        OnPropertyChanged(nameof(IsAboutTabSelected));
     }
     
     public async Task OnWindowOpened()
