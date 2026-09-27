@@ -13,8 +13,9 @@ public interface ITestExecutor
     event Action<int, TestStepViewModel> StepCompleted;
     event Action StepRepeated;
     event Func<Task> TestCompleted;
-    event Action TestCancelled;
+    event Action TestCanceled;
     event Action TestRepeated;
+    event Action ExecutionError;
     event Action<bool> SingleStepContinueRequestedChanged;
 
     Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int index, List<CustomVariable> runtimeVariables);

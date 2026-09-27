@@ -48,7 +48,7 @@ public class PdfExportService : IPdfExportService
 
         if (file == null)
         {
-            _loggingService.Info("PDF export cancelled.");
+            _loggingService.Info("PDF export canceled.");
             return;
         }
 

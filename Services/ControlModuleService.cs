@@ -166,7 +166,7 @@ public sealed class ControlModuleService : IDisposable
             TestStatus.RUNNING   => (byte)ControlModuleColors.LED_MODE_TEST_RUNNING,
             TestStatus.PASSED    => (byte)ControlModuleColors.LED_MODE_TEST_PASSED,
             TestStatus.FAILED    => (byte)ControlModuleColors.LED_MODE_TEST_FAILED,
-            TestStatus.CANCELLED => (byte)ControlModuleColors.LED_MODE_TEST_CANCELLED,
+            TestStatus.CANCELED => (byte)ControlModuleColors.LED_MODE_TEST_CANCELED,
             _ => (byte)ControlModuleColors.LED_MODE_OFF
         };
         

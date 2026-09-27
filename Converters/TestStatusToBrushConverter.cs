@@ -13,7 +13,7 @@ public class TestStatusToBrushConverter : IValueConverter
     public IBrush? RunningBrush { get; set; }
     public IBrush? PassedBrush { get; set; }
     public IBrush? FailedBrush { get; set; }
-    public IBrush? CancelledBrush { get; set; }
+    public IBrush? CanceledBrush { get; set; }
 
     public object? Convert(
         object? value,
@@ -30,7 +30,8 @@ public class TestStatusToBrushConverter : IValueConverter
             TestStatus.RUNNING   => RunningBrush,
             TestStatus.PASSED    => PassedBrush,
             TestStatus.FAILED    => FailedBrush,
-            TestStatus.CANCELLED => CancelledBrush,
+            TestStatus.CANCELED => CanceledBrush,
+            TestStatus.EXECUTION_ERROR => FailedBrush,
             _                    => IdleBrush
         };
     }

@@ -568,12 +568,22 @@
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
-                       Text="Test Cancelled" 
+                       Text="Test Canceled" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CANCELLED}"/>
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CANCELED}"/>
+            
+            <TextBlock Grid.Column="0"
+                       Grid.ColumnSpan="5"
+                       Grid.Row="0"
+                       Text="Test Execution Failed" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXECUTION_ERROR}"/>
             
             <TextBlock Grid.Column="0"
                        Grid.Row="2"

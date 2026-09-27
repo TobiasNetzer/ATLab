@@ -6,5 +6,6 @@ public enum TestStatus
     RUNNING,
     PASSED,
     FAILED,
-    CANCELLED
+    CANCELED,
+    EXECUTION_ERROR
 }

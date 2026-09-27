@@ -33,8 +33,9 @@ public class TestExecutor : ITestExecutor
     public event Action<int, TestStepViewModel> StepCompleted = (index, step) => { };
     public event Action StepRepeated = () => { };
     public event Func<Task> TestCompleted = () => Task.CompletedTask;
-    public event Action TestCancelled = () => { };
+    public event Action TestCanceled = () => { };
     public event Action TestRepeated = () => { };
+    public event Action ExecutionError = () => { };
     public event Action<bool> SingleStepContinueRequestedChanged = (continueRequested) => { };
     
     private const int MinRepeatDelayMs = 5;
@@ -90,14 +91,14 @@ public class TestExecutor : ITestExecutor
         if (steps.Count == 0)
         {
             _loggingService.Error("No test steps configured.");
-            OnTestCancelled();
+            OnTestCanceled();
             return;
         }
 
         if (startIndex >= steps.Count || startIndex < 0)
         {
             _loggingService.Error("Test step index out of range.");
-            OnTestCancelled();
+            OnTestCanceled();
             return;
         }
 
@@ -116,7 +117,7 @@ public class TestExecutor : ITestExecutor
         }
         catch (OperationCanceledException)
         {
-            OnTestCancelled();
+            OnTestCanceled();
         }
         catch (Exception ex)
         {
@@ -347,9 +348,12 @@ public class TestExecutor : ITestExecutor
                     _breakRepeatRequested = false;
                     OnStepCompleted(i, step);
                 }
-                
+
                 if (stepExecutionResult.IsFailure)
+                {
+                    OnExecutionError();
                     break; // END_TEST
+                }
                 
                 if (nextIndex == null)
                     break; // END_TEST
@@ -531,14 +535,17 @@ public class TestExecutor : ITestExecutor
     private async Task OnTestCompleted() =>
         await TestCompleted.Invoke();
 
-    private void OnTestCancelled()
+    private void OnTestCanceled()
     {
-        TestCancelled.Invoke();
+        TestCanceled.Invoke();
         _repeatTest = false;
     }
     
     private void OnTestRepeated() =>
         TestRepeated.Invoke();
+    
+    private void OnExecutionError() =>
+        ExecutionError.Invoke();
     
     private void SetRequestSingleStepContinueState(bool value)
     {

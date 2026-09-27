@@ -194,7 +194,7 @@
                         <StackPanel Orientation="Vertical"
                                     Spacing="2"
                                     VerticalAlignment="Top">
-                            <TextBlock Text="Color Theme"/>
+                            <TextBlock Text="Accent Color"/>
                             <ColorPicker
                                 Width="285"
                                 HorizontalAlignment="Left"

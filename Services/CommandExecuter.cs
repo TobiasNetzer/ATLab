@@ -129,13 +129,13 @@ public class CommandExecutor : ICommandExecutor
         catch (TaskCanceledException)
         {
             return token.IsCancellationRequested
-                ? OperationResult<byte[]>.Failure("Operation cancelled by user")
+                ? OperationResult<byte[]>.Failure("Operation canceled by user")
                 : OperationResult<byte[]>.Timeout("Operation timed out");
         }
         catch (OperationCanceledException)
         {
             return token.IsCancellationRequested
-                ? OperationResult<byte[]>.Failure("Operation cancelled by user")
+                ? OperationResult<byte[]>.Failure("Operation canceled by user")
                 : OperationResult<byte[]>.Timeout("Operation timed out");
         }
         catch (Exception ex)

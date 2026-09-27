@@ -44,7 +44,7 @@
         <SolidColorBrush x:Key="TestStatusFailedBrush"
                          Color="#FFFF1744" />
 
-        <SolidColorBrush x:Key="TestStatusCancelledBrush"
+        <SolidColorBrush x:Key="TestStatusCanceledBrush"
                          Color="Orange" />
         
         <SolidColorBrush x:Key="ResultValidBrush"
@@ -77,7 +77,7 @@
             RunningBrush="{StaticResource TestStatusRunningBrush}"
             PassedBrush="{StaticResource TestStatusPassedBrush}"
             FailedBrush="{StaticResource TestStatusFailedBrush}"
-            CancelledBrush="{StaticResource TestStatusCancelledBrush}" />
+            CanceledBrush="{StaticResource TestStatusCanceledBrush}" />
         
         <converters:ResultBrushConverter
             x:Key="ResultBrushConverter"

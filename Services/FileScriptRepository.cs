@@ -325,7 +325,7 @@ public sealed class FileScriptRepository : IScriptRepository
             else
             {
                 _loggingService.Info(
-                    "Repository folder selection cancelled.");
+                    "Repository folder selection canceled.");
             }
         }
         finally

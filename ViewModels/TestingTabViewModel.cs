@@ -68,10 +68,10 @@ public partial class TestingTabViewModel : ViewModelBase
     private TestStatus _testStatus = TestStatus.IDLE;
     
     [ObservableProperty]
-    private string _testDuration = string.Empty;
+    private string _testDuration = "0s";
     
     [ObservableProperty]
-    private string _serialNumber = string.Empty;
+    private string _serialNumber = "-";
     
     [ObservableProperty]
     private string _user = Environment.UserName;
@@ -300,7 +300,7 @@ public partial class TestingTabViewModel : ViewModelBase
         NumberRunTests = 0;
         NumberFailedSteps = 0;
         PassedPercentage = 100;
-        TestDuration = string.Empty;
+        TestDuration = "0s";
         TestStatus = TestStatus.IDLE;
     }
 
@@ -625,7 +625,10 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             StartTestBusy = true;
             ResetAllResults();
-
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            TestDuration = "0s";
+            
             if (!await RequestSerialNumber())
             {
                 StartTestBusy = false;
@@ -633,8 +636,6 @@ public partial class TestingTabViewModel : ViewModelBase
             }
 
             TestStatus = TestStatus.RUNNING;
-            NumberFailedSteps = 0;
-            TestProgress = 0;
             SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
 
             _allowResultSave = true;
@@ -651,16 +652,18 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             StartRepeatTestBusy = true;
             ResetAllResults();
-
+            NumberFailedSteps = 0;
+            TestProgress = 0;
+            TestDuration = "0s";
+            
             if (!await RequestSerialNumber())
             {
                 StartRepeatTestBusy = false;
                 return;
             }
-
-            NumberFailedSteps = 0;
+            
             TestStatus = TestStatus.RUNNING;
-            TestProgress = 0;
+            
             SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
 
             _allowResultSave = true;
@@ -680,6 +683,7 @@ public partial class TestingTabViewModel : ViewModelBase
             NumberFailedSteps = 0;
             TestStatus = TestStatus.RUNNING;
             TestProgress = 0;
+            TestDuration = "0s";
 
             var index = SelectedStep != null ? TestSteps.IndexOf(SelectedStep) : 0;
             await _testExecutor.StartTestAsync(TestSteps, index, _runtimeVariables);
@@ -698,7 +702,7 @@ public partial class TestingTabViewModel : ViewModelBase
             StartSingleStepBusy = true;
             NumberFailedSteps = 0;
             TestProgress = 0;
-            TestDuration = string.Empty;
+            TestDuration = "0s";
             TestStatus = TestStatus.RUNNING;
 
             await _testExecutor.StartSingleStepTest(SelectedStep, _runtimeVariables);
@@ -745,7 +749,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
             if (serial == null)
             {
-                SerialNumber = string.Empty;
+                SerialNumber = "-";
                 return false;
             }
 
@@ -753,7 +757,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
         else
         {
-            SerialNumber = string.Empty;
+            SerialNumber = "-";
         }
 
         return true;
@@ -807,7 +811,13 @@ public partial class TestingTabViewModel : ViewModelBase
             TestProgress = 100;
             NumberRunTests++;
 
-            if (TestStatus == TestStatus.CANCELLED)
+            if (TestStatus == TestStatus.CANCELED)
+            {
+                UpdatePassedPercentage();
+                return;
+            }
+            
+            if (TestStatus == TestStatus.EXECUTION_ERROR)
             {
                 UpdatePassedPercentage();
                 return;
@@ -839,9 +849,14 @@ public partial class TestingTabViewModel : ViewModelBase
             UpdatePassedPercentage();
         };
 
-        _testExecutor.TestCancelled += () =>
+        _testExecutor.TestCanceled += () =>
         {
-            TestStatus = TestStatus.CANCELLED;
+            TestStatus = TestStatus.CANCELED;
+        };
+        
+        _testExecutor.ExecutionError += () =>
+        {
+            TestStatus = TestStatus.EXECUTION_ERROR;
         };
 
         _testExecutor.TestRepeated += () =>

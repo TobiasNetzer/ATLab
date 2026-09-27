@@ -37,7 +37,7 @@ public class CsvExportService : ICsvExportService
 
         if (file == null)
         {
-            _loggingService.Info("CSV export cancelled.");
+            _loggingService.Info("CSV export canceled.");
             return;
         }
 
