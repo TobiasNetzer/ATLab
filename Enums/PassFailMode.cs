@@ -5,5 +5,6 @@ public enum PassFailMode
     CONTINUE,
     REPEAT,
     END_TEST,
-    JUMP_TO
+    JUMP_TO,
+    SHOW_COMMENT
 }

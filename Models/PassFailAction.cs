@@ -10,6 +10,9 @@ public partial class PassFailAction : ObservableObject
     private bool _isInvertResult;
     
     [ObservableProperty]
+    private bool _isIncludeResult;
+    
+    [ObservableProperty]
     private PassFailMode _mode = PassFailMode.CONTINUE;
     
     [ObservableProperty]
@@ -22,6 +25,7 @@ public partial class PassFailAction : ObservableObject
     public PassFailAction(PassFailAction other)
     {
         IsInvertResult = other.IsInvertResult;
+        IsIncludeResult = other.IsIncludeResult;
         Mode = other.Mode;
         JumpToId = other.JumpToId;
     }

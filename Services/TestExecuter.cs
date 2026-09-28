@@ -330,7 +330,7 @@ public class TestExecutor : ITestExecutor
                         throw new ArgumentOutOfRangeException();
                 }
                 
-                var nextIndex = EvaluateNextStepIndex(steps, i, step);
+                var nextIndex = await EvaluateNextStepIndex(steps, i, step);
 
                 if (i == nextIndex && stepExecutionResult.IsSuccess)
                 {
@@ -447,7 +447,7 @@ public class TestExecutor : ITestExecutor
         return -1;
     }
     
-    private int? EvaluateNextStepIndex(
+    private async Task<int?> EvaluateNextStepIndex(
         IReadOnlyList<TestStepViewModel> steps,
         int currentIndex,
         TestStepViewModel step)
@@ -487,6 +487,32 @@ public class TestExecutor : ITestExecutor
                 
                 return targetIndex;
 
+            case PassFailMode.SHOW_COMMENT:
+                
+                if (action.IsIncludeResult)
+                {
+                    var result = await _messageBoxService.ShowResultConfirmationImageAsync(
+                        "User Information",
+                        step.TestStep.Comment,
+                        step.TestStep.CustomMessageBoxImagePath,
+                        step.Result,
+                        step.IsPassed);
+    
+                    if (!result)
+                        throw new OperationCanceledException();
+                }
+                else
+                {
+                    var result = await _messageBoxService.ShowConfirmationImageAsync(
+                        "User Information",
+                        step.TestStep.Comment,
+                        step.TestStep.CustomMessageBoxImagePath);
+    
+                    if (!result)
+                        throw new OperationCanceledException();
+                }
+                
+                return currentIndex + 1;
 
             default:
                 throw new ArgumentOutOfRangeException();

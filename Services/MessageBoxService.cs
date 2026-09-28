@@ -53,14 +53,8 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             .WithMaxWidth(1000)
             .WithMinWidth(300)
             .Dismissible()
-            .WithSuccessCallback(() =>
-            {
-                tcs.TrySetResult(true);
-            })
-            .WithCancelCallback(() =>
-            {
-                tcs.TrySetResult(false);
-            })
+            .WithSuccessCallback(() => tcs.TrySetResult(true))
+            .WithCancelCallback(() => tcs.TrySetResult(false))
             .Show();
     
         var result = await tcs.Task;
@@ -71,26 +65,67 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         
     }
     
-    public async Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, DialogFunction dialogFunction = DialogFunction.CONFIRMATION)
+    public Task<bool> ShowConfirmationImageAsync(
+        string title,
+        string message,
+        string imagePath,
+        DialogFunction dialogFunction = DialogFunction.CONFIRMATION)
+    {
+        return ShowImageDialogAsync(
+            title,
+            message,
+            imagePath,
+            string.Empty,
+            false,
+            dialogFunction);
+    }
+
+    public Task<bool> ShowResultConfirmationImageAsync(
+        string title,
+        string message,
+        string imagePath,
+        string? resultText,
+        bool isPassed = false,
+        DialogFunction dialogFunction = DialogFunction.CONFIRMATION)
+    {
+        return ShowImageDialogAsync(
+            title,
+            message,
+            imagePath,
+            resultText,
+            isPassed,
+            dialogFunction);
+    }
+
+    private async Task<bool> ShowImageDialogAsync(
+        string title,
+        string message,
+        string imagePath,
+        string? resultText,
+        bool isPassed,
+        DialogFunction dialogFunction)
     {
         string okText;
         string cancelText;
-        
+
         switch (dialogFunction)
         {
             case DialogFunction.CONFIRMATION:
                 okText = "Continue";
                 cancelText = "Cancel";
                 break;
+
             case DialogFunction.USER_INPUT:
                 okText = "Pass";
                 cancelText = "Fail";
                 break;
+
             default:
                 return false;
         }
-        
+
         var bitmap = null as Bitmap;
+
         if (!string.IsNullOrWhiteSpace(imagePath))
         {
             if (File.Exists(imagePath))
@@ -98,47 +133,43 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             else
                 _loggingService.Error($"Image not found: {imagePath}");
         }
-        
+
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_GREEN);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_RED);
         _controlModuleService.SetUserResponseMode(true);
-            
+
         _messageBoxViewModel.Initialize(
             title,
             message,
             okText,
             cancelText,
             dialogFunction,
-            bitmap);
+            bitmap,
+            resultText,
+            isPassed);
 
         var tcs = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        
+
         IsDialogOpen = true;
-        
+
         DialogManager
             .CreateDialog(_messageBoxViewModel)
             .WithMaxWidth(1000)
             .WithMinWidth(300)
             .Dismissible()
-            .WithSuccessCallback(() =>
-            {
-                tcs.TrySetResult(true);
-            })
-            .WithCancelCallback(() =>
-            {
-                tcs.TrySetResult(false);
-            })
+            .WithSuccessCallback(() => tcs.TrySetResult(true))
+            .WithCancelCallback(() => tcs.TrySetResult(false))
             .Show();
 
         var result = await tcs.Task;
-        
+
         IsDialogOpen = false;
-        
+
         _controlModuleService.SetButtonColor(0, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetButtonColor(1, ControlModuleColors.LED_MODE_OFF);
         _controlModuleService.SetUserResponseMode(false);
-        
+
         return result;
     }
 
@@ -158,14 +189,8 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             .WithMaxWidth(1000)
             .WithMinWidth(300)
             .Dismissible()
-            .WithSuccessCallback(() =>
-            {
-                tcs.TrySetResult(true);
-            })
-            .WithCancelCallback(() =>
-            {
-                tcs.TrySetResult(false);
-            })
+            .WithSuccessCallback(() => tcs.TrySetResult(true))
+            .WithCancelCallback(() => tcs.TrySetResult(false))
             .Show();
         
         await tcs.Task;

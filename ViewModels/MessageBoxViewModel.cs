@@ -20,10 +20,16 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
     private string _message = string.Empty;
     
     [ObservableProperty]
+    private string? _resultText = string.Empty;
+    
+    [ObservableProperty]
     private string _okText = "Ok";
 
     [ObservableProperty]
     private string _cancelText = "Cancel";
+    
+    [ObservableProperty]
+    private bool _isPassed;
 
     [ObservableProperty]
     private DialogFunction _dialogFunction = DialogFunction.INFORMATION;
@@ -55,14 +61,16 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
         _controlModuleService.FailPressed += CancelHandler;
     }
 
-    public void Initialize(string title, string message, string okText = "Continue", string cancelText = "Cancel", DialogFunction dialogFunction = DialogFunction.INFORMATION, Bitmap? bitmap = null)
+    public void Initialize(string title, string message, string okText = "Continue", string cancelText = "Cancel", DialogFunction dialogFunction = DialogFunction.INFORMATION, Bitmap? bitmap = null, string? resultText = null, bool isPassed = false)
     {
         Title = title;
         Message = message;
+        ResultText = resultText;
         OkText = okText;
         CancelText = cancelText;
         DialogFunction = dialogFunction;
         Bitmap = bitmap;
+        IsPassed = isPassed;
     }
 
     [RelayCommand]

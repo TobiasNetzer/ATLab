@@ -5,7 +5,7 @@
              x:DataType="vm:MessageBoxViewModel">
     
     <Grid Margin="20"
-          RowDefinitions="Auto,20,Auto,Auto,20,Auto">
+          RowDefinitions="Auto,20,Auto,Auto,Auto,20,Auto">
         
         <TextBlock Grid.Row="0"
             FontSize="18"
@@ -32,7 +32,17 @@
                    IsVisible="{Binding Message, Converter={StaticResource StringNotEmptyConverter}}"
                    Margin=" 0 0 0 10"/>
         
-        <StackPanel Grid.Row="5"
+        <TextBlock Grid.Row="4"
+                   Text="{Binding ResultText}"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   Classes="Large"
+                   MaxWidth="1000"
+                   Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
+                   IsVisible="{Binding ResultText, Converter={StaticResource StringNotEmptyConverter}}"
+                   Margin=" 0 0 0 10"/>
+        
+        <StackPanel Grid.Row="6"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="8"
@@ -48,7 +58,7 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="5"
+        <StackPanel Grid.Row="6"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="8"
@@ -71,7 +81,7 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="5"
+        <StackPanel Grid.Row="6"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="8"
@@ -94,7 +104,7 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="5"
+        <StackPanel Grid.Row="6"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="8"
