@@ -61,7 +61,7 @@
                     HorizontalContentAlignment="Center"
                     Command="{Binding ConnectCommand}"/>
             
-            <Button Content="Simulation"
+            <Button Content="Simulator"
                     Classes="Outline"
                     Width="120"
                     HorizontalContentAlignment="Center"

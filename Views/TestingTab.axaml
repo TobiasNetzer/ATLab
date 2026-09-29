@@ -302,7 +302,7 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent SearchAlert}"/>
+                            <ContentControl Content="{LucideIconContent Search}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
                     
