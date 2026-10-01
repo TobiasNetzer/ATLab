@@ -268,9 +268,11 @@ public class TestExecutor : ITestExecutor
 
                 if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
                 {
+                    var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
+                    
                     var result = await _messageBoxService.ShowConfirmationImageAsync(
                         "User Information",
-                        step.TestStep.Comment,
+                        resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath);
 
                     if (!result)
@@ -330,7 +332,7 @@ public class TestExecutor : ITestExecutor
                         throw new ArgumentOutOfRangeException();
                 }
                 
-                var nextIndex = await EvaluateNextStepIndex(steps, i, step);
+                var nextIndex = await EvaluateNextStepIndex(steps, i, step, runtimeVariables);
 
                 if (i == nextIndex && stepExecutionResult.IsSuccess)
                 {
@@ -450,7 +452,8 @@ public class TestExecutor : ITestExecutor
     private async Task<int?> EvaluateNextStepIndex(
         IReadOnlyList<TestStepViewModel> steps,
         int currentIndex,
-        TestStepViewModel step)
+        TestStepViewModel step,
+        List<CustomVariable> runtimeVariables)
     {
         var action = step.IsPassed ? step.TestStep.OnPass : step.TestStep.OnFail;
         
@@ -489,11 +492,13 @@ public class TestExecutor : ITestExecutor
 
             case PassFailMode.SHOW_COMMENT:
                 
+                var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
+                
                 if (action.IsIncludeResult)
                 {
                     var result = await _messageBoxService.ShowResultConfirmationImageAsync(
                         "User Information",
-                        step.TestStep.Comment,
+                        resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath,
                         step.Result,
                         step.IsPassed);
@@ -505,7 +510,7 @@ public class TestExecutor : ITestExecutor
                 {
                     var result = await _messageBoxService.ShowConfirmationImageAsync(
                         "User Information",
-                        step.TestStep.Comment,
+                        resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath);
     
                     if (!result)

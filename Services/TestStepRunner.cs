@@ -87,9 +87,11 @@ public class TestStepRunner : ITestStepRunner
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {
+                    var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
+                    
                     var operatorResponse = await _messageBoxService.ShowConfirmationImageAsync(
                         "Awaiting User Response",
-                        step.TestStep.Comment,
+                        resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath,
                         DialogFunction.USER_INPUT);
 
