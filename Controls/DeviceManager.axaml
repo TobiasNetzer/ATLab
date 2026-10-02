@@ -310,9 +310,12 @@
                         </DataGrid.Styles>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
-                            <DataGridTextColumn Header="Interface" Binding="{Binding Type}" Width="100"/>
-                            <DataGridTextColumn Header="Resource" Binding="{Binding ResourceString}" Width="*"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"
+                                                Width="150"/>
+                            <DataGridTextColumn Header="Interface" Binding="{Binding Type,Converter={StaticResource EnumDescriptionConverter}}"
+                                                Width="100"/>
+                            <DataGridTextColumn Header="Resource" Binding="{Binding ResourceString}"
+                                                Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
