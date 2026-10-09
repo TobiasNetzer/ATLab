@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.TestInterfaceCommunication"
              xmlns:controls="clr-namespace:ATLab.Controls"
              x:DataType="controls:TestInterfaceCommunication"
@@ -23,7 +24,7 @@
                 Padding="10">
 
             <DockPanel>
-                <TextBlock Text="Interface Command"
+                <TextBlock Text="{helpers:Localize Header_TestHardwareCommunication}"
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
@@ -59,7 +60,7 @@
                                 Grid.Row="0"
                                 Spacing="2">
                         
-                        <TextBlock Text="Interface Type"/>
+                        <TextBlock Text="{helpers:Localize Label_InterfaceType}"/>
                     
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.InterfaceTypes}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType}"
@@ -73,7 +74,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
                         
-                        <TextBlock Text="Address 0-127"/>
+                        <TextBlock Text="{helpers:Localize Label_Address}"/>
                 
                         <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.I2CAddress, UpdateSourceTrigger=LostFocus}"
                                  Width="100"/>
@@ -85,7 +86,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
-                        <TextBlock Text="Termination"/>
+                        <TextBlock Text="{helpers:Localize Label_Termination}"/>
                 
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialTerminationModes}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.SerialTerminationMode}"
@@ -99,7 +100,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=I2C}">
                         
-                        <TextBlock Text="Speed Mode"/>
+                        <TextBlock Text="{helpers:Localize Label_Speed_Mode}"/>
                 
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.I2CSpeedModes}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.I2CSpeedMode}"
@@ -113,7 +114,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
-                        <TextBlock Text="Baud Rate"/>
+                        <TextBlock Text="{helpers:Localize Label_BaudRate}"/>
                         
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.AvailableBaudRates}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.BaudRate}"
@@ -127,7 +128,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
-                        <TextBlock Text="Data Bits"/>
+                        <TextBlock Text="{helpers:Localize Label_DataBits}"/>
                         
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.AvailableDataBits}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.DataBits}"
@@ -141,7 +142,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
-                        <TextBlock Text="Parity"/>
+                        <TextBlock Text="{helpers:Localize Label_Parity}"/>
                         
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialParities}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.SerialParity}"
@@ -155,7 +156,7 @@
                                 Spacing="2"
                                 IsVisible="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.InterfaceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='UART,UART_RS485'}">
                         
-                        <TextBlock Text="Stop Bits"/>
+                        <TextBlock Text="{helpers:Localize Label_StopBits}"/>
                         
                         <ComboBox ItemsSource="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.SerialStopBits}"
                                   SelectedItem="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.StopBits}"
@@ -167,7 +168,7 @@
                 </Grid>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Command"/>
+                    <TextBlock Text="{helpers:Localize Label_Command}"/>
                     
                     <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.Config.Command}"/>
                     
@@ -178,7 +179,7 @@
                                     Spacing="5"
                                     DockPanel.Dock="Left">
                             
-                            <TextBlock Text="Read Bytes"
+                            <TextBlock Text="{helpers:Localize Label_ReadBytes}"
                                        VerticalAlignment="Center"/>
                             
                             <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.BytesToRead}"
@@ -189,7 +190,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Spacing="5"
                                     DockPanel.Dock="Right">
-                            <TextBlock Text="Timeout (ms)"
+                            <TextBlock Text="{helpers:Localize Label_TimeoutMs}"
                                        VerticalAlignment="Center"/>
                             <TextBox Text="{Binding $parent[controls:TestInterfaceCommunication].TestInterfaceCommunicationVm?.TimeoutMs, UpdateSourceTrigger=LostFocus}"
                                      Width="100"/>

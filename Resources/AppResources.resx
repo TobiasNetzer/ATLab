@@ -1,0 +1,859 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplicationTitle" xml:space="preserve">
+    <value>ATLab</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ToolTip_NewFile" xml:space="preserve">
+    <value>New file</value>
+  </data>
+  <data name="ToolTip_OpenFile" xml:space="preserve">
+    <value>Open file</value>
+  </data>
+  <data name="ToolTip_SaveFile" xml:space="preserve">
+    <value>Save file</value>
+  </data>
+  <data name="ToolTip_SaveFileAs" xml:space="preserve">
+    <value>Save file as</value>
+  </data>
+  <data name="ToolTip_AddTestStep" xml:space="preserve">
+    <value>Add a new test step</value>
+  </data>
+  <data name="ToolTip_RemoveTestSteps" xml:space="preserve">
+    <value>Remove selected test steps</value>
+  </data>
+  <data name="ToolTip_MoveStepUp" xml:space="preserve">
+    <value>Move selected test step up</value>
+  </data>
+  <data name="ToolTip_MoveStepDown" xml:space="preserve">
+    <value>Move selected test step down</value>
+  </data>
+  <data name="ToolTip_DuplicateTestSteps" xml:space="preserve">
+    <value>Duplicate selected test steps</value>
+  </data>
+  <data name="ToolTip_CutTestSteps" xml:space="preserve">
+    <value>Cut selected test steps</value>
+  </data>
+  <data name="ToolTip_CopyTestSteps" xml:space="preserve">
+    <value>Copy selected test steps</value>
+  </data>
+  <data name="ToolTip_PasteTestSteps" xml:space="preserve">
+    <value>Paste test steps</value>
+  </data>
+  <data name="ToolTip_ExecuteSingleStep" xml:space="preserve">
+    <value>Execute single step</value>
+  </data>
+  <data name="ToolTip_StartTestFromSelectedStep" xml:space="preserve">
+    <value>Start test execution from selected step</value>
+  </data>
+  <data name="ToolTip_StartContinuousExecution" xml:space="preserve">
+    <value>Start continuous test execution</value>
+  </data>
+  <data name="ToolTip_StartTestExecution" xml:space="preserve">
+    <value>Start test execution</value>
+  </data>
+  <data name="ToolTip_StopTestExecution" xml:space="preserve">
+    <value>Stop test execution</value>
+  </data>
+  <data name="ToolTip_EnableDebugMode" xml:space="preserve">
+    <value>Enable debug mode</value>
+  </data>
+  <data name="ToolTip_AdvanceSingleStep" xml:space="preserve">
+    <value>Advance single step</value>
+  </data>
+  <data name="ToolTip_ShowMeasurementPanel" xml:space="preserve">
+    <value>Show measurement panel</value>
+  </data>
+  <data name="ToolTip_EnableDevelopmentMode" xml:space="preserve">
+    <value>Enable development mode</value>
+  </data>
+  <data name="Header_No" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="Header_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Header_LowerLimit" xml:space="preserve">
+    <value>Lower Limit</value>
+  </data>
+  <data name="Header_NominalValue" xml:space="preserve">
+    <value>Nominal Value</value>
+  </data>
+  <data name="Header_UpperLimit" xml:space="preserve">
+    <value>Upper Limit</value>
+  </data>
+  <data name="Header_MeasuredValue" xml:space="preserve">
+    <value>Measured Value</value>
+  </data>
+  <data name="Header_Deviation" xml:space="preserve">
+    <value>Deviation</value>
+  </data>
+  <data name="Header_Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="Menu_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Menu_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Menu_MoveUp" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="Menu_MoveDown" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="Menu_Duplicate" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="Menu_Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="Menu_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Menu_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Status_RunningTest" xml:space="preserve">
+    <value>Running Test</value>
+  </data>
+  <data name="Status_TestPassed" xml:space="preserve">
+    <value>Test Passed</value>
+  </data>
+  <data name="Status_TestFailed" xml:space="preserve">
+    <value>Test Failed</value>
+  </data>
+  <data name="Status_TestCanceled" xml:space="preserve">
+    <value>Test Canceled</value>
+  </data>
+  <data name="Status_TestExecutionFailed" xml:space="preserve">
+    <value>Test Execution Failed</value>
+  </data>
+  <data name="Label_SerialNumber" xml:space="preserve">
+    <value>S/N</value>
+  </data>
+  <data name="Label_TestDuration" xml:space="preserve">
+    <value>Test Duration</value>
+  </data>
+  <data name="Label_FailedSteps" xml:space="preserve">
+    <value>Failed Steps</value>
+  </data>
+  <data name="Label_PassedTests" xml:space="preserve">
+    <value>Passed Tests</value>
+  </data>
+  <data name="Label_User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Tab_Testing" xml:space="preserve">
+    <value>Test Environment</value>
+  </data>
+  <data name="Tab_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="Tab_Documentation" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="Tab_Scripting" xml:space="preserve">
+    <value>Scripting</value>
+  </data>
+  <data name="Tab_Hardware" xml:space="preserve">
+    <value>Test Hardware</value>
+  </data>
+  <data name="Tab_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Status_SimulationMode" xml:space="preserve">
+    <value>Software is working without test hardware</value>
+  </data>
+  <data name="ToolTip_ShowEventLog" xml:space="preserve">
+    <value>Show event log</value>
+  </data>
+  <data name="ToolTip_FindMatrixChannel" xml:space="preserve">
+    <value>Determine matrix channel via external probe</value>
+  </data>
+  <data name="ToolTip_ToggleTheme" xml:space="preserve">
+    <value>Toggle theme</value>
+  </data>
+  <data name="ToolTip_ToggleLanguage" xml:space="preserve">
+    <value>Toggle language</value>
+  </data>
+  <data name="Button_Connect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="Button_Simulator" xml:space="preserve">
+    <value>Simulator</value>
+  </data>
+  <data name="Button_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Button_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Button_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Label_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Label_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Label_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Label_TimeoutMs" xml:space="preserve">
+    <value>Timeout (ms)</value>
+  </data>
+  <data name="Label_Delay" xml:space="preserve">
+    <value>Delay</value>
+  </data>
+  <data name="Label_Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Label_Resource" xml:space="preserve">
+    <value>Resource</value>
+  </data>
+  <data name="Label_Interface" xml:space="preserve">
+    <value>Interface</value>
+  </data>
+  <data name="Label_IpAddress" xml:space="preserve">
+    <value>IP-Address</value>
+  </data>
+  <data name="Header_VariableName" xml:space="preserve">
+    <value>Variable Name</value>
+  </data>
+  <data name="Header_InitialValue" xml:space="preserve">
+    <value>Initial Value</value>
+  </data>
+  <data name="Header_DefaultValue" xml:space="preserve">
+    <value>Default Value</value>
+  </data>
+  <data name="Header_Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Header_ExpectResponse" xml:space="preserve">
+    <value>Expect Response</value>
+  </data>
+  <data name="Header_Evaluate" xml:space="preserve">
+    <value>Evaluate</value>
+  </data>
+  <data name="Header_DelayMs" xml:space="preserve">
+    <value>Delay (ms)</value>
+  </data>
+  <data name="Header_TimeoutMs" xml:space="preserve">
+    <value>Timeout (ms)</value>
+  </data>
+  <data name="Header_Interface" xml:space="preserve">
+    <value>Interface</value>
+  </data>
+  <data name="Header_Resource" xml:space="preserve">
+    <value>Resource</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="About_Description" xml:space="preserve">
+    <value>A cross‑platform automated testing framework for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces.</value>
+  </data>
+  <data name="About_Build" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="About_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Button_ViewProjectOnGitHub" xml:space="preserve">
+    <value>View project on GitHub</value>
+  </data>
+  <data name="Button_License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Window_TestHardwareSelector" xml:space="preserve">
+    <value>Test Hardware Selector</value>
+  </data>
+  <data name="Header_SelectTestHardware" xml:space="preserve">
+    <value>Select Test Hardware</value>
+  </data>
+  <data name="Header_ProjectSettings" xml:space="preserve">
+    <value>Project Settings</value>
+  </data>
+  <data name="Header_TestExecutionSettings" xml:space="preserve">
+    <value>Test Execution Settings</value>
+  </data>
+  <data name="Label_RequestSerialNumber" xml:space="preserve">
+    <value>Request Serial Number</value>
+  </data>
+  <data name="Label_SaveTestResult" xml:space="preserve">
+    <value>Save Test Result</value>
+  </data>
+  <data name="Label_Always" xml:space="preserve">
+    <value>Always</value>
+  </data>
+  <data name="Label_PassedOnly" xml:space="preserve">
+    <value>Passed Only</value>
+  </data>
+  <data name="Label_ExportTestDataCsv" xml:space="preserve">
+    <value>Export Test Data (CSV)</value>
+  </data>
+  <data name="Label_ExportTestReportPdf" xml:space="preserve">
+    <value>Export Test Report (PDF)</value>
+  </data>
+  <data name="Label_OutputPath" xml:space="preserve">
+    <value>Output Path</value>
+  </data>
+  <data name="Header_ControlDevices" xml:space="preserve">
+    <value>Control Devices</value>
+  </data>
+  <data name="Label_EnableControlModule" xml:space="preserve">
+    <value>Enable Control Module</value>
+  </data>
+  <data name="Header_SerialNumberValidation" xml:space="preserve">
+    <value>Serial Number Validation</value>
+  </data>
+  <data name="Label_EnableSerialNumberValidation" xml:space="preserve">
+    <value>Enable Serial Number Validation</value>
+  </data>
+  <data name="Label_Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Label_StartsWith" xml:space="preserve">
+    <value>Starts With</value>
+  </data>
+  <data name="Label_EndsWith" xml:space="preserve">
+    <value>Ends With</value>
+  </data>
+  <data name="Label_Contains" xml:space="preserve">
+    <value>Contains</value>
+  </data>
+  <data name="Header_GeneralSettings" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
+  <data name="Label_DefaultTolerance" xml:space="preserve">
+    <value>Default Tolerance (%)</value>
+  </data>
+  <data name="Label_DisplayedDecimalPlaces" xml:space="preserve">
+    <value>Displayed Decimal Places</value>
+  </data>
+  <data name="Label_LogLevel" xml:space="preserve">
+    <value>Log Level</value>
+  </data>
+  <data name="Header_RuntimeVariables" xml:space="preserve">
+    <value>Runtime Variables</value>
+  </data>
+  <data name="ToolTip_AddVariable" xml:space="preserve">
+    <value>Add a new variable</value>
+  </data>
+  <data name="ToolTip_RemoveVariable" xml:space="preserve">
+    <value>Remove variable</value>
+  </data>
+  <data name="Header_CustomRelayChannelNaming" xml:space="preserve">
+    <value>Custom Relay Channel Naming</value>
+  </data>
+  <data name="Header_MatrixChannels" xml:space="preserve">
+    <value>Matrix Channels</value>
+  </data>
+  <data name="Header_StimulationChannels" xml:space="preserve">
+    <value>Stimulation Channels</value>
+  </data>
+  <data name="Header_ExtStimulationChannels" xml:space="preserve">
+    <value>Ext Stimulation Channels</value>
+  </data>
+  <data name="Header_DeviceManager" xml:space="preserve">
+    <value>Device Manager</value>
+  </data>
+  <data name="Label_DeviceName" xml:space="preserve">
+    <value>Device Name</value>
+  </data>
+  <data name="Label_IncludeInTestReport" xml:space="preserve">
+    <value>Include in Test Report</value>
+  </data>
+  <data name="Label_IdentificationQuery" xml:space="preserve">
+    <value>Identification Query</value>
+  </data>
+  <data name="ToolTip_ReloadResources" xml:space="preserve">
+    <value>Reload resources</value>
+  </data>
+  <data name="Label_BaudRate" xml:space="preserve">
+    <value>Baud Rate</value>
+  </data>
+  <data name="Label_DataBits" xml:space="preserve">
+    <value>Data Bits</value>
+  </data>
+  <data name="Label_Parity" xml:space="preserve">
+    <value>Parity</value>
+  </data>
+  <data name="Label_StopBits" xml:space="preserve">
+    <value>Stop Bits</value>
+  </data>
+  <data name="Label_Handshake" xml:space="preserve">
+    <value>Handshake</value>
+  </data>
+  <data name="Label_TerminationCharacter" xml:space="preserve">
+    <value>Termination Character</value>
+  </data>
+  <data name="Label_FramingMode" xml:space="preserve">
+    <value>Framing Mode</value>
+  </data>
+  <data name="ToolTip_AddDevice" xml:space="preserve">
+    <value>Add new device</value>
+  </data>
+  <data name="ToolTip_RemoveDevice" xml:space="preserve">
+    <value>Remove device</value>
+  </data>
+  <data name="Header_ProjectDocumentation" xml:space="preserve">
+    <value>Project Documentation</value>
+  </data>
+  <data name="Label_TestDocumentation" xml:space="preserve">
+    <value>Test Documentation</value>
+  </data>
+  <data name="Label_RequiredGear" xml:space="preserve">
+    <value>Required Test Gear / Instruments / Tools</value>
+  </data>
+  <data name="Label_KnownIssues" xml:space="preserve">
+    <value>Known Issues</value>
+  </data>
+  <data name="Label_Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="Button_AddImage" xml:space="preserve">
+    <value>Add Image</value>
+  </data>
+  <data name="Label_Attachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="Button_AddAttachment" xml:space="preserve">
+    <value>Add Attachment</value>
+  </data>
+  <data name="Header_DeviceUnderTest" xml:space="preserve">
+    <value>Device Under Test</value>
+  </data>
+  <data name="Description_DeviceUnderTest" xml:space="preserve">
+    <value>Device‑specific information to be included in the generated test report</value>
+  </data>
+  <data name="Label_Revision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="Label_Variant" xml:space="preserve">
+    <value>Variant</value>
+  </data>
+  <data name="Label_PartNumber" xml:space="preserve">
+    <value>Part Number</value>
+  </data>
+  <data name="Label_AdditionalNotes" xml:space="preserve">
+    <value>Additional Notes</value>
+  </data>
+  <data name="Header_TestHardwareInfo" xml:space="preserve">
+    <value>Test Hardware Info</value>
+  </data>
+  <data name="Header_ConnectedHardware" xml:space="preserve">
+    <value>Connected Test Hardware</value>
+  </data>
+  <data name="Header_AvailableRelayChannels" xml:space="preserve">
+    <value>Available Relay Channels</value>
+  </data>
+  <data name="Header_AvailableInterfaces" xml:space="preserve">
+    <value>Available Interfaces</value>
+  </data>
+  <data name="Header_TestHardwareDiagnostics" xml:space="preserve">
+    <value>Test Hardware Diagnostics</value>
+  </data>
+  <data name="Label_Warning" xml:space="preserve">
+    <value>Warning:</value>
+  </data>
+  <data name="Warning_DisconnectEverything" xml:space="preserve">
+    <value>Ensure that everything is disconnected from the relay matrix before running the test. Leaving devices connected may cause permanent damage to the test hardware or the connected equipment.</value>
+  </data>
+  <data name="Label_IHaveDisconnectedEverything" xml:space="preserve">
+    <value>I have disconnected everything</value>
+  </data>
+  <data name="Button_RunRelayMatrixTest" xml:space="preserve">
+    <value>Run Relay Matrix Test</value>
+  </data>
+  <data name="Label_MatrixH" xml:space="preserve">
+    <value>Matrix H</value>
+  </data>
+  <data name="Label_MatrixL" xml:space="preserve">
+    <value>Matrix L</value>
+  </data>
+  <data name="Header_TestHardwareInterface" xml:space="preserve">
+    <value>Test Hardware Interface</value>
+  </data>
+  <data name="Header_ScriptEditor" xml:space="preserve">
+    <value>Script Editor</value>
+  </data>
+  <data name="ToolTip_NewScript" xml:space="preserve">
+    <value>New script</value>
+  </data>
+  <data name="ToolTip_SaveScript" xml:space="preserve">
+    <value>Save script</value>
+  </data>
+  <data name="ToolTip_DeleteScript" xml:space="preserve">
+    <value>Delete script</value>
+  </data>
+  <data name="ToolTip_ChangeRepositoryFolder" xml:space="preserve">
+    <value>Change repository folder</value>
+  </data>
+  <data name="ToolTip_ReloadScriptRepository" xml:space="preserve">
+    <value>Reload script repository</value>
+  </data>
+  <data name="Label_Scripts" xml:space="preserve">
+    <value>Scripts</value>
+  </data>
+  <data name="Label_Variables" xml:space="preserve">
+    <value>Variables</value>
+  </data>
+  <data name="Label_Commands" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="ToolTip_AddCommand" xml:space="preserve">
+    <value>Add a new command</value>
+  </data>
+  <data name="ToolTip_RemoveCommand" xml:space="preserve">
+    <value>Remove command</value>
+  </data>
+  <data name="Header_EnterSerialNumber" xml:space="preserve">
+    <value>Enter Serial Number</value>
+  </data>
+  <data name="Header_TestStepConfiguration" xml:space="preserve">
+    <value>Test Step Configuration</value>
+  </data>
+  <data name="Label_LowerLimit" xml:space="preserve">
+    <value>Lower Limit</value>
+  </data>
+  <data name="Label_Nominal" xml:space="preserve">
+    <value>Nominal</value>
+  </data>
+  <data name="Label_UpperLimit" xml:space="preserve">
+    <value>Upper Limit</value>
+  </data>
+  <data name="Label_Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="Label_AdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
+  </data>
+  <data name="Label_IgnoreStep" xml:space="preserve">
+    <value>Ignore Step</value>
+  </data>
+  <data name="Label_ExcludeFromExport" xml:space="preserve">
+    <value>Exclude from Export</value>
+  </data>
+  <data name="Label_AccentColor" xml:space="preserve">
+    <value>Accent Color</value>
+  </data>
+  <data name="Label_ShowComment" xml:space="preserve">
+    <value>Show Comment</value>
+  </data>
+  <data name="ToolTip_AddImageToMessageBox" xml:space="preserve">
+    <value>Add image to message box</value>
+  </data>
+  <data name="Label_AssignResultToVariable" xml:space="preserve">
+    <value>Assign Result to Variable</value>
+  </data>
+  <data name="Header_PassAction" xml:space="preserve">
+    <value>Pass-Action</value>
+  </data>
+  <data name="Header_FailAction" xml:space="preserve">
+    <value>Fail-Action</value>
+  </data>
+  <data name="Label_InvertResult" xml:space="preserve">
+    <value>Invert Result</value>
+  </data>
+  <data name="Label_Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Label_Repeat" xml:space="preserve">
+    <value>Repeat</value>
+  </data>
+  <data name="Label_EndTest" xml:space="preserve">
+    <value>End Test</value>
+  </data>
+  <data name="Label_JumpTo" xml:space="preserve">
+    <value>Jump To</value>
+  </data>
+  <data name="Label_IncludeResult" xml:space="preserve">
+    <value>Include Result</value>
+  </data>
+  <data name="Header_ResponseProcessing" xml:space="preserve">
+    <value>Response Processing</value>
+  </data>
+  <data name="Label_EnableCustomResponseProcessing" xml:space="preserve">
+    <value>Enable Custom Response Processing</value>
+  </data>
+  <data name="Label_Mask" xml:space="preserve">
+    <value>Mask</value>
+  </data>
+  <data name="Label_Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="Label_DisplayMode" xml:space="preserve">
+    <value>Display Mode</value>
+  </data>
+  <data name="Header_ReceivedSequence" xml:space="preserve">
+    <value>Received Sequence</value>
+  </data>
+  <data name="Label_Original" xml:space="preserve">
+    <value>Original:</value>
+  </data>
+  <data name="Label_Processed" xml:space="preserve">
+    <value>Processed:</value>
+  </data>
+  <data name="Header_Expression" xml:space="preserve">
+    <value>Expression</value>
+  </data>
+  <data name="Header_DeviceCommand" xml:space="preserve">
+    <value>Device Command</value>
+  </data>
+  <data name="Label_TargetDevice" xml:space="preserve">
+    <value>Target Device</value>
+  </data>
+  <data name="ToolTip_RemoveSelectedDevice" xml:space="preserve">
+    <value>Remove selected device</value>
+  </data>
+  <data name="Label_ExpectResponse" xml:space="preserve">
+    <value>Expect Response</value>
+  </data>
+  <data name="Header_ShellCommand" xml:space="preserve">
+    <value>Shell Command</value>
+  </data>
+  <data name="Label_DirectLaunch" xml:space="preserve">
+    <value>Direct Launch</value>
+  </data>
+  <data name="Label_WindowBehavior" xml:space="preserve">
+    <value>Window Behavior</value>
+  </data>
+  <data name="Header_FilePath" xml:space="preserve">
+    <value>File Path</value>
+  </data>
+  <data name="Header_ScriptConfiguration" xml:space="preserve">
+    <value>Script Configuration</value>
+  </data>
+  <data name="ToolTip_RemoveSelectedScript" xml:space="preserve">
+    <value>Remove selected script</value>
+  </data>
+  <data name="ToolTip_SwapChannels" xml:space="preserve">
+    <value>Swap channels</value>
+  </data>
+  <data name="ToolTip_EnableExternalProbe" xml:space="preserve">
+    <value>Enable external probe</value>
+  </data>
+  <data name="Label_Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="Header_Variable" xml:space="preserve">
+    <value>Variable</value>
+  </data>
+  <data name="Header_ExternalStimulationChannels" xml:space="preserve">
+    <value>External Stimulation Channels</value>
+  </data>
+  <data name="Label_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Label_Evaluate" xml:space="preserve">
+    <value>Evaluate</value>
+  </data>
+  <data name="Label_TestHardwareDeviceName" xml:space="preserve">
+    <value>Device:</value>
+  </data>
+  <data name="Label_TestHardwareSerialNumber" xml:space="preserve">
+    <value>Serial Number:</value>
+  </data>
+  <data name="Label_TestHardwareFirmware" xml:space="preserve">
+    <value>Firmware:</value>
+  </data>
+  <data name="Label_TestHardwareBuildDate" xml:space="preserve">
+    <value>Build Date:</value>
+  </data>
+  <data name="Label_TestHardwareBuildTime" xml:space="preserve">
+    <value>Build Time:</value>
+  </data>
+  <data name="Label_TestHardwareMatrixChannels" xml:space="preserve">
+    <value>Matrix Channels:</value>
+  </data>
+  <data name="Label_TestHardwareStimulationChannels" xml:space="preserve">
+    <value>Stimulation Channels:</value>
+  </data>
+  <data name="Label_TestHardwareExternalStimulationChannels" xml:space="preserve">
+    <value>External Stimulation Channels:</value>
+  </data>
+  <data name="Label_TestHardwareIsolatedI2C" xml:space="preserve">
+    <value>Isolated I²C:</value>
+  </data>
+  <data name="Label_TestHardwareIsolatedUART" xml:space="preserve">
+    <value>Isolated RS485:</value>
+  </data>
+  <data name="Label_TestHardwareIsolatedRS485" xml:space="preserve">
+    <value>Isolated UART:</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="About_Date" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="About_Configuration" xml:space="preserve">
+    <value>Configuration:</value>
+  </data>
+  <data name="About_Avalonia" xml:space="preserve">
+    <value>Avalonia:</value>
+  </data>
+  <data name="About_Runtime" xml:space="preserve">
+    <value>Runtime:</value>
+  </data>
+  <data name="Header_TestHardwareCommunication" xml:space="preserve">
+    <value>Interface Command</value>
+  </data>
+  <data name="Label_InterfaceType" xml:space="preserve">
+    <value>Interface Type</value>
+  </data>
+  <data name="Label_Address" xml:space="preserve">
+    <value>Address 0-127</value>
+  </data>
+  <data name="Label_Termination" xml:space="preserve">
+    <value>Termination</value>
+  </data>
+  <data name="Label_Speed_Mode" xml:space="preserve">
+    <value>Speed Mode</value>
+  </data>
+  <data name="Label_Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Label_ReadBytes" xml:space="preserve">
+    <value>Read Bytes</value>
+  </data>
+  <data name="Label_Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="ButtonLabel_Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="ButtonLabel_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonLabel_Pass" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="ButtonLabel_Fail" xml:space="preserve">
+    <value>Fail</value>
+  </data>
+  <data name="Title_UserInformation" xml:space="preserve">
+    <value>User Information</value>
+  </data>
+  <data name="Title_UnsavedChanges" xml:space="preserve">
+    <value>Unsaved Changes</value>
+  </data>
+  <data name="Text_UnsavedChanges" xml:space="preserve">
+    <value>You have unsaved changes. Continue without saving?</value>
+  </data>
+  <data name="Title_AwaitingUserResponse" xml:space="preserve">
+    <value>waiting User Response</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_NONE" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_SCRIPT" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_COMMAND" xml:space="preserve">
+    <value>Device Command</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_INTERFACE" xml:space="preserve">
+    <value>Interface Command</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_SHELL_COMMAND" xml:space="preserve">
+    <value>Shell Command</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_USER_RESPONSE" xml:space="preserve">
+    <value>User Response</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_EXPRESSION" xml:space="preserve">
+    <value>Expression</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_FILE" xml:space="preserve">
+    <value>File</value>
+  </data>
+</root>

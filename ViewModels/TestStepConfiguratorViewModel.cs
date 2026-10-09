@@ -8,6 +8,7 @@ using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Services;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,7 +22,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private readonly ProjectSettings _projectSettings;
     private readonly RuntimeVariableEditorViewModel _runtimeVariableEditorViewModel;
 
-    public List<TestEvaluationSource> EvaluationSources { get; } = Enum.GetValues<TestEvaluationSource>().ToList();
+    public List<TestEvaluationSource> EvaluationSources => Enum.GetValues<TestEvaluationSource>().ToList();
         
     [ObservableProperty]
     private TestStepViewModel? _testStepViewModel;
@@ -72,6 +73,11 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
         
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
+        
+        LocalizationService.Instance.PropertyChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(EvaluationSources));
+        };
     }
 
     public void LoadTestStep(TestStepViewModel testStep, IEnumerable<TestStepViewModel> allSteps)

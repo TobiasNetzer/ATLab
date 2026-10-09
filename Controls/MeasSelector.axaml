@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.MeasSelector"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:MeasChannelViewModel"
@@ -25,7 +26,7 @@
                 Background="{DynamicResource OutlineColor}"
                 Padding="10">
             <DockPanel>
-                <TextBlock Text="Matrix Channels"
+                <TextBlock Text="{helpers:Localize Header_MatrixChannels}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
@@ -57,7 +58,7 @@
                         Margin="10">
                 
                 <StackPanel>
-                    <TextBlock Text="Matrix H"
+                    <TextBlock Text="{helpers:Localize Label_MatrixH}"
                                FontSize="16"/>
                     
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
@@ -82,7 +83,7 @@
                 <Button
                     Background="{DynamicResource ButtonBackground}"
                     Classes="Icon"
-                    ToolTip.Tip="Swap channels"
+                    ToolTip.Tip="{helpers:Localize ToolTip_SwapChannels}"
                     Command="{Binding ToggleChannelsCommand}"
                     Width="35"
                     Height="35"
@@ -93,7 +94,7 @@
                 </Button>
                 
                 <StackPanel>
-                    <TextBlock Text="Matrix L"
+                    <TextBlock Text="{helpers:Localize Label_MatrixL}"
                                FontSize="16"/>
                 
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
@@ -118,7 +119,7 @@
                 <Button
                     Background="{Binding IsExternalProbeEnabled, Converter={StaticResource ButtonEnabledConverter}}"
                     Classes="Icon"
-                    ToolTip.Tip="Enable external probe"
+                    ToolTip.Tip="{helpers:Localize ToolTip_EnableExternalProbe}"
                     Command="{Binding ToggleExternalProbeCommand}"
                     Width="35"
                     Height="35"

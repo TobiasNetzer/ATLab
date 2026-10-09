@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.TestHardwareInfo"
              x:DataType="vm:TestHardwareInfoViewModel"
              Width="300">
@@ -11,7 +12,7 @@
                 Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            <TextBlock Text="Test Hardware Info"
+            <TextBlock Text="{helpers:Localize Header_TestHardwareInfo}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
@@ -27,32 +28,82 @@
                         HorizontalAlignment="Stretch">
 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Connected Test Hardware" Classes="Small" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding DeviceName, StringFormat=Device: {0}}"/>
-                    <TextBlock Text="{Binding SerialNumber, StringFormat=Serial Number: {0}}"/>
-                    <TextBlock Text="{Binding FirmwareVersion, StringFormat=Firmware: {0}}"/>
-                    <TextBlock Text="{Binding BuildDate, StringFormat=Build Date: {0}}"/>
-                    <TextBlock Text="{Binding BuildTime, StringFormat=Build Time: {0}}"/>
+                    <TextBlock Text="{helpers:Localize Header_ConnectedHardware}"
+                               Classes="Small"
+                               FontWeight="Bold"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareDeviceName}"/>
+                        <TextBlock Text="{Binding DeviceName}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareSerialNumber}"/>
+                        <TextBlock Text="{Binding SerialNumber}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareFirmware}"/>
+                        <TextBlock Text="{Binding FirmwareVersion}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareBuildDate}"/>
+                        <TextBlock Text="{Binding BuildDate}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareBuildTime}"/>
+                        <TextBlock Text="{Binding BuildTime}"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <Border BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"/>
 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Available Relay Channels" Classes="Small" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding MeasChannelCount, StringFormat=Matrix Channels: {0}}"/>
-                    <TextBlock Text="{Binding StimChannelCount, StringFormat=Stimulation Channels: {0}}"/>
-                    <TextBlock Text="{Binding ExtStimChannelCount, StringFormat=External Stimulation Channels: {0}}"/>
+                    <TextBlock Text="{helpers:Localize Header_AvailableRelayChannels}"
+                               Classes="Small"
+                               FontWeight="Bold"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareMatrixChannels}"/>
+                        <TextBlock Text="{Binding MeasChannelCount}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareStimulationChannels}"/>
+                        <TextBlock Text="{Binding StimChannelCount}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareExternalStimulationChannels}"/>
+                        <TextBlock Text="{Binding ExtStimChannelCount}"/>
+                    </StackPanel>
                 </StackPanel>
                 
                 <Border BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"/>
                 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Available Interfaces" Classes="Small" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding InterfaceAvailableI2C, StringFormat=Isolated I2C: {0}}"/>
-                    <TextBlock Text="{Binding InterfaceAvailableUART, StringFormat=Isolated UART: {0}}"/>
-                    <TextBlock Text="{Binding InterfaceAvailableRS485, StringFormat=Isolated RS485: {0}}"/>
+                    <TextBlock Text="{helpers:Localize Header_AvailableInterfaces}"
+                               Classes="Small"
+                               FontWeight="Bold"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareIsolatedI2C}"/>
+                        <TextBlock Text="{Binding InterfaceAvailableI2C}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareIsolatedUART}"/>
+                        <TextBlock Text="{Binding InterfaceAvailableUART}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="{helpers:Localize Label_TestHardwareIsolatedRS485}"/>
+                        <TextBlock Text="{Binding InterfaceAvailableRS485}"/>
+                    </StackPanel>
                 </StackPanel>
 
             </StackPanel>

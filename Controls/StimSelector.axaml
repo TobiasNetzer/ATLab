@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.StimSelector"
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
@@ -23,7 +24,7 @@
                 Classes.expanded="{Binding IsExpanded}"
                 Padding="10">
             <DockPanel>
-                <TextBlock Text="Stimulation Channels"
+                <TextBlock Text="{helpers:Localize Header_StimulationChannels}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>

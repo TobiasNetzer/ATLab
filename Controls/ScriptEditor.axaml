@@ -3,6 +3,7 @@
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.ScriptEditor"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:DataType="vm:ScriptingTabViewModel"
              Width="1200">
     
@@ -13,7 +14,7 @@
                 CornerRadius="15 15 0 0"
                 Padding="10">
                             
-            <TextBlock Text="Script Editor"
+            <TextBlock Text="{helpers:Localize Header_ScriptEditor}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
@@ -42,7 +43,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="New script"
+                                ToolTip.Tip="{helpers:Localize ToolTip_NewScript}"
                                 Command="{Binding NewScriptCommand}"
                                 Width="40"
                                 Height="40">
@@ -54,7 +55,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Save script"
+                                ToolTip.Tip="{helpers:Localize ToolTip_SaveScript}"
                                 Command="{Binding SaveScriptCommand}"
                                 Width="40"
                                 Height="40">
@@ -66,7 +67,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Delete script"
+                                ToolTip.Tip="{helpers:Localize ToolTip_DeleteScript}"
                                 Command="{Binding DeleteScriptCommand}"
                                 Width="40"
                                 Height="40">
@@ -91,7 +92,7 @@
                                 </shadui:ButtonAssist.Icon>
                                 <ToolTip.Tip>
                                     <StackPanel>
-                                        <TextBlock Text="Change repository folder"/>
+                                        <TextBlock Text="{helpers:Localize ToolTip_ChangeRepositoryFolder}"/>
                                         <TextBlock Text="{Binding RepositoryPath}"
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"
@@ -103,7 +104,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Reload script repository"
+                                ToolTip.Tip="{helpers:Localize ToolTip_ReloadScriptRepository}"
                                 Command="{Binding ReloadScriptsCommand}"
                                 Width="40"
                                 Height="40">
@@ -122,7 +123,7 @@
                       Margin="10"
                       RowSpacing="2">
                     
-                    <TextBlock Grid.Row="0" Text="Scripts"/>
+                    <TextBlock Grid.Row="0" Text="{helpers:Localize Label_Scripts}"/>
 
                     <ListBox Grid.Row="1"
                              ItemsSource="{Binding Scripts}"
@@ -159,7 +160,7 @@
                                 Grid.Column="0"
                                 Spacing="2">
                         
-                        <TextBlock Text="Name"/>
+                        <TextBlock Text="{helpers:Localize Label_Name}"/>
                         
                         <TextBox Text="{Binding SelectedScript?.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  MaxLength="50"/>
@@ -170,7 +171,7 @@
                                 Grid.Column="0"
                                 Spacing="2">
                         
-                        <TextBlock Text="Description"/>
+                        <TextBlock Text="{helpers:Localize Label_Description}"/>
                         
                         <TextBox Text="{Binding SelectedScript?.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  TextWrapping="Wrap"
@@ -189,12 +190,12 @@
                                     Orientation="Horizontal"
                                     Spacing="5">
                             
-                            <TextBlock Text="Variables" VerticalAlignment="Bottom"/>
+                            <TextBlock Text="{helpers:Localize Label_Variables}" VerticalAlignment="Bottom"/>
                             
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Add a new variable"
+                                ToolTip.Tip="{helpers:Localize ToolTip_AddVariable}"
                                 Command="{Binding SelectedScript?.AddVariableCommand}"
                                 Width="35"
                                 Height="35">
@@ -206,7 +207,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Remove variable"
+                                ToolTip.Tip="{helpers:Localize ToolTip_RemoveVariable}"
                                 Command="{Binding SelectedScript?.RemoveVariableCommand}"
                                 Width="35"
                                 Height="35">
@@ -237,14 +238,14 @@
                             </DataGrid.Styles>
                             
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Variable Name" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="Default Value" Binding="{Binding Value}" Width="200"/>
+                                <DataGridTextColumn Header="{helpers:Localize Header_VariableName}" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="{helpers:Localize Header_DefaultValue}" Binding="{Binding Value}" Width="200"/>
                             </DataGrid.Columns>
                         
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Add" Command="{Binding SelectedScript?.AddVariableCommand}"/>
-                                    <MenuItem Header="Remove" Command="{Binding SelectedScript?.RemoveVariableCommand}"/>
+                                    <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding SelectedScript?.AddVariableCommand}"/>
+                                    <MenuItem Header="{helpers:Localize Menu_Remove}" Command="{Binding SelectedScript?.RemoveVariableCommand}"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
@@ -260,12 +261,12 @@
                                     Orientation="Horizontal"
                                     Spacing="5">
                             
-                            <TextBlock Text="Commands" VerticalAlignment="Bottom"/>
+                            <TextBlock Text="{helpers:Localize Label_Commands}" VerticalAlignment="Bottom"/>
                             
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Add a new command" 
+                                ToolTip.Tip="{helpers:Localize ToolTip_AddCommand}" 
                                 Command="{Binding SelectedScript?.AddCommandCommand}"
                                 Width="35"
                                 Height="35">
@@ -277,7 +278,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="Remove command" 
+                                ToolTip.Tip="{helpers:Localize ToolTip_RemoveCommand}" 
                                 Command="{Binding SelectedScript?.RemoveCommandCommand}"
                                 Width="35"
                                 Height="35">
@@ -307,8 +308,8 @@
                             </DataGrid.Styles>
                             
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*"/>
-                                <DataGridTemplateColumn Header="Expect Response">
+                                <DataGridTextColumn Header="{helpers:Localize Header_Command}" Binding="{Binding Command}" Width="*"/>
+                                <DataGridTemplateColumn Header="{helpers:Localize Header_ExpectResponse}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox
@@ -318,7 +319,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Evaluate">
+                                <DataGridTemplateColumn Header="{helpers:Localize Header_Evaluate}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <RadioButton
@@ -328,14 +329,14 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Delay (ms)" Binding="{Binding DelayMs}"/>
-                                <DataGridTextColumn Header="Timeout (ms)" Binding="{Binding TimeoutMs}"/>
+                                <DataGridTextColumn Header="{helpers:Localize Header_DelayMs}" Binding="{Binding DelayMs}"/>
+                                <DataGridTextColumn Header="{helpers:Localize Header_TimeoutMs}" Binding="{Binding TimeoutMs}"/>
                             </DataGrid.Columns>
                         
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Add" Command="{Binding SelectedScript?.AddCommandCommand}"/>
-                                    <MenuItem Header="Remove" Command="{Binding SelectedScript?.RemoveCommandCommand}"/>
+                                    <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding SelectedScript?.AddCommandCommand}"/>
+                                    <MenuItem Header="{helpers:Localize Menu_Remove}" Command="{Binding SelectedScript?.RemoveCommandCommand}"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

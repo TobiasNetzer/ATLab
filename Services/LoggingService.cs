@@ -103,7 +103,7 @@ public partial class LoggingService : ObservableObject, ILoggingService
             .WithContent(
                 DateTime.Now.ToString(
                     "dddd, dd MMMM yyyy HH:mm",
-                    CultureInfo.GetCultureInfo("en-US")))
+                    CultureInfo.CurrentUICulture))
             .OnBottomLeft()
             .WithDelay(5);
 

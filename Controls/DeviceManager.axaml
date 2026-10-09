@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.DeviceManager"
              x:DataType="vm:DeviceManagerViewModel"
              Width="780">
@@ -12,7 +13,7 @@
                 Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            <TextBlock Text="Device Manager"
+            <TextBlock Text="{helpers:Localize Header_DeviceManager}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
@@ -33,25 +34,25 @@
                         
                         <StackPanel Spacing="2"
                                     HorizontalAlignment="Left">
-                            <TextBlock Text="Device Name"/>
+                            <TextBlock Text="{helpers:Localize Label_DeviceName}"/>
                             <TextBox Text="{Binding SelectedDevice?.Name}"
                                      Width="210"/>
                         </StackPanel>
                         
-                        <CheckBox Content="Include in Test Report"
+                        <CheckBox Content="{helpers:Localize Label_IncludeInTestReport}"
                                   IsChecked="{Binding SelectedDevice?.IsIncludeInReport}"/>
                         
                         <StackPanel Spacing="2"
                                     HorizontalAlignment="Left"
                                     IsVisible="{Binding SelectedDevice?.IsIncludeInReport, TargetNullValue=False}">
-                            <TextBlock Text="Identification Query"/>
+                            <TextBlock Text="{helpers:Localize Label_IdentificationQuery}"/>
                             <TextBox Text="{Binding SelectedDevice?.IdentificationQuery}"
                                      Width="210"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2"
                                     HorizontalAlignment="Left">
-                            <TextBlock Text="Interface"/>
+                            <TextBlock Text="{helpers:Localize Label_Interface}"/>
                             <ComboBox ItemsSource="{Binding AvailableDeviceTypes}"
                                       SelectedItem="{Binding SelectedDevice?.Type}"
                                       DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
@@ -60,13 +61,13 @@
                         
                         <StackPanel Spacing="2"
                                     HorizontalAlignment="Left">
-                            <TextBlock Text="Port"
+                            <TextBlock Text="{helpers:Localize Label_Port}"
                                        IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SERIAL, FallbackValue='TRUE'}"/>
                             
-                            <TextBlock Text="Resource"
+                            <TextBlock Text="{helpers:Localize Label_Resource}"
                                        IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=VISA, FallbackValue='FALSE'}"/>
                             
-                            <TextBlock Text="IP-Address"
+                            <TextBlock Text="{helpers:Localize Label_IpAddress}"
                                        IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TCP_IP, FallbackValue='FALSE'}"/>
 
                             <StackPanel Spacing="5" Orientation="Horizontal">
@@ -117,7 +118,7 @@
                                 <Button
                                     Background="{DynamicResource ButtonBackground}"
                                     Classes="Icon"
-                                    ToolTip.Tip="Reload resources"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_ReloadResources}"
                                     Command="{Binding RefreshResourcesCommand}"
                                     IsVisible="{Binding SelectedDevice?.Type, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SERIAL,VISA'}"
                                     Width="35"
@@ -134,7 +135,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Baud Rate"/>
+                                <TextBlock Text="{helpers:Localize Label_BaudRate}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableBaudRates}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.BaudRate}"/>
@@ -142,7 +143,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Data Bits"/>
+                                <TextBlock Text="{helpers:Localize Label_DataBits}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableDataBits}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.DataBits}"/>
@@ -150,7 +151,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Parity"/>
+                                <TextBlock Text="{helpers:Localize Label_Parity}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableParities}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.Parity}"/>
@@ -158,7 +159,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Stop Bits"/>
+                                <TextBlock Text="{helpers:Localize Label_StopBits}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableStopBits}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.StopBits}"/>
@@ -166,7 +167,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Handshake"/>
+                                <TextBlock Text="{helpers:Localize Label_Handshake}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableHandshakes}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.Handshake}"/>
@@ -174,7 +175,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Termination Character"/>
+                                <TextBlock Text="{helpers:Localize Label_TerminationCharacter}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableSerialTermination}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.SerialTerminationMode}"/>
@@ -182,7 +183,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Framing Mode"/>
+                                <TextBlock Text="{helpers:Localize Label_FramingMode}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableFramingModes}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.FramingMode}"
@@ -192,7 +193,7 @@
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left"
                                         IsVisible="{Binding SelectedDevice?.Configuration.FramingMode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TIMEOUT_BASED}">
-                                <TextBlock Text="Timeout (ms)"/>
+                                <TextBlock Text="{helpers:Localize Label_TimeoutMs}"/>
                                 <NumericUpDown Width="210"
                                                Minimum="10"
                                                Maximum="10000"
@@ -208,7 +209,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Timeout (ms)"/>
+                                <TextBlock Text="{helpers:Localize Label_TimeoutMs}"/>
                                 <NumericUpDown Width="210"
                                                Minimum="10"
                                                Maximum="10000"
@@ -219,7 +220,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Termination Character"/>
+                                <TextBlock Text="{helpers:Localize Label_TerminationCharacter}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableVisaTerminations}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.VisaTerminationMode}"/>
@@ -231,7 +232,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Port"/>
+                                <TextBlock Text="{helpers:Localize Label_Port}"/>
                                 <NumericUpDown Width="210"
                                                Minimum="1"
                                                Maximum="65535"
@@ -242,7 +243,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Timeout (ms)"/>
+                                <TextBlock Text="{helpers:Localize Label_TimeoutMs}"/>
                                 <NumericUpDown Width="210"
                                                Minimum="10"
                                                Maximum="10000"
@@ -253,7 +254,7 @@
                             
                             <StackPanel Spacing="2"
                                         HorizontalAlignment="Left">
-                                <TextBlock Text="Termination Character"/>
+                                <TextBlock Text="{helpers:Localize Label_TerminationCharacter}"/>
                                 <ComboBox Width="210"
                                           ItemsSource="{Binding AvailableTcpTerminations}"
                                           SelectedItem="{Binding SelectedDevice?.Configuration.TcpTerminationMode}"/>
@@ -271,7 +272,7 @@
                         <Button
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
-                            ToolTip.Tip="Add new device"
+                            ToolTip.Tip="{helpers:Localize ToolTip_AddDevice}"
                             Command="{Binding AddDeviceCommand}"
                             Width="35"
                             Height="35">
@@ -283,7 +284,7 @@
                         <Button
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
-                            ToolTip.Tip="Remove device"
+                            ToolTip.Tip="{helpers:Localize ToolTip_RemoveDevice}"
                             Command="{Binding RemoveDeviceCommand}"
                             Width="35"
                             Height="35">
@@ -310,11 +311,11 @@
                         </DataGrid.Styles>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"
+                            <DataGridTextColumn Header="{helpers:Localize Header_Name}" Binding="{Binding Name}"
                                                 Width="150"/>
-                            <DataGridTextColumn Header="Interface" Binding="{Binding Type,Converter={StaticResource EnumDescriptionConverter}}"
-                                                Width="100"/>
-                            <DataGridTextColumn Header="Resource" Binding="{Binding ResourceString}"
+                            <DataGridTextColumn Header="{helpers:Localize Header_Interface}" Binding="{Binding Type,Converter={StaticResource EnumDescriptionConverter}}"
+                                                Width="130"/>
+                            <DataGridTextColumn Header="{helpers:Localize Header_Resource}" Binding="{Binding ResourceString}"
                                                 Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>

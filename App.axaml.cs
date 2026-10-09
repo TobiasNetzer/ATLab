@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -38,6 +39,12 @@ public class App : Application
         
         var settingsService = _services.GetRequiredService<ISettingsService>();
         
+        var localizationService = _services.GetRequiredService<ILocalizationService>();
+        if (!string.IsNullOrWhiteSpace(settingsService.Settings.Language))
+        {
+            localizationService.ChangeCulture(new CultureInfo(settingsService.Settings.Language));
+        }
+
         Current!.RequestedThemeVariant = settingsService.Settings.IsDarkMode
             ? ThemeVariant.Dark
             : ThemeVariant.Light;

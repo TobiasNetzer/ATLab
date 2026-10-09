@@ -271,7 +271,7 @@ public class TestExecutor : ITestExecutor
                     var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
                     
                     var result = await _messageBoxService.ShowConfirmationImageAsync(
-                        "User Information",
+                        LocalizationService.Instance["Title_UserInformation"],
                         resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath);
 
@@ -497,7 +497,7 @@ public class TestExecutor : ITestExecutor
                 if (action.IsIncludeResult)
                 {
                     var result = await _messageBoxService.ShowResultConfirmationImageAsync(
-                        "User Information",
+                        LocalizationService.Instance["Title_UserInformation"],
                         resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath,
                         step.Result,
@@ -509,7 +509,7 @@ public class TestExecutor : ITestExecutor
                 else
                 {
                     var result = await _messageBoxService.ShowConfirmationImageAsync(
-                        "User Information",
+                        LocalizationService.Instance["Title_UserInformation"],
                         resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath);
     

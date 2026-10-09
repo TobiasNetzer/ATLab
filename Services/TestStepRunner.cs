@@ -90,7 +90,7 @@ public class TestStepRunner : ITestStepRunner
                     var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
                     
                     var operatorResponse = await _messageBoxService.ShowConfirmationImageAsync(
-                        "Awaiting User Response",
+                        LocalizationService.Instance["Title_AwaitingUserResponse"],
                         resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath,
                         DialogFunction.USER_INPUT);

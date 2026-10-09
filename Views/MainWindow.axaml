@@ -3,6 +3,7 @@
                xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
                xmlns:vm="clr-namespace:ATLab.ViewModels"
                xmlns:views="clr-namespace:ATLab.Views"
+               xmlns:helpers="clr-namespace:ATLab.Helpers"
                x:Class="ATLab.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
                Title="{Binding WindowTitle}"
@@ -126,7 +127,7 @@
                     <Button
                         Classes="Icon"
                         Background="{DynamicResource ButtonBackground}"
-                        ToolTip.Tip="Show event log">
+                        ToolTip.Tip="{helpers:Localize ToolTip_ShowEventLog}">
                         
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent Info}"/>
@@ -154,7 +155,7 @@
                         </Button.Flyout>
                     </Button>
 
-                    <TextBlock Text="Software is working without test hardware"
+                    <TextBlock Text="{helpers:Localize Status_SimulationMode}"
                                Classes="Large"
                                Foreground="{DynamicResource ErrorColor}"
                                VerticalAlignment="Center"
@@ -168,7 +169,7 @@
                     
                     <Button Classes="Icon"
                             Background="{DynamicResource ButtonBackground}"
-                            ToolTip.Tip="Determine matrix channel via external probe"
+                            ToolTip.Tip="{helpers:Localize ToolTip_FindMatrixChannel}"
                             Command="{Binding FindMatrixChannelCommand}">
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent ScanSearch}"/>
@@ -189,11 +190,24 @@
                             Background="{DynamicResource ButtonBackground}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
+                            ToolTip.Tip="{helpers:Localize ToolTip_ToggleTheme}"
                             Command="{Binding ToggleThemeCommand}">
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent SunMoon}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
+                    
+                    <Button Classes="Icon"
+                            Background="{DynamicResource ButtonBackground}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip.Tip="{helpers:Localize ToolTip_ToggleLanguage}"
+                            Command="{Binding ToggleLanguageCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Languages}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
                 </StackPanel>
             </Grid>
         </Border>

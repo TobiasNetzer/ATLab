@@ -14,6 +14,9 @@ public partial class MainWindow : Window
     private readonly ISettingsService? _settingsService;
     private readonly IProjectDocumentService? _projectDocumentService;
     private readonly ProjectModel? _projectModel;
+    
+    private const int ShadUiWidthOffset = 16;
+    private const int ShadUiHeightOffset = 9;
 
     public MainWindow()
     {
@@ -21,7 +24,10 @@ public partial class MainWindow : Window
         Closing += MainWindow_Closing;
     }
 
-    public MainWindow(ISettingsService settingsService, IProjectDocumentService projectDocumentService, ProjectModel projectModel) : this()
+    public MainWindow(
+        ISettingsService settingsService,
+        IProjectDocumentService projectDocumentService,
+        ProjectModel projectModel) : this()
     {
         _settingsService = settingsService;
         _projectDocumentService = projectDocumentService;
@@ -29,19 +35,24 @@ public partial class MainWindow : Window
 
         var s = _settingsService.Settings;
 
-        var screens = Screens.Primary;
-        var screenWidth = screens?.Bounds.Width ?? 800;
-        var screenHeight = screens?.Bounds.Height ?? 600;
+        var screen = Screens.Primary;
+        var screenWidth = screen?.Bounds.Width ?? 800;
+        var screenHeight = screen?.Bounds.Height ?? 600;
 
-        Width = Math.Min(s?.WindowWidth > 0 ? s.WindowWidth : Width, screenWidth);
-        Height = Math.Min(s?.WindowHeight > 0 ? s.WindowHeight : Height, screenHeight);
+        Width = Math.Min(
+            (s?.WindowWidth > 0 ? s.WindowWidth : Width) - ShadUiWidthOffset,
+            screenWidth);
+
+        Height = Math.Min(
+                (s?.WindowHeight > 0 ? s.WindowHeight : Height) - ShadUiHeightOffset,
+                screenHeight);
 
         var windowX = s?.WindowX ?? 0;
         var windowY = s?.WindowY ?? 0;
 
-        Position = new PixelPoint(
-            (int)Math.Max(0, Math.Min(windowX, screenWidth - Width)),
-            (int)Math.Max(0, Math.Min(windowY, screenHeight - Height))
+        var restorePosition = new PixelPoint(
+            (int)Math.Round(Math.Max(0, Math.Min(windowX, screenWidth - Width))),
+            (int)Math.Round(Math.Max(0, Math.Min(windowY, screenHeight - Height)))
         );
 
         if (s != null)
@@ -49,9 +60,21 @@ public partial class MainWindow : Window
             WindowState = s.WindowState;
         }
 
+        Opened += (_, _) =>
+        {
+            if (WindowState == WindowState.Normal)
+            {
+                Position = restorePosition;
+            }
+        };
     }
 
-    public MainWindow(MainWindowViewModel vm, ISettingsService settingsService, IProjectDocumentService projectDocumentService, ProjectModel projectModel) : this(settingsService, projectDocumentService, projectModel)
+    public MainWindow(
+        MainWindowViewModel vm,
+        ISettingsService settingsService,
+        IProjectDocumentService projectDocumentService,
+        ProjectModel projectModel)
+        : this(settingsService, projectDocumentService, projectModel)
     {
         DataContext = vm;
     }
@@ -60,7 +83,6 @@ public partial class MainWindow : Window
         object? sender,
         System.ComponentModel.CancelEventArgs e)
     {
-
         if (_projectDocumentService != null &&
             _projectModel != null &&
             _projectModel.IsDirty)
@@ -82,6 +104,7 @@ public partial class MainWindow : Window
             return;
 
         var settings = _settingsService.Settings;
+        
         if (WindowState == WindowState.Maximized)
         {
             settings.WindowState = WindowState.Maximized;
@@ -94,23 +117,24 @@ public partial class MainWindow : Window
             settings.WindowX = Position.X;
             settings.WindowY = Position.Y;
         }
+
         _settingsService.Save();
     }
-    
+
     protected override void OnClosed(EventArgs e)
     {
         base.OnClosed(e);
-        
+
         if (this.FindControl<DialogHost>("PART_DialogHost") is { } dialogHost)
         {
             dialogHost.Dispose();
         }
-        
+
         if (DataContext is IDisposable disposable)
         {
             disposable.Dispose();
         }
-        
+
         DataContext = null;
     }
 }

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ResponseMaskEditor"
              x:DataType="controls:ResponseMaskEditor"
              Width="500">
@@ -25,7 +26,7 @@
 
             <DockPanel>
 
-                <TextBlock Text="Response Processing"
+                <TextBlock Text="{helpers:Localize Header_ResponseProcessing}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
@@ -54,35 +55,35 @@
             
             <StackPanel Margin="10" Spacing="10">
                 
-                <CheckBox Content="Enable Custom Response Processing"
+                <CheckBox Content="{helpers:Localize Label_EnableCustomResponseProcessing}"
                           IsChecked="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsCustomMaskEnabled, Mode=TwoWay}"/>
                 
                 <StackPanel Spacing="10"
                             IsEnabled="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.IsCustomMaskEnabled, Converter={StaticResource NullableBoolToBoolConverter}}">
                 
                     <StackPanel Spacing="2">
-                        <TextBlock Text="Mask"/>
+                        <TextBlock Text="{helpers:Localize Label_Mask}"/>
                         <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.Mask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" Spacing="20">
 
                         <StackPanel Spacing="2">
-                            <TextBlock Text="Skip"/>
+                            <TextBlock Text="{helpers:Localize Label_Skip}"/>
                             <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.SkipCharacters, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                      Width="100"
                                      HorizontalAlignment="Left"/>
                         </StackPanel>
 
                         <StackPanel Spacing="2">
-                            <TextBlock Text="Length"/>
+                            <TextBlock Text="{helpers:Localize Label_Length}"/>
                             <TextBox Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.Length, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                      Width="100"/>
                         </StackPanel>
                         
                         <StackPanel Spacing="2">
                             
-                            <TextBlock Text="Display Mode"/>
+                            <TextBlock Text="{helpers:Localize Label_DisplayMode}"/>
                             <ComboBox ItemsSource="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.DisplayModes}"
                                       SelectedItem="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ResponseDisplayMode}"
                                       Width="100"/>
@@ -96,11 +97,11 @@
                     
                     <StackPanel Spacing="10">
                         
-                        <TextBlock Text="Received Sequence"
+                        <TextBlock Text="{helpers:Localize Header_ReceivedSequence}"
                                    Classes="Small"
                                    HorizontalAlignment="Center"/>
                             
-                        <TextBlock Text="Original:"
+                        <TextBlock Text="{helpers:Localize Label_Original}"
                                    FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.OriginalResponse}"
                                    TextWrapping="Wrap"
@@ -109,7 +110,7 @@
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
-                        <TextBlock Text="Processed:"
+                        <TextBlock Text="{helpers:Localize Label_Processed}"
                                    FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.ProcessedInput}"
                                    TextWrapping="Wrap"
@@ -118,7 +119,7 @@
                         <Border BorderBrush="{DynamicResource PanelBorder}"
                                 BorderThickness="1"/>
                         
-                        <TextBlock Text="Result:"
+                        <TextBlock Text="{helpers:Localize Label_Result}"
                                    FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.FinalResult}"
                                    IsVisible="{Binding $parent[controls:ResponseMaskEditor].ResponseMaskEditorVm?.FinalResult, Converter={StaticResource StringNotEmptyConverter}}"/>

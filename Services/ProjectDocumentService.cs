@@ -87,8 +87,8 @@ public class ProjectDocumentService : IProjectDocumentService
         if (_projectModel.IsDirty)
         {
             var result = await _messageBoxService.ShowConfirmationDestructiveAsync(
-                "Unsaved Changes", 
-                "You have unsaved changes. Continue without saving?");
+                LocalizationService.Instance["Title_UnsavedChanges"], 
+                LocalizationService.Instance["Text_UnsavedChanges"]);
             if (!result) return false;
         }
         _projectModel.MarkSaved();

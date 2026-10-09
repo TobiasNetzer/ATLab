@@ -2,9 +2,10 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
                xmlns:vm="clr-namespace:ATLab.ViewModels"
+               xmlns:helpers="clr-namespace:ATLab.Helpers"
                x:Class="ATLab.Views.TestHardwareConnectWindow"
                x:DataType="vm:TestHardwareConnectWindowViewModel"
-               Title="Test Hardware Selector"
+               Title="{helpers:Localize Window_TestHardwareSelector}"
                SizeToContent="WidthAndHeight"
                WindowStartupLocation="CenterScreen"
                CanResize="False"
@@ -22,7 +23,7 @@
 
     <StackPanel Margin="10" Spacing="10">
         
-        <TextBlock Text="Select Test Hardware"
+        <TextBlock Text="{helpers:Localize Header_SelectTestHardware}"
                    Classes="Large"
                    HorizontalAlignment="Center"/>
         
@@ -55,19 +56,19 @@
         
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
             
-            <Button Content="Connect"
+            <Button Content="{helpers:Localize Button_Connect}"
                     Classes="Outline"
                     Width="120"
                     HorizontalContentAlignment="Center"
                     Command="{Binding ConnectCommand}"/>
             
-            <Button Content="Simulator"
+            <Button Content="{helpers:Localize Button_Simulator}"
                     Classes="Outline"
                     Width="120"
                     HorizontalContentAlignment="Center"
                     Command="{Binding SimulationModeCommand}"/>
             
-            <Button Content="Exit"
+            <Button Content="{helpers:Localize Button_Exit}"
                     Classes="Outline"
                     Width="120"
                     HorizontalContentAlignment="Center"

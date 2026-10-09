@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ScriptSelector"
              x:DataType="controls:ScriptSelector"
              Width="500">
@@ -28,7 +29,7 @@
 
             <DockPanel>
 
-                <TextBlock Text="Script Configuration"
+                <TextBlock Text="{helpers:Localize Header_ScriptConfiguration}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
@@ -58,14 +59,14 @@
             <StackPanel Margin="10" Spacing="15">
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Target Device"/>
+                    <TextBlock Text="{helpers:Localize Label_TargetDevice}"/>
 
                     <DockPanel>
                         
                         <Button
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
-                            ToolTip.Tip="Remove selected device"
+                            ToolTip.Tip="{helpers:Localize ToolTip_RemoveSelectedDevice}"
                             Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.RemoveDeviceCommand}"
                             Width="35"
                             Height="35"
@@ -97,14 +98,14 @@
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Script"/>
+                    <TextBlock Text="{helpers:Localize Label_Script}"/>
 
                     <DockPanel>
                         
                         <Button
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
-                            ToolTip.Tip="Remove selected script"
+                            ToolTip.Tip="{helpers:Localize ToolTip_RemoveSelectedScript}"
                             Command="{Binding $parent[controls:ScriptSelector].ScriptSelectorVm?.RemoveScriptCommand}"
                             Width="35"
                             Height="35"
@@ -150,12 +151,12 @@
                     </DataGrid.Styles>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Variable"
+                        <DataGridTextColumn Header="{helpers:Localize Header_Variable}"
                                             Binding="{Binding Name}"
                                             IsReadOnly="True"
                                             Width="*"/>
 
-                        <DataGridTextColumn Header="Value"
+                        <DataGridTextColumn Header="{helpers:Localize Label_Value}"
                                             Binding="{Binding Value}"
                                             Width="*"/>
                     </DataGrid.Columns>

@@ -11,7 +11,7 @@ public class DocumentationTabViewModel : ViewModelBase
     {
         ProjectDocumentationViewModel = projectDocumentationViewModel;
         DeviceUnderTestInfoPanelViewModel = deviceUnderTestInfoPanelViewModel;
-        Title = "Documentation";
+        SetLocalizedTitle("Tab_Documentation");
     }
 
 }

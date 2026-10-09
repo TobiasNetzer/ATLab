@@ -151,7 +151,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _controlModuleService = controlModuleService;
 
-        Title = "Test Environment";
+        SetLocalizedTitle("Tab_Testing");
         IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
         IsShowMeasurementPanel = settingsService.Settings.IsShowMeasurementPanel;
 

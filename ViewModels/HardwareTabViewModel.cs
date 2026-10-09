@@ -12,6 +12,6 @@ public class HardwareTabViewModel : ViewModelBase
         TestHardwareInfoViewModel = testHardwareInfoViewModel;
         TestHardwareDiagnosticsViewModel = testHardwareDiagnosticsViewModel;
         
-        Title = "Test Hardware";
+        SetLocalizedTitle("Tab_Hardware");
     }
 }

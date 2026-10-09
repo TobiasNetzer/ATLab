@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.TestHardwareInterface"
              Width="1200">
     
@@ -9,7 +10,7 @@
                 Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            <TextBlock Text="Test Hardware Interface"
+            <TextBlock Text="{helpers:Localize Header_TestHardwareInterface}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>

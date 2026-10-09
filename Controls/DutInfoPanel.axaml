@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.DutInfoPanel"
              x:DataType="vm:DeviceUnderTestInfoPanelViewModel"
              Width="300">
@@ -11,7 +12,7 @@
                 Background="{DynamicResource OutlineColor}"
                 CornerRadius="15 15 0 0"
                 Padding="10">
-            <TextBlock Text="Device Under Test"
+            <TextBlock Text="{helpers:Localize Header_DeviceUnderTest}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
@@ -26,32 +27,32 @@
                         Orientation="Vertical"
                         HorizontalAlignment="Stretch">
                 
-                <TextBlock Text="Device‑specific information to be included in the generated test report"
+                <TextBlock Text="{helpers:Localize Description_DeviceUnderTest}"
                            TextWrapping="Wrap"
                            FontSize="14"/>
 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Name"/>
+                    <TextBlock Text="{helpers:Localize Label_Name}"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.DeviceName, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Revision"/>
+                    <TextBlock Text="{helpers:Localize Label_Revision}"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.Revision, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Variant"/>
+                    <TextBlock Text="{helpers:Localize Label_Variant}"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.Variant, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Part Number"/>
+                    <TextBlock Text="{helpers:Localize Label_PartNumber}"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.PartNumber, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Additional Notes"/>
+                    <TextBlock Text="{helpers:Localize Label_AdditionalNotes}"/>
                     <TextBox Text="{Binding DeviceUnderTestInfo.AdditionalNotes, UpdateSourceTrigger=LostFocus}"
                              AcceptsReturn="True"
                              AcceptsTab="True"

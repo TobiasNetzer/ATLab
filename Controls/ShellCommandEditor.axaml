@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ShellCommandEditor"
              x:DataType="controls:ShellCommandEditor"
              Width="500">
@@ -23,7 +24,7 @@
                 Padding="10">
 
             <DockPanel>
-                <TextBlock Text="Shell Command"
+                <TextBlock Text="{helpers:Localize Header_ShellCommand}"
                            Classes="h4"
                            VerticalAlignment="Center"/>
                 
@@ -54,7 +55,7 @@
 
                 <DockPanel LastChildFill="False">
                     
-                    <CheckBox Content="Direct Launch"
+                    <CheckBox Content="{helpers:Localize Label_DirectLaunch}"
                               IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
                               DockPanel.Dock="Left"/>
                     
@@ -62,7 +63,7 @@
                                 Spacing="10"
                                 DockPanel.Dock="Right">
                         
-                        <TextBlock Text="Window Behavior"
+                        <TextBlock Text="{helpers:Localize Label_WindowBehavior}"
                                    Classes="Small"
                                    VerticalAlignment="Center"/>
 

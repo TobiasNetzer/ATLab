@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ProjectSettingsEditor"
              x:DataType="vm:ProjectSettingsViewModel"
              Width="780">
@@ -13,7 +14,7 @@
                 CornerRadius="15 15 0 0"
                 Padding="10">
             
-            <TextBlock Text="Project Settings"
+            <TextBlock Text="{helpers:Localize Header_ProjectSettings}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>
@@ -39,33 +40,33 @@
                                 Padding="10">
 
                             <StackPanel Spacing="10">
-                                <TextBlock Text="Test Execution Settings"
+                                <TextBlock Text="{helpers:Localize Header_TestExecutionSettings}"
                                            HorizontalAlignment="Center"
                                            Classes="Large"
                                            Margin="0 0 0 10"/>
 
-                                <CheckBox Content="Request Serial Number"
+                                <CheckBox Content="{helpers:Localize Label_RequestSerialNumber}"
                                           IsChecked="{Binding Settings.IsUseSerialNumber, Mode=TwoWay}"/>
 
-                                <CheckBox Content="Save Test Result"
+                                <CheckBox Content="{helpers:Localize Label_SaveTestResult}"
                                           IsChecked="{Binding Settings.IsSaveTestResult, Mode=TwoWay}"
                                           IsEnabled="{Binding Settings.IsUseSerialNumber}"/>
                                 
-                                <RadioButton Content="Always"
+                                <RadioButton Content="{helpers:Localize Label_Always}"
                                              Margin="30 0 0 0"
                                              IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ALWAYS}"
                                              IsEnabled="{Binding CanSaveTestResult}"/>
 
-                                <RadioButton Content="Passed Only"
+                                <RadioButton Content="{helpers:Localize Label_PassedOnly}"
                                              Margin="30 0 0 0"
                                              IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
                                              IsEnabled="{Binding CanSaveTestResult}"/>
                                 
-                                <CheckBox Content="Export Test Data (CSV)"
+                                <CheckBox Content="{helpers:Localize Label_ExportTestDataCsv}"
                                           IsChecked="{Binding Settings.IsExportCsv}"
                                           IsEnabled="{Binding CanSaveTestResult}"/>
 
-                                <CheckBox Content="Export Test Report (PDF)"
+                                <CheckBox Content="{helpers:Localize Label_ExportTestReportPdf}"
                                           IsChecked="{Binding Settings.IsExportPdf}"
                                           IsEnabled="{Binding CanSaveTestResult}"/>
                                 
@@ -76,7 +77,7 @@
                                                 DockPanel.Dock="Left">
                                     
                                         <TextBlock
-                                            Text="Output Path"/>
+                                            Text="{helpers:Localize Label_OutputPath}"/>
 
                                        
                                         <TextBox 
@@ -117,7 +118,7 @@
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="0"
                                            Grid.ColumnSpan="2"
-                                           Text="Control Devices"
+                                           Text="{helpers:Localize Header_ControlDevices}"
                                            HorizontalAlignment="Center"
                                            Classes="Large"/>
                             
@@ -125,7 +126,7 @@
                                             Orientation="Horizontal"
                                             Spacing="10">
                                 
-                                    <CheckBox Content="Enable Control Module"
+                                    <CheckBox Content="{helpers:Localize Label_EnableControlModule}"
                                               IsChecked="{Binding Settings.IsControlModuleEnabled}"/>
                                 
                                     <Image Source="avares://ATLab/Assets/ControlModule.png"
@@ -155,19 +156,19 @@
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="0"
                                            Grid.ColumnSpan="2"
-                                           Text="Serial Number Validation"
+                                           Text="{helpers:Localize Header_SerialNumberValidation}"
                                            HorizontalAlignment="Center"
                                            Classes="Large"/>
                                 
                                 <CheckBox Grid.Row="1"
                                           Grid.Column="0"
                                           Grid.ColumnSpan="2"
-                                          Content="Enable Serial Number Validation"
+                                          Content="{helpers:Localize Label_EnableSerialNumberValidation}"
                                           IsChecked="{Binding Settings.IsEnableSerialNumberValidation}"/>
                                 
                                 <TextBlock Grid.Row="2"
                                            Grid.Column="0"
-                                           Text="Length"
+                                           Text="{helpers:Localize Label_Length}"
                                            VerticalAlignment="Center"/>
                             
                                 <TextBox Grid.Row="2"
@@ -177,7 +178,7 @@
                                 
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="0"
-                                           Text="Starts With"
+                                           Text="{helpers:Localize Label_StartsWith}"
                                            VerticalAlignment="Center"/>
                             
                                 <TextBox Grid.Row="3"
@@ -187,7 +188,7 @@
                                 
                                 <TextBlock Grid.Row="4"
                                            Grid.Column="0"
-                                           Text="Ends With"
+                                           Text="{helpers:Localize Label_EndsWith}"
                                            VerticalAlignment="Center"/>
                             
                                 <TextBox Grid.Row="4"
@@ -197,7 +198,7 @@
                             
                                 <TextBlock Grid.Row="5"
                                            Grid.Column="0"
-                                           Text="Contains"
+                                           Text="{helpers:Localize Label_Contains}"
                                            VerticalAlignment="Center"/>
                             
                                 <TextBox Grid.Row="5"
@@ -222,14 +223,14 @@
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="0"
                                            Grid.ColumnSpan="2"
-                                           Text="General Settings"
+                                           Text="{helpers:Localize Header_GeneralSettings}"
                                            HorizontalAlignment="Center"
                                            Classes="Large"
                                            Margin="0 0 0 10"/>
                                 
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
-                                           Text="Default Tolerance (%)"
+                                           Text="{helpers:Localize Label_DefaultTolerance}"
                                            VerticalAlignment="Center"/>
 
                                 <NumericUpDown Grid.Row="1"
@@ -241,7 +242,7 @@
                                 
                                 <TextBlock Grid.Row="2"
                                            Grid.Column="0"
-                                           Text="Displayed Decimal Places"
+                                           Text="{helpers:Localize Label_DisplayedDecimalPlaces}"
                                            VerticalAlignment="Center"/>
 
                                 <NumericUpDown Grid.Row="2"
@@ -254,7 +255,7 @@
                                 
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="0"
-                                           Text="Log Level"
+                                           Text="{helpers:Localize Label_LogLevel}"
                                            VerticalAlignment="Center"/>
                                 
                                 <ComboBox Grid.Row="3"

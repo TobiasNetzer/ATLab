@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
@@ -18,10 +19,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ITestHardware _testHardware;
     private readonly ILoggingService _loggingService;
     private readonly ISettingsService _settingsService;
+    private readonly ILocalizationService _localizationService;
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
-
-    public string WindowTitle => $"ATLab - Project: {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
+    
+    public string WindowTitle => $"ATLab - {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -68,6 +70,7 @@ public partial class MainWindowViewModel : ViewModelBase
         HardwareTabViewModel hardwareTab,
         DocumentationTabViewModel documentationTab,
         ISettingsService settingsService,
+        ILocalizationService localizationService,
         ProjectModel projectModel,
         ApplicationState applicationState,
         DialogManager dialogManager,
@@ -77,6 +80,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _loggingService = loggingService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;
+        _localizationService = localizationService;
         _projectModel = projectModel;
         _applicationState = applicationState;
         DialogManager = dialogManager;
@@ -137,6 +141,19 @@ public partial class MainWindowViewModel : ViewModelBase
                 : ThemeVariant.Light;
 
         _settingsService.Settings.IsDarkMode = Application.Current!.RequestedThemeVariant == ThemeVariant.Dark;
+    }
+
+    [RelayCommand]
+    private void ToggleLanguage()
+    {
+        var currentLanguage = _localizationService.CurrentCulture.TwoLetterISOLanguageName;
+        var nextCulture = currentLanguage.Equals("de", StringComparison.OrdinalIgnoreCase)
+            ? new CultureInfo("en")
+            : new CultureInfo("de");
+
+        _localizationService.ChangeCulture(nextCulture);
+        _settingsService.Settings.Language = nextCulture.TwoLetterISOLanguageName;
+        _settingsService.Save();
     }
     
     partial void OnSelectedTabChanged(ViewModelBase value)

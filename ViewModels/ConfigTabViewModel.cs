@@ -24,6 +24,6 @@ public partial class ConfigTabViewModel : ViewModelBase
         ProjectSettingsViewModel = projectSettingsViewModel;
         RuntimeVariableEditorViewModel = runtimeVariableEditorViewModel;
 
-        Title = "Configuration";
+        SetLocalizedTitle("Tab_Configuration");
     }
 }

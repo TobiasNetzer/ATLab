@@ -60,7 +60,7 @@ public partial class AboutTabViewModel : ViewModelBase
     
     public AboutTabViewModel()
     {
-        Title = "About";
+        SetLocalizedTitle("Tab_About");
     }
 
     [RelayCommand]

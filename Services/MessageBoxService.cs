@@ -39,8 +39,8 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         _messageBoxViewModel.Initialize(
             title,
             message,
-            "Continue",
-            "Cancel",
+            LocalizationService.Instance["ButtonLabel_Continue"],
+            LocalizationService.Instance["ButtonLabel_Cancel"],
             DialogFunction.CONFIRMATION_DESTRUCTIVE);
 
         var tcs = new TaskCompletionSource<bool>(
@@ -111,13 +111,13 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         switch (dialogFunction)
         {
             case DialogFunction.CONFIRMATION:
-                okText = "Continue";
-                cancelText = "Cancel";
+                okText = LocalizationService.Instance["ButtonLabel_Continue"];
+                cancelText = LocalizationService.Instance["ButtonLabel_Cancel"];
                 break;
 
             case DialogFunction.USER_INPUT:
-                okText = "Pass";
-                cancelText = "Fail";
+                okText = LocalizationService.Instance["ButtonLabel_Pass"];
+                cancelText = LocalizationService.Instance["ButtonLabel_Fail"];
                 break;
 
             default:

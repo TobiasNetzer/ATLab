@@ -54,7 +54,7 @@
                 Classes="Primary"
                 Command="{Binding SubmitCommand}"
                 HotKey="Enter"
-                Width="100"/>
+                Width="130"/>
             
         </StackPanel>
         
@@ -70,14 +70,14 @@
                 Classes="Outline"
                 Command="{Binding CancelCommand}"
                 HotKey="Escape"
-                Width="100"/>
+                Width="130"/>
             
             <Button
                 Content="{Binding OkText}"
                 Classes="Destructive"
                 Command="{Binding SubmitCommand}"
                 HotKey="Enter"
-                Width="100"/>
+                Width="130"/>
             
         </StackPanel>
         
@@ -93,14 +93,14 @@
                 Classes="Outline"
                 Command="{Binding CancelCommand}"
                 HotKey="Escape"
-                Width="100"/>
+                Width="130"/>
             
             <Button
                 Content="{Binding OkText}"
                 Classes="Primary"
                 Command="{Binding SubmitCommand}"
                 HotKey="Enter"
-                Width="100"/>
+                Width="130"/>
             
         </StackPanel>
         
@@ -117,7 +117,7 @@
                 Classes="Primary"
                 Command="{Binding CancelCommand}"
                 HotKey="Escape"
-                Width="100"/>
+                Width="130"/>
             
             <Button
                 Content="{Binding OkText}"
@@ -125,7 +125,7 @@
                 Classes="Primary"
                 Command="{Binding SubmitCommand}"
                 HotKey="Enter"
-                Width="100"/>
+                Width="130"/>
             
         </StackPanel>
     </Grid>

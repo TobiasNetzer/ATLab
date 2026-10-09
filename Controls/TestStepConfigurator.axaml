@@ -27,7 +27,7 @@
                 Classes.expanded="{Binding IsExpanded, Converter={StaticResource NullableBoolToBoolConverter}}"
                 Padding="10">
             <DockPanel>
-                <TextBlock Text="Test Step Configuration"
+                <TextBlock Text="{helpers:Localize Header_TestStepConfiguration}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
@@ -59,7 +59,7 @@
                 <StackPanel HorizontalAlignment="Stretch"
                             Orientation="Vertical"
                             Spacing="2">
-                    <TextBlock Text="Name"/>
+                    <TextBlock Text="{helpers:Localize Label_Name}"/>
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              helpers:FocusExtensions.MoveFocusOnEnter="True"
                              TabIndex="0"/>
@@ -69,7 +69,7 @@
                             Spacing="20">
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
-                        <TextBlock Text="Lower Limit"/>
+                        <TextBlock Text="{helpers:Localize Label_LowerLimit}"/>
                         <TextBox Text="{Binding LowerLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="2"
@@ -79,7 +79,7 @@
                     
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
-                        <TextBlock Text="Nominal"/>
+                        <TextBlock Text="{helpers:Localize Label_Nominal}"/>
                         <TextBox Text="{Binding NominalValueText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="1"
@@ -89,7 +89,7 @@
                     
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
-                        <TextBlock Text="Upper Limit"/>
+                        <TextBlock Text="{helpers:Localize Label_UpperLimit}"/>
                         <TextBox Text="{Binding UpperLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="3"
@@ -100,7 +100,7 @@
                     <StackPanel Orientation="Vertical"
                                 Spacing="2"
                                 Margin="35 0 0 0">
-                        <TextBlock Text="Unit"/>
+                        <TextBlock Text="{helpers:Localize Label_Unit}"/>
                         <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="4"
@@ -114,7 +114,7 @@
                     
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
-                        <TextBlock Text="Delay"/>
+                        <TextBlock Text="{helpers:Localize Label_Delay}"/>
                         <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="5"
@@ -124,12 +124,24 @@
                 
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
-                        <TextBlock Text="Evaluate"/>
+                        <TextBlock Text="{helpers:Localize Label_Evaluate}"/>
                         <ComboBox ItemsSource="{Binding EvaluationSources}"
-                                  MinWidth="100"
-                                  SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource, FallbackValue=''}"
-                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
-                                  TabIndex="6"/>
+                                  SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource}"
+                                  MinWidth="100">
+
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+
+                            <ComboBox.SelectionBoxItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.SelectionBoxItemTemplate>
+
+                        </ComboBox>
                         
                     </StackPanel>
                     
@@ -139,7 +151,7 @@
                             Orientation="Vertical"
                             Spacing="2">
                     
-                    <TextBlock Text="Comment"
+                    <TextBlock Text="{helpers:Localize Label_Comment}"
                                VerticalAlignment="Bottom"/>
                     
                     <TextBox Text="{Binding TestStepViewModel.TestStep.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
@@ -150,16 +162,19 @@
                     
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal" Spacing="10">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="10">
                     
-                    <TextBlock Text="Advanced Settings"
+                    <TextBlock Grid.Column="0"
+                               Text="{helpers:Localize Label_AdvancedSettings}"
                                VerticalAlignment="Center"
                                Classes="Small"/>
                     
-                    <Separator Width="270"
+                    <Separator Grid.Column="1"
                                Background="{DynamicResource MutedColor}"/>
 
-                    <Button Command="{Binding ToggleAdvancedSettingsCommand}"
+                    <Button Grid.Column="2"
+                            Command="{Binding ToggleAdvancedSettingsCommand}"
                             Classes="Ghost"
                             TabIndex="8">
                         <shadui:ButtonAssist.Icon>
@@ -171,76 +186,80 @@
                             </Grid>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                </StackPanel>
+                </Grid>
                 
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
                     
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="30">
+                    <Grid ColumnDefinitions="220,*"
+                          ColumnSpacing="10">
                         
-                        <StackPanel Spacing="20">
+                        <StackPanel Grid.Column="0" Spacing="20">
                             
-                            <CheckBox Content="Ignore Step"
+                            <CheckBox Content="{helpers:Localize Label_IgnoreStep}"
                                       TabIndex="9"
                                       IsChecked="{Binding TestStepViewModel.TestStep.IsIgnoreStep, FallbackValue='False'}"/>
             
-                            <CheckBox Content="Exclude from Export"
+                            <CheckBox Content="{helpers:Localize Label_ExcludeFromExport}"
                                       TabIndex="10"
                                       IsChecked="{Binding TestStepViewModel.TestStep.IsExcludeFromExport, FallbackValue='False'}"/>
                             
                         </StackPanel>
                         
-                        <StackPanel Orientation="Vertical"
+                        <StackPanel Grid.Column="1" Orientation="Vertical"
                                     Spacing="2"
                                     VerticalAlignment="Top">
-                            <TextBlock Text="Accent Color"/>
+                            <TextBlock Text="{helpers:Localize Label_AccentColor}"/>
                             <ColorPicker
-                                Width="285"
                                 HorizontalAlignment="Left"
                                 TabIndex="11"
                                 Color="{Binding TestStepViewModel?.TestStep.StepColor, Mode=TwoWay}"/>
                         </StackPanel>
                         
-                    </StackPanel>
+                    </Grid>
                     
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="10">
+                    <Grid ColumnDefinitions="220,*"
+                          ColumnSpacing="10">
                     
-                        <CheckBox
-                            Content="Show Comment"
-                            TabIndex="12"
-                            IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
-                            IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
+                        <StackPanel Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    Spacing="10">
+                            
+                            <CheckBox Content="{helpers:Localize Label_ShowComment}"
+                                      TabIndex="12"
+                                      IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
+                                      IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                         
-                        <Button
-                            Background="{DynamicResource ButtonBackground}"
-                            Classes="Icon"
-                            ToolTip.Tip="Add image to message box"
-                            TabIndex="13"
-                            Command="{Binding OpenImagePickerCommand}"
-                            Width="40"
-                            Height="40">
-                            <shadui:ButtonAssist.Icon>
-                                <ContentControl Content="{LucideIconContent ImagePlus}"/>
-                            </shadui:ButtonAssist.Icon>
-                        </Button>
+                            <Button Background="{DynamicResource ButtonBackground}"
+                                    Classes="Icon"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_AddImageToMessageBox}"
+                                    TabIndex="13"
+                                    Command="{Binding OpenImagePickerCommand}"
+                                    Width="40"
+                                    Height="40">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent ImagePlus}"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            
+                        </StackPanel>
+                        
                     
-                        <TextBox TabIndex="14"
-                                 Width="285"
+                        <TextBox Grid.Column="1"
+                                 TabIndex="14"
                                  Text="{Binding TestStepViewModel.TestStep.CustomMessageBoxImagePath, FallbackValue=''}"/>
                     
-                    </StackPanel>
+                    </Grid>
                     
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="10">
+                    <Grid ColumnDefinitions="220,*"
+                          ColumnSpacing="10">
                         
-                        <CheckBox Content="Assign Result to Variable"
+                        <CheckBox Grid.Column="0" Content="{helpers:Localize Label_AssignResultToVariable}"
                                   TabIndex="15"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding TestStepViewModel.TestStep.IsAssignResultToVariable, FallbackValue='False'}"/>
-                        <ComboBox
-                            Width="275"
+                        
+                        <ComboBox Grid.Column="1"
                             TabIndex="16"
                             ItemsSource="{Binding RuntimeVariables}"
                             SelectedItem="{Binding SelectedVariable, Mode=TwoWay}"
@@ -254,43 +273,46 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         
-                    </StackPanel>
+                    </Grid>
                     
                     <Grid ColumnDefinitions="*,*">
                         
                         <StackPanel Grid.Column="0"
                                     Spacing="10">
                         
-                            <TextBlock Text="Pass-Action"
+                            <TextBlock Text="{helpers:Localize Header_PassAction}"
                                        Classes="Large"
                                        Margin="0 0 0 5"/>
                             
-                            <CheckBox Content="Invert Result"
+                            <CheckBox Content="{helpers:Localize Label_InvertResult}"
                                       TabIndex="17"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnPass.IsInvertResult, FallbackValue='False'}"/>
                         
-                            <RadioButton Content="Continue"
+                            <RadioButton Content="{helpers:Localize Label_Continue}"
                                          TabIndex="18"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE, FallbackValue='False'}"/>
 
-                            <RadioButton Content="Repeat"
+                            <RadioButton Content="{helpers:Localize Label_Repeat}"
                                          TabIndex="19"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT, FallbackValue='False'}"/>
 
-                            <RadioButton Content="End Test"
+                            <RadioButton Content="{helpers:Localize Label_EndTest}"
                                          TabIndex="20"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST, FallbackValue='False'}"/>
                             
-                            <StackPanel Orientation="Horizontal" Spacing="10">
-                                <RadioButton Content="Jump To"
+                            <Grid ColumnDefinitions="Auto,*,5"
+                                  ColumnSpacing="10">
+                                
+                                <RadioButton Grid.Column="0"
+                                             Content="{helpers:Localize Label_JumpTo}"
                                              TabIndex="21"
                                              GroupName="PassAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}"/>
 
-                                <ComboBox Width="130"
+                                <ComboBox Grid.Column="1"
                                           TabIndex="22"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedPassJumpTarget, Mode=TwoWay}"
@@ -303,14 +325,14 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                            </StackPanel>
+                            </Grid>
                             
-                            <RadioButton Content="Show Comment"
+                            <RadioButton Content="{helpers:Localize Label_ShowComment}"
                                          TabIndex="23"
                                          GroupName="PassAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHOW_COMMENT, FallbackValue='False'}"/>
                             
-                            <CheckBox Content="Include Result"
+                            <CheckBox Content="{helpers:Localize Label_IncludeResult}"
                                       TabIndex="24"
                                       Margin="25 0 0 0"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnPass.IsIncludeResult, FallbackValue='False'}"
@@ -319,39 +341,41 @@
                         </StackPanel>
                     
                         <StackPanel Grid.Column="1"
-                                    HorizontalAlignment="Right"
                                     Spacing="10">
                         
-                            <TextBlock Text="Fail-Action"
+                            <TextBlock Text="{helpers:Localize Header_FailAction}"
                                        Classes="Large"
                                        Margin="0 0 0 5"/>
                             
-                            <CheckBox Content="Invert Result"
+                            <CheckBox Content="{helpers:Localize Label_InvertResult}"
                                       TabIndex="25"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnFail.IsInvertResult, FallbackValue='False'}"/>
                         
-                            <RadioButton Content="Continue"
+                            <RadioButton Content="{helpers:Localize Label_Continue}"
                                          TabIndex="26"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONTINUE, FallbackValue='False'}"/>
                             
-                            <RadioButton Content="Repeat"
+                            <RadioButton Content="{helpers:Localize Label_Repeat}"
                                          TabIndex="27"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=REPEAT, FallbackValue='False'}"/>
 
-                            <RadioButton Content="End Test"
+                            <RadioButton Content="{helpers:Localize Label_EndTest}"
                                          TabIndex="28"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=END_TEST, FallbackValue='False'}"/>
                             
-                            <StackPanel Orientation="Horizontal" Spacing="10">
-                                <RadioButton Content="Jump To"
+                            <Grid ColumnDefinitions="Auto,*,5"
+                                  ColumnSpacing="10">
+                                
+                                <RadioButton Grid.Column="0"
+                                             Content="{helpers:Localize Label_JumpTo}"
                                              TabIndex="29"
                                              GroupName="FailAction"
                                              IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}"/>
 
-                                <ComboBox Width="130"
+                                <ComboBox Grid.Column="1"
                                           TabIndex="30"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedFailJumpTarget, Mode=TwoWay}"
@@ -364,14 +388,14 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                            </StackPanel>
+                            </Grid>
                             
-                            <RadioButton Content="Show Comment"
+                            <RadioButton Content="{helpers:Localize Label_ShowComment}"
                                          TabIndex="31"
                                          GroupName="FailAction"
                                          IsChecked="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHOW_COMMENT, FallbackValue='False'}"/>
                             
-                            <CheckBox Content="Include Result"
+                            <CheckBox Content="{helpers:Localize Label_IncludeResult}"
                                       TabIndex="32"
                                       Margin="25 0 0 0"
                                       IsChecked="{Binding TestStepViewModel.TestStep.OnFail.IsIncludeResult, FallbackValue='False'}"

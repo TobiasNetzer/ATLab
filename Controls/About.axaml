@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.About"
              x:DataType="vm:AboutTabViewModel"
              Width="780"
@@ -12,7 +13,7 @@
                     Background="{DynamicResource OutlineColor}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
-                <TextBlock Text="About"
+                <TextBlock Text="{helpers:Localize About_Title}"
                            Classes="h4"
                            HorizontalAlignment="Center"/>
             </Border>
@@ -35,7 +36,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
 
-                        <TextBlock Text="A cross‑platform automated testing framework for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces."
+                        <TextBlock Text="{helpers:Localize About_Description}"
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
                                    HorizontalAlignment="Center"
@@ -49,27 +50,55 @@
                             
                             <StackPanel Grid.Column="0" Spacing="5">
                                 <TextBlock Text="{Binding AppName}" Classes="Large"/>
-                                <TextBlock Text="{Binding AppVersion, StringFormat=Version: {0}}" FontSize="14"/>
+
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{helpers:Localize About_Version}" FontSize="14"/>
+                                    <TextBlock Text="{Binding AppVersion}" FontSize="14"/>
+                                </StackPanel>
+
                                 <TextBlock Text="{Binding Copyright}" FontSize="14"/>
-                                <TextBlock Text="Build" Classes="Large" Margin="0 5 0 0"/>
-                                <TextBlock Text="{Binding BuildDate, StringFormat=Date: {0}}" FontSize="14"/>
-                                <TextBlock Text="{Binding BuildConfiguration, StringFormat=Configuration: {0}}" FontSize="14"/>
-                                <TextBlock Text="{Binding AvaloniaVersion, StringFormat=Avalonia: {0}}" FontSize="14"/>
-                                <TextBlock Text="System" Classes="Large" Margin="0 5 0 0"/>
+
+                                <TextBlock Text="{helpers:Localize About_Build}"
+                                           Classes="Large"
+                                           Margin="0 5 0 0"/>
+
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{helpers:Localize About_Date}" FontSize="14"/>
+                                    <TextBlock Text="{Binding BuildDate}" FontSize="14"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{helpers:Localize About_Configuration}" FontSize="14"/>
+                                    <TextBlock Text="{Binding BuildConfiguration}" FontSize="14"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{helpers:Localize About_Avalonia}" FontSize="14"/>
+                                    <TextBlock Text="{Binding AvaloniaVersion}" FontSize="14"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{helpers:Localize About_System}"
+                                           Classes="Large"
+                                           Margin="0 5 0 0"/>
+
                                 <TextBlock Text="{Binding OSInfo}" FontSize="14"/>
-                                <TextBlock Text="{Binding RuntimeFramework, StringFormat=Runtime: {0}}" FontSize="14"/>
+
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{helpers:Localize About_Runtime}" FontSize="14"/>
+                                    <TextBlock Text="{Binding RuntimeFramework}" FontSize="14"/>
+                                </StackPanel>
                             </StackPanel>
                             
                             <StackPanel Grid.Column="1" Spacing="5">
                                 
                                 <Button
-                                    Content="View project on GitHub"
+                                    Content="{helpers:Localize Button_ViewProjectOnGitHub}"
                                     Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
                                     CommandParameter="https://github.com/TobiasNetzer/ATLab"/>
                                 
                                 <Button
-                                    Content="License"
+                                    Content="{helpers:Localize Button_License}"
                                     Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
                                     CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE"/>

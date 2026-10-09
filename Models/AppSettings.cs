@@ -24,4 +24,5 @@ public class AppSettings
     public bool IsExpressionEditorExpanded { get; set; }
     public bool IsFilePathEditorExpanded { get; set; }
     public bool IsDarkMode { get; set; } = true;
+    public string Language { get; set; } = "en";
 }

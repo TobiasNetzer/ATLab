@@ -4,6 +4,7 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:behaviors="clr-namespace:ATLab.Behaviors"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
         
@@ -23,7 +24,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="New file"
+                        ToolTip.Tip="{helpers:Localize ToolTip_NewFile}"
                         Command="{Binding NewFileCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -36,7 +37,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Open file"
+                        ToolTip.Tip="{helpers:Localize ToolTip_OpenFile}"
                         Command="{Binding LoadFileWithDialogCommand}"
                         Width="40"
                         Height="40">
@@ -48,7 +49,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Save file"
+                        ToolTip.Tip="{helpers:Localize ToolTip_SaveFile}"
                         Command="{Binding SaveFileCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -61,7 +62,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Save file as"
+                        ToolTip.Tip="{helpers:Localize ToolTip_SaveFileAs}"
                         Command="{Binding SaveFileAsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -80,7 +81,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Add a new test step"
+                        ToolTip.Tip="{helpers:Localize ToolTip_AddTestStep}"
                         Command="{Binding AddTestStepCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -93,7 +94,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Remove selected test steps"
+                        ToolTip.Tip="{helpers:Localize ToolTip_RemoveTestSteps}"
                         Command="{Binding RemoveTestStepsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -106,7 +107,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Move selected test step up"
+                        ToolTip.Tip="{helpers:Localize ToolTip_MoveStepUp}"
                         Command="{Binding MoveStepUpCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -119,7 +120,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Move selected test step down"
+                        ToolTip.Tip="{helpers:Localize ToolTip_MoveStepDown}"
                         Command="{Binding MoveStepDownCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -132,7 +133,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Duplicate selected test steps"
+                        ToolTip.Tip="{helpers:Localize ToolTip_DuplicateTestSteps}"
                         Command="{Binding DuplicateTestStepsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -145,7 +146,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Cut selected test steps"
+                        ToolTip.Tip="{helpers:Localize ToolTip_CutTestSteps}"
                         Command="{Binding CutTestStepsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -158,7 +159,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Copy selected test steps"
+                        ToolTip.Tip="{helpers:Localize ToolTip_CopyTestSteps}"
                         Command="{Binding CopyTestStepsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -171,7 +172,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Paste test steps"
+                        ToolTip.Tip="{helpers:Localize ToolTip_PasteTestSteps}"
                         Command="{Binding PasteTestStepsCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -190,7 +191,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Execute single step"
+                        ToolTip.Tip="{helpers:Localize ToolTip_ExecuteSingleStep}"
                         Command="{Binding StartSingleStepTestCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartSingleStepBusy}"
                         IsEnabled="{Binding IsDevelopmentMode}"
@@ -204,7 +205,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Start test execution from selected step"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StartTestFromSelectedStep}"
                         Command="{Binding StartTestFromSelectionCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartFromStepBusy}"
                         IsEnabled="{Binding IsDevelopmentMode}"
@@ -218,7 +219,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Start continuous test execution"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StartContinuousExecution}"
                         Command="{Binding StartTestRepeatCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartRepeatTestBusy}"
                         IsEnabled="{Binding IsDevelopmentMode}"
@@ -232,7 +233,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Start test execution"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StartTestExecution}"
                         Command="{Binding StartTestCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartTestBusy}"
                         Width="40"
@@ -245,7 +246,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Stop test execution"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StopTestExecution}"
                         Command="{Binding CancelTestCommand}"
                         Width="40"
                         Height="40">
@@ -263,7 +264,7 @@
                     <Button
                         Background="{Binding IsDebugMode, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
-                        ToolTip.Tip="Enable debug mode"
+                        ToolTip.Tip="{helpers:Localize ToolTip_EnableDebugMode}"
                         Command="{Binding ToggleDebugModeCommand}"
                         IsEnabled="{Binding IsDevelopmentMode}"
                         IsVisible="{Binding IsDevelopmentMode}"
@@ -277,7 +278,7 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="Advance single step"
+                        ToolTip.Tip="{helpers:Localize ToolTip_AdvanceSingleStep}"
                         Command="{Binding RequestSingleStepContinueCommand}"
                         IsVisible="{Binding IsDevelopmentMode}"
                         Width="40"
@@ -297,7 +298,7 @@
                     <Button
                         Background="{Binding IsShowMeasurementPanel, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
-                        ToolTip.Tip="Show measurement panel"
+                        ToolTip.Tip="{helpers:Localize ToolTip_ShowMeasurementPanel}"
                         Command="{Binding ToggleMeasurementPanelCommand}"
                         Width="40"
                         Height="40">
@@ -309,7 +310,7 @@
                     <Button
                         Background="{Binding IsDevelopmentMode, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
-                        ToolTip.Tip="Enable development mode"
+                        ToolTip.Tip="{helpers:Localize ToolTip_EnableDevelopmentMode}"
                         Command="{Binding ToggleDevelopmentModeCommand}"
                         IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}"
                         Width="40"
@@ -356,7 +357,7 @@
             </DataGrid.Styles>
             
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="No." MinWidth="70">
+                <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <StackPanel Orientation="Horizontal"
@@ -376,9 +377,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
+                <DataGridTextColumn Header="{helpers:Localize Header_Name}" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
                 
-                <DataGridTemplateColumn Header="Lower Limit" MinWidth="140">
+                <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -393,7 +394,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Nominal Value" MinWidth="140">
+                <DataGridTemplateColumn Header="{helpers:Localize Header_NominalValue}" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -408,7 +409,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Upper Limit" MinWidth="140">
+                <DataGridTemplateColumn Header="{helpers:Localize Header_UpperLimit}" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -423,7 +424,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Measured Value" MinWidth="140">
+                <DataGridTemplateColumn Header="{helpers:Localize Header_MeasuredValue}" MinWidth="140">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="vm:TestStepViewModel">
                             <TextBlock Text="{Binding Result}" 
@@ -432,8 +433,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Deviation" Binding="{Binding Deviation}" MinWidth="100" />
-                <DataGridTemplateColumn Header="Result" MinWidth="80">
+                <DataGridTextColumn Header="{helpers:Localize Header_Deviation}" Binding="{Binding Deviation}" MinWidth="110" />
+                <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Width="15" Height="15"
@@ -446,14 +447,14 @@
         
             <DataGrid.ContextMenu>
                 <ContextMenu IsEnabled="{Binding IsDevelopmentMode}">
-                    <MenuItem Header="Add" Command="{Binding AddTestStepCommand}"/>
-                    <MenuItem Header="Remove" Command="{Binding RemoveTestStepsCommand}"/>
-                    <MenuItem Header="Move Up" Command="{Binding MoveStepUpCommand}"/>
-                    <MenuItem Header="Move Down" Command="{Binding MoveStepDownCommand}"/>
-                    <MenuItem Header="Duplicate" Command="{Binding DuplicateTestStepsCommand}"/>
-                    <MenuItem Header="Cut" Command="{Binding CutTestStepsCommand}"/>
-                    <MenuItem Header="Copy" Command="{Binding CopyTestStepsCommand}"/>
-                    <MenuItem Header="Paste" Command="{Binding PasteTestStepsCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding AddTestStepCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Remove}" Command="{Binding RemoveTestStepsCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_MoveUp}" Command="{Binding MoveStepUpCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_MoveDown}" Command="{Binding MoveStepDownCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Duplicate}" Command="{Binding DuplicateTestStepsCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Cut}" Command="{Binding CutTestStepsCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Copy}" Command="{Binding CopyTestStepsCommand}"/>
+                    <MenuItem Header="{helpers:Localize Menu_Paste}" Command="{Binding PasteTestStepsCommand}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             
@@ -529,26 +530,34 @@
                 
             </ProgressBar>
             
-            <TextBlock Grid.Column="0"
-                       Grid.ColumnSpan="5"
-                       Grid.Row="0"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontWeight="Bold"
-                       FontSize="24"
-                       IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RUNNING}">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="Running Test: {0} / {1}">
-                        <Binding Path="SelectedStep?.TestStep.Number" FallbackValue="" />
-                        <Binding Path="TestSteps.Count" />
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <StackPanel Grid.Column="0"
+                        Grid.ColumnSpan="5"
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RUNNING}">
+                <TextBlock Text="{helpers:Localize Status_RunningTest}"
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text="{Binding SelectedStep?.TestStep.Number, FallbackValue=''}"
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text=" / "
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text="{Binding TestSteps.Count}"
+                           FontWeight="Bold"
+                           FontSize="24"/>
+            </StackPanel>
             
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
-                       Text="Test Passed" 
+                       Text="{helpers:Localize Status_TestPassed}" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
@@ -558,7 +567,7 @@
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
-                       Text="Test Failed" 
+                       Text="{helpers:Localize Status_TestFailed}" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
@@ -568,7 +577,7 @@
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
-                       Text="Test Canceled" 
+                       Text="{helpers:Localize Status_TestCanceled}" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
@@ -578,65 +587,111 @@
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
-                       Text="Test Execution Failed" 
+                       Text="{helpers:Localize Status_TestExecutionFailed}" 
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontWeight="Bold"
                        FontSize="24"
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXECUTION_ERROR}"/>
             
-            <TextBlock Grid.Column="0"
-                       Grid.Row="2"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       HorizontalAlignment="Left"
-                       Text="{Binding SerialNumber, StringFormat='S/N: {0}'}"
-                       TextTrimming="CharacterEllipsis"
-                       ToolTip.Tip="{Binding SerialNumber}"/>
+            <StackPanel Grid.Column="0"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        ToolTip.Tip="{Binding SerialNumber}">
+                <TextBlock Text="{helpers:Localize Label_SerialNumber}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding SerialNumber}"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
             
-            <TextBlock Grid.Column="1"
-                       Grid.Row="2"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       MinWidth="200"
-                       Text="{Binding TestDuration, StringFormat='Test Duration: {0}'}"/>
+            <StackPanel Grid.Column="1"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        MinWidth="200">
+                <TextBlock Text="{helpers:Localize Label_TestDuration}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding TestDuration}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+            </StackPanel>
             
-            <TextBlock Grid.Column="2"
-                       Grid.Row="2"
-                       Classes.error="{Binding NumberFailedSteps}"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       Text="{Binding NumberFailedSteps, StringFormat='Failed Steps: {0}'}">
-                <TextBlock.Styles>
-                    <Style Selector="TextBlock.error">
+            <StackPanel Grid.Column="2"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Classes.error="{Binding NumberFailedSteps}">
+                <StackPanel.Styles>
+                    <Style Selector="StackPanel.error TextBlock">
                         <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
                     </Style>
-                </TextBlock.Styles>
-            </TextBlock>
+                </StackPanel.Styles>
+                <TextBlock Text="{helpers:Localize Label_FailedSteps}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding NumberFailedSteps}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+            </StackPanel>
             
-            <TextBlock Grid.Column="3"
-                       Grid.Row="2"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       HorizontalAlignment="Center">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="Passed Tests: {0}/{1} ({2}%)">
-                        <Binding Path="NumberPassedTests"/>
-                        <Binding Path="NumberRunTests"/>
-                        <Binding Path="PassedPercentage"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <StackPanel Grid.Column="3"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <TextBlock Text="{helpers:Localize Label_PassedTests}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding NumberPassedTests}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="/"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding NumberRunTests}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=" ("
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding PassedPercentage}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="%)"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+            </StackPanel>
 
-            
-            <TextBlock Grid.Column="4"
-                       Grid.Row="2"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       HorizontalAlignment="Right"
-                       Text="{Binding User, StringFormat='User: {0}'}"/>
+            <StackPanel Grid.Column="4"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="{helpers:Localize Label_User}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="16"/>
+                <TextBlock Text="{Binding User}"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+            </StackPanel>
             
         </Grid>
             

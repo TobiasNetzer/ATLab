@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:conv="using:Avalonia.Data.Converters"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ProjectDocumentationViewer"
              x:DataType="vm:ProjectDocumentationViewModel"
              Width="1200">
@@ -14,7 +15,7 @@
                     Background="{DynamicResource OutlineColor}"
                     CornerRadius="15 15 0 0"
                     Padding="10">
-                <TextBlock Text="Project Documentation"
+                <TextBlock Text="{helpers:Localize Header_ProjectDocumentation}"
                            Classes="h4"
                            HorizontalAlignment="Center"/>
             </Border>
@@ -37,7 +38,7 @@
                                     Grid.ColumnSpan="2"
                                     Spacing="2">
                             
-                            <TextBlock Text="Test Documentation"/>
+                            <TextBlock Text="{helpers:Localize Label_TestDocumentation}"/>
                             
                             <TextBox Text="{Binding ProjectDocumentation.TestDocumentation, UpdateSourceTrigger=LostFocus}"
                                      AcceptsReturn="True"
@@ -50,7 +51,7 @@
                                     Grid.Column="0"
                                     Spacing="2">
                             
-                            <TextBlock Text="Required Test Gear / Instruments / Tools"/>
+                            <TextBlock Text="{helpers:Localize Label_RequiredGear}"/>
                             
                             <TextBox Text="{Binding ProjectDocumentation.RequiredGearDocumentation, UpdateSourceTrigger=LostFocus}"
                                      AcceptsReturn="True"
@@ -63,7 +64,7 @@
                                     Grid.Column="1"
                                     Spacing="2">
                             
-                            <TextBlock Text="Known Issues"/>
+                            <TextBlock Text="{helpers:Localize Label_KnownIssues}"/>
                             
                             <TextBox Text="{Binding ProjectDocumentation.KnownIssuesDocumentation, UpdateSourceTrigger=LostFocus}"
                                      AcceptsReturn="True"
@@ -82,14 +83,14 @@
                         
                             <StackPanel>
                             
-                                <TextBlock Text="Images"
+                                <TextBlock Text="{helpers:Localize Label_Images}"
                                            Classes="Large"
                                            Margin="0 0 0 10"/>
                                 
                                 <Button
                                     Background="{DynamicResource ButtonBackground}"
                                     Classes="Secondary"
-                                    Content="Add Image"
+                                    Content="{helpers:Localize Button_AddImage}"
                                     Command="{Binding AddImageCommand}"
                                     HorizontalAlignment="Left"
                                     Margin="0 0 0 10"/>
@@ -156,14 +157,14 @@
                             
                             <StackPanel>
                                 
-                                <TextBlock Text="Attachments"
+                                <TextBlock Text="{helpers:Localize Label_Attachments}"
                                            Classes="Large"
                                            Margin="0 0 0 10"/>
 
                                 <Button 
                                     Background="{DynamicResource ButtonBackground}"
                                     Classes="Secondary"
-                                    Content="Add Attachment"
+                                    Content="{helpers:Localize Button_AddAttachment}"
                                     Command="{Binding AddAttachmentCommand}"
                                     HorizontalAlignment="Left"
                                     Margin="0 0 0 10"/>

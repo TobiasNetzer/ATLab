@@ -1,13 +1,14 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:vm="using:ATLab.ViewModels"
+            xmlns:helpers="clr-namespace:ATLab.Helpers"
             x:Class="ATLab.Controls.SerialNumberEntryDialog"
             x:DataType="vm:SerialNumberEntryDialogViewModel">
         
     <Grid Margin="20"
             RowDefinitions="Auto,Auto,Auto">
 
-        <TextBlock Text="Enter Serial Number"
+        <TextBlock Text="{helpers:Localize Header_EnterSerialNumber}"
                         Margin="0,0,0,10"
                         Classes="Large"/>
 
@@ -24,14 +25,14 @@
                     Spacing="10">
             
             <Button
-                Content="Cancel"
+                Content="{helpers:Localize Button_Cancel}"
                 Classes="Outline"
                 Command="{Binding CancelCommand}"
                 HotKey="Escape"
                 Width="145"/>
             
             <Button
-                Content="Start"
+                Content="{helpers:Localize Button_Start}"
                 Classes="Primary"
                 Command="{Binding SubmitCommand}"
                 IsEnabled="{Binding IsOkEnabled}"

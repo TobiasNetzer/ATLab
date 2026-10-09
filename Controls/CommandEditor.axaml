@@ -3,6 +3,7 @@
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:models="clr-namespace:ATLab.Models"
              xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.CommandEditor"
              x:DataType="controls:CommandEditor"
              Width="500">
@@ -27,7 +28,7 @@
 
             <DockPanel>
 
-                <TextBlock Text="Device Command"
+                <TextBlock Text="{helpers:Localize Header_DeviceCommand}"
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
@@ -56,14 +57,14 @@
             <StackPanel Margin="10" Spacing="15">
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Target Device"/>
+                    <TextBlock Text="{helpers:Localize Label_TargetDevice}"/>
 
                     <DockPanel>
                         
                         <Button
                             Background="{DynamicResource ButtonBackground}"
                             Classes="Icon"
-                            ToolTip.Tip="Remove selected device"
+                            ToolTip.Tip="{helpers:Localize ToolTip_RemoveSelectedDevice}"
                             Command="{Binding $parent[controls:CommandEditor].CommandEditorVm?.RemoveDeviceCommand}"
                             Width="35"
                             Height="35"
@@ -95,21 +96,21 @@
                 </StackPanel>
                 
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Command"/>
+                    <TextBlock Text="{helpers:Localize Header_Command}"/>
                     
                     <TextBox Text="{Binding $parent[controls:CommandEditor].CommandEditorVm?.Command.Command}"/>
                     
                     <DockPanel Margin="0 8 0 0"
                                LastChildFill="False">
                         
-                        <CheckBox Content="Expect Response"
+                        <CheckBox Content="{helpers:Localize Label_ExpectResponse}"
                                   IsChecked="{Binding $parent[controls:CommandEditor].CommandEditorVm?.Command.IsExpectResponse}"/>
                         
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10"
                                     DockPanel.Dock="Right">
                             
-                            <TextBlock Text="Timeout (ms)"
+                            <TextBlock Text="{helpers:Localize Label_TimeoutMs}"
                                        VerticalAlignment="Center"
                                        Classes="Small"/>
                             

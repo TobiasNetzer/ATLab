@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -32,7 +33,8 @@ public partial class ScriptingTabViewModel : ViewModelBase
         _messageBoxService = messageBoxService;
         RepositoryPath = projectModel.ScriptRepositoryPath;
 
-        Title = "Scripting";
+        UpdateTitle();
+        LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTitle();
         
         _repository.RepositoryFolderChanged += async (_, folderPath) =>
         {
@@ -57,7 +59,8 @@ public partial class ScriptingTabViewModel : ViewModelBase
 
     private void UpdateTitle()
     {
-        Title = Scripts.Any(s => s.IsDirty) ? "Scripting*" : "Scripting";
+        var baseTitle = LocalizationService.Instance["Tab_Scripting"];
+        Title = Scripts.Any(s => s.IsDirty) ? $"{baseTitle}*" : baseTitle;
     }
 
     [RelayCommand]

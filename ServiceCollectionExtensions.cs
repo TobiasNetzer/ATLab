@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBackendServices(this IServiceCollection services)
     {
+        services.AddSingleton<ILocalizationService>(LocalizationService.Instance);
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<IProjectFileService, ProjectFileService>();
         services.AddSingleton<ISerialNumberDialogService, SerialNumberDialogService>();
