@@ -30,6 +30,8 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private readonly List<CustomVariable> _runtimeVariables = new();
     
+    public IStatusService StatusService { get; }
+    
     public ObservableCollection<TestStepViewModel> TestSteps { get; } = new();
     public WorkspaceEditorViewModel WorkspaceEditor { get; }
     
@@ -94,36 +96,35 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool _allowResultSave;
     private DateTimeOffset _startTime;
     private TimeSpan Elapsed => DateTimeOffset.Now - _startTime;
-    
-    private bool _isAnimationEnabled = true;
-    public bool IsAnimationEnabled
+
+    private bool IsAnimationEnabled
     {
-        get => _isAnimationEnabled;
+        get;
         set
         {
-            if (_isAnimationEnabled == value)
+            if (field == value)
                 return;
-            
-            _isAnimationEnabled = value;
+
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(AnimationDuration));
         }
-    }
-    
-    private int _testProgress;
+    } = true;
+
     public int TestProgress
     {
-        get => _testProgress;
+        get;
         set
         {
-            if (_testProgress == value)
+            if (field == value)
                 return;
-            
-            _testProgress = value;
-            IsAnimationEnabled = _testProgress != 0;
+
+            field = value;
+            IsAnimationEnabled = field != 0;
             OnPropertyChanged();
         }
     }
+
     public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(200) : TimeSpan.Zero;
 
     public TestingTabViewModel(
@@ -138,7 +139,8 @@ public partial class TestingTabViewModel : ViewModelBase
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
         ITestResultExportService testResultExportService,
-        IMessageBoxService messageBoxService)
+        IMessageBoxService messageBoxService,
+        IStatusService statusService)
     {
         _hardwareInfo = hardwareInfo;
         _settingsService = settingsService;
@@ -151,6 +153,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _serialNumberDialogService = serialNumberDialogService;
         _testResultExportService = testResultExportService;
         _messageBoxService = messageBoxService;
+        StatusService = statusService;
 
         _controlModuleService = controlModuleService;
 

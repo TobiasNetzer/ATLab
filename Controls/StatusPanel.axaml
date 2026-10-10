@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             x:Class="ATLab.Controls.StatusPanel">
+    
+    <Grid Height="30">
+        
+        <ProgressBar
+            Value="{Binding $parent[controls:StatusPanel].ProgressValue}"
+            Minimum="0.0"
+            Maximum="1.0"
+            CornerRadius="5"
+            Background="{DynamicResource OutlineColor}"
+            IsIndeterminate="{Binding $parent[controls:StatusPanel].IsIndeterminateValue}">
+                
+            <ProgressBar.Styles>
+                <Style Selector="ProgressBar /template/ Border#PART_Indicator">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </ProgressBar.Styles>
+                
+            <ProgressBar.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Value"
+                                      Duration="{Binding $parent[controls:StatusPanel].AnimationDurationValue}">
+                        <DoubleTransition.Easing>
+                            <LinearEasing/>
+                        </DoubleTransition.Easing>
+                    </DoubleTransition>
+                </Transitions>
+            </ProgressBar.Transitions>
+                
+        </ProgressBar>
+        
+        <TextBlock
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Text="{Binding $parent[controls:StatusPanel].StatusText}"
+            Classes="Large"/>
+
+    </Grid>
+    
+</UserControl>

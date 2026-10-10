@@ -23,6 +23,7 @@ public class TestStepRunner : ITestStepRunner
     private readonly IFileContentReader _fileContentReader;
     private readonly IInterfaceCommandExecuter _interfaceCommandExecuter;
     private readonly ProjectModel _projectModel;
+    private readonly IStatusService _statusService;
 
     public TestStepRunner(
         ITestHardware testHardware,
@@ -32,7 +33,8 @@ public class TestStepRunner : ITestStepRunner
         IMessageBoxService messageBoxService,
         IFileContentReader fileContentReader,
         IInterfaceCommandExecuter interfaceCommandExecuter,
-        ProjectModel projectModel)
+        ProjectModel projectModel,
+        IStatusService statusService)
     {
         _testHardware = testHardware;
         _scriptRunner = scriptRunner;
@@ -42,6 +44,7 @@ public class TestStepRunner : ITestStepRunner
         _fileContentReader = fileContentReader;
         _interfaceCommandExecuter = interfaceCommandExecuter;
         _projectModel = projectModel;
+        _statusService = statusService;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
@@ -65,7 +68,37 @@ public class TestStepRunner : ITestStepRunner
                 return OperationResult<double>.Failure(result.ErrorMessage);
             }
 
-            await Task.Delay(step.TestStep.Delay, token);
+            const int updateIntervalMs = 100;
+
+            if (step.TestStep.Delay <= 1000)
+            {
+                await Task.Delay(step.TestStep.Delay, token);
+            }
+            else
+            {
+                var totalMs = step.TestStep.Delay;
+                var elapsedMs = 0;
+
+                _statusService.Progress = 0;
+                _statusService.Text = LocalizationService.Instance["StatusLabel_ExecuteDelay"];
+                _statusService.IsVisible = true;
+
+                while (elapsedMs < totalMs)
+                {
+                    var chunk = Math.Min(updateIntervalMs, totalMs - elapsedMs);
+
+                    await Task.Delay(chunk, token);
+
+                    elapsedMs += chunk;
+
+                    _statusService.Progress = Math.Min(
+                        (double)(elapsedMs + updateIntervalMs) / totalMs,
+                        1.0);
+                }
+                
+                _statusService.IsVisible = false;
+                _statusService.Progress = 0;
+            }
             
             var mask = step.TestStep.IsCustomResponseMask ? step.TestStep.ResponseMask : null;
 
@@ -82,8 +115,18 @@ public class TestStepRunner : ITestStepRunner
 
                 case TestEvaluationSource.INTERFACE:
                     return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
-                
-                case TestEvaluationSource.SHELL_COMMAND: return await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
+
+                case TestEvaluationSource.SHELL_COMMAND:
+                {
+                    _statusService.Progress = 0;
+                    _statusService.Text = LocalizationService.Instance["StatusLabel_WaitingForExternalApp"];
+                    _statusService.IsIndeterminate = true;
+                    _statusService.IsVisible = true;
+                    var shellCommandResult = await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
+                    _statusService.IsVisible = false;
+                    _statusService.IsIndeterminate = false;
+                    return shellCommandResult;
+                }
                 
                 case TestEvaluationSource.USER_RESPONSE:
                 {
@@ -125,6 +168,8 @@ public class TestStepRunner : ITestStepRunner
         }
         catch (OperationCanceledException)
         {
+            _statusService.IsVisible = false;
+            _statusService.IsIndeterminate = false;
             throw new OperationCanceledException();
         }
         catch (Exception ex)

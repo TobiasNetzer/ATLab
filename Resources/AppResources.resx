@@ -859,4 +859,10 @@
   <data name="ToolTip_RequestBreakRepeat" xml:space="preserve">
     <value>Continue test execution</value>
   </data>
+  <data name="StatusLabel_ExecuteDelay" xml:space="preserve">
+    <value>Waiting...</value>
+  </data>
+  <data name="StatusLabel_WaitingForExternalApp" xml:space="preserve">
+    <value>Waiting for external application...</value>
+  </data>
 </root>
