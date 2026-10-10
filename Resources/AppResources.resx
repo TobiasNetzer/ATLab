@@ -221,7 +221,7 @@
     <value>User</value>
   </data>
   <data name="Tab_Testing" xml:space="preserve">
-    <value>Test Environment</value>
+    <value>Test Execution</value>
   </data>
   <data name="Tab_Configuration" xml:space="preserve">
     <value>Configuration</value>
@@ -239,7 +239,7 @@
     <value>About</value>
   </data>
   <data name="Status_SimulationMode" xml:space="preserve">
-    <value>Software is working without test hardware</value>
+    <value>No test hardware connected</value>
   </data>
   <data name="ToolTip_ShowEventLog" xml:space="preserve">
     <value>Show event log</value>
@@ -764,10 +764,10 @@
     <value>Isolated I²C:</value>
   </data>
   <data name="Label_TestHardwareIsolatedUART" xml:space="preserve">
-    <value>Isolated RS485:</value>
+    <value>Isolated UART:</value>
   </data>
   <data name="Label_TestHardwareIsolatedRS485" xml:space="preserve">
-    <value>Isolated UART:</value>
+    <value>Isolated RS485:</value>
   </data>
   <data name="About_Version" xml:space="preserve">
     <value>Version:</value>
@@ -815,10 +815,10 @@
     <value>Cancel</value>
   </data>
   <data name="ButtonLabel_Pass" xml:space="preserve">
-    <value>Pass</value>
+    <value>Passed</value>
   </data>
   <data name="ButtonLabel_Fail" xml:space="preserve">
-    <value>Fail</value>
+    <value>Failed</value>
   </data>
   <data name="Title_UserInformation" xml:space="preserve">
     <value>User Information</value>
@@ -830,7 +830,7 @@
     <value>You have unsaved changes. Continue without saving?</value>
   </data>
   <data name="Title_AwaitingUserResponse" xml:space="preserve">
-    <value>waiting User Response</value>
+    <value>Waiting for User Response</value>
   </data>
   <data name="Enum_TestEvaluationSource_NONE" xml:space="preserve">
     <value>None</value>
@@ -864,5 +864,89 @@
   </data>
   <data name="StatusLabel_WaitingForExternalApp" xml:space="preserve">
     <value>Waiting for external application...</value>
+  </data>
+  <data name="ReportTitle_TestReport" xml:space="preserve">
+    <value>Test Report</value>
+  </data>
+  <data name="ReportLabel_Page" xml:space="preserve">
+    <value>Page </value>
+  </data>
+  <data name="ReportLabel_TestInformation" xml:space="preserve">
+    <value>Test Information</value>
+  </data>
+  <data name="ReportLabel_Project" xml:space="preserve">
+    <value>Project:</value>
+  </data>
+  <data name="ReportLabel_Operator" xml:space="preserve">
+    <value>Operator:</value>
+  </data>
+  <data name="ReportLabel_Date" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="ReportLabel_Time" xml:space="preserve">
+    <value>Time:</value>
+  </data>
+  <data name="ReportLabel_Duration" xml:space="preserve">
+    <value>Duration:</value>
+  </data>
+  <data name="ReportLabel_DeviceUnderTest" xml:space="preserve">
+    <value>Device Under Test</value>
+  </data>
+  <data name="ReportLabel_SerialNumber" xml:space="preserve">
+    <value>Serial Number:</value>
+  </data>
+  <data name="ReportLabel_DeviceName" xml:space="preserve">
+    <value>Device Name:</value>
+  </data>
+  <data name="ReportLabel_Revision" xml:space="preserve">
+    <value>Revision:</value>
+  </data>
+  <data name="ReportLabel_Variant" xml:space="preserve">
+    <value>Variant:</value>
+  </data>
+  <data name="ReportLabel_PartNumber" xml:space="preserve">
+    <value>Part Number:</value>
+  </data>
+  <data name="ReportLabel_AdditionalNotes" xml:space="preserve">
+    <value>Additional Notes:</value>
+  </data>
+  <data name="ReportLabel_Pass" xml:space="preserve">
+    <value>PASS</value>
+  </data>
+  <data name="ReportLabel_Fail" xml:space="preserve">
+    <value>FAIL</value>
+  </data>
+  <data name="ReportLabel_Step" xml:space="preserve">
+    <value>Step</value>
+  </data>
+  <data name="ReportLabel_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ReportLabel_LowerLimit" xml:space="preserve">
+    <value>Lower Limit</value>
+  </data>
+  <data name="ReportLabel_Measured" xml:space="preserve">
+    <value>Measured</value>
+  </data>
+  <data name="ReportLabel_UpperLimit" xml:space="preserve">
+    <value>Upper Limit</value>
+  </data>
+  <data name="ReportLabel_Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="ReportLabel_Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="ReportLabel_UsedEquipment" xml:space="preserve">
+    <value>Used Test Equipment</value>
+  </data>
+  <data name="ReportLabel_TestHardware" xml:space="preserve">
+    <value>Test Hardware:</value>
+  </data>
+  <data name="ReportLabel_FirmwareVersion" xml:space="preserve">
+    <value>Firmware Version:</value>
+  </data>
+  <data name="ReportLabel_TestGear" xml:space="preserve">
+    <value>Test Equipment:</value>
   </data>
 </root>

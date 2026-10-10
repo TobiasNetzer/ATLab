@@ -9,6 +9,7 @@ using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
+using ATLab.Services;
 using ATLab.ViewModels;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -68,7 +69,7 @@ public class TestReportComposer
                     .AlignMiddle()
                     .Column(col =>
                     {
-                        col.Item().Text($"Test Report - {_info.DeviceUnderTestInfo.DeviceName} {_info.SerialNumber}")
+                        col.Item().Text($"{LocalizationService.Instance["ReportTitle_TestReport"]} - {_info.DeviceUnderTestInfo.DeviceName} {_info.SerialNumber}")
                             .FontSize(20)
                             .Bold()
                             .FontColor(Colors.Black);
@@ -110,11 +111,11 @@ public class TestReportComposer
         container.PaddingTop(10)
             .Row(row =>
             {
-                row.RelativeItem().AlignLeft().Text($"{AppName} - Version: {AppVersion}");
+                row.RelativeItem().AlignLeft().Text($"{AppName} - {LocalizationService.Instance["ReportLabel_Version"]} {AppVersion}");
                 
                 row.RelativeItem().AlignRight().Text(text =>
                 {
-                    text.Span("Page ");
+                    text.Span(LocalizationService.Instance["ReportLabel_Page"]);
                     text.CurrentPageNumber();
                     text.Span(" / ");
                     text.TotalPages();
@@ -130,7 +131,7 @@ public class TestReportComposer
         {
             col.Spacing(5);
 
-            col.Item().Text("Test Information")
+            col.Item().Text(LocalizationService.Instance["ReportLabel_TestInformation"])
                 .FontSize(16)
                 .SemiBold()
                 .FontColor(Colors.Black);
@@ -139,31 +140,31 @@ public class TestReportComposer
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(70).Text("Project:");
+                r.ConstantItem(70).Text(LocalizationService.Instance["ReportLabel_Project"]);
                 r.RelativeItem().Text(info.ProjectName ?? "-").SemiBold();
             });
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(70).Text("Operator:");
+                r.ConstantItem(70).Text(LocalizationService.Instance["ReportLabel_Operator"]);
                 r.RelativeItem().Text(info.Operator ?? "-").SemiBold();
             });
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(70).Text("Date:");
+                r.ConstantItem(70).Text(LocalizationService.Instance["ReportLabel_Date"]);
                 r.RelativeItem().Text(info.Date).SemiBold();
             });
             
             col.Item().Row(r =>
             {
-                r.ConstantItem(70).Text("Time:");
+                r.ConstantItem(70).Text(LocalizationService.Instance["ReportLabel_Time"]);
                 r.RelativeItem().Text(info.Time).SemiBold();
             });
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(70).Text("Duration:");
+                r.ConstantItem(70).Text(LocalizationService.Instance["ReportLabel_Duration"]);
                 r.RelativeItem().Text(info.Duration ?? "-").SemiBold();
             });
         });
@@ -177,7 +178,7 @@ public class TestReportComposer
         {
             col.Spacing(5);
 
-            col.Item().Text("Device Under Test")
+            col.Item().Text(LocalizationService.Instance["ReportLabel_DeviceUnderTest"])
                 .FontSize(16)
                 .SemiBold()
                 .FontColor(Colors.Black);
@@ -186,31 +187,31 @@ public class TestReportComposer
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(90).Text("Serial Number:");
+                r.ConstantItem(90).Text(LocalizationService.Instance["ReportLabel_SerialNumber"]);
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.SerialNumber) ? "-" : info.SerialNumber).SemiBold();
             });
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(90).Text("Device Name:");
+                r.ConstantItem(90).Text(LocalizationService.Instance["ReportLabel_DeviceName"]);
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.DeviceName) ? "-" : info.DeviceUnderTestInfo.DeviceName).SemiBold();
             });
 
             col.Item().Row(r =>
             {
-                r.ConstantItem(90).Text("Revision:");
+                r.ConstantItem(90).Text(LocalizationService.Instance["ReportLabel_Revision"]);
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.Revision) ? "-" : info.DeviceUnderTestInfo.Revision).SemiBold();
             });
             
             col.Item().Row(r =>
             {
-                r.ConstantItem(90).Text("Variant:");
+                r.ConstantItem(90).Text(LocalizationService.Instance["ReportLabel_Variant"]);
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.Variant) ? "-" : info.DeviceUnderTestInfo.Variant).SemiBold();
             });
             
             col.Item().Row(r =>
             {
-                r.ConstantItem(90).Text("Part Number:");
+                r.ConstantItem(90).Text(LocalizationService.Instance["ReportLabel_PartNumber"]);
                 r.RelativeItem().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.PartNumber) ? "-" : info.DeviceUnderTestInfo.PartNumber).SemiBold();
             });
         });
@@ -222,7 +223,7 @@ public class TestReportComposer
 
         container.Padding(5).Column(c =>
         {
-            c.Item().Text("Additional Notes:")
+            c.Item().Text(LocalizationService.Instance["ReportLabel_AdditionalNotes"])
                 .SemiBold()
                 .FontColor(Colors.Black);
             c.Item().Text(string.IsNullOrEmpty(info.DeviceUnderTestInfo.AdditionalNotes) ? "-" : info.DeviceUnderTestInfo.AdditionalNotes);
@@ -233,7 +234,7 @@ public class TestReportComposer
     {
         var allPassed = _testResults.All(x => x.IsPassed);
 
-        var text = allPassed ? "PASS" : "FAIL";
+        var text = allPassed ? LocalizationService.Instance["ReportLabel_Pass"] : LocalizationService.Instance["ReportLabel_Fail"];
         var color = allPassed ? Colors.Green.Medium : Colors.Red.Medium;
 
         container
@@ -252,23 +253,23 @@ public class TestReportComposer
         {
             table.ColumnsDefinition(columns =>
             {
-                columns.ConstantColumn(40);  // Step
+                columns.ConstantColumn(45);  // Step
                 columns.RelativeColumn();          // Name
                 columns.ConstantColumn(80);  // Lower
                 columns.ConstantColumn(80);  // Measured
                 columns.ConstantColumn(80);  // Upper
-                columns.ConstantColumn(45);  // Result
+                columns.ConstantColumn(55);  // Result
             });
 
             // Header
             table.Header(header =>
             {
-                header.Cell().Element(HeaderCell).Text("Step").LineHeight(1.3f);
-                header.Cell().Element(HeaderCell).Text("Name").LineHeight(1.3f);
-                header.Cell().Element(HeaderCell).Text("Lower Limit").LineHeight(1.3f);
-                header.Cell().Element(HeaderCell).Text("Measured").LineHeight(1.3f);
-                header.Cell().Element(HeaderCell).Text("Upper Limit").LineHeight(1.3f);
-                header.Cell().Element(HeaderCell).Text("Result").LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_Step"]).LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_Name"]).LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_LowerLimit"]).LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_Measured"]).LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_UpperLimit"]).LineHeight(1.3f);
+                header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_Result"]).LineHeight(1.3f);
             });
 
             // Rows
@@ -327,7 +328,7 @@ public class TestReportComposer
         {
             col.Spacing(5);
 
-            col.Item().Text("Used Equipment")
+            col.Item().Text(LocalizationService.Instance["ReportLabel_UsedEquipment"])
                 .FontSize(16)
                 .SemiBold()
                 .FontColor(Colors.Black);
@@ -337,25 +338,25 @@ public class TestReportComposer
             if (_hardwareInfo is not DummyHardwareInfo)
             {
                 col.Item().PaddingTop(10)
-                    .Text("Test Hardware:")
+                    .Text(LocalizationService.Instance["ReportLabel_TestHardware"])
                     .SemiBold()
                     .FontColor(Colors.Black);
                 
                 col.Item().Row(r =>
                 {
-                    r.ConstantItem(120).Text("Device Name:");
+                    r.ConstantItem(120).Text(LocalizationService.Instance["ReportLabel_DeviceName"]);
                     r.RelativeItem().Text(_hardwareInfo.DeviceName).SemiBold();
                 });
                 
                 col.Item().Row(r =>
                 {
-                    r.ConstantItem(120).Text("Serial Number:");
+                    r.ConstantItem(120).Text(LocalizationService.Instance["ReportLabel_SerialNumber"]);
                     r.RelativeItem().Text(_hardwareInfo.SerialNumber).SemiBold();
                 });
                 
                 col.Item().Row(r =>
                 {
-                    r.ConstantItem(120).Text("Firmware Version:");
+                    r.ConstantItem(120).Text(LocalizationService.Instance["ReportLabel_FirmwareVersion"]);
                     r.RelativeItem().Text(_hardwareInfo.FirmwareVersion).SemiBold();
                 });
             }
@@ -363,7 +364,7 @@ public class TestReportComposer
             if (_deviceIdentification.Count > 0)
             {
                 col.Item().PaddingTop(10)
-                    .Text("Instruments:")
+                    .Text(LocalizationService.Instance["ReportLabel_TestGear"])
                     .FontSize(12)
                     .SemiBold()
                     .FontColor(Colors.Black);

@@ -221,7 +221,7 @@
     <value>Benutzer</value>
   </data>
   <data name="Tab_Testing" xml:space="preserve">
-    <value>Testumgebung</value>
+    <value>Testausführung</value>
   </data>
   <data name="Tab_Configuration" xml:space="preserve">
     <value>Konfiguration</value>
@@ -239,7 +239,7 @@
     <value>Info</value>
   </data>
   <data name="Status_SimulationMode" xml:space="preserve">
-    <value>Software läuft ohne Test-Hardware</value>
+    <value>Keine Test-Hardware verbunden</value>
   </data>
   <data name="ToolTip_ShowEventLog" xml:space="preserve">
     <value>Ereignisprotokoll anzeigen</value>
@@ -431,7 +431,7 @@
     <value>Variable entfernen</value>
   </data>
   <data name="Header_CustomRelayChannelNaming" xml:space="preserve">
-    <value>Benutzerdefinierte Relaiskanal Benennung</value>
+    <value>Benutzerdefinierte Relaiskanalbenennung</value>
   </data>
   <data name="Header_MatrixChannels" xml:space="preserve">
     <value>Matrix-Kanäle</value>
@@ -764,10 +764,10 @@
     <value>Galvanisch isolierter I²C-Bus:</value>
   </data>
   <data name="Label_TestHardwareIsolatedRS485" xml:space="preserve">
-    <value>Galvanisch isolierter UART:</value>
+    <value>Galvanisch isolierter RS485:</value>
   </data>
   <data name="Label_TestHardwareIsolatedUART" xml:space="preserve">
-    <value>Galvanisch isolierter RS485:</value>
+    <value>Galvanisch isolierter UART:</value>
   </data>
   <data name="About_Version" xml:space="preserve">
     <value>Version:</value>
@@ -815,7 +815,7 @@
     <value>Abbrechen</value>
   </data>
   <data name="ButtonLabel_Pass" xml:space="preserve">
-    <value>Erfolgreich</value>
+    <value>Bestanden</value>
   </data>
   <data name="ButtonLabel_Fail" xml:space="preserve">
     <value>Fehlgeschlagen</value>
@@ -854,7 +854,7 @@
     <value>Datei</value>
   </data>
   <data name="Enum_TestEvaluationSource_USER_RESPONSE" xml:space="preserve">
-    <value>Benutzerreaktion</value>
+    <value>Benutzereingabe</value>
   </data>
   <data name="ToolTip_RequestBreakRepeat" xml:space="preserve">
     <value>Testausführung fortsetzen</value>
@@ -864,5 +864,89 @@
   </data>
   <data name="StatusLabel_ExecuteDelay" xml:space="preserve">
     <value>Warten...</value>
+  </data>
+  <data name="ReportTitle_TestReport" xml:space="preserve">
+    <value>Testbericht</value>
+  </data>
+  <data name="ReportLabel_Page" xml:space="preserve">
+    <value>Seite </value>
+  </data>
+  <data name="ReportLabel_TestInformation" xml:space="preserve">
+    <value>Testinformationen</value>
+  </data>
+  <data name="ReportLabel_Project" xml:space="preserve">
+    <value>Projekt:</value>
+  </data>
+  <data name="ReportLabel_Operator" xml:space="preserve">
+    <value>Bediener:</value>
+  </data>
+  <data name="ReportLabel_Date" xml:space="preserve">
+    <value>Datum:</value>
+  </data>
+  <data name="ReportLabel_Time" xml:space="preserve">
+    <value>Zeit:</value>
+  </data>
+  <data name="ReportLabel_Duration" xml:space="preserve">
+    <value>Laufzeit:</value>
+  </data>
+  <data name="ReportLabel_DeviceUnderTest" xml:space="preserve">
+    <value>Prüfling (DUT)</value>
+  </data>
+  <data name="ReportLabel_SerialNumber" xml:space="preserve">
+    <value>Seriennummer:</value>
+  </data>
+  <data name="ReportLabel_DeviceName" xml:space="preserve">
+    <value>Gerätename:</value>
+  </data>
+  <data name="ReportLabel_Revision" xml:space="preserve">
+    <value>Revision:</value>
+  </data>
+  <data name="ReportLabel_Variant" xml:space="preserve">
+    <value>Variante:</value>
+  </data>
+  <data name="ReportLabel_PartNumber" xml:space="preserve">
+    <value>Teilenummer:</value>
+  </data>
+  <data name="ReportLabel_AdditionalNotes" xml:space="preserve">
+    <value>Zusätzliche Informationen:</value>
+  </data>
+  <data name="ReportLabel_Pass" xml:space="preserve">
+    <value>BESTANDEN</value>
+  </data>
+  <data name="ReportLabel_Fail" xml:space="preserve">
+    <value>FEHLGESCHLAGEN</value>
+  </data>
+  <data name="ReportLabel_Step" xml:space="preserve">
+    <value>Schritt</value>
+  </data>
+  <data name="ReportLabel_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ReportLabel_LowerLimit" xml:space="preserve">
+    <value>Untergrenze</value>
+  </data>
+  <data name="ReportLabel_Measured" xml:space="preserve">
+    <value>Gemessen</value>
+  </data>
+  <data name="ReportLabel_UpperLimit" xml:space="preserve">
+    <value>Obergrenze</value>
+  </data>
+  <data name="ReportLabel_Result" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="ReportLabel_Version" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="ReportLabel_UsedEquipment" xml:space="preserve">
+    <value>Verwendete Prüfmittel</value>
+  </data>
+  <data name="ReportLabel_TestHardware" xml:space="preserve">
+    <value>Test-Hardware:</value>
+  </data>
+  <data name="ReportLabel_FirmwareVersion" xml:space="preserve">
+    <value>Firmware Version:</value>
+  </data>
+  <data name="ReportLabel_TestGear" xml:space="preserve">
+    <value>Prüfmittel:</value>
   </data>
 </root>
