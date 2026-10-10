@@ -34,7 +34,7 @@ public partial class StatusService : ObservableObject, IStatusService
         get;
         set
         {
-            if (Math.Abs(field - value) < 0.01)
+            if (Math.Abs(field - value) < 0.001)
                 return;
 
             field = value;
@@ -43,5 +43,5 @@ public partial class StatusService : ObservableObject, IStatusService
         }
     }
 
-    public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(150) : TimeSpan.Zero;
+    public TimeSpan AnimationDuration => IsAnimationEnabled ? TimeSpan.FromMilliseconds(200) : TimeSpan.Zero;
 }
