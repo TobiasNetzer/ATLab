@@ -244,12 +244,39 @@
                     </Button>
                     
                     <Button
+                        Background="{DynamicResource SuccessColor60}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_RequestBreakRepeat}"
+                        Command="{Binding RequestBreakRepeatCommand}"
+                        Width="40"
+                        Height="40"
+                        IsVisible="{Binding IsShowContinueButton}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent SkipForward}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
                         ToolTip.Tip="{helpers:Localize ToolTip_StopTestExecution}"
                         Command="{Binding CancelTestCommand}"
                         Width="40"
-                        Height="40">
+                        Height="40"
+                        IsVisible="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Square}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Button
+                        Background="{DynamicResource ErrorColor60}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StopTestExecution}"
+                        Command="{Binding CancelTestCommand}"
+                        Width="40"
+                        Height="40"
+                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=RUNNING}">
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent Square}"/>
                         </shadui:ButtonAssist.Icon>

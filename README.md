@@ -34,6 +34,7 @@ An example project developed with ATLab can be found [here](https://github.com/T
 -   **JSON File Format**: All project and script files use a standard JSON file format, perfect for tracking changes through version control.
 -   **Cross-Platform Support**: Runs on Windows & Linux.
 -   **Themes**: Light and Dark theme available.
+-   **Languages**: Currently supports English and German.
 
 ![image](docs/Themes.png)
 

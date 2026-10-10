@@ -46,6 +46,9 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool _isDebugMode;
     
     [ObservableProperty]
+    private bool _isShowContinueButton;
+    
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RequestSingleStepContinueCommand))]
     private bool _isSingleStepContinueRequested;
     
@@ -639,7 +642,9 @@ public partial class TestingTabViewModel : ViewModelBase
             SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
 
             _allowResultSave = true;
+            IsShowContinueButton = true;
             await _testExecutor.StartTestAsync(TestSteps, 0, _runtimeVariables);
+            IsShowContinueButton = false;
             _allowResultSave = false;
             StartTestBusy = false;
         }
@@ -667,7 +672,9 @@ public partial class TestingTabViewModel : ViewModelBase
             SelectedStep = TestSteps.Count > 0 ? TestSteps[0] : null;
 
             _allowResultSave = true;
+            IsShowContinueButton = true;
             await _testExecutor.StartRepeatTestAsync(TestSteps, 0, _runtimeVariables);
+            IsShowContinueButton = false;
             _allowResultSave = false;
             StartRepeatTestBusy = false;
         }
@@ -685,8 +692,10 @@ public partial class TestingTabViewModel : ViewModelBase
             TestProgress = 0;
             TestDuration = "0s";
 
+            IsShowContinueButton = true;
             var index = SelectedStep != null ? TestSteps.IndexOf(SelectedStep) : 0;
             await _testExecutor.StartTestAsync(TestSteps, index, _runtimeVariables);
+            IsShowContinueButton = false;
             StartFromStepBusy = false;
         }
     }

@@ -856,4 +856,7 @@
   <data name="Enum_TestEvaluationSource_FILE" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="ToolTip_RequestBreakRepeat" xml:space="preserve">
+    <value>Continue test execution</value>
+  </data>
 </root>

@@ -856,4 +856,7 @@
   <data name="Enum_TestEvaluationSource_USER_RESPONSE" xml:space="preserve">
     <value>Benutzerreaktion</value>
   </data>
+  <data name="ToolTip_RequestBreakRepeat" xml:space="preserve">
+    <value>Testausführung fortsetzen</value>
+  </data>
 </root>
