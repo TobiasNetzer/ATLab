@@ -11,6 +11,7 @@
             Maximum="1.0"
             CornerRadius="5"
             Background="{DynamicResource OutlineColor}"
+            Foreground="{DynamicResource InfoColor}"
             IsIndeterminate="{Binding $parent[controls:StatusPanel].IsIndeterminateValue}">
                 
             <ProgressBar.Styles>
