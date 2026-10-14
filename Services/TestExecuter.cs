@@ -44,7 +44,7 @@ public class TestExecutor : ITestExecutor
     private volatile bool _isDebugMode;
 
     public TestExecutor(
-        ITestHardware testHardware,
+        IHardwareAccessor hardwareAccessor,
         ITestStepRunner runner,
         ILoggingService loggingService,
         ITestStepEvaluator evaluator,
@@ -52,7 +52,7 @@ public class TestExecutor : ITestExecutor
         ProjectModel projectModel,
         ICommandExecutor commandExecutor)
     {
-        _testHardware = testHardware;
+        _testHardware = hardwareAccessor.Hardware;
         _runner = runner;
         _loggingService = loggingService;
         _evaluator = evaluator;

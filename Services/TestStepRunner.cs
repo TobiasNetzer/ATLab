@@ -26,7 +26,7 @@ public class TestStepRunner : ITestStepRunner
     private readonly IStatusService _statusService;
 
     public TestStepRunner(
-        ITestHardware testHardware,
+        IHardwareAccessor hardwareAccessor,
         IScriptRunner scriptRunner,
         ICommandExecutor commandExecutor,
         IShellCommandRunner shellCommandRunner,
@@ -36,7 +36,7 @@ public class TestStepRunner : ITestStepRunner
         ProjectModel projectModel,
         IStatusService statusService)
     {
-        _testHardware = testHardware;
+        _testHardware = hardwareAccessor.Hardware;
         _scriptRunner = scriptRunner;
         _commandExecutor = commandExecutor;
         _shellCommandRunner = shellCommandRunner;

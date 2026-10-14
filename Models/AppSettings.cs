@@ -11,6 +11,9 @@ public class AppSettings
     public WindowState WindowState { get; set; } = WindowState.Normal;
     public string? LastComPort { get; set; } = "";
     public string LastOpenedFile { get; set; } = "";
+    public bool IsDarkMode { get; set; } = true;
+    public string Language { get; set; } = "en";
+    public bool IsForceSimulation { get; set; }
     public bool IsDevelopmentMode { get; set; }
     public bool IsShowMeasurementPanel { get; set; }
     public bool IsStepConfiguratorExpanded { get; set; }
@@ -23,6 +26,4 @@ public class AppSettings
     public bool IsResponseMaskEditorExpanded { get; set; }
     public bool IsExpressionEditorExpanded { get; set; }
     public bool IsFilePathEditorExpanded { get; set; }
-    public bool IsDarkMode { get; set; } = true;
-    public string Language { get; set; } = "en";
 }

@@ -135,14 +135,14 @@ public partial class TestingTabViewModel : ViewModelBase
         IProjectController projectController,
         ITestStepEditor testStepEditor,
         ControlModuleService controlModuleService,
-        IHardwareInfo hardwareInfo,
+        IHardwareAccessor hardwareAccessor,
         ITestExecutor testExecutor,
         ISerialNumberDialogService serialNumberDialogService,
         ITestResultExportService testResultExportService,
         IMessageBoxService messageBoxService,
         IStatusService statusService)
     {
-        _hardwareInfo = hardwareInfo;
+        _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _settingsService = settingsService;
         _loggingService = loggingService;
         _projectModel = projectModel;

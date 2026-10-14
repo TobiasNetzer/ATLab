@@ -42,19 +42,18 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestStepRunner, TestStepRunner>();
         services.AddSingleton<ITestExecutor, TestExecutor>();
 
+        services.AddSingleton<IHardwareInitializer, HardwareInitializer>();
         services.AddTransient<ICtiaCommunication, CtiaCommunication>();
         services.AddTransient<CtiaHardware>();
         services.AddSingleton<TestHardwareSimulator>();
-        
         services.AddSingleton<IHardwareAccessor, HardwareAccessor>();
-        services.AddSingleton<ITestHardware>(sp => sp.GetRequiredService<IHardwareAccessor>().Hardware ?? throw new InvalidOperationException("Hardware not initialized"));
-        services.AddSingleton<IHardwareInfo>(sp => sp.GetRequiredService<ITestHardware>().HardwareInfo);
         
         services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
         
         services.AddSingleton<ControlModuleService>();
-
+        
+        services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectModel>();
         services.AddSingleton<ApplicationState>();
 

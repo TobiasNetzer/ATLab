@@ -28,9 +28,9 @@ public partial class TestHardwareDiagnosticsViewModel : ViewModelBase
     [ObservableProperty]
     private bool _selfTestPassed;
     
-    public TestHardwareDiagnosticsViewModel(ITestHardware testHardware)
+    public TestHardwareDiagnosticsViewModel(IHardwareAccessor hardwareAccessor)
     {
-        _testHardware = testHardware;
+        _testHardware = hardwareAccessor.Hardware;
     }
 
     partial void OnIsAcknowledgedChanged(bool value)

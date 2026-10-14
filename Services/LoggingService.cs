@@ -24,10 +24,10 @@ public partial class LoggingService : ObservableObject, ILoggingService
     private ToastManager _toastManager;
 
     public LoggingService(ToastManager toastManager,
-        ProjectModel projectModel)
+        ProjectSettings projectSettings)
     {
         ToastManager = toastManager;
-        _settings = projectModel.Settings;
+        _settings = projectSettings;
 
         var dir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

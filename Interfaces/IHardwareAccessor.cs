@@ -2,5 +2,5 @@
 
 public interface IHardwareAccessor
 {
-    ITestHardware? Hardware { get; set; }
+    ITestHardware Hardware { get; set; }
 }

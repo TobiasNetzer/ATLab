@@ -19,14 +19,14 @@ public class ProjectController : IProjectController
     public ProjectController(
         IProjectDocumentService projectDocumentService,
         ILoggingService loggingService,
-        IHardwareInfo hardwareInfo,
+        IHardwareAccessor hardwareAccessor,
         ProjectModel projectModel,
         IMessageBoxService messageBoxService,
         IScriptRepository scriptRepository)
     {
         _projectDocumentService = projectDocumentService;
         _loggingService = loggingService;
-        _hardwareInfo = hardwareInfo;
+        _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _projectModel = projectModel;
         _messageBoxService = messageBoxService;
         _scriptRepository = scriptRepository;

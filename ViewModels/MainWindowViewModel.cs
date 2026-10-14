@@ -60,7 +60,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ToastManager _toastManager;
 
-    public MainWindowViewModel(ITestHardware testHardware,
+    public MainWindowViewModel(
+        IHardwareAccessor hardwareAccessor,
         ILoggingService loggingService,
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel, 
         TestingTabViewModel testingTab, 
@@ -76,7 +77,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DialogManager dialogManager,
         ToastManager toastManager)
     {
-        _testHardware = testHardware;
+        _testHardware = hardwareAccessor.Hardware;
         _loggingService = loggingService;
         TestHardwareRelayChannelsViewModel = testHardwareRelayChannelsViewModel;
         _settingsService = settingsService;

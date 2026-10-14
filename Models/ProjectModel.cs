@@ -14,7 +14,8 @@ namespace ATLab.Models;
 
 public partial class ProjectModel : ObservableObject
 {
-    private readonly IHardwareInfo _hardwareInfo;
+    private readonly IHardwareAccessor _hardwareAccessor;
+    private IHardwareInfo HardwareInfo => _hardwareAccessor.Hardware.HardwareInfo;
     
     [ObservableProperty]
     private bool _isDirty;
@@ -30,7 +31,7 @@ public partial class ProjectModel : ObservableObject
             ? "Untitled"
             : Path.GetFileNameWithoutExtension(FilePath);
     
-    public ProjectSettings Settings { get; } = new();
+    public ProjectSettings Settings { get; }
     public ProjectDocumentation Documentation { get; } = new();
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; } = new();
     public ObservableCollection<TestStep> TestSteps { get; } = new();
@@ -44,9 +45,10 @@ public partial class ProjectModel : ObservableObject
     
     private int _suppressChangesCount;
     
-    public ProjectModel(IHardwareInfo hardwareInfo)
+    public ProjectModel(IHardwareAccessor hardwareAccessor, ProjectSettings settings)
     {
-        _hardwareInfo = hardwareInfo;
+        _hardwareAccessor = hardwareAccessor;
+        Settings = settings;
 
         InitializeRelayChannels();
         
@@ -155,7 +157,7 @@ public partial class ProjectModel : ObservableObject
             Reset();
 
             var step = new TestStep();
-            step.InitializeRuntimeState(_hardwareInfo);
+            step.InitializeRuntimeState(HardwareInfo);
             TestSteps.Add(step);
 
             MarkSaved(null);
@@ -175,7 +177,7 @@ public partial class ProjectModel : ObservableObject
                 step.RestoreAfterLoad(pathService);
 
             TestStepRuntimeInitializer.InitializeRuntimeValues(step);
-            step.InitializeRuntimeState(_hardwareInfo);
+            step.InitializeRuntimeState(HardwareInfo);
             TestSteps.Add(step);
         }
         
@@ -336,13 +338,13 @@ public partial class ProjectModel : ObservableObject
     
     private void InitializeRelayChannels()
     {
-        for (var i = 1; i <= _hardwareInfo.StimChannelCount; i++)
+        for (var i = 1; i <= HardwareInfo.StimChannelCount; i++)
             StimChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
 
-        for (var i = 1; i <= _hardwareInfo.ExtStimChannelCount; i++)
+        for (var i = 1; i <= HardwareInfo.ExtStimChannelCount; i++)
             ExtStimChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
 
-        for (var i = 1; i <= _hardwareInfo.MeasChannelCount; i++)
+        for (var i = 1; i <= HardwareInfo.MeasChannelCount; i++)
             MeasChannelNames.Add(new CustomRelayChannelName(string.Empty, i));
     }
     

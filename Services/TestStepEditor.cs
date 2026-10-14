@@ -17,10 +17,10 @@ public class TestStepEditor : ITestStepEditor
     public bool CanPaste => _clipboard != null && _clipboard.Count > 0;
 
     public TestStepEditor(ProjectModel projectModel,
-        IHardwareInfo hardwareInfo)
+        IHardwareAccessor hardwareAccessor)
     {
         _projectModel = projectModel;
-        _hardwareInfo = hardwareInfo;
+        _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
     }
 
     public TestStep AddStep(int insertIndex)

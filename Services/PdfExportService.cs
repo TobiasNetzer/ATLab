@@ -27,13 +27,13 @@ public class PdfExportService : IPdfExportService
     public PdfExportService(
         IFileDialogService fileDialogService,
         ILoggingService loggingService,
-        IHardwareInfo hardwareInfo,
+        IHardwareAccessor hardwareAccessor,
         IDeviceIdentificationService deviceIdentificationService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
         _loggingService = loggingService;
-        _hardwareInfo = hardwareInfo;
+        _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _deviceIdentificationService = deviceIdentificationService;
         _projectModel = projectModel;
     }

@@ -60,7 +60,7 @@ public partial class TestHardwareConnectWindowViewModel : ViewModelBase
         ConnectCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort) && (TestHardware == null || _settingsService.Settings.LastComPort != SelectedPort);
+    private bool CanConnect => !string.IsNullOrWhiteSpace(SelectedPort);
     
 
     [RelayCommand(CanExecute = nameof(CanConnect))]

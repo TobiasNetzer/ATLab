@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ATLab.ViewModels;
-using ATLab.Views;
-using ATLab.Services;
-using System.Threading.Tasks;
-using ATLab.CTIA;
+using Avalonia.Styling;
 using ATLab.Interfaces;
 using ATLab.Models;
-using Avalonia.Styling;
+using ATLab.Services;
+using ATLab.ViewModels;
+using ATLab.Views;
 using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
 
@@ -40,6 +39,7 @@ public class App : Application
         var settingsService = _services.GetRequiredService<ISettingsService>();
         
         var localizationService = _services.GetRequiredService<ILocalizationService>();
+
         if (!string.IsNullOrWhiteSpace(settingsService.Settings.Language))
         {
             localizationService.ChangeCulture(new CultureInfo(settingsService.Settings.Language));
@@ -52,123 +52,97 @@ public class App : Application
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
             return;
 
-        var initSuccess = false;
-        var openConnectWindow = false;
+        TestHardwareConnectWindow? connectWindow = null;
 
-        var lastPort = settingsService.Settings.LastComPort;
-        var factory = _services.GetRequiredService<ICommunicationFactory>();
-        var hardwareAccessor = _services.GetRequiredService<IHardwareAccessor>();
-        
-        TestHardwareConnectWindow? serialPortWindow = null;
+        var hardwareInitializer = _services.GetRequiredService<IHardwareInitializer>();
 
-        if (string.IsNullOrEmpty(lastPort))
-        {
-            openConnectWindow = true;
-        }
-        else
-        {
-            var testHardwareInterface = factory.CreateSerial(lastPort, new DeviceConfiguration());
-
-            var openResult = await testHardwareInterface.ConnectAsync();
-
-            if (!openResult.IsSuccess)
-            {
-                await testHardwareInterface.DisconnectAsync();
-                await testHardwareInterface.DisposeAsync();
-                openConnectWindow = true;
-            }
-            else
-            {
-                var communication = ActivatorUtilities.CreateInstance<CtiaCommunication>(_services, testHardwareInterface);
-                var hardware = ActivatorUtilities.CreateInstance<CtiaHardware>(_services, communication);
-                var initResult = await hardware.InitializeAsync();
-                if (!initResult.IsSuccess)
-                {
-                    await testHardwareInterface.DisconnectAsync();
-                    await testHardwareInterface.DisposeAsync();
-                    openConnectWindow = true;
-                }
-                else
-                {
-                    hardwareAccessor.Hardware = hardware;
-                    initSuccess = true;
-                }
-            }
-        }
-
-        if (openConnectWindow)
-        {
-            serialPortWindow = _services.GetRequiredService<TestHardwareConnectWindow>();
-            
-            desktop.MainWindow = serialPortWindow;
-
-            var vm = (TestHardwareConnectWindowViewModel)serialPortWindow.DataContext!;
-
-            var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            void ConnectedHandler(bool connected)
-            {
-                Cleanup();
-                tcs.TrySetResult(connected);
-            }
-
-            void ClosedHandler(object? sender, EventArgs e)
-            {
-                Cleanup();
-                tcs.TrySetResult(null);
-            }
-
-            void Cleanup()
-            {
-                vm.Connected -= ConnectedHandler;
-                serialPortWindow.Closed -= ClosedHandler;
-            }
-
-            vm.Connected += ConnectedHandler;
-            serialPortWindow.Closed += ClosedHandler;
-
-            serialPortWindow.Show();
-
-            var result = await tcs.Task;
-
-            if (result is not null)
-            {
-                initSuccess = true;
-
-                var applicationState = _services.GetRequiredService<ApplicationState>();
-
-                applicationState.IsSimulationMode = result != true;
-
-                if (result != true)
-                {
-                    hardwareAccessor.Hardware = _services.GetRequiredService<TestHardwareSimulator>();
-                }
-            }
-        }
+        var initSuccess = await hardwareInitializer.InitializeAsync();
 
         if (!initSuccess)
         {
-            desktop.Shutdown();
-            return;
+            var connectionResult = await ShowHardwareConnectionWindowAsync(desktop);
+
+            connectWindow = connectionResult.Window;
+
+            if (connectionResult.Connected is null)
+            {
+                desktop.Shutdown();
+                return;
+            }
+
+            ApplyConnectionMode(connectionResult.Connected.Value);
         }
 
-        var window = _services.GetRequiredService<MainWindow>();
-        var mainVm = (MainWindowViewModel)window.DataContext!;
-        
-        window.Opened += async (_, _) => await mainVm.OnWindowOpened();
+        var mainWindow = _services.GetRequiredService<MainWindow>();
+
+        var mainVm = (MainWindowViewModel)mainWindow.DataContext!;
+
+        mainWindow.Opened += async (_, _) => await mainVm.OnWindowOpened();
 
         desktop.Exit += (_, _) =>
         {
             OnExitAsync().GetAwaiter().GetResult();
         };
 
-        desktop.MainWindow = window;
-        window.Show();
+        desktop.MainWindow = mainWindow;
 
-        serialPortWindow?.Close();
+        mainWindow.Show();
+
+        connectWindow?.Close();
 
         base.OnFrameworkInitializationCompleted();
     }
+
+    private async Task<(bool? Connected, TestHardwareConnectWindow Window)> ShowHardwareConnectionWindowAsync(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        var window = _services!.GetRequiredService<TestHardwareConnectWindow>();
+
+        desktop.MainWindow = window;
+
+        var vm = (TestHardwareConnectWindowViewModel)window.DataContext!;
+
+        var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        void ConnectedHandler(bool connected)
+        {
+            Cleanup();
+            tcs.TrySetResult(connected);
+        }
+
+        void ClosedHandler(object? sender, EventArgs e)
+        {
+            Cleanup();
+            tcs.TrySetResult(null);
+        }
+
+        void Cleanup()
+        {
+            vm.Connected -= ConnectedHandler;
+            window.Closed -= ClosedHandler;
+        }
+
+        vm.Connected += ConnectedHandler;
+        window.Closed += ClosedHandler;
+
+        window.Show();
+
+        return (await tcs.Task, window);
+    }
+
+    private void ApplyConnectionMode(bool connected)
+    {
+        var applicationState = _services!.GetRequiredService<ApplicationState>();
+
+        applicationState.IsSimulationMode = !connected;
+
+        if (!connected)
+        {
+            var hardwareAccessor = _services!.GetRequiredService<IHardwareAccessor>();
+
+            hardwareAccessor.Hardware = _services!.GetRequiredService<TestHardwareSimulator>();
+        }
+    }
+
 
     private async Task OnExitAsync()
     {
@@ -184,6 +158,7 @@ public class App : Application
             case IAsyncDisposable asyncDisposable:
                 await asyncDisposable.DisposeAsync();
                 break;
+            
             case IDisposable disposable:
                 disposable.Dispose();
                 break;

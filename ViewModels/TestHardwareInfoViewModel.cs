@@ -18,20 +18,20 @@ public class TestHardwareInfoViewModel : ViewModelBase
     public bool InterfaceAvailableUART { get; }
     public bool InterfaceAvailableRS485 { get; }
     
-    public TestHardwareInfoViewModel(IHardwareInfo hardwareInfo)
+    public TestHardwareInfoViewModel(IHardwareAccessor hardwareAccessor)
     {
-        FirmwareVersion = hardwareInfo.FirmwareVersion;
-        DeviceName = hardwareInfo.DeviceName;
-        SerialNumber = hardwareInfo.SerialNumber;
-        BuildDate = hardwareInfo.BuildDate;
-        BuildTime = hardwareInfo.BuildTime;
+        FirmwareVersion = hardwareAccessor.Hardware.HardwareInfo.FirmwareVersion;
+        DeviceName = hardwareAccessor.Hardware.HardwareInfo.DeviceName;
+        SerialNumber = hardwareAccessor.Hardware.HardwareInfo.SerialNumber;
+        BuildDate = hardwareAccessor.Hardware.HardwareInfo.BuildDate;
+        BuildTime = hardwareAccessor.Hardware.HardwareInfo.BuildTime;
 
-        MeasChannelCount = hardwareInfo.MeasChannelCount;
-        StimChannelCount = hardwareInfo.StimChannelCount;
-        ExtStimChannelCount = hardwareInfo.ExtStimChannelCount;
+        MeasChannelCount = hardwareAccessor.Hardware.HardwareInfo.MeasChannelCount;
+        StimChannelCount = hardwareAccessor.Hardware.HardwareInfo.StimChannelCount;
+        ExtStimChannelCount = hardwareAccessor.Hardware.HardwareInfo.ExtStimChannelCount;
         
-        InterfaceAvailableI2C = hardwareInfo.InterfaceAvailableI2C;
-        InterfaceAvailableUART = hardwareInfo.InterfaceAvailableUART;
-        InterfaceAvailableRS485 = hardwareInfo.InterfaceAvailableRS485;
+        InterfaceAvailableI2C = hardwareAccessor.Hardware.HardwareInfo.InterfaceAvailableI2C;
+        InterfaceAvailableUART = hardwareAccessor.Hardware.HardwareInfo.InterfaceAvailableUART;
+        InterfaceAvailableRS485 = hardwareAccessor.Hardware.HardwareInfo.InterfaceAvailableRS485;
     }
 }

@@ -15,10 +15,10 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
     private readonly ITestHardware _testHardware;
     private readonly ILoggingService  _loggingService;
 
-    public InterfaceCommandExecuter(ITestHardware testHardware,
+    public InterfaceCommandExecuter(IHardwareAccessor hardwareAccessor,
         ILoggingService  loggingService)
     {
-        _testHardware = testHardware;
+        _testHardware = hardwareAccessor.Hardware;
         _loggingService = loggingService;
     }
 
