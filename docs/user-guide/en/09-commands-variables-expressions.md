@@ -22,12 +22,42 @@ Write a variable name in curly braces:
 SOUR:VOLT {V_Supply}
 ```
 
-Two kinds of variables can be used:
+Three kinds of variables can be used:
 
 1. **Script variables** (only inside scripts) – defined in the script, value set per step.
 2. **Runtime variables** – defined on the Configuration tab, available everywhere.
+3. **System variables** – provided by ATLab during test execution, see below.
 
 Script variables are replaced first. Names may contain letters, digits and `_`. A reference to an unknown variable is replaced with `0.0`, so check spelling carefully.
+
+### System variables
+
+System variables start with `sys.` and are read-only. They can be used everywhere runtime variables can, but they cannot be selected under *Assign Result to Variable*.
+
+| Variable | Value |
+|----------|-------|
+| `{sys.SerialNumber}` | Serial number entered at test start (`-` if none) |
+| `{sys.User}` | Operator (logged-in user name) |
+| `{sys.ProjectName}` | Name of the project |
+| `{sys.Year}` | Current year, four digits, e.g. `2026` |
+| `{sys.Month}` | Current month, two digits, `01`–`12` |
+| `{sys.Day}` | Current day, two digits, `01`–`31` |
+| `{sys.Hour}` | Current hour, two digits, `00`–`23` |
+| `{sys.Minute}` | Current minute, two digits, `00`–`59` |
+| `{sys.Second}` | Current second, two digits, `00`–`59` |
+| `{sys.ElapsedTime}` | Seconds since the test started, e.g. `12.34` |
+| `{sys.StepNumber}` | Number of the current step |
+| `{sys.FailedSteps}` | Number of failed steps so far |
+
+The values are updated at the start and end of every step. `{sys.FailedSteps}` therefore does not yet include the current step while it is running (e.g. in its Pass/Fail comment).
+
+Combine the date and time parts into any format you need:
+
+```text
+{sys.Day}.{sys.Month}.{sys.Year} {sys.Hour}:{sys.Minute}
+```
+
+Example – write the serial number to the DUT over UART: `SN={sys.SerialNumber}{hex:0A}`
 
 ## Encoding blocks
 

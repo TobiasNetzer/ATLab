@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -29,6 +30,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly IMessageBoxService _messageBoxService;
     
     private readonly List<CustomVariable> _runtimeVariables = new();
+    private readonly SystemVariables _systemVariables = new();
     
     public IStatusService StatusService { get; }
     
@@ -164,7 +166,8 @@ public partial class TestingTabViewModel : ViewModelBase
         _projectModel.TestSteps.CollectionChanged += ProjectTestStepsChanged;
         
         _projectModel.RuntimeVariableChanged += SynchronizeRuntimeVariables;
-        
+        SynchronizeRuntimeVariables();
+
         HookTestEvents();
         
         _projectModel.Settings.ControlModuleSettingChanged += () => 
@@ -263,6 +266,20 @@ public partial class TestingTabViewModel : ViewModelBase
 
         foreach (var variable in _projectModel.RuntimeVariables)
             _runtimeVariables.Add(variable.Clone());
+
+        _runtimeVariables.AddRange(_systemVariables.All);
+    }
+
+    private void UpdateSystemVariables(TestStepViewModel? step)
+    {
+        _systemVariables.SerialNumber.Value = SerialNumber;
+        _systemVariables.User.Value = User;
+        _systemVariables.ProjectName.Value = _projectModel.ProjectName;
+        _systemVariables.FailedSteps.Value = NumberFailedSteps.ToString(CultureInfo.InvariantCulture);
+        _systemVariables.UpdateTimestamp(DateTimeOffset.Now, Elapsed);
+
+        if (step != null)
+            _systemVariables.StepNumber.Value = step.TestStep.Number.ToString(CultureInfo.InvariantCulture);
     }
     
     private int ComputeInsertIndex()
@@ -716,6 +733,8 @@ public partial class TestingTabViewModel : ViewModelBase
             TestProgress = 0;
             TestDuration = "0s";
             TestStatus = TestStatus.RUNNING;
+            _startTime = DateTimeOffset.Now;
+            UpdateSystemVariables(SelectedStep);
 
             await _testExecutor.StartSingleStepTest(SelectedStep, _runtimeVariables);
 
@@ -793,6 +812,7 @@ public partial class TestingTabViewModel : ViewModelBase
         _testExecutor.StepStarted += (index, step) =>
         {
             SelectedStep = TestSteps[index];
+            UpdateSystemVariables(step);
         };
 
         _testExecutor.StepCompleted += (index, step) =>
@@ -804,7 +824,9 @@ public partial class TestingTabViewModel : ViewModelBase
 
             if (!step.IsPassed)
                 NumberFailedSteps++;
-            
+
+            UpdateSystemVariables(step);
+
             step.IsExecuted = true;
         };
         

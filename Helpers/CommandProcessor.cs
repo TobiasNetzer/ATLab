@@ -11,7 +11,7 @@ namespace ATLab.Helpers;
 public static class CommandProcessor
 {
     private static readonly Regex VarRegex =
-        new(@"\{([A-Za-z0-9_]+)\}", RegexOptions.Compiled);
+        new(@"\{([A-Za-z0-9_.]+)\}", RegexOptions.Compiled);
     
     public static byte[] CompileToBytes(string command, IEnumerable<CustomVariable>? vars)
     {

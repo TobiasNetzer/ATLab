@@ -75,5 +75,4 @@ You can also open `ATLab.sln` in JetBrains Rider, Visual Studio 2022 or VS Code 
 ## System requirements
 
 - Windows 10/11 (64-bit) or a current desktop Linux distribution.
-- Minimum window size 1300 × 600 pixels.
 - A free USB port for the Test Interface Adapter (it appears as a serial/COM port).

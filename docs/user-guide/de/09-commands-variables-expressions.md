@@ -22,12 +22,42 @@ Schreiben Sie einen Variablennamen in geschweifte Klammern:
 SOUR:VOLT {V_Supply}
 ```
 
-Zwei Arten von Variablen sind verfügbar:
+Drei Arten von Variablen sind verfügbar:
 
 1. **Skriptvariablen** (nur in Skripten) – im Skript definiert, Wert pro Schritt festgelegt.
 2. **Laufzeitvariablen** – auf der Registerkarte Konfiguration definiert, überall verfügbar.
+3. **Systemvariablen** – werden von ATLab während der Testausführung bereitgestellt, siehe unten.
 
 Skriptvariablen werden zuerst ersetzt. Namen dürfen Buchstaben, Ziffern und `_` enthalten. Ein Verweis auf eine unbekannte Variable wird durch `0.0` ersetzt – prüfen Sie die Schreibweise daher sorgfältig.
+
+### Systemvariablen
+
+Systemvariablen beginnen mit `sys.` und sind schreibgeschützt. Sie können überall verwendet werden, wo auch Laufzeitvariablen erlaubt sind, lassen sich aber nicht unter *Ergebnis einer Variable zuweisen* auswählen.
+
+| Variable | Wert |
+|----------|------|
+| `{sys.SerialNumber}` | Beim Teststart eingegebene Seriennummer (`-`, falls keine) |
+| `{sys.User}` | Bediener (angemeldeter Benutzername) |
+| `{sys.ProjectName}` | Name des Projekts |
+| `{sys.Year}` | Aktuelles Jahr, vierstellig, z. B. `2026` |
+| `{sys.Month}` | Aktueller Monat, zweistellig, `01`–`12` |
+| `{sys.Day}` | Aktueller Tag, zweistellig, `01`–`31` |
+| `{sys.Hour}` | Aktuelle Stunde, zweistellig, `00`–`23` |
+| `{sys.Minute}` | Aktuelle Minute, zweistellig, `00`–`59` |
+| `{sys.Second}` | Aktuelle Sekunde, zweistellig, `00`–`59` |
+| `{sys.ElapsedTime}` | Sekunden seit Teststart, z. B. `12.34` |
+| `{sys.StepNumber}` | Nummer des aktuellen Schritts |
+| `{sys.FailedSteps}` | Anzahl der bisher fehlgeschlagenen Schritte |
+
+Die Werte werden zu Beginn und am Ende jedes Schritts aktualisiert. `{sys.FailedSteps}` enthält den aktuellen Schritt daher noch nicht, solange er läuft (z. B. in seinem Pass/Fail-Kommentar).
+
+Datums- und Zeitteile lassen sich zu jedem gewünschten Format kombinieren:
+
+```text
+{sys.Day}.{sys.Month}.{sys.Year} {sys.Hour}:{sys.Minute}
+```
+
+Beispiel – Seriennummer per UART an den Prüfling senden: `SN={sys.SerialNumber}{hex:0A}`
 
 ## Kodierungsblöcke
 
