@@ -58,11 +58,14 @@ Below the step list:
 | Element | Description |
 |---------|-------------|
 | Status banner | **Running Test** with a progress bar, then **Test Passed** (green), **Test Failed** (red), **Test Canceled** or **Test Execution Failed**. |
-| **S/N** | Serial number of the current run, or `-`. |
 | **Test Duration** | Elapsed time of the run. |
-| **Failed Steps** | Number of failed steps in this run. |
+| **Failed Steps** | Number of failed steps in this run. Highlighted in red when greater than zero. |
 | **Passed Tests** | Passed runs / total runs since the project was opened, with percentage. Useful for continuous runs. |
+| **Device Under Test** | Device name, revision, variant and part number from the [Documentation tab](13-documentation-tab.md#device-under-test), or `-`. Hover for the individual fields. |
 | **User** | Operating-system user name; printed as *Operator* in the report. |
+| **S/N** | Serial number of the current run, or `-`. Hover to see a long serial number in full. |
+
+If the window is narrow, *Device Under Test* and *S/N* are shortened with "…".
 
 ### Final verdict
 

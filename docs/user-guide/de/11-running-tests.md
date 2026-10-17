@@ -58,11 +58,14 @@ Unterhalb der Schrittliste:
 | Element | Beschreibung |
 |---------|--------------|
 | Statusbanner | **Test läuft** mit Fortschrittsbalken, danach **Test bestanden** (grün), **Test fehlgeschlagen** (rot), **Test abgebrochen** oder **Testausführung fehlgeschlagen**. |
-| **S/N** | Seriennummer des aktuellen Laufs oder `-`. |
 | **Testdauer** | Verstrichene Zeit des Laufs. |
-| **Fehlgeschlagene Schritte** | Anzahl fehlgeschlagener Schritte in diesem Lauf. |
+| **Fehlgeschlagene Schritte** | Anzahl fehlgeschlagener Schritte in diesem Lauf. Rot hervorgehoben, wenn größer als null. |
 | **Bestandene Tests** | Bestandene Läufe / alle Läufe seit dem Öffnen des Projekts, mit Prozentangabe. Nützlich bei Dauertests. |
+| **Prüfling (DUT)** | Gerätename, Revision, Variante und Teilenummer aus der [Registerkarte Dokumentation](13-documentation-tab.md#prüfling-dut), oder `-`. Beim Darüberfahren werden die einzelnen Felder angezeigt. |
 | **Benutzer** | Benutzername des Betriebssystems; erscheint im Bericht als *Bediener*. |
+| **S/N** | Seriennummer des aktuellen Laufs oder `-`. Beim Darüberfahren wird eine lange Seriennummer vollständig angezeigt. |
+
+Bei schmalem Fenster werden *Prüfling (DUT)* und *S/N* mit „…“ gekürzt.
 
 ### Gesamtergebnis
 
