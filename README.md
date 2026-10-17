@@ -9,6 +9,16 @@ ATLab is a cross‑platform automated testing framework for interfacing with har
 Built with **Avalonia UI** and **.NET**, it offers a modern environment for developing and running automated test sequences.
 
 An example project developed with ATLab can be found [here](https://github.com/TobiasNetzer/ATLab-Examples).
+
+## 📖 User Guide
+
+A complete user guide covering installation, project setup, scripting, building and running test sequences, reports and troubleshooting is available in English and German:
+
+- **English:** [docs/user-guide/en](docs/user-guide/en/README.md)
+- **Deutsch:** [docs/user-guide/de](docs/user-guide/de/README.md)
+
+The guide is also shipped as a PDF with every release package (in the `docs` folder next to the program) and can be opened from within ATLab with the book button in the status bar or `F1`.
+
 ## Features
 
 -   **Custom Test Sequence Creation**: Test steps can be configured to perform various actions:
@@ -24,12 +34,13 @@ An example project developed with ATLab can be found [here](https://github.com/T
     -   **Interface Communication**: Use the Test Interface Adapters onboard interfaces (I2C/UART) to communicate with the DUT.
     -   **Define Pass/Fail Criteria**:
         -   **Test Step Evaluation**: Define pass/fail criteria based on step results and conditions.
-        -   **Conditional Test Execution**: Use pass/fail criteria to conditionally execute test steps or skip tests based on previous results.
+        -   **Conditional Test Execution**: Repeat a step, jump to another step, or end the test depending on the result.
 -   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232)**, **TCP/IP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
 -   **Scripting Engine**: Create test sequences with predefined multicommand scripts.
+-   **Debugging & Simulation**: Step through sequences in development mode, or work without hardware using the built-in simulator.
 -   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
--   **Test Report Generation**: Automatically generate test reports with detailed test results for documentation and sharing test results.
+-   **Test Report Generation**: Automatically generate PDF test reports with detailed test results for documentation and sharing.
 -   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
 -   **JSON File Format**: All project and script files use a standard JSON file format, perfect for tracking changes through version control.
 -   **Cross-Platform Support**: Runs on Windows & Linux.
@@ -38,88 +49,78 @@ An example project developed with ATLab can be found [here](https://github.com/T
 
 ![image](docs/Themes.png)
 
-## Build and Prerequisites
+## Installation
 
-### Prerequisites
+Download the latest version from the [releases page](https://github.com/TobiasNetzer/ATLab/releases):
 
--   **.NET 10.0 SDK** (or newer)
--   *Optional:* NI-VISA drivers (if using VISA-based instruments) **currently Windows only**
+| Asset | Platform | Notes |
+|-------|----------|-------|
+| `ATLab-setup-<version>.exe` | Windows (64-bit) | Installer with Start-menu entry and `.atlab` file association |
+| `ATLab-win-<version>.zip` | Windows | Portable build, no installation |
+| `ATLab-linux-<version>.tar.gz` | Linux | Portable build |
 
-### How to Build
+*Optional:* NI-VISA runtime for VISA-based instruments (**currently Windows only**).
 
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/TobiasNetzer/ATLab.git
-    cd ATLab
-    ```
+See the [Installation chapter](docs/user-guide/en/02-installation.md) for details, including Linux serial port permissions.
 
-2.  **Restore dependencies**:
-    ```bash
-    dotnet restore
-    ```
+## Building from Source
 
-3.  **Build the project**:
-    ```bash
-    dotnet build -c Release
-    ```
+Prerequisite: **.NET 10.0 SDK** (or newer).
 
-4.  **Run the application**:
-    ```bash
-    dotnet run --project ATLab.csproj
-    ```
+```bash
+git clone https://github.com/TobiasNetzer/ATLab.git
+cd ATLab
+dotnet restore
+dotnet build -c Release
+dotnet run --project ATLab.csproj
+```
 
-Alternatively, you can open the `ATLab.sln` file in **JetBrains Rider**, **Visual Studio 2022**, or **VS Code** (with C# Dev Kit) and use the built-in build/run commands.
+Alternatively, open `ATLab.sln` in **JetBrains Rider**, **Visual Studio 2022**, or **VS Code** (with C# Dev Kit).
 
-## Developing a Test Sequence
+To build the user guide PDFs yourself:
 
-### 1. Configure Devices and Settings
--   **Hardware Setup**: The **Configuration** tab allows adding and configuring your external test instruments. You can set up **Serial Port (VCOM/RS232)** , **TCP/IP** or **VISA** devices, with custom connection parameters.
--   **Project Settings**: Configure project-wide settings such as default tolerances, serial number requirements, and test result export options.
--   **Custom channel names (optional):** Add custom channel names for the various relay channels.
--   **Runtime variables (optional):** Add Runtime Variables to use within the test.
+```bash
+pip install -r scripts/requirements-docs.txt
+python -m playwright install chromium
+python scripts/build_user_guide_pdf.py --lang en   # or --lang de
+```
+
+## Overview
+
+### Configuration
+Add and configure external test instruments (Serial, TCP/IP, VISA), project settings, custom channel names and runtime variables.
+→ [Configuration Tab](docs/user-guide/en/05-configuration.md)
 
 ![image](docs/Configuration_Tab.png)
 
-### 2. Create Scripts
-The **Scripting** tab allows you to create and edit multi step scripts that can be used within your test. Scripts are saved in a configured repository folder, making them available across different projects.
-- **Create New Scripts**: Click on **New Script** to create a new script sequence.
-- **Define Commands**: Add commands with specific delays and timeouts. The system is primarily designed for SCPI commands.
-- **Add Variables (optional)**: Define variables within your script (e.g., `{Range}`) to make them customizable when used in different test steps.
+### Scripting
+Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script repository shared across projects.
+→ [Scripting Tab](docs/user-guide/en/06-scripting.md)
 
 ![image](docs/Scripting_Tab.png)
 
-### 3. Build Test Sequence
-In the **Test Environment** tab, you can now build your test sequence.
-- **Add/Edit Steps**: Use the toolbar or context menu to add, remove, copy, paste, duplicate, or reorder test steps.
-- **Configure Step Parameters**: Customize step settings such as pass/fail limits and evaluation sources.
-- **Assign Scripts or Commands**: For each test step, you can either select a predefined script from your repository or manually enter a command (e.g., SCPI).
-- **Custom Variables**: If a script with variables is selected, you can provide specific values for that step.
-- **Response Validation**: Configure expected responses and use response processing to verify the instrument output.
-- **Relay Control**: Set the state of the Relay Matrix or Relay Groups for signal routing during that step.
+### Test Execution
+Build the test sequence, configure limits, evaluation sources, response processing and relay routing per step, then run, single-step or debug it.
+→ [Building Test Sequences](docs/user-guide/en/07-building-test-sequences.md) · [Running Tests](docs/user-guide/en/11-running-tests.md)
 
 ![image](docs/Testing_Tab.png)
 
-### 4. Run Test Sequence
-Once your sequence is ready, use the execution controls to run the test:
--   **Start Test**: Run the entire sequence.
--   **Start from Selection**: Begin execution from the currently selected step.
--   **Single Step**: Execute only the selected step.
--   **Repeat Test**: Run the sequence in a continuous loop.
--   **Stop**: Cancel the running test at any time.
--   **Debugging** If development mode is enabled, the debug controls will be available as well.  
-Enable debug mode to step through the sequence step by step.
-
-Depending on the project settings, a test report will be generated automatically when the test completes.
+Depending on the project settings, a test report is generated automatically when the test completes:
 - [Test Report Example 2026-001_2026-04-21_20-57-52](docs/2026-001_2026-04-21_20-57-52.pdf)
 - [Test Report Example 2026-002_2026-04-21_21-01-42](docs/2026-002_2026-04-21_21-01-42.pdf)
 
-### 5. Documentation
-The **Documentation** tab allows for adding documentation to the project.  
-You can add images, descriptions, and links to external resources, so they are easily accessible within the project.
+### Documentation
+Keep notes, images, attachments and DUT information directly within the project.
+→ [Documentation Tab](docs/user-guide/en/13-documentation-tab.md)
 
 ![image](docs/Documentation_Tab.png)
 
-### 6. Hardware Overview
-The **Test Hardware** tab provides a visual representation of the attached test hardware, as well as information about the available channels and interfaces.
+### Test Hardware
+View information about the attached Test Interface Adapter, its channels and interfaces, and run the relay matrix self-test.
+→ [Test Hardware Tab](docs/user-guide/en/14-test-hardware.md)
 
 ![image](docs/Hardware_Tab.png)
+
+## License
+
+ATLab is licensed under the [GNU GPL v3](LICENSE).
