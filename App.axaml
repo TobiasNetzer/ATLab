@@ -112,7 +112,66 @@
                 </ControlTemplate>
             </Setter>
         </Style>
-        
+
+        <!-- ShadUI's DataGrid template wraps the rows in a ScrollViewer and lacks the
+             PART_HorizontalScrollbar/PART_VerticalScrollbar parts, so the DataGrid can't
+             scroll horizontally. Same look, but with the DataGrid's own scrollbars. -->
+        <Style Selector="DataGrid">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="DataGridBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Border ClipToBounds="True" CornerRadius="{TemplateBinding CornerRadius}">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  RowDefinitions="Auto,*,Auto"
+                                  ClipToBounds="True">
+
+                                <Border x:Name="PART_HeaderBackground"
+                                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                        BorderBrush="{DynamicResource BorderColor}"
+                                        BorderThickness="0,0,0,1"/>
+
+                                <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
+                                                                Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+                                <DataGridRowsPresenter Name="PART_RowsPresenter"
+                                                       Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                                       ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                                    <DataGridRowsPresenter.GestureRecognizers>
+                                        <ScrollGestureRecognizer CanHorizontallyScroll="True"
+                                                                 CanVerticallyScroll="True"
+                                                                 IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}"/>
+                                    </DataGridRowsPresenter.GestureRecognizers>
+                                </DataGridRowsPresenter>
+
+                                <ScrollBar Name="PART_VerticalScrollbar"
+                                           Grid.Row="1" Grid.Column="2"
+                                           Orientation="Vertical"/>
+
+                                <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                      ColumnDefinitions="Auto,*">
+                                    <Rectangle Name="PART_FrozenColumnScrollBarSpacer"/>
+                                    <ScrollBar Name="PART_HorizontalScrollbar"
+                                               Grid.Column="1"
+                                               Orientation="Horizontal"/>
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- Same hover animation ShadUI applies to ScrollViewer scrollbars -->
+        <Style Selector="DataGrid:pointerover /template/ ScrollBar">
+            <Setter Property="AllowAutoHide" Value="True"/>
+        </Style>
+
     </Application.Styles>
 
 </Application>
