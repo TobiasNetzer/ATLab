@@ -82,6 +82,11 @@ public partial class TestingTabViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _user = Environment.UserName;
+
+    [ObservableProperty]
+    private string _deviceUnderTestSummary = "-";
+
+    public DeviceUnderTestInfo DeviceUnderTestInfo => _projectModel.DeviceUnderTestInfo;
     
     [ObservableProperty]
     private bool _startTestBusy;
@@ -167,6 +172,9 @@ public partial class TestingTabViewModel : ViewModelBase
         
         _projectModel.RuntimeVariableChanged += SynchronizeRuntimeVariables;
         SynchronizeRuntimeVariables();
+
+        _projectModel.DeviceUnderTestInfo.DeviceUnderTestInfoChanged += UpdateDeviceUnderTestSummary;
+        UpdateDeviceUnderTestSummary();
 
         HookTestEvents();
         
@@ -268,6 +276,23 @@ public partial class TestingTabViewModel : ViewModelBase
             _runtimeVariables.Add(variable.Clone());
 
         _runtimeVariables.AddRange(_systemVariables.All);
+    }
+
+    private void UpdateDeviceUnderTestSummary()
+    {
+        var info = _projectModel.DeviceUnderTestInfo;
+
+        var parts = new[]
+            {
+                info.DeviceName,
+                string.IsNullOrWhiteSpace(info.Revision) ? null : $"Rev. {info.Revision}",
+                info.Variant,
+                info.PartNumber
+            }
+            .Where(p => !string.IsNullOrWhiteSpace(p));
+
+        var summary = string.Join(" · ", parts);
+        DeviceUnderTestSummary = string.IsNullOrEmpty(summary) ? "-" : summary;
     }
 
     private void UpdateSystemVariables(TestStepViewModel? step)
