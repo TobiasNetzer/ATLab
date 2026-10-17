@@ -52,7 +52,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: windows-latest
+            rid: win-x64
 
     steps:
     - uses: actions/checkout@v4
@@ -64,11 +68,14 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
+    # Publishing for a specific runtime identifier (RID) copies only the native
+    # libraries for that platform next to ATLab.exe, instead of a "runtimes"
+    # folder with binaries for every platform. The app stays framework-dependent.
     - name: Restore
-      run: dotnet restore ATLab.sln
+      run: dotnet restore ATLab.csproj -r ${{ matrix.rid }}
 
     - name: Build
-      run: dotnet publish ATLab.sln -c Release -o out
+      run: dotnet publish ATLab.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out
 
     # User guides are shipped with every package in out/docs
     - name: Add user guide PDFs
