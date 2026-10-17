@@ -161,4 +161,4 @@ Groß-/Kleinschreibung wird beachtet.
 |-------------|----------|--------------|
 | **Standardtoleranz (%)** | 10 | Beim Eingeben eines Sollwerts werden Unter- und Obergrenze auf Sollwert −/+ diesen Prozentsatz gesetzt. |
 | **Angezeigte Nachkommastellen** | 3 | Anzahl der angezeigten Nachkommastellen bei Messwerten. Nachgestellte Nullen entfallen. |
-| **Protokolliergrad** | Info | Mindestschwere für Pop-up-Benachrichtigungen: `Info`, `Success`, `Warning`, `Error`. Alle Meldungen landen weiterhin im Ereignisprotokoll. |
+| **Protokolliergrad** | Info | Mindestschwere für Pop-up-Benachrichtigungen: `Info`, `Warning`, `Error`. Erfolgsmeldungen werden immer angezeigt. Alle Meldungen landen weiterhin im Ereignisprotokoll. |

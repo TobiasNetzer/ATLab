@@ -42,7 +42,7 @@ public partial class LoggingService : ObservableObject, ILoggingService
         => Log(LogLevel.INFO, message);
 
     public void Success(string message)
-        => Log(LogLevel.SUCCESS, message);
+        => Log(LogLevel.INFO, message, isSuccess: true);
 
     public void Warning(string message)
         => Log(LogLevel.WARNING, message);
@@ -59,7 +59,8 @@ public partial class LoggingService : ObservableObject, ILoggingService
         string message,
         string? file = null,
         string? member = null,
-        int? line = null)
+        int? line = null,
+        bool isSuccess = false)
     {
         var entry = new LogEntry(
             DateTime.Now,
@@ -69,7 +70,7 @@ public partial class LoggingService : ObservableObject, ILoggingService
             member,
             line);
 
-        ShowToast(level, message);
+        ShowToast(level, message, isSuccess);
 
         Events.Insert(0, entry);
 
@@ -94,9 +95,10 @@ public partial class LoggingService : ObservableObject, ILoggingService
         EventAdded?.Invoke(this, EventArgs.Empty);
     }
 
-    private void ShowToast(LogLevel level, string message)
+    private void ShowToast(LogLevel level, string message, bool isSuccess)
     {
-        if (level < _settings.ToastLogLevel)
+        // Success messages are always shown, regardless of the selected log level
+        if (!isSuccess && level < _settings.ToastLogLevel)
             return;
 
         var toast = ToastManager.CreateToast(message)
@@ -107,12 +109,14 @@ public partial class LoggingService : ObservableObject, ILoggingService
             .OnBottomLeft()
             .WithDelay(5);
 
+        if (isSuccess)
+        {
+            toast.ShowSuccess();
+            return;
+        }
+
         switch (level)
         {
-            case LogLevel.SUCCESS:
-                toast.ShowSuccess();
-                break;
-
             case LogLevel.WARNING:
                 toast.ShowWarning();
                 break;

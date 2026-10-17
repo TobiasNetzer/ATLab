@@ -6,8 +6,6 @@ public enum LogLevel
 {
     [Description("Info")]
     INFO,
-    [Description("Success")]
-    SUCCESS,
     [Description("Warning")]
     WARNING,
     [Description("Error")]

@@ -161,4 +161,4 @@ Checks are case-sensitive.
 |---------|---------|-------------|
 | **Default Tolerance (%)** | 10 | When you enter a nominal value, the lower and upper limits are set to nominal −/+ this percentage. |
 | **Displayed Decimal Places** | 3 | Number of decimals shown for measured values. Trailing zeros are omitted. |
-| **Log Level** | Info | Minimum severity for pop-up notifications: `Info`, `Success`, `Warning`, `Error`. All messages are still written to the event log. |
+| **Log Level** | Info | Minimum severity for pop-up notifications: `Info`, `Warning`, `Error`. Success messages are always shown. All messages are still written to the event log. |
