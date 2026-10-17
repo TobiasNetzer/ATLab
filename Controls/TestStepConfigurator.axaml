@@ -211,7 +211,6 @@
                                     VerticalAlignment="Top">
                             <TextBlock Text="{helpers:Localize Label_AccentColor}"/>
                             <ColorPicker
-                                HorizontalAlignment="Left"
                                 TabIndex="11"
                                 Color="{Binding TestStepViewModel?.TestStep.StepColor, Mode=TwoWay}"/>
                         </StackPanel>
