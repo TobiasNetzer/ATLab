@@ -253,6 +253,9 @@
   <data name="ToolTip_ToggleLanguage" xml:space="preserve">
     <value>Sprache umschalten</value>
   </data>
+  <data name="ToolTip_OpenUserGuide" xml:space="preserve">
+    <value>Benutzerhandbuch öffnen (F1)</value>
+  </data>
   <data name="Button_Connect" xml:space="preserve">
     <value>Verbinden</value>
   </data>

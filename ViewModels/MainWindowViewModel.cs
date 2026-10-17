@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.Input;
@@ -142,6 +143,45 @@ public partial class MainWindowViewModel : ViewModelBase
                 : ThemeVariant.Light;
 
         _settingsService.Settings.IsDarkMode = Application.Current!.RequestedThemeVariant == ThemeVariant.Dark;
+    }
+    
+    [RelayCommand]
+    private void OpenUserGuide()
+    {
+        var language = _localizationService.CurrentCulture.TwoLetterISOLanguageName
+            .Equals("de", StringComparison.OrdinalIgnoreCase) ? "de" : "en";
+
+        var docsFolder = Path.Combine(AppContext.BaseDirectory, "docs");
+        var localizedGuide = Path.Combine(docsFolder, $"ATLab-User-Guide-{language}.pdf");
+        var englishGuide = Path.Combine(docsFolder, "ATLab-User-Guide-en.pdf");
+
+        string target;
+        if (File.Exists(localizedGuide))
+        {
+            target = localizedGuide;
+        }
+        else if (File.Exists(englishGuide))
+        {
+            target = englishGuide;
+        }
+        else
+        {
+            _loggingService.Warning($"User guide not found in '{docsFolder}'.");
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = target,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            _loggingService.Error($"Could not open the user guide '{target}': {ex.Message}");
+        }
     }
 
     [RelayCommand]

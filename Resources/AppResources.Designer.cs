@@ -109,6 +109,7 @@ public class AppResources
     public static string ToolTip_FindMatrixChannel => ResourceManager.GetString("ToolTip_FindMatrixChannel", resourceCulture) ?? "Determine matrix channel via external probe";
     public static string ToolTip_ToggleTheme => ResourceManager.GetString("ToolTip_ToggleTheme", resourceCulture) ?? "Toggle theme";
     public static string ToolTip_ToggleLanguage => ResourceManager.GetString("ToolTip_ToggleLanguage", resourceCulture) ?? "Toggle language";
+    public static string ToolTip_OpenUserGuide => ResourceManager.GetString("ToolTip_OpenUserGuide", resourceCulture) ?? "Open user guide (F1)";
     public static string Button_Connect => ResourceManager.GetString("Button_Connect", resourceCulture) ?? "Connect";
     public static string Button_Simulator => ResourceManager.GetString("Button_Simulator", resourceCulture) ?? "Simulator";
     public static string Button_Exit => ResourceManager.GetString("Button_Exit", resourceCulture) ?? "Exit";

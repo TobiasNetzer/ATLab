@@ -9,7 +9,46 @@ on:
       - "v*"
 
 jobs:
+  user-guide:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install documentation tools
+      run: |
+        pip install -r scripts/requirements-docs.txt
+        python -m playwright install --with-deps chromium
+        sudo apt-get update
+        sudo apt-get install -y fonts-inter
+
+    - name: Build user guide PDFs (English and German)
+      run: |
+        mkdir -p user-guide-pdf
+        for lang in en de; do
+          python scripts/build_user_guide_pdf.py \
+            --lang "$lang" \
+            --version "${{ github.ref_name }}" \
+            --repo-url "${{ github.server_url }}/${{ github.repository }}" \
+            --ref "${{ github.ref_name }}" \
+            --output "user-guide-pdf/ATLab-User-Guide-$lang.pdf"
+        done
+
+    - name: Upload user guide artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: user-guide
+        path: user-guide-pdf/*.pdf
+        if-no-files-found: error
+        retention-days: 1
+
   build-matrix:
+    needs: user-guide
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -30,6 +69,13 @@ jobs:
 
     - name: Build
       run: dotnet publish ATLab.sln -c Release -o out
+
+    # User guides are shipped with every package in out/docs
+    - name: Add user guide PDFs
+      uses: actions/download-artifact@v4
+      with:
+        name: user-guide
+        path: out/docs
 
     # Linux packaging
     - name: Package Linux build

@@ -33,6 +33,7 @@
         <KeyBinding Gesture="Escape" Command="{Binding TestingTab.CancelTestCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
         <KeyBinding Gesture="F6" Command="{Binding FindMatrixChannelCommand}" />
+        <KeyBinding Gesture="F1" Command="{Binding OpenUserGuideCommand}" />
         <KeyBinding Gesture="F3" Command="{Binding TestingTab.StartSingleStepTestCommand}" />
         <KeyBinding Gesture="F10" Command="{Binding TestingTab.RequestSingleStepContinueCommand}" />
         <KeyBinding Gesture="Enter" Command="{Binding TestingTab.RequestBreakRepeatCommand}" />
@@ -205,6 +206,17 @@
                             Command="{Binding ToggleLanguageCommand}">
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent Languages}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button Classes="Icon"
+                            Background="{DynamicResource ButtonBackground}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ToolTip.Tip="{helpers:Localize ToolTip_OpenUserGuide}"
+                            Command="{Binding OpenUserGuideCommand}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent BookOpen}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
                     
