@@ -10,20 +10,29 @@ public static class ExpressionEvaluator
 
     private record Token(TokenType Type, string Value);
 
+    // Operator precedence and associativity follow C#:
+    // unary + -  >  * / %  >  + -  >  << >>  >  &  >  ^  >  |
+    private const string UnaryMinus = "u-";
+    private const string UnaryPlus = "u+";
+
     private static readonly Dictionary<string, (int prec, bool rightAssoc)> Ops = new()
     {
-        { "+",  (1, false) },
-        { "-",  (1, false) },
-        { "*",  (2, false) },
-        { "/",  (2, false) },
-        { "%",  (2, false) },
+        { "|",  (1, false) },
+        { "^",  (2, false) },
+        { "&",  (3, false) },
 
-        { "<<", (3, false) },
-        { ">>", (3, false) },
+        { "<<", (4, false) },
+        { ">>", (4, false) },
 
-        { "&",  (4, false) },
-        { "^",  (5, false) },
-        { "|",  (6, false) },
+        { "+",  (5, false) },
+        { "-",  (5, false) },
+
+        { "*",  (6, false) },
+        { "/",  (6, false) },
+        { "%",  (6, false) },
+
+        { UnaryMinus, (7, true) },
+        { UnaryPlus,  (7, true) },
     };
 
     public static double Evaluate(string expr)
@@ -106,6 +115,15 @@ public static class ExpressionEvaluator
             }
 
             var one = c.ToString();
+
+            // A '+' or '-' at the start, after an operator or after '(' is a sign, not a binary operator
+            if ((c == '-' || c == '+') && IsUnaryPosition(tokens))
+            {
+                tokens.Add(new Token(TokenType.OPERATOR, c == '-' ? UnaryMinus : UnaryPlus));
+                i++;
+                continue;
+            }
+
             if (Ops.ContainsKey(one))
             {
                 tokens.Add(new Token(TokenType.OPERATOR, one));
@@ -117,6 +135,15 @@ public static class ExpressionEvaluator
         }
 
         return tokens;
+    }
+
+    private static bool IsUnaryPosition(List<Token> tokens)
+    {
+        if (tokens.Count == 0)
+            return true;
+
+        var previous = tokens[^1].Type;
+        return previous is TokenType.OPERATOR or TokenType.LEFT_PAREN;
     }
 
     private static List<Token> ToRpn(List<Token> tokens)
@@ -197,6 +224,19 @@ public static class ExpressionEvaluator
                 continue;
             }
 
+            if (t.Value is UnaryMinus or UnaryPlus)
+            {
+                if (stack.Count < 1)
+                    throw new Exception("Invalid expression: missing operand");
+
+                var operand = stack.Pop();
+                stack.Push(t.Value == UnaryMinus ? -operand : operand);
+                continue;
+            }
+
+            if (stack.Count < 2)
+                throw new Exception($"Invalid expression: missing operand for '{t.Value}'");
+
             var b = stack.Pop();
             var a = stack.Pop();
 
@@ -217,6 +257,9 @@ public static class ExpressionEvaluator
                 _ => throw new Exception($"Unknown operator {t.Value}")
             });
         }
+
+        if (stack.Count != 1)
+            throw new Exception("Invalid expression");
 
         return stack.Pop();
     }

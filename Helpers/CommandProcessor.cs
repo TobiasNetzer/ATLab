@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -97,7 +96,7 @@ public static class CommandProcessor
 
                 if (parts.Length == 2)
                 {
-                    // {enc:content} (enc can be hex/bin/base64/ascii/upper/lower/len/bytes/whatever)
+                    // {enc:content} (enc can be hex/bin/ascii/upper/lower/len/bytes/expr)
                     blocks.Add(new Block(BlockType.ENCODED, parts[1].Trim(), parts[0].Trim().ToLowerInvariant()));
                 }
                 else
@@ -174,7 +173,6 @@ public static class CommandProcessor
                 "lower"  => v.ToLowerInvariant(),
                 "len"    => v.Length.ToString(CultureInfo.InvariantCulture),
                 "bytes"  => ConvertToByteString(v),
-                "base64" => Convert.ToBase64String(Encoding.UTF8.GetBytes(v)),
                 _        => v
             };
         }
@@ -194,10 +192,6 @@ public static class CommandProcessor
 
                 case "bin":
                     output.AddRange(ParseBinary(block.Value));
-                    break;
-
-                case "base64":
-                    output.AddRange(Convert.FromBase64String(block.Value));
                     break;
 
                 default:
