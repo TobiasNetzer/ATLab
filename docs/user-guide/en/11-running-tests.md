@@ -15,7 +15,7 @@ Tests are run from the **Test Execution** tab. Operators normally work with deve
 | **Continue test execution** | `Enter` | Visible during a run. Ends a step that is repeating (Pass/Fail-Action *Repeat*) and proceeds to the next step. |
 | **Stop test execution** (■) | `Esc` | Cancels the running test. |
 
-While a test runs, editing and file commands are disabled, and the step list follows the current step.
+While a test runs, editing and project commands are disabled, and the step list follows the current step.
 
 ### Differences between the start modes
 

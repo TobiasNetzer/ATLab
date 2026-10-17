@@ -80,16 +80,16 @@
     <value>Abbrechen</value>
   </data>
   <data name="ToolTip_NewFile" xml:space="preserve">
-    <value>Neue Datei</value>
+    <value>Neues Projekt</value>
   </data>
   <data name="ToolTip_OpenFile" xml:space="preserve">
-    <value>Datei öffnen</value>
+    <value>Projekt öffnen</value>
   </data>
   <data name="ToolTip_SaveFile" xml:space="preserve">
-    <value>Datei speichern</value>
+    <value>Projekt speichern</value>
   </data>
   <data name="ToolTip_SaveFileAs" xml:space="preserve">
-    <value>Datei speichern unter</value>
+    <value>Projekt speichern unter</value>
   </data>
   <data name="ToolTip_AddTestStep" xml:space="preserve">
     <value>Neuen Testschritt hinzufügen</value>

@@ -23,7 +23,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ILocalizationService _localizationService;
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
-    
+
+    private const string OnlineUserGuideUrl = "https://github.com/TobiasNetzer/ATLab/blob/main/docs/user-guide";
+
     public string WindowTitle => $"ATLab - {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
     
     [ObservableProperty]
@@ -166,8 +168,8 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            _loggingService.Warning($"User guide not found in '{docsFolder}'.");
-            return;
+            _loggingService.Warning($"User guide not found in '{docsFolder}'. Opening the online user guide.");
+            target = $"{OnlineUserGuideUrl}/{language}/README.md";
         }
 
         try

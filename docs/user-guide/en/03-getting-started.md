@@ -69,7 +69,7 @@ The setting is remembered, so a test station can be left in operator view.
 
 This walkthrough works in simulator mode and needs no instruments.
 
-1. **Create a project.** On the Test Execution tab click **New file** (or press `Ctrl+N`).
+1. **Create a project.** On the Test Execution tab click **New project** (or press `Ctrl+N`).
 2. **Enable development mode** with the construction-cone button.
 3. **Add a step.** Click **Add a new test step** (`+`, or press `Insert`). A new row appears and is selected.
 4. **Configure it** in the **Test Step Configuration** panel on the right:

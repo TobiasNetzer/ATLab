@@ -47,10 +47,10 @@ public class AppResources
     public static string Ok => ResourceManager.GetString("Ok", resourceCulture) ?? "OK";
     public static string Cancel => ResourceManager.GetString("Cancel", resourceCulture) ?? "Cancel";
 
-    public static string ToolTip_NewFile => ResourceManager.GetString("ToolTip_NewFile", resourceCulture) ?? "New file";
-    public static string ToolTip_OpenFile => ResourceManager.GetString("ToolTip_OpenFile", resourceCulture) ?? "Open file";
-    public static string ToolTip_SaveFile => ResourceManager.GetString("ToolTip_SaveFile", resourceCulture) ?? "Save file";
-    public static string ToolTip_SaveFileAs => ResourceManager.GetString("ToolTip_SaveFileAs", resourceCulture) ?? "Save file as";
+    public static string ToolTip_NewFile => ResourceManager.GetString("ToolTip_NewFile", resourceCulture) ?? "New project";
+    public static string ToolTip_OpenFile => ResourceManager.GetString("ToolTip_OpenFile", resourceCulture) ?? "Open project";
+    public static string ToolTip_SaveFile => ResourceManager.GetString("ToolTip_SaveFile", resourceCulture) ?? "Save project";
+    public static string ToolTip_SaveFileAs => ResourceManager.GetString("ToolTip_SaveFileAs", resourceCulture) ?? "Save project as";
     public static string ToolTip_AddTestStep => ResourceManager.GetString("ToolTip_AddTestStep", resourceCulture) ?? "Add a new test step";
     public static string ToolTip_RemoveTestSteps => ResourceManager.GetString("ToolTip_RemoveTestSteps", resourceCulture) ?? "Remove selected test steps";
     public static string ToolTip_MoveStepUp => ResourceManager.GetString("ToolTip_MoveStepUp", resourceCulture) ?? "Move selected test step up";

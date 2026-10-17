@@ -1,6 +1,6 @@
 # 4. Working with Projects
 
-A **project** is a single file with the extension `.atlab`. It stores everything that belongs to one test:
+A **project** is stored in a single **project file** with the extension `.atlab`. It contains everything that belongs to one test:
 
 - the test steps and their full configuration,
 - the devices from the Device Manager,
@@ -13,18 +13,18 @@ A **project** is a single file with the extension `.atlab`. It stores everything
 
 Scripts themselves are **not** stored in the project; they live as separate files in the script repository (see [Scripting](06-scripting.md)).
 
-## File commands
+## Project commands
 
-The file buttons are the first four icons in the Test Execution toolbar.
+The project buttons are the first four icons in the Test Execution toolbar.
 
 | Button | Shortcut | Action |
 |--------|----------|--------|
-| **New file** | `Ctrl+N` | Starts an empty, untitled project. |
-| **Open file** | `Ctrl+O` | Opens an existing `.atlab` file. |
-| **Save file** | `Ctrl+S` | Saves to the current file. For an untitled project this behaves like *Save as*. |
-| **Save file as** | `Ctrl+Shift+S` | Saves under a new name. The default suggestion is `Test.atlab`. |
+| **New project** | `Ctrl+N` | Starts an empty, untitled project. |
+| **Open project** | `Ctrl+O` | Opens an existing `.atlab` project file. |
+| **Save project** | `Ctrl+S` | Saves to the current project file. For an untitled project this behaves like *Save project as*. |
+| **Save project as** | `Ctrl+Shift+S` | Saves under a new name. The default suggestion is `Test.atlab`. |
 
-File commands are disabled while a test is running.
+Project commands are disabled while a test is running.
 
 ## Unsaved changes
 

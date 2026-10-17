@@ -1,6 +1,6 @@
 # 4. Arbeiten mit Projekten
 
-Ein **Projekt** ist eine einzelne Datei mit der Endung `.atlab`. Sie enthält alles, was zu einem Test gehört:
+Ein **Projekt** wird in einer einzelnen **Projektdatei** mit der Endung `.atlab` gespeichert. Sie enthält alles, was zu einem Test gehört:
 
 - die Testschritte mit ihrer vollständigen Konfiguration,
 - die Geräte aus dem Geräte-Manager,
@@ -13,18 +13,18 @@ Ein **Projekt** ist eine einzelne Datei mit der Endung `.atlab`. Sie enthält al
 
 Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skript-Repository (siehe [Skripte](06-scripting.md)).
 
-## Dateibefehle
+## Projektbefehle
 
-Die Dateibefehle sind die ersten vier Symbole der Werkzeugleiste auf der Registerkarte Testausführung.
+Die Projektbefehle sind die ersten vier Symbole der Werkzeugleiste auf der Registerkarte Testausführung.
 
 | Schaltfläche | Kürzel | Aktion |
 |--------------|--------|--------|
-| **Neue Datei** | `Strg+N` | Beginnt ein leeres, unbenanntes Projekt. |
-| **Datei öffnen** | `Strg+O` | Öffnet eine vorhandene `.atlab`-Datei. |
-| **Datei speichern** | `Strg+S` | Speichert in die aktuelle Datei. Bei einem unbenannten Projekt wie *Speichern unter*. |
-| **Datei speichern unter** | `Strg+Umschalt+S` | Speichert unter neuem Namen. Vorschlag ist `Test.atlab`. |
+| **Neues Projekt** | `Strg+N` | Beginnt ein leeres, unbenanntes Projekt. |
+| **Projekt öffnen** | `Strg+O` | Öffnet eine vorhandene `.atlab`-Projektdatei. |
+| **Projekt speichern** | `Strg+S` | Speichert in die aktuelle Projektdatei. Bei einem unbenannten Projekt wie *Projekt speichern unter*. |
+| **Projekt speichern unter** | `Strg+Umschalt+S` | Speichert unter neuem Namen. Vorschlag ist `Test.atlab`. |
 
-Während ein Test läuft, sind die Dateibefehle gesperrt.
+Während ein Test läuft, sind die Projektbefehle gesperrt.
 
 ## Ungespeicherte Änderungen
 

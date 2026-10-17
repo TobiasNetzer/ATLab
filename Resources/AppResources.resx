@@ -80,16 +80,16 @@
     <value>Cancel</value>
   </data>
   <data name="ToolTip_NewFile" xml:space="preserve">
-    <value>New file</value>
+    <value>New project</value>
   </data>
   <data name="ToolTip_OpenFile" xml:space="preserve">
-    <value>Open file</value>
+    <value>Open project</value>
   </data>
   <data name="ToolTip_SaveFile" xml:space="preserve">
-    <value>Save file</value>
+    <value>Save project</value>
   </data>
   <data name="ToolTip_SaveFileAs" xml:space="preserve">
-    <value>Save file as</value>
+    <value>Save project as</value>
   </data>
   <data name="ToolTip_AddTestStep" xml:space="preserve">
     <value>Add a new test step</value>

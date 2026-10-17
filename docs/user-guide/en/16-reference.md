@@ -35,7 +35,7 @@ From left to right:
 
 | Group | Buttons |
 |-------|---------|
-| File | New file · Open file · Save file · Save file as |
+| Project | New project · Open project · Save project · Save project as |
 | Editing | Add · Remove · Move up · Move down · Duplicate · Cut · Copy · Paste |
 | Execution | Execute single step · Start from selected step · Start continuous execution · Start test execution · Continue (during run) · Stop |
 | Debug (development mode only) | Enable debug mode · Advance single step |

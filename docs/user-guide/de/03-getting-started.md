@@ -69,7 +69,7 @@ Die Einstellung wird gespeichert, sodass ein Prüfplatz in der Bedieneransicht v
 
 Diese Anleitung funktioniert im Simulatormodus und benötigt keine Messgeräte.
 
-1. **Projekt anlegen.** Auf der Registerkarte Testausführung **Neue Datei** klicken (oder `Strg+N`).
+1. **Projekt anlegen.** Auf der Registerkarte Testausführung **Neues Projekt** klicken (oder `Strg+N`).
 2. **Entwicklungsmodus aktivieren** mit der Baustellen-Schaltfläche.
 3. **Schritt hinzufügen.** **Neuen Testschritt hinzufügen** (`+` oder Taste `Einfg`) klicken. Eine neue Zeile erscheint und ist ausgewählt.
 4. **Konfigurieren** im Bereich **Testschritt-Konfiguration** rechts:

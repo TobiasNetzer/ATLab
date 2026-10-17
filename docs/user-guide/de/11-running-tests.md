@@ -15,7 +15,7 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 | **Testausführung fortsetzen** | `Enter` | Während eines Laufs sichtbar. Beendet einen sich wiederholenden Schritt (Aktion *Wiederholen*) und fährt mit dem nächsten Schritt fort. |
 | **Testausführung stoppen** (■) | `Esc` | Bricht den laufenden Test ab. |
 
-Während ein Test läuft, sind Bearbeitungs- und Dateibefehle gesperrt, und die Schrittliste folgt dem aktuellen Schritt.
+Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und die Schrittliste folgt dem aktuellen Schritt.
 
 ### Unterschiede zwischen den Startarten
 
