@@ -71,11 +71,11 @@ Der ganze Ordner kann dann auf einen anderen Prüfplatz kopiert oder in eine Ver
 Beim Öffnen eines Projekts prüft ATLab, ob der angeschlossene Adapter genügend Kanäle hat. Verwendet das Projekt Matrix-, Stimulations- oder externe Stimulationskanäle, die der Adapter nicht besitzt, listet eine Warnung diese auf, z. B.:
 
 ```
-Connected test hardware is missing required channels:
+Der angeschlossenen Test-Hardware fehlen benötigte Kanäle:
 
-- Matrix channels (available: 16/24)
+- Matrix-Kanäle (verfügbar: 16/24)
 
-All unavailable channels will be permanently lost upon saving!
+Alle nicht verfügbaren Kanäle gehen beim Speichern unwiderruflich verloren!
 ```
 
 Schritte, die einen fehlenden Matrix-Kanal verwenden, schlagen bei der Ausführung mit *„Matrix Channel is not available.“* fehl. Speichern Sie ein solches Projekt nur, wenn Sie diese Kanalzuordnungen wirklich verwerfen wollen – öffnen Sie es stattdessen mit der passenden Hardware (oder im Simulator mit 32/16/4 Kanälen).

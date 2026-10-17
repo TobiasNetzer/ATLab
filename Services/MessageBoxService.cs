@@ -177,7 +177,9 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
     {
         _messageBoxViewModel.Initialize(
             title,
-            message);
+            message,
+            LocalizationService.Instance["ButtonLabel_Continue"],
+            LocalizationService.Instance["ButtonLabel_Cancel"]);
         
         var tcs = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);

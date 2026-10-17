@@ -132,24 +132,26 @@ public class ProjectController : IProjectController
                 .DefaultIfEmpty(-1)
                 .Max();
         
+        var localization = LocalizationService.Instance;
+
         if (hardwareInfo.MeasChannelCount < highestUsedMatrixChannel)
-            warnings.Add($"- Matrix channels (available: {hardwareInfo.MeasChannelCount}/{highestUsedMatrixChannel})");
+            warnings.Add(string.Format(localization["Text_MissingMatrixChannels"], hardwareInfo.MeasChannelCount, highestUsedMatrixChannel));
 
         if (hardwareInfo.StimChannelCount < highestUsedStimChannel)
-            warnings.Add($"- Stimulation channels (available: {hardwareInfo.StimChannelCount}/{highestUsedStimChannel})");
+            warnings.Add(string.Format(localization["Text_MissingStimChannels"], hardwareInfo.StimChannelCount, highestUsedStimChannel));
 
         if (hardwareInfo.ExtStimChannelCount < highestUsedExtStimChannel)
-            warnings.Add($"- External Stimulation channels (available: {hardwareInfo.ExtStimChannelCount}/{highestUsedExtStimChannel})");
-        
+            warnings.Add(string.Format(localization["Text_MissingExtStimChannels"], hardwareInfo.ExtStimChannelCount, highestUsedExtStimChannel));
+
         if (warnings.Count > 0)
         {
-            warnings.Insert(0, "Connected test hardware is missing required channels:");
+            warnings.Insert(0, localization["Text_MissingHardwareChannels"]);
             warnings.Insert(1,"");
             warnings.Add("");
-            warnings.Add("All unavailable channels will be permanently lost upon saving!");
+            warnings.Add(localization["Text_UnavailableChannelsLostOnSave"]);
 
             var message = string.Join(Environment.NewLine, warnings);
-            await _messageBoxService.ShowMessageAsync("Warning", message);
+            await _messageBoxService.ShowMessageAsync(localization["Title_Warning"], message);
         }
     }
 }

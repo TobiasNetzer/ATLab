@@ -835,6 +835,24 @@
   <data name="Title_AwaitingUserResponse" xml:space="preserve">
     <value>Waiting for User Response</value>
   </data>
+  <data name="Title_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Text_MissingHardwareChannels" xml:space="preserve">
+    <value>Connected test hardware is missing required channels:</value>
+  </data>
+  <data name="Text_MissingMatrixChannels" xml:space="preserve">
+    <value>- Matrix channels (available: {0}/{1})</value>
+  </data>
+  <data name="Text_MissingStimChannels" xml:space="preserve">
+    <value>- Stimulation channels (available: {0}/{1})</value>
+  </data>
+  <data name="Text_MissingExtStimChannels" xml:space="preserve">
+    <value>- External stimulation channels (available: {0}/{1})</value>
+  </data>
+  <data name="Text_UnavailableChannelsLostOnSave" xml:space="preserve">
+    <value>All unavailable channels will be permanently lost upon saving!</value>
+  </data>
   <data name="Enum_TestEvaluationSource_NONE" xml:space="preserve">
     <value>None</value>
   </data>
