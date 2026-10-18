@@ -264,7 +264,7 @@
                         
                         <ComboBox Grid.Column="1"
                             TabIndex="16"
-                            ItemsSource="{Binding RuntimeVariables}"
+                            ItemsSource="{Binding VariableOptions}"
                             SelectedItem="{Binding SelectedVariable, Mode=TwoWay}"
                             IsEnabled="{Binding TestStepViewModel.TestStep.IsAssignResultToVariable, FallbackValue='False'}">
                             <ComboBox.ItemTemplate>

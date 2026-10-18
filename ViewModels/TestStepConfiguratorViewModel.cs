@@ -46,6 +46,12 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
     private bool _isAdvancedExpanded;
 
     public ObservableCollection<CustomVariable> RuntimeVariables => _runtimeVariableEditorViewModel.RuntimeVariables;
+
+    // Entry at the top of the variable list to clear the variable (IsSystem skips name normalization)
+    private readonly CustomVariable _noVariable = new() { IsSystem = true, Name = "—" };
+
+    // Runtime variables plus the "—" entry, shown in the Assign Result to Variable drop-down
+    public ObservableCollection<CustomVariable> VariableOptions { get; } = new();
     
     [ObservableProperty]
     private CustomVariable? _selectedVariable;
@@ -58,8 +64,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     [ObservableProperty]
     private JumpTargetDto? _selectedFailJumpTarget;
-
-    private bool _isInternalChange;
+    
+    private int _internalChangeDepth;
+    private bool IsInternalChange => _internalChangeDepth > 0;
 
     public TestStepConfiguratorViewModel(
         ISettingsService settingsService,
@@ -73,6 +80,9 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         _runtimeVariableEditorViewModel = runtimeVariableEditorViewModel;
         
         IsExpanded = settingsService.Settings.IsStepConfiguratorExpanded;
+
+        RebuildVariableOptions();
+        RuntimeVariables.CollectionChanged += (_, _) => RebuildVariableOptions();
         
         LocalizationService.Instance.PropertyChanged += (_, _) =>
         {
@@ -82,7 +92,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     public void LoadTestStep(TestStepViewModel testStep, IEnumerable<TestStepViewModel> allSteps)
     {
-        _isInternalChange = true;
+        _internalChangeDepth++;
         try
         {
             if (TestStepViewModel?.TestStep != null)
@@ -99,10 +109,11 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             InitializeNumericFromExpressions();
             UpdateStringProperties();
 
-            SelectedVariable = RuntimeVariables.FirstOrDefault(v => v.Name == TestStepViewModel.TestStep.VariableName);
+            SelectedVariable = FindVariableOption(TestStepViewModel.TestStep.VariableName);
 
             JumpTargets = allSteps
                 .Select(s => new JumpTargetDto(s.TestStep.Id, s.Module.Name, s.TestStep.Number, s.TestStep.Name))
+                .Prepend(JumpTargetDto.None)
                 .ToList();
 
             SelectedPassJumpTarget =
@@ -113,7 +124,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         }
         finally
         {
-            _isInternalChange = false;
+            _internalChangeDepth--;
         }
     }
     
@@ -153,7 +164,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     private void UpdateStringProperties()
     {
-        _isInternalChange = true;
+        _internalChangeDepth++;
         try
         {
             if (TestStepViewModel?.TestStep == null) return;
@@ -207,7 +218,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         }
         finally
         {
-            _isInternalChange = false;
+            _internalChangeDepth--;
         }
     }
 
@@ -253,7 +264,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnNominalValueTextChanged(string value)
     {
-        if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
+        if (TestStepViewModel?.TestStep == null || IsInternalChange) return;
         var step = TestStepViewModel.TestStep;
         
         if (!IsVariableExpression(value))
@@ -279,7 +290,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnLowerLimitTextChanged(string value)
     {
-        if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
+        if (TestStepViewModel?.TestStep == null || IsInternalChange) return;
         var step = TestStepViewModel.TestStep;
         
         if (!IsVariableExpression(value))
@@ -323,7 +334,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnUpperLimitTextChanged(string value)
     {
-        if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
+        if (TestStepViewModel?.TestStep == null || IsInternalChange) return;
         var step = TestStepViewModel.TestStep;
         
         if (!IsVariableExpression(value))
@@ -366,7 +377,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnDelayTextChanged(string value)
     {
-        if (TestStepViewModel?.TestStep == null || _isInternalChange) return;
+        if (TestStepViewModel?.TestStep == null || IsInternalChange) return;
         var step = TestStepViewModel.TestStep;
 
         if (!IsVariableExpression(value))
@@ -439,19 +450,46 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
 
     partial void OnSelectedVariableChanged(CustomVariable? value)
     {
-        if (TestStepViewModel?.TestStep == null || value == null) return;
-        TestStepViewModel.TestStep.VariableName = value.Name;
+        if (IsInternalChange || TestStepViewModel?.TestStep == null || value == null) return;
+        TestStepViewModel.TestStep.VariableName = ReferenceEquals(value, _noVariable) ? string.Empty : value.Name;
     }
 
+    private void RebuildVariableOptions()
+    {
+        _internalChangeDepth++;
+        try
+        {
+            VariableOptions.Clear();
+            VariableOptions.Add(_noVariable);
+
+            foreach (var variable in RuntimeVariables)
+                VariableOptions.Add(variable);
+
+            SelectedVariable = FindVariableOption(TestStepViewModel?.TestStep.VariableName);
+        }
+        finally
+        {
+            _internalChangeDepth--;
+        }
+    }
+
+    // An empty name selects the "—" entry; a name without matching variable (e.g. deleted) selects nothing
+    private CustomVariable? FindVariableOption(string? variableName)
+    {
+        return string.IsNullOrEmpty(variableName)
+            ? _noVariable
+            : VariableOptions.FirstOrDefault(v => !ReferenceEquals(v, _noVariable) && v.Name == variableName);
+    }
+    
     partial void OnSelectedPassJumpTargetChanged(JumpTargetDto? value)
     {
-        if (TestStepViewModel?.TestStep == null || value == null) return;
+        if (IsInternalChange || TestStepViewModel?.TestStep == null || value == null) return;
         TestStepViewModel.TestStep.OnPass.JumpToId = value.Id;
     }
 
     partial void OnSelectedFailJumpTargetChanged(JumpTargetDto? value)
     {
-        if (TestStepViewModel?.TestStep == null || value == null) return;
+        if (IsInternalChange || TestStepViewModel?.TestStep == null || value == null) return;
         TestStepViewModel.TestStep.OnFail.JumpToId = value.Id;
     }
     

@@ -2,18 +2,21 @@
 
 public class JumpTargetDto
 {
-    public string Id { get; }
-    private string ModuleName { get; }
-    private int Number { get; }
-    private string Name { get; }
+    // Entry at the top of the jump target list to clear the target
+    public static JumpTargetDto None { get; } = new(string.Empty, "—");
 
-    public string Display => $"{ModuleName} / {Number}: {Name}";
+    public string Id { get; }
+
+    public string Display { get; }
 
     public JumpTargetDto(string id, string moduleName, int number, string name)
+        : this(id, $"{moduleName} / {number}: {name}")
+    {
+    }
+
+    private JumpTargetDto(string id, string display)
     {
         Id = id;
-        ModuleName = moduleName;
-        Number = number;
-        Name = name;
+        Display = display;
     }
 }

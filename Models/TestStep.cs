@@ -189,6 +189,14 @@ public partial class TestStep : ObservableObject
     {
         ScriptVariables.CollectionChanged += ScriptVariables_CollectionChanged;
         MatrixState.PropertyChanged += Child_PropertyChanged;
+        OnPass.PropertyChanged += Child_PropertyChanged;
+        OnFail.PropertyChanged += Child_PropertyChanged;
+        Command.PropertyChanged += Child_PropertyChanged;
+        InterfaceConfig.PropertyChanged += Child_PropertyChanged;
+        ShellCommand.PropertyChanged += Child_PropertyChanged;
+        ResponseMask.PropertyChanged += Child_PropertyChanged;
+        LiveStimState.PropertyChanged += Child_PropertyChanged;
+        LiveExtStimState.PropertyChanged += Child_PropertyChanged;
     }
 
     partial void OnOnPassChanged(PassFailAction? oldValue, PassFailAction newValue)

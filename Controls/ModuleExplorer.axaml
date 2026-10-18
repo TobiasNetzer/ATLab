@@ -164,7 +164,7 @@
                     <TextBox Text="{Binding SelectedModule.Module.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              TextWrapping="Wrap"
                              AcceptsReturn="True"
-                             Height="70"/>
+                             Height="100"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
