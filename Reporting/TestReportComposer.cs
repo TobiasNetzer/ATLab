@@ -335,7 +335,7 @@ public class TestReportComposer
             c.Padding(4).BorderBottom(1).BorderColor(Colors.Grey.Lighten3);
 
         static IContainer ModuleCell(IContainer c) =>
-            c.PaddingTop(8).Padding(4).Background(Colors.Grey.Lighten4).BorderBottom(1).BorderColor(Colors.Grey.Darken1);
+            c.PaddingTop(8).Padding(4).BorderBottom(1).BorderColor(Colors.Grey.Darken1);
     }
     
     private void ComposeEquipmentSection(IContainer container)
