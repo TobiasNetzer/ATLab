@@ -1,6 +1,6 @@
 # 1. Introduction
 
-ATLab is an automated testing framework for electronic assemblies. A test engineer builds a **test sequence**: a list of steps, each of which switches relays, talks to an instrument or the device under test, obtains a numeric result and compares it against limits. An operator then runs that sequence, enters a serial number, and gets a pass/fail verdict plus an optional PDF test report.
+ATLab is an automated testing framework for electronic assemblies. A test engineer builds a **test sequence**: a list of steps, grouped into modules, each of which switches relays, talks to an instrument or the device under test, obtains a numeric result and compares it against limits. An operator then runs that sequence, enters a serial number, and gets a pass/fail verdict plus an optional PDF test report.
 
 ![ATLab main window](images/Testing_Tab_en.png)
 
@@ -13,6 +13,7 @@ ATLab is an automated testing framework for electronic assemblies. A test engine
 - **Ask the operator** to confirm a visual check (Passed / Failed).
 - **Compute values** from runtime variables using expressions.
 - **Read files** from disk and extract a value from them.
+- **Organize** the sequence into modules (e.g. power supply, programming, LED test) that can be enabled individually.
 - **Branch**: repeat a step, jump to another step, or end the test depending on the result.
 - **Document and report**: store test notes, images and attachments in the project, and export results as CSV and PDF.
 
@@ -23,7 +24,8 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | Term | Meaning |
 |------|---------|
 | **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](04-projects.md). |
-| **Test step** | One row in the sequence. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. |
+| **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](07-building-test-sequences.md#modules). |
+| **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. |
 | **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, Shell Command, User Response, Expression* or *File*. See [Evaluation Sources](08-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script repository* folder, so it can be shared across projects. |

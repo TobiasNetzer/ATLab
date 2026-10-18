@@ -31,7 +31,7 @@ Um Schritte in ein anderes Modul zu verschieben, schneiden Sie sie aus, wählen 
 | **Abweichung** | Abweichung vom Sollwert in Prozent. |
 | **Ergebnis** | ✔ oder ✘, nachdem der Schritt ausgeführt wurde. |
 
-Ignorierte Schritte werden abgeblendet dargestellt. Spaltenbreite und -reihenfolge sind veränderbar; sortieren lässt sich die Liste nicht. Während eines Tests ist die Bearbeitung gesperrt.
+Ignorierte Schritte werden abgeblendet dargestellt. Spaltenbreite und -reihenfolge sind veränderbar; sortieren lässt sich die Liste nicht. Passen die Spalten nicht in die Breite, z. B. auf kleinen Bildschirmen, lässt sich die Liste horizontal scrollen. Während eines Tests ist die Bearbeitung gesperrt.
 
 ### Mehrere Schritte auswählen
 
@@ -55,7 +55,7 @@ Schritte werden innerhalb ihres Moduls automatisch neu nummeriert. Kopien erhalt
 
 ## Testschritt-Konfiguration
 
-Der obere Bereich rechts bearbeitet die Grundeigenschaften des ausgewählten Schritts. Bereiche lassen sich über den Pfeil in ihrer Kopfzeile einklappen; ATLab merkt sich, welche geöffnet sind.
+Der obere Bereich rechts bearbeitet die Grundeigenschaften des ausgewählten Schritts. Ist kein Schritt ausgewählt, z. B. in einem leeren Modul, sind alle Bereiche gesperrt und zeigen Standardwerte. Bereiche lassen sich über den Pfeil in ihrer Kopfzeile einklappen; ATLab merkt sich, welche geöffnet sind.
 
 ### Name, Grenzwerte und Einheit
 
@@ -120,7 +120,7 @@ Nach der Bewertung wendet ATLab die **Bestanden-Aktion** an, wenn der Wert inner
 | **Fortfahren** | Mit dem nächsten Schritt weitermachen (Standard). |
 | **Wiederholen** | Denselben Schritt erneut ausführen. Nützlich für „Warten bis“-Schleifen, z. B. bei Fehlschlag wiederholen, bis sich eine Spannung eingestellt hat. |
 | **Test beenden** | Die Sequenz nach diesem Schritt beenden. Der Lauf wird normal bewertet. |
-| **Springe zu** | Mit dem in der Auswahlliste gewählten Schritt weitermachen (vorwärts oder rückwärts). Das Ziel kann in einem beliebigen Modul liegen; die Auswahlliste zeigt Schritte als *Modul / Nr.: Name*. |
+| **Springe zu** | Mit dem in der Auswahlliste gewählten Schritt weitermachen (vorwärts oder rückwärts). Das Ziel kann in einem beliebigen Modul liegen; die Auswahlliste zeigt Schritte als *Modul / Nr.: Name*; der vollständige Text erscheint beim Darüberfahren mit der Maus. |
 | **Kommentar anzeigen** | Den Kommentar in einem Dialog anzeigen, dann mit dem nächsten Schritt weitermachen. Mit **Ergebnis einbinden** zeigt der Dialog zusätzlich den Messwert und dessen Bewertung. **Abbrechen** bricht den Test ab. |
 | **Ergebnis invertieren** | Kehrt die Bewertung des Schritts um, *nachdem* die Aktion gewählt wurde. In der Fehlgeschlagen-Aktion bedeutet das „ein Wert außerhalb der Grenzen gilt als bestanden“, in der Bestanden-Aktion „ein Wert innerhalb der Grenzen gilt als fehlgeschlagen“. |
 

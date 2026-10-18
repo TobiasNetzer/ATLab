@@ -1,6 +1,6 @@
 # 1. Einführung
 
-ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugruppen. Ein Prüfingenieur erstellt eine **Prüfsequenz**: eine Liste von Schritten, von denen jeder Relais schaltet, mit einem Messgerät oder dem Prüfling kommuniziert, einen Zahlenwert ermittelt und ihn mit Grenzwerten vergleicht. Ein Bediener führt die Sequenz anschließend aus, gibt eine Seriennummer ein und erhält ein Bestanden/Fehlgeschlagen-Ergebnis sowie optional einen PDF-Testbericht.
+ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugruppen. Ein Prüfingenieur erstellt eine **Prüfsequenz**: eine Liste von Schritten, gegliedert in Module, von denen jeder Relais schaltet, mit einem Messgerät oder dem Prüfling kommuniziert, einen Zahlenwert ermittelt und ihn mit Grenzwerten vergleicht. Ein Bediener führt die Sequenz anschließend aus, gibt eine Seriennummer ein und erhält ein Bestanden/Fehlgeschlagen-Ergebnis sowie optional einen PDF-Testbericht.
 
 ![ATLab Hauptfenster](images/Testing_Tab_de.png)
 
@@ -13,6 +13,7 @@ ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugrupp
 - **Den Bediener fragen**, z. B. für eine Sichtprüfung (Bestanden / Fehlgeschlagen).
 - **Werte berechnen** aus Laufzeitvariablen mit Ausdrücken.
 - **Dateien einlesen** und daraus einen Wert gewinnen.
+- **Gliedern**: die Sequenz in Module aufteilen (z. B. Spannungsversorgung, Programmierung, LED-Test), die sich einzeln aktivieren lassen.
 - **Verzweigen**: einen Schritt wiederholen, zu einem anderen Schritt springen oder den Test je nach Ergebnis beenden.
 - **Dokumentieren und berichten**: Testnotizen, Bilder und Anhänge im Projekt ablegen und Ergebnisse als CSV und PDF exportieren.
 
@@ -23,7 +24,8 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 | Begriff | Bedeutung |
 |---------|-----------|
 | **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](04-projects.md). |
-| **Testschritt** | Eine Zeile der Sequenz mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. |
+| **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](07-building-test-sequences.md#module). |
+| **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. |
 | **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Shell-Befehl, Benutzereingabe, Ausdruck* oder *Datei*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skript-Repository*, damit sie projektübergreifend genutzt werden kann. |

@@ -60,8 +60,8 @@ Theme and language are remembered between sessions. Messages also pop up briefly
 
 The Test Execution tab has two faces:
 
-- **Operator view** (default): toolbar, step list, result bar. The step configuration panel is hidden.
-- **Development mode**: toggled with the construction-cone button at the right end of the toolbar (**Enable development mode**). The configuration panels appear on the right and the debug controls become available.
+- **Operator view** (default): toolbar, module list, step list, result bar. The step configuration panel is hidden.
+- **Development mode**: toggled with the construction-cone button at the right end of the toolbar (**Enable development mode**). The configuration panels appear on the right, the module list gets buttons for editing modules, and the debug controls become available.
 
 The setting is remembered, so a test station can be left in operator view.
 
@@ -69,7 +69,7 @@ The setting is remembered, so a test station can be left in operator view.
 
 This walkthrough works in simulator mode and needs no instruments.
 
-1. **Create a project.** On the Test Execution tab click **New project** (or press `Ctrl+N`).
+1. **Create a project.** On the Test Execution tab click **New project** (or press `Ctrl+N`). A new project contains one module, *Module 1*, which is selected in the module list.
 2. **Enable development mode** with the construction-cone button.
 3. **Add a step.** Click **Add a new test step** (`+`, or press `Insert`). A new row appears and is selected.
 4. **Configure it** in the **Test Step Configuration** panel on the right:

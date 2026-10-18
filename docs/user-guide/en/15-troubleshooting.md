@@ -7,7 +7,7 @@ Most problems are explained by a message in the **event log**. Open it with the 
 - Windows: `%LOCALAPPDATA%\ATLab\events.log`
 - Linux: `~/.local/share/ATLab/events.log`
 
-The file grows over time; you can delete it while ATLab is closed. Error messages in the step context start with *"Error in step \<n\>: …"*.
+The file grows over time; you can delete it while ATLab is closed. Error messages in the step context start with *"Error in module '\<name\>', step \<n\>: …"*.
 
 ## Start-up and hardware
 
@@ -25,6 +25,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 |---------|------------------|
 | Warning *Connected test hardware is missing required channels* | The project was made for an adapter with more channels. Don't save; open it with the right hardware or the simulator. |
 | Scripts are missing in the script selector | The project's script repository folder does not exist on this computer. ATLab then creates an empty folder at that location (or falls back to the default folder) and logs a message. Point it to the right folder on the Scripting tab (**Change repository folder**) and save the project. Keeping the repository inside the project folder avoids this. |
+| *Unsupported project file format version 0 (expected 2)* | The project was saved by an ATLab version without modules. These files cannot be opened. |
 | *Image not found* / *File not found* | Referenced files were moved. Keep images and attachments in the project folder so relative paths work. |
 
 ## Instruments
@@ -51,7 +52,8 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | Limits changed after entering the nominal value | Intended: limits are recalculated from the **Default Tolerance**. Enter the nominal first, then the limits. |
 | Delay is much longer than expected | The delay is in **seconds**. Use `500ms` for half a second. |
 | *Lower limit is greater than upper limit* | Fix the limits, typically when they are calculated from variables. |
-| *Step … tries to jump to a non-existent step* | The *Jump To* target was deleted. Choose a new target. |
+| *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed). Choose a new target or enable the module. |
+| *Module '…' is disabled. Enable it to start the test from the selected step.* | *Start test execution from selected step* only works in enabled modules. Enable the module or use *Start test execution of selected module*. |
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
 | Shell command returns `0` immediately | On Windows with **Direct Launch**, non-`.exe` files are opened via file association and not awaited. Start the interpreter directly, e.g. `python script.py`. |
 

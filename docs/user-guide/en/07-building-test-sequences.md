@@ -31,7 +31,7 @@ To move steps to another module, cut them, select the target module and paste th
 | **Deviation** | Deviation from the nominal value in percent. |
 | **Result** | ✔ or ✘ after the step has been executed. |
 
-Ignored steps are shown dimmed. Columns can be resized and reordered; the list cannot be sorted. Editing is disabled while a test runs.
+Ignored steps are shown dimmed. Columns can be resized and reordered; the list cannot be sorted. If the columns don't fit, e.g. on small displays, the list scrolls horizontally. Editing is disabled while a test runs.
 
 ### Selecting several steps
 
@@ -55,7 +55,7 @@ Steps are renumbered automatically within their module. Copies get new internal 
 
 ## Test Step Configuration
 
-The top panel on the right edits the basic properties of the selected step. Panels can be collapsed with the arrow in their header; ATLab remembers which panels are open.
+The top panel on the right edits the basic properties of the selected step. If no step is selected, e.g. in an empty module, all panels are disabled and show default values. Panels can be collapsed with the arrow in their header; ATLab remembers which panels are open.
 
 ### Name, limits and unit
 
@@ -120,7 +120,7 @@ After evaluation, ATLab applies the **Pass-Action** if the value is within limit
 | **Continue** | Go to the next step (default). |
 | **Repeat** | Execute the same step again. Useful for "wait until" loops, e.g. repeat on fail until a voltage has settled. |
 | **End Test** | Stop the sequence after this step. The run is evaluated normally. |
-| **Jump To** | Continue with the step selected in the drop-down (forwards or backwards). The target can be in any module; the drop-down lists steps as *Module / No.: Name*. |
+| **Jump To** | Continue with the step selected in the drop-down (forwards or backwards). The target can be in any module; the drop-down lists steps as *Module / No.: Name*; hover an entry to see the full text. |
 | **Show Comment** | Show the comment in a dialog, then continue with the next step. With **Include Result**, the dialog also shows the measured value and its pass/fail state. **Cancel** aborts the test. |
 | **Invert Result** | Flips the step's verdict *after* the action has been chosen. In the Fail-Action this means "a value outside the limits counts as pass"; in the Pass-Action, "a value inside the limits counts as fail". |
 

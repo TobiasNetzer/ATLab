@@ -37,6 +37,7 @@ The guide is also shipped as a PDF with every release package (in the `docs` fol
         -   **Conditional Test Execution**: Repeat a step, jump to another step, or end the test depending on the result.
 -   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232)**, **TCP/IP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
 -   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
+-   **Test Modules**: Organize test sequences into modules (e.g. power supply, programming, LED test) that can be enabled individually or run on their own.
 -   **Scripting Engine**: Create test sequences with predefined multicommand scripts.
 -   **Debugging & Simulation**: Step through sequences in development mode, or work without hardware using the built-in simulator.
 -   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
