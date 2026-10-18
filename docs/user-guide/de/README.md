@@ -31,7 +31,6 @@ Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Proj
 
 - **Fett** gedruckter Text bezeichnet Beschriftungen der deutschen Benutzeroberfläche.
 - `Festbreitenschrift` kennzeichnet Eingaben, Dateinamen oder Werte.
-- Die Bildschirmfotos zeigen die englische Oberfläche einer älteren Version, in der die erste Registerkarte noch **Test Environment** hieß. In der aktuellen deutschen Version heißt sie **Testausführung**.
 - Meldungen im Ereignisprotokoll sowie einige Auswahlwerte (z. B. Framing-Modi, Protokollstufen) erscheinen auch in der deutschen Oberfläche auf Englisch und werden hier unverändert wiedergegeben.
 
 ## PDF-Version

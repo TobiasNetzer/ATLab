@@ -31,7 +31,6 @@ This guide explains how to install ATLab, set up a project, write instrument scr
 
 - **Bold** text refers to labels as they appear in the user interface (English UI).
 - `Monospace` text is something you type, a file name, or a value.
-- Screenshots were taken with an earlier build in which the first tab was called **Test Environment**; in the current version it is labelled **Test Execution**.
 
 ## PDF version
 

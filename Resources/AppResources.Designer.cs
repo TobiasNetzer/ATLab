@@ -98,7 +98,7 @@ public class AppResources
     public static string Label_FailedSteps => ResourceManager.GetString("Label_FailedSteps", resourceCulture) ?? "Failed Steps";
     public static string Label_PassedTests => ResourceManager.GetString("Label_PassedTests", resourceCulture) ?? "Passed Tests";
     public static string Label_Operator => ResourceManager.GetString("Label_Operator", resourceCulture) ?? "Operator";
-    public static string Tab_Testing => ResourceManager.GetString("Tab_Testing", resourceCulture) ?? "Test Environment";
+    public static string Tab_Testing => ResourceManager.GetString("Tab_Testing", resourceCulture) ?? "Test Execution";
     public static string Tab_Configuration => ResourceManager.GetString("Tab_Configuration", resourceCulture) ?? "Configuration";
     public static string Tab_Documentation => ResourceManager.GetString("Tab_Documentation", resourceCulture) ?? "Documentation";
     public static string Tab_Scripting => ResourceManager.GetString("Tab_Scripting", resourceCulture) ?? "Scripting";
