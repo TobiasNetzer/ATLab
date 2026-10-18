@@ -9,8 +9,8 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 | Schaltfläche | Kürzel | Aktion |
 |--------------|--------|--------|
 | **Einzelschritt ausführen** | `F3` | Führt nur den ausgewählten Schritt aus (siehe unten). |
-| **Testausführung ab ausgewähltem Schritt starten** | | Führt die Sequenz ab dem ausgewählten Schritt aus. |
 | **Testausführung des ausgewählten Moduls starten** | | Führt nur die Schritte des ausgewählten Moduls aus, auch wenn das Modul deaktiviert ist. |
+| **Testausführung ab ausgewähltem Schritt starten** | | Führt die Sequenz ab dem ausgewählten Schritt aus. |
 | **Dauertest starten** | | Führt die ganze Sequenz in einer Endlosschleife aus, bis sie gestoppt wird. |
 | **Testausführung starten** (▶) | `F5` | Führt die ganze Sequenz einmal aus. |
 | **Testausführung fortsetzen** | `Enter` | Während eines Laufs sichtbar. Beendet einen sich wiederholenden Schritt (Aktion *Wiederholen*) und fährt mit dem nächsten Schritt fort. |

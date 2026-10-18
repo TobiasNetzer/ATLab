@@ -11,7 +11,6 @@ A project is divided into **modules**, e.g. *Power Supply*, *Programming* or *LE
 | Element | Meaning |
 |---------|---------|
 | Checkbox | Includes the module in test execution. Disabled modules are shown dimmed and are skipped completely. |
-| Number | Number of steps in the module. |
 | Spinner / ✔ / ✘ | A spinning icon while the module is running, otherwise the result of the module after a run (✘ if any executed step failed). |
 
 In development mode the panel offers buttons to **add**, **remove**, **move up / down** and **duplicate** modules, plus fields for the selected module's **name** and **description** (the description is shown as tooltip in the list). A project always contains at least one module. Enabling or disabling modules is only possible in development mode.

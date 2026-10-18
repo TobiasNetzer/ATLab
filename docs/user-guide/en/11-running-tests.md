@@ -9,8 +9,8 @@ Tests are run from the **Test Execution** tab. Operators normally work with deve
 | Toolbar button | Shortcut | Action |
 |----------------|----------|--------|
 | **Execute single step** | `F3` | Runs only the selected step (see below). |
-| **Start test execution from selected step** | | Runs the sequence starting at the selected step. |
 | **Start test execution of selected module** | | Runs only the steps of the selected module, even if the module is disabled. |
+| **Start test execution from selected step** | | Runs the sequence starting at the selected step. |
 | **Start continuous test execution** | | Runs the whole sequence in an endless loop until stopped. |
 | **Start test execution** (▶) | `F5` | Runs the whole sequence once. |
 | **Continue test execution** | `Enter` | Visible during a run. Ends a step that is repeating (Pass/Fail-Action *Repeat*) and proceeds to the next step. |
