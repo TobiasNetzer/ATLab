@@ -2,7 +2,7 @@
 
 Test sequences are built on the **Test Execution** tab with **development mode** enabled (construction-cone button at the right end of the toolbar). In development mode the configuration panels appear to the right of the step list.
 
-![Test Execution tab in development mode](../../Testing_Tab.png)
+![Test Execution tab in development mode](images/Testing_Tab_en.png)
 
 ## The step list
 

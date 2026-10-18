@@ -2,7 +2,7 @@
 
 ATLab is an automated testing framework for electronic assemblies. A test engineer builds a **test sequence**: a list of steps, each of which switches relays, talks to an instrument or the device under test, obtains a numeric result and compares it against limits. An operator then runs that sequence, enters a serial number, and gets a pass/fail verdict plus an optional PDF test report.
 
-![ATLab main window](../../Testing_Tab.png)
+![ATLab main window](images/Testing_Tab_en.png)
 
 ## What ATLab can do
 

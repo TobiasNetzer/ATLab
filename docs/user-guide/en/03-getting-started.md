@@ -25,7 +25,7 @@ While the simulator is active, the status bar shows **No test hardware connected
 
 ## The main window
 
-![Main window](../../Testing_Tab.png)
+![Main window](images/Testing_Tab_en.png)
 
 The window has three areas:
 

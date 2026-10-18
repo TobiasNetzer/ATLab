@@ -2,7 +2,7 @@
 
 A **script** is a named, reusable sequence of instrument commands, for example *"Configure & Query DC Voltage"*. Instead of typing the same SCPI commands into many steps, you write them once as a script and select the script in each step. Variables let one script serve many steps with different settings.
 
-![Scripting tab](../../Scripting_Tab.png)
+![Scripting tab](images/Scripting_Tab_en.png)
 
 ## The script repository
 

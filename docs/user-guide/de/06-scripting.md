@@ -2,7 +2,7 @@
 
 Ein **Skript** ist eine benannte, wiederverwendbare Folge von Gerätebefehlen, z. B. *„Configure & Query DC Voltage“*. Statt dieselben SCPI-Befehle in viele Schritte zu tippen, schreiben Sie sie einmal als Skript und wählen das Skript in jedem Schritt aus. Mit Variablen kann ein Skript viele Schritte mit unterschiedlichen Einstellungen bedienen.
 
-![Registerkarte Skripte](../../Scripting_Tab.png)
+![Registerkarte Skripte](images/Scripting_Tab_de.png)
 
 ## Das Skript-Repository
 

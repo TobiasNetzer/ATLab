@@ -2,7 +2,7 @@
 
 The **Documentation** tab keeps the knowledge needed to run a test together with the test itself: what it does, which equipment is needed, known issues, pictures and reference documents. It also holds the Device Under Test information printed in the test report.
 
-![Documentation tab](../../Documentation_Tab.png)
+![Documentation tab](images/Documentation_Tab_en.png)
 
 All content is saved in the project file. Images and attachments are stored as **paths** (relative if they are inside the project folder), not embedded — keep the files next to the project.
 

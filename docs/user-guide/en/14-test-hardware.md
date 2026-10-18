@@ -2,7 +2,7 @@
 
 The **Test Hardware** tab shows what is connected and lets you check the relay matrix.
 
-![Test Hardware tab](../../Hardware_Tab.png)
+![Test Hardware tab](images/Hardware_Tab_en.png)
 
 ## Test Hardware Interface
 

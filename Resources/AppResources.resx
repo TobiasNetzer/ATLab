@@ -206,7 +206,7 @@
     <value>Test Execution Failed</value>
   </data>
   <data name="Label_SerialNumber" xml:space="preserve">
-    <value>S/N</value>
+    <value>Serial Number</value>
   </data>
   <data name="Label_TestDuration" xml:space="preserve">
     <value>Test Duration</value>
@@ -217,8 +217,8 @@
   <data name="Label_PassedTests" xml:space="preserve">
     <value>Passed Tests</value>
   </data>
-  <data name="Label_User" xml:space="preserve">
-    <value>User</value>
+  <data name="Label_Operator" xml:space="preserve">
+    <value>Operator</value>
   </data>
   <data name="Tab_Testing" xml:space="preserve">
     <value>Test Execution</value>

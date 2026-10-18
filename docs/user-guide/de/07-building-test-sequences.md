@@ -2,7 +2,7 @@
 
 Prüfsequenzen werden auf der Registerkarte **Testausführung** mit aktiviertem **Entwicklungsmodus** erstellt (Baustellen-Schaltfläche am rechten Ende der Werkzeugleiste). Im Entwicklungsmodus erscheinen rechts neben der Schrittliste die Konfigurationsbereiche.
 
-![Registerkarte Testausführung im Entwicklungsmodus](../../Testing_Tab.png)
+![Registerkarte Testausführung im Entwicklungsmodus](images/Testing_Tab_de.png)
 
 ## Die Schrittliste
 

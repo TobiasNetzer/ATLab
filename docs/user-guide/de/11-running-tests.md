@@ -2,7 +2,7 @@
 
 Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbeiten normalerweise mit ausgeschaltetem Entwicklungsmodus und sehen nur Werkzeugleiste, Schrittliste und Ergebnisleiste.
 
-![Einen Test ausführen](../../Testing_Tab_light.png)
+![Einen Test ausführen](images/Testing_Tab_de.png)
 
 ## Steuerung der Ausführung
 
@@ -37,7 +37,7 @@ Ist **Seriennummer abfragen** in den Projekteinstellungen aktiv, erscheint beim 
 - **Starten** beginnt den Test. Die Schaltfläche ist nur aktiv, wenn die Eingabe nicht leer ist und – bei aktivierter Validierung – die Validierungsregeln erfüllt.
 - **Abbrechen** bricht den Start ab.
 
-Die Seriennummer erscheint in der Ergebnisleiste (**S/N**), in den Dateinamen exportierter Ergebnisse und im PDF-Bericht.
+Die Seriennummer erscheint im Feld **Seriennummer** der Ergebnisleiste, in den Dateinamen exportierter Ergebnisse und im PDF-Bericht.
 
 ## Bedienerdialoge
 
@@ -61,11 +61,11 @@ Unterhalb der Schrittliste:
 | **Testdauer** | Verstrichene Zeit des Laufs. |
 | **Fehlgeschlagene Schritte** | Anzahl fehlgeschlagener Schritte in diesem Lauf. Rot hervorgehoben, wenn größer als null. |
 | **Bestandene Tests** | Bestandene Läufe / alle Läufe seit dem Öffnen des Projekts, mit Prozentangabe. Nützlich bei Dauertests. |
+| **Bediener** | Benutzername des Betriebssystems; erscheint auch im Bericht als *Bediener*. |
 | **Prüfling (DUT)** | Gerätename, Revision, Variante und Teilenummer aus der [Registerkarte Dokumentation](13-documentation-tab.md#prüfling-dut), oder `-`. Beim Darüberfahren werden die einzelnen Felder angezeigt. |
-| **Benutzer** | Benutzername des Betriebssystems; erscheint im Bericht als *Bediener*. |
-| **S/N** | Seriennummer des aktuellen Laufs oder `-`. Beim Darüberfahren wird eine lange Seriennummer vollständig angezeigt. |
+| **Seriennummer** | Seriennummer des aktuellen Laufs oder `-`. Beim Darüberfahren wird eine lange Seriennummer vollständig angezeigt. |
 
-Bei schmalem Fenster werden *Prüfling (DUT)* und *S/N* mit „…“ gekürzt.
+Bei schmalem Fenster werden *Prüfling (DUT)* und *Seriennummer* mit „…“ gekürzt.
 
 ### Gesamtergebnis
 

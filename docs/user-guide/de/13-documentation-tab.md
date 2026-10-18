@@ -2,7 +2,7 @@
 
 Die Registerkarte **Dokumentation** hält das Wissen, das zum Ausführen eines Tests nötig ist, zusammen mit dem Test selbst fest: was er tut, welche Ausrüstung benötigt wird, bekannte Probleme, Bilder und Referenzdokumente. Außerdem enthält sie die Prüflingsdaten für den Testbericht.
 
-![Registerkarte Dokumentation](../../Documentation_Tab.png)
+![Registerkarte Dokumentation](images/Documentation_Tab_de.png)
 
 Alle Inhalte werden in der Projektdatei gespeichert. Bilder und Anhänge werden als **Pfade** abgelegt (relativ, wenn sie im Projektordner liegen), nicht eingebettet – bewahren Sie die Dateien neben dem Projekt auf.
 

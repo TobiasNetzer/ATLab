@@ -2,7 +2,7 @@
 
 Tests are run from the **Test Execution** tab. Operators normally work with development mode switched off, so they see only the toolbar, the step list and the result bar.
 
-![Running a test](../../Testing_Tab_light.png)
+![Running a test](images/Testing_Tab_en.png)
 
 ## Execution controls
 
@@ -37,7 +37,7 @@ If **Request Serial Number** is enabled in the project settings, the **Enter Ser
 - **Start** begins the test. It is only enabled when the input is not empty and — if validation is enabled — satisfies the validation rules.
 - **Cancel** aborts the start.
 
-The serial number appears in the result bar (**S/N**), in the file names of exported results and in the PDF report.
+The serial number appears in the result bar's **Serial Number** field, in the file names of exported results and in the PDF report.
 
 ## Operator dialogs
 
@@ -61,11 +61,11 @@ Below the step list:
 | **Test Duration** | Elapsed time of the run. |
 | **Failed Steps** | Number of failed steps in this run. Highlighted in red when greater than zero. |
 | **Passed Tests** | Passed runs / total runs since the project was opened, with percentage. Useful for continuous runs. |
+| **Operator** | Operating-system user name; also printed as *Operator* in the report. |
 | **Device Under Test** | Device name, revision, variant and part number from the [Documentation tab](13-documentation-tab.md#device-under-test), or `-`. Hover for the individual fields. |
-| **User** | Operating-system user name; printed as *Operator* in the report. |
-| **S/N** | Serial number of the current run, or `-`. Hover to see a long serial number in full. |
+| **Serial Number** | Serial number of the current run, or `-`. Hover to see a long serial number in full. |
 
-If the window is narrow, *Device Under Test* and *S/N* are shortened with "…".
+If the window is narrow, *Device Under Test* and *Serial Number* are shortened with "…".
 
 ### Final verdict
 

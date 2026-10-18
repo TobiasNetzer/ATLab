@@ -2,7 +2,7 @@
 
 The **Configuration** tab holds the project-wide setup. Everything here is saved in the project file.
 
-![Configuration tab](../../Configuration_Tab.png)
+![Configuration tab](images/Configuration_Tab_en.png)
 
 It is divided into four panels:
 

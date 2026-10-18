@@ -93,11 +93,11 @@ public class AppResources
     public static string Status_TestCanceled => ResourceManager.GetString("Status_TestCanceled", resourceCulture) ?? "Test Canceled";
     public static string Status_TestExecutionFailed => ResourceManager.GetString("Status_TestExecutionFailed", resourceCulture) ?? "Test Execution Failed";
 
-    public static string Label_SerialNumber => ResourceManager.GetString("Label_SerialNumber", resourceCulture) ?? "S/N";
+    public static string Label_SerialNumber => ResourceManager.GetString("Label_SerialNumber", resourceCulture) ?? "Serial Number";
     public static string Label_TestDuration => ResourceManager.GetString("Label_TestDuration", resourceCulture) ?? "Test Duration";
     public static string Label_FailedSteps => ResourceManager.GetString("Label_FailedSteps", resourceCulture) ?? "Failed Steps";
     public static string Label_PassedTests => ResourceManager.GetString("Label_PassedTests", resourceCulture) ?? "Passed Tests";
-    public static string Label_User => ResourceManager.GetString("Label_User", resourceCulture) ?? "User";
+    public static string Label_Operator => ResourceManager.GetString("Label_Operator", resourceCulture) ?? "Operator";
     public static string Tab_Testing => ResourceManager.GetString("Tab_Testing", resourceCulture) ?? "Test Environment";
     public static string Tab_Configuration => ResourceManager.GetString("Tab_Configuration", resourceCulture) ?? "Configuration";
     public static string Tab_Documentation => ResourceManager.GetString("Tab_Documentation", resourceCulture) ?? "Documentation";

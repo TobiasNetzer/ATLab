@@ -25,7 +25,7 @@ Solange der Simulator aktiv ist, zeigt die Statusleiste in Rot **Keine Test-Hard
 
 ## Das Hauptfenster
 
-![Hauptfenster](../../Testing_Tab.png)
+![Hauptfenster](images/Testing_Tab_de.png)
 
 Das Fenster besteht aus drei Bereichen:
 

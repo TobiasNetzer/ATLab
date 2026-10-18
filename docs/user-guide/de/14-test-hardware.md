@@ -2,7 +2,7 @@
 
 Die Registerkarte **Test-Hardware** zeigt, was angeschlossen ist, und ermöglicht die Prüfung der Relais-Matrix.
 
-![Registerkarte Test-Hardware](../../Hardware_Tab.png)
+![Registerkarte Test-Hardware](images/Hardware_Tab_de.png)
 
 ## Test-Hardware Schnittstelle
 

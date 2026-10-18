@@ -2,7 +2,7 @@
 
 ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugruppen. Ein Prüfingenieur erstellt eine **Prüfsequenz**: eine Liste von Schritten, von denen jeder Relais schaltet, mit einem Messgerät oder dem Prüfling kommuniziert, einen Zahlenwert ermittelt und ihn mit Grenzwerten vergleicht. Ein Bediener führt die Sequenz anschließend aus, gibt eine Seriennummer ein und erhält ein Bestanden/Fehlgeschlagen-Ergebnis sowie optional einen PDF-Testbericht.
 
-![ATLab Hauptfenster](../../Testing_Tab.png)
+![ATLab Hauptfenster](images/Testing_Tab_de.png)
 
 ## Was ATLab kann
 

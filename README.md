@@ -91,19 +91,19 @@ python scripts/build_user_guide_pdf.py --lang en   # or --lang de
 Add and configure external test instruments (Serial, TCP/IP, VISA), project settings, custom channel names and runtime variables.
 → [Configuration Tab](docs/user-guide/en/05-configuration.md)
 
-![image](docs/Configuration_Tab.png)
+![image](docs/user-guide/en/images/Configuration_Tab_en.png)
 
 ### Scripting
 Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script repository shared across projects.
 → [Scripting Tab](docs/user-guide/en/06-scripting.md)
 
-![image](docs/Scripting_Tab.png)
+![image](docs/user-guide/en/images/Scripting_Tab_en.png)
 
 ### Test Execution
 Build the test sequence, configure limits, evaluation sources, response processing and relay routing per step, then run, single-step or debug it.
 → [Building Test Sequences](docs/user-guide/en/07-building-test-sequences.md) · [Running Tests](docs/user-guide/en/11-running-tests.md)
 
-![image](docs/Testing_Tab.png)
+![image](docs/user-guide/en/images/Testing_Tab_en.png)
 
 Depending on the project settings, a test report is generated automatically when the test completes:
 - [Test Report Example 2026-001_2026-04-21_20-57-52](docs/2026-001_2026-04-21_20-57-52.pdf)
@@ -113,13 +113,13 @@ Depending on the project settings, a test report is generated automatically when
 Keep notes, images, attachments and DUT information directly within the project.
 → [Documentation Tab](docs/user-guide/en/13-documentation-tab.md)
 
-![image](docs/Documentation_Tab.png)
+![image](docs/user-guide/en/images/Documentation_Tab_en.png)
 
 ### Test Hardware
 View information about the attached Test Interface Adapter, its channels and interfaces, and run the relay matrix self-test.
 → [Test Hardware Tab](docs/user-guide/en/14-test-hardware.md)
 
-![image](docs/Hardware_Tab.png)
+![image](docs/user-guide/en/images/Hardware_Tab_en.png)
 
 ## License
 

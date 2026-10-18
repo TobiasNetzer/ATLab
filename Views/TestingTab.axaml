@@ -643,9 +643,9 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" MaxWidth="300"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
@@ -715,6 +715,19 @@
                 
                 <StackPanel Grid.Column="6"
                             Spacing="2">
+                    <TextBlock Classes="Small" Text="{helpers:Localize Label_Operator}"/>
+                    <TextBlock Classes="Small" Text="{Binding User}"/>
+                </StackPanel>
+
+                <Separator Grid.Column="7"
+                           Width="2"
+                           Height="40"
+                           Margin="10 0 10 0"
+                           CornerRadius="1"
+                           Background="{DynamicResource MutedColor}"/>
+
+                <StackPanel Grid.Column="8"
+                            Spacing="2">
                     <ToolTip.Tip>
                         <Grid ColumnDefinitions="Auto,*"
                               RowDefinitions="Auto,Auto,Auto,Auto"
@@ -735,20 +748,7 @@
                     <TextBlock Classes="Small" Text="{Binding DeviceUnderTestSummary}"
                                TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                
-                <Separator Grid.Column="7"
-                           Width="2"
-                           Height="40"
-                           Margin="10 0 10 0"
-                           CornerRadius="1"
-                           Background="{DynamicResource MutedColor}"/>
-                
-                <StackPanel Grid.Column="8"
-                            Spacing="2">
-                    <TextBlock Classes="Small" Text="{helpers:Localize Label_User}"/>
-                    <TextBlock Classes="Small" Text="{Binding User}"/>
-                </StackPanel>
-                
+
                 <Separator Grid.Column="9"
                            Width="2"
                            Height="40"

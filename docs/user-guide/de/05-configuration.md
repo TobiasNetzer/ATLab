@@ -2,7 +2,7 @@
 
 Die Registerkarte **Konfiguration** enthält die projektweiten Einstellungen. Alles hier wird in der Projektdatei gespeichert.
 
-![Registerkarte Konfiguration](../../Configuration_Tab.png)
+![Registerkarte Konfiguration](images/Configuration_Tab_de.png)
 
 Sie besteht aus vier Bereichen:
 
