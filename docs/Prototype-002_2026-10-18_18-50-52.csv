@@ -1,0 +1,77 @@
+﻿Module	Step	Name	Lower Limit	Measured Value	Upper Limit	Unit	Deviation (%)	Result
+Setup	2	VIN 12V?	10.8	12.031	13.2	V	0.26	Pass
+Setup	3	U1 VOUT 3V3?	2.97	3.302	3.63	V	0.06	Pass
+Setup	4	D2 Forward Voltage	1.71	1.903	2.09	V	0.16	Pass
+Setup	5	R1 Voltage Drop	1.17	1.332	1.43	V	2.46	Pass
+Setup	6	D2 Forward Current	0.00117	0.001332	0.00143	A	2.46	Pass
+Setup	10	Segment A ON?	2.97	3.293	3.63	V	-0.21	Pass
+Setup	12	Segment B ON?	2.97	3.275	3.63	V	-0.76	Pass
+Setup	14	Segment C ON?	2.97	3.265	3.63	V	-1.06	Pass
+Setup	16	Segment D ON?	2.97	3.273	3.63	V	-0.82	Pass
+Setup	18	Segment E ON?	2.97	3.286	3.63	V	-0.42	Pass
+Setup	20	Segment F ON?	2.97	3.299	3.63	V	-0.03	Pass
+Setup	22	Segment G ON?	2.97	3.264	3.63	V	-1.09	Pass
+Setup	23	### Read DIP Switches ###	0	0	255		-100	Pass
+LED Test	1	### DIP Switch 1 ON? ###	0	0	0		0	Pass
+LED Test	4	D3 Red Forward Voltage	1.53	1.697	1.87	V	-0.18	Pass
+LED Test	5	R22 Voltage Drop	1.35	1.456	1.65	V	-2.93	Pass
+LED Test	6	D3 Red Forward Current	0.001143	0.001213333333	0.001397	A	-4.46	Pass
+LED Test	8	D3 Green Forward Voltage	2.07	2.285	2.53	V	-0.65	Pass
+LED Test	9	R23 Voltage Drop	0.9	0.863	1.1	V	-13.7	Fail
+LED Test	10	D3 Green Forward Current	0.000747	0.000719166667	0.000913	A	-13.35	Fail
+LED Test	12	D3 Blue Forward Voltage	2.25	2.531	2.75	V	1.24	Pass
+LED Test	13	R24 Voltage Drop	0.675	0.752	0.825	V	0.27	Pass
+LED Test	14	D3 Green Forward Current	0.000576	0.000626666667	0.000704	A	-2.08	Pass
+LED Test	15	RGB LED User Response	1	1	1		0	Pass
+Button Test	1	### DIP Switch 2 ON? ###	0	0	0		0	Pass
+Button Test	3	Button 1 High?	2.97	3.252	3.63	V	-1.45	Pass
+Button Test	4	Button 1 Low?	-0.2	0.056	0.2	V	0.06	Pass
+Button Test	5	Button 2 High?	2.97	3.287	3.63	V	-0.39	Pass
+Button Test	6	Button 1 Low?	-0.2	0.049	0.2	V	0.05	Pass
+Voltage Divider Test	1	### DIP Switch 3 ON? ###	0	0	0		0	Pass
+Voltage Divider Test	3	Divider with 680R	0.189	0.22	0.231	V	4.76	Pass
+Voltage Divider Test	4	Divider with 1k2	0.315	0.368	0.385	V	5.14	Pass
+Voltage Divider Test	5	Divider with 2k2	0.531	0.63	0.649	V	6.78	Pass
+Voltage Divider Test	6	Divider with 3k9	0.828	0.99	1.012	V	7.61	Pass
+Voltage Divider Test	7	Divider with 6k8	1.17	1.23	1.43	V	-5.38	Pass
+Adjust Potentiometer	1	### DIP Switch 4 ON? ###	0	0	0		0	Pass
+Temperature Sensor	1	### DIP Switch 5 ON? ###	0	0	0		0	Pass
+Temperature Sensor	3	Temperature Sensor VOUT	0.693	0.74	0.847	V	-3.9	Pass
+Temperature Sensor	4	Temperature	22.5	24	27.5	°C	-4	Pass
+I2C DAC	1	### DIP Switch 6 ON? ###	0	0	0		0	Pass
+I2C DAC	3	Set I2C DAC to 0.5V	1	1	1		0	Pass
+I2C DAC	4	Measure DAC Output 0.5V?	0.45	0.504	0.55	V	0.8	Pass
+I2C DAC	5	Set I2C DAC to 1.0V	1	1	1		0	Pass
+I2C DAC	6	Measure DAC Output 1.0V?	0.9	1.024	1.1	V	2.4	Pass
+I2C DAC	7	Set I2C DAC to 1.5V	1	1	1		0	Pass
+I2C DAC	8	Measure DAC Output 1.5V?	1.35	1.532	1.65	V	2.13	Pass
+I2C DAC	9	Set I2C DAC to 2.0V	1	1	1		0	Pass
+I2C DAC	10	Measure DAC Output 2.0V?	1.8	2.065	2.2	V	3.25	Pass
+I2C DAC	11	Set I2C DAC to 2.5V	1	1	1		0	Pass
+I2C DAC	12	Measure DAC Output 2.5V?	2.25	2.515	2.75	V	0.6	Pass
+I2C DAC	13	Set I2C DAC to 3.0V	1	1	1		0	Pass
+I2C DAC	14	Measure DAC Output 3.0V?	2.7	3.121	3.3	V	4.03	Pass
+Program MCU	1	### DIP Switch 7 ON? ###	0	0	0		0	Pass
+Program MCU	3	Program MCU	0	0	0		0	Pass
+Program MCU	4	Get FW-Version	1.2	1.2	1.2		0	Pass
+Test MCU	1	### DIP Switch 8 ON? ###	0	0	0		0	Pass
+Test MCU	3	Read POT2 Value from MCU	1350	1502	1650	mV	0.13	Pass
+Test MCU	4	Configure MCU DAC to 0.5V	1	1	1		0	Pass
+Test MCU	5	Read DAC Output from MCU ADC	450	505	550	mV	1	Pass
+Test MCU	6	Measure DAC Output Voltage	0.45	0.507	0.55	V	1.4	Pass
+Test MCU	7	Configure MCU DAC to 1.0V	1	1	1		0	Pass
+Test MCU	8	Read DAC Output from MCU ADC	900	1005	1100	mV	0.5	Pass
+Test MCU	9	Measure DAC Output Voltage	0.9	1.002	1.1	V	0.2	Pass
+Test MCU	10	Configure MCU DAC to 1.5V	1	1	1		0	Pass
+Test MCU	11	Read DAC Output from MCU ADC	1350	1510	1650	mV	0.67	Pass
+Test MCU	12	Measure DAC Output Voltage	1.35	1.514	1.65	V	0.93	Pass
+Test MCU	13	Configure MCU DAC to 2.0V	1	1	1		0	Pass
+Test MCU	14	Read DAC Output from MCU ADC	1800	2015	2200	mV	0.75	Pass
+Test MCU	15	Measure DAC Output Voltage	1.8	2.005	2.2	V	0.25	Pass
+Test MCU	16	Configure MCU DAC to 2.5V	1	1	1		0	Pass
+Test MCU	17	Read DAC Output from MCU ADC	2250	2507	2750	mV	0.28	Pass
+Test MCU	18	Measure DAC Output Voltage	2.25	2.509	2.75	V	0.36	Pass
+Test MCU	19	Configure MCU DAC to 3.0V	1	1	1		0	Pass
+Test MCU	20	Read DAC Output from MCU ADC	2700	3020	3300	mV	0.67	Pass
+Test MCU	21	Measure DAC Output Voltage	2.7	3.006	3.3	V	0.2	Pass
+Test MCU	22	Measure Timer Frequency	4.5	4.89	5.5	Hz	-2.2	Pass

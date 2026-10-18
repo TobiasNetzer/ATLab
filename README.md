@@ -106,9 +106,9 @@ Build the test sequence, configure limits, evaluation sources, response processi
 
 ![image](docs/user-guide/en/images/Testing_Tab_en.png)
 
-Depending on the project settings, a test report is generated automatically when the test completes:
-- [Test Report Example 2026-001_2026-04-21_20-57-52](docs/2026-001_2026-04-21_20-57-52.pdf)
-- [Test Report Example 2026-002_2026-04-21_21-01-42](docs/2026-002_2026-04-21_21-01-42.pdf)
+Depending on the project settings, a test report and a data file are generated automatically when the test completes:
+- Example Prototype-001_2026-10-18_18-50-00: [PDF report](docs/Prototype-001_2026-10-18_18-50-00.pdf) · [CSV data](docs/Prototype-001_2026-10-18_18-50-00.csv)
+- Example Prototype-002_2026-10-18_18-50-52: [PDF report](docs/Prototype-002_2026-10-18_18-50-52.pdf) · [CSV data](docs/Prototype-002_2026-10-18_18-50-52.csv)
 
 ### Documentation
 Keep notes, images, attachments and DUT information directly within the project.

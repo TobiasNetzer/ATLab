@@ -27,7 +27,7 @@ Jeder Export erzeugt eine Meldung im Ereignisprotokoll, z. B. `PDF exported to '
 <Seriennummer>_<JJJJ-MM-TT>_<HH-mm-ss>.pdf
 ```
 
-Beispiel: `2026-001_2026-04-21_20-57-52.pdf`. Vermeiden Sie in Seriennummern Zeichen, die in Dateinamen nicht erlaubt sind (`\ / : * ? " < > |`).
+Beispiel: `Prototype-001_2026-10-18_18-50-00.pdf`. Vermeiden Sie in Seriennummern Zeichen, die in Dateinamen nicht erlaubt sind (`\ / : * ? " < > |`).
 
 ## Welche Schritte enthalten sind
 
@@ -57,7 +57,7 @@ Die Spaltenüberschriften und Werte sind unabhängig von der Oberflächensprache
 
 ## PDF-Testbericht
 
-Der Bericht wird in der aktuellen Oberflächensprache (Deutsch oder Englisch) erzeugt. Zwei Beispielberichte liegen im Repository: [2026-001](../../2026-001_2026-04-21_20-57-52.pdf) und [2026-002](../../2026-002_2026-04-21_21-01-42.pdf).
+Der Bericht wird in der aktuellen Oberflächensprache (Deutsch oder Englisch) erzeugt. Zwei Beispieldurchläufe liegen im Repository, jeweils mit Bericht und Datendatei: Prototype-001 ([PDF](../../Prototype-001_2026-10-18_18-50-00.pdf), [CSV](../../Prototype-001_2026-10-18_18-50-00.csv)) und Prototype-002 ([PDF](../../Prototype-002_2026-10-18_18-50-52.pdf), [CSV](../../Prototype-002_2026-10-18_18-50-52.csv)).
 
 Inhalt:
 

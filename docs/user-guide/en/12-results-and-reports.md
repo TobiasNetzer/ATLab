@@ -27,7 +27,7 @@ Each export produces a message in the event log, e.g. `PDF exported to 'D:\Resul
 <SerialNumber>_<yyyy-MM-dd>_<HH-mm-ss>.pdf
 ```
 
-Example: `2026-001_2026-04-21_20-57-52.pdf`. Avoid characters that are not allowed in file names (`\ / : * ? " < > |`) in serial numbers.
+Example: `Prototype-001_2026-10-18_18-50-00.pdf`. Avoid characters that are not allowed in file names (`\ / : * ? " < > |`) in serial numbers.
 
 ## Which steps are included
 
@@ -57,7 +57,7 @@ Numbers are written without SI prefixes, so a value shown as `1,3mA` appears as 
 
 ## PDF test report
 
-The report is generated in the current UI language (English or German). Two example reports are included in the repository: [2026-001](../../2026-001_2026-04-21_20-57-52.pdf) and [2026-002](../../2026-002_2026-04-21_21-01-42.pdf).
+The report is generated in the current UI language (English or German). Two example runs are included in the repository, each with report and data file: Prototype-001 ([PDF](../../Prototype-001_2026-10-18_18-50-00.pdf), [CSV](../../Prototype-001_2026-10-18_18-50-00.csv)) and Prototype-002 ([PDF](../../Prototype-002_2026-10-18_18-50-52.pdf), [CSV](../../Prototype-002_2026-10-18_18-50-52.csv)).
 
 Contents:
 

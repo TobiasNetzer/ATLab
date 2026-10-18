@@ -123,13 +123,14 @@
                                        Text="{Binding TestSteps.Count}"
                                        Classes="Small"
                                        Foreground="{DynamicResource MutedColor}"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center"
+                                       IsVisible="False"/>
 
                             <Panel Grid.Column="3"
                                    Width="25"
                                    VerticalAlignment="Center">
-                                <ContentControl Content="{LucideIconContent Play}"
-                                                Foreground="{DynamicResource InfoColor}"
+                                <!-- Same spinner ShadUI shows for ButtonAssist.ShowProgress -->
+                                <shadui:Loading Width="15" Height="15"
                                                 IsVisible="{Binding IsRunning}"/>
                                 <Image Width="15" Height="15"
                                        Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}">

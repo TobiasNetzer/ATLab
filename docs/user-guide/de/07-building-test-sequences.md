@@ -12,7 +12,7 @@ Ein Projekt ist in **Module** gegliedert, z. B. *Spannungsversorgung*, *Programm
 |---------|-----------|
 | Kontrollkästchen | Bezieht das Modul in die Testausführung ein. Deaktivierte Module werden abgeblendet dargestellt und vollständig übersprungen. |
 | Zahl | Anzahl der Schritte im Modul. |
-| ▶ / ✔ / ✘ | Das Modul wird gerade ausgeführt, bzw. das Ergebnis des Moduls nach einem Durchlauf (✘, wenn ein ausgeführter Schritt fehlgeschlagen ist). |
+| Ladesymbol / ✔ / ✘ | Ein drehendes Symbol, während das Modul ausgeführt wird, sonst das Ergebnis des Moduls nach einem Durchlauf (✘, wenn ein ausgeführter Schritt fehlgeschlagen ist). |
 
 Im Entwicklungsmodus bietet der Bereich Schaltflächen zum **Hinzufügen**, **Entfernen**, **Nach oben / unten verschieben** und **Duplizieren** von Modulen sowie Felder für **Name** und **Beschreibung** des ausgewählten Moduls (die Beschreibung erscheint als Tooltip in der Liste). Ein Projekt enthält immer mindestens ein Modul. Module können nur im Entwicklungsmodus aktiviert oder deaktiviert werden.
 
