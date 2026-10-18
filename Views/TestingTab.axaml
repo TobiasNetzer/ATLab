@@ -206,20 +206,6 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
-                        ToolTip.Tip="{helpers:Localize ToolTip_StartTestFromSelectedStep}"
-                        Command="{Binding StartTestFromSelectionCommand}"
-                        shadui:ButtonAssist.ShowProgress="{Binding StartFromStepBusy}"
-                        IsEnabled="{Binding IsDevelopmentMode}"
-                        Width="40"
-                        Height="40">
-                        <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent ArrowDownFromLine}"/>
-                        </shadui:ButtonAssist.Icon>
-                    </Button>
-                    
-                    <Button
-                        Background="{DynamicResource ButtonBackground}"
-                        Classes="Icon"
                         ToolTip.Tip="{helpers:Localize ToolTip_StartModuleTest}"
                         Command="{Binding StartModuleTestCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartModuleTestBusy}"
@@ -228,6 +214,20 @@
                         Height="40">
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent ListVideo}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StartTestFromSelectedStep}"
+                        Command="{Binding StartTestFromSelectionCommand}"
+                        shadui:ButtonAssist.ShowProgress="{Binding StartFromStepBusy}"
+                        IsEnabled="{Binding IsDevelopmentMode}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent ArrowDownFromLine}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
 
