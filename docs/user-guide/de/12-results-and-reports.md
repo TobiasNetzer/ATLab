@@ -43,7 +43,8 @@ Trotz der Endung `.csv` ist die Datei **tabulatorgetrennt** (UTF-8). Sie lässt 
 
 | Spalte | Inhalt |
 |--------|--------|
-| Step | Schrittnummer |
+| Module | Name des Moduls |
+| Step | Schrittnummer innerhalb des Moduls |
 | Name | Name des Schritts |
 | Lower Limit | Untergrenze (reine Zahl, `.` als Dezimaltrennzeichen) |
 | Measured Value | Messwert oder `Timeout` / `Overflow` |
@@ -68,7 +69,7 @@ Inhalt:
    - *Test-Hardware*: Name, Seriennummer und Firmware-Version des Test Interface Adapters (`Simulator` / `N/A` im Simulatormodus).
    - *Prüfmittel*: jedes Gerät mit aktivierter Option **In Testbericht aufnehmen**, mit der Antwort auf seine **Identifikationsabfrage** (z. B. den `*IDN?`-String) oder `-`, wenn es nicht geantwortet hat.
 6. **Gesamtergebnis** – ein großes **BESTANDEN** (grün) oder **FEHLGESCHLAGEN** (rot).
-7. **Ergebnistabelle** – Schritt, Name, Untergrenze, Messwert, Obergrenze und ein Bestanden/Fehlgeschlagen-Symbol.
+7. **Ergebnistabelle** – Schritt, Name, Untergrenze, Messwert, Obergrenze und ein Bestanden/Fehlgeschlagen-Symbol, gruppiert nach Modulen mit einer Überschriftszeile je Modul.
 8. **Fußzeile** – ATLab-Version und Seitenzahl.
 
 Das Gesamtergebnis im Bericht wird aus den **im Bericht enthaltenen** Schritten berechnet. Fehlgeschlagene Schritte, die vom Export ausgeschlossen sind, erscheinen darin daher nicht.

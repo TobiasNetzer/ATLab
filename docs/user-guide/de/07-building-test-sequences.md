@@ -4,6 +4,22 @@ Prüfsequenzen werden auf der Registerkarte **Testausführung** mit aktiviertem 
 
 ![Registerkarte Testausführung im Entwicklungsmodus](images/Testing_Tab_de.png)
 
+## Module
+
+Ein Projekt ist in **Module** gegliedert, z. B. *Spannungsversorgung*, *Programmierung* oder *LED-Test*. Jedes Modul hat eine eigene Liste von Testschritten. Der Bereich **Module** links neben der Schrittliste zeigt alle Module des Projekts; ein Klick auf ein Modul zeigt dessen Schritte.
+
+| Element | Bedeutung |
+|---------|-----------|
+| Kontrollkästchen | Bezieht das Modul in die Testausführung ein. Deaktivierte Module werden abgeblendet dargestellt und vollständig übersprungen. |
+| Zahl | Anzahl der Schritte im Modul. |
+| ▶ / ✔ / ✘ | Das Modul wird gerade ausgeführt, bzw. das Ergebnis des Moduls nach einem Durchlauf (✘, wenn ein ausgeführter Schritt fehlgeschlagen ist). |
+
+Im Entwicklungsmodus bietet der Bereich Schaltflächen zum **Hinzufügen**, **Entfernen**, **Nach oben / unten verschieben** und **Duplizieren** von Modulen sowie Felder für **Name** und **Beschreibung** des ausgewählten Moduls (die Beschreibung erscheint als Tooltip in der Liste). Ein Projekt enthält immer mindestens ein Modul. Module können nur im Entwicklungsmodus aktiviert oder deaktiviert werden.
+
+Module werden in der Reihenfolge der Liste ausgeführt; die Schritte aller aktivierten Module bilden eine durchgehende Sequenz. Die Schrittnummerierung beginnt in jedem Modul bei 1.
+
+Um Schritte in ein anderes Modul zu verschieben, schneiden Sie sie aus, wählen das Zielmodul und fügen sie ein.
+
 ## Die Schrittliste
 
 | Spalte | Inhalt |
@@ -33,7 +49,7 @@ Mit `Strg`+Klick und `Umschalt`+Klick wählen Sie mehrere Schritte aus. Der Konf
 | **Ausgewählte Testschritte kopieren** | Kopieren | `Strg+C` | Kopiert die Schritte. |
 | **Testschritte einfügen** | Einfügen | `Strg+V` | Fügt die kopierten/ausgeschnittenen Schritte nach der Auswahl ein. |
 
-Schritte werden automatisch neu nummeriert. Kopien erhalten neue interne IDs; *Springe zu*-Ziele in kopierten Schritten zeigen daher weiterhin auf die Originalschritte.
+Schritte werden innerhalb ihres Moduls automatisch neu nummeriert. Kopien erhalten neue interne IDs; *Springe zu*-Ziele in kopierten Schritten zeigen daher weiterhin auf die Originalschritte. Wird ein ganzes Modul dupliziert, werden Sprünge zwischen Schritten innerhalb dieses Moduls auf die kopierten Schritte umgelenkt.
 
 ---
 
@@ -104,7 +120,7 @@ Nach der Bewertung wendet ATLab die **Bestanden-Aktion** an, wenn der Wert inner
 | **Fortfahren** | Mit dem nächsten Schritt weitermachen (Standard). |
 | **Wiederholen** | Denselben Schritt erneut ausführen. Nützlich für „Warten bis“-Schleifen, z. B. bei Fehlschlag wiederholen, bis sich eine Spannung eingestellt hat. |
 | **Test beenden** | Die Sequenz nach diesem Schritt beenden. Der Lauf wird normal bewertet. |
-| **Springe zu** | Mit dem in der Auswahlliste gewählten Schritt weitermachen (vorwärts oder rückwärts). |
+| **Springe zu** | Mit dem in der Auswahlliste gewählten Schritt weitermachen (vorwärts oder rückwärts). Das Ziel kann in einem beliebigen Modul liegen; die Auswahlliste zeigt Schritte als *Modul / Nr.: Name*. |
 | **Kommentar anzeigen** | Den Kommentar in einem Dialog anzeigen, dann mit dem nächsten Schritt weitermachen. Mit **Ergebnis einbinden** zeigt der Dialog zusätzlich den Messwert und dessen Bewertung. **Abbrechen** bricht den Test ab. |
 | **Ergebnis invertieren** | Kehrt die Bewertung des Schritts um, *nachdem* die Aktion gewählt wurde. In der Fehlgeschlagen-Aktion bedeutet das „ein Wert außerhalb der Grenzen gilt als bestanden“, in der Bestanden-Aktion „ein Wert innerhalb der Grenzen gilt als fehlgeschlagen“. |
 
@@ -112,7 +128,7 @@ Hinweise:
 
 - Ein sich wiederholender Schritt kann mit der Schaltfläche **Testausführung fortsetzen** in der Werkzeugleiste (oder `Enter`) manuell beendet werden. Die Sequenz fährt dann mit dem nächsten Schritt fort.
 - Ohne Verzögerung laufen wiederholte Schritte so schnell wie möglich (mit einer minimalen Pause, damit die Oberfläche reagiert). Eine Verzögerung begrenzt die Abfragerate.
-- Ein Sprung zu einem gelöschten oder ignorierten Schritt protokolliert einen Fehler, markiert den Schritt als fehlgeschlagen und beendet den Test.
+- Ein Sprung zu einem gelöschten oder ignorierten Schritt oder zu einem Schritt in einem deaktivierten Modul protokolliert einen Fehler, markiert den Schritt als fehlgeschlagen und beendet den Test.
 - Jede Wiederholung überschreibt das vorherige Ergebnis; nur das letzte zählt.
 
 **Beispiel – warten, bis eine Versorgung hochgefahren ist:**

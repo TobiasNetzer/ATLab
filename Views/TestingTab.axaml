@@ -220,6 +220,20 @@
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_StartModuleTest}"
+                        Command="{Binding StartModuleTestCommand}"
+                        shadui:ButtonAssist.ShowProgress="{Binding StartModuleTestBusy}"
+                        IsEnabled="{Binding IsDevelopmentMode}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent ListVideo}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
                         ToolTip.Tip="{helpers:Localize ToolTip_StartContinuousExecution}"
                         Command="{Binding StartTestRepeatCommand}"
                         shadui:ButtonAssist.ShowProgress="{Binding StartRepeatTestBusy}"
@@ -360,154 +374,165 @@
                               Margin="10 10 10 0"
                               IsVisible="{Binding StatusService.IsVisible}"/>
         
-        <DataGrid Grid.Column="0" Grid.Row="2"
-                  x:Name="TestStepPresenter"
-                  ItemsSource="{Binding TestSteps}"
-                  SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
-                  Margin="10"
-                  IsReadOnly="True"
-                  CanUserReorderColumns="True"
-                  CanUserResizeColumns="True"
-                  CanUserSortColumns="False"
-                  GridLinesVisibility="All"
-                  HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  SelectionMode="Extended"
-                  BorderThickness="2"
-                  BorderBrush="{DynamicResource OutlineColor}"
-                  behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
-                  IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
+        <Grid Grid.Column="0" Grid.Row="2"
+              ColumnDefinitions="250,Auto,*"
+              Margin="10">
             
-            <DataGrid.Styles>
-                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-                    <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
-                    <Setter Property="Opacity" Value="1" />
-                </Style>
-                
-                <Style Selector="DataGridRow">
-                    <Setter Property="Opacity"
-                            Value="{ReflectionBinding DataContext.TestStep.IsIgnoreStep,
-                            RelativeSource={RelativeSource Self},
-                            Converter={StaticResource BoolToOpacityConverter}}" />
-                </Style>
-            </DataGrid.Styles>
+            <controls:ModuleExplorer Grid.Column="0"/>
             
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="70">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vm:TestStepViewModel">
-                            <StackPanel Orientation="Horizontal"
-                                        Spacing="2"
-                                        VerticalAlignment="Center">
-                                
-                                <Border Width="4"
-                                        Height="35"
-                                        Background="{Binding TestStep.StepBrush}"
-                                        VerticalAlignment="Top"
-                                        Margin="-19 -8 0 -8"/>
-
-                                <TextBlock Text="{Binding TestStep.Number}"
-                                           VerticalAlignment="Center"/>
-
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{helpers:Localize Header_Name}" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
-                
-                <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="140">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vm:TestStepViewModel">
-                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
-                                <TextBlock.Text>
-                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
-                                        <Binding Path="TestStep.LowerLimit"/>
-                                        <Binding Path="TestStep.Unit"/>
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="{helpers:Localize Header_NominalValue}" MinWidth="140">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vm:TestStepViewModel">
-                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
-                                <TextBlock.Text>
-                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
-                                        <Binding Path="TestStep.NominalValue"/>
-                                        <Binding Path="TestStep.Unit"/>
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="{helpers:Localize Header_UpperLimit}" MinWidth="140">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vm:TestStepViewModel">
-                            <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
-                                <TextBlock.Text>
-                                    <MultiBinding Converter="{StaticResource UnitFormatConverter}">
-                                        <Binding Path="TestStep.UpperLimit"/>
-                                        <Binding Path="TestStep.Unit"/>
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="{helpers:Localize Header_MeasuredValue}" MinWidth="140">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="vm:TestStepViewModel">
-                            <TextBlock Text="{Binding Result}" 
-                                       Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
-                                       VerticalAlignment="Center" Margin="12,0,0,0"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{helpers:Localize Header_Deviation}" Binding="{Binding Deviation}" MinWidth="110" />
-                <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="80">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="15" Height="15"
-                                   Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}"
-                                   IsVisible="{Binding IsExecuted}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
+            <GridSplitter Grid.Column="1"
+                          Width="10"
+                          Background="Transparent"
+                          ResizeDirection="Columns"/>
         
-            <DataGrid.ContextMenu>
-                <ContextMenu IsEnabled="{Binding IsDevelopmentMode}">
-                    <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding AddTestStepCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_Remove}" Command="{Binding RemoveTestStepsCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_MoveUp}" Command="{Binding MoveStepUpCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_MoveDown}" Command="{Binding MoveStepDownCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_Duplicate}" Command="{Binding DuplicateTestStepsCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_Cut}" Command="{Binding CutTestStepsCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_Copy}" Command="{Binding CopyTestStepsCommand}"/>
-                    <MenuItem Header="{helpers:Localize Menu_Paste}" Command="{Binding PasteTestStepsCommand}"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
+            <DataGrid Grid.Column="2"
+                      x:Name="TestStepPresenter"
+                      ItemsSource="{Binding TestSteps}"
+                      SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      GridLinesVisibility="All"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      SelectionMode="Extended"
+                      BorderThickness="2"
+                      BorderBrush="{DynamicResource OutlineColor}"
+                      behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
+                      IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
             
-            <DataGrid.KeyBindings>
-                <KeyBinding Gesture="Insert"
-                            Command="{Binding AddTestStepCommand}" />
-                <KeyBinding Gesture="Delete"
-                            Command="{Binding RemoveTestStepsCommand}" />
-                <KeyBinding Gesture="Ctrl+C"
-                            Command="{Binding CopyTestStepsCommand}" />
-                <KeyBinding Gesture="Ctrl+X"
-                            Command="{Binding CutTestStepsCommand}" />
-                <KeyBinding Gesture="Ctrl+V"
-                            Command="{Binding PasteTestStepsCommand}" />
-            </DataGrid.KeyBindings>
+                <DataGrid.Styles>
+                    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                        <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
+                
+                    <Style Selector="DataGridRow">
+                        <Setter Property="Opacity"
+                                Value="{ReflectionBinding DataContext.TestStep.IsIgnoreStep,
+                                RelativeSource={RelativeSource Self},
+                                Converter={StaticResource BoolToOpacityConverter}}" />
+                    </Style>
+                </DataGrid.Styles>
             
-        </DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="2"
+                                            VerticalAlignment="Center">
+                                
+                                    <Border Width="4"
+                                            Height="35"
+                                            Background="{Binding TestStep.StepBrush}"
+                                            VerticalAlignment="Top"
+                                            Margin="-19 -8 0 -8"/>
+
+                                    <TextBlock Text="{Binding TestStep.Number}"
+                                               VerticalAlignment="Center"/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="{helpers:Localize Header_Name}" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
+                
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                            <Binding Path="TestStep.LowerLimit"/>
+                                            <Binding Path="TestStep.Unit"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_NominalValue}" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                            <Binding Path="TestStep.NominalValue"/>
+                                            <Binding Path="TestStep.Unit"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_UpperLimit}" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource UnitFormatConverter}">
+                                            <Binding Path="TestStep.UpperLimit"/>
+                                            <Binding Path="TestStep.Unit"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_MeasuredValue}" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <TextBlock Text="{Binding Result}" 
+                                           Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
+                                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="{helpers:Localize Header_Deviation}" Binding="{Binding Deviation}" MinWidth="110" />
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="15" Height="15"
+                                       Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}"
+                                       IsVisible="{Binding IsExecuted}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+        
+                <DataGrid.ContextMenu>
+                    <ContextMenu IsEnabled="{Binding IsDevelopmentMode}">
+                        <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding AddTestStepCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_Remove}" Command="{Binding RemoveTestStepsCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_MoveUp}" Command="{Binding MoveStepUpCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_MoveDown}" Command="{Binding MoveStepDownCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_Duplicate}" Command="{Binding DuplicateTestStepsCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_Cut}" Command="{Binding CutTestStepsCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_Copy}" Command="{Binding CopyTestStepsCommand}"/>
+                        <MenuItem Header="{helpers:Localize Menu_Paste}" Command="{Binding PasteTestStepsCommand}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            
+                <DataGrid.KeyBindings>
+                    <KeyBinding Gesture="Insert"
+                                Command="{Binding AddTestStepCommand}" />
+                    <KeyBinding Gesture="Delete"
+                                Command="{Binding RemoveTestStepsCommand}" />
+                    <KeyBinding Gesture="Ctrl+C"
+                                Command="{Binding CopyTestStepsCommand}" />
+                    <KeyBinding Gesture="Ctrl+X"
+                                Command="{Binding CutTestStepsCommand}" />
+                    <KeyBinding Gesture="Ctrl+V"
+                                Command="{Binding PasteTestStepsCommand}" />
+                </DataGrid.KeyBindings>
+            
+            </DataGrid>
+        </Grid>
         
         <Border Grid.Column="0" Grid.Row="3"
                 BorderThickness="2"
@@ -577,6 +602,12 @@
                            FontWeight="Bold"
                            FontSize="24"/>
                 <TextBlock Text=": "
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text="{Binding SelectedModule?.Module.Name, FallbackValue=''}"
+                           FontWeight="Bold"
+                           FontSize="24"/>
+                <TextBlock Text=" · "
                            FontWeight="Bold"
                            FontSize="24"/>
                 <TextBlock Text="{Binding SelectedStep?.TestStep.Number, FallbackValue=''}"
@@ -772,8 +803,13 @@
         </Border>
         
         <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="5"
-                      Margin="0 10 0 10"
-                      IsVisible="{Binding IsDevelopmentMode}">
+                      Margin="0 10 0 10">
+            <ScrollViewer.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="IsDevelopmentMode"/>
+                    <Binding Path="SelectedStep" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                </MultiBinding>
+            </ScrollViewer.IsVisible>
             <StackPanel HorizontalAlignment="Right"
                         Spacing="10"
                         Margin="0 0 10 0"

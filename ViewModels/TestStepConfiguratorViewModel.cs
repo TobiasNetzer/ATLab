@@ -102,7 +102,7 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
             SelectedVariable = RuntimeVariables.FirstOrDefault(v => v.Name == TestStepViewModel.TestStep.VariableName);
 
             JumpTargets = allSteps
-                .Select(s => new JumpTargetDto(s.TestStep.Id, s.TestStep.Number, s.TestStep.Name))
+                .Select(s => new JumpTargetDto(s.TestStep.Id, s.Module.Name, s.TestStep.Number, s.TestStep.Name))
                 .ToList();
 
             SelectedPassJumpTarget =

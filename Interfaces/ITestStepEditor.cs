@@ -6,12 +6,12 @@ namespace ATLab.Interfaces;
 public interface ITestStepEditor
 {
     bool CanPaste { get; }
-    TestStep AddStep(int insertIndex);
-    IReadOnlyList<TestStep> DuplicateSteps(IEnumerable<TestStep> steps, int insertIndex);
-    void CopySteps(IEnumerable<TestStep> steps);
-    IReadOnlyList<TestStep> PasteSteps(int insertIndex);
-    IReadOnlyList<TestStep> CutSteps(IEnumerable<TestStep> steps);
-    int RemoveSteps(IEnumerable<TestStep> steps);
-    bool MoveStepUp(TestStep step);
-    bool MoveStepDown(TestStep step);
+    TestStep AddStep(TestModule module, int insertIndex);
+    IReadOnlyList<TestStep> DuplicateSteps(TestModule module, IEnumerable<TestStep> steps, int insertIndex);
+    void CopySteps(TestModule module, IEnumerable<TestStep> steps);
+    IReadOnlyList<TestStep> PasteSteps(TestModule module, int insertIndex);
+    IReadOnlyList<TestStep> CutSteps(TestModule module, IEnumerable<TestStep> steps);
+    int RemoveSteps(TestModule module, IEnumerable<TestStep> steps);
+    bool MoveStepUp(TestModule module, TestStep step);
+    bool MoveStepDown(TestModule module, TestStep step);
 }

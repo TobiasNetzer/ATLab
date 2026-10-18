@@ -4,7 +4,11 @@ namespace ATLab.Models;
 
 public class AtlabFileDto
 {
-    public List<TestStep> TestSteps { get; init; } = new();
+    public const int CurrentFormatVersion = 2;
+
+    // Files written before modules existed have no version and deserialize as 0
+    public int FormatVersion { get; init; }
+    public List<TestModule> Modules { get; init; } = new();
     public List<CustomRelayChannelName> StimChannelNames { get; init; } = new();
     public List<CustomRelayChannelName> ExtStimChannelNames { get; init; } = new();
     public List<CustomRelayChannelName> MeasChannelNames { get; init; } = new();

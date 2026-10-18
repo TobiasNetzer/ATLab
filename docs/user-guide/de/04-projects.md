@@ -84,4 +84,6 @@ Schritte, die einen fehlenden Matrix-Kanal verwenden, schlagen bei der Ausführu
 
 Projektdateien sind lesbares, eingerücktes JSON. Damit eignen sie sich gut für die Versionsverwaltung: Änderungen an einzelnen Schritten erscheinen als kleine, lesbare Diffs. Bearbeiten von Hand ist möglich, aber nicht empfohlen; legen Sie immer eine Sicherung an.
 
-Jeder Testschritt hat eine dauerhafte interne ID. *Springe zu*-Ziele verweisen auf diese ID, sodass Sprünge auch nach Verschieben oder Umnummerieren von Schritten funktionieren.
+Die Testschritte werden je Modul gespeichert (`Modules` → `TestSteps`). Jedes Modul und jeder Testschritt hat eine dauerhafte interne ID. *Springe zu*-Ziele verweisen auf die Schritt-ID, sodass Sprünge auch nach Verschieben oder Umnummerieren von Schritten funktionieren.
+
+Die Datei enthält eine `FormatVersion`. Projektdateien aus Versionen vor Einführung der Module (ohne `FormatVersion`) können nicht geöffnet werden.

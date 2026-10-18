@@ -4,6 +4,22 @@ Test sequences are built on the **Test Execution** tab with **development mode**
 
 ![Test Execution tab in development mode](images/Testing_Tab_en.png)
 
+## Modules
+
+A project is divided into **modules**, e.g. *Power Supply*, *Programming* or *LED Test*. Each module has its own list of test steps. The **Modules** panel to the left of the step list shows all modules of the project; click a module to show its steps.
+
+| Element | Meaning |
+|---------|---------|
+| Checkbox | Includes the module in test execution. Disabled modules are shown dimmed and are skipped completely. |
+| Number | Number of steps in the module. |
+| ▶ / ✔ / ✘ | The module is currently running, or the result of the module after a run (✘ if any executed step failed). |
+
+In development mode the panel offers buttons to **add**, **remove**, **move up / down** and **duplicate** modules, plus fields for the selected module's **name** and **description** (the description is shown as tooltip in the list). A project always contains at least one module. Enabling or disabling modules is only possible in development mode.
+
+Modules are executed in list order, and the steps of all enabled modules form one continuous sequence. Step numbers start at 1 in every module.
+
+To move steps to another module, cut them, select the target module and paste them.
+
 ## The step list
 
 | Column | Content |
@@ -33,7 +49,7 @@ Use `Ctrl`+click and `Shift`+click to select multiple steps. The configuration p
 | **Copy selected test steps** | Copy | `Ctrl+C` | Copies the steps. |
 | **Paste test steps** | Paste | `Ctrl+V` | Inserts the copied/cut steps after the selection. |
 
-Steps are renumbered automatically. Copies get new internal IDs, so *Jump To* targets in copied steps still point to the original steps.
+Steps are renumbered automatically within their module. Copies get new internal IDs, so *Jump To* targets in copied steps still point to the original steps. When a whole module is duplicated, jumps between steps inside that module are redirected to the copied steps.
 
 ---
 
@@ -104,7 +120,7 @@ After evaluation, ATLab applies the **Pass-Action** if the value is within limit
 | **Continue** | Go to the next step (default). |
 | **Repeat** | Execute the same step again. Useful for "wait until" loops, e.g. repeat on fail until a voltage has settled. |
 | **End Test** | Stop the sequence after this step. The run is evaluated normally. |
-| **Jump To** | Continue with the step selected in the drop-down (forwards or backwards). |
+| **Jump To** | Continue with the step selected in the drop-down (forwards or backwards). The target can be in any module; the drop-down lists steps as *Module / No.: Name*. |
 | **Show Comment** | Show the comment in a dialog, then continue with the next step. With **Include Result**, the dialog also shows the measured value and its pass/fail state. **Cancel** aborts the test. |
 | **Invert Result** | Flips the step's verdict *after* the action has been chosen. In the Fail-Action this means "a value outside the limits counts as pass"; in the Pass-Action, "a value inside the limits counts as fail". |
 
@@ -112,7 +128,7 @@ Notes:
 
 - A repeating step can be ended manually with the **Continue test execution** button in the toolbar (or `Enter`). The sequence then proceeds with the next step.
 - Without a delay, repeated steps run as fast as possible (with a minimal pause to keep the UI responsive). Add a delay to limit the polling rate.
-- Jumping to a deleted or ignored step logs an error, marks the step as failed and ends the test.
+- Jumping to a deleted or ignored step, or to a step in a disabled module, logs an error, marks the step as failed and ends the test.
 - Each repetition overwrites the previous result; only the final one counts.
 
 **Example – wait for a supply to come up (max. ~10 s):**

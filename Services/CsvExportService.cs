@@ -153,6 +153,7 @@ public class CsvExportService : ICsvExportService
                 }
 
                 return new TestStepCsvRow(
+                    Module: vm.Module.Name,
                     Number: ts.Number,
                     Name: ts.Name,
                     LowerLimit: ts.LowerLimit.ToString(
@@ -176,6 +177,7 @@ public class CsvExportService : ICsvExportService
 
         sb.AppendLine(string.Join(Separator, new[]
         {
+            "Module",
             "Step",
             "Name",
             "Lower Limit",
@@ -190,6 +192,7 @@ public class CsvExportService : ICsvExportService
         {
             sb.AppendLine(string.Join(Separator, new[]
             {
+                Escape(r.Module),
                 r.Number.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Name),
                 r.LowerLimit.ToString(CultureInfo.CurrentCulture),

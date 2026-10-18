@@ -433,7 +433,7 @@ public class TestExecutor : ITestExecutor
     private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result, List<CustomVariable> runtimeVariables)
     {
         if (!string.IsNullOrEmpty(result.ErrorMessage))
-            _loggingService.Error($"Error in step {step.TestStep.Number}: {result.ErrorMessage}");
+            _loggingService.Error($"Error in module '{step.Module.Name}', step {step.TestStep.Number}: {result.ErrorMessage}");
 
         step.Result = string.Empty;
         step.IsPassed = false;
@@ -476,14 +476,14 @@ public class TestExecutor : ITestExecutor
                 
                 if (targetIndex < 0)
                 {
-                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to a non-existent step.");
+                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} in module '{step.Module.Name}' tries to jump to a step that does not exist or belongs to a disabled module.");
                     step.IsPassed = false;
                     return null;
                 }
 
                 if (steps[targetIndex].TestStep.IsIgnoreStep)
                 {
-                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name}.");
+                    _loggingService.Error($"Step {step.TestStep.Number} {step.TestStep.Name} in module '{step.Module.Name}' tries to jump to ignored step {steps[targetIndex].TestStep.Number} {steps[targetIndex].TestStep.Name} in module '{steps[targetIndex].Module.Name}'.");
                     step.IsPassed = false;
                     return null;
                 }

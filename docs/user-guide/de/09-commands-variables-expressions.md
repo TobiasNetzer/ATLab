@@ -46,7 +46,8 @@ Systemvariablen beginnen mit `sys.` und sind schreibgeschützt. Sie können übe
 | `{sys.Minute}` | Aktuelle Minute, zweistellig, `00`–`59` |
 | `{sys.Second}` | Aktuelle Sekunde, zweistellig, `00`–`59` |
 | `{sys.ElapsedTime}` | Sekunden seit Teststart, z. B. `12.34` |
-| `{sys.StepNumber}` | Nummer des aktuellen Schritts |
+| `{sys.ModuleName}` | Name des Moduls des aktuellen Schritts |
+| `{sys.StepNumber}` | Nummer des aktuellen Schritts innerhalb seines Moduls |
 | `{sys.FailedSteps}` | Anzahl der bisher fehlgeschlagenen Schritte |
 
 Die Werte werden zu Beginn und am Ende jedes Schritts aktualisiert. `{sys.FailedSteps}` enthält den aktuellen Schritt daher noch nicht, solange er läuft (z. B. in seinem Pass/Fail-Kommentar).

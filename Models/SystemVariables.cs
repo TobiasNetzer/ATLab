@@ -20,12 +20,13 @@ public class SystemVariables
     public CustomVariable Minute { get; } = Create("Minute");
     public CustomVariable Second { get; } = Create("Second");
     public CustomVariable ElapsedTime { get; } = Create("ElapsedTime");
+    public CustomVariable ModuleName { get; } = Create("ModuleName");
     public CustomVariable StepNumber { get; } = Create("StepNumber");
     public CustomVariable FailedSteps { get; } = Create("FailedSteps");
 
     public IEnumerable<CustomVariable> All =>
     [
-        SerialNumber, User, ProjectName, Year, Month, Day, Hour, Minute, Second, ElapsedTime, StepNumber, FailedSteps
+        SerialNumber, User, ProjectName, Year, Month, Day, Hour, Minute, Second, ElapsedTime, ModuleName, StepNumber, FailedSteps
     ];
 
     public void UpdateTimestamp(DateTimeOffset now, TimeSpan elapsed)

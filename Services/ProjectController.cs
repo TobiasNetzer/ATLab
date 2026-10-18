@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,21 +112,23 @@ public class ProjectController : IProjectController
     {
         List<string> warnings = [];
 
+        var allSteps = dto.Modules.SelectMany(m => m.TestSteps).ToList();
+
         var highestUsedMatrixChannel =
-            dto.TestSteps
+            allSteps
                 .Select(s => Math.Max(s.MatrixState.ActiveChannelHigh, s.MatrixState.ActiveChannelLow))
                 .DefaultIfEmpty(-1)
                 .Max();
 
         var highestUsedStimChannel =
-            dto.TestSteps
+            allSteps
                 .Where(s => s.StimState?.EnabledChannels != null)
                 .SelectMany(s => s.StimState!.EnabledChannels)
                 .DefaultIfEmpty(-1)
                 .Max();
 
         var highestUsedExtStimChannel =
-            dto.TestSteps
+            allSteps
                 .Where(s => s.ExtStimState?.EnabledChannels != null)
                 .SelectMany(s => s.ExtStimState!.EnabledChannels)
                 .DefaultIfEmpty(-1)

@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestResultExportService, TestResultExportService>();
         services.AddSingleton<IProjectController, ProjectController>();
         services.AddSingleton<ITestStepEditor, TestStepEditor>();
+        services.AddSingleton<ITestModuleEditor, TestModuleEditor>();
         services.AddSingleton<IDeviceIdentificationService, DeviceIdentificationService>();
         services.AddSingleton<IFileContentReader, FileContentReader>();
         services.AddSingleton<IAttachmentLauncherService, AttachmentLauncherService>();

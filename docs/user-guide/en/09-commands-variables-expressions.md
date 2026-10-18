@@ -46,7 +46,8 @@ System variables start with `sys.` and are read-only. They can be used everywher
 | `{sys.Minute}` | Current minute, two digits, `00`–`59` |
 | `{sys.Second}` | Current second, two digits, `00`–`59` |
 | `{sys.ElapsedTime}` | Seconds since the test started, e.g. `12.34` |
-| `{sys.StepNumber}` | Number of the current step |
+| `{sys.ModuleName}` | Name of the module of the current step |
+| `{sys.StepNumber}` | Number of the current step within its module |
 | `{sys.FailedSteps}` | Number of failed steps so far |
 
 The values are updated at the start and end of every step. `{sys.FailedSteps}` therefore does not yet include the current step while it is running (e.g. in its Pass/Fail comment).

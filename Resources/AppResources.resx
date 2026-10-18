@@ -976,4 +976,46 @@
   <data name="ReportLabel_TestGear" xml:space="preserve">
     <value>Test Equipment:</value>
   </data>
+  <data name="Header_Modules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
+  <data name="Text_DefaultModuleName" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="Text_CopySuffix" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Title_DeleteModule" xml:space="preserve">
+    <value>Delete Module</value>
+  </data>
+  <data name="Text_DeleteModule" xml:space="preserve">
+    <value>The module '{0}' and all of its test steps will be removed.</value>
+  </data>
+  <data name="ToolTip_AddModule" xml:space="preserve">
+    <value>Add module</value>
+  </data>
+  <data name="ToolTip_RemoveModule" xml:space="preserve">
+    <value>Remove selected module</value>
+  </data>
+  <data name="ToolTip_DuplicateModule" xml:space="preserve">
+    <value>Duplicate selected module</value>
+  </data>
+  <data name="ToolTip_MoveModuleUp" xml:space="preserve">
+    <value>Move module up</value>
+  </data>
+  <data name="ToolTip_MoveModuleDown" xml:space="preserve">
+    <value>Move module down</value>
+  </data>
+  <data name="ToolTip_ModuleEnabled" xml:space="preserve">
+    <value>Include module in test execution</value>
+  </data>
+  <data name="Label_ModuleName" xml:space="preserve">
+    <value>Module Name</value>
+  </data>
+  <data name="Label_ModuleDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ToolTip_StartModuleTest" xml:space="preserve">
+    <value>Start test execution of selected module</value>
+  </data>
 </root>

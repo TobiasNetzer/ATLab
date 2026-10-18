@@ -1,0 +1,172 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.ModuleExplorer"
+             x:DataType="vm:TestingTabViewModel">
+
+    <Border BorderBrush="{DynamicResource OutlineColor}"
+            BorderThickness="2"
+            CornerRadius="10">
+
+        <Grid RowDefinitions="Auto,Auto,*,Auto"
+              Margin="5">
+
+            <TextBlock Grid.Row="0"
+                       Text="{helpers:Localize Header_Modules}"
+                       Classes="h4"
+                       Margin="5"/>
+
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        Spacing="5"
+                        Margin="0 0 0 5"
+                        IsVisible="{Binding IsDevelopmentMode}">
+
+                <Button Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_AddModule}"
+                        Command="{Binding AddModuleCommand}"
+                        Width="35"
+                        Height="35">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FolderPlus}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+
+                <Button Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_RemoveModule}"
+                        Command="{Binding RemoveModuleCommand}"
+                        Width="35"
+                        Height="35">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FolderMinus}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+
+                <Button Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_MoveModuleUp}"
+                        Command="{Binding MoveModuleUpCommand}"
+                        Width="35"
+                        Height="35">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent ArrowUp}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+
+                <Button Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_MoveModuleDown}"
+                        Command="{Binding MoveModuleDownCommand}"
+                        Width="35"
+                        Height="35">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent ArrowDown}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+
+                <Button Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_DuplicateModule}"
+                        Command="{Binding DuplicateModuleCommand}"
+                        Width="35"
+                        Height="35">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent CopyPlus}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </StackPanel>
+
+            <ListBox Grid.Row="2"
+                     ItemsSource="{Binding Modules}"
+                     SelectedItem="{Binding SelectedModule, Mode=TwoWay}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
+
+                <ListBox.Styles>
+                    <!-- Items take the panel width so long module names are trimmed with an ellipsis -->
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ PathIcon#CheckSelected">
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ Border#SelectionBackground">
+                        <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                        <Setter Property="Opacity" Value="1"/>
+                    </Style>
+                </ListBox.Styles>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:TestModuleViewModel">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                              ColumnSpacing="8"
+                              ToolTip.Tip="{Binding Module.Description}"
+                              ToolTip.ServiceEnabled="{Binding Module.Description, Converter={StaticResource StringNotEmptyConverter}}">
+
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding Module.IsEnabled, Mode=TwoWay}"
+                                      IsEnabled="{Binding $parent[ListBox].((vm:TestingTabViewModel)DataContext).IsDevelopmentMode}"
+                                      ToolTip.Tip="{helpers:Localize ToolTip_ModuleEnabled}"
+                                      VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Module.Name}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Opacity="{Binding !Module.IsEnabled, Converter={StaticResource BoolToOpacityConverter}}"/>
+
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding TestSteps.Count}"
+                                       Classes="Small"
+                                       Foreground="{DynamicResource MutedColor}"
+                                       VerticalAlignment="Center"/>
+
+                            <Panel Grid.Column="3"
+                                   Width="25"
+                                   VerticalAlignment="Center">
+                                <ContentControl Content="{LucideIconContent Play}"
+                                                Foreground="{DynamicResource InfoColor}"
+                                                IsVisible="{Binding IsRunning}"/>
+                                <Image Width="15" Height="15"
+                                       Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}">
+                                    <Image.IsVisible>
+                                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                            <Binding Path="IsExecuted"/>
+                                            <Binding Path="!IsRunning"/>
+                                        </MultiBinding>
+                                    </Image.IsVisible>
+                                </Image>
+                            </Panel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="3"
+                        Spacing="10"
+                        Margin="5 10 5 5"
+                        IsVisible="{Binding IsDevelopmentMode}"
+                        IsEnabled="{Binding SelectedModule, Converter={x:Static ObjectConverters.IsNotNull}}">
+
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{helpers:Localize Label_ModuleName}"/>
+                    <TextBox Text="{Binding SelectedModule.Module.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
+                             helpers:FocusExtensions.MoveFocusOnEnter="True"
+                             MaxLength="50"/>
+                </StackPanel>
+
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{helpers:Localize Label_ModuleDescription}"/>
+                    <TextBox Text="{Binding SelectedModule.Module.Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Height="70"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

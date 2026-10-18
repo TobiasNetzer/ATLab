@@ -8,39 +8,37 @@ namespace ATLab.Services;
 
 public class TestStepEditor : ITestStepEditor
 {
-    private readonly ProjectModel _projectModel;
     private readonly IHardwareInfo _hardwareInfo;
 
     private List<TestStep>? _clipboard;
     private bool _clipboardIsCut;
-    
+
     public bool CanPaste => _clipboard != null && _clipboard.Count > 0;
 
-    public TestStepEditor(ProjectModel projectModel,
-        IHardwareAccessor hardwareAccessor)
+    public TestStepEditor(IHardwareAccessor hardwareAccessor)
     {
-        _projectModel = projectModel;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
     }
 
-    public TestStep AddStep(int insertIndex)
+    public TestStep AddStep(TestModule module, int insertIndex)
     {
         var step = new TestStep();
         step.InitializeRuntimeState(_hardwareInfo);
 
-        _projectModel.TestSteps.Insert(insertIndex, step);
+        module.TestSteps.Insert(insertIndex, step);
 
-        Renumber();
+        module.Renumber();
 
         return step;
     }
 
     public IReadOnlyList<TestStep> DuplicateSteps(
+        TestModule module,
         IEnumerable<TestStep> steps,
         int insertIndex)
     {
         var ordered = steps
-            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .OrderBy(s => module.TestSteps.IndexOf(s))
             .ToList();
 
         var clones = new List<TestStep>();
@@ -52,20 +50,20 @@ public class TestStepEditor : ITestStepEditor
             var clone = step.Clone();
             clone.InitializeRuntimeState(_hardwareInfo);
 
-            _projectModel.TestSteps.Insert(insertIndex++, clone);
+            module.TestSteps.Insert(insertIndex++, clone);
 
             clones.Add(clone);
         }
 
-        Renumber();
+        module.Renumber();
 
         return clones;
     }
 
-    public void CopySteps(IEnumerable<TestStep> steps)
+    public void CopySteps(TestModule module, IEnumerable<TestStep> steps)
     {
         var ordered = steps
-            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .OrderBy(s => module.TestSteps.IndexOf(s))
             .ToList();
 
         foreach (var step in ordered)
@@ -78,7 +76,7 @@ public class TestStepEditor : ITestStepEditor
         _clipboardIsCut = false;
     }
 
-    public IReadOnlyList<TestStep> PasteSteps(int insertIndex)
+    public IReadOnlyList<TestStep> PasteSteps(TestModule module, int insertIndex)
     {
         if (!CanPaste)
             return [];
@@ -90,12 +88,12 @@ public class TestStepEditor : ITestStepEditor
             var clone = model.Clone(_clipboardIsCut);
             clone.InitializeRuntimeState(_hardwareInfo);
 
-            _projectModel.TestSteps.Insert(insertIndex++, clone);
+            module.TestSteps.Insert(insertIndex++, clone);
 
             pasted.Add(clone);
         }
 
-        Renumber();
+        module.Renumber();
 
         if (_clipboardIsCut)
         {
@@ -105,11 +103,11 @@ public class TestStepEditor : ITestStepEditor
 
         return pasted;
     }
-    
-    public IReadOnlyList<TestStep> CutSteps(IEnumerable<TestStep> steps)
+
+    public IReadOnlyList<TestStep> CutSteps(TestModule module, IEnumerable<TestStep> steps)
     {
         var ordered = steps
-            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .OrderBy(s => module.TestSteps.IndexOf(s))
             .ToList();
 
         if (ordered.Count == 0)
@@ -124,67 +122,61 @@ public class TestStepEditor : ITestStepEditor
 
         _clipboardIsCut = true;
 
-        foreach (var step in ordered.OrderByDescending(s => _projectModel.TestSteps.IndexOf(s)))
-            _projectModel.TestSteps.Remove(step);
+        foreach (var step in ordered.OrderByDescending(s => module.TestSteps.IndexOf(s)))
+            module.TestSteps.Remove(step);
 
-        Renumber();
+        module.Renumber();
 
         return ordered;
     }
 
-    public int RemoveSteps(IEnumerable<TestStep> steps)
+    public int RemoveSteps(TestModule module, IEnumerable<TestStep> steps)
     {
         var ordered = steps
-            .OrderBy(s => _projectModel.TestSteps.IndexOf(s))
+            .OrderBy(s => module.TestSteps.IndexOf(s))
             .ToList();
 
         if (ordered.Count == 0)
             return -1;
 
-        var selectionIndex = _projectModel.TestSteps.IndexOf(ordered.First());
+        var selectionIndex = module.TestSteps.IndexOf(ordered.First());
 
         foreach (var step in ordered.AsEnumerable().Reverse())
-            _projectModel.TestSteps.Remove(step);
+            module.TestSteps.Remove(step);
 
-        Renumber();
+        module.Renumber();
 
-        if (_projectModel.TestSteps.Count == 0)
+        if (module.TestSteps.Count == 0)
             return -1;
 
-        return Math.Min(selectionIndex, _projectModel.TestSteps.Count - 1);
+        return Math.Min(selectionIndex, module.TestSteps.Count - 1);
     }
 
-    public bool MoveStepUp(TestStep step)
+    public bool MoveStepUp(TestModule module, TestStep step)
     {
-        var index = _projectModel.TestSteps.IndexOf(step);
+        var index = module.TestSteps.IndexOf(step);
 
         if (index <= 0)
             return false;
 
-        _projectModel.TestSteps.Move(index, index - 1);
+        module.TestSteps.Move(index, index - 1);
 
-        Renumber();
+        module.Renumber();
 
         return true;
     }
 
-    public bool MoveStepDown(TestStep step)
+    public bool MoveStepDown(TestModule module, TestStep step)
     {
-        var index = _projectModel.TestSteps.IndexOf(step);
+        var index = module.TestSteps.IndexOf(step);
 
-        if (index < 0 || index >= _projectModel.TestSteps.Count - 1)
+        if (index < 0 || index >= module.TestSteps.Count - 1)
             return false;
 
-        _projectModel.TestSteps.Move(index, index + 1);
+        module.TestSteps.Move(index, index + 1);
 
-        Renumber();
+        module.Renumber();
 
         return true;
-    }
-
-    private void Renumber()
-    {
-        for (var i = 0; i < _projectModel.TestSteps.Count; i++)
-            _projectModel.TestSteps[i].Number = i + 1;
     }
 }

@@ -24,9 +24,13 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isExecuted;
 
-    public TestStepViewModel(TestStep testStep, IHardwareInfo hardwareInfo)
+    // The module the step belongs to, used for navigation during execution and in reports
+    public TestModule Module { get; }
+
+    public TestStepViewModel(TestStep testStep, TestModule module, IHardwareInfo hardwareInfo)
     {
         TestStep = testStep;
+        Module = module;
         
         TestStep.InitializeRuntimeState(hardwareInfo);
     }

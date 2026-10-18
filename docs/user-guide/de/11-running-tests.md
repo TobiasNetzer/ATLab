@@ -10,23 +10,26 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 |--------------|--------|--------|
 | **Einzelschritt ausführen** | `F3` | Führt nur den ausgewählten Schritt aus (siehe unten). |
 | **Testausführung ab ausgewähltem Schritt starten** | | Führt die Sequenz ab dem ausgewählten Schritt aus. |
+| **Testausführung des ausgewählten Moduls starten** | | Führt nur die Schritte des ausgewählten Moduls aus, auch wenn das Modul deaktiviert ist. |
 | **Dauertest starten** | | Führt die ganze Sequenz in einer Endlosschleife aus, bis sie gestoppt wird. |
 | **Testausführung starten** (▶) | `F5` | Führt die ganze Sequenz einmal aus. |
 | **Testausführung fortsetzen** | `Enter` | Während eines Laufs sichtbar. Beendet einen sich wiederholenden Schritt (Aktion *Wiederholen*) und fährt mit dem nächsten Schritt fort. |
 | **Testausführung stoppen** (■) | `Esc` | Bricht den laufenden Test ab. |
 
-Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und die Schrittliste folgt dem aktuellen Schritt.
+Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und Modul- und Schrittliste folgen dem aktuellen Schritt. Es werden nur aktivierte Module ausgeführt. *Testausführung ab ausgewähltem Schritt starten* ist von einem Schritt in einem deaktivierten Modul aus nicht möglich.
 
 ### Unterschiede zwischen den Startarten
 
-| | Test starten | Dauertest | Ab Auswahl | Einzelschritt |
-|---|:---:|:---:|:---:|:---:|
-| Fragt Seriennummer ab (falls aktiv) | ✔ | ✔ (einmal) | – | – |
-| Automatischer Ergebnisexport (falls aktiv) | ✔ | ✔ (jeder Lauf) | – | – |
-| Setzt Relais vorher und nachher zurück | ✔ | ✔ | ✔ | – |
-| Befolgt Bestanden-/Fehlgeschlagen-Aktionen | ✔ | ✔ | ✔ | – |
-| Zeigt *Kommentar anzeigen*-Dialog vor dem Schritt | ✔ | ✔ | ✔ | – |
-| Aktualisiert die Laufzähler | ✔ | ✔ | ✔ | – |
+| | Test starten | Dauertest | Ab Auswahl | Modul | Einzelschritt |
+|---|:---:|:---:|:---:|:---:|:---:|
+| Fragt Seriennummer ab (falls aktiv) | ✔ | ✔ (einmal) | – | – | – |
+| Automatischer Ergebnisexport (falls aktiv) | ✔ | ✔ (jeder Lauf) | – | – | – |
+| Setzt Relais vorher und nachher zurück | ✔ | ✔ | ✔ | ✔ | – |
+| Befolgt Bestanden-/Fehlgeschlagen-Aktionen | ✔ | ✔ | ✔ | ✔ | – |
+| Zeigt *Kommentar anzeigen*-Dialog vor dem Schritt | ✔ | ✔ | ✔ | ✔ | – |
+| Aktualisiert die Laufzähler | ✔ | ✔ | ✔ | – | – |
+
+**Testausführung des ausgewählten Moduls starten** ist für die Entwicklung einzelner Module gedacht. Ein *Springe zu* auf einen Schritt außerhalb des Moduls beendet den Lauf mit einem Fehler.
 
 **Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt.
 

@@ -43,7 +43,8 @@ Despite the `.csv` extension, the file is **tab-separated** (UTF-8). It opens di
 
 | Column | Content |
 |--------|---------|
-| Step | Step number |
+| Module | Module name |
+| Step | Step number within the module |
 | Name | Step name |
 | Lower Limit | Lower limit (plain number, `.` as decimal separator) |
 | Measured Value | Measured value, or `Timeout` / `Overflow` |
@@ -68,7 +69,7 @@ Contents:
    - *Test Hardware*: name, serial number and firmware version of the Test Interface Adapter (`Simulator` / `N/A` in simulator mode).
    - *Test Equipment*: every device with **Include in Test Report** enabled, with the answer to its **Identification Query** (e.g. the `*IDN?` string), or `-` if it did not answer.
 6. **Overall verdict** – a large **PASS** (green) or **FAIL** (red).
-7. **Results table** – step, name, lower limit, measured value, upper limit and a pass/fail icon.
+7. **Results table** – step, name, lower limit, measured value, upper limit and a pass/fail icon, grouped by module with a heading row per module.
 8. **Footer** – ATLab version and page number.
 
 The overall verdict in the report is calculated from the steps **contained in the report**. Failed steps that are excluded from export therefore do not appear in it.

@@ -84,4 +84,6 @@ Steps that refer to a missing matrix channel fail with *"Matrix Channel is not a
 
 Project files are human-readable, indented JSON. This makes them well suited to version control: changes to individual steps show up as small, readable diffs. Editing the file by hand is possible but not recommended; always keep a backup.
 
-Each test step has a permanent internal ID. *Jump To* targets refer to this ID, so jumps keep working when steps are moved or renumbered.
+The test steps are stored per module (`Modules` → `TestSteps`). Each module and each test step has a permanent internal ID. *Jump To* targets refer to the step ID, so jumps keep working when steps are moved or renumbered.
+
+The file contains a `FormatVersion`. Project files from versions before modules were introduced (without `FormatVersion`) cannot be opened.

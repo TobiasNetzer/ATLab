@@ -272,9 +272,22 @@ public class TestReportComposer
                 header.Cell().Element(HeaderCell).Text(LocalizationService.Instance["ReportLabel_Result"]).LineHeight(1.3f);
             });
 
-            // Rows
+            // Rows, grouped by module with a header row whenever the module changes
+            TestModule? currentModule = null;
+
             foreach (var row in _testResults)
             {
+                if (!ReferenceEquals(row.Module, currentModule))
+                {
+                    currentModule = row.Module;
+
+                    table.Cell().ColumnSpan(6).Element(ModuleCell)
+                        .Text(currentModule.Name)
+                        .FontSize(11)
+                        .SemiBold()
+                        .LineHeight(1.3f);
+                }
+
                 table.Cell().Element(BodyCell).Text(row.TestStep.Number.ToString()).FontSize(10).LineHeight(1.3f);
                 table.Cell().Element(BodyCell).Text(row.TestStep.Name).FontSize(10).LineHeight(1.3f);
 
@@ -320,6 +333,9 @@ public class TestReportComposer
 
         static IContainer BodyCell(IContainer c) =>
             c.Padding(4).BorderBottom(1).BorderColor(Colors.Grey.Lighten3);
+
+        static IContainer ModuleCell(IContainer c) =>
+            c.PaddingTop(8).Padding(4).Background(Colors.Grey.Lighten4).BorderBottom(1).BorderColor(Colors.Grey.Darken1);
     }
     
     private void ComposeEquipmentSection(IContainer container)

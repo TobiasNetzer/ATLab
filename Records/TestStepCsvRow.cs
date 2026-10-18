@@ -1,6 +1,7 @@
 ﻿namespace ATLab.Records;
 
 public sealed record TestStepCsvRow(
+    string Module,
     int Number,
     string Name,
     string LowerLimit,

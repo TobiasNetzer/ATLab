@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace ATLab.ViewModels;
 
@@ -38,7 +38,7 @@ public class WorkspaceEditorViewModel
 
     public void LoadTestStep(
         TestStepViewModel vm,
-        ObservableCollection<TestStepViewModel> allSteps)
+        IEnumerable<TestStepViewModel> allSteps)
     {
         TestHardwareRelayChannels.MeasChannelViewModel.LoadActiveMeasChannels(vm.TestStep.MatrixState);
         TestHardwareRelayChannels.StimChannelViewModel.LoadRelayStates(vm.TestStep.LiveStimState);

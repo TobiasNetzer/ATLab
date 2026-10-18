@@ -34,7 +34,7 @@ public partial class ProjectModel : ObservableObject
     public ProjectSettings Settings { get; }
     public ProjectDocumentation Documentation { get; } = new();
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; } = new();
-    public ObservableCollection<TestStep> TestSteps { get; } = new();
+    public ObservableCollection<TestModule> Modules { get; } = new();
     public ObservableCollection<Device> Devices { get; } = new();
     public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
     public ObservableCollection<CustomRelayChannelName> StimChannelNames { get; } = new();
@@ -52,7 +52,7 @@ public partial class ProjectModel : ObservableObject
 
         InitializeRelayChannels();
         
-        TestSteps.CollectionChanged += TestStepsChanged;
+        Modules.CollectionChanged += ModulesChanged;
         Settings.SettingsChanged += MarkDirty;
         Documentation.DocumentationChanged += MarkDirty;
         DeviceUnderTestInfo.DeviceUnderTestInfoChanged += MarkDirty;
@@ -94,7 +94,7 @@ public partial class ProjectModel : ObservableObject
             Documentation.ResetToDefault();
             DeviceUnderTestInfo.ResetToDefault();
             
-            TestSteps.Clear();
+            Modules.Clear();
             
             Devices.Clear();
             
@@ -122,11 +122,11 @@ public partial class ProjectModel : ObservableObject
             ? null 
             : new PathService(FilePath);
 
-        var testStepsClone = TestSteps.Select(step => step.Clone(true)).ToList();
+        var modulesClone = Modules.Select(module => module.Clone(true)).ToList();
         var documentationClone = Documentation.Clone();
         var settingsClone = Settings.Clone();
 
-        foreach (var step in testStepsClone)
+        foreach (var step in modulesClone.SelectMany(m => m.TestSteps))
             step.UpdateDtos(pathService);
 
         if (pathService != null)
@@ -137,8 +137,9 @@ public partial class ProjectModel : ObservableObject
 
         return new AtlabFileDto
         {
+            FormatVersion = AtlabFileDto.CurrentFormatVersion,
             ScriptRepositoryPath = pathService?.ToRelative(ScriptRepositoryPath ?? string.Empty) ?? ScriptRepositoryPath,
-            TestSteps = testStepsClone,
+            Modules = modulesClone,
             StimChannelNames = StimChannelNames.ToList(),
             ExtStimChannelNames = ExtStimChannelNames.ToList(),
             MeasChannelNames = MeasChannelNames.ToList(),
@@ -156,9 +157,16 @@ public partial class ProjectModel : ObservableObject
         {
             Reset();
 
+            var module = new TestModule
+            {
+                Name = TestModule.CreateDefaultName([], LocalizationService.Instance["Text_DefaultModuleName"])
+            };
+
             var step = new TestStep();
             step.InitializeRuntimeState(HardwareInfo);
-            TestSteps.Add(step);
+            module.TestSteps.Add(step);
+
+            Modules.Add(module);
 
             MarkSaved(null);
         }
@@ -170,15 +178,28 @@ public partial class ProjectModel : ObservableObject
             ? new PathService(FilePath)
             : null;
 
-        TestSteps.Clear();
-        foreach (var step in dto.TestSteps)
+        Modules.Clear();
+        foreach (var module in dto.Modules)
         {
-            if (pathService != null)
-                step.RestoreAfterLoad(pathService);
+            foreach (var step in module.TestSteps)
+            {
+                if (pathService != null)
+                    step.RestoreAfterLoad(pathService);
 
-            TestStepRuntimeInitializer.InitializeRuntimeValues(step);
-            step.InitializeRuntimeState(HardwareInfo);
-            TestSteps.Add(step);
+                TestStepRuntimeInitializer.InitializeRuntimeValues(step);
+                step.InitializeRuntimeState(HardwareInfo);
+            }
+
+            module.Renumber();
+            Modules.Add(module);
+        }
+
+        if (Modules.Count == 0)
+        {
+            Modules.Add(new TestModule
+            {
+                Name = TestModule.CreateDefaultName([], LocalizationService.Instance["Text_DefaultModuleName"])
+            });
         }
         
         Devices.Clear();
@@ -235,6 +256,61 @@ public partial class ProjectModel : ObservableObject
         IsDirty = false;
     }
     
+    private void ModulesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (TestModule module in e.NewItems)
+                SubscribeToModule(module);
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (TestModule module in e.OldItems)
+                UnsubscribeFromModule(module);
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            foreach (var module in _subscribedModules.Where(m => !Modules.Contains(m)).ToList())
+                UnsubscribeFromModule(module);
+        }
+
+        MarkDirty();
+    }
+
+    // Collection.Clear() raises Reset without OldItems, so subscriptions are tracked to unhook them reliably
+    private readonly HashSet<TestModule> _subscribedModules = new();
+
+    private void SubscribeToModule(TestModule module)
+    {
+        if (!_subscribedModules.Add(module))
+            return;
+
+        module.PropertyChanged += ModuleChanged;
+        module.TestSteps.CollectionChanged += TestStepsChanged;
+
+        foreach (var step in module.TestSteps)
+            SubscribeToTestStep(step);
+    }
+
+    private void UnsubscribeFromModule(TestModule module)
+    {
+        if (!_subscribedModules.Remove(module))
+            return;
+
+        module.PropertyChanged -= ModuleChanged;
+        module.TestSteps.CollectionChanged -= TestStepsChanged;
+
+        foreach (var step in module.TestSteps)
+            UnsubscribeFromTestStep(step);
+    }
+
+    private void ModuleChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        MarkDirty();
+    }
+
     private void TestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.NewItems != null)

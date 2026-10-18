@@ -65,16 +65,23 @@ public class ProjectFileService : IProjectFileService
 
             var project = Deserialize(json);
 
+            if (project != null && project.FormatVersion != AtlabFileDto.CurrentFormatVersion)
+            {
+                throw new NotSupportedException(
+                    $"Unsupported project file format version {project.FormatVersion} (expected {AtlabFileDto.CurrentFormatVersion}).");
+            }
+
             //_loggingService.Info($"Project '{Path.GetFileName(path)}' loaded.");
 
             return project;
         }
         catch (Exception ex)
         {
+            // Logged here only, callers treat null as "nothing loaded"
             _loggingService.Error(
                 $"Failed to load project '{Path.GetFileName(path)}'. {ex.Message}");
 
-            throw;
+            return null;
         }
         finally
         {

@@ -18,6 +18,10 @@
         <Style Selector="ComboBox /template/ Popup#PART_Popup">
             <Setter Property="Width" Value="250"/>
         </Style>
+        
+        <Style Selector="ComboBox.JumpTarget /template/ Popup#PART_Popup">
+            <Setter Property="Width" Value="450"/>
+        </Style>
     </UserControl.Styles>
     
     <StackPanel>
@@ -313,12 +317,14 @@
 
                                 <ComboBox Grid.Column="1"
                                           TabIndex="22"
+                                          Classes="JumpTarget"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedPassJumpTarget, Mode=TwoWay}"
                                           IsEnabled="{Binding TestStepViewModel.TestStep.OnPass.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Display}"
+                                                       ToolTip.Tip="{Binding Display}"
                                                        TextTrimming="CharacterEllipsis"
                                                        TextWrapping="NoWrap"/>
                                         </DataTemplate>
@@ -376,12 +382,14 @@
 
                                 <ComboBox Grid.Column="1"
                                           TabIndex="30"
+                                          Classes="JumpTarget"
                                           ItemsSource="{Binding JumpTargets}"
                                           SelectedItem="{Binding SelectedFailJumpTarget, Mode=TwoWay}"
                                           IsEnabled="{Binding TestStepViewModel.TestStep.OnFail.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=JUMP_TO, FallbackValue='False'}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Display}"
+                                                       ToolTip.Tip="{Binding Display}"
                                                        TextTrimming="CharacterEllipsis"
                                                        TextWrapping="NoWrap"/>
                                         </DataTemplate>
