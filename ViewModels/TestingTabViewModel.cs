@@ -482,8 +482,10 @@ public partial class TestingTabViewModel : ViewModelBase
     
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
-        if (value?.TestStep == null) return;
-        
+        // Without a selection the (disabled) editor shows a blank step that isn't part of the project,
+        // so it doesn't keep displaying the previously selected step
+        var stepToLoad = value ?? new TestStepViewModel(new TestStep(), new TestModule(), _hardwareInfo);
+
         _isChangingSelection = true;
         try
         {
@@ -491,7 +493,7 @@ public partial class TestingTabViewModel : ViewModelBase
             {
                 try
                 {
-                    WorkspaceEditor.LoadTestStep(value, AllTestSteps);
+                    WorkspaceEditor.LoadTestStep(stepToLoad, AllTestSteps);
                 }
                 catch (Exception ex)
                 {
