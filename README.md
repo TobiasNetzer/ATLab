@@ -95,7 +95,7 @@ Add and configure external test instruments (Serial, TCP/IP, VISA), project sett
 ![image](docs/user-guide/en/images/Configuration_Tab_en.png)
 
 ### Scripting
-Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script repository shared across projects.
+Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script folder shared across projects.
 → [Scripting Tab](docs/user-guide/en/06-scripting.md)
 
 ![image](docs/user-guide/en/images/Scripting_Tab_en.png)

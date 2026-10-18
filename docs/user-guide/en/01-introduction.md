@@ -28,7 +28,7 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. |
 | **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, Shell Command, User Response, Expression* or *File*. See [Evaluation Sources](08-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
-| **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script repository* folder, so it can be shared across projects. |
+| **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
 | **Script variable** | A placeholder such as `{Range}` inside a script, given a concrete value per test step. |
 | **Runtime variable** | A project-wide variable that can be read in commands, limits and expressions, and written by a step via *Assign Result to Variable*. |
 | **Relay matrix** | The adapter's measurement matrix. Each step selects one channel for **Matrix H** and one for **Matrix L** (or *Off*). |

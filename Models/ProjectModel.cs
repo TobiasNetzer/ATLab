@@ -24,7 +24,7 @@ public partial class ProjectModel : ObservableObject
     private string? _filePath;
     
     [ObservableProperty]
-    private string? _scriptRepositoryPath;
+    private string? _scriptFolderPath;
 
     public string ProjectName =>
         string.IsNullOrEmpty(FilePath)
@@ -66,7 +66,7 @@ public partial class ProjectModel : ObservableObject
 
         PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(ScriptRepositoryPath))
+            if (e.PropertyName == nameof(ScriptFolderPath))
                 MarkDirty();
         };
 
@@ -110,7 +110,7 @@ public partial class ProjectModel : ObservableObject
                 channel.ChannelName = string.Empty;
 
             FilePath = null;
-            ScriptRepositoryPath = null;
+            ScriptFolderPath = null;
         }
 
         IsDirty = false;
@@ -138,7 +138,7 @@ public partial class ProjectModel : ObservableObject
         return new AtlabFileDto
         {
             FormatVersion = AtlabFileDto.CurrentFormatVersion,
-            ScriptRepositoryPath = pathService?.ToRelative(ScriptRepositoryPath ?? string.Empty) ?? ScriptRepositoryPath,
+            ScriptFolderPath = pathService?.ToRelative(ScriptFolderPath ?? string.Empty) ?? ScriptFolderPath,
             Modules = modulesClone,
             StimChannelNames = StimChannelNames.ToList(),
             ExtStimChannelNames = ExtStimChannelNames.ToList(),
@@ -214,9 +214,9 @@ public partial class ProjectModel : ObservableObject
         ApplyRelayChannelNames(ExtStimChannelNames, dto.ExtStimChannelNames);
         ApplyRelayChannelNames(MeasChannelNames, dto.MeasChannelNames);
         
-        ScriptRepositoryPath = pathService != null && !string.IsNullOrWhiteSpace(dto.ScriptRepositoryPath)
-            ? pathService.ToAbsolute(dto.ScriptRepositoryPath)
-            : dto.ScriptRepositoryPath;
+        ScriptFolderPath = pathService != null && !string.IsNullOrWhiteSpace(dto.ScriptFolderPath)
+            ? pathService.ToAbsolute(dto.ScriptFolderPath)
+            : dto.ScriptFolderPath;
 
         if (pathService != null)
         {

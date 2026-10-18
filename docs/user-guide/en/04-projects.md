@@ -9,9 +9,9 @@ A **project** is stored in a single **project file** with the extension `.atlab`
 - the project settings (tolerance, serial number, export options …),
 - the documentation (texts, image and attachment paths),
 - the Device Under Test information used in reports,
-- the path of the script repository folder.
+- the path of the script folder.
 
-Scripts themselves are **not** stored in the project; they live as separate files in the script repository (see [Scripting](06-scripting.md)).
+Scripts themselves are **not** stored in the project; they live as separate files in the script folder (see [Scripting](06-scripting.md)).
 
 ## Project commands
 
@@ -46,7 +46,7 @@ ATLab.exe "D:\Tests\PowerBoard.atlab"
 
 When a project is saved, any referenced file **inside the project folder (or a sub-folder)** is stored with a relative path. This applies to:
 
-- the script repository folder,
+- the script folder,
 - documentation images and attachments,
 - message-box images of test steps,
 - file paths of **File** evaluation steps,
@@ -59,7 +59,7 @@ Paths outside the project folder are stored as absolute paths.
 ```
 PowerBoard/
 ├── PowerBoard.atlab
-├── Scripts/            ← script repository
+├── Scripts/            ← script folder
 ├── Images/
 └── Attachments/
 ```

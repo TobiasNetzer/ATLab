@@ -9,9 +9,9 @@ Ein **Projekt** wird in einer einzelnen **Projektdatei** mit der Endung `.atlab`
 - die Projekteinstellungen (Toleranz, Seriennummer, Exportoptionen …),
 - die Dokumentation (Texte, Pfade zu Bildern und Anhängen),
 - die Prüflingsdaten für den Testbericht,
-- den Pfad des Skript-Repository-Ordners.
+- den Pfad des Skriptordners.
 
-Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skript-Repository (siehe [Skripte](06-scripting.md)).
+Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skriptordner (siehe [Skripte](06-scripting.md)).
 
 ## Projektbefehle
 
@@ -46,7 +46,7 @@ ATLab.exe "D:\Tests\PowerBoard.atlab"
 
 Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners (oder eines Unterordners)** mit relativem Pfad gespeichert. Das gilt für
 
-- den Skript-Repository-Ordner,
+- den Skriptordner,
 - Bilder und Anhänge der Dokumentation,
 - Bilder in Meldungsfenstern von Testschritten,
 - Dateipfade von Schritten mit Auswertung **Datei**,
@@ -59,7 +59,7 @@ Pfade außerhalb des Projektordners werden absolut gespeichert.
 ```
 PowerBoard/
 ├── PowerBoard.atlab
-├── Scripts/            ← Skript-Repository
+├── Scripts/            ← Skriptordner
 ├── Images/
 └── Attachments/
 ```

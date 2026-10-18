@@ -577,11 +577,11 @@
   <data name="ToolTip_DeleteScript" xml:space="preserve">
     <value>Skript löschen</value>
   </data>
-  <data name="ToolTip_ChangeRepositoryFolder" xml:space="preserve">
-    <value>Repository-Ordner ändern</value>
+  <data name="ToolTip_ChangeScriptFolder" xml:space="preserve">
+    <value>Skriptordner ändern</value>
   </data>
-  <data name="ToolTip_ReloadScriptRepository" xml:space="preserve">
-    <value>Skript-Repository neu laden</value>
+  <data name="ToolTip_ReloadScriptFolder" xml:space="preserve">
+    <value>Skriptordner neu laden</value>
   </data>
   <data name="Label_Scripts" xml:space="preserve">
     <value>Skripte</value>

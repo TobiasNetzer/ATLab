@@ -32,14 +32,14 @@ The step only switches relays, waits for its delay and optionally shows its comm
 
 ## Script
 
-Runs a script from the [script repository](06-scripting.md) on a device.
+Runs a script from the [script folder](06-scripting.md) on a device.
 
 **Script Configuration panel**
 
 | Field | Description |
 |-------|-------------|
 | **Target Device** | Device from the Device Manager, shown as `Name (resource)`. The × button clears it. |
-| **Script** | Script from the repository. Hover over an entry to see its description. The × button clears it. |
+| **Script** | Script from the script folder. Hover over an entry to see its description. The × button clears it. |
 | **Variable / Value** | The script's variables with this step's values. When a script is first selected, its default values are copied in; edit them per step. |
 
 Execution: all commands of the script are sent in order; the answer of the command marked **Evaluate** becomes the measured value. Script variables are substituted first, then runtime variables, encodings and expressions are processed.

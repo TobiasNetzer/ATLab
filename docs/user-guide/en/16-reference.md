@@ -95,11 +95,11 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 |------|---------|-------|
 | Personal settings | `%LOCALAPPDATA%\ATLab\settings.json` | `~/.local/share/ATLab/settings.json` |
 | Event log | `%LOCALAPPDATA%\ATLab\events.log` | `~/.local/share/ATLab/events.log` |
-| Default script repository | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
+| Default script folder | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
 | Program (installer) | `C:\Program Files\ATLab\` | wherever you extracted it |
 | User guide PDFs | `<program folder>\docs\ATLab-User-Guide-en.pdf` / `-de.pdf` | `<program folder>/docs/ATLab-User-Guide-en.pdf` / `-de.pdf` |
 | Projects | `*.atlab`, anywhere | `*.atlab`, anywhere |
-| Scripts | `<repository>\<id>.json` | `<repository>/<id>.json` |
+| Scripts | `<script folder>\<id>.json` | `<script folder>/<id>.json` |
 
 ### settings.json
 
@@ -145,6 +145,6 @@ Personal, per-user settings — not part of any project:
 | **Overflow** | Result ≥ 9.9 × 10³⁷, the SCPI "overload" value. |
 | **Runtime variable** | Project-wide variable, readable everywhere and writable by steps. |
 | **SCPI** | Standard Commands for Programmable Instruments, e.g. `MEAS:VOLT:DC?`. |
-| **Script repository** | Folder containing script JSON files. |
+| **Script folder** | Folder containing script JSON files. |
 | **Simulator** | Virtual adapter used when no hardware is connected. |
 | **Stimulation channel** | Relay on the adapter used to apply a signal or load to the DUT. |

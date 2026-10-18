@@ -24,7 +24,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | Symptom | Ursache / Lösung |
 |---------|------------------|
 | Warnung *Der angeschlossenen Test-Hardware fehlen benötigte Kanäle* | Das Projekt wurde für einen Adapter mit mehr Kanälen erstellt. Nicht speichern; mit der richtigen Hardware oder im Simulator öffnen. |
-| Skripte fehlen in der Skriptauswahl | Der Skript-Repository-Ordner des Projekts existiert auf diesem Rechner nicht. ATLab legt dann an dieser Stelle einen leeren Ordner an (oder verwendet den Standardordner) und protokolliert eine Meldung. Auf der Registerkarte Skripte den richtigen Ordner wählen (**Repository-Ordner ändern**) und das Projekt speichern. Ein Repository im Projektordner vermeidet das Problem. |
+| Skripte fehlen in der Skriptauswahl | Der Skriptordner des Projekts existiert auf diesem Rechner nicht. ATLab legt dann an dieser Stelle einen leeren Ordner an (oder verwendet den Standardordner) und protokolliert eine Meldung. Auf der Registerkarte Skripte den richtigen Ordner wählen (**Skriptordner ändern**) und das Projekt speichern. Ein Skriptordner im Projektordner vermeidet das Problem. |
 | *Unsupported project file format version 0 (expected 2)* | Das Projekt wurde mit einer ATLab-Version ohne Module gespeichert. Solche Dateien können nicht geöffnet werden. |
 | *Image not found* / *File not found* | Referenzierte Dateien wurden verschoben. Bilder und Anhänge im Projektordner ablegen, damit relative Pfade funktionieren. |
 

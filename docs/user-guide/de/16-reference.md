@@ -95,11 +95,11 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 |-------|---------|-------|
 | Persönliche Einstellungen | `%LOCALAPPDATA%\ATLab\settings.json` | `~/.local/share/ATLab/settings.json` |
 | Ereignisprotokoll | `%LOCALAPPDATA%\ATLab\events.log` | `~/.local/share/ATLab/events.log` |
-| Standard-Skript-Repository | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
+| Standard-Skriptordner | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
 | Programm (Installer) | `C:\Program Files\ATLab\` | dort, wo Sie es entpackt haben |
 | Benutzerhandbuch (PDF) | `<Programmordner>\docs\ATLab-User-Guide-de.pdf` / `-en.pdf` | `<Programmordner>/docs/ATLab-User-Guide-de.pdf` / `-en.pdf` |
 | Projekte | `*.atlab`, beliebig | `*.atlab`, beliebig |
-| Skripte | `<Repository>\<id>.json` | `<Repository>/<id>.json` |
+| Skripte | `<Skriptordner>\<id>.json` | `<Skriptordner>/<id>.json` |
 
 ### settings.json
 
@@ -146,5 +146,5 @@ Persönliche Einstellungen pro Benutzer – nicht Teil eines Projekts:
 | **Overflow** | Ergebnis ≥ 9,9 × 10³⁷, der SCPI-„Überlauf“-Wert. |
 | **SCPI** | Standard Commands for Programmable Instruments, z. B. `MEAS:VOLT:DC?`. |
 | **Simulator** | Virtueller Adapter, der verwendet wird, wenn keine Hardware angeschlossen ist. |
-| **Skript-Repository** | Ordner mit den JSON-Dateien der Skripte. |
+| **Skriptordner** | Ordner mit den JSON-Dateien der Skripte. |
 | **Stimulationskanal** | Relais am Adapter, mit dem ein Signal oder eine Last an den Prüfling angelegt wird. |

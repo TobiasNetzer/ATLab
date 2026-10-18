@@ -17,5 +17,5 @@ public class AtlabFileDto
     public ProjectSettings ProjectSettings { get; init; } = new();
     public ProjectDocumentation ProjectDocumentation { get; init; } = new();
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; init; } = new();
-    public string? ScriptRepositoryPath { get; init; }
+    public string? ScriptFolderPath { get; init; }
 }

@@ -33,7 +33,7 @@ public class ProjectController : IProjectController
         
         _scriptRepository.RepositoryFolderChanged += (_, folderPath) =>
         {
-            _projectModel.ScriptRepositoryPath = folderPath;
+            _projectModel.ScriptFolderPath = folderPath;
         };
     }
 
@@ -104,7 +104,7 @@ public class ProjectController : IProjectController
         using (_projectModel.SuppressDirtyTracking())
         {
             _projectModel.Load(dto);
-            _scriptRepository.SetRepositoryFolder(_projectModel.ScriptRepositoryPath);
+            _scriptRepository.SetRepositoryFolder(_projectModel.ScriptFolderPath);
         }
     }
 

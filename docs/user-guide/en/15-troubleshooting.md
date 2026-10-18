@@ -24,7 +24,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | Symptom | Cause / solution |
 |---------|------------------|
 | Warning *Connected test hardware is missing required channels* | The project was made for an adapter with more channels. Don't save; open it with the right hardware or the simulator. |
-| Scripts are missing in the script selector | The project's script repository folder does not exist on this computer. ATLab then creates an empty folder at that location (or falls back to the default folder) and logs a message. Point it to the right folder on the Scripting tab (**Change repository folder**) and save the project. Keeping the repository inside the project folder avoids this. |
+| Scripts are missing in the script selector | The project's script folder does not exist on this computer. ATLab then creates an empty folder at that location (or falls back to the default folder) and logs a message. Point it to the right folder on the Scripting tab (**Change script folder**) and save the project. Keeping the script folder inside the project folder avoids this. |
 | *Unsupported project file format version 0 (expected 2)* | The project was saved by an ATLab version without modules. These files cannot be opened. |
 | *Image not found* / *File not found* | Referenced files were moved. Keep images and attachments in the project folder so relative paths work. |
 

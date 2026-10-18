@@ -92,8 +92,8 @@
                                 </shadui:ButtonAssist.Icon>
                                 <ToolTip.Tip>
                                     <StackPanel>
-                                        <TextBlock Text="{helpers:Localize ToolTip_ChangeRepositoryFolder}"/>
-                                        <TextBlock Text="{Binding RepositoryPath}"
+                                        <TextBlock Text="{helpers:Localize ToolTip_ChangeScriptFolder}"/>
+                                        <TextBlock Text="{Binding ScriptFolderPath}"
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"
                                                    HorizontalAlignment="Left"/>
@@ -104,7 +104,7 @@
                             <Button
                                 Background="{DynamicResource ButtonBackground}"
                                 Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_ReloadScriptRepository}"
+                                ToolTip.Tip="{helpers:Localize ToolTip_ReloadScriptFolder}"
                                 Command="{Binding ReloadScriptsCommand}"
                                 Width="40"
                                 Height="40">

@@ -65,12 +65,12 @@ public sealed class FileScriptRepository : IScriptRepository
                     Directory.CreateDirectory(folderPath);
 
                     _loggingService.Info(
-                        $"Created repository folder '{folderPath}'.");
+                        $"Created script folder '{folderPath}'.");
                 }
                 catch (Exception ex)
                 {
                     _loggingService.Error(
-                        $"Failed to create repository folder '{folderPath}'. {ex.Message}");
+                        $"Failed to create script folder '{folderPath}'. {ex.Message}");
 
                     folderPath = string.Empty;
                 }
@@ -89,7 +89,7 @@ public sealed class FileScriptRepository : IScriptRepository
                     Directory.CreateDirectory(folderPath);
 
                     _loggingService.Info(
-                        $"Created default repository folder '{folderPath}'.");
+                        $"Created default script folder '{folderPath}'.");
                 }
             }
 
@@ -303,7 +303,7 @@ public sealed class FileScriptRepository : IScriptRepository
         {
             var storageFolder =
                 await _fileDialogService.OpenFolderAsync(
-                    "Select Script Repository Folder");
+                    "Select Script Folder");
 
             if (storageFolder != null)
             {
@@ -318,14 +318,14 @@ public sealed class FileScriptRepository : IScriptRepository
                 }
 
                 _loggingService.Info(
-                    $"Repository folder set to '{folderPath}'.");
+                    $"Script folder set to '{folderPath}'.");
 
                 RepositoryFolderChanged?.Invoke(this, folderPath);
             }
             else
             {
                 _loggingService.Info(
-                    "Repository folder selection canceled.");
+                    "Script folder selection canceled.");
             }
         }
         finally

@@ -32,14 +32,14 @@ Der Schritt schaltet nur Relais, wartet seine Verzögerung ab und zeigt optional
 
 ## Skript
 
-Führt ein Skript aus dem [Skript-Repository](06-scripting.md) auf einem Gerät aus.
+Führt ein Skript aus dem [Skriptordner](06-scripting.md) auf einem Gerät aus.
 
 **Bereich Skript-Konfiguration**
 
 | Feld | Beschreibung |
 |------|--------------|
 | **Zielgerät** | Gerät aus dem Geräte-Manager, angezeigt als `Name (Ressource)`. Die ×-Schaltfläche leert die Auswahl. |
-| **Skript** | Skript aus dem Repository. Beim Überfahren eines Eintrags erscheint seine Beschreibung. Die ×-Schaltfläche leert die Auswahl. |
+| **Skript** | Skript aus dem Skriptordner. Beim Überfahren eines Eintrags erscheint seine Beschreibung. Die ×-Schaltfläche leert die Auswahl. |
 | **Variable / Wert** | Die Variablen des Skripts mit den Werten dieses Schritts. Bei der ersten Auswahl eines Skripts werden die Standardwerte übernommen; bearbeiten Sie sie pro Schritt. |
 
 Ausführung: Alle Befehle des Skripts werden der Reihe nach gesendet; die Antwort des mit **Auswertung** markierten Befehls wird zum Messwert. Zuerst werden Skriptvariablen ersetzt, danach Laufzeitvariablen, Kodierungen und Ausdrücke verarbeitet.

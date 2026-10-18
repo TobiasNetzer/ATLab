@@ -4,12 +4,12 @@ A **script** is a named, reusable sequence of instrument commands, for example *
 
 ![Scripting tab](images/Scripting_Tab_en.png)
 
-## The script repository
+## The script folder
 
-Scripts are stored as individual JSON files (`<id>.json`) in a **repository folder**, independent of any project. Several projects can share one repository.
+Scripts are stored as individual JSON files (`<id>.json`) in a **script folder**, independent of any project. Several projects can share one script folder.
 
-- The repository path is saved in the project. If it lies inside the project folder, it is stored relatively.
-- A new project uses the default repository:
+- The script folder path is saved in the project. If it lies inside the project folder, it is stored relatively.
+- A new project uses the default script folder:
   - Windows: `%LOCALAPPDATA%\ATLab\Scripts`
   - Linux: `~/.local/share/ATLab/Scripts`
 - If the configured folder does not exist, ATLab tries to create it; if that fails it falls back to the default folder and logs a message.
@@ -18,11 +18,11 @@ Scripts are stored as individual JSON files (`<id>.json`) in a **repository fold
 
 | Button | Function |
 |--------|----------|
-| **New script** | Creates a new, empty script and saves it to the repository immediately. |
+| **New script** | Creates a new, empty script and saves it to the script folder immediately. |
 | **Save script** | Saves the selected script. |
 | **Delete script** | Permanently deletes the selected script file after confirmation. |
-| **Change repository folder** | Selects another folder as repository and reloads the list. |
-| **Reload script repository** | Re-reads all scripts from disk, e.g. after pulling changes from version control. |
+| **Change script folder** | Selects another folder as script folder and reloads the list. |
+| **Reload script folder** | Re-reads all scripts from disk, e.g. after pulling changes from version control. |
 
 Scripts with unsaved changes are marked with `*` in the list, and the tab title shows **Scripting\*** while any script is unsaved. Script changes are **not** saved with the project — use **Save script**.
 
@@ -78,6 +78,6 @@ A step using this script sends the two configuration commands, waits 500 ms, que
 ## Good practice
 
 - Keep scripts small and generic; push step-specific values into variables.
-- Put the repository folder next to your projects and under version control.
+- Put the script folder next to your projects and under version control.
 - If a script returns more than a bare number, use [Response Processing](10-response-processing.md) in the step to extract the value.
 - If no command is marked **Evaluate**, the step's measured value is `0`.

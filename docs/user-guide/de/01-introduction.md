@@ -28,7 +28,7 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 | **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. |
 | **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Shell-Befehl, Benutzereingabe, Ausdruck* oder *Datei*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
-| **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skript-Repository*, damit sie projektübergreifend genutzt werden kann. |
+| **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
 | **Skriptvariable** | Platzhalter wie `{Range}` in einem Skript, der pro Testschritt einen konkreten Wert erhält. |
 | **Laufzeitvariable** | Projektweite Variable, die in Befehlen, Grenzwerten und Ausdrücken gelesen und von einem Schritt über *Ergebnis einer Variable zuweisen* geschrieben werden kann. |
 | **Relais-Matrix** | Die Messmatrix des Adapters. Jeder Schritt wählt einen Kanal für **Matrix H** und einen für **Matrix L** (oder *Off*). |

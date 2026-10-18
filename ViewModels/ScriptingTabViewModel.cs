@@ -15,7 +15,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
     private readonly IScriptService _scriptService;
     private readonly IScriptRepository _repository;
     private readonly IMessageBoxService _messageBoxService;
-    public string? RepositoryPath { get; private set; }
+    public string? ScriptFolderPath { get; private set; }
 
     public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
@@ -31,7 +31,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
         _scriptService = scriptService;
         _repository = repository;
         _messageBoxService = messageBoxService;
-        RepositoryPath = projectModel.ScriptRepositoryPath;
+        ScriptFolderPath = projectModel.ScriptFolderPath;
 
         UpdateTitle();
         LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTitle();
@@ -39,7 +39,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
         _repository.RepositoryFolderChanged += async (_, folderPath) =>
         {
             await ReloadScripts();
-            RepositoryPath = projectModel.ScriptRepositoryPath;
+            ScriptFolderPath = projectModel.ScriptFolderPath;
         };
     }
 

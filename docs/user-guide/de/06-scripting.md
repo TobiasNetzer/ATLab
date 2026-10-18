@@ -4,12 +4,12 @@ Ein **Skript** ist eine benannte, wiederverwendbare Folge von Gerätebefehlen, z
 
 ![Registerkarte Skripte](images/Scripting_Tab_de.png)
 
-## Das Skript-Repository
+## Der Skriptordner
 
-Skripte werden als einzelne JSON-Dateien (`<id>.json`) in einem **Repository-Ordner** gespeichert, unabhängig von einem Projekt. Mehrere Projekte können ein Repository gemeinsam nutzen.
+Skripte werden als einzelne JSON-Dateien (`<id>.json`) in einem **Skriptordner** gespeichert, unabhängig von einem Projekt. Mehrere Projekte können einen Skriptordner gemeinsam nutzen.
 
-- Der Repository-Pfad wird im Projekt gespeichert. Liegt er im Projektordner, wird er relativ gespeichert.
-- Ein neues Projekt verwendet das Standard-Repository:
+- Der Pfad des Skriptordners wird im Projekt gespeichert. Liegt er im Projektordner, wird er relativ gespeichert.
+- Ein neues Projekt verwendet den Standard-Skriptordner:
   - Windows: `%LOCALAPPDATA%\ATLab\Scripts`
   - Linux: `~/.local/share/ATLab/Scripts`
 - Existiert der konfigurierte Ordner nicht, versucht ATLab, ihn anzulegen; gelingt das nicht, wird der Standardordner verwendet und eine Meldung protokolliert.
@@ -18,11 +18,11 @@ Skripte werden als einzelne JSON-Dateien (`<id>.json`) in einem **Repository-Ord
 
 | Schaltfläche | Funktion |
 |--------------|----------|
-| **Neues Skript** | Legt ein neues, leeres Skript an und speichert es sofort im Repository. |
+| **Neues Skript** | Legt ein neues, leeres Skript an und speichert es sofort im Skriptordner. |
 | **Skript speichern** | Speichert das ausgewählte Skript. |
 | **Skript löschen** | Löscht die Datei des ausgewählten Skripts nach Rückfrage dauerhaft. |
-| **Repository-Ordner ändern** | Wählt einen anderen Ordner als Repository und lädt die Liste neu. |
-| **Skript-Repository neu laden** | Liest alle Skripte erneut vom Datenträger, z. B. nach dem Abrufen von Änderungen aus der Versionsverwaltung. |
+| **Skriptordner ändern** | Wählt einen anderen Ordner als Skriptordner und lädt die Liste neu. |
+| **Skriptordner neu laden** | Liest alle Skripte erneut vom Datenträger, z. B. nach dem Abrufen von Änderungen aus der Versionsverwaltung. |
 
 Skripte mit ungespeicherten Änderungen sind in der Liste mit `*` markiert, und die Registerkarte heißt **Skripte\***, solange ein Skript ungespeichert ist. Skriptänderungen werden **nicht** mit dem Projekt gespeichert – verwenden Sie **Skript speichern**.
 
@@ -78,6 +78,6 @@ Ein Schritt mit diesem Skript sendet die beiden Konfigurationsbefehle, wartet 50
 ## Bewährte Vorgehensweisen
 
 - Halten Sie Skripte klein und allgemein; verlagern Sie schrittspezifische Werte in Variablen.
-- Legen Sie den Repository-Ordner neben Ihre Projekte und unter Versionsverwaltung.
+- Legen Sie den Skriptordner neben Ihre Projekte und unter Versionsverwaltung.
 - Liefert ein Skript mehr als eine reine Zahl, verwenden Sie im Schritt die [Antwortverarbeitung](10-response-processing.md), um den Wert zu extrahieren.
 - Ist kein Befehl mit **Auswertung** markiert, ist der Messwert des Schritts `0`.
