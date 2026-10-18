@@ -62,7 +62,7 @@ public class ProjectDocumentService : IProjectDocumentService
 
     public async Task<bool> SaveAsAsync(AtlabFileDto dto)
     {
-        var file = await _fileDialogService.SaveFileAsync("ATLab files", "Test.atlab", "atlab", new[] { "atlab" });
+        var file = await _fileDialogService.SaveFileAsync("ATLab files", "Untitled.atlab", "atlab", new[] { "atlab" });
 
         if (file is null)
             return false;
