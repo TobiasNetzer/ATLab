@@ -7,8 +7,8 @@
                x:Class="ATLab.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
                Title="{Binding WindowTitle}"
-               MinWidth="1300"
-               MinHeight="600"
+               MinWidth="1400"
+               MinHeight="700"
                ShowTitlebarBackground="False"
                Background="{DynamicResource WindowBackground}">
     <shadui:Window.LogoContent>

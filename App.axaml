@@ -113,6 +113,72 @@
             </Setter>
         </Style>
 
+        <!-- ShadUI's DataGrid template wraps the rows in a ScrollViewer and has no PART_HorizontalScrollbar,
+             so the DataGrid can't scroll horizontally. This template uses the DataGrid's own scrollbars,
+             laid out like Avalonia's Fluent theme: the rows presenter spans the scrollbar row and column
+             so both scrollbars overlay the cells. The DataGrid derives IsVerticalScrollBarOverCells and
+             IsHorizontalScrollBarOverCells from these spans; if they don't match the actual layout it
+             subtracts unset scrollbar sizes from the cell area and the rows render incorrectly. -->
+        <Style Selector="DataGrid.HorizontalScroll">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="DataGridBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              RowDefinitions="Auto,*,Auto"
+                              ClipToBounds="True">
+
+                            <Border x:Name="PART_HeaderBackground"
+                                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                    BorderBrush="{DynamicResource BorderColor}"
+                                    BorderThickness="0,0,0,1"/>
+
+                            <!-- ColumnSpan 2: horizontal scrollbar is treated as overlaying the cells -->
+                            <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
+                                                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
+
+                            <!-- RowSpan 2 / ColumnSpan 3: rows extend under both scrollbars -->
+                            <DataGridRowsPresenter Name="PART_RowsPresenter"
+                                                   Grid.Row="1" Grid.Column="0"
+                                                   Grid.RowSpan="2" Grid.ColumnSpan="3"
+                                                   ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                                <DataGridRowsPresenter.GestureRecognizers>
+                                    <ScrollGestureRecognizer CanHorizontallyScroll="True"
+                                                             CanVerticallyScroll="True"
+                                                             IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}"/>
+                                </DataGridRowsPresenter.GestureRecognizers>
+                            </DataGridRowsPresenter>
+
+                            <ScrollBar Name="PART_VerticalScrollbar"
+                                       Grid.Row="1" Grid.Column="2"
+                                       Orientation="Vertical"/>
+
+                            <Grid Grid.Row="2" Grid.Column="1"
+                                  ColumnDefinitions="Auto,*">
+                                <Rectangle Name="PART_FrozenColumnScrollBarSpacer"/>
+                                <ScrollBar Name="PART_HorizontalScrollbar"
+                                           Grid.Column="1"
+                                           Orientation="Horizontal"/>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- Same hover animation ShadUI applies to ScrollViewer scrollbars. AllowAutoHide must not be
+             set in the template above, template values take precedence over this style. -->
+        <Style Selector="DataGrid.HorizontalScroll:pointerover /template/ ScrollBar">
+            <Setter Property="AllowAutoHide" Value="True"/>
+        </Style>
+
     </Application.Styles>
 
 </Application>

@@ -387,6 +387,7 @@
         
             <DataGrid Grid.Column="2"
                       x:Name="TestStepPresenter"
+                      Classes="HorizontalScroll"
                       ItemsSource="{Binding TestSteps}"
                       SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
                       IsReadOnly="True"
@@ -403,6 +404,11 @@
                       IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
             
                 <DataGrid.Styles>
+                    <Style Selector="DataGridCell.StepNumberCell">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
+
                     <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
                         <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
                         <Setter Property="Opacity" Value="1" />
@@ -418,22 +424,24 @@
             
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="70">
+                        <DataGridTemplateColumn.CellStyleClasses>
+                            <x:String>StepNumberCell</x:String>
+                        </DataGridTemplateColumn.CellStyleClasses>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
-                                <StackPanel Orientation="Horizontal"
-                                            Spacing="2"
-                                            VerticalAlignment="Center">
-                                
-                                    <Border Width="4"
-                                            Height="35"
-                                            Background="{Binding TestStep.StepBrush}"
-                                            VerticalAlignment="Top"
-                                            Margin="-19 -8 0 -8"/>
+                                <!-- The cell has no padding (StepNumberCell), so the accent stripe sits at the
+                                     cell edge without negative margins, which get clipped by the rows presenter -->
+                                <Grid ColumnDefinitions="4,*">
 
-                                    <TextBlock Text="{Binding TestStep.Number}"
+                                    <Border Grid.Column="0"
+                                            Background="{Binding TestStep.StepBrush}"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding TestStep.Number}"
+                                               Margin="10 0 12 0"
                                                VerticalAlignment="Center"/>
 
-                                </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
