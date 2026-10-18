@@ -832,6 +832,12 @@
   <data name="Text_UnsavedChanges" xml:space="preserve">
     <value>You have unsaved changes. Continue without saving?</value>
   </data>
+  <data name="Title_DeleteScript" xml:space="preserve">
+    <value>Delete Script</value>
+  </data>
+  <data name="Text_DeleteScript" xml:space="preserve">
+    <value>The selected script will be permanently deleted.</value>
+  </data>
   <data name="Title_AwaitingUserResponse" xml:space="preserve">
     <value>Waiting for User Response</value>
   </data>

@@ -832,6 +832,12 @@
   <data name="Text_UnsavedChanges" xml:space="preserve">
     <value>Sie haben ungespeicherte Änderungen. Trotzdem fortfahren?</value>
   </data>
+  <data name="Title_DeleteScript" xml:space="preserve">
+    <value>Skript löschen</value>
+  </data>
+  <data name="Text_DeleteScript" xml:space="preserve">
+    <value>Das ausgewählte Skript wird unwiderruflich gelöscht.</value>
+  </data>
   <data name="Title_AwaitingUserResponse" xml:space="preserve">
     <value>Warten auf Benutzereingabe</value>
   </data>
