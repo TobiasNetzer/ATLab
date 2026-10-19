@@ -10,13 +10,13 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 |--------------|--------|--------|
 | **Einzelschritt ausführen** | `F3` | Führt nur den ausgewählten Schritt aus (siehe unten). |
 | **Testausführung des ausgewählten Moduls starten** | | Führt nur die Schritte des ausgewählten Moduls aus, auch wenn das Modul deaktiviert ist. |
-| **Testausführung ab ausgewähltem Schritt starten** | | Führt die Sequenz ab dem ausgewählten Schritt aus. |
+| **Testausführung ab ausgewähltem Schritt starten** | | Führt das Modul des ausgewählten Schritts ab diesem Schritt aus. Der Lauf endet mit dem letzten Schritt des Moduls, auch wenn das Modul deaktiviert ist. |
 | **Dauertest starten** | | Führt die ganze Sequenz in einer Endlosschleife aus, bis sie gestoppt wird. |
 | **Testausführung starten** (▶) | `F5` | Führt die ganze Sequenz einmal aus. |
 | **Testausführung fortsetzen** | `Enter` | Während eines Laufs sichtbar. Beendet einen sich wiederholenden Schritt (Aktion *Wiederholen*) und fährt mit dem nächsten Schritt fort. |
 | **Testausführung stoppen** (■) | `Esc` | Bricht den laufenden Test ab. |
 
-Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und Modul- und Schrittliste folgen dem aktuellen Schritt. Es werden nur aktivierte Module ausgeführt. *Testausführung ab ausgewähltem Schritt starten* ist von einem Schritt in einem deaktivierten Modul aus nicht möglich.
+Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und Modul- und Schrittliste folgen dem aktuellen Schritt. *Testausführung starten* und *Dauertest starten* führen nur aktivierte Module aus.
 
 ### Unterschiede zwischen den Startarten
 
@@ -27,9 +27,9 @@ Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und Mo
 | Setzt Relais vorher und nachher zurück | ✔ | ✔ | ✔ | ✔ | – |
 | Befolgt Bestanden-/Fehlgeschlagen-Aktionen | ✔ | ✔ | ✔ | ✔ | – |
 | Zeigt *Kommentar anzeigen*-Dialog vor dem Schritt | ✔ | ✔ | ✔ | ✔ | – |
-| Aktualisiert die Laufzähler | ✔ | ✔ | ✔ | – | – |
+| Aktualisiert die Laufzähler | ✔ | ✔ | – | – | – |
 
-**Testausführung des ausgewählten Moduls starten** ist für die Entwicklung einzelner Module gedacht. Ein *Springe zu* auf einen Schritt außerhalb des Moduls beendet den Lauf mit einem Fehler.
+**Testausführung des ausgewählten Moduls starten** und **Testausführung ab ausgewähltem Schritt starten** sind für die Entwicklung einzelner Module gedacht. Ein *Springe zu* auf einen Schritt außerhalb des Moduls beendet den Lauf mit einem Fehler.
 
 **Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt.
 
@@ -63,7 +63,7 @@ Unterhalb der Schrittliste:
 | Statusbanner | **Test läuft** mit Fortschrittsbalken, danach **Test bestanden** (grün), **Test fehlgeschlagen** (rot), **Test abgebrochen** oder **Testausführung fehlgeschlagen**. |
 | **Testdauer** | Verstrichene Zeit des Laufs. |
 | **Fehlgeschlagene Schritte** | Anzahl fehlgeschlagener Schritte in diesem Lauf. Rot hervorgehoben, wenn größer als null. |
-| **Bestandene Tests** | Bestandene Läufe / alle Läufe seit dem Öffnen des Projekts, mit Prozentangabe. Nützlich bei Dauertests. |
+| **Bestandene Tests** | Bestandene Läufe / alle Läufe seit dem Öffnen des Projekts, mit Prozentangabe. Gezählt werden nur *Testausführung starten* und *Dauertest starten*. Nützlich bei Dauertests. |
 | **Bediener** | Benutzername des Betriebssystems; erscheint auch im Bericht als *Bediener*. |
 | **Prüfling (DUT)** | Gerätename, Revision, Variante und Teilenummer aus der [Registerkarte Dokumentation](13-documentation-tab.md#prüfling-dut), oder `-`. Beim Darüberfahren werden die einzelnen Felder angezeigt. |
 | **Seriennummer** | Seriennummer des aktuellen Laufs oder `-`. Beim Darüberfahren wird eine lange Seriennummer vollständig angezeigt. |

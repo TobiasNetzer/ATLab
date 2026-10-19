@@ -52,8 +52,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | Grenzwerte haben sich nach Eingabe des Sollwerts geändert | Beabsichtigt: Die Grenzwerte werden aus der **Standardtoleranz** neu berechnet. Zuerst den Sollwert, dann die Grenzwerte eingeben. |
 | Verzögerung ist viel länger als erwartet | Die Verzögerung ist in **Sekunden** angegeben. `500ms` für eine halbe Sekunde verwenden. |
 | *Lower limit is greater than upper limit* | Grenzwerte korrigieren, typischerweise wenn sie aus Variablen berechnet werden. |
-| *Step … tries to jump to a step that does not exist or belongs to a disabled module* | Das *Springe zu*-Ziel wurde gelöscht oder sein Modul ist deaktiviert (bzw. nicht Teil des Laufs, wenn nur ein Modul ausgeführt wird). Ein neues Ziel wählen oder das Modul aktivieren. |
-| *Module '…' is disabled. Enable it to start the test from the selected step.* | *Testausführung ab ausgewähltem Schritt starten* funktioniert nur in aktivierten Modulen. Modul aktivieren oder *Testausführung des ausgewählten Moduls starten* verwenden. |
+| *Step … tries to jump to a step that does not exist or belongs to a disabled module* | Das *Springe zu*-Ziel wurde gelöscht oder sein Modul ist deaktiviert (bzw. nicht Teil des Laufs, wenn nur ein Modul ausgeführt wird, z. B. beim Start ab dem ausgewählten Schritt). Ein neues Ziel wählen oder das Modul aktivieren. |
 | Eine Laufzeitvariable hat einen unerwarteten Startwert | In einem Lauf zugewiesene Werte bleiben für den nächsten Lauf erhalten. Variable bei Bedarf in einem frühen Schritt zurücksetzen. |
 | Shell-Befehl liefert sofort `0` | Unter Windows werden mit **Direktstart** Dateien, die keine `.exe` sind, über die Dateizuordnung geöffnet und nicht abgewartet. Den Interpreter direkt starten, z. B. `python script.py`. |
 

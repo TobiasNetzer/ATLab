@@ -52,8 +52,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | Limits changed after entering the nominal value | Intended: limits are recalculated from the **Default Tolerance**. Enter the nominal first, then the limits. |
 | Delay is much longer than expected | The delay is in **seconds**. Use `500ms` for half a second. |
 | *Lower limit is greater than upper limit* | Fix the limits, typically when they are calculated from variables. |
-| *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed). Choose a new target or enable the module. |
-| *Module '…' is disabled. Enable it to start the test from the selected step.* | *Start test execution from selected step* only works in enabled modules. Enable the module or use *Start test execution of selected module*. |
+| *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed, e.g. when starting from the selected step). Choose a new target or enable the module. |
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
 | Shell command returns `0` immediately | On Windows with **Direct Launch**, non-`.exe` files are opened via file association and not awaited. Start the interpreter directly, e.g. `python script.py`. |
 

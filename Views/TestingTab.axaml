@@ -227,7 +227,7 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent ArrowDownFromLine}"/>
+                            <ContentControl Content="{LucideIconContent ListEnd}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
 

@@ -10,13 +10,13 @@ Tests are run from the **Test Execution** tab. Operators normally work with deve
 |----------------|----------|--------|
 | **Execute single step** | `F3` | Runs only the selected step (see below). |
 | **Start test execution of selected module** | | Runs only the steps of the selected module, even if the module is disabled. |
-| **Start test execution from selected step** | | Runs the sequence starting at the selected step. |
+| **Start test execution from selected step** | | Runs the selected step's module, starting at the selected step. The run ends with the last step of the module, even if the module is disabled. |
 | **Start continuous test execution** | | Runs the whole sequence in an endless loop until stopped. |
 | **Start test execution** (▶) | `F5` | Runs the whole sequence once. |
 | **Continue test execution** | `Enter` | Visible during a run. Ends a step that is repeating (Pass/Fail-Action *Repeat*) and proceeds to the next step. |
 | **Stop test execution** (■) | `Esc` | Cancels the running test. |
 
-While a test runs, editing and project commands are disabled, and the module list and step list follow the current step. Only enabled modules are executed. *Start test execution from selected step* is not possible from a step in a disabled module.
+While a test runs, editing and project commands are disabled, and the module list and step list follow the current step. *Start test execution* and *Start continuous test execution* only execute enabled modules.
 
 ### Differences between the start modes
 
@@ -27,9 +27,9 @@ While a test runs, editing and project commands are disabled, and the module lis
 | Clears relays before and after | ✔ | ✔ | ✔ | ✔ | – |
 | Follows Pass/Fail-Actions | ✔ | ✔ | ✔ | ✔ | – |
 | Shows *Show Comment* dialog before the step | ✔ | ✔ | ✔ | ✔ | – |
-| Updates the run counters | ✔ | ✔ | ✔ | – | – |
+| Updates the run counters | ✔ | ✔ | – | – | – |
 
-**Start test execution of selected module** is meant for developing a single module. A *Jump To* to a step outside the module ends the run with an error.
+**Start test execution of selected module** and **Start test execution from selected step** are meant for developing a single module. A *Jump To* to a step outside the module ends the run with an error.
 
 **Execute single step** is meant for development: it switches the step's relays, waits, acquires and evaluates the value, and shows the result — nothing else. The relays **stay in the step's state** afterwards. Use it to tune masks, limits and delays. Ignored steps are not executed.
 
@@ -63,7 +63,7 @@ Below the step list:
 | Status banner | **Running Test** with a progress bar, then **Test Passed** (green), **Test Failed** (red), **Test Canceled** or **Test Execution Failed**. |
 | **Test Duration** | Elapsed time of the run. |
 | **Failed Steps** | Number of failed steps in this run. Highlighted in red when greater than zero. |
-| **Passed Tests** | Passed runs / total runs since the project was opened, with percentage. Useful for continuous runs. |
+| **Passed Tests** | Passed runs / total runs since the project was opened, with percentage. Only *Start test execution* and *Start continuous test execution* are counted. Useful for continuous runs. |
 | **Operator** | Operating-system user name; also printed as *Operator* in the report. |
 | **Device Under Test** | Device name, revision, variant and part number from the [Documentation tab](13-documentation-tab.md#device-under-test), or `-`. Hover for the individual fields. |
 | **Serial Number** | Serial number of the current run, or `-`. Hover to see a long serial number in full. |

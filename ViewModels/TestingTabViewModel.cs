@@ -117,7 +117,7 @@ public partial class TestingTabViewModel : ViewModelBase
     [ObservableProperty]
     private bool _startModuleTestBusy;
     
-    private bool _isModuleRun;
+    private bool _isPartialRun;
 
     private bool _allowResultSave;
     private DateTimeOffset _startTime;
@@ -871,16 +871,16 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         using (_projectModel.SuppressDirtyTracking())
         {
-            _executionSteps = BuildExecutionSteps();
-            var index = SelectedStep != null ? _executionSteps.IndexOf(SelectedStep) : 0;
+            var module = SelectedStep != null ? FindModuleViewModel(SelectedStep.Module) : SelectedModule;
 
-            if (index < 0)
-            {
-                _loggingService.Error($"Module '{SelectedStep!.Module.Name}' is disabled. Enable it to start the test from the selected step.");
+            if (module == null)
                 return;
-            }
+            
+            _executionSteps = module.TestSteps.ToList();
+            var index = SelectedStep != null ? Math.Max(_executionSteps.IndexOf(SelectedStep), 0) : 0;
 
             StartFromStepBusy = true;
+            _isPartialRun = true;
             ResetAllResults();
             NumberFailedSteps = 0;
             TestStatus = TestStatus.RUNNING;
@@ -888,9 +888,16 @@ public partial class TestingTabViewModel : ViewModelBase
             TestDuration = "0s";
 
             IsShowContinueButton = true;
-            await _testExecutor.StartTestAsync(_executionSteps, index, _runtimeVariables);
-            IsShowContinueButton = false;
-            StartFromStepBusy = false;
+            try
+            {
+                await _testExecutor.StartTestAsync(_executionSteps, index, _runtimeVariables);
+            }
+            finally
+            {
+                IsShowContinueButton = false;
+                _isPartialRun = false;
+                StartFromStepBusy = false;
+            }
         }
     }
 
@@ -903,7 +910,7 @@ public partial class TestingTabViewModel : ViewModelBase
         using (_projectModel.SuppressDirtyTracking())
         {
             StartModuleTestBusy = true;
-            _isModuleRun = true;
+            _isPartialRun = true;
             ResetAllResults();
             NumberFailedSteps = 0;
             TestProgress = 0;
@@ -921,7 +928,7 @@ public partial class TestingTabViewModel : ViewModelBase
             finally
             {
                 IsShowContinueButton = false;
-                _isModuleRun = false;
+                _isPartialRun = false;
                 StartModuleTestBusy = false;
             }
         }
@@ -1062,7 +1069,7 @@ public partial class TestingTabViewModel : ViewModelBase
             foreach (var module in Modules)
                 module.IsRunning = false;
 
-            if (_isModuleRun)
+            if (_isPartialRun)
             {
                 if (TestStatus == TestStatus.RUNNING)
                     TestStatus = NumberFailedSteps > 0 ? TestStatus.FAILED : TestStatus.PASSED;
