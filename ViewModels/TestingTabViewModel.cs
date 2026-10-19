@@ -279,12 +279,14 @@ public partial class TestingTabViewModel : ViewModelBase
     {
         var vm = new TestModuleViewModel(module, _hardwareInfo);
         vm.StepPropertyChanged += OnStepPropertyChanged;
+        vm.TestSteps.CollectionChanged += OnModuleTestStepsChanged;
         return vm;
     }
 
     private void RemoveModuleViewModel(TestModuleViewModel vm)
     {
         vm.StepPropertyChanged -= OnStepPropertyChanged;
+        vm.TestSteps.CollectionChanged -= OnModuleTestStepsChanged;
         vm.Detach();
         Modules.Remove(vm);
 
@@ -406,9 +408,20 @@ public partial class TestingTabViewModel : ViewModelBase
         PasteTestStepsCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(_testStepEditor.CanPaste));
     }
+    
+    private void OnModuleTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        NotifyMoveStepCommandsChanged();
+    }
+
+    private void NotifyMoveStepCommandsChanged()
+    {
+        MoveStepUpCommand.NotifyCanExecuteChanged();
+        MoveStepDownCommand.NotifyCanExecuteChanged();
+    }
 
     private bool _isUpdatingMultipleSteps;
-    
+
     private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (_isUpdatingMultipleSteps || _isChangingSelection || sender is not TestStepViewModel changedVm)
@@ -486,6 +499,8 @@ public partial class TestingTabViewModel : ViewModelBase
         // so it doesn't keep displaying the previously selected step
         var stepToLoad = value ?? new TestStepViewModel(new TestStep(), new TestModule(), _hardwareInfo);
 
+        NotifyMoveStepCommandsChanged();
+
         _isChangingSelection = true;
         try
         {
@@ -519,6 +534,7 @@ public partial class TestingTabViewModel : ViewModelBase
         PasteTestStepsCommand.NotifyCanExecuteChanged();
         StartModuleTestCommand.NotifyCanExecuteChanged();
         NotifyModuleCommandsChanged();
+        NotifyMoveStepCommandsChanged();
     }
 
     partial void OnTestStatusChanged(TestStatus value)
@@ -578,6 +594,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool CanRemoveModule() => IsModuleSelected() && Modules.Count > 1;
     private bool CanMoveModuleUp() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) > 0;
     private bool CanMoveModuleDown() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) < Modules.Count - 1;
+    private bool CanMoveStepUp() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) > 0;
+    private bool CanMoveStepDown() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) is var index && index >= 0 && index < TestSteps.Count - 1;
 
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task NewFile()
@@ -715,7 +733,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(CanMoveStepUp))]
     private void MoveStepUp()
     {
         if (SelectedModule == null || SelectedStep == null)
@@ -727,7 +745,7 @@ public partial class TestingTabViewModel : ViewModelBase
             Select(step);
     }
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(CanMoveStepDown))]
     private void MoveStepDown()
     {
         if (SelectedModule == null || SelectedStep == null)

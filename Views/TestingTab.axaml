@@ -429,8 +429,6 @@
                         </DataGridTemplateColumn.CellStyleClasses>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
-                                <!-- The cell has no padding (StepNumberCell), so the accent stripe sits at the
-                                     cell edge without negative margins, which get clipped by the rows presenter -->
                                 <Grid ColumnDefinitions="4,*">
 
                                     <Border Grid.Column="0"

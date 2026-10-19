@@ -258,6 +258,13 @@ public partial class ProjectModel : ObservableObject
     
     private void ModulesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // A Move lists the item in both NewItems and OldItems, handling it would end up unsubscribing the item
+        if (e.Action == NotifyCollectionChangedAction.Move)
+        {
+            MarkDirty();
+            return;
+        }
+
         if (e.NewItems != null)
         {
             foreach (TestModule module in e.NewItems)
@@ -313,6 +320,13 @@ public partial class ProjectModel : ObservableObject
 
     private void TestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // A Move lists the item in both NewItems and OldItems, handling it would end up unsubscribing the item
+        if (e.Action == NotifyCollectionChangedAction.Move)
+        {
+            MarkDirty();
+            return;
+        }
+
         if (e.NewItems != null)
         {
             foreach (TestStep step in e.NewItems)

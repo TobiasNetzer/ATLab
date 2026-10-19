@@ -95,7 +95,10 @@ public partial class TestModuleViewModel : ViewModelBase
             }
             case NotifyCollectionChangedAction.Move:
             {
-                TestSteps.Move(e.OldStartingIndex, e.NewStartingIndex);
+                // The DataGrid does not refresh its rows on a Move notification, so remove and re-insert instead
+                var item = TestSteps[e.OldStartingIndex];
+                TestSteps.RemoveAt(e.OldStartingIndex);
+                TestSteps.Insert(e.NewStartingIndex, item);
                 break;
             }
             case NotifyCollectionChangedAction.Replace:
