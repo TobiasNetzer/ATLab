@@ -11,22 +11,30 @@
 | `Ctrl+S` | Save project |
 | `Ctrl+Shift+S` | Save project as |
 | `F5` | Start test execution |
-| `F3` | Execute single step |
+| `Ctrl+F5` | Start continuous test execution (development mode) |
+| `F3` | Execute single step (development mode) |
+| `F4` | Start test execution of selected module (development mode) |
+| `Shift+F4` | Start test execution from selected step (development mode) |
+| `F8` | Go to next failed test step |
+| `Shift+F8` | Go to previous failed test step |
+| `F9` | Enable / disable debug mode (development mode) |
 | `F10` | Advance single step (debug mode) |
+| `F12` | Determine matrix channel via external probe |
 | `Enter` | Continue test execution (end a repeating step) |
 | `Esc` | Stop test execution |
-| `F6` | Determine matrix channel via external probe |
 | `F1` | Open user guide (PDF in the current UI language) |
 
 ### Step list (Test Execution tab)
 
 | Shortcut | Action |
 |----------|--------|
-| `Insert` | Add step |
-| `Delete` | Remove selected steps |
+| `Insert` | Add step (development mode) |
+| `Delete` | Remove selected steps (development mode) |
 | `Ctrl+C` | Copy selected steps |
-| `Ctrl+X` | Cut selected steps |
-| `Ctrl+V` | Paste steps |
+| `Ctrl+X` | Cut selected steps (development mode) |
+| `Ctrl+V` | Paste steps (development mode) |
+| `Ctrl+D` | Duplicate selected steps (development mode) |
+| `F2` | Edit the name of the selected step (development mode) |
 | `Ctrl`/`Shift` + click | Multi-select |
 
 ## Toolbar of the Test Execution tab

@@ -9,9 +9,9 @@ Tests are run from the **Test Execution** tab. Operators normally work with deve
 | Toolbar button | Shortcut | Action |
 |----------------|----------|--------|
 | **Execute single step** | `F3` | Runs only the selected step (see below). |
-| **Start test execution of selected module** | | Runs only the steps of the selected module, even if the module is disabled. |
-| **Start test execution from selected step** | | Runs the selected step's module, starting at the selected step. The run ends with the last step of the module, even if the module is disabled. |
-| **Start continuous test execution** | | Runs the whole sequence in an endless loop until stopped. |
+| **Start test execution of selected module** | `F4` | Runs only the steps of the selected module, even if the module is disabled. |
+| **Start test execution from selected step** | `Shift+F4` | Runs the selected step's module, starting at the selected step. The run ends with the last step of the module, even if the module is disabled. |
+| **Start continuous test execution** | `Ctrl+F5` | Runs the whole sequence in an endless loop until stopped. |
 | **Start test execution** (▶) | `F5` | Runs the whole sequence once. |
 | **Continue test execution** | `Enter` | Visible during a run. Ends a step that is repeating (Pass/Fail-Action *Repeat*) and proceeds to the next step. |
 | **Stop test execution** (■) | `Esc` | Cancels the running test. |
@@ -85,10 +85,10 @@ Results are only exported for **Passed** and **Failed** runs.
 
 After a run, two buttons to the right of the execution controls jump between the failed steps:
 
-| Button | Function |
-|--------|----------|
-| **Go to previous failed test step** (outlined arrow up with bar) | Selects the closest failed step before the selected step. |
-| **Go to next failed test step** (outlined arrow down with bar) | Selects the closest failed step after the selected step. If no step is selected, it selects the first failed step. |
+| Button | Shortcut | Function |
+|--------|----------|----------|
+| **Go to previous failed test step** (outlined arrow up with bar) | `Shift+F8` | Selects the closest failed step before the selected step. |
+| **Go to next failed test step** (outlined arrow down with bar) | `F8` | Selects the closest failed step after the selected step. If no step is selected, it selects the first failed step. |
 
 The search covers all modules in their order and switches the module list to the module of the found step. A button is only enabled if there is a failed step in its direction, so both are disabled when no executed step has failed. Both are disabled while a test is running. They are also available with development mode switched off.
 
@@ -102,7 +102,7 @@ In development mode, two extra buttons appear to the right of the failed step bu
 
 | Button | Shortcut | Function |
 |--------|----------|----------|
-| **Enable debug mode** (bug icon) | | When active, every started run pauses **before each step**. |
+| **Enable debug mode** (bug icon) | `F9` | When active, every started run pauses **before each step**. |
 | **Advance single step** (curved arrow with dot) | `F10` | Executes the step the run is paused at and pauses again before the next one. |
 
 Debug mode lets you walk through a sequence step by step with all Pass/Fail-Actions, dialogs and relay changes, and inspect results and relay states in between. Stop the run at any time with `Esc`. Debug mode can only be switched while no test is running.

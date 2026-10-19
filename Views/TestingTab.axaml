@@ -565,6 +565,8 @@
                                 Command="{Binding CutTestStepsCommand}" />
                     <KeyBinding Gesture="Ctrl+V"
                                 Command="{Binding PasteTestStepsCommand}" />
+                    <KeyBinding Gesture="Ctrl+D"
+                                Command="{Binding DuplicateTestStepsCommand}" />
                 </DataGrid.KeyBindings>
             
             </DataGrid>
@@ -852,7 +854,8 @@
                     </MultiBinding>
                 </StackPanel.IsEnabled>
                 
-                <controls:TestStepConfigurator 
+                <controls:TestStepConfigurator
+                    x:Name="StepConfigurator"
                     DataContext="{Binding WorkspaceEditor.TestStepConfigurator}"/>
 
                 <controls:ScriptSelector

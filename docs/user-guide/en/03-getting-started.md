@@ -47,7 +47,7 @@ The window title shows the project name, followed by `*` when there are unsaved 
 |---------|----------|
 | Info button (left) | Opens the **event log**: every info, warning and error message of this session, newest first. |
 | **No test hardware connected** | Shown in simulator mode. |
-| Probe button (right) | **Determine matrix channel via external probe** (`F6`). Touch a net with the external probe and ATLab shows `Matrix Channel: n`. See [Test Hardware](14-test-hardware.md#finding-a-matrix-channel-with-the-probe). |
+| Probe button (right) | **Determine matrix channel via external probe** (`F12`). Touch a net with the external probe and ATLab shows `Matrix Channel: n`. See [Test Hardware](14-test-hardware.md#finding-a-matrix-channel-with-the-probe). |
 | Sun/moon button | **Toggle theme** between light and dark. |
 | Languages button | **Toggle language** between English and German. |
 | Book button (far right) | **Open user guide** (`F1`). Opens this guide as a PDF in the current UI language. If the PDF is missing (e.g. in a self-built development version), the English PDF or the online guide on GitHub is opened instead. |

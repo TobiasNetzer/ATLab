@@ -64,7 +64,8 @@
                             Orientation="Vertical"
                             Spacing="2">
                     <TextBlock Text="{helpers:Localize Label_Name}"/>
-                    <TextBox Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
+                    <TextBox x:Name="StepNameTextBox"
+                             Text="{Binding TestStepViewModel.TestStep.Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus, FallbackValue=''}"
                              helpers:FocusExtensions.MoveFocusOnEnter="True"
                              TabIndex="0"/>
                 </StackPanel>

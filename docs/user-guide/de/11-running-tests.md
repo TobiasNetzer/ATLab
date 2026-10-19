@@ -9,9 +9,9 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 | Schaltfläche | Kürzel | Aktion |
 |--------------|--------|--------|
 | **Einzelschritt ausführen** | `F3` | Führt nur den ausgewählten Schritt aus (siehe unten). |
-| **Testausführung des ausgewählten Moduls starten** | | Führt nur die Schritte des ausgewählten Moduls aus, auch wenn das Modul deaktiviert ist. |
-| **Testausführung ab ausgewähltem Schritt starten** | | Führt das Modul des ausgewählten Schritts ab diesem Schritt aus. Der Lauf endet mit dem letzten Schritt des Moduls, auch wenn das Modul deaktiviert ist. |
-| **Dauertest starten** | | Führt die ganze Sequenz in einer Endlosschleife aus, bis sie gestoppt wird. |
+| **Testausführung des ausgewählten Moduls starten** | `F4` | Führt nur die Schritte des ausgewählten Moduls aus, auch wenn das Modul deaktiviert ist. |
+| **Testausführung ab ausgewähltem Schritt starten** | `Umschalt+F4` | Führt das Modul des ausgewählten Schritts ab diesem Schritt aus. Der Lauf endet mit dem letzten Schritt des Moduls, auch wenn das Modul deaktiviert ist. |
+| **Dauertest starten** | `Strg+F5` | Führt die ganze Sequenz in einer Endlosschleife aus, bis sie gestoppt wird. |
 | **Testausführung starten** (▶) | `F5` | Führt die ganze Sequenz einmal aus. |
 | **Testausführung fortsetzen** | `Enter` | Während eines Laufs sichtbar. Beendet einen sich wiederholenden Schritt (Aktion *Wiederholen*) und fährt mit dem nächsten Schritt fort. |
 | **Testausführung stoppen** (■) | `Esc` | Bricht den laufenden Test ab. |
@@ -85,10 +85,10 @@ Ergebnisse werden nur bei **bestandenen** und **fehlgeschlagenen** Läufen expor
 
 Nach einem Lauf springen zwei Schaltflächen rechts neben der Ausführungssteuerung zwischen den fehlgeschlagenen Schritten:
 
-| Schaltfläche | Funktion |
-|--------------|----------|
-| **Zum vorherigen fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach oben mit Strich) | Wählt den nächstgelegenen fehlgeschlagenen Schritt vor dem ausgewählten Schritt aus. |
-| **Zum nächsten fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach unten mit Strich) | Wählt den nächstgelegenen fehlgeschlagenen Schritt nach dem ausgewählten Schritt aus. Ist kein Schritt ausgewählt, wird der erste fehlgeschlagene Schritt ausgewählt. |
+| Schaltfläche | Kürzel | Funktion |
+|--------------|--------|----------|
+| **Zum vorherigen fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach oben mit Strich) | `Umschalt+F8` | Wählt den nächstgelegenen fehlgeschlagenen Schritt vor dem ausgewählten Schritt aus. |
+| **Zum nächsten fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach unten mit Strich) | `F8` | Wählt den nächstgelegenen fehlgeschlagenen Schritt nach dem ausgewählten Schritt aus. Ist kein Schritt ausgewählt, wird der erste fehlgeschlagene Schritt ausgewählt. |
 
 Die Suche läuft über alle Module in ihrer Reihenfolge und wechselt in der Modulliste zum Modul des gefundenen Schritts. Eine Schaltfläche ist nur aktiv, wenn es in ihrer Richtung einen fehlgeschlagenen Schritt gibt; ist kein ausgeführter Schritt fehlgeschlagen, sind beide gesperrt. Während ein Test läuft, sind beide gesperrt. Sie stehen auch bei ausgeschaltetem Entwicklungsmodus zur Verfügung.
 
@@ -102,7 +102,7 @@ Im Entwicklungsmodus erscheinen rechts neben den Schaltflächen für fehlgeschla
 
 | Schaltfläche | Kürzel | Funktion |
 |--------------|--------|----------|
-| **Debug-Modus aktivieren** (Käfer-Symbol) | | Wenn aktiv, hält jeder gestartete Lauf **vor jedem Schritt** an. |
+| **Debug-Modus aktivieren** (Käfer-Symbol) | `F9` | Wenn aktiv, hält jeder gestartete Lauf **vor jedem Schritt** an. |
 | **Einzelschritt weiterschalten** (gebogener Pfeil mit Punkt) | `F10` | Führt den Schritt aus, an dem der Lauf wartet, und hält vor dem nächsten erneut an. |
 
 Mit dem Debug-Modus gehen Sie eine Sequenz Schritt für Schritt durch – mit allen Aktionen, Dialogen und Relaisänderungen – und können dazwischen Ergebnisse und Relaiszustände prüfen. Mit `Esc` stoppen Sie den Lauf jederzeit. Der Debug-Modus lässt sich nur umschalten, während kein Test läuft.

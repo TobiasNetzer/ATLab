@@ -609,6 +609,17 @@ public partial class TestingTabViewModel : ViewModelBase
     partial void OnIsDevelopmentModeChanged(bool value)
     {
         _settingsService.Settings.IsDevelopmentMode = value;
+
+        AddTestStepCommand.NotifyCanExecuteChanged();
+        RemoveTestStepsCommand.NotifyCanExecuteChanged();
+        CutTestStepsCommand.NotifyCanExecuteChanged();
+        PasteTestStepsCommand.NotifyCanExecuteChanged();
+        DuplicateTestStepsCommand.NotifyCanExecuteChanged();
+        StartSingleStepTestCommand.NotifyCanExecuteChanged();
+        StartModuleTestCommand.NotifyCanExecuteChanged();
+        StartTestFromSelectionCommand.NotifyCanExecuteChanged();
+        StartTestRepeatCommand.NotifyCanExecuteChanged();
+        ToggleDebugModeCommand.NotifyCanExecuteChanged();
     }
     
     partial void OnIsShowMeasurementPanelChanged(bool value)
@@ -629,7 +640,10 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING && !_serialNumberDialogService.IsDialogOpen;
     private bool CanRequestSingleStepContinue() => IsDebugMode && TestStatus == TestStatus.RUNNING && !IsSingleStepContinueRequested;
     private bool IsModuleSelected() => IsNotTestRunning() && SelectedModule != null;
-    private bool CanPasteTestStep() => IsModuleSelected() && _testStepEditor.CanPaste;
+    private bool IsDevelopmentIdle() => IsDevelopmentMode && IsNotTestRunning();
+    private bool CanStartModuleTest() => IsDevelopmentMode && IsModuleSelected();
+    private bool CanAddTestStep() => IsDevelopmentMode && IsModuleSelected();
+    private bool CanPasteTestStep() => IsDevelopmentMode && IsModuleSelected() && _testStepEditor.CanPaste;
     private bool CanRemoveModule() => IsModuleSelected() && Modules.Count > 1;
     private bool CanMoveModuleUp() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) > 0;
     private bool CanMoveModuleDown() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) < Modules.Count - 1;
@@ -674,7 +688,7 @@ public partial class TestingTabViewModel : ViewModelBase
         ResetTestCounters();
     }
 
-    [RelayCommand(CanExecute = nameof(IsModuleSelected))]
+    [RelayCommand(CanExecute = nameof(CanAddTestStep))]
     private void AddTestStep()
     {
         if (SelectedModule == null)
@@ -685,7 +699,7 @@ public partial class TestingTabViewModel : ViewModelBase
         Select(step);
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private void DuplicateTestSteps()
     {
         if (SelectedModule == null || SelectedSteps.Count == 0)
@@ -732,7 +746,7 @@ public partial class TestingTabViewModel : ViewModelBase
         NotifyPasteChanged();
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private void CutTestSteps()
     {
         if (SelectedModule == null)
@@ -751,7 +765,7 @@ public partial class TestingTabViewModel : ViewModelBase
         NotifyPasteChanged();
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private void RemoveTestSteps()
     {
         if (SelectedModule == null || SelectedSteps.Count == 0)
@@ -902,7 +916,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private async Task StartTestRepeat()
     {
         using (_projectModel.SuppressDirtyTracking())
@@ -931,7 +945,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private async Task StartTestFromSelection()
     {
         using (_projectModel.SuppressDirtyTracking())
@@ -966,7 +980,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsModuleSelected))]
+    [RelayCommand(CanExecute = nameof(CanStartModuleTest))]
     private async Task StartModuleTest()
     {
         if (SelectedModule == null)
@@ -999,7 +1013,7 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private async Task StartSingleStepTest()
     {
         if (SelectedStep == null)
@@ -1037,7 +1051,7 @@ public partial class TestingTabViewModel : ViewModelBase
     [RelayCommand]
     private void ToggleDevelopmentMode() => IsDevelopmentMode = !IsDevelopmentMode;
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private void ToggleDebugMode()
     {
         IsDebugMode = !IsDebugMode;

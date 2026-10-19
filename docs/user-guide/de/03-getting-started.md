@@ -47,7 +47,7 @@ Die Titelleiste zeigt den Projektnamen, gefolgt von `*` bei ungespeicherten Änd
 |---------|----------|
 | Info-Schaltfläche (links) | Öffnet das **Ereignisprotokoll**: alle Info-, Warn- und Fehlermeldungen dieser Sitzung, neueste zuerst. |
 | **Keine Test-Hardware verbunden** | Wird im Simulatormodus angezeigt. |
-| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F6`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](14-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
+| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](14-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
 | Sonne/Mond | **Design umschalten** zwischen hell und dunkel. |
 | Sprachen | **Sprache umschalten** zwischen Deutsch und Englisch. |
 | Buch (ganz rechts) | **Benutzerhandbuch öffnen** (`F1`). Öffnet dieses Handbuch als PDF in der aktuellen Oberflächensprache. Fehlt das PDF (z. B. in einer selbst gebauten Entwicklungsversion), wird stattdessen das englische PDF oder das Online-Handbuch auf GitHub geöffnet. |

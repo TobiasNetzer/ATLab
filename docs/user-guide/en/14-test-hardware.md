@@ -50,7 +50,7 @@ The acknowledgement checkbox is cleared after each run, so it must be ticked aga
 To find out which matrix channel a test point is connected to (for example while building a fixture or writing a sequence):
 
 1. Touch the test point with the **external probe**.
-2. Click the probe button in the status bar (**Determine matrix channel via external probe**) or press `F6`.
+2. Click the probe button in the status bar (**Determine matrix channel via external probe**) or press `F12`. This is not possible while a test is running.
 3. The status bar shows `Matrix Channel: <n>`, or `-` if the point is not connected to any matrix channel. If no probe is detected, *External probe not detected* is shown and an error is logged.
 
 This works from any tab.

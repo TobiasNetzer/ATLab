@@ -11,22 +11,30 @@
 | `Strg+S` | Projekt speichern |
 | `Strg+Umschalt+S` | Projekt speichern unter |
 | `F5` | Testausführung starten |
-| `F3` | Einzelschritt ausführen |
+| `Strg+F5` | Dauertest starten (Entwicklungsmodus) |
+| `F3` | Einzelschritt ausführen (Entwicklungsmodus) |
+| `F4` | Testausführung des ausgewählten Moduls starten (Entwicklungsmodus) |
+| `Umschalt+F4` | Testausführung ab ausgewähltem Schritt starten (Entwicklungsmodus) |
+| `F8` | Zum nächsten fehlgeschlagenen Testschritt springen |
+| `Umschalt+F8` | Zum vorherigen fehlgeschlagenen Testschritt springen |
+| `F9` | Debug-Modus ein- / ausschalten (Entwicklungsmodus) |
 | `F10` | Einzelschritt weiterschalten (Debug-Modus) |
+| `F12` | Matrix-Kanal über externe Prüfspitze ermitteln |
 | `Enter` | Testausführung fortsetzen (sich wiederholenden Schritt beenden) |
 | `Esc` | Testausführung stoppen |
-| `F6` | Matrix-Kanal über externe Prüfspitze ermitteln |
 | `F1` | Benutzerhandbuch öffnen (PDF in der aktuellen Oberflächensprache) |
 
 ### Schrittliste (Registerkarte Testausführung)
 
 | Kürzel | Aktion |
 |--------|--------|
-| `Einfg` | Schritt hinzufügen |
-| `Entf` | Ausgewählte Schritte entfernen |
+| `Einfg` | Schritt hinzufügen (Entwicklungsmodus) |
+| `Entf` | Ausgewählte Schritte entfernen (Entwicklungsmodus) |
 | `Strg+C` | Ausgewählte Schritte kopieren |
-| `Strg+X` | Ausgewählte Schritte ausschneiden |
-| `Strg+V` | Schritte einfügen |
+| `Strg+X` | Ausgewählte Schritte ausschneiden (Entwicklungsmodus) |
+| `Strg+V` | Schritte einfügen (Entwicklungsmodus) |
+| `Strg+D` | Ausgewählte Schritte duplizieren (Entwicklungsmodus) |
+| `F2` | Namen des ausgewählten Schritts bearbeiten (Entwicklungsmodus) |
 | `Strg`/`Umschalt` + Klick | Mehrfachauswahl |
 
 ## Werkzeugleiste der Registerkarte Testausführung

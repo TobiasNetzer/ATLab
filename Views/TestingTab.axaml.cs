@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 
 namespace ATLab.Views;
 
@@ -15,5 +16,18 @@ public partial class TestingTab : UserControl
             if (grid.SelectedItem != null)
                 grid.ScrollIntoView(grid.SelectedItem, null);
         };
+    }
+
+    // F2 jumps into the step name field
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.F2 && e.KeyModifiers == KeyModifiers.None)
+        {
+            StepConfigurator.FocusStepName();
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
     }
 }

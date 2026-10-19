@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
@@ -114,13 +115,22 @@ public partial class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(WindowTitle));
             }
         };
+
+        TestingTab.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName is nameof(TestingTabViewModel.TestStatus))
+                FindMatrixChannelCommand.NotifyCanExecuteChanged();
+        };
     }
     
     private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
     
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
-    [RelayCommand]
+    // Probing talks to the test hardware, which must not happen in the middle of a run
+    private bool IsNotTestRunning() => TestingTab.TestStatus != TestStatus.RUNNING;
+
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
     private async Task FindMatrixChannel()
     {
         var result = await _testHardware.FindMeasChannel();

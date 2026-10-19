@@ -43,7 +43,7 @@ Use `Ctrl`+click and `Shift`+click to select multiple steps. The configuration p
 | **Add a new test step** (`+`) | Add | `Insert` | Inserts a new step after the selection (or at the end). |
 | **Remove selected test steps** (`−`) | Remove | `Delete` | Deletes the selected steps. |
 | **Move selected test step up / down** (↑ / ↓) | Move Up / Move Down | | Moves the selected step by one position within its module. Disabled when the step is already first (up) or last (down). |
-| **Duplicate selected test steps** | Duplicate | | Inserts copies directly after the selection. |
+| **Duplicate selected test steps** | Duplicate | `Ctrl+D` | Inserts copies directly after the selection. |
 | **Cut selected test steps** | Cut | `Ctrl+X` | Removes the steps and keeps them for pasting. |
 | **Copy selected test steps** | Copy | `Ctrl+C` | Copies the steps. |
 | **Paste test steps** | Paste | `Ctrl+V` | Inserts the copied/cut steps after the selection. |

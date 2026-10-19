@@ -50,7 +50,7 @@ Das Bestätigungs-Kontrollkästchen wird nach jedem Lauf zurückgesetzt und muss
 So finden Sie heraus, mit welchem Matrix-Kanal ein Testpunkt verbunden ist (z. B. beim Bau einer Prüfvorrichtung oder beim Schreiben einer Sequenz):
 
 1. Den Testpunkt mit der **externen Prüfspitze** berühren.
-2. Die Prüfspitzen-Schaltfläche in der Statusleiste (**Matrix-Kanal über externe Prüfspitze ermitteln**) klicken oder `F6` drücken.
+2. Die Prüfspitzen-Schaltfläche in der Statusleiste (**Matrix-Kanal über externe Prüfspitze ermitteln**) klicken oder `F12` drücken. Während ein Test läuft, ist das nicht möglich.
 3. Die Statusleiste zeigt `Matrix Channel: <n>` oder `-`, wenn der Punkt mit keinem Matrix-Kanal verbunden ist. Wird keine Prüfspitze erkannt, erscheint *External probe not detected* und ein Fehler wird protokolliert.
 
 Das funktioniert auf jeder Registerkarte.

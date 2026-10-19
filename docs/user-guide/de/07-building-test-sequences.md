@@ -43,7 +43,7 @@ Mit `Strg`+Klick und `Umschalt`+Klick wählen Sie mehrere Schritte aus. Der Konf
 | **Neuen Testschritt hinzufügen** (`+`) | Hinzufügen | `Einfg` | Fügt einen neuen Schritt nach der Auswahl (oder am Ende) ein. |
 | **Ausgewählte Testschritte entfernen** (`−`) | Entfernen | `Entf` | Löscht die ausgewählten Schritte. |
 | **Ausgewählten Testschritt nach oben / unten verschieben** (↑ / ↓) | Nach oben / Nach unten | | Verschiebt den ausgewählten Schritt innerhalb seines Moduls um eine Position. Gesperrt, wenn der Schritt bereits der erste (nach oben) oder letzte (nach unten) ist. |
-| **Ausgewählte Testschritte duplizieren** | Duplizieren | | Fügt Kopien direkt nach der Auswahl ein. |
+| **Ausgewählte Testschritte duplizieren** | Duplizieren | `Strg+D` | Fügt Kopien direkt nach der Auswahl ein. |
 | **Ausgewählte Testschritte ausschneiden** | Ausschneiden | `Strg+X` | Entfernt die Schritte und hält sie zum Einfügen bereit. |
 | **Ausgewählte Testschritte kopieren** | Kopieren | `Strg+C` | Kopiert die Schritte. |
 | **Testschritte einfügen** | Einfügen | `Strg+V` | Fügt die kopierten/ausgeschnittenen Schritte nach der Auswahl ein. |
