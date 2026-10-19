@@ -25,7 +25,7 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 |---------|-----------|
 | **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](04-projects.md). |
 | **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](07-building-test-sequences.md#module). |
-| **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. |
+| **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. Siehe [Wie ein Testschritt ausgeführt wird](11-running-tests.md#wie-ein-testschritt-ausgeführt-wird). |
 | **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Shell-Befehl, Benutzereingabe, Ausdruck* oder *Datei*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
@@ -35,20 +35,6 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 | **Stimulations- / Ext. Stimulationskanäle** | Einzeln schaltbare Relais des Adapters, pro Schritt eingestellt. |
 | **Entwicklungsmodus** | Bearbeitungsmodus der Registerkarte Testausführung. Ist er aus, zeigt die Registerkarte nur Sequenz und Ergebnisse – die Bedieneransicht. |
 | **Simulator** | Virtueller Test Interface Adapter, der verwendet wird, wenn keine Hardware angeschlossen ist. Relais- und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun. |
-
-## Wie ein Testschritt ausgeführt wird
-
-Jeder Schritt durchläuft dieselben Phasen:
-
-1. **Kommentardialog (optional)** – ist *Kommentar anzeigen* aktiv, wird der Kommentar angezeigt und der Bediener muss **Weiter** klicken.
-2. **Werte auflösen** – Grenzwerte, Sollwert und Verzögerung werden berechnet, einschließlich `{Variable}`-Verweisen.
-3. **Relais schalten** – Matrix-, Stimulations- und externe Stimulationsrelais werden gemäß Schritt eingestellt.
-4. **Warten** – die Verzögerung des Schritts läuft ab (bei mehr als einer Sekunde mit Fortschrittsbalken).
-5. **Erfassen** – die Auswertungsquelle liefert einen Rohwert; die Antwortverarbeitung kann daraus eine Zahl extrahieren.
-6. **Bewerten** – der Wert wird mit Unter- und Obergrenze verglichen; die Abweichung vom Sollwert wird berechnet.
-7. **Entscheiden** – die Bestanden- oder Fehlgeschlagen-Aktion legt fest, wie es weitergeht (fortfahren, wiederholen, springen, beenden oder Kommentar anzeigen).
-
-Vor dem ersten und nach dem letzten Schritt werden alle Relais zurückgesetzt.
 
 ## Für wen dieses Handbuch gedacht ist
 

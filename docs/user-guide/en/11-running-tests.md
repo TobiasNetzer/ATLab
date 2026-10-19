@@ -18,6 +18,20 @@ Tests are run from the **Test Execution** tab. Operators normally work with deve
 
 While a test runs, editing and project commands are disabled, and the module list and step list follow the current step. *Start test execution* and *Start continuous test execution* only execute enabled modules.
 
+### How a test step is executed
+
+Every step goes through the same stages:
+
+1. **Comment dialog (optional)** — if *Show Comment* is enabled, the comment is shown and the operator must click **Continue**.
+2. **Resolve values** — limits, nominal value and delay are calculated, including any `{Variable}` references.
+3. **Switch relays** — matrix, stimulation and external stimulation relays are set to the step's configuration.
+4. **Wait** — the step's delay elapses (a progress bar appears for delays over one second).
+5. **Acquire** — the evaluation source produces a raw value; response processing may extract a number from it.
+6. **Evaluate** — the value is compared against the lower and upper limit; the deviation from nominal is calculated.
+7. **Decide** — the Pass-Action or Fail-Action determines what happens next (continue, repeat, jump, end, or show a comment).
+
+Before the first step and after the last one, all relays are cleared.
+
 ### Differences between the start modes
 
 | | Start test | Continuous | From selection | Module | Single step |

@@ -18,6 +18,20 @@ Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbei
 
 Während ein Test läuft, sind Bearbeitungs- und Projektbefehle gesperrt, und Modul- und Schrittliste folgen dem aktuellen Schritt. *Testausführung starten* und *Dauertest starten* führen nur aktivierte Module aus.
 
+### Wie ein Testschritt ausgeführt wird
+
+Jeder Schritt durchläuft dieselben Phasen:
+
+1. **Kommentardialog (optional)** – ist *Kommentar anzeigen* aktiv, wird der Kommentar angezeigt und der Bediener muss **Weiter** klicken.
+2. **Werte auflösen** – Grenzwerte, Sollwert und Verzögerung werden berechnet, einschließlich `{Variable}`-Verweisen.
+3. **Relais schalten** – Matrix-, Stimulations- und externe Stimulationsrelais werden gemäß Schritt eingestellt.
+4. **Warten** – die Verzögerung des Schritts läuft ab (bei mehr als einer Sekunde mit Fortschrittsbalken).
+5. **Erfassen** – die Auswertungsquelle liefert einen Rohwert; die Antwortverarbeitung kann daraus eine Zahl extrahieren.
+6. **Bewerten** – der Wert wird mit Unter- und Obergrenze verglichen; die Abweichung vom Sollwert wird berechnet.
+7. **Entscheiden** – die Bestanden- oder Fehlgeschlagen-Aktion legt fest, wie es weitergeht (fortfahren, wiederholen, springen, beenden oder Kommentar anzeigen).
+
+Vor dem ersten und nach dem letzten Schritt werden alle Relais zurückgesetzt.
+
 ### Unterschiede zwischen den Startarten
 
 | | Test starten | Dauertest | Ab Auswahl | Modul | Einzelschritt |

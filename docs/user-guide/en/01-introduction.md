@@ -25,7 +25,7 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 |------|---------|
 | **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](04-projects.md). |
 | **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](07-building-test-sequences.md#modules). |
-| **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. |
+| **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. See [How a test step is executed](11-running-tests.md#how-a-test-step-is-executed). |
 | **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, Shell Command, User Response, Expression* or *File*. See [Evaluation Sources](08-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
@@ -35,20 +35,6 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | **Stimulation / Ext. stimulation channels** | Individually switchable relays on the adapter, set per step. |
 | **Development mode** | The editing mode of the Test Execution tab. When it is off, the tab shows only the sequence and results — the operator view. |
 | **Simulator** | A virtual Test Interface Adapter used when no hardware is connected. Relay and interface commands succeed without doing anything. |
-
-## How a test step is executed
-
-Every step goes through the same stages:
-
-1. **Comment dialog (optional)** — if *Show Comment* is enabled, the comment is shown and the operator must click **Continue**.
-2. **Resolve values** — limits, nominal value and delay are calculated, including any `{Variable}` references.
-3. **Switch relays** — matrix, stimulation and external stimulation relays are set to the step's configuration.
-4. **Wait** — the step's delay elapses (a progress bar appears for delays over one second).
-5. **Acquire** — the evaluation source produces a raw value; response processing may extract a number from it.
-6. **Evaluate** — the value is compared against the lower and upper limit; the deviation from nominal is calculated.
-7. **Decide** — the Pass-Action or Fail-Action determines what happens next (continue, repeat, jump, end, or show a comment).
-
-Before the first step and after the last one, all relays are cleared.
 
 ## Who this guide is for
 
