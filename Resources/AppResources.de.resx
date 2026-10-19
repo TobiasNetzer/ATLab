@@ -103,6 +103,12 @@
   <data name="ToolTip_MoveStepDown" xml:space="preserve">
     <value>Ausgewählten Testschritt nach unten verschieben</value>
   </data>
+  <data name="ToolTip_PreviousFailedStep" xml:space="preserve">
+    <value>Zum vorherigen fehlgeschlagenen Testschritt springen</value>
+  </data>
+  <data name="ToolTip_NextFailedStep" xml:space="preserve">
+    <value>Zum nächsten fehlgeschlagenen Testschritt springen</value>
+  </data>
   <data name="ToolTip_DuplicateTestSteps" xml:space="preserve">
     <value>Ausgewählte Testschritte duplizieren</value>
   </data>

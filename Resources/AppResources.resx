@@ -103,6 +103,12 @@
   <data name="ToolTip_MoveStepDown" xml:space="preserve">
     <value>Move selected test step down</value>
   </data>
+  <data name="ToolTip_PreviousFailedStep" xml:space="preserve">
+    <value>Go to previous failed test step</value>
+  </data>
+  <data name="ToolTip_NextFailedStep" xml:space="preserve">
+    <value>Go to next failed test step</value>
+  </data>
   <data name="ToolTip_DuplicateTestSteps" xml:space="preserve">
     <value>Duplicate selected test steps</value>
   </data>

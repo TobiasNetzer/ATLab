@@ -296,6 +296,37 @@
                             <ContentControl Content="{LucideIconContent Square}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
+                    
+                    <Separator Width="2"
+                               Height="25"
+                               Margin="5 0 5 0"
+                               CornerRadius="1"
+                               IsVisible="{Binding IsDevelopmentMode}"
+                               Background="{DynamicResource MutedColor}"/>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_PreviousFailedStep}"
+                        Command="{Binding GoToPreviousFailedStepCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent ArrowBigUpDash}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_NextFailedStep}"
+                        Command="{Binding GoToNextFailedStepCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent ArrowBigDownDash}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
 
                     <Separator Width="2"
                                Height="25"
@@ -326,17 +357,16 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent StepForward}"/>
+                            <ContentControl Content="{LucideIconContent RedoDot}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
-                               IsVisible="{Binding IsDevelopmentMode}"
                                Background="{DynamicResource MutedColor}"/>
-                    
+
                     <Button
                         Background="{Binding IsShowMeasurementPanel, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"

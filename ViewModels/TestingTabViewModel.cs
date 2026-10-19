@@ -273,6 +273,8 @@ public partial class TestingTabViewModel : ViewModelBase
                 break;
             }
         }
+
+        NotifyFailedStepCommandsChanged();
     }
 
     private TestModuleViewModel CreateModuleViewModel(TestModule module)
@@ -412,6 +414,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private void OnModuleTestStepsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         NotifyMoveStepCommandsChanged();
+        NotifyFailedStepCommandsChanged();
     }
 
     private void NotifyMoveStepCommandsChanged()
@@ -420,10 +423,44 @@ public partial class TestingTabViewModel : ViewModelBase
         MoveStepDownCommand.NotifyCanExecuteChanged();
     }
 
+    private void NotifyFailedStepCommandsChanged()
+    {
+        GoToPreviousFailedStepCommand.NotifyCanExecuteChanged();
+        GoToNextFailedStepCommand.NotifyCanExecuteChanged();
+    }
+
+    private static bool IsFailedStep(TestStepViewModel step) => step.IsExecuted && !step.IsPassed;
+    
+    private TestStepViewModel? FindFailedStep(bool forward)
+    {
+        var steps = AllTestSteps.ToList();
+        var current = SelectedStep != null ? steps.IndexOf(SelectedStep) : -1;
+
+        return forward
+            ? steps.Skip(current + 1).FirstOrDefault(IsFailedStep)
+            : steps.Take(Math.Max(current, 0)).LastOrDefault(IsFailedStep);
+    }
+
+    private void SelectFailedStep(bool forward)
+    {
+        var step = FindFailedStep(forward);
+
+        if (step == null)
+            return;
+
+        if (SelectedModule?.Module != step.Module)
+            SelectedModule = FindModuleViewModel(step.Module);
+
+        Select(step.TestStep);
+    }
+
     private bool _isUpdatingMultipleSteps;
 
     private void OnStepPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(TestStepViewModel.IsExecuted) or nameof(TestStepViewModel.IsPassed))
+            NotifyFailedStepCommandsChanged();
+
         if (_isUpdatingMultipleSteps || _isChangingSelection || sender is not TestStepViewModel changedVm)
             return;
 
@@ -500,6 +537,7 @@ public partial class TestingTabViewModel : ViewModelBase
         var stepToLoad = value ?? new TestStepViewModel(new TestStep(), new TestModule(), _hardwareInfo);
 
         NotifyMoveStepCommandsChanged();
+        NotifyFailedStepCommandsChanged();
 
         _isChangingSelection = true;
         try
@@ -547,6 +585,7 @@ public partial class TestingTabViewModel : ViewModelBase
         RemoveTestStepsCommand.NotifyCanExecuteChanged();
         MoveStepUpCommand.NotifyCanExecuteChanged();
         MoveStepDownCommand.NotifyCanExecuteChanged();
+        NotifyFailedStepCommandsChanged();
         NewFileCommand.NotifyCanExecuteChanged();
         SaveFileCommand.NotifyCanExecuteChanged();
         LoadFileWithDialogCommand.NotifyCanExecuteChanged();
@@ -594,6 +633,8 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool CanRemoveModule() => IsModuleSelected() && Modules.Count > 1;
     private bool CanMoveModuleUp() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) > 0;
     private bool CanMoveModuleDown() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) < Modules.Count - 1;
+    private bool CanGoToPreviousFailedStep() => IsNotTestRunning() && FindFailedStep(forward: false) != null;
+    private bool CanGoToNextFailedStep() => IsNotTestRunning() && FindFailedStep(forward: true) != null;
     private bool CanMoveStepUp() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) > 0;
     private bool CanMoveStepDown() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) is var index && index >= 0 && index < TestSteps.Count - 1;
 
@@ -733,6 +774,12 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousFailedStep))]
+    private void GoToPreviousFailedStep() => SelectFailedStep(forward: false);
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextFailedStep))]
+    private void GoToNextFailedStep() => SelectFailedStep(forward: true);
+
     [RelayCommand(CanExecute = nameof(CanMoveStepUp))]
     private void MoveStepUp()
     {

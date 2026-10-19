@@ -55,6 +55,8 @@ public class AppResources
     public static string ToolTip_RemoveTestSteps => ResourceManager.GetString("ToolTip_RemoveTestSteps", resourceCulture) ?? "Remove selected test steps";
     public static string ToolTip_MoveStepUp => ResourceManager.GetString("ToolTip_MoveStepUp", resourceCulture) ?? "Move selected test step up";
     public static string ToolTip_MoveStepDown => ResourceManager.GetString("ToolTip_MoveStepDown", resourceCulture) ?? "Move selected test step down";
+    public static string ToolTip_PreviousFailedStep => ResourceManager.GetString("ToolTip_PreviousFailedStep", resourceCulture) ?? "Go to previous failed test step";
+    public static string ToolTip_NextFailedStep => ResourceManager.GetString("ToolTip_NextFailedStep", resourceCulture) ?? "Go to next failed test step";
     public static string ToolTip_DuplicateTestSteps => ResourceManager.GetString("ToolTip_DuplicateTestSteps", resourceCulture) ?? "Duplicate selected test steps";
     public static string ToolTip_CutTestSteps => ResourceManager.GetString("ToolTip_CutTestSteps", resourceCulture) ?? "Cut selected test steps";
     public static string ToolTip_CopyTestSteps => ResourceManager.GetString("ToolTip_CopyTestSteps", resourceCulture) ?? "Copy selected test steps";
