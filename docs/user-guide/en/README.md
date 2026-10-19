@@ -20,7 +20,7 @@ This guide explains how to install ATLab, set up a project, write instrument scr
 | 8 | [Evaluation Sources](08-evaluation-sources.md) | Script, Device Command, Interface Command, Shell, User Response, Expression, File |
 | 9 | [Commands, Variables & Expressions](09-commands-variables-expressions.md) | Placeholder syntax, encodings, arithmetic, units |
 | 10 | [Response Processing](10-response-processing.md) | Skip/Length, masks and numeric extraction |
-| 11 | [Running Tests](11-running-tests.md) | Execution controls, debugging, serial numbers, the control module |
+| 11 | [Running Tests](11-running-tests.md) | Execution controls, failed step navigation, debugging, serial numbers, the control module |
 | 12 | [Test Results & Reports](12-results-and-reports.md) | CSV export and PDF test reports |
 | 13 | [Documentation Tab](13-documentation-tab.md) | Project notes, images, attachments, DUT information |
 | 14 | [Test Hardware Tab](14-test-hardware.md) | Hardware info, relay matrix self-test, probing |

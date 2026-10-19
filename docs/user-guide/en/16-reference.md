@@ -38,6 +38,7 @@ From left to right:
 | Project | New project · Open project · Save project · Save project as |
 | Editing | Add · Remove · Move up · Move down · Duplicate · Cut · Copy · Paste |
 | Execution | Execute single step · Start selected module · Start from selected step · Start continuous execution · Start test execution · Continue (during run) · Stop |
+| Failed steps | Go to previous failed step · Go to next failed step |
 | Debug (development mode only) | Enable debug mode · Advance single step |
 | View | Show measurement panel · Enable development mode |
 

@@ -38,6 +38,7 @@ Von links nach rechts:
 | Projekt | Neues Projekt · Projekt öffnen · Projekt speichern · Projekt speichern unter |
 | Bearbeiten | Hinzufügen · Entfernen · Nach oben · Nach unten · Duplizieren · Ausschneiden · Kopieren · Einfügen |
 | Ausführung | Einzelschritt ausführen · Ausgewähltes Modul starten · Ab ausgewähltem Schritt starten · Dauertest starten · Testausführung starten · Fortsetzen (während eines Laufs) · Stoppen |
+| Fehlgeschlagene Schritte | Zum vorherigen fehlgeschlagenen Schritt · Zum nächsten fehlgeschlagenen Schritt |
 | Debug (nur Entwicklungsmodus) | Debug-Modus aktivieren · Einzelschritt weiterschalten |
 | Ansicht | Messfenster anzeigen · Entwicklungsmodus aktivieren |
 

@@ -301,7 +301,6 @@
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
-                               IsVisible="{Binding IsDevelopmentMode}"
                                Background="{DynamicResource MutedColor}"/>
 
                     <Button
@@ -327,11 +326,12 @@
                             <ContentControl Content="{LucideIconContent ArrowBigDownDash}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-
+                    
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
+                               IsVisible="{Binding IsDevelopmentMode}"
                                Background="{DynamicResource MutedColor}"/>
                     
                     <Button

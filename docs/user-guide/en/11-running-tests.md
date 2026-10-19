@@ -81,18 +81,29 @@ If the window is narrow, *Device Under Test* and *Serial Number* are shortened w
 
 Results are only exported for **Passed** and **Failed** runs.
 
+## Navigating failed steps
+
+After a run, two buttons to the right of the execution controls jump between the failed steps:
+
+| Button | Function |
+|--------|----------|
+| **Go to previous failed test step** (outlined arrow up with bar) | Selects the closest failed step before the selected step. |
+| **Go to next failed test step** (outlined arrow down with bar) | Selects the closest failed step after the selected step. If no step is selected, it selects the first failed step. |
+
+The search covers all modules in their order and switches the module list to the module of the found step. A button is only enabled if there is a failed step in its direction, so both are disabled when no executed step has failed. Both are disabled while a test is running. They are also available with development mode switched off.
+
 ## Measurement panel
 
 The magnifier button (**Show measurement panel**) toggles a large display between the step list and the result bar. It shows the selected step's lower limit, measured value and upper limit on a scale — readable from a distance and handy when adjusting a potentiometer with a repeating step.
 
 ## Debug mode
 
-In development mode, two extra buttons appear:
+In development mode, two extra buttons appear to the right of the failed step buttons:
 
 | Button | Shortcut | Function |
 |--------|----------|----------|
 | **Enable debug mode** (bug icon) | | When active, every started run pauses **before each step**. |
-| **Advance single step** | `F10` | Executes the step the run is paused at and pauses again before the next one. |
+| **Advance single step** (curved arrow with dot) | `F10` | Executes the step the run is paused at and pauses again before the next one. |
 
 Debug mode lets you walk through a sequence step by step with all Pass/Fail-Actions, dialogs and relay changes, and inspect results and relay states in between. Stop the run at any time with `Esc`. Debug mode can only be switched while no test is running.
 

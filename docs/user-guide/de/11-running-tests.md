@@ -81,18 +81,29 @@ Bei schmalem Fenster werden *Prüfling (DUT)* und *Seriennummer* mit „…“ g
 
 Ergebnisse werden nur bei **bestandenen** und **fehlgeschlagenen** Läufen exportiert.
 
+## Zwischen fehlgeschlagenen Schritten springen
+
+Nach einem Lauf springen zwei Schaltflächen rechts neben der Ausführungssteuerung zwischen den fehlgeschlagenen Schritten:
+
+| Schaltfläche | Funktion |
+|--------------|----------|
+| **Zum vorherigen fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach oben mit Strich) | Wählt den nächstgelegenen fehlgeschlagenen Schritt vor dem ausgewählten Schritt aus. |
+| **Zum nächsten fehlgeschlagenen Testschritt springen** (Umriss-Pfeil nach unten mit Strich) | Wählt den nächstgelegenen fehlgeschlagenen Schritt nach dem ausgewählten Schritt aus. Ist kein Schritt ausgewählt, wird der erste fehlgeschlagene Schritt ausgewählt. |
+
+Die Suche läuft über alle Module in ihrer Reihenfolge und wechselt in der Modulliste zum Modul des gefundenen Schritts. Eine Schaltfläche ist nur aktiv, wenn es in ihrer Richtung einen fehlgeschlagenen Schritt gibt; ist kein ausgeführter Schritt fehlgeschlagen, sind beide gesperrt. Während ein Test läuft, sind beide gesperrt. Sie stehen auch bei ausgeschaltetem Entwicklungsmodus zur Verfügung.
+
 ## Messfenster
 
 Die Lupen-Schaltfläche (**Messfenster anzeigen**) blendet zwischen Schrittliste und Ergebnisleiste eine große Anzeige ein. Sie zeigt Untergrenze, Messwert und Obergrenze des ausgewählten Schritts auf einer Skala – aus der Entfernung lesbar und praktisch, um mit einem sich wiederholenden Schritt ein Potentiometer abzugleichen.
 
 ## Debug-Modus
 
-Im Entwicklungsmodus erscheinen zwei zusätzliche Schaltflächen:
+Im Entwicklungsmodus erscheinen rechts neben den Schaltflächen für fehlgeschlagene Schritte zwei zusätzliche Schaltflächen:
 
 | Schaltfläche | Kürzel | Funktion |
 |--------------|--------|----------|
 | **Debug-Modus aktivieren** (Käfer-Symbol) | | Wenn aktiv, hält jeder gestartete Lauf **vor jedem Schritt** an. |
-| **Einzelschritt weiterschalten** | `F10` | Führt den Schritt aus, an dem der Lauf wartet, und hält vor dem nächsten erneut an. |
+| **Einzelschritt weiterschalten** (gebogener Pfeil mit Punkt) | `F10` | Führt den Schritt aus, an dem der Lauf wartet, und hält vor dem nächsten erneut an. |
 
 Mit dem Debug-Modus gehen Sie eine Sequenz Schritt für Schritt durch – mit allen Aktionen, Dialogen und Relaisänderungen – und können dazwischen Ergebnisse und Relaiszustände prüfen. Mit `Esc` stoppen Sie den Lauf jederzeit. Der Debug-Modus lässt sich nur umschalten, während kein Test läuft.
 
