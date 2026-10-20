@@ -196,7 +196,7 @@
                 <StackPanel IsVisible="{Binding IsAdvancedExpanded}"
                             Spacing="10">
                     
-                    <Grid ColumnDefinitions="240,*"
+                    <Grid ColumnDefinitions="250,*"
                           ColumnSpacing="10">
                         
                         <StackPanel Grid.Column="0" Spacing="20">
@@ -222,7 +222,7 @@
                         
                     </Grid>
                     
-                    <Grid ColumnDefinitions="240,*"
+                    <Grid ColumnDefinitions="250,*"
                           ColumnSpacing="10">
                     
                         <StackPanel Grid.Column="0"
@@ -255,7 +255,7 @@
                     
                     </Grid>
                     
-                    <Grid ColumnDefinitions="240,*"
+                    <Grid ColumnDefinitions="250,*"
                           ColumnSpacing="10">
                         
                         <CheckBox Grid.Column="0" Content="{helpers:Localize Label_AssignResultToVariable}"
