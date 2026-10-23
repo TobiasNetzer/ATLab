@@ -2,7 +2,7 @@
 
 Messgeräte und Prüflinge antworten nicht immer mit einer reinen Zahl. Ein Multimeter antwortet vielleicht `+1.2001555E+01` (in Ordnung), ein Prüfling sendet aber womöglich `ID:42;OK\r\n`, einen binären Rahmen oder ein Statusregister. Die **Antwortverarbeitung** macht aus solchen Rohantworten die eine Zahl, die der Schritt bewertet.
 
-Der Bereich **Antwortverarbeitung** steht für die Auswertungsquellen **Skript**, **Gerätebefehl**, **Schnittstellenbefehl** und **Datei** zur Verfügung.
+Der Bereich **Antwortverarbeitung** steht für die Auswertungsquellen **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Datei** und **Benutzereingabe** zur Verfügung.
 
 ## Ohne benutzerdefinierte Verarbeitung
 

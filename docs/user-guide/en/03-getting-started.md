@@ -17,7 +17,7 @@ A status line shows the result, for example `Connected to COM5` or `Initializati
 
 ### Simulator mode
 
-In simulator mode ATLab behaves as if an adapter with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), shell commands, files, expressions and user responses work normally.
+In simulator mode ATLab behaves as if an adapter with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), shell commands, files, expressions, user confirmations and user inputs work normally.
 
 While the simulator is active, the status bar shows **No test hardware connected** in red. Simulator mode is ideal for editing sequences at a desk.
 
@@ -74,7 +74,7 @@ This walkthrough works in simulator mode and needs no instruments.
 3. **Add a step.** Click **Add a new test step** (`+`, or press `Insert`). A new row appears and is selected.
 4. **Configure it** in the **Test Step Configuration** panel on the right:
    - **Name**: `Operator check`
-   - **Evaluate**: `User Response`
+   - **Evaluate**: `User Confirmation`
    - **Comment**: `Is the power LED green?`
    - **Nominal**: `1` — the lower and upper limits are filled in automatically from the default tolerance; set both **Lower Limit** and **Upper Limit** to `1`.
 5. **Add a second step** that calculates something:

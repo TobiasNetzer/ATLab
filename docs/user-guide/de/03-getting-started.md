@@ -17,7 +17,7 @@ Eine Statuszeile zeigt das Ergebnis, z. B. `Connected to COM5` oder `Initializat
 
 ### Simulatormodus
 
-Im Simulatormodus verhält sich ATLab so, als wäre ein Adapter mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), Shell-Befehle, Dateien, Ausdrücke und Benutzereingaben funktionieren normal.
+Im Simulatormodus verhält sich ATLab so, als wäre ein Adapter mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), Shell-Befehle, Dateien, Ausdrücke, Benutzerbestätigungen und Benutzereingaben funktionieren normal.
 
 Solange der Simulator aktiv ist, zeigt die Statusleiste in Rot **Keine Test-Hardware verbunden**. Der Simulatormodus eignet sich ideal zum Bearbeiten von Sequenzen am Schreibtisch.
 
@@ -74,7 +74,7 @@ Diese Anleitung funktioniert im Simulatormodus und benötigt keine Messgeräte.
 3. **Schritt hinzufügen.** **Neuen Testschritt hinzufügen** (`+` oder Taste `Einfg`) klicken. Eine neue Zeile erscheint und ist ausgewählt.
 4. **Konfigurieren** im Bereich **Testschritt-Konfiguration** rechts:
    - **Name**: `Bedienerprüfung`
-   - **Auswertung**: `Benutzereingabe`
+   - **Auswertung**: `Benutzerbestätigung`
    - **Kommentar**: `Leuchtet die Power-LED grün?`
    - **Sollwert**: `1` – Unter- und Obergrenze werden automatisch aus der Standardtoleranz berechnet; setzen Sie **Untergrenze** und **Obergrenze** jeweils auf `1`.
 5. **Zweiten Schritt hinzufügen**, der etwas berechnet:

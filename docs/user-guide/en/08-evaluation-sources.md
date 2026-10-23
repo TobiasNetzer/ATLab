@@ -9,7 +9,8 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [Device Command](#device-command) | answer of a single command | Device Command | ✔ |
 | [Interface Command](#interface-command) | data read via the adapter's I²C/UART | Interface Command | ✔ |
 | [Shell Command](#shell-command) | process exit code | Shell Command | – |
-| [User Response](#user-response) | `1` (Passed) or `0` (Failed) | – (uses Comment) | – |
+| [User Confirmation](#user-confirmation) | `1` (Passed) or `0` (Failed) | – (uses Comment) | – |
+| [User Input](#user-input) | number entered by the operator | – (uses Comment) | ✔ |
 | [Expression](#expression) | result of a calculation | Expression | – |
 | [File](#file) | number read from a file | File Path | ✔ |
 
@@ -111,11 +112,23 @@ python flash_firmware.py --port COM7 --sn {SerialNo}
 "C:\Program Files\SEGGER\JLink\JLink.exe" -CommanderScript program.jlink
 ```
 
-## User Response
+## User Confirmation
 
-Shows the step's **Comment** in a dialog titled *Waiting for User Response* with the buttons **Passed** and **Failed**. Clicking **Passed** yields `1`, **Failed** yields `0`. Set all limits to `1` so that only *Passed* passes.
+Shows the step's **Comment** in a dialog titled *Waiting for User Confirmation* with the buttons **Passed** and **Failed**. Clicking **Passed** yields `1`, **Failed** yields `0`. Set all limits to `1` so that only *Passed* passes.
 
-An image added via *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](11-running-tests.md#control-module) enabled, the green button answers *Passed* and the red one *Failed*.
+An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](11-running-tests.md#control-module) enabled, the green button answers *Passed* and the red one *Failed*.
+
+## User Input
+
+Asks the operator to enter a value — for example a reading from an analog gauge, a value from a handheld instrument, or a number printed on the DUT. Shows the step's **Comment** in a dialog titled *Waiting for User Input* with a text box and the buttons **Continue** and **Cancel**. The cursor is placed in the text box, so the operator can start typing right away.
+
+- The entered value is the measured value and is compared with the limits like any other measurement.
+- Both `.` and `,` are accepted as decimal separator (`1.5` and `1,5` both give 1.5). Thousands separators and SI prefixes (`k`, `m` …) are not supported — enter a plain number such as `4700` or `4.7e3`.
+- With [Response Processing](10-response-processing.md) enabled, the entered text is processed like a device answer before it is converted, e.g. to extract the number from a scanned label such as `R=4.7`.
+- Text that cannot be converted to a number is an execution error and stops the test.
+- **Cancel** stops the test.
+
+An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](11-running-tests.md#control-module) enabled, the green button acts as **Continue** and the red one as **Cancel**.
 
 ## Expression
 

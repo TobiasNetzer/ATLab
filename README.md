@@ -28,7 +28,8 @@ The guide is also shipped as a PDF with every release package (in the `docs` fol
     -   **Evaluate Runtime Variables**:
         -   **Dynamic Test Configurations**: Define and use custom variables within test scripts for dynamic test configurations.
         -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic or calculated values.
-    -   **User Responses**: Capture user input during test execution.
+    -   **User Confirmation**: Let the operator judge a step as passed or failed.
+    -   **User Input**: Let the operator enter a measured value that is checked against the limits.
     -   **File Content**: Read and validate file contents from the local file system.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
     -   **Interface Communication**: Use the Test Interface Adapters onboard interfaces (I2C/UART) to communicate with the DUT.

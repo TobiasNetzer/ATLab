@@ -155,9 +155,8 @@ public class TestStepRunner : ITestStepRunner
                         throw new OperationCanceledException();
 
                     var processed = ResponseProcessor.Process(Encoding.UTF8.GetBytes(userInput), mask).Trim();
-
-                    return double.TryParse(processed, CultureInfo.InvariantCulture, out var doubleResult)
-                           || double.TryParse(processed, CultureInfo.CurrentCulture, out doubleResult)
+                    
+                    return double.TryParse(processed.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
                         : OperationResult<double>.Failure($"Failed to parse user input to double: {processed}");
                 }

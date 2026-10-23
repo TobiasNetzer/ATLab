@@ -66,7 +66,7 @@ Der obere Bereich rechts bearbeitet die Grundeigenschaften des ausgewählten Sch
 | **Obergrenze** | Größter Wert, der besteht. |
 | **Einheit** | Einheitenzeichen wie `V`, `A`, `Ohm`, `Hz`. Wird für die Anzeige und beim Einlesen eingegebener Werte verwendet. |
 
-Ein Schritt **besteht**, wenn `Untergrenze ≤ Messwert ≤ Obergrenze`. Die **Abweichung** beträgt `(Messwert − Sollwert) / Sollwert × 100 %`; ist der Sollwert 0, wird stattdessen die absolute Differenz angezeigt.
+Ein Schritt **besteht**, wenn `Untergrenze ≤ Messwert ≤ Obergrenze`. Messwert und Grenzwerte werden mit 15 signifikanten Stellen verglichen, sodass winzige Gleitkomma-Ungenauigkeiten (z. B. `0.1 + 0.2` ergibt `0.30000000000000004`) einen Wert, der genau auf einem Grenzwert liegt, nicht durchfallen lassen. Die **Abweichung** beträgt `(Messwert − Sollwert) / Sollwert × 100 %`; ist der Sollwert 0, wird stattdessen die absolute Differenz angezeigt.
 
 **Werte eingeben**
 
@@ -74,7 +74,7 @@ Ein Schritt **besteht**, wenn `Untergrenze ≤ Messwert ≤ Obergrenze`. Die **A
 - Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert.
 - Wenn Sie einen **Sollwert** eingeben, werden Unter- und Obergrenze aus der **Standardtoleranz** des Projekts neu berechnet (z. B. Sollwert `12` bei 10 % → `10.8` … `13.2`). Geben Sie zuerst den Sollwert ein und passen Sie danach die Grenzwerte an.
 - Eine feste Untergrenze kann nicht größer als der Sollwert sein, eine feste Obergrenze nicht kleiner; ATLab korrigiert solche Eingaben.
-- Um auf einen exakten Wert zu prüfen, setzen Sie alle drei auf dieselbe Zahl (z. B. `1` für eine Benutzereingabe oder eine Übereinstimmung).
+- Um auf einen exakten Wert zu prüfen, setzen Sie alle drei auf dieselbe Zahl (z. B. `1` für eine Benutzerbestätigung oder eine Übereinstimmung).
 
 **Anzeige von Einheiten**
 
@@ -90,11 +90,11 @@ Wartezeit zwischen dem Schalten der Relais und dem Erfassen des Werts, zum Einsc
 
 ### Auswertung
 
-Wählt die [Auswertungsquelle](08-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Shell-Befehl**, **Benutzereingabe**, **Ausdruck** oder **Datei**. Darunter erscheint der passende Editorbereich.
+Wählt die [Auswertungsquelle](08-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Shell-Befehl**, **Benutzerbestätigung**, **Benutzereingabe**, **Ausdruck** oder **Datei**. Darunter erscheint der passende Editorbereich.
 
 ### Kommentar
 
-Text für den Bediener. Er wird in einem Dialog angezeigt, wenn *Kommentar anzeigen* aktiv ist, wenn die Bestanden-/Fehlgeschlagen-Aktion *Kommentar anzeigen* ist, und als Frage bei *Benutzereingabe*-Schritten. Der Kommentar darf `{Variable}`-Verweise enthalten, die durch den aktuellen Wert ersetzt werden.
+Text für den Bediener. Er wird in einem Dialog angezeigt, wenn *Kommentar anzeigen* aktiv ist, wenn die Bestanden-/Fehlgeschlagen-Aktion *Kommentar anzeigen* ist, und als Frage bei *Benutzerbestätigung*- und *Benutzereingabe*-Schritten. Der Kommentar darf `{Variable}`-Verweise enthalten, die durch den aktuellen Wert ersetzt werden.
 
 ---
 
@@ -107,7 +107,7 @@ Zum Aufklappen auf **Erweiterte Einstellungen** klicken.
 | **Schritt ignorieren** | Der Schritt wird bei der Ausführung übersprungen und nicht exportiert. Nützlich zum vorübergehenden Deaktivieren. |
 | **Vom Export ausschließen** | Der Schritt läuft und zählt für das Gesamtergebnis, wird aber nicht in CSV oder PDF geschrieben (z. B. Einrichtungsschritte). |
 | **Akzentfarbe** | Farbe des Streifens neben der Schrittnummer. Zum optischen Gruppieren von Schritten. |
-| **Kommentar anzeigen** | Vor der Ausführung des Schritts wird der Kommentar in einem Dialog mit **Weiter** / **Abbrechen** angezeigt. Abbrechen bricht den Test ab. Über die Bild-Schaltfläche daneben (**Bild zu Meldungsfenster hinzufügen**) fügen Sie dem Dialog ein Bild hinzu (PNG, JPG, BMP, GIF, WEBP) – z. B. ein Foto, wo eine Prüfspitze anzusetzen ist. |
+| **Kommentar anzeigen** | Vor der Ausführung des Schritts wird der Kommentar in einem Dialog mit **Weiter** / **Abbrechen** angezeigt. Abbrechen bricht den Test ab. Über die Bild-Schaltfläche daneben (**Bild zu Meldungsfenster hinzufügen**) fügen Sie dem Dialog ein Bild hinzu (PNG, JPG, BMP, GIF, WEBP) – z. B. ein Foto, wo eine Prüfspitze anzusetzen ist. Bei *Benutzerbestätigung*- und *Benutzereingabe*-Schritten ist das Kontrollkästchen deaktiviert, da deren Dialog den Kommentar bereits anzeigt; das Bild erscheint in diesem Dialog. |
 | **Ergebnis einer Variable zuweisen** | Nach der Ausführung wird der Messwert in die gewählte Laufzeitvariable geschrieben. `Timeout` und `Overflow` werden als Text geschrieben. |
 
 ### Bestanden-Aktion und Fehlgeschlagen-Aktion

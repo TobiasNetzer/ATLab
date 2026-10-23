@@ -9,7 +9,8 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Gerätebefehl](#gerätebefehl) | Antwort eines einzelnen Befehls | Gerätebefehl | ✔ |
 | [Schnittstellenbefehl](#schnittstellenbefehl) | über I²C/UART des Adapters gelesene Daten | Schnittstellenbefehl | ✔ |
 | [Shell-Befehl](#shell-befehl) | Exit-Code des Prozesses | Shell-Befehl | – |
-| [Benutzereingabe](#benutzereingabe) | `1` (Bestanden) oder `0` (Fehlgeschlagen) | – (verwendet den Kommentar) | – |
+| [Benutzerbestätigung](#benutzerbestätigung) | `1` (Bestanden) oder `0` (Fehlgeschlagen) | – (verwendet den Kommentar) | – |
+| [Benutzereingabe](#benutzereingabe) | vom Bediener eingegebene Zahl | – (verwendet den Kommentar) | ✔ |
 | [Ausdruck](#ausdruck) | Ergebnis einer Berechnung | Ausdruck | – |
 | [Datei](#datei) | aus einer Datei gelesene Zahl | Dateipfad | ✔ |
 
@@ -111,11 +112,23 @@ python flash_firmware.py --port COM7 --sn {SerialNo}
 "C:\Program Files\SEGGER\JLink\JLink.exe" -CommanderScript program.jlink
 ```
 
+## Benutzerbestätigung
+
+Zeigt den **Kommentar** des Schritts in einem Dialog mit dem Titel *Warten auf Benutzerbestätigung* und den Schaltflächen **Bestanden** und **Fehlgeschlagen**. **Bestanden** ergibt `1`, **Fehlgeschlagen** ergibt `0`. Setzen Sie alle Grenzwerte auf `1`, damit nur *Bestanden* besteht.
+
+Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](11-running-tests.md#steuermodul) beantwortet die grüne Taste *Bestanden* und die rote *Fehlgeschlagen*.
+
 ## Benutzereingabe
 
-Zeigt den **Kommentar** des Schritts in einem Dialog mit dem Titel *Warten auf Benutzereingabe* und den Schaltflächen **Bestanden** und **Fehlgeschlagen**. **Bestanden** ergibt `1`, **Fehlgeschlagen** ergibt `0`. Setzen Sie alle Grenzwerte auf `1`, damit nur *Bestanden* besteht.
+Fordert den Bediener auf, einen Wert einzugeben – z. B. die Ablesung eines Zeigerinstruments, einen Wert von einem Handmessgerät oder eine auf dem Prüfling aufgedruckte Zahl. Zeigt den **Kommentar** des Schritts in einem Dialog mit dem Titel *Warten auf Benutzereingabe* mit einem Textfeld und den Schaltflächen **Weiter** und **Abbrechen**. Der Cursor steht bereits im Textfeld, der Bediener kann also sofort tippen.
 
-Ein über *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](11-running-tests.md#steuermodul) beantwortet die grüne Taste *Bestanden* und die rote *Fehlgeschlagen*.
+- Der eingegebene Wert ist der Messwert und wird wie jede andere Messung mit den Grenzwerten verglichen.
+- Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`1.5` und `1,5` ergeben beide 1,5). Tausendertrennzeichen und SI-Präfixe (`k`, `m` …) werden nicht unterstützt – geben Sie eine einfache Zahl ein, z. B. `4700` oder `4.7e3`.
+- Ist die [Antwortverarbeitung](10-response-processing.md) aktiviert, wird der eingegebene Text vor der Umwandlung wie eine Geräteantwort verarbeitet, z. B. um die Zahl aus einem gescannten Etikett wie `R=4.7` herauszulösen.
+- Text, der sich nicht in eine Zahl umwandeln lässt, ist ein Ausführungsfehler und stoppt den Test.
+- **Abbrechen** stoppt den Test.
+
+Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](11-running-tests.md#steuermodul) wirkt die grüne Taste als **Weiter** und die rote als **Abbrechen**.
 
 ## Ausdruck
 

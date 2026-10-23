@@ -120,6 +120,8 @@ Beispiele:
 {expr:{V_Meas} - {Offset}}          → Offset-Korrektur, auch mit negativem Offset
 ```
 
+Das Ergebnis eines `{expr:…}`-Blocks wird mit höchstens 15 signifikanten Stellen eingesetzt, damit keine Gleitkomma-Ungenauigkeiten in Befehlen landen: `{expr:0.1+0.2}` ergibt `0.3`, nicht `0.30000000000000004`.
+
 Lässt sich ein Ausdruck in einem Befehl nicht auswerten, bleibt der Block unverändert. In einem **Ausdruck**-Schritt ist ein ungültiger Ausdruck ein Ausführungsfehler.
 
 ## Einheiten und SI-Präfixe

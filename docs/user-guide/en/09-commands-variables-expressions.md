@@ -120,6 +120,8 @@ Examples:
 {expr:{V_Meas} - {Offset}}          → offset correction, works with negative offsets
 ```
 
+The result of an `{expr:…}` block is inserted with up to 15 significant digits, so floating-point noise does not end up in commands: `{expr:0.1+0.2}` becomes `0.3`, not `0.30000000000000004`.
+
 If an expression inside a command cannot be evaluated, the block is left unchanged. In an **Expression** step, an invalid expression is an execution error.
 
 ## Units and SI prefixes

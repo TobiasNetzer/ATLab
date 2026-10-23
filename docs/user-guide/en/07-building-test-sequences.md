@@ -66,7 +66,7 @@ The top panel on the right edits the basic properties of the selected step. If n
 | **Upper Limit** | Largest value that passes. |
 | **Unit** | Unit symbol such as `V`, `A`, `Ohm`, `Hz`. Used for display and when parsing entered values. |
 
-A step **passes** when `Lower Limit ≤ measured value ≤ Upper Limit`. The **deviation** is `(measured − nominal) / nominal × 100 %`; if the nominal is 0, the absolute difference is shown instead.
+A step **passes** when `Lower Limit ≤ measured value ≤ Upper Limit`. Value and limits are compared with 15 significant digits, so tiny floating-point errors (e.g. `0.1 + 0.2` giving `0.30000000000000004`) do not turn a value that equals a limit into a failure. The **deviation** is `(measured − nominal) / nominal × 100 %`; if the nominal is 0, the absolute difference is shown instead.
 
 **Entering values**
 
@@ -74,7 +74,7 @@ A step **passes** when `Lower Limit ≤ measured value ≤ Upper Limit`. The **d
 - Both `.` and `,` are accepted as decimal separator.
 - When you enter a **Nominal** value, the lower and upper limits are recalculated from the project's **Default Tolerance** (e.g. nominal `12` with 10 % → `10.8` … `13.2`). Enter the nominal value first, then adjust the limits.
 - A literal lower limit cannot be greater than the nominal value, and a literal upper limit cannot be less than it; ATLab corrects such entries.
-- To check for an exact value, set all three to the same number (e.g. `1` for a user response or a match).
+- To check for an exact value, set all three to the same number (e.g. `1` for a user confirmation or a match).
 
 **Display of units**
 
@@ -90,11 +90,11 @@ Wait time between switching the relays and acquiring the value, for settling. Th
 
 ### Evaluate
 
-Selects the [evaluation source](08-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **Shell Command**, **User Response**, **Expression** or **File**. The matching editor panel appears below.
+Selects the [evaluation source](08-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **Shell Command**, **User Confirmation**, **User Input**, **Expression** or **File**. The matching editor panel appears below.
 
 ### Comment
 
-Text for the operator. It is shown in a dialog when *Show Comment* is enabled, when the pass/fail action is *Show Comment*, and as the question for *User Response* steps. The comment may contain `{Variable}` references, which are replaced by their current value.
+Text for the operator. It is shown in a dialog when *Show Comment* is enabled, when the pass/fail action is *Show Comment*, and as the question for *User Confirmation* and *User Input* steps. The comment may contain `{Variable}` references, which are replaced by their current value.
 
 ---
 
@@ -107,7 +107,7 @@ Click **Advanced Settings** to expand.
 | **Ignore Step** | The step is skipped during execution and omitted from exports. Useful for temporarily disabling a step. |
 | **Exclude from Export** | The step runs and counts for pass/fail, but is not written to CSV or PDF (e.g. setup steps). |
 | **Accent Color** | Colour of the stripe next to the step number. Use it to group steps visually. |
-| **Show Comment** | Before the step executes, the comment is shown in a dialog with **Continue** / **Cancel**. Cancel aborts the test. Use the image button next to it to add a picture (PNG, JPG, BMP, GIF, WEBP) to the dialog — e.g. a photo showing where to connect a probe. |
+| **Show Comment** | Before the step executes, the comment is shown in a dialog with **Continue** / **Cancel**. Cancel aborts the test. Use the image button next to it to add a picture (PNG, JPG, BMP, GIF, WEBP) to the dialog — e.g. a photo showing where to connect a probe. For *User Confirmation* and *User Input* steps the checkbox is disabled, because their dialog already shows the comment; the image is shown in that dialog. |
 | **Assign Result to Variable** | After execution, the measured value is written to the selected runtime variable. `Timeout` and `Overflow` are written as text. |
 
 ### Pass-Action and Fail-Action

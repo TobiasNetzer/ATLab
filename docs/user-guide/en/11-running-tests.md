@@ -64,9 +64,10 @@ During a run, ATLab may show dialogs:
 |--------|-------|---------|--------|
 | Show Comment (before step) | *User Information* | **Continue** / **Cancel** | Cancel stops the test. |
 | Pass/Fail-Action *Show Comment* | *User Information* | **Continue** / **Cancel** | Optionally shows the measured value. Cancel stops the test. |
-| User Response step | *Waiting for User Response* | **Passed** / **Failed** | Result `1` or `0`. |
+| User Confirmation step | *Waiting for User Confirmation* | **Passed** / **Failed** | Result `1` or `0`. |
+| User Input step | *Waiting for User Input* | **Continue** / **Cancel** | The entered number is the result. Cancel stops the test. |
 
-Dialogs may contain an image. Closing a dialog without choosing a button counts as **Cancel** (or **Failed** for a user response).
+Dialogs may contain an image. Closing a dialog without choosing a button counts as **Cancel** (or **Failed** for a user confirmation).
 
 ## The result bar
 
@@ -130,7 +131,8 @@ The control module is a USB HID device with two illuminated buttons. Enable it i
 | Idle | Start test (like `F5`) | Stop test |
 | During a repeating step | Continue (like `Enter`) | Stop test |
 | Serial number dialog | Start (if input is valid) | Cancel |
-| User Response dialog | **Passed** | **Failed** |
+| User Confirmation dialog | **Passed** | **Failed** |
+| User Input dialog | **Continue** | **Cancel** |
 | Comment dialog | **Continue** | **Cancel** |
 
 The module's status LEDs show the test state: idle, running, passed, failed and canceled. If the module is not found when the setting is enabled, the message *"No control module connected."* is logged.

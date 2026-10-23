@@ -64,9 +64,10 @@ Während eines Laufs kann ATLab Dialoge anzeigen:
 |--------|-------|---------------|---------|
 | Kommentar anzeigen (vor dem Schritt) | *Benutzerinformation* | **Weiter** / **Abbrechen** | Abbrechen stoppt den Test. |
 | Aktion *Kommentar anzeigen* | *Benutzerinformation* | **Weiter** / **Abbrechen** | Zeigt optional den Messwert. Abbrechen stoppt den Test. |
-| Schritt mit Benutzereingabe | *Warten auf Benutzereingabe* | **Bestanden** / **Fehlgeschlagen** | Ergebnis `1` oder `0`. |
+| Schritt mit Benutzerbestätigung | *Warten auf Benutzerbestätigung* | **Bestanden** / **Fehlgeschlagen** | Ergebnis `1` oder `0`. |
+| Schritt mit Benutzereingabe | *Warten auf Benutzereingabe* | **Weiter** / **Abbrechen** | Die eingegebene Zahl ist das Ergebnis. Abbrechen stoppt den Test. |
 
-Dialoge können ein Bild enthalten. Wird ein Dialog ohne Wahl einer Schaltfläche geschlossen, zählt das als **Abbrechen** (bzw. **Fehlgeschlagen** bei einer Benutzereingabe).
+Dialoge können ein Bild enthalten. Wird ein Dialog ohne Wahl einer Schaltfläche geschlossen, zählt das als **Abbrechen** (bzw. **Fehlgeschlagen** bei einer Benutzerbestätigung).
 
 ## Die Ergebnisleiste
 
@@ -130,7 +131,8 @@ Das Steuermodul ist ein USB-HID-Gerät mit zwei beleuchteten Tasten. Aktivieren 
 | Ruhezustand | Test starten (wie `F5`) | Test stoppen |
 | Während eines sich wiederholenden Schritts | Fortsetzen (wie `Enter`) | Test stoppen |
 | Seriennummer-Dialog | Starten (bei gültiger Eingabe) | Abbrechen |
-| Benutzereingabe-Dialog | **Bestanden** | **Fehlgeschlagen** |
+| Benutzerbestätigung-Dialog | **Bestanden** | **Fehlgeschlagen** |
+| Benutzereingabe-Dialog | **Weiter** | **Abbrechen** |
 | Kommentar-Dialog | **Weiter** | **Abbrechen** |
 
 Die Status-LEDs des Moduls zeigen den Testzustand: Ruhe, läuft, bestanden, fehlgeschlagen und abgebrochen. Wird das Modul beim Aktivieren der Einstellung nicht gefunden, wird die Meldung *„No control module connected.“* protokolliert.
