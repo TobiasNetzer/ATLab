@@ -38,7 +38,8 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *TCP connection error* / *Connection timed out.* | Wrong IP address/port, instrument not on the network, firewall. Port 5025 is the usual SCPI socket port. |
 | *VISA error: …* | NI-VISA not installed, wrong resource string, or instrument not visible in NI MAX. VISA is Windows-only. |
 | *Failed to convert result '…'* | The answer is not a plain number. Enable [Response Processing](10-response-processing.md) to extract the value. |
-| Answers are truncated or belong to the previous command | Serial **Chunk** framing returned early. Switch to **LF Terminated**, **CRLF Terminated** or **Timeout Based**. |
+| Answers are truncated | Serial **Chunk** framing returned early; the rest of the answer is discarded before the next command. Switch to **LF Terminated**, **CRLF Terminated** or **Timeout Based**. |
+| Answers belong to the previous command | The device answers slower than the step's **Timeout (ms)**, and the late answer arrived after the next command was sent. Late answers that arrive *before* the next command are discarded automatically. Increase **Timeout (ms)** for the slow command. |
 | Instrument ignores commands over VISA socket | Append a terminator explicitly, e.g. `{hex:0A}`. |
 
 ## Test steps

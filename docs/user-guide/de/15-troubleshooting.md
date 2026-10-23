@@ -38,7 +38,8 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | *TCP connection error* / *Connection timed out.* | Falsche IP-Adresse/Port, Gerät nicht im Netzwerk, Firewall. Port 5025 ist der übliche SCPI-Socket-Port. |
 | *VISA error: …* | NI-VISA nicht installiert, falscher Ressourcenstring oder Gerät in NI MAX nicht sichtbar. VISA gibt es nur unter Windows. |
 | *Failed to convert result '…'* | Die Antwort ist keine reine Zahl. [Antwortverarbeitung](10-response-processing.md) aktivieren, um den Wert zu extrahieren. |
-| Antworten sind abgeschnitten oder gehören zum vorherigen Befehl | Serielles **Chunk**-Framing hat zu früh beendet. Auf **LF Terminated**, **CRLF Terminated** oder **Timeout Based** umstellen. |
+| Antworten sind abgeschnitten | Serielles **Chunk**-Framing hat zu früh beendet; der Rest der Antwort wird vor dem nächsten Befehl verworfen. Auf **LF Terminated**, **CRLF Terminated** oder **Timeout Based** umstellen. |
+| Antworten gehören zum vorherigen Befehl | Das Gerät antwortet langsamer als das **Timeout (ms)** des Schritts, und die verspätete Antwort kam erst nach dem Senden des nächsten Befehls an. Verspätete Antworten, die *vor* dem nächsten Befehl eintreffen, werden automatisch verworfen. **Timeout (ms)** für den langsamen Befehl erhöhen. |
 | Gerät ignoriert Befehle über VISA-Socket | Abschlusszeichen explizit anhängen, z. B. `{hex:0A}`. |
 
 ## Testschritte
