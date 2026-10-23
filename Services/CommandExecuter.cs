@@ -159,10 +159,18 @@ public class CommandExecutor : ICommandExecutor
         if (result.IsFailure)
             return OperationResult<T>.Failure(result.ErrorMessage);
 
-        if (result.Value == null || result.Value.Length == 0)
+        if (mask == null && (result.Value == null || result.Value.Length == 0))
             return OperationResult<T>.Success(default!);
 
-        var processedValue = ResponseProcessor.Process(result.Value, mask);
+        string processedValue;
+        try
+        {
+            processedValue = ResponseProcessor.Process(result.Value ?? Array.Empty<byte>(), mask);
+        }
+        catch (ResponseProcessingException ex)
+        {
+            return OperationResult<T>.Failure(ex.Message);
+        }
 
         try
         {

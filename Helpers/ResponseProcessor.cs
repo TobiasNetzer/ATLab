@@ -8,6 +8,11 @@ using ATLab.Enums;
 
 namespace ATLab.Helpers;
 
+public sealed class ResponseProcessingException : Exception
+{
+    public ResponseProcessingException(string message) : base(message) { }
+}
+
 public static class ResponseProcessor
 {
     public static string Process(byte[] input, ResponseMask? mask)
@@ -28,8 +33,17 @@ public static class ResponseProcessor
         mask.RawProcessed = processedInput.ToArray();
         mask.ProcessedInput = Format(mask.RawProcessed, mask.ResponseDisplayMode);
 
+        var skip = Math.Max(mask.Skip, 0);
+
+        if (mask.Length > 0 && processedInput.Length < mask.Length)
+            throw new ResponseProcessingException(
+                $"Response too short: expected {mask.Length} bytes after skipping {skip}, " +
+                $"but only {processedInput.Length} available ({input.Length} bytes received).");
+
         if (processedInput.Length == 0)
-            return string.Empty;
+            throw new ResponseProcessingException(input.Length == 0
+                ? "Response is empty."
+                : $"Response too short: no data left after skipping {skip} of {input.Length} received bytes.");
 
         if (string.IsNullOrWhiteSpace(mask.Mask))
         {
@@ -37,7 +51,15 @@ public static class ResponseProcessor
             return resultString;
         }
 
-        var parsed = MaskParser.Parse(mask.Mask);
+        ParsedMask parsed;
+        try
+        {
+            parsed = MaskParser.Parse(mask.Mask);
+        }
+        catch (FormatException ex)
+        {
+            throw new ResponseProcessingException($"Invalid mask '{mask.Mask}': {ex.Message}");
+        }
 
         var ascii = Encoding.ASCII.GetString(processedInput);
 
@@ -67,9 +89,16 @@ public static class ResponseProcessor
         }
         else if (parsed.NumericExtraction != null)
         {
-            var result = ExtractNumeric(processedInput, ascii, parsed.NumericExtraction);
+            var spec = parsed.NumericExtraction;
+            var shownData = spec.Type == NumericExtractionType.BYTE
+                ? Format(processedInput, ResponseDisplayMode.HEX)
+                : ascii.Trim();
 
-            resultString = result?.ToString(CultureInfo.InvariantCulture) ?? "0";
+            var result = ExtractNumeric(processedInput, ascii, spec)
+                         ?? throw new ResponseProcessingException(
+                             $"Numeric extraction {spec} failed on processed data '{shownData}' ({processedInput.Length} bytes).");
+
+            resultString = result.ToString(CultureInfo.InvariantCulture);
         }
         else if (parsed.MatchRules.Count == 0)
         {
@@ -230,6 +259,16 @@ internal sealed class NumericExtractionSpec
         ByteCount = byteCount;
         Endian = endian;
     }
+
+    public override string ToString() => Type switch
+    {
+        NumericExtractionType.BYTE => $"{{byte:{ByteCount},{Endian.ToString().ToLowerInvariant()}}}",
+        NumericExtractionType.HEX_ASCII => "{hex}",
+        NumericExtractionType.BIN_ASCII => "{bin}",
+        NumericExtractionType.DEC_ASCII => "{dec}",
+        NumericExtractionType.FLOAT_ASCII => "{float}",
+        _ => "{ascii}"
+    };
 }
 
 internal interface IMatchRule { }

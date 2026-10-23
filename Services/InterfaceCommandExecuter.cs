@@ -83,8 +83,6 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
                 Convert.ToByte(config.BytesToRead),
                 config.TimeoutMs);
             
-            var processed = ResponseProcessor.Process(status.Value?.Data ?? Array.Empty<byte>(), mask);
-            
             if (status.IsTimeout)
                 return OperationResult<double>.Timeout(status.ErrorMessage);
 
@@ -95,6 +93,16 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             {
                 _loggingService.Error("I²C read failed: NACK received.");
                 return OperationResult<double>.Success(0);
+            }
+
+            string processed;
+            try
+            {
+                processed = ResponseProcessor.Process(status.Value?.Data ?? Array.Empty<byte>(), mask);
+            }
+            catch (ResponseProcessingException ex)
+            {
+                return OperationResult<double>.Failure(ex.Message);
             }
 
             try
@@ -144,8 +152,6 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             _loggingService.Error("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
         }
             
-        var processed = ResponseProcessor.Process(status.Value ?? Array.Empty<byte>(), mask);
-        
         if (status.IsTimeout)
             return OperationResult<double>.Timeout(status.ErrorMessage);
 
@@ -154,6 +160,16 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
         
         if (config.BytesToRead == 0)
             return OperationResult<double>.Success(0);
+
+        string processed;
+        try
+        {
+            processed = ResponseProcessor.Process(status.Value ?? Array.Empty<byte>(), mask);
+        }
+        catch (ResponseProcessingException ex)
+        {
+            return OperationResult<double>.Failure(ex.Message);
+        }
 
         try
         {

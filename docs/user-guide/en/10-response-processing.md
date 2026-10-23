@@ -15,7 +15,7 @@ Enable **Enable Custom Response Processing** and fill in:
 | Field | Description |
 |-------|-------------|
 | **Skip** | Number of bytes to discard from the start of the answer. |
-| **Length** | Number of bytes to keep after skipping (`0` = all remaining bytes). |
+| **Length** | Number of bytes to keep after skipping (`0` = all remaining bytes). If fewer bytes are left, the step reports an execution error. |
 | **Mask** | Rules that the remaining bytes must match, and/or how to convert them to a number. |
 | **Display Mode** | `ASCII` or `HEX` – how the received data is shown in the panel. |
 
@@ -69,7 +69,7 @@ Match rules and numeric extraction do two independent jobs: the match rules only
 
 | Mask | Skip | Length | What happens | Result |
 |------|------|--------|--------------|--------|
-| `"Result=" {float}` | 0 | 0 | `Result=` is found ✔, then `{float}` tries to parse the whole text `Result=3.27\r\n` ✘ | `0` |
+| `"Result=" {float}` | 0 | 0 | `Result=` is found ✔, then `{float}` tries to parse the whole text `Result=3.27\r\n` ✘ | execution error |
 | `{float}` | 7 | 0 | Skip removes `Result=`, `{float}` parses `3.27\r\n` ✔ | `3.27` |
 | `"3."` | 7 | 0 | Skip removes `Result=`, `3.` is found ✔, no extraction | `1` |
 
@@ -83,9 +83,15 @@ So whenever a number has a prefix, remove the prefix with **Skip** (and a suffix
 | Numeric extraction only | the extracted number | – |
 | Match rules + extraction | the extracted number | `0` |
 | *(empty mask)* | `0` | `0` |
-| Extraction fails (e.g. `{dec}` on `4.2`) | `0` | |
 
-If Skip/Length leave no data at all, the result is empty and the step reports an execution error.
+The step reports an **execution error** (instead of a result) if
+
+- the answer is shorter than **Skip** + **Length** (with Length > 0), e.g. a truncated frame,
+- no data is left after **Skip**, or the answer is empty,
+- the numeric extraction fails, e.g. `{dec}` on `4.2`, or `{byte:2}` on a single byte,
+- the mask is invalid, e.g. an unknown extraction such as `{foo}`.
+
+The error message names the cause, e.g. *Response too short: expected 5 bytes after skipping 2, but only 3 available*.
 
 ## Examples
 

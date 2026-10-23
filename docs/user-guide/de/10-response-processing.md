@@ -15,7 +15,7 @@ Schalten Sie **Benutzerdefinierte Antwortverarbeitung aktivieren** ein und füll
 | Feld | Beschreibung |
 |------|--------------|
 | **Überspringen** | Anzahl Bytes, die am Anfang der Antwort verworfen werden. |
-| **Länge** | Anzahl Bytes, die nach dem Überspringen behalten werden (`0` = alle restlichen). |
+| **Länge** | Anzahl Bytes, die nach dem Überspringen behalten werden (`0` = alle restlichen). Sind weniger Bytes übrig, meldet der Schritt einen Ausführungsfehler. |
 | **Maske** | Regeln, die die verbleibenden Bytes erfüllen müssen, und/oder wie sie in eine Zahl umgewandelt werden. |
 | **Anzeigemodus** | `ASCII` oder `HEX` – wie die empfangenen Daten im Bereich angezeigt werden. |
 
@@ -69,7 +69,7 @@ Prüfregeln und Zahlenextraktion erledigen zwei unabhängige Aufgaben: Die Prüf
 
 | Maske | Überspringen | Länge | Was passiert | Ergebnis |
 |-------|--------------|-------|--------------|----------|
-| `"Result=" {float}` | 0 | 0 | `Result=` wird gefunden ✔, dann versucht `{float}` den ganzen Text `Result=3.27\r\n` zu lesen ✘ | `0` |
+| `"Result=" {float}` | 0 | 0 | `Result=` wird gefunden ✔, dann versucht `{float}` den ganzen Text `Result=3.27\r\n` zu lesen ✘ | Ausführungsfehler |
 | `{float}` | 7 | 0 | Überspringen entfernt `Result=`, `{float}` liest `3.27\r\n` ✔ | `3.27` |
 | `"3."` | 7 | 0 | Überspringen entfernt `Result=`, `3.` wird gefunden ✔, keine Extraktion | `1` |
 
@@ -83,9 +83,15 @@ Hat eine Zahl also ein Präfix, entfernen Sie das Präfix mit **Überspringen** 
 | Nur Zahlenextraktion | die extrahierte Zahl | – |
 | Prüfregeln + Extraktion | die extrahierte Zahl | `0` |
 | *(leere Maske)* | `0` | `0` |
-| Extraktion schlägt fehl (z. B. `{dec}` auf `4.2`) | `0` | |
 
-Bleiben nach Überspringen/Länge überhaupt keine Daten übrig, ist das Ergebnis leer, und der Schritt meldet einen Ausführungsfehler.
+Der Schritt meldet einen **Ausführungsfehler** (statt eines Ergebnisses), wenn
+
+- die Antwort kürzer ist als **Überspringen** + **Länge** (bei Länge > 0), z. B. bei einem abgeschnittenen Frame,
+- nach dem **Überspringen** keine Daten übrig bleiben oder die Antwort leer ist,
+- die Zahlenextraktion fehlschlägt, z. B. `{dec}` auf `4.2` oder `{byte:2}` auf ein einzelnes Byte,
+- die Maske ungültig ist, z. B. eine unbekannte Extraktion wie `{foo}`.
+
+Die Fehlermeldung nennt die Ursache, z. B. *Response too short: expected 5 bytes after skipping 2, but only 3 available*.
 
 ## Beispiele
 
