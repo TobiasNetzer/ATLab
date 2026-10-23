@@ -142,10 +142,11 @@ public static class CommandProcessor
 
             try
             {
-                // Normalize decimal separator to dot for internal math evaluation
-                expr = expr.Replace(
-                    CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator,
-                    ".");
+                // Normalize decimal separator to dot for internal math evaluation. ',' is always
+                // accepted, independent of the culture, as it has no other meaning in expressions
+                expr = expr
+                    .Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".")
+                    .Replace(',', '.');
 
                 var result = ExpressionEvaluator.Evaluate(expr);
                 block.Value = result.ToString("G15", CultureInfo.InvariantCulture);

@@ -107,7 +107,7 @@ Operatoren, von der stärksten zur schwächsten Bindung – in derselben Reihenf
 
 Operatoren derselben Stufe werden von links nach rechts ausgewertet. Beispielsweise ergibt `1 + 2 << 1` den Wert `(1 + 2) << 1 = 6` und `1 | 2 * 3` den Wert `1 | (2 * 3) = 7`. Klammern machen gemischte Bit-/Rechenausdrücke trotzdem leichter lesbar.
 
-Zahlen können dezimal (`3.3`), wissenschaftlich (`1.5e-3`) oder hexadezimal (`0x3F`) geschrieben werden. Sowohl `.` als auch das Dezimaltrennzeichen der eingestellten Sprache (bei Deutsch `,`) werden akzeptiert.
+Zahlen können dezimal (`3.3`), wissenschaftlich (`1.5e-3`) oder hexadezimal (`0x3F`) geschrieben werden. Sowohl `.` als auch `,` werden unabhängig von der eingestellten Sprache als Dezimaltrennzeichen akzeptiert (`1,5` und `1.5` ergeben beide 1,5).
 
 Negative Zahlen funktionieren wie erwartet: `-5`, `2 * -3`, `-(1 + 2)` und `1 - -0.3` sind alle gültig. Das gilt auch für Variablen mit negativen Werten – enthält `{Offset}` den Wert `-0.3`, wird `1 + {Offset}` zu `1 + -0.3 = 0.7`.
 

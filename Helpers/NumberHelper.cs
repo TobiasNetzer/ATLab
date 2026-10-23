@@ -12,4 +12,7 @@ public static class NumberHelper
 
         return double.Parse(value.ToString("G15", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
     }
+    
+    public static bool TryParseDecimal(string? input, out double result) =>
+        double.TryParse(input?.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out result);
 }

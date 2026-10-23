@@ -156,7 +156,7 @@ public class TestStepRunner : ITestStepRunner
 
                     var processed = ResponseProcessor.Process(Encoding.UTF8.GetBytes(userInput), mask).Trim();
                     
-                    return double.TryParse(processed.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleResult)
+                    return NumberHelper.TryParseDecimal(processed, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
                         : OperationResult<double>.Failure($"Failed to parse user input to double: {processed}");
                 }
@@ -164,9 +164,9 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.EXPRESSION: 
                 {
                     var resolved = CommandProcessor.EvaluateExpression(step.TestStep.Expression, runtimeVariables);
-                    return double.TryParse(resolved, CultureInfo.InvariantCulture, out var doubleResult)
+                    return double.TryParse(resolved, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
-                        : OperationResult<double>.Failure($"Failed to evaluate expression: {step.TestStep.Expression}. Resolved to: {resolved}");
+                        : OperationResult<double>.Failure($"Failed to evaluate expression:{step.TestStep.Expression}. Resolved to: {resolved}");
                 }
 
                 case TestEvaluationSource.FILE:
@@ -178,7 +178,7 @@ public class TestStepRunner : ITestStepRunner
 
                     var processed = ResponseProcessor.Process(fileResult.Value!, mask);
 
-                    return double.TryParse(processed, CultureInfo.InvariantCulture, out var doubleResult)
+                    return NumberHelper.TryParseDecimal(processed, out var doubleResult)
                         ? OperationResult<double>.Success(doubleResult)
                         : OperationResult<double>.Failure($"Failed to parse file content to double: {processed}");
                 }

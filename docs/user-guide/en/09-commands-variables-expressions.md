@@ -107,7 +107,7 @@ Operators, from the most tightly binding to the least — the same order as in C
 
 Operators of the same level are evaluated left to right. For example `1 + 2 << 1` is `(1 + 2) << 1 = 6`, and `1 | 2 * 3` is `1 | (2 * 3) = 7`. Parentheses still make mixed bitwise/arithmetic expressions easier to read.
 
-Numbers can be written as decimal (`3.3`), scientific (`1.5e-3`) or hexadecimal (`0x3F`). Both `.` and the current culture's decimal separator are accepted.
+Numbers can be written as decimal (`3.3`), scientific (`1.5e-3`) or hexadecimal (`0x3F`). Both `.` and `,` are accepted as decimal separator, regardless of the language setting (`1,5` and `1.5` are both 1.5).
 
 Negative numbers work as expected: `-5`, `2 * -3`, `-(1 + 2)` and `1 - -0.3` are all valid. This also covers variables holding negative values — if `{Offset}` is `-0.3`, the expression `1 + {Offset}` becomes `1 + -0.3 = 0.7`.
 
