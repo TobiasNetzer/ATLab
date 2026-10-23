@@ -57,9 +57,12 @@ Several match rules must all be found. Text rules are searched **in the given or
 | `{hex}` | ASCII hexadecimal digits | `1F` → 31 |
 | `{bin}` | ASCII binary digits | `1010` → 10 |
 | `{ascii}` | ASCII characters combined into an integer (big-endian) | `AB` → 16706 |
-| `{byte:N}` | the first *N* raw bytes as an unsigned integer, most significant byte first | `0x01 0x2C` with `{byte:2}` → 300 |
-| `{byte:N,lsb}` | the first *N* raw bytes, least significant byte first | `0x2C 0x01` with `{byte:2,lsb}` → 300 |
-| `{byte:N,msb}` | same as `{byte:N}` | |
+| `{byte:N}` | the first *N* raw bytes (1–8) as an unsigned integer, big-endian (most significant byte first) | `0x01 0x2C` with `{byte:2}` → 300 |
+| `{byte:N,le}` | the first *N* raw bytes, little-endian (least significant byte first) | `0x2C 0x01` with `{byte:2,le}` → 300 |
+| `{byte:N,be}` | same as `{byte:N}` | |
+| `{byte:N,signed}` | the first *N* raw bytes as a signed integer (two's complement); combinable with `le` | `0xFF 0xFE` with `{byte:2,signed}` → -2, `0xFE 0xFF` with `{byte:2,le,signed}` → -2 |
+| `{f32}` | the first 4 raw bytes as a 32-bit float (IEEE 754), big-endian | `0x40 0x53 0x33 0x33` → 3.3 |
+| `{f32:le}` | same, little-endian | `0x33 0x33 0x53 0x40` → 3.3 |
 
 Only one numeric extraction is used per mask. **The extraction always works on the complete processed part** (after Skip/Length), not on the text following a match rule — use Skip and Length to isolate the number.
 

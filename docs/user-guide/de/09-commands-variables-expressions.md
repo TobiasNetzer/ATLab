@@ -72,8 +72,8 @@ Ein Kodierungsblock hat die Form `{kodierung:inhalt}`. Der Inhalt darf selbst Va
 | `{upper:…}` | Text in Großbuchstaben. | `{upper:{Mode}}` | `DC` |
 | `{lower:…}` | Text in Kleinbuchstaben. | `{lower:VOLT}` | `volt` |
 | `{len:…}` | Länge des Texts. | `{len:HELLO}` | `5` |
-| `{bytes:…}` | UTF-8-Bytewerte als Liste. | `{bytes:AB}` | `[65, 66]` |
 | `{expr:…}` | Ergebnis eines arithmetischen Ausdrucks. | `{expr:{Range}*2}` | `200` |
+| `{u16be:…}` usw. | Zahl als binärer Rohwert, siehe [Binäre Zahlen](#binäre-zahlen). | `{u16be:1000}` | Bytes `0x03 0xE8` |
 
 Text außerhalb von Klammern wird als ASCII gesendet. Blöcke lassen sich beliebig kombinieren:
 
@@ -85,8 +85,33 @@ Typische Anwendungen:
 
 - Zeilenvorschub für ein Gerät anhängen, das ihn benötigt: `MEAS?{hex:0A}`
 - Registeradresse und Wert über I²C senden: `{hex:10}{hex:{RegValue}}`
+- Berechneten Wert in ein 16-Bit-Register schreiben: `{hex:10}{u16be:{Setpoint}*10}`
 
-> Rohbyte-Blöcke (`hex`, `bin`) sind nur für Befehle an Geräte und Schnittstellen sinnvoll. In Shell-Befehlen, Kommentaren und Grenzwerten wird der Inhalt als Text eingefügt.
+> Rohbyte-Blöcke (`hex`, `bin` und die Blöcke für binäre Zahlen) sind nur für Befehle an Geräte und Schnittstellen sinnvoll. In Shell-Befehlen, Kommentaren und Grenzwerten wird der Inhalt als Text eingefügt (bei binären Zahlen: die berechnete Zahl).
+
+### Binäre Zahlen
+
+Die Blöcke `{u8:…}`, `{i8:…}`, `{u16be:…}`, `{u16le:…}`, `{i16be:…}`, `{i16le:…}`, `{u32be:…}`, `{u32le:…}`, `{i32be:…}`, `{i32le:…}`, `{f32be:…}` und `{f32le:…}` wandeln eine Zahl in ihre binäre Rohdarstellung um:
+
+| Teil | Bedeutung |
+|------|-----------|
+| `u` / `i` / `f` | vorzeichenlose Ganzzahl / vorzeichenbehaftete Ganzzahl (Zweierkomplement) / 32-Bit-Gleitkommazahl (IEEE 754) |
+| `8` / `16` / `32` | Größe in Bit (1, 2 oder 4 Bytes); Gleitkommazahlen immer `32` |
+| `be` / `le` | Bytereihenfolge: Big-Endian (höchstwertiges Byte zuerst) / Little-Endian. Ohne Suffix: Big-Endian. |
+
+Der Inhalt wird wie ein [Ausdruck](#ausdrücke) ausgewertet und kann daher eine Zahl, eine Variable, ein Hex-Literal oder eine Berechnung sein. Ganzzahlen werden auf die nächste ganze Zahl gerundet; ein Wert außerhalb des Wertebereichs (z. B. `{u8:256}` oder `{u16be:-1}`) bricht den Schritt mit einem Ausführungsfehler ab.
+
+| Block | Gesendete Bytes |
+|-------|-----------------|
+| `{u16be:1000}` | `0x03 0xE8` |
+| `{u16le:1000}` | `0xE8 0x03` |
+| `{i8:-1}` | `0xFF` |
+| `{i16le:-300}` | `0xD4 0xFE` |
+| `{u32be:0x12345678}` | `0x12 0x34 0x56 0x78` |
+| `{u16be:{Setpoint}*10}` mit `Setpoint` = `100` | `0x03 0xE8` |
+| `{f32be:3.3}` | `0x40 0x53 0x33 0x33` |
+
+Das Gegenstück zum Lesen binärer Antworten ist `{byte:N}` / `{f32}` in der [Antwortverarbeitung](10-response-processing.md#zahlenextraktion).
 
 ## Ausdrücke
 

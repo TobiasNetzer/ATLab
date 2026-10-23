@@ -72,8 +72,8 @@ An encoding block has the form `{encoding:content}`. The content can itself cont
 | `{upper:…}` | Text in upper case. | `{upper:{Mode}}` | `DC` |
 | `{lower:…}` | Text in lower case. | `{lower:VOLT}` | `volt` |
 | `{len:…}` | Length of the text. | `{len:HELLO}` | `5` |
-| `{bytes:…}` | UTF-8 byte values as a list. | `{bytes:AB}` | `[65, 66]` |
 | `{expr:…}` | Result of an arithmetic expression. | `{expr:{Range}*2}` | `200` |
+| `{u16be:…}` etc. | Number as raw binary value, see [Binary numbers](#binary-numbers). | `{u16be:1000}` | bytes `0x03 0xE8` |
 
 Text outside braces is sent as ASCII. Blocks can be mixed freely:
 
@@ -85,8 +85,33 @@ Typical uses:
 
 - Appending a line feed for an instrument that needs it: `MEAS?{hex:0A}`
 - Sending a register address and value over I²C: `{hex:10}{hex:{RegValue}}`
+- Writing a calculated value to a 16-bit register: `{hex:10}{u16be:{Setpoint}*10}`
 
-> Raw byte blocks (`hex`, `bin`) are only meaningful for commands sent to devices and interfaces. In shell commands, comments and limits the content is inserted as text.
+> Raw byte blocks (`hex`, `bin` and the binary number blocks) are only meaningful for commands sent to devices and interfaces. In shell commands, comments and limits the content is inserted as text (binary number blocks: the calculated number).
+
+### Binary numbers
+
+The blocks `{u8:…}`, `{i8:…}`, `{u16be:…}`, `{u16le:…}`, `{i16be:…}`, `{i16le:…}`, `{u32be:…}`, `{u32le:…}`, `{i32be:…}`, `{i32le:…}`, `{f32be:…}` and `{f32le:…}` convert a number into its raw binary representation:
+
+| Part | Meaning |
+|------|---------|
+| `u` / `i` / `f` | unsigned integer / signed integer (two's complement) / 32-bit float (IEEE 754) |
+| `8` / `16` / `32` | size in bits (1, 2 or 4 bytes); floats are always `32` |
+| `be` / `le` | byte order: big-endian (most significant byte first) / little-endian. Without suffix: big-endian. |
+
+The content is evaluated like an [expression](#expressions), so it can be a number, a variable, a hex literal or a calculation. Integers are rounded to the nearest whole number; a value outside the type's range (e.g. `{u8:256}` or `{u16be:-1}`) stops the step with an execution error.
+
+| Block | Bytes sent |
+|-------|------------|
+| `{u16be:1000}` | `0x03 0xE8` |
+| `{u16le:1000}` | `0xE8 0x03` |
+| `{i8:-1}` | `0xFF` |
+| `{i16le:-300}` | `0xD4 0xFE` |
+| `{u32be:0x12345678}` | `0x12 0x34 0x56 0x78` |
+| `{u16be:{Setpoint}*10}` with `Setpoint` = `100` | `0x03 0xE8` |
+| `{f32be:3.3}` | `0x40 0x53 0x33 0x33` |
+
+The counterpart for reading binary answers is `{byte:N}` / `{f32}` in [Response Processing](10-response-processing.md#numeric-extraction).
 
 ## Expressions
 

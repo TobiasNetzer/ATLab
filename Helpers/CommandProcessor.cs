@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,6 +13,10 @@ public static class CommandProcessor
 {
     private static readonly Regex VarRegex =
         new(@"\{([A-Za-z0-9_.]+)\}", RegexOptions.Compiled);
+
+    // {u16be:…}, {i8:…}, {f32le:…}: number as raw binary, multi-byte without suffix = big-endian
+    private static readonly Regex NumericEncodingRegex =
+        new(@"^(?<type>[uif])(?<bits>\d+)(?<order>be|le)?$", RegexOptions.Compiled);
     
     public static byte[] CompileToBytes(string command, IEnumerable<CustomVariable>? vars)
     {
@@ -96,7 +101,7 @@ public static class CommandProcessor
 
                 if (parts.Length == 2)
                 {
-                    // {enc:content} (enc can be hex/bin/ascii/upper/lower/len/bytes/expr)
+                    // {enc:content} (enc can be hex/bin/ascii/upper/lower/len/expr or a numeric type like u16be)
                     blocks.Add(new Block(BlockType.ENCODED, parts[1].Trim(), parts[0].Trim().ToLowerInvariant()));
                 }
                 else
@@ -135,7 +140,7 @@ public static class CommandProcessor
     {
         foreach (var block in blocks)
         {
-            if (block.Encoding != "expr")
+            if (block.Encoding != "expr" && GetNumericEncoding(block.Encoding) == null)
                 continue;
 
             var expr = block.Value;
@@ -173,7 +178,6 @@ public static class CommandProcessor
                 "upper"  => v.ToUpperInvariant(),
                 "lower"  => v.ToLowerInvariant(),
                 "len"    => v.Length.ToString(CultureInfo.InvariantCulture),
-                "bytes"  => ConvertToByteString(v),
                 _        => v
             };
         }
@@ -193,6 +197,10 @@ public static class CommandProcessor
 
                 case "bin":
                     output.AddRange(ParseBinary(block.Value));
+                    break;
+
+                case var encoding when GetNumericEncoding(encoding) is { } numeric:
+                    output.AddRange(EncodeNumber(block.Value, numeric, encoding));
                     break;
 
                 default:
@@ -234,12 +242,65 @@ public static class CommandProcessor
         return bytes;
     }
 
-    private static string ConvertToByteString(string value)
+    private static NumericEncoding? GetNumericEncoding(string encoding)
     {
-        var bytes = Encoding.UTF8.GetBytes(value);
-        return "[" + string.Join(", ", bytes) + "]";
+        var match = NumericEncodingRegex.Match(encoding);
+        if (!match.Success)
+            return null;
+
+        var type = match.Groups["type"].Value[0];
+        var bits = int.Parse(match.Groups["bits"].Value, CultureInfo.InvariantCulture);
+
+        var supported = type == 'f'
+            ? bits == 32
+            : bits is 8 or 16 or 32;
+
+        if (!supported)
+            throw new FormatException(
+                $"Unknown encoding '{encoding}'. Supported: u8, i8, u16, i16, u32, i32, f32 (with optional be/le suffix).");
+
+        return new NumericEncoding(type, bits, match.Groups["order"].Value != "le");
     }
-    
+
+    private static byte[] EncodeNumber(string value, NumericEncoding numeric, string encoding)
+    {
+        if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+            throw new FormatException($"{{{encoding}:…}}: '{value}' is not a number.");
+
+        var bytes = new byte[numeric.Bits / 8];
+
+        if (numeric.Type == 'f')
+        {
+            if (numeric.BigEndian)
+                BinaryPrimitives.WriteSingleBigEndian(bytes, (float)number);
+            else
+                BinaryPrimitives.WriteSingleLittleEndian(bytes, (float)number);
+
+            return bytes;
+        }
+
+        var rounded = Math.Round(number, MidpointRounding.AwayFromZero);
+        var min = numeric.Type == 'i' ? -Math.Pow(2, numeric.Bits - 1) : 0;
+        var max = numeric.Type == 'i' ? Math.Pow(2, numeric.Bits - 1) - 1 : Math.Pow(2, numeric.Bits) - 1;
+
+        if (!double.IsFinite(rounded) || rounded < min || rounded > max)
+            throw new FormatException(
+                $"{{{encoding}:…}}: {value} is out of range ({min.ToString(CultureInfo.InvariantCulture)} … {max.ToString(CultureInfo.InvariantCulture)}).");
+
+        // two's complement for negative values
+        var raw = (ulong)(long)rounded;
+
+        for (var b = 0; b < bytes.Length; b++)
+        {
+            var shift = 8 * (numeric.BigEndian ? bytes.Length - 1 - b : b);
+            bytes[b] = (byte)(raw >> shift);
+        }
+
+        return bytes;
+    }
+
+    private sealed record NumericEncoding(char Type, int Bits, bool BigEndian);
+
     private enum BlockType { ASCII, ENCODED }
 
     private sealed class Block

@@ -1,5 +1,6 @@
 ﻿using ATLab.Models;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -90,7 +91,7 @@ public static class ResponseProcessor
         else if (parsed.NumericExtraction != null)
         {
             var spec = parsed.NumericExtraction;
-            var shownData = spec.Type == NumericExtractionType.BYTE
+            var shownData = spec.Type is NumericExtractionType.BYTE or NumericExtractionType.FLOAT32
                 ? Format(processedInput, ResponseDisplayMode.HEX)
                 : ascii.Trim();
 
@@ -154,13 +155,38 @@ public static class ResponseProcessor
                 if (input.Length < spec.ByteCount)
                     return null;
 
-                var slice = new byte[spec.ByteCount];
-                Array.Copy(input, 0, slice, 0, spec.ByteCount);
+                ulong raw = 0;
+                for (var b = 0; b < spec.ByteCount; b++)
+                {
+                    var index = spec.Endian == Endianness.BIG ? b : spec.ByteCount - 1 - b;
+                    raw = (raw << 8) | input[index];
+                }
 
-                if (spec.Endian == Endianness.LSB)
-                    Array.Reverse(slice);
+                if (!spec.Signed)
+                    return raw;
 
-                return slice.Aggregate(0, (current, b) => (current << 8) | b);
+                // sign-extend from N bytes to 64 bit
+                var bits = spec.ByteCount * 8;
+                if (bits < 64 && (raw & (1UL << (bits - 1))) != 0)
+                    raw |= ulong.MaxValue << bits;
+
+                return (long)raw;
+            }
+
+            case NumericExtractionType.FLOAT32:
+            {
+                if (input.Length < 4)
+                    return null;
+
+                var f = spec.Endian == Endianness.BIG
+                    ? BinaryPrimitives.ReadSingleBigEndian(input)
+                    : BinaryPrimitives.ReadSingleLittleEndian(input);
+
+                if (!float.IsFinite(f))
+                    return null;
+
+                // via the shortest round-trip string, so 3.3f gives 3.3 instead of 3.299999952316284
+                return double.Parse(f.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
             }
 
             case NumericExtractionType.HEX_ASCII:
@@ -238,13 +264,14 @@ internal enum NumericExtractionType
     HEX_ASCII,
     BIN_ASCII,
     DEC_ASCII,
-    FLOAT_ASCII
+    FLOAT_ASCII,
+    FLOAT32
 }
 
 internal enum Endianness
 {
-    MSB,
-    LSB
+    BIG,
+    LITTLE
 }
 
 internal sealed class NumericExtractionSpec
@@ -252,17 +279,23 @@ internal sealed class NumericExtractionSpec
     public NumericExtractionType Type { get; }
     public int ByteCount { get; }
     public Endianness Endian { get; }
+    public bool Signed { get; }
 
-    public NumericExtractionSpec(NumericExtractionType type, int byteCount = 0, Endianness endian = Endianness.MSB)
+    private string EndianSuffix => Endian == Endianness.BIG ? "be" : "le";
+
+    public NumericExtractionSpec(NumericExtractionType type, int byteCount = 0, Endianness endian = Endianness.BIG,
+        bool signed = false)
     {
         Type = type;
         ByteCount = byteCount;
         Endian = endian;
+        Signed = signed;
     }
 
     public override string ToString() => Type switch
     {
-        NumericExtractionType.BYTE => $"{{byte:{ByteCount},{Endian.ToString().ToLowerInvariant()}}}",
+        NumericExtractionType.BYTE => $"{{byte:{ByteCount},{EndianSuffix}{(Signed ? ",signed" : "")}}}",
+        NumericExtractionType.FLOAT32 => $"{{f32:{EndianSuffix}}}",
         NumericExtractionType.HEX_ASCII => "{hex}",
         NumericExtractionType.BIN_ASCII => "{bin}",
         NumericExtractionType.DEC_ASCII => "{dec}",
@@ -436,34 +469,67 @@ internal static class MaskParser
         if (i < s.Length && s[i] == '}')
             i++;
 
-        if (!content.StartsWith("byte:", StringComparison.OrdinalIgnoreCase))
-            return content.ToLowerInvariant() switch
-            {
-                "ascii" => new NumericExtractionSpec(NumericExtractionType.ASCII),
-                "hex" => new NumericExtractionSpec(NumericExtractionType.HEX_ASCII),
-                "bin" => new NumericExtractionSpec(NumericExtractionType.BIN_ASCII),
-                "dec" => new NumericExtractionSpec(NumericExtractionType.DEC_ASCII),
-                "float" => new NumericExtractionSpec(NumericExtractionType.FLOAT_ASCII),
-                _ => throw new FormatException($"Unknown numeric extraction: {{{content}}}")
-            };
-        var parts = content.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        // {name} or {name:option,option,…}
+        var colon = content.IndexOf(':');
+        var name = (colon < 0 ? content : content[..colon]).Trim().ToLowerInvariant();
+        var options = colon < 0
+            ? Array.Empty<string>()
+            : content[(colon + 1)..].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        var fmtAndCount = parts[0].Split(':');
-        var byteCount = int.Parse(fmtAndCount[1], CultureInfo.InvariantCulture);
-
-        var endian = Endianness.MSB;
-
-        if (parts.Length > 1)
+        switch (name)
         {
-            endian = parts[1].ToLowerInvariant() switch
+            case "ascii": return new NumericExtractionSpec(NumericExtractionType.ASCII);
+            case "hex": return new NumericExtractionSpec(NumericExtractionType.HEX_ASCII);
+            case "bin": return new NumericExtractionSpec(NumericExtractionType.BIN_ASCII);
+            case "dec": return new NumericExtractionSpec(NumericExtractionType.DEC_ASCII);
+            case "float": return new NumericExtractionSpec(NumericExtractionType.FLOAT_ASCII);
+
+            case "byte":
             {
-                "msb" => Endianness.MSB,
-                "lsb" => Endianness.LSB,
-                _ => throw new FormatException($"Unknown endianness '{parts[1]}'")
-            };
+                if (options.Length == 0
+                    || !int.TryParse(options[0], NumberStyles.None, CultureInfo.InvariantCulture, out var byteCount)
+                    || byteCount is < 1 or > 8)
+                    throw new FormatException("byte count must be between 1 and 8");
+
+                var (endian, signed) = ParseBinaryOptions(options.Skip(1), allowSigned: true);
+                return new NumericExtractionSpec(NumericExtractionType.BYTE, byteCount, endian, signed);
+            }
+
+            case "f32":
+            {
+                var (endian, _) = ParseBinaryOptions(options, allowSigned: false);
+                return new NumericExtractionSpec(NumericExtractionType.FLOAT32, 4, endian);
+            }
+
+            default:
+                throw new FormatException($"unknown numeric extraction '{name}'");
+        }
+    }
+
+    private static (Endianness Endian, bool Signed) ParseBinaryOptions(IEnumerable<string> options, bool allowSigned)
+    {
+        var endian = Endianness.BIG;
+        var signed = false;
+
+        foreach (var option in options)
+        {
+            switch (option.ToLowerInvariant())
+            {
+                case "be":
+                    endian = Endianness.BIG;
+                    break;
+                case "le":
+                    endian = Endianness.LITTLE;
+                    break;
+                case "signed" when allowSigned:
+                    signed = true;
+                    break;
+                default:
+                    throw new FormatException($"unknown option '{option}'");
+            }
         }
 
-        return new NumericExtractionSpec(NumericExtractionType.BYTE, byteCount, endian);
+        return (endian, signed);
     }
 }
 
