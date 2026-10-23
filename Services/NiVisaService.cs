@@ -11,6 +11,7 @@ namespace ATLab.Services;
 
 public class NiVisaService : ICommunication
 {
+    private ResourceManager? _resourceManager;
     private MessageBasedSession? _session;
     private bool _disposed;
     private bool _connected;
@@ -38,8 +39,8 @@ public class NiVisaService : ICommunication
 
         try
         {
-            var rm = new ResourceManager();
-            _session = (MessageBasedSession)rm.Open(Resource);
+            _resourceManager = new ResourceManager();
+            _session = (MessageBasedSession)_resourceManager.Open(Resource);
 
             _session.TimeoutMilliseconds = _timeoutMs;
 
@@ -53,17 +54,13 @@ public class NiVisaService : ICommunication
         }
         catch (VisaException ex)
         {
-            _connected = false;
-            _session?.Dispose();
-            _session = null;
+            CloseSession();
 
             return Task.FromResult(OperationResult.Failure($"VISA error: {ex.Message}"));
         }
         catch (Exception ex)
         {
-            _connected = false;
-            _session?.Dispose();
-            _session = null;
+            CloseSession();
 
             return Task.FromResult(OperationResult.Failure($"Unexpected error: {ex.Message}"));
         }
@@ -89,9 +86,7 @@ public class NiVisaService : ICommunication
 
         try
         {
-            _session?.Dispose();
-            _session = null;
-            _connected = false;
+            CloseSession();
 
             return Task.FromResult(OperationResult.Success());
         }
@@ -114,39 +109,47 @@ public class NiVisaService : ICommunication
     {
         if (data == null) throw new ArgumentNullException(nameof(data));
         if (_disposed) throw new ObjectDisposedException(nameof(NiVisaService));
-        if (_session == null) throw new InvalidOperationException("Not connected.");
+        // capture the session, as a disconnect during the blocking read sets the field to null
+        var session = _session ?? throw new InvalidOperationException("Not connected.");
 
-        _session.TimeoutMilliseconds = timeoutMs;
+        session.TimeoutMilliseconds = timeoutMs;
 
         return await Task.Run(() =>
         {
-            _session.RawIO.Write(data);
-            return _session.RawIO.Read();
+            session.RawIO.Write(data);
+            return session.RawIO.Read();
         });
     }
 
     public async Task<byte[]> ReceiveAsync(CancellationToken cancellationToken = default)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(NiVisaService));
-        if (_session == null) throw new InvalidOperationException("Not connected.");
+        var session = _session ?? throw new InvalidOperationException("Not connected.");
 
         return await Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return _session.RawIO.Read();
+            return session.RawIO.Read();
         }, cancellationToken);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await DisconnectAsync();
-        
         if (_disposed) return;
+
+        await DisconnectAsync();
         _disposed = true;
+    }
+
+    private void CloseSession()
+    {
+        _connected = false;
 
         _session?.Dispose();
         _session = null;
-        _connected = false;
+
+        _resourceManager?.Dispose();
+        _resourceManager = null;
     }
 
     private static byte ToTerminationByte(VisaTerminationMode mode)

@@ -45,6 +45,9 @@ public class TcpService : ICommunication
 
         try
         {
+            // a connection dropped by the remote side is no longer connected, but still has to be released
+            CloseConnection();
+
             _client = new TcpClient();
 
             using var cts = new CancellationTokenSource(_timeoutMs);
@@ -81,13 +84,7 @@ public class TcpService : ICommunication
 
         try
         {
-            _stream?.Dispose();
-            _stream = null;
-
-            _client?.Dispose();
-            _client = null;
-
-            _connected = false;
+            CloseConnection();
 
             return Task.FromResult(OperationResult.Success());
         }
@@ -128,6 +125,7 @@ public class TcpService : ICommunication
         if (_disposed) throw new ObjectDisposedException(nameof(TcpService));
         if (!IsConnected || _stream == null) throw new InvalidOperationException("Not connected.");
 
+        DiscardStaleData(_stream);
         SendRaw(data);
 
         var buffer = new byte[8192];
@@ -159,13 +157,30 @@ public class TcpService : ICommunication
 
     public async ValueTask DisposeAsync()
     {
-        await DisconnectAsync();
-        
         if (_disposed) return;
+
+        await DisconnectAsync();
         _disposed = true;
+    }
+    
+    private static void DiscardStaleData(NetworkStream stream)
+    {
+        var buffer = new byte[8192];
+        while (stream.DataAvailable)
+        {
+            if (stream.Read(buffer, 0, buffer.Length) == 0)
+                break; // connection closed by the remote side
+        }
+    }
+
+    private void CloseConnection()
+    {
+        _connected = false;
 
         _stream?.Dispose();
+        _stream = null;
+
         _client?.Dispose();
-        _connected = false;
+        _client = null;
     }
 }

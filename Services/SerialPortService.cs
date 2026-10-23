@@ -106,6 +106,7 @@ public class SerialPortService : ICommunication
                 }
 
                 _incomingQueue.Clear();
+                _rxBuffer.Clear();
 
                 if (_port.IsOpen)
                     _port.Close();
@@ -129,11 +130,10 @@ public class SerialPortService : ICommunication
     {
         try
         {
-            if (_port.IsOpen)
-            {
-                _port.Close();
-            }
-            
+            var disconnectResult = await DisconnectAsync();
+            if (!disconnectResult.IsSuccess)
+                return disconnectResult;
+
             await Task.Delay(100);
             
             return await ConnectAsync();
@@ -239,6 +239,10 @@ public class SerialPortService : ICommunication
             if (_pendingTcs != null)
                 throw new InvalidOperationException("Another request is already pending.");
 
+            // discard late answers to earlier (timed out) requests, so they are not taken as the answer to this one
+            _incomingQueue.Clear();
+            _rxBuffer.Clear();
+
             _pendingTcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
             waitTask = _pendingTcs.Task;
         }
@@ -284,30 +288,37 @@ public class SerialPortService : ICommunication
             if (_pendingTcs != null)
                 throw new InvalidOperationException("A request is already pending.");
 
-            _pendingTcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-            cancellationToken.Register(() =>
+            var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+            _pendingTcs = tcs;
+
+            // only cancel this receive, not a request that became pending later
+            var registration = cancellationToken.Register(() =>
             {
                 lock (_lock)
                 {
-                    _pendingTcs?.TrySetCanceled();
-                    _pendingTcs = null;
+                    if (_pendingTcs == tcs)
+                        _pendingTcs = null;
                 }
+
+                tcs.TrySetCanceled();
             });
 
-            return _pendingTcs.Task;
+            // remove the registration once the receive is done, so they don't pile up on long-lived tokens
+            tcs.Task.ContinueWith(_ => registration.Dispose(), TaskScheduler.Default);
+
+            return tcs.Task;
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await DisconnectAsync();
-        
         if (_disposed) return;
+
+        await DisconnectAsync();
         _disposed = true;
 
         _port.DataReceived -= SerialPort_DataReceived;
         if (_framer is IDisposable disposableFramer) disposableFramer.Dispose();
-        if (_port.IsOpen) _port.Close();
         _port.Dispose();
     }
 }
