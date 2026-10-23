@@ -1,4 +1,5 @@
 ﻿using System;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
@@ -22,7 +23,9 @@ public class TestStepEvaluator : ITestStepEvaluator
             _loggingService.Error($"Step {testStep.Number}: Lower limit is greater than upper limit");
         }
         
-        var isValid = Math.Round(value, 15) >= testStep.LowerLimit && value <= testStep.UpperLimit;
+        var roundedValue = NumberHelper.RoundToSignificantDigits(value);
+        var isValid = roundedValue >= NumberHelper.RoundToSignificantDigits(testStep.LowerLimit)
+                      && roundedValue <= NumberHelper.RoundToSignificantDigits(testStep.UpperLimit);
 
         double deviation = 0;
         

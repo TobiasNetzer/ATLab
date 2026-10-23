@@ -9,5 +9,6 @@ public interface IMessageBoxService
     Task<bool> ShowConfirmationDestructiveAsync(string title, string message);
     Task<bool> ShowConfirmationImageAsync(string title, string message, string imagePath, DialogFunction dialogFunction = DialogFunction.CONFIRMATION);
     Task<bool> ShowResultConfirmationImageAsync(string title, string message, string imagePath, string? resultText, bool isPassed = false, DialogFunction dialogFunction = DialogFunction.CONFIRMATION);
+    Task<string?> ShowInputImageAsync(string title, string message, string imagePath);
     Task ShowMessageAsync(string title, string message);
 }

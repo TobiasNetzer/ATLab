@@ -96,6 +96,22 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
             isPassed,
             dialogFunction);
     }
+    
+    public async Task<string?> ShowInputImageAsync(
+        string title,
+        string message,
+        string imagePath)
+    {
+        var result = await ShowImageDialogAsync(
+            title,
+            message,
+            imagePath,
+            string.Empty,
+            false,
+            DialogFunction.USER_INPUT);
+
+        return result ? _messageBoxViewModel.InputText : null;
+    }
 
     private async Task<bool> ShowImageDialogAsync(
         string title,
@@ -115,9 +131,14 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
                 cancelText = LocalizationService.Instance["ButtonLabel_Cancel"];
                 break;
 
-            case DialogFunction.USER_INPUT:
+            case DialogFunction.USER_CONFIRMATION:
                 okText = LocalizationService.Instance["ButtonLabel_Pass"];
                 cancelText = LocalizationService.Instance["ButtonLabel_Fail"];
+                break;
+
+            case DialogFunction.USER_INPUT:
+                okText = LocalizationService.Instance["ButtonLabel_Continue"];
+                cancelText = LocalizationService.Instance["ButtonLabel_Cancel"];
                 break;
 
             default:

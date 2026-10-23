@@ -89,7 +89,7 @@ public partial class MeasurementPanel : UserControl
         {
             MeasuredText.Text = !string.IsNullOrWhiteSpace(Unit)
                 ? UnitParser.Format(measured, Unit)
-                : measured.ToString(CultureInfo.CurrentCulture);
+                : measured.ToString("G15", CultureInfo.CurrentCulture);
             
             var measuredX = Scale(measured);
             MeasuredMarker.IsVisible = true;

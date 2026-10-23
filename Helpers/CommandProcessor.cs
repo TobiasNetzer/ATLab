@@ -148,7 +148,7 @@ public static class CommandProcessor
                     ".");
 
                 var result = ExpressionEvaluator.Evaluate(expr);
-                block.Value = result.ToString(CultureInfo.InvariantCulture);
+                block.Value = result.ToString("G15", CultureInfo.InvariantCulture);
             }
             catch
             {

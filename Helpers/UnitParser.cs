@@ -57,7 +57,7 @@ public static class UnitParser
                 NumberStyles.Any,
                 CultureInfo.InvariantCulture,
                 out var value)) return false;
-        result = Math.Round(value * multiplier, 13);
+        result = NumberHelper.RoundToSignificantDigits(value * multiplier);
         return true;
 
     }
@@ -69,7 +69,7 @@ public static class UnitParser
         if (unit != null && unit.StartsWith('{') && unit.EndsWith('}'))
         {
             var trimmedUnit = unit.Trim('{', '}');
-            var valueString = value.ToString(culture);
+            var valueString = value.ToString("G15", culture);
             return $"{valueString}{trimmedUnit}";
         }
         

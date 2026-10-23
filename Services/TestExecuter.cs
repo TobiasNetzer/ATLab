@@ -266,7 +266,7 @@ public class TestExecutor : ITestExecutor
 
                 OperationResult<double> stepExecutionResult;
 
-                if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource != TestEvaluationSource.USER_RESPONSE)
+                if (step.TestStep.IsShowComment && step.TestStep.EvaluationSource is not (TestEvaluationSource.USER_CONFIRMATION or TestEvaluationSource.USER_INPUT))
                 {
                     var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
                     
@@ -407,8 +407,8 @@ public class TestExecutor : ITestExecutor
         step.Result = string.IsNullOrEmpty(step.TestStep.Unit)
             ? Math.Round(value, precision).ToString(format, CultureInfo.CurrentCulture)
             : UnitParser.Format(value, step.TestStep.Unit, precision);
-
-        step.ResultNoFormatting = Math.Round(value, 12).ToString(CultureInfo.CurrentCulture);
+        
+        step.ResultNoFormatting = value.ToString("G15", CultureInfo.CurrentCulture);
 
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";

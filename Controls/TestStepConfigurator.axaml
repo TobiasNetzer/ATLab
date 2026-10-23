@@ -231,7 +231,7 @@
                             
                             <CheckBox Content="{helpers:Localize Label_ShowComment}"
                                       TabIndex="12"
-                                      IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=USER_RESPONSE, FallbackValue='True'}"
+                                      IsEnabled="{Binding TestStepViewModel.TestStep.EvaluationSource, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter='USER_CONFIRMATION,USER_INPUT', FallbackValue='True'}"
                                       IsChecked="{Binding TestStepViewModel.TestStep.IsShowComment, FallbackValue=False}"/>
                         
                             <Button Background="{DynamicResource ButtonBackground}"

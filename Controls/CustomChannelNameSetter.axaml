@@ -12,7 +12,7 @@
                 CornerRadius="15 15 0 0"
                 Padding="10">
                 
-            <TextBlock Text="{helpers:Localize Header_CustomRelayChannelNaming}"
+            <TextBlock Text="{helpers:Localize Header_CustomLabels}"
                        Classes="h4"
                        HorizontalAlignment="Center"/>
         </Border>

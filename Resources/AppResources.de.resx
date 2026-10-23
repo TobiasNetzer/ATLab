@@ -439,9 +439,6 @@
   <data name="ToolTip_RemoveVariable" xml:space="preserve">
     <value>Variable entfernen</value>
   </data>
-  <data name="Header_CustomRelayChannelNaming" xml:space="preserve">
-    <value>Benutzerdefinierte Relaiskanalbenennung</value>
-  </data>
   <data name="Header_MatrixChannels" xml:space="preserve">
     <value>Matrix-Kanäle</value>
   </data>
@@ -844,7 +841,10 @@
   <data name="Text_DeleteScript" xml:space="preserve">
     <value>Das ausgewählte Skript wird unwiderruflich gelöscht.</value>
   </data>
-  <data name="Title_AwaitingUserResponse" xml:space="preserve">
+  <data name="Title_AwaitingUserConfirmation" xml:space="preserve">
+    <value>Warten auf Benutzerbestätigung</value>
+  </data>
+  <data name="Title_AwaitingUserInput" xml:space="preserve">
     <value>Warten auf Benutzereingabe</value>
   </data>
   <data name="Title_Warning" xml:space="preserve">
@@ -886,8 +886,8 @@
   <data name="Enum_TestEvaluationSource_FILE" xml:space="preserve">
     <value>Datei</value>
   </data>
-  <data name="Enum_TestEvaluationSource_USER_RESPONSE" xml:space="preserve">
-    <value>Benutzereingabe</value>
+  <data name="Enum_TestEvaluationSource_USER_CONFIRMATION" xml:space="preserve">
+    <value>Benutzerbestätigung</value>
   </data>
   <data name="ToolTip_RequestBreakRepeat" xml:space="preserve">
     <value>Testausführung fortsetzen</value>
@@ -1023,5 +1023,11 @@
   </data>
   <data name="ToolTip_StartModuleTest" xml:space="preserve">
     <value>Testausführung des ausgewählten Moduls starten</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_USER_INPUT" xml:space="preserve">
+    <value>Benutzereingabe</value>
+  </data>
+  <data name="Header_CustomLabels" xml:space="preserve">
+    <value>Kanalbezeichnungen</value>
   </data>
 </root>

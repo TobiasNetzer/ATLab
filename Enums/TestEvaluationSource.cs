@@ -7,7 +7,8 @@ public enum TestEvaluationSource
     COMMAND,
     INTERFACE,
     SHELL_COMMAND,
-    USER_RESPONSE,
+    USER_CONFIRMATION,
+    USER_INPUT,
     EXPRESSION,
     FILE
 }

@@ -1,11 +1,13 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.MessageBox"
-             x:DataType="vm:MessageBoxViewModel">
+             x:DataType="vm:MessageBoxViewModel"
+             MinWidth="500">
     
     <Grid Margin="20"
-          RowDefinitions="Auto,20,Auto,Auto,Auto,20,Auto">
+          RowDefinitions="Auto,20,Auto,Auto,Auto,Auto,20,Auto">
         
         <TextBlock Grid.Row="0"
             FontSize="18"
@@ -41,11 +43,17 @@
                    Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
                    IsVisible="{Binding ResultText, Converter={StaticResource StringNotEmptyConverter}}"
                    Margin=" 0 0 0 10"/>
-        
-        <StackPanel Grid.Row="6"
+
+        <TextBox Grid.Row="5"
+                 Text="{Binding InputText}"
+                 MaxWidth="1000"
+                 helpers:FocusExtensions.FocusWhenVisible="True"
+                 IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_INPUT}"/>
+
+        <StackPanel Grid.Row="7"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Spacing="8"
+                    Spacing="10"
                     IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INFORMATION}"
                     IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INFORMATION}">
             
@@ -58,10 +66,10 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="6"
+        <StackPanel Grid.Row="7"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Spacing="8"
+                    Spacing="10"
                     IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONFIRMATION_DESTRUCTIVE}"
                     IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONFIRMATION_DESTRUCTIVE}">
             
@@ -81,12 +89,12 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="6"
+        <StackPanel Grid.Row="7"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Spacing="8"
-                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONFIRMATION}"
-                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CONFIRMATION}">
+                    Spacing="10"
+                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT'}"
+                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT'}">
             
             <Button
                 Content="{Binding CancelText}"
@@ -104,13 +112,13 @@
             
         </StackPanel>
         
-        <StackPanel Grid.Row="6"
+        <StackPanel Grid.Row="7"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Spacing="8"
-                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_INPUT}"
-                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_INPUT}">
-            
+                    Spacing="10"
+                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_CONFIRMATION}"
+                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_CONFIRMATION}">
+
             <Button
                 Content="{Binding CancelText}"
                 Background="{DynamicResource DestructiveColor}"

@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 
 namespace ATLab.Helpers;
 
@@ -13,8 +14,19 @@ public static class FocusExtensions
     public static bool GetMoveFocusOnEnter(Control element) => element.GetValue(MoveFocusOnEnterProperty);
     public static void SetMoveFocusOnEnter(Control element, bool value) => element.SetValue(MoveFocusOnEnterProperty, value);
 
+    public static readonly AttachedProperty<bool> FocusWhenVisibleProperty =
+        AvaloniaProperty.RegisterAttached<Control, bool>("FocusWhenVisible", typeof(FocusExtensions));
+
+    public static bool GetFocusWhenVisible(Control element) => element.GetValue(FocusWhenVisibleProperty);
+    public static void SetFocusWhenVisible(Control element, bool value) => element.SetValue(FocusWhenVisibleProperty, value);
+
     static FocusExtensions()
     {
+        // focus when the control is shown, either by being loaded (e.g. dialog opened) or by becoming visible
+        Control.LoadedEvent.AddClassHandler<Control>((control, _) => FocusIfVisible(control));
+        Visual.IsVisibleProperty.Changed.AddClassHandler<Control>((control, _) => FocusIfVisible(control));
+
+
         InputElement.KeyDownEvent.AddClassHandler<Control>((control, e) =>
         {
             if (GetMoveFocusOnEnter(control) && (e.Key == Key.Enter || e.Key == Key.Return))
@@ -43,5 +55,18 @@ public static class FocusExtensions
                 }
             }
         }, RoutingStrategies.Bubble);
+    }
+
+    private static void FocusIfVisible(Control control)
+    {
+        if (!GetFocusWhenVisible(control) || !control.IsVisible)
+            return;
+
+        // post so the focus is set after the dialog host has finished setting up its own focus
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (control.IsEffectivelyVisible)
+                control.Focus();
+        }, DispatcherPriority.Background);
     }
 }

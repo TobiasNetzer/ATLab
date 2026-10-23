@@ -439,8 +439,8 @@
   <data name="ToolTip_RemoveVariable" xml:space="preserve">
     <value>Remove variable</value>
   </data>
-  <data name="Header_CustomRelayChannelNaming" xml:space="preserve">
-    <value>Custom Relay Channel Naming</value>
+  <data name="Header_CustomLabels" xml:space="preserve">
+    <value>Channel Labels</value>
   </data>
   <data name="Header_MatrixChannels" xml:space="preserve">
     <value>Matrix Channels</value>
@@ -844,8 +844,11 @@
   <data name="Text_DeleteScript" xml:space="preserve">
     <value>The selected script will be permanently deleted.</value>
   </data>
-  <data name="Title_AwaitingUserResponse" xml:space="preserve">
-    <value>Waiting for User Response</value>
+  <data name="Title_AwaitingUserConfirmation" xml:space="preserve">
+    <value>Waiting for User Confirmation</value>
+  </data>
+  <data name="Title_AwaitingUserInput" xml:space="preserve">
+    <value>Waiting for User Input</value>
   </data>
   <data name="Title_Warning" xml:space="preserve">
     <value>Warning</value>
@@ -880,8 +883,8 @@
   <data name="Enum_TestEvaluationSource_SHELL_COMMAND" xml:space="preserve">
     <value>Shell Command</value>
   </data>
-  <data name="Enum_TestEvaluationSource_USER_RESPONSE" xml:space="preserve">
-    <value>User Response</value>
+  <data name="Enum_TestEvaluationSource_USER_CONFIRMATION" xml:space="preserve">
+    <value>User Confirmation</value>
   </data>
   <data name="Enum_TestEvaluationSource_EXPRESSION" xml:space="preserve">
     <value>Expression</value>
@@ -1023,5 +1026,8 @@
   </data>
   <data name="ToolTip_StartModuleTest" xml:space="preserve">
     <value>Start test execution of selected module</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_USER_INPUT" xml:space="preserve">
+    <value>User Input</value>
   </data>
 </root>

@@ -32,6 +32,9 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
     private bool _isPassed;
 
     [ObservableProperty]
+    private string _inputText = string.Empty;
+
+    [ObservableProperty]
     private DialogFunction _dialogFunction = DialogFunction.INFORMATION;
 
     public Bitmap? Bitmap { get; set; }
@@ -71,6 +74,7 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
         DialogFunction = dialogFunction;
         Bitmap = bitmap;
         IsPassed = isPassed;
+        InputText = string.Empty;
     }
 
     [RelayCommand]

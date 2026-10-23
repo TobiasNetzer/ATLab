@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Enums;
@@ -128,17 +129,37 @@ public class TestStepRunner : ITestStepRunner
                     return shellCommandResult;
                 }
                 
-                case TestEvaluationSource.USER_RESPONSE:
+                case TestEvaluationSource.USER_CONFIRMATION:
                 {
                     var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
                     
                     var operatorResponse = await _messageBoxService.ShowConfirmationImageAsync(
-                        LocalizationService.Instance["Title_AwaitingUserResponse"],
+                        LocalizationService.Instance["Title_AwaitingUserConfirmation"],
                         resolvedComment,
                         step.TestStep.CustomMessageBoxImagePath,
-                        DialogFunction.USER_INPUT);
+                        DialogFunction.USER_CONFIRMATION);
 
                     return OperationResult<double>.Success(Convert.ToDouble(operatorResponse));
+                }
+
+                case TestEvaluationSource.USER_INPUT:
+                {
+                    var resolvedComment = CommandProcessor.CompileToString(step.TestStep.Comment, runtimeVariables);
+
+                    var userInput = await _messageBoxService.ShowInputImageAsync(
+                        LocalizationService.Instance["Title_AwaitingUserInput"],
+                        resolvedComment,
+                        step.TestStep.CustomMessageBoxImagePath);
+
+                    if (userInput == null)
+                        throw new OperationCanceledException();
+
+                    var processed = ResponseProcessor.Process(Encoding.UTF8.GetBytes(userInput), mask).Trim();
+
+                    return double.TryParse(processed, CultureInfo.InvariantCulture, out var doubleResult)
+                           || double.TryParse(processed, CultureInfo.CurrentCulture, out doubleResult)
+                        ? OperationResult<double>.Success(doubleResult)
+                        : OperationResult<double>.Failure($"Failed to parse user input to double: {processed}");
                 }
                 
                 case TestEvaluationSource.EXPRESSION: 

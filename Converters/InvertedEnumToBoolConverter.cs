@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
@@ -12,10 +13,12 @@ public class InvertedEnumToBoolConverter : IValueConverter
             return true; // default: enabled
 
         var enumType = value.GetType();
-        var parameterValue = Enum.Parse(enumType, parameter.ToString()!);
+        var parts = parameter.ToString()!.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-        // Return TRUE when NOT equal
-        return !value.Equals(parameterValue);
+        // Return TRUE when NOT equal to any of the given values
+        return !parts
+            .Select(part => Enum.Parse(enumType, part.Trim(), ignoreCase: true))
+            .Contains(value);
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
