@@ -473,7 +473,16 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="{helpers:Localize Header_Name}" Binding="{Binding TestStep.Name}" Width="*" MinWidth="200" />
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_Name}" Width="*" MinWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <TextBlock Text="{Binding TestStep.Name}"
+                                           ToolTip.Tip="{Binding TestStep.Name}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 
                     <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="140">
                         <DataGridTemplateColumn.CellTemplate>
