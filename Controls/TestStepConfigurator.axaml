@@ -78,7 +78,6 @@
                         <TextBox Text="{Binding LowerLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="2"
-                                 MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
                     
@@ -88,7 +87,6 @@
                         <TextBox Text="{Binding NominalValueText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="1"
-                                 MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
                     
@@ -98,7 +96,6 @@
                         <TextBox Text="{Binding UpperLimitText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="3"
-                                 MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
                     
@@ -109,7 +106,6 @@
                         <TextBox Text="{Binding TestStepViewModel.TestStep.Unit, Mode=TwoWay, FallbackValue=''}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="4"
-                                 MaxLength="10"
                                  Width="80"/>
                     </StackPanel>
                 </StackPanel>
@@ -123,7 +119,6 @@
                         <TextBox Text="{Binding DelayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                  helpers:FocusExtensions.MoveFocusOnEnter="True"
                                  TabIndex="5"
-                                 MaxLength="20"
                                  Width="100"/>
                     </StackPanel>
                 
