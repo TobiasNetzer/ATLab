@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TestHardwareSimulator>();
         services.AddSingleton<IHardwareAccessor, HardwareAccessor>();
         
-        services.AddSingleton<IShellCommandRunner, ShellCommandRunner>();
+        services.AddSingleton<IExternalProgramRunner, ExternalProgramRunner>();
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
         
         services.AddSingleton<ControlModuleService>();
@@ -81,7 +81,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ScriptSelectorViewModel>();
         services.AddSingleton<CommandEditorViewModel>();
         services.AddSingleton<TestHardwareConnectWindowViewModel>();
-        services.AddSingleton<ShellCommandEditorViewModel>();
+        services.AddSingleton<ExternalProgramEditorViewModel>();
         services.AddSingleton<ExpressionEditorViewModel>();
         services.AddSingleton<FilePathEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();

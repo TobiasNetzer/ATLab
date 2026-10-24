@@ -706,8 +706,8 @@
   <data name="Label_ExpectResponse" xml:space="preserve">
     <value>Expect Response</value>
   </data>
-  <data name="Header_ShellCommand" xml:space="preserve">
-    <value>Shell Command</value>
+  <data name="Header_ExternalProgram" xml:space="preserve">
+    <value>External Program</value>
   </data>
   <data name="Label_EvaluateOutput" xml:space="preserve">
     <value>Evaluate Output</value>
@@ -877,8 +877,8 @@
   <data name="Enum_TestEvaluationSource_INTERFACE" xml:space="preserve">
     <value>Interface Command</value>
   </data>
-  <data name="Enum_TestEvaluationSource_SHELL_COMMAND" xml:space="preserve">
-    <value>Shell Command</value>
+  <data name="Enum_TestEvaluationSource_EXTERNAL_PROGRAM" xml:space="preserve">
+    <value>External Program</value>
   </data>
   <data name="Enum_TestEvaluationSource_USER_CONFIRMATION" xml:space="preserve">
     <value>User Confirmation</value>

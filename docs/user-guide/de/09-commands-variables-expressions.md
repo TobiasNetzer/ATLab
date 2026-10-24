@@ -9,7 +9,7 @@ Befehlstexte in ATLab sind mehr als einfache Zeichenketten. In geschweiften Klam
 | Skriptbefehle | ✔ (Skript + Laufzeit) | ✔ | ✔ |
 | Gerätebefehl | ✔ | ✔ | ✔ |
 | Schnittstellenbefehl | ✔ | ✔ | ✔ |
-| Shell-Befehl | ✔ | nur Textkodierungen | ✔ |
+| Externes Programm | ✔ | nur Textkodierungen | ✔ |
 | Kommentar / Meldungstext | ✔ | nur Textkodierungen | ✔ |
 | Unter-/Soll-/Obergrenze, Verzögerung | ✔ | – | ✔ |
 | Auswertungsquelle Ausdruck | ✔ | – | das ganze Feld ist ein Ausdruck |
@@ -87,7 +87,7 @@ Typische Anwendungen:
 - Registeradresse und Wert über I²C senden: `{hex:10}{hex:{RegValue}}`
 - Berechneten Wert in ein 16-Bit-Register schreiben: `{hex:10}{u16be:{Setpoint}*10}`
 
-> Rohbyte-Blöcke (`hex`, `bin` und die Blöcke für binäre Zahlen) sind nur für Befehle an Geräte und Schnittstellen sinnvoll. In Shell-Befehlen, Kommentaren und Grenzwerten wird der Inhalt als Text eingefügt (bei binären Zahlen: die berechnete Zahl).
+> Rohbyte-Blöcke (`hex`, `bin` und die Blöcke für binäre Zahlen) sind nur für Befehle an Geräte und Schnittstellen sinnvoll. In Befehlszeilen externer Programme, Kommentaren und Grenzwerten wird der Inhalt als Text eingefügt (bei binären Zahlen: die berechnete Zahl).
 
 ### Binäre Zahlen
 

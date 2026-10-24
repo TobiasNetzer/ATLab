@@ -2,7 +2,7 @@
 
 Instruments and DUTs do not always answer with a bare number. A DMM might answer `+1.2001555E+01` (fine), but a DUT might send `ID:42;OK\r\n`, a binary frame, or a status register. **Response Processing** turns such raw answers into the single number that the step evaluates.
 
-The **Response Processing** panel is available for the evaluation sources **Script**, **Device Command**, **Interface Command**, **Shell Command** (with **Evaluate Output**), **File** and **User Input**.
+The **Response Processing** panel is available for the evaluation sources **Script**, **Device Command**, **Interface Command**, **External Program** (with **Evaluate Output**), **File** and **User Input**.
 
 ## Without custom processing
 

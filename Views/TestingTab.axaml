@@ -866,9 +866,9 @@
                     CommandEditorVm="{Binding WorkspaceEditor.CommandEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND, TargetNullValue=False}"/>
                 
-                <controls:ShellCommandEditor
-                    ShellCommandEditorVm="{Binding WorkspaceEditor.ShellCommandEditor}"
-                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SHELL_COMMAND, TargetNullValue=False}"/>
+                <controls:ExternalProgramEditor
+                    ExternalProgramEditorVm="{Binding WorkspaceEditor.ExternalProgramEditor}"
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXTERNAL_PROGRAM, TargetNullValue=False}"/>
                 
                 <controls:ExpressionEditor
                     ExpressionEditorVm="{Binding WorkspaceEditor.ExpressionEditor}"
@@ -884,7 +884,7 @@
                 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding WorkspaceEditor.ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE, USER_INPUT, SHELL_COMMAND', TargetNullValue=False}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE, USER_INPUT, EXTERNAL_PROGRAM', TargetNullValue=False}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding WorkspaceEditor.TestHardwareRelayChannels.MeasChannelViewModel}" />

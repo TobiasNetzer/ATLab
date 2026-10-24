@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
-public partial class ShellCommand : ObservableObject
+public partial class ExternalProgram : ObservableObject
 {
     [ObservableProperty]
     private string _command = string.Empty;
@@ -10,12 +10,12 @@ public partial class ShellCommand : ObservableObject
     [ObservableProperty]
     private bool _evaluateOutput;
 
-    public ShellCommand()
+    public ExternalProgram()
     {
 
     }
 
-    public ShellCommand(ShellCommand other)
+    public ExternalProgram(ExternalProgram other)
     {
         Command = other.Command;
         EvaluateOutput = other.EvaluateOutput;

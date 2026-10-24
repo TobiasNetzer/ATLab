@@ -5,31 +5,31 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-public partial class ShellCommandEditorViewModel : ViewModelBase
+public partial class ExternalProgramEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
 
     [ObservableProperty]
-    private ShellCommand _shellCommand = new();
+    private ExternalProgram _externalProgram = new();
 
     [ObservableProperty]
     private bool _isExpanded;
 
-    public ShellCommandEditorViewModel(ISettingsService settingsService)
+    public ExternalProgramEditorViewModel(ISettingsService settingsService)
     {
         _settingsService = settingsService;
 
-        IsExpanded = settingsService.Settings.IsShellCommandEditorExpanded;
+        IsExpanded = settingsService.Settings.IsExternalProgramEditorExpanded;
     }
 
     partial void OnIsExpandedChanged(bool value)
     {
-        _settingsService.Settings.IsShellCommandEditorExpanded = value;
+        _settingsService.Settings.IsExternalProgramEditorExpanded = value;
     }
 
-    public void LoadTestStep(ShellCommand shellCommand)
+    public void LoadTestStep(ExternalProgram externalProgram)
     {
-        ShellCommand = shellCommand;
+        ExternalProgram = externalProgram;
     }
 
     [RelayCommand]

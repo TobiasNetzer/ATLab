@@ -140,7 +140,7 @@ public partial class TestStep : ObservableObject
     
     [ObservableProperty]
     [property: JsonPropertyOrder(25)]
-    private ShellCommand _shellCommand = new();
+    private ExternalProgram _externalProgram = new();
     
     [ObservableProperty]
     [property: JsonPropertyOrder(26)]
@@ -193,7 +193,7 @@ public partial class TestStep : ObservableObject
         OnFail.PropertyChanged += Child_PropertyChanged;
         Command.PropertyChanged += Child_PropertyChanged;
         InterfaceConfig.PropertyChanged += Child_PropertyChanged;
-        ShellCommand.PropertyChanged += Child_PropertyChanged;
+        ExternalProgram.PropertyChanged += Child_PropertyChanged;
         ResponseMask.PropertyChanged += Child_PropertyChanged;
         LiveStimState.PropertyChanged += Child_PropertyChanged;
         LiveExtStimState.PropertyChanged += Child_PropertyChanged;
@@ -223,7 +223,7 @@ public partial class TestStep : ObservableObject
         newValue.PropertyChanged += Child_PropertyChanged;
     }
     
-    partial void OnShellCommandChanged(ShellCommand? oldValue, ShellCommand newValue)
+    partial void OnExternalProgramChanged(ExternalProgram? oldValue, ExternalProgram newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -285,7 +285,7 @@ public partial class TestStep : ObservableObject
     {
         if (ReferenceEquals(sender, OnPass)) OnPropertyChanged(nameof(OnPass));
         else if (ReferenceEquals(sender, OnFail)) OnPropertyChanged(nameof(OnFail));
-        else if (ReferenceEquals(sender, ShellCommand)) OnPropertyChanged(nameof(ShellCommand));
+        else if (ReferenceEquals(sender, ExternalProgram)) OnPropertyChanged(nameof(ExternalProgram));
         else if (ReferenceEquals(sender, InterfaceConfig)) OnPropertyChanged(nameof(InterfaceConfig));
         else if (ReferenceEquals(sender, Command)) OnPropertyChanged(nameof(Command));
         else if (ReferenceEquals(sender, MatrixState)) OnPropertyChanged(nameof(MatrixState));
@@ -351,7 +351,7 @@ public partial class TestStep : ObservableObject
             ScriptId = ScriptId,
             Command = new ScriptCommand(Command),
             InterfaceConfig = new TestInterfaceConfig(InterfaceConfig),
-            ShellCommand = new ShellCommand(ShellCommand),
+            ExternalProgram = new ExternalProgram(ExternalProgram),
             Expression = Expression,
             FilePath = FilePath,
             ResponseMask = new ResponseMask(ResponseMask),

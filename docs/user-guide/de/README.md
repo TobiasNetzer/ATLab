@@ -17,7 +17,7 @@ Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Proj
 | 5 | [Registerkarte Konfiguration](05-configuration.md) | Kanalnamen, Geräte-Manager, Laufzeitvariablen, Projekteinstellungen |
 | 6 | [Registerkarte Skripte](06-scripting.md) | Skriptordner und Geräteskripte mit mehreren Befehlen |
 | 7 | [Prüfsequenzen erstellen](07-building-test-sequences.md) | Schritte bearbeiten, Grenzwerte, Einheiten, Aktionen, Relais |
-| 8 | [Auswertungsquellen](08-evaluation-sources.md) | Skript, Gerätebefehl, Schnittstellenbefehl, Shell, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei |
+| 8 | [Auswertungsquellen](08-evaluation-sources.md) | Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei |
 | 9 | [Befehle, Variablen & Ausdrücke](09-commands-variables-expressions.md) | Platzhalter, Kodierungen, Arithmetik, Einheiten |
 | 10 | [Antwortverarbeitung](10-response-processing.md) | Überspringen/Länge, Masken, Zahlenextraktion |
 | 11 | [Tests ausführen](11-running-tests.md) | Ausführung, fehlgeschlagene Schritte, Debugging, Seriennummern, Steuermodul |

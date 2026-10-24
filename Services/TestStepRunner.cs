@@ -19,7 +19,7 @@ public class TestStepRunner : ITestStepRunner
     private readonly ITestHardware _testHardware;
     private readonly IScriptRunner _scriptRunner;
     private readonly ICommandExecutor _commandExecutor;
-    private readonly IShellCommandRunner _shellCommandRunner;
+    private readonly IExternalProgramRunner _externalProgramRunner;
     private readonly IMessageBoxService _messageBoxService;
     private readonly IFileContentReader _fileContentReader;
     private readonly IInterfaceCommandExecuter _interfaceCommandExecuter;
@@ -30,7 +30,7 @@ public class TestStepRunner : ITestStepRunner
         IHardwareAccessor hardwareAccessor,
         IScriptRunner scriptRunner,
         ICommandExecutor commandExecutor,
-        IShellCommandRunner shellCommandRunner,
+        IExternalProgramRunner externalProgramRunner,
         IMessageBoxService messageBoxService,
         IFileContentReader fileContentReader,
         IInterfaceCommandExecuter interfaceCommandExecuter,
@@ -40,7 +40,7 @@ public class TestStepRunner : ITestStepRunner
         _testHardware = hardwareAccessor.Hardware;
         _scriptRunner = scriptRunner;
         _commandExecutor = commandExecutor;
-        _shellCommandRunner = shellCommandRunner;
+        _externalProgramRunner = externalProgramRunner;
         _messageBoxService = messageBoxService;
         _fileContentReader = fileContentReader;
         _interfaceCommandExecuter = interfaceCommandExecuter;
@@ -117,16 +117,16 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.INTERFACE:
                     return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
 
-                case TestEvaluationSource.SHELL_COMMAND:
+                case TestEvaluationSource.EXTERNAL_PROGRAM:
                 {
                     _statusService.Progress = 0;
                     _statusService.Text = LocalizationService.Instance["StatusLabel_WaitingForExternalApp"];
                     _statusService.IsIndeterminate = true;
                     _statusService.IsVisible = true;
-                    var shellCommandResult = await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables, mask);
+                    var externalProgramResult = await _externalProgramRunner.RunAsync(step.TestStep.ExternalProgram,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables, mask);
                     _statusService.IsVisible = false;
                     _statusService.IsIndeterminate = false;
-                    return shellCommandResult;
+                    return externalProgramResult;
                 }
                 
                 case TestEvaluationSource.USER_CONFIRMATION:

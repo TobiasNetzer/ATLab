@@ -703,8 +703,8 @@
   <data name="Label_ExpectResponse" xml:space="preserve">
     <value>Antwort erwarten</value>
   </data>
-  <data name="Header_ShellCommand" xml:space="preserve">
-    <value>Shell-Befehl</value>
+  <data name="Header_ExternalProgram" xml:space="preserve">
+    <value>Externes Programm</value>
   </data>
   <data name="Label_EvaluateOutput" xml:space="preserve">
     <value>Ausgabe auswerten</value>
@@ -874,8 +874,8 @@
   <data name="Enum_TestEvaluationSource_INTERFACE" xml:space="preserve">
     <value>Schnittstellenbefehl</value>
   </data>
-  <data name="Enum_TestEvaluationSource_SHELL_COMMAND" xml:space="preserve">
-    <value>Shell-Befehl</value>
+  <data name="Enum_TestEvaluationSource_EXTERNAL_PROGRAM" xml:space="preserve">
+    <value>Externes Programm</value>
   </data>
   <data name="Enum_TestEvaluationSource_EXPRESSION" xml:space="preserve">
     <value>Ausdruck</value>

@@ -6,10 +6,10 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
-public interface IShellCommandRunner
+public interface IExternalProgramRunner
 {
     Task<OperationResult<double>> RunAsync(
-        ShellCommand shellCommand,
+        ExternalProgram externalProgram,
         string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null,

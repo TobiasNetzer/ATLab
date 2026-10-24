@@ -6,7 +6,7 @@ public enum TestEvaluationSource
     SCRIPT,
     COMMAND,
     INTERFACE,
-    SHELL_COMMAND,
+    EXTERNAL_PROGRAM,
     USER_CONFIRMATION,
     USER_INPUT,
     EXPRESSION,

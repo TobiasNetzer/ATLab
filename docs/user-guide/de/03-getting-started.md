@@ -17,7 +17,7 @@ Eine Statuszeile zeigt das Ergebnis, z. B. `Connected to COM5` oder `Initializat
 
 ### Simulatormodus
 
-Im Simulatormodus verhält sich ATLab so, als wäre ein Adapter mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), Shell-Befehle, Dateien, Ausdrücke, Benutzerbestätigungen und Benutzereingaben funktionieren normal.
+Im Simulatormodus verhält sich ATLab so, als wäre ein Adapter mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), externe Programme, Dateien, Ausdrücke, Benutzerbestätigungen und Benutzereingaben funktionieren normal.
 
 Solange der Simulator aktiv ist, zeigt die Statusleiste in Rot **Keine Test-Hardware verbunden**. Der Simulatormodus eignet sich ideal zum Bearbeiten von Sequenzen am Schreibtisch.
 

@@ -9,7 +9,7 @@ public class WorkspaceEditorViewModel
     public ResponseMaskEditorViewModel ResponseMaskEditor { get; }
     public ScriptSelectorViewModel ScriptSelector { get; }
     public CommandEditorViewModel CommandEditor { get; }
-    public ShellCommandEditorViewModel ShellCommandEditor { get; }
+    public ExternalProgramEditorViewModel ExternalProgramEditor { get; }
     public ExpressionEditorViewModel ExpressionEditor { get; }
     public FilePathEditorViewModel FilePathEditor { get; }
     public TestInterfaceCommunicationViewModel TestInterfaceCommunication { get; }
@@ -20,7 +20,7 @@ public class WorkspaceEditorViewModel
         ResponseMaskEditorViewModel responseMaskEditor,
         ScriptSelectorViewModel scriptSelector,
         CommandEditorViewModel commandEditor,
-        ShellCommandEditorViewModel shellCommandEditor,
+        ExternalProgramEditorViewModel externalProgramEditor,
         ExpressionEditorViewModel expressionEditor,
         FilePathEditorViewModel filePathEditor,
         TestInterfaceCommunicationViewModel testInterfaceCommunication)
@@ -30,7 +30,7 @@ public class WorkspaceEditorViewModel
         ResponseMaskEditor = responseMaskEditor;
         ScriptSelector = scriptSelector;
         CommandEditor = commandEditor;
-        ShellCommandEditor = shellCommandEditor;
+        ExternalProgramEditor = externalProgramEditor;
         ExpressionEditor = expressionEditor;
         FilePathEditor = filePathEditor;
         TestInterfaceCommunication = testInterfaceCommunication;
@@ -47,7 +47,7 @@ public class WorkspaceEditorViewModel
         ScriptSelector.LoadTestStep(vm);
         CommandEditor.LoadTestStep(vm);
         TestInterfaceCommunication.LoadTestStep(vm);
-        ShellCommandEditor.LoadTestStep(vm.TestStep.ShellCommand);
+        ExternalProgramEditor.LoadTestStep(vm.TestStep.ExternalProgram);
         ExpressionEditor.LoadTestStep(vm.TestStep);
         FilePathEditor.LoadTestStep(vm.TestStep);
         ResponseMaskEditor.LoadTestStep(vm);

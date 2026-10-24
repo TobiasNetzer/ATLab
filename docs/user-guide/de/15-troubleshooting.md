@@ -57,7 +57,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | *Lower limit is greater than upper limit* | Grenzwerte korrigieren, typischerweise wenn sie aus Variablen berechnet werden. |
 | *Step … tries to jump to a step that does not exist or belongs to a disabled module* | Das *Springe zu*-Ziel wurde gelöscht oder sein Modul ist deaktiviert (bzw. nicht Teil des Laufs, wenn nur ein Modul ausgeführt wird, z. B. beim Start ab dem ausgewählten Schritt). Ein neues Ziel wählen oder das Modul aktivieren. |
 | Eine Laufzeitvariable hat einen unerwarteten Startwert | In einem Lauf zugewiesene Werte bleiben für den nächsten Lauf erhalten. Variable bei Bedarf in einem frühen Schritt zurücksetzen. |
-| Shell-Befehl schlägt mit *Das System kann die angegebene Datei nicht finden* fehl | Der Befehl wird nicht über eine Shell ausgeführt. Eingebaute Befehle (`dir`, `echo`, …), Pipes und Batch-Dateien benötigen `cmd /c` (Windows) bzw. `bash -c "…"` (Linux) davor. |
+| Externes Programm schlägt mit *Das System kann die angegebene Datei nicht finden* fehl | Der Befehl wird nicht über eine Shell ausgeführt. Eingebaute Befehle (`dir`, `echo`, …), Pipes und Batch-Dateien benötigen `cmd /c` (Windows) bzw. `bash -c "…"` (Linux) davor. |
 
 ## Ergebnisse und Berichte
 

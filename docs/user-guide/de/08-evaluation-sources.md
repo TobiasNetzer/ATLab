@@ -8,7 +8,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Skript](#skript) | Antwort des mit *Auswertung* markierten Skriptbefehls | Skript-Konfiguration | ✔ |
 | [Gerätebefehl](#gerätebefehl) | Antwort eines einzelnen Befehls | Gerätebefehl | ✔ |
 | [Schnittstellenbefehl](#schnittstellenbefehl) | über I²C/UART des Adapters gelesene Daten | Schnittstellenbefehl | ✔ |
-| [Shell-Befehl](#shell-befehl) | Exit-Code oder Ausgabe des Programms | Shell-Befehl | ✔ (nur Ausgabe) |
+| [Externes Programm](#externes-programm) | Exit-Code oder Ausgabe des Programms | Externes Programm | ✔ (nur Ausgabe) |
 | [Benutzerbestätigung](#benutzerbestätigung) | `1` (Bestanden) oder `0` (Fehlgeschlagen) | – (verwendet den Kommentar) | – |
 | [Benutzereingabe](#benutzereingabe) | vom Bediener eingegebene Zahl | – (verwendet den Kommentar) | ✔ |
 | [Ausdruck](#ausdruck) | Ergebnis einer Berechnung | Ausdruck | – |
@@ -88,7 +88,7 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 
 Die Schnittstelle muss am angeschlossenen Adapter vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
 
-## Shell-Befehl
+## Externes Programm
 
 Führt ein Programm auf dem Prüfrechner aus. Standardmäßig ist der **Exit-Code** der Messwert – `0` bedeutet normalerweise Erfolg, setzen Sie die Grenzwerte also auf `0 … 0`. Mit **Ausgabe auswerten** ist stattdessen die Ausgabe des Programms der Messwert.
 
@@ -161,4 +161,4 @@ Liest eine Datei und extrahiert daraus eine Zahl.
 |------|--------------|
 | **Dateipfad** | Pfad zur Datei. Mit der Durchsuchen-Schaltfläche auswählen. Pfade im Projektordner werden relativ gespeichert. |
 
-Ohne Antwortverarbeitung muss der gesamte Dateiinhalt eine Zahl sein (z. B. eine Datei mit `3.274`). Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`3,274` ergibt ebenfalls 3,274); Tausendertrennzeichen werden nicht unterstützt. Mit Antwortverarbeitung können Sie einen Wert an fester Position mit **Überspringen**/**Länge** aus einer größeren Datei herausschneiden oder einfach prüfen, ob die Datei einen bestimmten Text enthält (siehe [Antwortverarbeitung](10-response-processing.md)). Ein typisches Muster ist ein Shell-Befehl-Schritt, der ein externes Werkzeug startet, das sein Ergebnis in eine Datei schreibt, gefolgt von einem Datei-Schritt, der sie auswertet.
+Ohne Antwortverarbeitung muss der gesamte Dateiinhalt eine Zahl sein (z. B. eine Datei mit `3.274`). Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`3,274` ergibt ebenfalls 3,274); Tausendertrennzeichen werden nicht unterstützt. Mit Antwortverarbeitung können Sie einen Wert an fester Position mit **Überspringen**/**Länge** aus einer größeren Datei herausschneiden oder einfach prüfen, ob die Datei einen bestimmten Text enthält (siehe [Antwortverarbeitung](10-response-processing.md)). Ein typisches Muster ist ein Schritt mit der Auswertungsquelle *Externes Programm*, der ein externes Werkzeug startet, das sein Ergebnis in eine Datei schreibt, gefolgt von einem Datei-Schritt, der sie auswertet.

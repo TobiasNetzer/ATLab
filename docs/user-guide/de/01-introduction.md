@@ -9,7 +9,7 @@ ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugrupp
 - **Signale routen** über die Relais-Matrix des Test Interface Adapters und dessen Stimulations- und externe Stimulationsrelais pro Schritt schalten.
 - **Messgeräte fernsteuern** (Multimeter, Netzteile, Oszilloskope …) über serielle Schnittstelle (VCOM/RS232), TCP/IP-Sockets oder NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
 - **Mit dem Prüfling kommunizieren** über die galvanisch isolierten I²C- und UART-Schnittstellen des Adapters.
-- **Lokale Programme** oder Shell-Befehle ausführen und deren Exit-Code oder Ausgabe als Ergebnis verwenden.
+- **Externe Programme** ausführen und deren Exit-Code oder Ausgabe als Ergebnis verwenden.
 - **Den Bediener fragen**, z. B. für eine Sichtprüfung (Bestanden / Fehlgeschlagen).
 - **Werte berechnen** aus Laufzeitvariablen mit Ausdrücken.
 - **Dateien einlesen** und daraus einen Wert gewinnen.
@@ -26,7 +26,7 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 | **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](04-projects.md). |
 | **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](07-building-test-sequences.md#module). |
 | **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. Siehe [Wie ein Testschritt ausgeführt wird](11-running-tests.md#wie-ein-testschritt-ausgeführt-wird). |
-| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Shell-Befehl, Benutzerbestätigung, Benutzereingabe, Ausdruck* oder *Datei*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
+| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck* oder *Datei*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
 | **Skriptvariable** | Platzhalter wie `{Range}` in einem Skript, der pro Testschritt einen konkreten Wert erhält. |

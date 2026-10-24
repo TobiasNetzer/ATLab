@@ -8,7 +8,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [Script](#script) | answer of the script's *Evaluate* command | Script Configuration | ✔ |
 | [Device Command](#device-command) | answer of a single command | Device Command | ✔ |
 | [Interface Command](#interface-command) | data read via the adapter's I²C/UART | Interface Command | ✔ |
-| [Shell Command](#shell-command) | process exit code or program output | Shell Command | ✔ (output only) |
+| [External Program](#external-program) | process exit code or program output | External Program | ✔ (output only) |
 | [User Confirmation](#user-confirmation) | `1` (Passed) or `0` (Failed) | – (uses Comment) | – |
 | [User Input](#user-input) | number entered by the operator | – (uses Comment) | ✔ |
 | [Expression](#expression) | result of a calculation | Expression | – |
@@ -88,7 +88,7 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 
 The interface must be available on the connected adapter (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
 
-## Shell Command
+## External Program
 
 Runs a program on the test PC. By default the **exit code** is the measured value — `0` normally means success, so set the limits to `0 … 0`. With **Evaluate Output** the program's output is the measured value instead.
 
@@ -161,4 +161,4 @@ Reads a file and extracts a number from its content.
 |-------|-------------|
 | **File Path** | Path to the file. Use the browse button to pick it. Paths inside the project folder are stored relatively. |
 
-Without response processing, the entire file content must be a number (e.g. a file containing `3.274`). Both `.` and `,` are accepted as decimal separator (`3,274` is also 3.274); thousands separators are not supported. With response processing you can cut a fixed-position value out of a larger file with **Skip**/**Length**, or simply check that the file contains a given text (see [Response Processing](10-response-processing.md)). A typical pattern is a Shell Command step that runs an external tool which writes its result into a file, followed by a File step that evaluates it.
+Without response processing, the entire file content must be a number (e.g. a file containing `3.274`). Both `.` and `,` are accepted as decimal separator (`3,274` is also 3.274); thousands separators are not supported. With response processing you can cut a fixed-position value out of a larger file with **Skip**/**Length**, or simply check that the file contains a given text (see [Response Processing](10-response-processing.md)). A typical pattern is an External Program step that runs an external tool which writes its result into a file, followed by a File step that evaluates it.

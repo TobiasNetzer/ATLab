@@ -10,10 +10,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
-public sealed class ShellCommandRunner : IShellCommandRunner
+public sealed class ExternalProgramRunner : IExternalProgramRunner
 {
     public async Task<OperationResult<double>> RunAsync(
-        ShellCommand shellCommand,
+        ExternalProgram externalProgram,
         string? projectDirectory = null,
         CancellationToken cancellationToken = default,
         List<CustomVariable>? runtimeVariables = null,
@@ -21,7 +21,7 @@ public sealed class ShellCommandRunner : IShellCommandRunner
     {
         try
         {
-            var parsedCommand = CommandProcessor.CompileToString(shellCommand.Command, runtimeVariables);
+            var parsedCommand = CommandProcessor.CompileToString(externalProgram.Command, runtimeVariables);
             ParseExeAndArgs(parsedCommand, out var exe, out var args);
 
             var psi = new ProcessStartInfo
@@ -31,7 +31,7 @@ public sealed class ShellCommandRunner : IShellCommandRunner
                 WorkingDirectory = projectDirectory ?? AppContext.BaseDirectory
             };
 
-            if (shellCommand.EvaluateOutput)
+            if (externalProgram.EvaluateOutput)
                 return await RunAndEvaluateOutputAsync(psi, mask, cancellationToken);
 
             // On Windows, ShellExecute gives console programs their own window and resolves registered App Paths

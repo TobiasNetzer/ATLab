@@ -17,7 +17,7 @@ A status line shows the result, for example `Connected to COM5` or `Initializati
 
 ### Simulator mode
 
-In simulator mode ATLab behaves as if an adapter with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), shell commands, files, expressions, user confirmations and user inputs work normally.
+In simulator mode ATLab behaves as if an adapter with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), external programs, files, expressions, user confirmations and user inputs work normally.
 
 While the simulator is active, the status bar shows **No test hardware connected** in red. Simulator mode is ideal for editing sequences at a desk.
 

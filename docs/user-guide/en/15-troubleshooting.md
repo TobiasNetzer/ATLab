@@ -57,7 +57,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *Lower limit is greater than upper limit* | Fix the limits, typically when they are calculated from variables. |
 | *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed, e.g. when starting from the selected step). Choose a new target or enable the module. |
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
-| Shell command fails with *The system cannot find the file specified* | The command is not run through a shell. Built-in commands (`dir`, `echo`, …), pipes and batch files need `cmd /c` (Windows) or `bash -c "…"` (Linux) in front. |
+| External program fails with *The system cannot find the file specified* | The command is not run through a shell. Built-in commands (`dir`, `echo`, …), pipes and batch files need `cmd /c` (Windows) or `bash -c "…"` (Linux) in front. |
 
 ## Results and reports
 

@@ -17,7 +17,7 @@ This guide explains how to install ATLab, set up a project, write instrument scr
 | 5 | [Configuration Tab](05-configuration.md) | Channel names, Device Manager, runtime variables, project settings |
 | 6 | [Scripting Tab](06-scripting.md) | The script folder and multi-command instrument scripts |
 | 7 | [Building Test Sequences](07-building-test-sequences.md) | Editing steps, limits, units, pass/fail actions, relay routing |
-| 8 | [Evaluation Sources](08-evaluation-sources.md) | Script, Device Command, Interface Command, Shell, User Confirmation, User Input, Expression, File |
+| 8 | [Evaluation Sources](08-evaluation-sources.md) | Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression, File |
 | 9 | [Commands, Variables & Expressions](09-commands-variables-expressions.md) | Placeholder syntax, encodings, arithmetic, units |
 | 10 | [Response Processing](10-response-processing.md) | Skip/Length, masks and numeric extraction |
 | 11 | [Running Tests](11-running-tests.md) | Execution controls, failed step navigation, debugging, serial numbers, the control module |

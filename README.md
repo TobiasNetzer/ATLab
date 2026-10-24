@@ -24,7 +24,7 @@ The guide is also shipped as a PDF with every release package (in the `docs` fol
 -   **Custom Test Sequence Creation**: Test steps can be configured to perform various actions:
     -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
     -   **Response Validation**: Use custom response processing to verify incoming data.
-    -   **Shell Commands**: Execute local system commands or scripts.
+    -   **External Programs**: Run local programs or scripts and evaluate their exit code or output.
     -   **Evaluate Runtime Variables**:
         -   **Dynamic Test Configurations**: Define and use custom variables within test scripts for dynamic test configurations.
         -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic or calculated values.

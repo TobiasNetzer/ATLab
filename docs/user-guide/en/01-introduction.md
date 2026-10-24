@@ -9,7 +9,7 @@ ATLab is an automated testing framework for electronic assemblies. A test engine
 - **Route signals** through the Test Interface Adapter's relay matrix and switch its stimulation and external stimulation relays per step.
 - **Remote-control instruments** (multimeters, power supplies, oscilloscopes …) over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
 - **Talk to the DUT** through the adapter's isolated I²C and UART interfaces.
-- **Run local programs** or shell commands and use their exit code or output as a result.
+- **Run external programs** and use their exit code or output as a result.
 - **Ask the operator** to confirm a visual check (Passed / Failed).
 - **Compute values** from runtime variables using expressions.
 - **Read files** from disk and extract a value from them.
@@ -26,7 +26,7 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](04-projects.md). |
 | **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](07-building-test-sequences.md#modules). |
 | **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. See [How a test step is executed](11-running-tests.md#how-a-test-step-is-executed). |
-| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, Shell Command, User Confirmation, User Input, Expression* or *File*. See [Evaluation Sources](08-evaluation-sources.md). |
+| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression* or *File*. See [Evaluation Sources](08-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
 | **Script variable** | A placeholder such as `{Range}` inside a script, given a concrete value per test step. |

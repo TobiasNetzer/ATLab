@@ -509,7 +509,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 PassFailAction p => new PassFailAction(p),
                 ScriptCommand s => new ScriptCommand(s),
                 ResponseMask r => new ResponseMask(r),
-                ShellCommand sc => new ShellCommand(sc),
+                ExternalProgram sc => new ExternalProgram(sc),
                 RelayMatrix rm => new RelayMatrix(rm),
                 RelayGroup rg => new RelayGroup(rg),
                 _ => sourceValue

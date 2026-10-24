@@ -22,7 +22,7 @@ public class AppSettings
     public bool IsExtStimSelectorExpanded { get; set; }
     public bool IsScriptSelectorExpanded { get; set; }
     public bool IsCommandEditorExpanded  { get; set; }
-    public bool IsShellCommandEditorExpanded { get; set; }
+    public bool IsExternalProgramEditorExpanded { get; set; }
     public bool IsResponseMaskEditorExpanded { get; set; }
     public bool IsExpressionEditorExpanded { get; set; }
     public bool IsFilePathEditorExpanded { get; set; }

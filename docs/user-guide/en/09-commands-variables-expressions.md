@@ -9,7 +9,7 @@ Command texts in ATLab are more than plain strings. Inside curly braces you can 
 | Script commands | ✔ (script + runtime) | ✔ | ✔ |
 | Device Command | ✔ | ✔ | ✔ |
 | Interface Command | ✔ | ✔ | ✔ |
-| Shell Command | ✔ | text encodings only | ✔ |
+| External Program | ✔ | text encodings only | ✔ |
 | Comment / message text | ✔ | text encodings only | ✔ |
 | Lower/Nominal/Upper limit, Delay | ✔ | – | ✔ |
 | Expression evaluation source | ✔ | – | whole field is an expression |
@@ -87,7 +87,7 @@ Typical uses:
 - Sending a register address and value over I²C: `{hex:10}{hex:{RegValue}}`
 - Writing a calculated value to a 16-bit register: `{hex:10}{u16be:{Setpoint}*10}`
 
-> Raw byte blocks (`hex`, `bin` and the binary number blocks) are only meaningful for commands sent to devices and interfaces. In shell commands, comments and limits the content is inserted as text (binary number blocks: the calculated number).
+> Raw byte blocks (`hex`, `bin` and the binary number blocks) are only meaningful for commands sent to devices and interfaces. In external program command lines, comments and limits the content is inserted as text (binary number blocks: the calculated number).
 
 ### Binary numbers
 

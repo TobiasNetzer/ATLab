@@ -260,7 +260,7 @@ public class AppResources
     public static string Label_TargetDevice => ResourceManager.GetString("Label_TargetDevice", resourceCulture) ?? "Target Device";
     public static string ToolTip_RemoveSelectedDevice => ResourceManager.GetString("ToolTip_RemoveSelectedDevice", resourceCulture) ?? "Remove selected device";
     public static string Label_ExpectResponse => ResourceManager.GetString("Label_ExpectResponse", resourceCulture) ?? "Expect Response";
-    public static string Header_ShellCommand => ResourceManager.GetString("Header_ShellCommand", resourceCulture) ?? "Shell Command";
+    public static string Header_ExternalProgram => ResourceManager.GetString("Header_ExternalProgram", resourceCulture) ?? "External Program";
     public static string Label_EvaluateOutput => ResourceManager.GetString("Label_EvaluateOutput", resourceCulture) ?? "Evaluate Output";
     public static string Header_FilePath => ResourceManager.GetString("Header_FilePath", resourceCulture) ?? "File Path";
     public static string Header_ScriptConfiguration => ResourceManager.GetString("Header_ScriptConfiguration", resourceCulture) ?? "Script Configuration";

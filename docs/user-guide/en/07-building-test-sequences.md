@@ -90,7 +90,7 @@ Wait time between switching the relays and acquiring the value, for settling. Th
 
 ### Evaluate
 
-Selects the [evaluation source](08-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **Shell Command**, **User Confirmation**, **User Input**, **Expression** or **File**. The matching editor panel appears below.
+Selects the [evaluation source](08-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **External Program**, **User Confirmation**, **User Input**, **Expression** or **File**. The matching editor panel appears below.
 
 ### Comment
 
