@@ -30,8 +30,9 @@ public class PathService
 
         var full = Path.GetFullPath(filePath);
 
-        return full.StartsWith(_root, _cmp)
-            ? Path.GetRelativePath(_root, full)
+        // Store relative paths with '/' so project files stay portable between Windows and Linux
+        return IsUnderRoot(full)
+            ? Path.GetRelativePath(_root, full).Replace('\\', '/')
             : full;
     }
 
@@ -40,9 +41,22 @@ public class PathService
         if (string.IsNullOrWhiteSpace(storedPath))
             return storedPath;
 
-        return !Path.IsPathRooted(storedPath)
-            ? Path.GetFullPath(Path.Combine(_root, storedPath))
-            : storedPath;
+        if (Path.IsPathRooted(storedPath))
+            return storedPath;
+        
+        var portable = storedPath.Replace('\\', '/');
+        return Path.GetFullPath(Path.Combine(_root, portable));
+    }
+
+    private bool IsUnderRoot(string fullPath)
+    {
+        if (!fullPath.StartsWith(_root, _cmp))
+            return false;
+        
+        return fullPath.Length == _root.Length
+               || Path.EndsInDirectorySeparator(_root)
+               || fullPath[_root.Length] == Path.DirectorySeparatorChar
+               || fullPath[_root.Length] == Path.AltDirectorySeparatorChar;
     }
 
     public string Normalize(string path)

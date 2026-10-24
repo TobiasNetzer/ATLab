@@ -54,6 +54,8 @@ When a project is saved, any referenced file **inside the project folder (or a s
 
 Paths outside the project folder are stored as absolute paths.
 
+Relative paths always use `/` as separator, so a project can be saved on Windows and opened on Linux (and vice versa). Absolute paths are not portable between operating systems — a path like `D:\Results` cannot be resolved on Linux.
+
 **Recommendation:** keep a project together with its scripts, images and attachments in one folder, for example:
 
 ```

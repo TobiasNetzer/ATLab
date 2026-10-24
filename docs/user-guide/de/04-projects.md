@@ -54,6 +54,8 @@ Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners
 
 Pfade außerhalb des Projektordners werden absolut gespeichert.
 
+Relative Pfade verwenden immer `/` als Trennzeichen, sodass ein unter Windows gespeichertes Projekt auch unter Linux geöffnet werden kann (und umgekehrt). Absolute Pfade sind nicht zwischen Betriebssystemen übertragbar – ein Pfad wie `D:\Results` kann unter Linux nicht aufgelöst werden.
+
 **Empfehlung:** Legen Sie ein Projekt mit seinen Skripten, Bildern und Anhängen in einem gemeinsamen Ordner ab, zum Beispiel:
 
 ```
