@@ -2,7 +2,7 @@
 
 Messgeräte und Prüflinge antworten nicht immer mit einer reinen Zahl. Ein Multimeter antwortet vielleicht `+1.2001555E+01` (in Ordnung), ein Prüfling sendet aber womöglich `ID:42;OK\r\n`, einen binären Rahmen oder ein Statusregister. Die **Antwortverarbeitung** macht aus solchen Rohantworten die eine Zahl, die der Schritt bewertet.
 
-Der Bereich **Antwortverarbeitung** steht für die Auswertungsquellen **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Datei** und **Benutzereingabe** zur Verfügung.
+Der Bereich **Antwortverarbeitung** steht für die Auswertungsquellen **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Shell-Befehl** (mit **Ausgabe auswerten**), **Datei** und **Benutzereingabe** zur Verfügung.
 
 ## Ohne benutzerdefinierte Verarbeitung
 
@@ -63,19 +63,35 @@ Alle Prüfregeln müssen gefunden werden. Textregeln werden **in der angegebenen
 | `{f32}` | die ersten 4 Rohbytes als 32-Bit-Gleitkommazahl (IEEE 754), Big-Endian | `0x40 0x53 0x33 0x33` → 3,3 |
 | `{f32:le}` | wie `{f32}`, Little-Endian | `0x33 0x33 0x53 0x40` → 3,3 |
 
-Pro Maske wird nur eine Zahlenextraktion verwendet. **Die Extraktion arbeitet immer auf dem gesamten verarbeiteten Teil** (nach Überspringen/Länge), nicht auf dem Text hinter einer Prüfregel – isolieren Sie die Zahl mit Überspringen und Länge.
+Pro Maske wird nur eine Zahlenextraktion verwendet. Wo sie liest, hängt von ihrer Position in der Maske ab:
 
-#### Prüfregeln prüfen, Überspringen/Länge schneiden
+- **Extraktion zuerst** (keine Prüfregel davor, z. B. `{float}` oder `{dec} "OK"`): Die Extraktion arbeitet auf dem **gesamten verarbeiteten Teil** (nach Überspringen/Länge).
+- **Extraktion nach einer Prüfregel** (z. B. `"U3=" {float}`): Die Extraktion beginnt **direkt hinter dem Text bzw. der Bytefolge**, die die letzte Prüfregel davor gefunden hat.
+  - Textextraktionen (`{float}`, `{dec}`, `{hex}`, `{bin}`) lesen nur die Zahl an dieser Stelle; führende Leerzeichen werden übersprungen, alles nach der Zahl wird ignoriert. `{hex}` akzeptiert zusätzlich ein Präfix `0x`.
+  - Binäre Extraktionen (`{byte:N}`, `{f32}`) lesen die Bytes direkt hinter der Fundstelle.
 
-Prüfregeln und Zahlenextraktion erledigen zwei unabhängige Aufgaben: Die Prüfregeln entscheiden nur, *ob* die Daten akzeptabel sind; sie verschieben nicht den Startpunkt der Extraktion. Beispiel – ein Prüfling antwortet `Result=3.27\r\n`:
+#### Zahl hinter einer Bezeichnung lesen
+
+Beispiel – ein Prüfling antwortet `Result=3.27\r\n`:
 
 | Maske | Überspringen | Länge | Was passiert | Ergebnis |
 |-------|--------------|-------|--------------|----------|
-| `"Result=" {float}` | 0 | 0 | `Result=` wird gefunden ✔, dann versucht `{float}` den ganzen Text `Result=3.27\r\n` zu lesen ✘ | Ausführungsfehler |
+| `"Result=" {float}` | 0 | 0 | `Result=` wird gefunden ✔, `{float}` liest `3.27` direkt dahinter ✔ | `3.27` |
 | `{float}` | 7 | 0 | Überspringen entfernt `Result=`, `{float}` liest `3.27\r\n` ✔ | `3.27` |
+| `{float}` | 0 | 0 | `{float}` versucht den ganzen Text `Result=3.27\r\n` zu lesen ✘ | Ausführungsfehler |
 | `"3."` | 7 | 0 | Überspringen entfernt `Result=`, `3.` wird gefunden ✔, keine Extraktion | `1` |
 
-Hat eine Zahl also ein Präfix, entfernen Sie das Präfix mit **Überspringen** (und ein Suffix mit **Länge**), statt es zu prüfen. Das funktioniert, solange die Zahl an einer festen Position beginnt – ihre eigene Länge darf variieren (`Result=3.27` und `Result=12.5` funktionieren beide mit Überspringen `7`, Länge `0`). Variiert die Länge des Präfixes selbst (z. B. `CH1:3.27` vs. `CH12:3.27`), lassen Sie den Prüfling bzw. das Gerät ein Format mit fester Breite senden, oder lassen Sie ein kleines Skript (Shell-Befehl-Schritt) den reinen Wert in eine Datei schreiben und werten diese mit einem Datei-Schritt aus.
+Anders als Überspringen funktioniert eine Bezeichnung auch, wenn die Position der Zahl variiert, z. B. `CH1:3.27` vs. `CH12:3.27`, oder wenn eine Antwort mehrere Werte enthält. Ein Werkzeug, das
+
+```text
+U1=3.271
+U2=3.305
+U3=12.48
+```
+
+ausgibt, lässt sich mit einem Schritt pro Wert auswerten: `"U1=" {float}` → 3,271, `"U2=" {float}` → 3,305, `"U3=" {float}` → 12,48. Der Text wird ab dem Anfang des verarbeiteten Teils gesucht, die erste Fundstelle gilt – wählen Sie die Bezeichnung daher eindeutig, z. B. `"U1="` statt `"U1"`, das auch in `U10` gefunden würde. Wird die Bezeichnung nicht gefunden, ist das Ergebnis `0` (siehe unten).
+
+Prüfregeln hinter der Extraktion (z. B. `"ID:" {dec} ";OK"`) werden weiterhin geprüft; fehlt eine davon, ist das Ergebnis `0`.
 
 ### Ergebnisregeln
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using ATLab.Enums;
 
 namespace ATLab.Helpers;
@@ -66,19 +67,26 @@ public static class ResponseProcessor
 
         var matched = true;
 
-        foreach (var rule in parsed.MatchRules)
-        {
-            switch (rule)
-            {
-                case AsciiMatchRule ar when !ar.IsMatch(ascii, ref asciiCursor):
+        // position right after the match rule preceding the extraction; ASCII decoding maps one byte to one
+        // char, so text and byte cursors share the same positions
+        int? extractionStart = null;
 
-                case ByteSequenceMatchRule br when !br.IsMatch(processedInput, ref byteCursor):
-                    matched = false;
-                    break;
-            }
+        for (var r = 0; r < parsed.MatchRules.Count; r++)
+        {
+            var rule = parsed.MatchRules[r];
+
+            matched = rule switch
+            {
+                AsciiMatchRule ar => ar.IsMatch(ascii, ref asciiCursor),
+                ByteSequenceMatchRule br => br.IsMatch(processedInput, ref byteCursor),
+                _ => true
+            };
 
             if (!matched)
                 break;
+
+            if (r == parsed.ExtractionAfterRule)
+                extractionStart = rule is AsciiMatchRule ? asciiCursor : byteCursor;
         }
 
         if (!matched)
@@ -88,15 +96,32 @@ public static class ResponseProcessor
         else if (parsed.NumericExtraction != null)
         {
             var spec = parsed.NumericExtraction;
-            var shownData = spec.Type is NumericExtractionType.BYTE or NumericExtractionType.FLOAT32
+            var isBinary = spec.Type is NumericExtractionType.BYTE or NumericExtractionType.FLOAT32;
+            var shownData = isBinary
                 ?Format(processedInput, ResponseDisplayMode.HEX)
                 : ascii.Trim();
 
-            var result = ExtractNumeric(processedInput, ascii, spec)
+            double? result;
+
+            if (extractionStart is { } start)
+            {
+                // extraction after a match rule: binary types read the bytes following the match,
+                // text types read the number token following the match
+                var remaining = processedInput[start..];
+                result = ExtractNumeric(remaining, isBinary ? "" : ReadNumberToken(ascii[start..], spec.Type), spec);
+
+                if (result == null)
+                    throw new ResponseProcessingException(
+                        $"Numeric extraction {spec} failed after the match at position {start} of processed data '{shownData}' ({processedInput.Length} bytes).");
+            }
+            else
+            {
+                result = ExtractNumeric(processedInput, ascii, spec)
                          ?? throw new ResponseProcessingException(
                              $"Numeric extraction {spec} failed on processed data '{shownData}' ({processedInput.Length} bytes).");
+            }
 
-            resultString = result.ToString(CultureInfo.InvariantCulture);
+            resultString = result.Value.ToString(CultureInfo.InvariantCulture);
         }
         else if (parsed.MatchRules.Count == 0)
         {
@@ -234,6 +259,26 @@ public static class ResponseProcessor
         }
     }
 
+    private static readonly Regex FloatToken = new(@"^\s*([+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:[eE][+-]?\d+)?)", RegexOptions.Compiled);
+    private static readonly Regex DecToken = new(@"^\s*([+-]?\d+)", RegexOptions.Compiled);
+    private static readonly Regex HexToken = new(@"^\s*(?:0[xX])?([0-9A-Fa-f]+)", RegexOptions.Compiled);
+    private static readonly Regex BinToken = new(@"^\s*([01]+)", RegexOptions.Compiled);
+    
+    private static string ReadNumberToken(string text, NumericExtractionType type)
+    {
+        var regex = type switch
+        {
+            NumericExtractionType.FLOAT_ASCII => FloatToken,
+            NumericExtractionType.DEC_ASCII => DecToken,
+            NumericExtractionType.HEX_ASCII => HexToken,
+            NumericExtractionType.BIN_ASCII => BinToken,
+            _ => throw new NotSupportedException($"{type} is not a text extraction.")
+        };
+
+        var match = regex.Match(text);
+        return match.Success ? match.Groups[1].Value : "";
+    }
+
     private static ulong ReadUnsigned(byte[] input, int byteCount, Endianness endian)
     {
         ulong raw = 0;
@@ -349,6 +394,8 @@ internal sealed class ParsedMask
 {
     public List<IMatchRule> MatchRules { get; } = new();
     public NumericExtractionSpec? NumericExtraction { get; set; }
+    
+    public int ExtractionAfterRule { get; set; } = -1;
 }
 
 internal static class MaskParser
@@ -384,6 +431,7 @@ internal static class MaskParser
                 {
                     var spec = ParseNumericExtraction(pattern, ref i);
                     result.NumericExtraction = spec;
+                    result.ExtractionAfterRule = result.MatchRules.Count - 1;
                     break;
                 }
                 default:

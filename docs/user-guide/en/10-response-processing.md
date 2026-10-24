@@ -2,7 +2,7 @@
 
 Instruments and DUTs do not always answer with a bare number. A DMM might answer `+1.2001555E+01` (fine), but a DUT might send `ID:42;OK\r\n`, a binary frame, or a status register. **Response Processing** turns such raw answers into the single number that the step evaluates.
 
-The **Response Processing** panel is available for the evaluation sources **Script**, **Device Command**, **Interface Command**, **File** and **User Input**.
+The **Response Processing** panel is available for the evaluation sources **Script**, **Device Command**, **Interface Command**, **Shell Command** (with **Evaluate Output**), **File** and **User Input**.
 
 ## Without custom processing
 
@@ -63,19 +63,35 @@ Several match rules must all be found. Text rules are searched **in the given or
 | `{f32}` | the first 4 raw bytes as a 32-bit float (IEEE 754), big-endian | `0x40 0x53 0x33 0x33` → 3.3 |
 | `{f32:le}` | same, little-endian | `0x33 0x33 0x53 0x40` → 3.3 |
 
-Only one numeric extraction is used per mask. **The extraction always works on the complete processed part** (after Skip/Length), not on the text following a match rule — use Skip and Length to isolate the number.
+Only one numeric extraction is used per mask. Where it reads depends on its position in the mask:
 
-#### Match rules check, Skip/Length cut
+- **Extraction first** (no match rule before it, e.g. `{float}` or `{dec} "OK"`): the extraction works on the **complete processed part** (after Skip/Length).
+- **Extraction after a match rule** (e.g. `"U3=" {float}`): the extraction starts **directly after the text or byte sequence** found by the last match rule before it.
+  - Text extractions (`{float}`, `{dec}`, `{hex}`, `{bin}`) read only the number at that point; leading spaces are skipped, and everything after the number is ignored. `{hex}` also accepts a `0x` prefix.
+  - Binary extractions (`{byte:N}`, `{f32}`) read the bytes directly following the match.
 
-Match rules and numeric extraction do two independent jobs: the match rules only decide *whether* the data is acceptable; they do not move the starting point of the extraction. Example — a DUT answers `Result=3.27\r\n`:
+#### Reading a number after a label
+
+Example — a DUT answers `Result=3.27\r\n`:
 
 | Mask | Skip | Length | What happens | Result |
 |------|------|--------|--------------|--------|
-| `"Result=" {float}` | 0 | 0 | `Result=` is found ✔, then `{float}` tries to parse the whole text `Result=3.27\r\n` ✘ | execution error |
+| `"Result=" {float}` | 0 | 0 | `Result=` is found ✔, `{float}` reads `3.27` right after it ✔ | `3.27` |
 | `{float}` | 7 | 0 | Skip removes `Result=`, `{float}` parses `3.27\r\n` ✔ | `3.27` |
+| `{float}` | 0 | 0 | `{float}` tries to parse the whole text `Result=3.27\r\n` ✘ | execution error |
 | `"3."` | 7 | 0 | Skip removes `Result=`, `3.` is found ✔, no extraction | `1` |
 
-So whenever a number has a prefix, remove the prefix with **Skip** (and a suffix with **Length**) rather than matching it. This works as long as the number starts at a fixed position — its own length may vary (`Result=3.27` and `Result=12.5` both work with Skip `7`, Length `0`). If the prefix itself varies in length (e.g. `CH1:3.27` vs. `CH12:3.27`), have the DUT/instrument send a fixed-width format, or let a small script (Shell Command step) write the bare value to a file and evaluate it with a File step.
+Unlike Skip, a label also works when the number's position varies, e.g. `CH1:3.27` vs. `CH12:3.27`, or when an answer contains several values. A tool that prints
+
+```text
+U1=3.271
+U2=3.305
+U3=12.48
+```
+
+can be evaluated with one step per value: `"U1=" {float}` → 3.271, `"U2=" {float}` → 3.305, `"U3=" {float}` → 12.48. The text is searched from the start of the processed part, so the first occurrence wins — make the label unique, e.g. `"U1="` rather than `"U1"`, which would also match inside `U10`. If the label is not found, the result is `0` (see below).
+
+Match rules after the extraction (e.g. `"ID:" {dec} ";OK"`) are still checked; if one of them is missing, the result is `0`.
 
 ### Result rules
 
