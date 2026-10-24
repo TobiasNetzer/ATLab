@@ -52,11 +52,10 @@ Several match rules must all be found. Text rules are searched **in the given or
 
 | Element | Converts the processed bytes as … | Example data → result |
 |---------|------------------------------------|-----------------------|
-| `{float}` | ASCII decimal number with optional fraction/exponent | `3.274` → 3.274 |
+| `{float}` | ASCII decimal number with optional fraction/exponent; `.` or `,` as decimal separator, no thousands separators | `3.274` → 3.274, `3,274` → 3.274 |
 | `{dec}` | ASCII integer | `42` → 42 |
-| `{hex}` | ASCII hexadecimal digits | `1F` → 31 |
-| `{bin}` | ASCII binary digits | `1010` → 10 |
-| `{ascii}` | ASCII characters combined into an integer (big-endian) | `AB` → 16706 |
+| `{hex}` | ASCII hexadecimal digits (up to 16) | `1F` → 31 |
+| `{bin}` | ASCII binary digits (up to 64) | `1010` → 10 |
 | `{byte:N}` | the first *N* raw bytes (1–8) as an unsigned integer, big-endian (most significant byte first) | `0x01 0x2C` with `{byte:2}` → 300 |
 | `{byte:N,le}` | the first *N* raw bytes, little-endian (least significant byte first) | `0x2C 0x01` with `{byte:2,le}` → 300 |
 | `{byte:N,be}` | same as `{byte:N}` | |
@@ -85,7 +84,7 @@ So whenever a number has a prefix, remove the prefix with **Skip** (and a suffix
 | Match rules only | `1` | `0` |
 | Numeric extraction only | the extracted number | – |
 | Match rules + extraction | the extracted number | `0` |
-| *(empty mask)* | `0` | `0` |
+| *(empty mask)* | the number, parsed like `{float}` (e.g. `3` → 3, `3.27` → 3.27) | – |
 
 The step reports an **execution error** (instead of a result) if
 

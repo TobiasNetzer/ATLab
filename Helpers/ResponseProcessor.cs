@@ -46,16 +46,13 @@ public static class ResponseProcessor
                 ? "Response is empty."
                 : $"Response too short: no data left after skipping {skip} of {input.Length} received bytes.");
 
-        if (string.IsNullOrWhiteSpace(mask.Mask))
-        {
-            mask.Result = resultString;
-            return resultString;
-        }
+        // empty mask: parse the processed data as a number, like a step without a custom mask
+        var maskText = string.IsNullOrWhiteSpace(mask.Mask) ? "{float}" : mask.Mask;
 
         ParsedMask parsed;
         try
         {
-            parsed = MaskParser.Parse(mask.Mask);
+            parsed = MaskParser.Parse(maskText);
         }
         catch (FormatException ex)
         {
@@ -92,7 +89,7 @@ public static class ResponseProcessor
         {
             var spec = parsed.NumericExtraction;
             var shownData = spec.Type is NumericExtractionType.BYTE or NumericExtractionType.FLOAT32
-                ? Format(processedInput, ResponseDisplayMode.HEX)
+                ?Format(processedInput, ResponseDisplayMode.HEX)
                 : ascii.Trim();
 
             var result = ExtractNumeric(processedInput, ascii, spec)
@@ -155,12 +152,7 @@ public static class ResponseProcessor
                 if (input.Length < spec.ByteCount)
                     return null;
 
-                ulong raw = 0;
-                for (var b = 0; b < spec.ByteCount; b++)
-                {
-                    var index = spec.Endian == Endianness.BIG ? b : spec.ByteCount - 1 - b;
-                    raw = (raw << 8) | input[index];
-                }
+                var raw = ReadUnsigned(input, spec.ByteCount, spec.Endian);
 
                 if (!spec.Signed)
                     return raw;
@@ -193,25 +185,22 @@ public static class ResponseProcessor
             {
                 if (ascii.Length == 0)
                     return null;
+                
+                if (ulong.TryParse(ascii, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex))
+                    return hex;
 
-                try
-                {
-                    return int.Parse(ascii, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                    return null;
-                }
+                return null;
             }
 
             case NumericExtractionType.BIN_ASCII:
             {
-                if (ascii.Length == 0)
+                var digits = ascii.Trim();
+                if (digits.Length == 0)
                     return null;
 
                 try
                 {
-                    return Convert.ToInt32(ascii, 2);
+                    return Convert.ToUInt64(digits, 2);
                 }
                 catch
                 {
@@ -224,34 +213,37 @@ public static class ResponseProcessor
                 if (ascii.Length == 0)
                     return null;
 
-                try
-                {
-                    return int.Parse(ascii, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                    return null;
-                }
+                if (long.TryParse(ascii, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dec))
+                    return dec;
+
+                return null;
             }
             case NumericExtractionType.FLOAT_ASCII:
             {
                 if (ascii.Length == 0)
                     return null;
 
-                if (double.TryParse(ascii, NumberStyles.Float, CultureInfo.InvariantCulture, out var f))
-                    return Convert.ToDouble(f);
-                
+                // accepts ',' as decimal separator, like results without a custom mask
+                if (NumberHelper.TryParseDecimal(ascii, out var f))
+                    return f;
+
                 return null;
             }
-            case NumericExtractionType.ASCII:
             default:
-                if (ascii.Length == 0)
-                    return null;
-
-                var bytes = Encoding.ASCII.GetBytes(ascii);
-
-                return bytes.Aggregate(0, (current, b) => (current << 8) | b);
+                throw new NotSupportedException($"Numeric extraction {spec} is not supported.");
         }
+    }
+
+    private static ulong ReadUnsigned(byte[] input, int byteCount, Endianness endian)
+    {
+        ulong raw = 0;
+        for (var b = 0; b < byteCount; b++)
+        {
+            var index = endian == Endianness.BIG ? b : byteCount - 1 - b;
+            raw = (raw << 8) | input[index];
+        }
+
+        return raw;
     }
 }
 
@@ -260,7 +252,6 @@ public static class ResponseProcessor
 internal enum NumericExtractionType
 {
     BYTE,
-    ASCII,
     HEX_ASCII,
     BIN_ASCII,
     DEC_ASCII,
@@ -300,7 +291,7 @@ internal sealed class NumericExtractionSpec
         NumericExtractionType.BIN_ASCII => "{bin}",
         NumericExtractionType.DEC_ASCII => "{dec}",
         NumericExtractionType.FLOAT_ASCII => "{float}",
-        _ => "{ascii}"
+        _ => Type.ToString()
     };
 }
 
@@ -478,7 +469,6 @@ internal static class MaskParser
 
         switch (name)
         {
-            case "ascii": return new NumericExtractionSpec(NumericExtractionType.ASCII);
             case "hex": return new NumericExtractionSpec(NumericExtractionType.HEX_ASCII);
             case "bin": return new NumericExtractionSpec(NumericExtractionType.BIN_ASCII);
             case "dec": return new NumericExtractionSpec(NumericExtractionType.DEC_ASCII);

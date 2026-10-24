@@ -23,7 +23,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | `Overflow` | Value ≥ 9.9 × 10³⁷ (the SCPI overload value, e.g. a DMM out of range) | Fail |
 | *(empty)* with ✘ and an error in the event log | The step could not be executed (device not found, connection failed, parse error …). **The test stops** with status *Test Execution Failed*. | Fail |
 
-A response that cannot be converted to a number — for example `OK` or `+1.23E+00 VDC` — is an execution error. Use [Response Processing](10-response-processing.md) to turn such answers into a number.
+A response that cannot be converted to a number — for example `OK` or `+1.23E+00 VDC` — is an execution error. Use [Response Processing](10-response-processing.md) to turn such answers into a number. Both `.` and `,` are accepted as decimal separator (`4,5` is 4.5); thousands separators are not supported.
 
 ---
 

@@ -105,21 +105,10 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
                 return OperationResult<double>.Failure(ex.Message);
             }
 
-            try
-            {
-                var converted = (double)Convert.ChangeType(
-                    processed,
-                    typeof(double),
-                    CultureInfo.InvariantCulture);
+            return NumberHelper.TryParseDecimal(processed, out var converted)
+                ? OperationResult<double>.Success(converted)
+                : OperationResult<double>.Failure($"Failed to convert result '{processed}' to a number.");
 
-                return OperationResult<double>.Success(converted);
-            }
-            catch (Exception ex)
-            {
-                return OperationResult<double>.Failure(
-                    $"Failed to convert result '{processed}': {ex.Message}");
-            }
-            
         }
         
         return OperationResult<double>.Success(result);
@@ -171,20 +160,9 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             return OperationResult<double>.Failure(ex.Message);
         }
 
-        try
-        {
-            var converted = (double)Convert.ChangeType(
-                processed,
-                typeof(double),
-                CultureInfo.InvariantCulture);
-
-            return OperationResult<double>.Success(converted);
-        }
-        catch (Exception ex)
-        {
-            return OperationResult<double>.Failure(
-                $"Failed to convert result '{processed}': {ex.Message}");
-        }
+        return NumberHelper.TryParseDecimal(processed, out var converted)
+            ? OperationResult<double>.Success(converted)
+            : OperationResult<double>.Failure($"Failed to convert result '{processed}' to a number.");
     }
     
     private static byte[] ApplyTermination(byte[] data, SerialTerminationMode mode)

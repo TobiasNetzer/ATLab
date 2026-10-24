@@ -23,7 +23,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | `Overflow` | Wert ≥ 9,9 × 10³⁷ (der SCPI-Überlaufwert, z. B. Multimeter außerhalb des Messbereichs) | Fehlgeschlagen |
 | *(leer)* mit ✘ und Fehler im Ereignisprotokoll | Der Schritt konnte nicht ausgeführt werden (Gerät nicht gefunden, Verbindung fehlgeschlagen, Parse-Fehler …). **Der Test stoppt** mit dem Status *Testausführung fehlgeschlagen*. | Fehlgeschlagen |
 
-Eine Antwort, die sich nicht in eine Zahl umwandeln lässt – z. B. `OK` oder `+1.23E+00 VDC` –, ist ein Ausführungsfehler. Verwenden Sie die [Antwortverarbeitung](10-response-processing.md), um solche Antworten in eine Zahl umzuwandeln.
+Eine Antwort, die sich nicht in eine Zahl umwandeln lässt – z. B. `OK` oder `+1.23E+00 VDC` –, ist ein Ausführungsfehler. Verwenden Sie die [Antwortverarbeitung](10-response-processing.md), um solche Antworten in eine Zahl umzuwandeln. Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`4,5` ergibt 4,5); Tausendertrennzeichen werden nicht unterstützt.
 
 ---
 

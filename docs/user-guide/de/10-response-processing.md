@@ -52,11 +52,10 @@ Alle Prüfregeln müssen gefunden werden. Textregeln werden **in der angegebenen
 
 | Element | Wandelt die verarbeiteten Bytes um als … | Beispieldaten → Ergebnis |
 |---------|-------------------------------------------|--------------------------|
-| `{float}` | ASCII-Dezimalzahl mit optionalen Nachkommastellen/Exponent | `3.274` → 3,274 |
+| `{float}` | ASCII-Dezimalzahl mit optionalen Nachkommastellen/Exponent; `.` oder `,` als Dezimaltrennzeichen, keine Tausendertrennzeichen | `3.274` → 3,274, `3,274` → 3,274 |
 | `{dec}` | ASCII-Ganzzahl | `42` → 42 |
-| `{hex}` | ASCII-Hexadezimalziffern | `1F` → 31 |
-| `{bin}` | ASCII-Binärziffern | `1010` → 10 |
-| `{ascii}` | ASCII-Zeichen, zu einer Ganzzahl zusammengesetzt (Big Endian) | `AB` → 16706 |
+| `{hex}` | ASCII-Hexadezimalziffern (bis zu 16) | `1F` → 31 |
+| `{bin}` | ASCII-Binärziffern (bis zu 64) | `1010` → 10 |
 | `{byte:N}` | die ersten *N* Rohbytes (1–8) als vorzeichenlose Ganzzahl, Big-Endian (höchstwertiges Byte zuerst) | `0x01 0x2C` mit `{byte:2}` → 300 |
 | `{byte:N,le}` | die ersten *N* Rohbytes, Little-Endian (niederwertigstes Byte zuerst) | `0x2C 0x01` mit `{byte:2,le}` → 300 |
 | `{byte:N,be}` | wie `{byte:N}` | |
@@ -64,7 +63,7 @@ Alle Prüfregeln müssen gefunden werden. Textregeln werden **in der angegebenen
 | `{f32}` | die ersten 4 Rohbytes als 32-Bit-Gleitkommazahl (IEEE 754), Big-Endian | `0x40 0x53 0x33 0x33` → 3,3 |
 | `{f32:le}` | wie `{f32}`, Little-Endian | `0x33 0x33 0x53 0x40` → 3,3 |
 
-Pro Maske wird nur eine Zahlenextraktion verwendet. Zahlen in der Antwort müssen einen Punkt als Dezimaltrennzeichen verwenden. **Die Extraktion arbeitet immer auf dem gesamten verarbeiteten Teil** (nach Überspringen/Länge), nicht auf dem Text hinter einer Prüfregel – isolieren Sie die Zahl mit Überspringen und Länge.
+Pro Maske wird nur eine Zahlenextraktion verwendet. **Die Extraktion arbeitet immer auf dem gesamten verarbeiteten Teil** (nach Überspringen/Länge), nicht auf dem Text hinter einer Prüfregel – isolieren Sie die Zahl mit Überspringen und Länge.
 
 #### Prüfregeln prüfen, Überspringen/Länge schneiden
 
@@ -85,7 +84,7 @@ Hat eine Zahl also ein Präfix, entfernen Sie das Präfix mit **Überspringen** 
 | Nur Prüfregeln | `1` | `0` |
 | Nur Zahlenextraktion | die extrahierte Zahl | – |
 | Prüfregeln + Extraktion | die extrahierte Zahl | `0` |
-| *(leere Maske)* | `0` | `0` |
+| *(leere Maske)* | die Zahl, gelesen wie mit `{float}` (z. B. `3` → 3, `3.27` → 3,27) | – |
 
 Der Schritt meldet einen **Ausführungsfehler** (statt eines Ergebnisses), wenn
 

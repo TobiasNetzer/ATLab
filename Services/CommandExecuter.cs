@@ -172,6 +172,14 @@ public class CommandExecutor : ICommandExecutor
             return OperationResult<T>.Failure(ex.Message);
         }
 
+        // numbers via NumberHelper so that ',' is a decimal separator (Convert treats it as a thousands separator: 4,5 -> 45)
+        if (typeof(T) == typeof(double))
+        {
+            return NumberHelper.TryParseDecimal(processedValue, out var number)
+                ? OperationResult<T>.Success((T)(object)number)
+                : OperationResult<T>.Failure($"Failed to convert result '{processedValue}' to a number.");
+        }
+
         try
         {
             var converted = (T)Convert.ChangeType(processedValue, typeof(T), CultureInfo.InvariantCulture);
