@@ -123,7 +123,7 @@ public class TestStepRunner : ITestStepRunner
                     _statusService.Text = LocalizationService.Instance["StatusLabel_WaitingForExternalApp"];
                     _statusService.IsIndeterminate = true;
                     _statusService.IsVisible = true;
-                    var shellCommandResult = await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables);
+                    var shellCommandResult = await _shellCommandRunner.RunAsync(step.TestStep.ShellCommand,Path.GetDirectoryName(_projectModel.FilePath), token, runtimeVariables, mask);
                     _statusService.IsVisible = false;
                     _statusService.IsIndeterminate = false;
                     return shellCommandResult;

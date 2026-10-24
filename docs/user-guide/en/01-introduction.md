@@ -9,7 +9,7 @@ ATLab is an automated testing framework for electronic assemblies. A test engine
 - **Route signals** through the Test Interface Adapter's relay matrix and switch its stimulation and external stimulation relays per step.
 - **Remote-control instruments** (multimeters, power supplies, oscilloscopes …) over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
 - **Talk to the DUT** through the adapter's isolated I²C and UART interfaces.
-- **Run local programs** or shell commands and use their exit code as a result.
+- **Run local programs** or shell commands and use their exit code or output as a result.
 - **Ask the operator** to confirm a visual check (Passed / Failed).
 - **Compute values** from runtime variables using expressions.
 - **Read files** from disk and extract a value from them.

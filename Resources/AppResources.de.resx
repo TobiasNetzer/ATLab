@@ -706,11 +706,8 @@
   <data name="Header_ShellCommand" xml:space="preserve">
     <value>Shell-Befehl</value>
   </data>
-  <data name="Label_DirectLaunch" xml:space="preserve">
-    <value>Direktstart</value>
-  </data>
-  <data name="Label_WindowBehavior" xml:space="preserve">
-    <value>Fensterverhalten</value>
+  <data name="Label_EvaluateOutput" xml:space="preserve">
+    <value>Ausgabe auswerten</value>
   </data>
   <data name="Header_FilePath" xml:space="preserve">
     <value>Dateipfad</value>

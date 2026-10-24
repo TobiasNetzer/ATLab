@@ -8,7 +8,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [Script](#script) | answer of the script's *Evaluate* command | Script Configuration | ✔ |
 | [Device Command](#device-command) | answer of a single command | Device Command | ✔ |
 | [Interface Command](#interface-command) | data read via the adapter's I²C/UART | Interface Command | ✔ |
-| [Shell Command](#shell-command) | process exit code | Shell Command | – |
+| [Shell Command](#shell-command) | process exit code or program output | Shell Command | ✔ (output only) |
 | [User Confirmation](#user-confirmation) | `1` (Passed) or `0` (Failed) | – (uses Comment) | – |
 | [User Input](#user-input) | number entered by the operator | – (uses Comment) | ✔ |
 | [Expression](#expression) | result of a calculation | Expression | – |
@@ -90,27 +90,38 @@ The interface must be available on the connected adapter (see the Test Hardware 
 
 ## Shell Command
 
-Runs a program or shell command on the test PC. The **exit code** is the measured value — `0` normally means success, so set the limits to `0 … 0`.
+Runs a program on the test PC. By default the **exit code** is the measured value — `0` normally means success, so set the limits to `0 … 0`. With **Evaluate Output** the program's output is the measured value instead.
 
 | Field | Description |
 |-------|-------------|
-| **Command** | Command line. May contain `{Variable}` references. |
-| **Direct Launch** | On: start the program directly, without a shell window. The first word (or a `"quoted path"`) is the program, the rest are arguments. Off: run the command in a terminal window. |
-| **Window Behavior** | Without direct launch: **Auto Close** closes the window when the command finishes; **Keep Open** leaves it open — the step then waits until the operator closes the window. |
+| **Command** | Command line. May contain `{Variable}` references. The first word (or a `"quoted path"`) is the program, the rest are its arguments. |
+| **Evaluate Output** | Off: the exit code is the measured value. On: the program runs without a window, its standard output is evaluated like a device response (with [Response Processing](10-response-processing.md) if configured) and must yield a number. A non-zero exit code fails the step; the error message contains the program's error output. |
 
-The working directory is the project folder, so you can call scripts stored next to the project with relative paths. While the step waits, the status panel shows *Waiting for external application…*.
+The command is executed exactly as entered — there is no shell in between. To use shell features such as pipes, redirection, built-in commands (`dir`, `echo`, `type`) or batch files, call the shell yourself:
 
-Platform details:
+- **Windows:** `cmd /c <command>` runs the command and closes the window; `cmd /k <command>` keeps the window open — the step then waits until the operator closes it, and the exit code is that of `cmd`, not of your command.
+- **Linux:** `bash -c "<command>"`. Use double quotes for arguments that contain spaces; single quotes are not supported. No terminal window is opened on Linux.
 
-- **Windows:** commands run in `cmd.exe` (`/c` for Auto Close, `/k` for Keep Open). With **Direct Launch**, ATLab waits for and returns the exit code only if the program is an `.exe`; other files (e.g. `.bat`, `.py`, documents) are opened with their associated application and the result is `0` immediately.
-- **Linux:** commands run in `bash` inside the first available terminal emulator (ptyxis, gnome-terminal, konsole, xfce4-terminal, xterm). Some terminal emulators return immediately, before the command has finished; use **Direct Launch** if you depend on the exit code.
+> **Terminal windows on Linux:** you can start any terminal emulator yourself, e.g. `gnome-terminal -- bash -c "./flash.sh; exec bash"`. The step then receives the exit code of the **terminal emulator**, not of your command: `gnome-terminal` and `ptyxis` return `0` immediately, before the command has even finished; `xterm` waits but usually returns `0` regardless of the result. If you need a visible window *and* a reliable result, let the command write its exit code to a file and evaluate it with a following [File](#file) step:
+>
+> ```text
+> gnome-terminal --wait -- bash -c "./flash.sh; echo $? > exit.txt"
+> ```
+>
+> `--wait` makes `gnome-terminal` block until the command has finished. Note that `{...}` is interpreted as an ATLab variable reference, so avoid bash syntax like `${VAR}` in the command.
+
+The working directory is the project folder, so you can call scripts stored next to the project with relative paths. While the step waits, the status panel shows *Waiting for external application…*. Stopping the test run terminates the program and everything it started.
 
 Examples:
 
 ```text
 python flash_firmware.py --port COM7 --sn {SerialNo}
 "C:\Program Files\SEGGER\JLink\JLink.exe" -CommanderScript program.jlink
+cmd /c program_board.bat {SerialNo}
+cmd /c type result.txt | findstr Voltage
 ```
+
+The last example only makes sense with **Evaluate Output** and a response mask that cuts the number out of the matching line.
 
 ## User Confirmation
 

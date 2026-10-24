@@ -48,8 +48,6 @@ Für den Zugriff auf die serielle Schnittstelle des Test Interface Adapters muss
 sudo usermod -aG dialout $USER   # danach ab- und wieder anmelden
 ```
 
-Für **Shell-Befehl**-Schritte, die ein Terminalfenster öffnen, sucht ATLab nacheinander nach `ptyxis`, `gnome-terminal`, `konsole`, `xfce4-terminal` und schließlich `xterm`. Installieren Sie eines davon, falls keines vorhanden ist.
-
 ## Optional: NI-VISA
 
 VISA-Geräte benötigen die **NI-VISA**-Laufzeitumgebung von National Instruments. VISA wird derzeit **nur unter Windows** unterstützt. Serielle und TCP/IP-Geräte funktionieren ohne.

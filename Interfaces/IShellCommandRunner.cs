@@ -12,5 +12,6 @@ public interface IShellCommandRunner
         ShellCommand shellCommand,
         string? projectDirectory = null,
         CancellationToken cancellationToken = default,
-        List<CustomVariable>? runtimeVariables = null);
+        List<CustomVariable>? runtimeVariables = null,
+        ResponseMask? mask = null);
 }

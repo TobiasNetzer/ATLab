@@ -8,7 +8,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Skript](#skript) | Antwort des mit *Auswertung* markierten Skriptbefehls | Skript-Konfiguration | ✔ |
 | [Gerätebefehl](#gerätebefehl) | Antwort eines einzelnen Befehls | Gerätebefehl | ✔ |
 | [Schnittstellenbefehl](#schnittstellenbefehl) | über I²C/UART des Adapters gelesene Daten | Schnittstellenbefehl | ✔ |
-| [Shell-Befehl](#shell-befehl) | Exit-Code des Prozesses | Shell-Befehl | – |
+| [Shell-Befehl](#shell-befehl) | Exit-Code oder Ausgabe des Programms | Shell-Befehl | ✔ (nur Ausgabe) |
 | [Benutzerbestätigung](#benutzerbestätigung) | `1` (Bestanden) oder `0` (Fehlgeschlagen) | – (verwendet den Kommentar) | – |
 | [Benutzereingabe](#benutzereingabe) | vom Bediener eingegebene Zahl | – (verwendet den Kommentar) | ✔ |
 | [Ausdruck](#ausdruck) | Ergebnis einer Berechnung | Ausdruck | – |
@@ -90,27 +90,38 @@ Die Schnittstelle muss am angeschlossenen Adapter vorhanden sein (siehe Register
 
 ## Shell-Befehl
 
-Führt ein Programm oder einen Shell-Befehl auf dem Prüfrechner aus. Der **Exit-Code** ist der Messwert – `0` bedeutet normalerweise Erfolg, setzen Sie die Grenzwerte also auf `0 … 0`.
+Führt ein Programm auf dem Prüfrechner aus. Standardmäßig ist der **Exit-Code** der Messwert – `0` bedeutet normalerweise Erfolg, setzen Sie die Grenzwerte also auf `0 … 0`. Mit **Ausgabe auswerten** ist stattdessen die Ausgabe des Programms der Messwert.
 
 | Feld | Beschreibung |
 |------|--------------|
-| **Befehl** | Befehlszeile. Darf `{Variable}`-Verweise enthalten. |
-| **Direktstart** | Ein: Programm direkt starten, ohne Shell-Fenster. Das erste Wort (oder ein `"Pfad in Anführungszeichen"`) ist das Programm, der Rest sind Argumente. Aus: den Befehl in einem Terminalfenster ausführen. |
-| **Fensterverhalten** | Ohne Direktstart: **Auto Close** schließt das Fenster, wenn der Befehl fertig ist; **Keep Open** lässt es offen – der Schritt wartet dann, bis der Bediener das Fenster schließt. |
+| **Befehl** | Befehlszeile. Darf `{Variable}`-Verweise enthalten. Das erste Wort (oder ein `"Pfad in Anführungszeichen"`) ist das Programm, der Rest sind Argumente. |
+| **Ausgabe auswerten** | Aus: Der Exit-Code ist der Messwert. Ein: Das Programm läuft ohne Fenster, seine Standardausgabe wird wie eine Geräteantwort ausgewertet (bei Bedarf mit [Antwortverarbeitung](10-response-processing.md)) und muss eine Zahl ergeben. Ein Exit-Code ungleich `0` lässt den Schritt fehlschlagen; die Fehlermeldung enthält die Fehlerausgabe des Programms. |
 
-Arbeitsverzeichnis ist der Projektordner; Skripte neben dem Projekt lassen sich also mit relativen Pfaden aufrufen. Während der Schritt wartet, zeigt der Statusbereich *Warten auf externe Anwendung...*.
+Der Befehl wird genau so ausgeführt, wie er eingegeben wurde – ohne Shell dazwischen. Für Shell-Funktionen wie Pipes, Umleitungen, eingebaute Befehle (`dir`, `echo`, `type`) oder Batch-Dateien rufen Sie die Shell selbst auf:
 
-Plattformdetails:
+- **Windows:** `cmd /c <Befehl>` führt den Befehl aus und schließt das Fenster; `cmd /k <Befehl>` lässt das Fenster offen – der Schritt wartet dann, bis der Bediener es schließt, und der Exit-Code ist der von `cmd`, nicht der Ihres Befehls.
+- **Linux:** `bash -c "<Befehl>"`. Verwenden Sie doppelte Anführungszeichen für Argumente mit Leerzeichen; einfache Anführungszeichen werden nicht unterstützt. Unter Linux wird kein Terminalfenster geöffnet.
 
-- **Windows:** Befehle laufen in `cmd.exe` (`/c` für Auto Close, `/k` für Keep Open). Mit **Direktstart** wartet ATLab nur dann auf den Exit-Code, wenn das Programm eine `.exe` ist; andere Dateien (z. B. `.bat`, `.py`, Dokumente) werden mit der zugeordneten Anwendung geöffnet, und das Ergebnis ist sofort `0`.
-- **Linux:** Befehle laufen in `bash` im ersten verfügbaren Terminal-Emulator (ptyxis, gnome-terminal, konsole, xfce4-terminal, xterm). Manche Terminal-Emulatoren kehren sofort zurück, bevor der Befehl fertig ist; verwenden Sie **Direktstart**, wenn Sie den Exit-Code benötigen.
+> **Terminalfenster unter Linux:** Sie können jeden Terminal-Emulator selbst starten, z. B. `gnome-terminal -- bash -c "./flash.sh; exec bash"`. Der Schritt erhält dann den Exit-Code des **Terminal-Emulators**, nicht den Ihres Befehls: `gnome-terminal` und `ptyxis` liefern sofort `0`, noch bevor der Befehl fertig ist; `xterm` wartet, liefert aber meist unabhängig vom Ergebnis `0`. Brauchen Sie ein sichtbares Fenster *und* ein verlässliches Ergebnis, lassen Sie den Befehl seinen Exit-Code in eine Datei schreiben und werten diese mit einem nachfolgenden [Datei](#datei)-Schritt aus:
+>
+> ```text
+> gnome-terminal --wait -- bash -c "./flash.sh; echo $? > exit.txt"
+> ```
+>
+> `--wait` lässt `gnome-terminal` warten, bis der Befehl beendet ist. Beachten Sie, dass `{...}` als ATLab-Variablenverweis interpretiert wird; vermeiden Sie daher Bash-Syntax wie `${VAR}` im Befehl.
+
+Arbeitsverzeichnis ist der Projektordner; Skripte neben dem Projekt lassen sich also mit relativen Pfaden aufrufen. Während der Schritt wartet, zeigt der Statusbereich *Warten auf externe Anwendung...*. Wird der Testlauf gestoppt, beendet ATLab das Programm und alle von ihm gestarteten Prozesse.
 
 Beispiele:
 
 ```text
 python flash_firmware.py --port COM7 --sn {SerialNo}
 "C:\Program Files\SEGGER\JLink\JLink.exe" -CommanderScript program.jlink
+cmd /c program_board.bat {SerialNo}
+cmd /c type result.txt | findstr Voltage
 ```
+
+Das letzte Beispiel ist nur mit **Ausgabe auswerten** und einer Antwortmaske sinnvoll, die die Zahl aus der gefundenen Zeile herausschneidet.
 
 ## Benutzerbestätigung
 

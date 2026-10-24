@@ -709,11 +709,8 @@
   <data name="Header_ShellCommand" xml:space="preserve">
     <value>Shell Command</value>
   </data>
-  <data name="Label_DirectLaunch" xml:space="preserve">
-    <value>Direct Launch</value>
-  </data>
-  <data name="Label_WindowBehavior" xml:space="preserve">
-    <value>Window Behavior</value>
+  <data name="Label_EvaluateOutput" xml:space="preserve">
+    <value>Evaluate Output</value>
   </data>
   <data name="Header_FilePath" xml:space="preserve">
     <value>File Path</value>

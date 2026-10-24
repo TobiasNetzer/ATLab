@@ -9,7 +9,7 @@ ATLab ist ein Framework für die automatisierte Prüfung elektronischer Baugrupp
 - **Signale routen** über die Relais-Matrix des Test Interface Adapters und dessen Stimulations- und externe Stimulationsrelais pro Schritt schalten.
 - **Messgeräte fernsteuern** (Multimeter, Netzteile, Oszilloskope …) über serielle Schnittstelle (VCOM/RS232), TCP/IP-Sockets oder NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
 - **Mit dem Prüfling kommunizieren** über die galvanisch isolierten I²C- und UART-Schnittstellen des Adapters.
-- **Lokale Programme** oder Shell-Befehle ausführen und deren Exit-Code als Ergebnis verwenden.
+- **Lokale Programme** oder Shell-Befehle ausführen und deren Exit-Code oder Ausgabe als Ergebnis verwenden.
 - **Den Bediener fragen**, z. B. für eine Sichtprüfung (Bestanden / Fehlgeschlagen).
 - **Werte berechnen** aus Laufzeitvariablen mit Ausdrücken.
 - **Dateien einlesen** und daraus einen Wert gewinnen.

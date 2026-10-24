@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TestHardwareSimulator>();
         services.AddSingleton<IHardwareAccessor, HardwareAccessor>();
         
-        services.AddSingleton<IShellCommandRunner>(sp => ShellCommandRunnerFactory.Create());
+        services.AddSingleton<IShellCommandRunner, ShellCommandRunner>();
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
         
         services.AddSingleton<ControlModuleService>();

@@ -53,28 +53,8 @@
 
                 <TextBox Text="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.Command}"/>
 
-                <DockPanel LastChildFill="False">
-                    
-                    <CheckBox Content="{helpers:Localize Label_DirectLaunch}"
-                              IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.IsDirectLaunch, Mode=TwoWay}"
-                              DockPanel.Dock="Left"/>
-                    
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="10"
-                                DockPanel.Dock="Right">
-                        
-                        <TextBlock Text="{helpers:Localize Label_WindowBehavior}"
-                                   Classes="Small"
-                                   VerticalAlignment="Center"/>
-
-                        <ComboBox ItemsSource="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.CommandOptions}"
-                                  Width="130"
-                                  SelectedItem="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.Option}"
-                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
-                        
-                    </StackPanel>
-                    
-                </DockPanel>
+                <CheckBox Content="{helpers:Localize Label_EvaluateOutput}"
+                          IsChecked="{Binding $parent[controls:ShellCommandEditor].ShellCommandEditorVm?.ShellCommand.EvaluateOutput, Mode=TwoWay}"/>
 
             </StackPanel>
         </Border>

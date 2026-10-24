@@ -48,8 +48,6 @@ To access the Test Interface Adapter's serial port, your user usually needs to b
 sudo usermod -aG dialout $USER   # log out and back in afterwards
 ```
 
-For **Shell Command** steps that open a terminal window, ATLab looks for `ptyxis`, `gnome-terminal`, `konsole`, `xfce4-terminal` and finally `xterm`, in that order. Install one of them if none is present.
-
 ## Optional: NI-VISA
 
 VISA devices require the **NI-VISA** runtime from National Instruments. VISA support is currently **Windows only**. Serial and TCP/IP devices work without it.
