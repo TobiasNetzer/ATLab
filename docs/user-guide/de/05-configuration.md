@@ -6,14 +6,14 @@ Die Registerkarte **Konfiguration** enthält die projektweiten Einstellungen. Al
 
 Sie besteht aus vier Bereichen:
 
-- [Benutzerdefinierte Relaiskanalbenennung](#benutzerdefinierte-relaiskanalbenennung)
+- [Kanalbezeichnungen](#kanalbezeichnungen)
 - [Geräte-Manager](#geräte-manager)
 - [Laufzeitvariablen](#laufzeitvariablen)
 - [Projekteinstellungen](#projekteinstellungen)
 
 ---
 
-## Benutzerdefinierte Relaiskanalbenennung
+## Kanalbezeichnungen
 
 Geben Sie den Relaiskanälen des Adapters sprechende Namen wie `GND`, `VIN 12V` oder `TP12 3V3`. Es gibt drei Spalten:
 

@@ -25,7 +25,7 @@ The pin table (`a1…a32`, `b1…b32`, `c1…c32`) lists the signals on the DUT-
 
 In simulator mode, the device is shown as `Simulator` with `N/A` for serial number and firmware, and 32 / 16 / 4 channels with all interfaces available.
 
-The channel counts determine how many rows appear in the channel naming table and the relay selectors, and are checked when a project is opened (see [Hardware compatibility check](04-projects.md#hardware-compatibility-check)).
+The channel counts determine how many rows appear in the [Channel Labels](05-configuration.md#channel-labels) panel and the relay selectors, and are checked when a project is opened (see [Hardware compatibility check](04-projects.md#hardware-compatibility-check)).
 
 ## Test Hardware Diagnostics
 

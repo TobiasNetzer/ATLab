@@ -6,14 +6,14 @@ The **Configuration** tab holds the project-wide setup. Everything here is saved
 
 It is divided into four panels:
 
-- [Custom Relay Channel Naming](#custom-relay-channel-naming)
+- [Channel Labels](#channel-labels)
 - [Device Manager](#device-manager)
 - [Runtime Variables](#runtime-variables)
 - [Project Settings](#project-settings)
 
 ---
 
-## Custom Relay Channel Naming
+## Channel Labels
 
 Give the adapter's relay channels meaningful names, such as `GND`, `VIN 12V` or `TP12 3V3`. There are three columns:
 

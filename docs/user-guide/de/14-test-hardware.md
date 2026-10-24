@@ -25,7 +25,7 @@ Die Pintabelle (`a1…a32`, `b1…b32`, `c1…c32`) listet die Signale am prüfl
 
 Im Simulatormodus wird das Gerät als `Simulator` mit `N/A` für Seriennummer und Firmware angezeigt, mit 32 / 16 / 4 Kanälen und allen Schnittstellen.
 
-Die Kanalanzahlen bestimmen, wie viele Zeilen die Kanalbenennung und die Relaisauswahlen haben, und werden beim Öffnen eines Projekts geprüft (siehe [Prüfung der Hardware-Kompatibilität](04-projects.md#prüfung-der-hardware-kompatibilität)).
+Die Kanalanzahlen bestimmen, wie viele Zeilen die [Kanalbezeichnungen](05-configuration.md#kanalbezeichnungen) und die Relaisauswahlen haben, und werden beim Öffnen eines Projekts geprüft (siehe [Prüfung der Hardware-Kompatibilität](04-projects.md#prüfung-der-hardware-kompatibilität)).
 
 ## Test-Hardware Diagnose
 
