@@ -8,6 +8,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
+/// <summary>File and folder pickers of the main window's storage provider.</summary>
 public class FileDialogService : IFileDialogService
 {
     private IStorageProvider? GetStorageProvider()

@@ -2,6 +2,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Models;
 
+/// <summary>Hardware information of the simulator: a fully equipped adapter.</summary>
 public class DummyHardwareInfo : IHardwareInfo
 {
     public string DeviceName { get; set; } = "Simulator";

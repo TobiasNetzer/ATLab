@@ -38,6 +38,10 @@ public class BoundaryScanPinActionViewModel
     }
 }
 
+/// <summary>
+/// Step editor for the Boundary Scan source: list of pin actions, settle time and teach-in from the current pin
+/// states.
+/// </summary>
 public partial class BoundaryScanStepEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

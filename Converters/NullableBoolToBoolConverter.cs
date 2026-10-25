@@ -4,6 +4,7 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
+/// <summary>Treats a null bool as false.</summary>
 public class NullableBoolToBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

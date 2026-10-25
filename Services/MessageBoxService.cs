@@ -9,6 +9,10 @@ using ShadUI;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Modal dialogs through the ShadUI dialog host. Dialogs of a test run can also be answered with the control
+/// module.
+/// </summary>
 public partial class MessageBoxService : ObservableObject, IMessageBoxService
 {
     private readonly ILoggingService _loggingService;

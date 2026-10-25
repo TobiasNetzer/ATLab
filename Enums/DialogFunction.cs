@@ -1,5 +1,6 @@
 ﻿namespace ATLab.Enums;
 
+/// <summary>Purpose of a message box, decides its buttons and how the control module answers it.</summary>
 public enum DialogFunction
 {
     INFORMATION,

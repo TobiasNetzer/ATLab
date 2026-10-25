@@ -7,6 +7,10 @@ using Avalonia.Threading;
 
 namespace ATLab.Behaviors;
 
+/// <summary>
+/// Attached property that keeps the selected rows of a DataGrid in sync with a list in the view model, which
+/// DataGrid does not support for multi-selection.
+/// </summary>
 public static class DataGridSelectedItemsBehavior
 {
     public static readonly AttachedProperty<IList?> SelectedItemsProperty =

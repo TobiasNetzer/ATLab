@@ -2,6 +2,7 @@ using System.ComponentModel;
 
 namespace ATLab.Enums;
 
+/// <summary>Bus types that can be emulated through boundary scan pins.</summary>
 public enum BoundaryScanBusType
 {
     [Description("I²C")]

@@ -3,6 +3,7 @@ using ATLab.Models;
 
 namespace ATLab.ViewModels;
 
+/// <summary>A relay with its state and user defined name.</summary>
 public partial class RelayChannelViewModel : ViewModelBase
 {
     [ObservableProperty]

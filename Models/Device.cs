@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Instrument or other device from the Device Manager, referenced by test steps through its id.</summary>
 public partial class Device : ObservableObject
 {
     

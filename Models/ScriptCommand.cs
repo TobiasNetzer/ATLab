@@ -2,6 +2,7 @@
 
 namespace ATLab.Models;
 
+/// <summary>One command of a script or a Device Command step.</summary>
 public partial class ScriptCommand : ObservableObject
 {
     [ObservableProperty]

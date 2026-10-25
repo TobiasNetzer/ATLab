@@ -14,6 +14,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Boundary scan state of a test run: connects on the first boundary scan step, verifies the chain, keeps output
+/// states across steps and releases the chain at the end.
+/// </summary>
 public class BoundaryScanTestSession : IBoundaryScanTestSession
 {
     private readonly IBoundaryScanService _boundaryScanService;

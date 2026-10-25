@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Connection settings of a device for serial port, VISA and TCP.</summary>
 public partial class DeviceConfiguration : ObservableObject
 {
     // Serial settings

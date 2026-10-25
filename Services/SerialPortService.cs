@@ -10,6 +10,9 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Serial port transport with configurable framing. Used for instruments and for the Test Interface Adapter.
+/// </summary>
 public class SerialPortService : ICommunication
 {
     private readonly SerialPort _port;

@@ -9,6 +9,10 @@ using ATLab.Models;
 
 namespace ATLab.Helpers;
 
+/// <summary>
+/// Turns command texts into bytes or strings: resolves {Variable} references, evaluates {expr:...} blocks and
+/// applies encodings such as {hex:...} or {u16be:...}.
+/// </summary>
 public static class CommandProcessor
 {
     private static readonly Regex VarRegex =
@@ -18,6 +22,7 @@ public static class CommandProcessor
     private static readonly Regex NumericEncodingRegex =
         new(@"^(?<type>[uif])(?<bits>\d+)(?<order>be|le)?$", RegexOptions.Compiled);
     
+    /// <summary>Compiles a command for sending: variables first, then expressions, then encodings.</summary>
     public static byte[] CompileToBytes(string command, IEnumerable<CustomVariable>? vars)
     {
         var blocks = CompileInternal(command, vars);

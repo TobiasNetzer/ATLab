@@ -2,6 +2,7 @@ using ATLab.Enums;
 
 namespace ATLab.Models;
 
+/// <summary>Outcome of an operation without value: success, failure with message, or timeout.</summary>
 public class OperationResult
 {
     private OperationStatus Status { get; }
@@ -27,6 +28,7 @@ public class OperationResult
         new(OperationStatus.TIMEOUT, message ?? "Timeout");
 }
 
+/// <summary>Outcome of an operation that returns a value on success.</summary>
 public class OperationResult<T>
 {
     public T? Value { get; }

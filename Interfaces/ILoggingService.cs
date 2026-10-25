@@ -4,6 +4,10 @@ using ATLab.Records;
 
 namespace ATLab.Interfaces;
 
+/// <summary>
+/// Collects messages for the event log, shows them as toasts and writes them to the log file according to the log
+/// level.
+/// </summary>
 public interface ILoggingService
 {
     void Error(

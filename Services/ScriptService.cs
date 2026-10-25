@@ -7,6 +7,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
+/// <summary>Keeps the script list of the Scripting tab in sync with the script repository.</summary>
 public class ScriptService : IScriptService
 {
     private readonly IScriptRepository _repository;

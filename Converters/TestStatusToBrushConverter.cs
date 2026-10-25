@@ -7,6 +7,7 @@ using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 
+/// <summary>Colors the result banner according to the test status.</summary>
 public class TestStatusToBrushConverter : IValueConverter
 {
     public IBrush? IdleBrush { get; set; }

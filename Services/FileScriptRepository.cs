@@ -10,6 +10,9 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Stores each script as <id>.json in the script folder of the project, or in the default folder.
+/// </summary>
 public sealed class FileScriptRepository : IScriptRepository
 {
     public event EventHandler<string?>? RepositoryFolderChanged;

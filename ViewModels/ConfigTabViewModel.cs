@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Configuration tab: channel names, devices, project settings and runtime variables.</summary>
 public partial class ConfigTabViewModel : ViewModelBase
 {
     

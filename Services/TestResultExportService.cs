@@ -9,6 +9,9 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Exports CSV and PDF after a run according to the project settings, named after serial number and time.
+/// </summary>
 public class TestResultExportService : ITestResultExportService
 {
     private readonly ProjectSettings _settings;

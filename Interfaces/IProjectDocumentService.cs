@@ -3,6 +3,7 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
+/// <summary>File dialogs and unsaved-changes handling around opening and saving project files.</summary>
 public interface IProjectDocumentService
 {
     Task<AtlabFileDto?> OpenFileAsync();

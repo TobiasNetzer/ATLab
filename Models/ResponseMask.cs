@@ -4,6 +4,9 @@ using ATLab.Enums;
 
 namespace ATLab.Models;
 
+/// <summary>
+/// Response processing settings of a step (skip, length, mask), plus the last processed response for the editor.
+/// </summary>
 public partial class ResponseMask : ObservableObject
 {
     [ObservableProperty]

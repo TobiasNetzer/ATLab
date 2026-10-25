@@ -5,6 +5,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Connects to the adapter on the port used last time, or switches to the simulator when simulation is forced in
+/// the settings.
+/// </summary>
 public sealed class HardwareInitializer : IHardwareInitializer
 {
     private readonly ISettingsService _settingsService;

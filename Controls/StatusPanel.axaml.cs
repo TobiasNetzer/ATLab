@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
+/// <summary>Status text with progress bar.</summary>
 public partial class StatusPanel : UserControl
 {
     public static readonly StyledProperty<double> ProgressValueProperty =

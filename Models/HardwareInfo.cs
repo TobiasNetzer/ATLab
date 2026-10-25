@@ -2,6 +2,7 @@
 
 namespace ATLab.Models;
 
+/// <summary>Hardware information reported by the connected Test Interface Adapter.</summary>
 public class HardwareInfo : IHardwareInfo
 {
     public string DeviceName { get; set; } = string.Empty;

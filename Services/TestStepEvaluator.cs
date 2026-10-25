@@ -6,6 +6,10 @@ using ATLab.Records;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Checks a value against the step limits (rounded to significant digits) and calculates the deviation from
+/// nominal.
+/// </summary>
 public class TestStepEvaluator : ITestStepEvaluator
 {
     

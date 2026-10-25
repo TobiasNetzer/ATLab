@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>About tab: version, build and runtime information.</summary>
 public partial class AboutTabViewModel : ViewModelBase
 {
     public static string AppName =>

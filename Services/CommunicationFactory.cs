@@ -3,6 +3,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Creates serial, TCP and VISA transports.</summary>
 public class CommunicationFactory : ICommunicationFactory
 {
     public ICommunication CreateSerial(string portName, DeviceConfiguration config)

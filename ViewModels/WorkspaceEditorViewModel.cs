@@ -2,6 +2,7 @@
 
 namespace ATLab.ViewModels;
 
+/// <summary>Groups the step editors shown next to the step list.</summary>
 public class WorkspaceEditorViewModel
 {
     public TestHardwareRelayChannelsViewModel TestHardwareRelayChannels { get; }

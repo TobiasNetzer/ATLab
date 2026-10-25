@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Stimulus relay selection of a step.</summary>
 public partial class StimChannelViewModel : ViewModelBase
 {
     

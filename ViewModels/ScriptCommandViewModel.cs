@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
+/// <summary>One command of a script.</summary>
 public partial class ScriptCommandViewModel : ViewModelBase
 {
     private readonly ScriptCommand _model;

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>External stimulus relay selection of a step.</summary>
 public partial class ExtStimChannelViewModel : ViewModelBase
 {
     [ObservableProperty]

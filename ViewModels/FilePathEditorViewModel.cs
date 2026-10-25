@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the File source.</summary>
 public partial class FilePathEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

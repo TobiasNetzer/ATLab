@@ -3,6 +3,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
+/// <summary>Splits received data into messages at CR LF.</summary>
 public class CrLfMessageFramer : IMessageFramer
 {
     public bool TryExtractMessages(List<byte> buffer, out List<byte[]> messages)

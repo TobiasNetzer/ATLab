@@ -4,6 +4,10 @@ using System.Globalization;
 
 namespace ATLab.Helpers;
 
+/// <summary>
+/// Evaluates arithmetic and bitwise expressions with C# operator precedence. Used for the {expr:...} blocks in
+/// commands, limits, delays and the Expression source.
+/// </summary>
 public static class ExpressionEvaluator
 {
     private enum TokenType { NUMBER, OPERATOR, LEFT_PAREN, RIGHT_PAREN }
@@ -35,6 +39,7 @@ public static class ExpressionEvaluator
         { UnaryPlus,  (7, true) },
     };
 
+    /// <summary>Tokenizes the expression, converts it to reverse polish notation and evaluates it.</summary>
     public static double Evaluate(string expr)
     {
         var tokens = Tokenize(expr);

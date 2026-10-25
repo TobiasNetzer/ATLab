@@ -4,6 +4,7 @@ using ATLab.Models;
 
 namespace ATLab.BoundaryScan.Probes;
 
+/// <summary>A probe found during enumeration.</summary>
 public record JtagProbeInfo(string SerialNumber, string Description)
 {
     public string DisplayName => string.IsNullOrWhiteSpace(SerialNumber)
@@ -11,6 +12,7 @@ public record JtagProbeInfo(string SerialNumber, string Description)
         : $"{Description} ({SerialNumber})";
 }
 
+/// <summary>Settings applied when a probe is opened.</summary>
 public record JtagProbeOptions(int FrequencyKHz, byte FtdiLowByteValue = 0x08, byte FtdiLowByteDirection = 0x0B);
 
 /// <summary>

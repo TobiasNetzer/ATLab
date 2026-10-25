@@ -7,6 +7,7 @@ using ShadUI;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Serial number dialog before a run, validates the entry against the project settings.</summary>
 public partial class SerialNumberEntryDialogViewModel : ViewModelBase, IDisposable
 {
     private readonly ProjectSettings _settings;

@@ -15,6 +15,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Step settings panel: name, limits, delay, evaluation source and pass/fail actions with jump targets.
+/// </summary>
 public partial class TestStepConfiguratorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

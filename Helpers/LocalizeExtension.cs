@@ -5,6 +5,10 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Helpers;
 
+/// <summary>
+/// XAML markup extension {helpers:Localize Key} that binds a text to the localization service, so it updates when
+/// the language changes.
+/// </summary>
 public class LocalizeExtension : MarkupExtension
 {
     public string Key { get; set; } = string.Empty;

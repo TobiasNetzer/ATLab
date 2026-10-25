@@ -3,6 +3,7 @@ using ATLab.Enums;
 
 namespace ATLab.Interfaces;
 
+/// <summary>Shows modal dialogs: confirmations, operator questions with optional image and input prompts.</summary>
 public interface IMessageBoxService
 {
     bool IsDialogOpen { get; }

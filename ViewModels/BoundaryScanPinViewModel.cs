@@ -8,6 +8,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// A pin of a boundary scan device with its cells from the BSDL file, the last read state and the state to drive.
+/// </summary>
 public partial class BoundaryScanPinViewModel : ObservableObject
 {
     private readonly Action<BoundaryScanPinViewModel, PinDriveState> _drive;

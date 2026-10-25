@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Start-up window shown when the adapter is not found: select a port or continue in simulation mode.
+/// </summary>
 public partial class TestHardwareConnectWindowViewModel : ViewModelBase
 {
     private readonly IHardwareAccessor _hardwareAccessor;

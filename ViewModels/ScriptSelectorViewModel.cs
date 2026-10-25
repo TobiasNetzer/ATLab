@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the Script source: device, script and the values of the script variables.</summary>
 public partial class ScriptSelectorViewModel : ViewModelBase
 {
     private readonly IScriptService _scriptService;

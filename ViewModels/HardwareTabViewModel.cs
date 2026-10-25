@@ -1,5 +1,6 @@
 namespace ATLab.ViewModels;
 
+/// <summary>Test Hardware tab: adapter information and diagnostics.</summary>
 public class HardwareTabViewModel : ViewModelBase
 {
     public TestHardwareInfoViewModel TestHardwareInfoViewModel { get; }

@@ -4,6 +4,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Interfaces;
 
+/// <summary>Keeps the scripts of the script folder in sync with the Scripting tab.</summary>
 public interface IScriptService
 {
     ObservableCollection<ScriptViewModel> Scripts { get; }

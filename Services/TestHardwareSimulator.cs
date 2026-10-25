@@ -6,6 +6,7 @@ using ATLab.Records;
 
 namespace ATLab.Services;
 
+/// <summary>Virtual adapter used without hardware: all commands succeed, reads return fixed data.</summary>
 public class TestHardwareSimulator : ITestHardware
 {
     public IHardwareInfo HardwareInfo { get; }

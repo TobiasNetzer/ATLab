@@ -1,5 +1,6 @@
 namespace ATLab.Enums;
 
+/// <summary>Signals of the buses that can be emulated through boundary scan pins.</summary>
 public enum BoundaryScanBusSignal
 {
     SCL,

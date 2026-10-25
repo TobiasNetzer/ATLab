@@ -1,6 +1,7 @@
 using System.ComponentModel;
 namespace ATLab.Models;
 
+/// <summary>User defined name of a relay channel, shown in the relay selectors.</summary>
 public class CustomRelayChannelName : INotifyPropertyChanged
 {
     public int? ChannelIndex { get; init; }

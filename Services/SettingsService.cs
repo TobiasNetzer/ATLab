@@ -6,6 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Loads and saves settings.json in the user's application data folder.</summary>
 public class SettingsService : ISettingsService
 {
     private readonly string _filePath;

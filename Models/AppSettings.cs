@@ -2,6 +2,7 @@ using Avalonia.Controls;
 
 namespace ATLab.Models;
 
+/// <summary>Personal settings of the user, stored in settings.json and not part of any project.</summary>
 public class AppSettings
 {
     public double WindowWidth { get; set; } = 800;

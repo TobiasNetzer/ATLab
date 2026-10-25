@@ -2,6 +2,7 @@
 
 namespace ATLab.Models;
 
+/// <summary>On/off state of one relay channel.</summary>
 public partial class RelayChannelState : ObservableObject
 {
     [ObservableProperty]

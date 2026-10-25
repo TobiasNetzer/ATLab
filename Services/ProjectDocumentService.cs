@@ -4,6 +4,9 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// File dialogs, unsaved-changes confirmation and the remembered last project around the project file.
+/// </summary>
 public class ProjectDocumentService : IProjectDocumentService
 {
     private readonly IFileDialogService _fileDialogService;

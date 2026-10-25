@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ATLab.Models;
 namespace ATLab.CTIA;
 
+/// <summary>Transport for cTIA command frames.</summary>
 public interface ICtiaCommunication : IAsyncDisposable
 {
     Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000);

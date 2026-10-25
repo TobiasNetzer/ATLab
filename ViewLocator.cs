@@ -5,6 +5,7 @@ using ATLab.ViewModels;
 
 namespace ATLab;
 
+/// <summary>Finds the view for a view model by naming convention (FooViewModel -> Foo).</summary>
 public class ViewLocator : IDataTemplate
 {
 

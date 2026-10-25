@@ -15,6 +15,10 @@ using QuestPDF.Infrastructure;
 
 namespace ATLab;
 
+/// <summary>
+/// Application entry: builds the dependency injection container, applies theme and language and connects to the
+/// test hardware before the main window opens.
+/// </summary>
 public class App : Application
 {
     private IServiceProvider? _services;
@@ -24,6 +28,10 @@ public class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    /// <summary>
+    /// Connects to the adapter used last time; if that fails the hardware selection window decides between a port
+    /// and simulation mode.
+    /// </summary>
     public override async void OnFrameworkInitializationCompleted()
     {
         QuestPDF.Settings.License = LicenseType.Community;

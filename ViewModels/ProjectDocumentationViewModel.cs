@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Images and attachments of the project documentation.</summary>
 public partial class ProjectDocumentationViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;

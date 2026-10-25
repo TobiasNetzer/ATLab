@@ -7,6 +7,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Measurement relay selection of a step: high and low channel of the relay matrix and the external probe.
+/// </summary>
 public partial class MeasChannelViewModel : ViewModelBase
 {
     
@@ -90,6 +93,7 @@ public partial class MeasChannelViewModel : ViewModelBase
     private void ToggleExternalProbe() => IsExternalProbeEnabled = !IsExternalProbeEnabled;
 }
 
+/// <summary>The "Off" entry in front of the measurement channel list.</summary>
 public class MeasChannelOff : CustomRelayChannelName
 {
     public MeasChannelOff() : base("Off", null) { }

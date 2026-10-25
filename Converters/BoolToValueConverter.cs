@@ -5,6 +5,7 @@ using System.Globalization;
 
 namespace ATLab.Converters;
 
+/// <summary>Selects one of two brushes depending on a bool, e.g. for highlighted toggle buttons.</summary>
 public class BoolToValueConverter : IValueConverter
 {
     public IBrush? TrueValue { get; set; }

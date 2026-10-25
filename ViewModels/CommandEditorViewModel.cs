@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the Command source: device, command and timeout.</summary>
 public partial class CommandEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

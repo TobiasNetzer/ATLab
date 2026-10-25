@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the Boundary Scan Bus source: bus, address, data to write and bytes to read.</summary>
 public partial class BoundaryScanBusStepEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

@@ -6,6 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Adds, removes, moves, duplicates and copies steps. Pasted and duplicated steps get new ids.</summary>
 public class TestStepEditor : ITestStepEditor
 {
     private readonly IHardwareInfo _hardwareInfo;

@@ -9,6 +9,7 @@ using NationalInstruments.Visa;
 
 namespace ATLab.Services;
 
+/// <summary>Transport through an NI-VISA session (USB, GPIB, LAN instruments). Windows only.</summary>
 public class NiVisaService : ICommunication
 {
     private ResourceManager? _resourceManager;

@@ -5,6 +5,7 @@ using Avalonia.Media;
 
 namespace ATLab.Converters;
 
+/// <summary>Stores colors as text (e.g. #FF2979FF) in the project file.</summary>
 public sealed class ColorJsonConverter : JsonConverter<Color>
 {
     public override Color Read(

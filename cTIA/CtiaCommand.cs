@@ -8,6 +8,7 @@ using ATLab.Records;
 
 namespace ATLab.CTIA;
 
+/// <summary>Flags of the control byte of a cTIA command frame.</summary>
 public enum CtiaControlByte : byte {
     CONTROL_BYTE_IGNORE_CRC_BYTE = 1,
     CONTROL_BYTE_DONT_SEND_RESPONSE = 2
@@ -171,6 +172,10 @@ public enum DbgCmd : ushort
     DBG_END = 0x07FF
 }
 
+/// <summary>
+/// Typed wrappers for the commands of the cTIA protocol: one method per set, clear, get, configure and execute
+/// command.
+/// </summary>
 public class CtiaCommand
 {
     private readonly ICtiaCommunication _ctia;

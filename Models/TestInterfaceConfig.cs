@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Settings of an Interface Command step for the I²C and UART interfaces of the test hardware.</summary>
 public partial class TestInterfaceConfig : ObservableObject
 {
     [ObservableProperty]

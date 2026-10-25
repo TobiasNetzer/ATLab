@@ -18,6 +18,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Boundary Scan tab: probe connection, chain detection and comparison, device list with BSDL files, instruction
+/// loading, live pin view and the bus definitions. Locked while a test controls the chain.
+/// </summary>
 public partial class BoundaryScanTabViewModel : ViewModelBase
 {
     private const int RefreshIntervalMs = 100;

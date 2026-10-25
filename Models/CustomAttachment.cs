@@ -1,5 +1,6 @@
 ﻿namespace ATLab.Models;
 
+/// <summary>File attached to the project documentation.</summary>
 public class CustomAttachment
 {
     public string Path { get; set; } = string.Empty;

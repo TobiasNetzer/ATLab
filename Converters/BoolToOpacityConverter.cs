@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace ATLab.Converters;
 
+/// <summary>Dims an element (50 % opacity) when the bound value is true, e.g. for ignored steps.</summary>
 public class BoolToOpacityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Scripting tab: lists, creates, edits and deletes the scripts of the script folder.</summary>
 public partial class ScriptingTabViewModel : ViewModelBase
 {
     private readonly IScriptService _scriptService;

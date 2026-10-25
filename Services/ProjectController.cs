@@ -7,6 +7,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Project commands of the toolbar: creates, opens and saves projects and checks a loaded project against the
+/// connected hardware.
+/// </summary>
 public class ProjectController : IProjectController
 {
     private readonly IProjectDocumentService _projectDocumentService;

@@ -9,6 +9,9 @@ using ATLab.Resources;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Resource based localization (English, German). A single instance is used by bindings and code.
+/// </summary>
 public class LocalizationService : ILocalizationService
 {
     private readonly ResourceManager _resourceManager = AppResources.ResourceManager;

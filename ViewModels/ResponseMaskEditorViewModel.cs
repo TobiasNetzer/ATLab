@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Response mask editor of a step, with a preview of how the last response was processed.</summary>
 public partial class ResponseMaskEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

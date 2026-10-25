@@ -11,6 +11,10 @@ using ATLab.Controls;
 
 namespace ATLab;
 
+/// <summary>
+/// Registration of all services, view models and views. Almost everything is a singleton, as the application works
+/// on one project at a time.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBackendServices(this IServiceCollection services)

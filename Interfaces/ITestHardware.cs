@@ -6,6 +6,10 @@ using ATLab.Records;
 
 namespace ATLab.Interfaces;
 
+/// <summary>
+/// The Test Interface Adapter: relay matrix, stimulation channels, I²C/UART interfaces and diagnostics. Implemented
+/// by the cTIA hardware and the simulator.
+/// </summary>
 public interface ITestHardware : IAsyncDisposable
 {
     bool[] StimChannelStates {get; set; }

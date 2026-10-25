@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace ATLab.Models;
 
+/// <summary>States of a group of relay channels (stimulation or external stimulation) of a test step.</summary>
 public class RelayGroup : ObservableObject
 {
     public List<RelayChannelState> Channels { get; set; } = new();

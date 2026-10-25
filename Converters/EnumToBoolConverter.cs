@@ -6,6 +6,10 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
+/// <summary>
+/// True when the bound enum value is one of the comma separated values in the parameter. Also used two-way for
+/// radio buttons.
+/// </summary>
 public class EnumToBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

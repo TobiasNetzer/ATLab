@@ -12,6 +12,10 @@ using ShadUI;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Event log of the session: keeps all messages, shows toasts and writes the log file, both filtered by the
+/// project's log level.
+/// </summary>
 public partial class LoggingService : ObservableObject, ILoggingService
 {
     private readonly string _logFilePath;

@@ -1,4 +1,5 @@
 namespace ATLab.Interfaces;
+/// <summary>Identification, channel counts and available interfaces of the test hardware.</summary>
 public interface IHardwareInfo
 {
     string FirmwareVersion { get; set; }

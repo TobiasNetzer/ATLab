@@ -2,6 +2,7 @@ using System;
 
 namespace ATLab.Models;
 
+/// <summary>General information about a run for the report and the export file names.</summary>
 public class TestInfo
 {
     public string? ProjectName { get; init; }

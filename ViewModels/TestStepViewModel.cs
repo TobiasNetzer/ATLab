@@ -8,6 +8,7 @@ using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
+/// <summary>A step in the step list with the result of its last execution.</summary>
 public partial class TestStepViewModel : ViewModelBase
 {
     [ObservableProperty]

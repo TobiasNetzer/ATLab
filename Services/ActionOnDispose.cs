@@ -2,6 +2,7 @@ using System;
 
 namespace ATLab.Services
 {
+    /// <summary>Runs an action when disposed, for scoped state changes with using.</summary>
     public sealed class ActionOnDispose : IDisposable
     {
         private readonly Action _action;

@@ -3,6 +3,7 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
+/// <summary>Editing operations on the steps of a module, including the step clipboard.</summary>
 public interface ITestStepEditor
 {
     bool CanPaste { get; }

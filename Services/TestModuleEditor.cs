@@ -4,6 +4,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Adds, duplicates, removes and moves modules of the project.</summary>
 public class TestModuleEditor : ITestModuleEditor
 {
     private readonly ProjectModel _projectModel;

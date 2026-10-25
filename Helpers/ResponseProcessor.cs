@@ -10,13 +10,22 @@ using ATLab.Enums;
 
 namespace ATLab.Helpers;
 
+/// <summary>A response could not be processed with the configured mask, e.g. because it is too short.</summary>
 public sealed class ResponseProcessingException : Exception
 {
     public ResponseProcessingException(string message) : base(message) { }
 }
 
+/// <summary>
+/// Applies a step's response mask to received bytes: Skip/Length, match rules and the numeric extraction that
+/// yields the measured value.
+/// </summary>
 public static class ResponseProcessor
 {
+    /// <summary>
+    /// Returns the value text of the response. Without mask the response is used as ASCII text; the mask editor's
+    /// preview fields are updated on the way.
+    /// </summary>
     public static string Process(byte[] input, ResponseMask? mask)
     {
         if (mask == null)
@@ -294,6 +303,7 @@ public static class ResponseProcessor
 
 #region Mask parsing and rules
 
+/// <summary>Number formats a mask can extract, text based or raw binary.</summary>
 internal enum NumericExtractionType
 {
     BYTE,
@@ -304,12 +314,14 @@ internal enum NumericExtractionType
     FLOAT32
 }
 
+/// <summary>Byte order of a binary extraction.</summary>
 internal enum Endianness
 {
     BIG,
     LITTLE
 }
 
+/// <summary>A parsed numeric extraction of a mask, e.g. {byte:2,le,signed}.</summary>
 internal sealed class NumericExtractionSpec
 {
     public NumericExtractionType Type { get; }
@@ -340,8 +352,10 @@ internal sealed class NumericExtractionSpec
     };
 }
 
+/// <summary>A rule that must match at the current position of the response.</summary>
 internal interface IMatchRule { }
 
+/// <summary>Mask rule that requires a text at the current position, e.g. "U1=".</summary>
 internal sealed class AsciiMatchRule : IMatchRule
 {
     private readonly string _needle;
@@ -362,6 +376,7 @@ internal sealed class AsciiMatchRule : IMatchRule
     }
 }
 
+/// <summary>Mask rule that requires a byte sequence at the current position.</summary>
 internal sealed class ByteSequenceMatchRule : IMatchRule
 {
     private readonly byte[] _sequence;
@@ -390,6 +405,7 @@ internal sealed class ByteSequenceMatchRule : IMatchRule
     }
 }
 
+/// <summary>Match rules and numeric extraction of a mask, as produced by MaskParser.</summary>
 internal sealed class ParsedMask
 {
     public List<IMatchRule> MatchRules { get; } = new();
@@ -398,6 +414,7 @@ internal sealed class ParsedMask
     public int ExtractionAfterRule { get; set; } = -1;
 }
 
+/// <summary>Parses the mask syntax of the response processing.</summary>
 internal static class MaskParser
 {
     public static ParsedMask Parse(string pattern)

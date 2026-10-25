@@ -1,5 +1,6 @@
 namespace ATLab.Enums;
 
+/// <summary>What a Boundary Scan test step does with a pin.</summary>
 public enum BoundaryScanPinActionType
 {
     DRIVE_LOW,

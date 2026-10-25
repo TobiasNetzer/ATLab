@@ -10,6 +10,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Runs a script on a device: applies script and runtime variables to its commands and returns the answer of the
+/// command marked for evaluation.
+/// </summary>
 public class ScriptRunner : IScriptRunner
 {
     private readonly IScriptRepository _scriptRepository;

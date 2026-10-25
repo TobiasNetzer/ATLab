@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Named group of test steps. Modules run in order; disabled modules are skipped in full runs.</summary>
 public partial class TestModule : ObservableObject
 {
     public TestModule()

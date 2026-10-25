@@ -16,6 +16,9 @@ using ShadUI;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Shell of the main window: the tabs, the dialog and toast hosts, theme and language switching and the user guide.
+/// </summary>
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;
@@ -225,6 +228,9 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsAboutTabSelected));
     }
     
+    /// <summary>
+    /// Opens the project given on the command line, otherwise the last opened project, otherwise a new one.
+    /// </summary>
     public async Task OnWindowOpened()
     {
         

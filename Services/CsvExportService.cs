@@ -12,6 +12,7 @@ using Avalonia.Platform.Storage;
 
 namespace ATLab.Services;
 
+/// <summary>Writes the step results as tab-separated CSV with culture independent numbers.</summary>
 public class CsvExportService : ICsvExportService
 {
     private readonly IFileDialogService _fileDialogService;

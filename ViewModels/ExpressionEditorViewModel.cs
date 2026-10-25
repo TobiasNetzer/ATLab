@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the Expression source.</summary>
 public partial class ExpressionEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

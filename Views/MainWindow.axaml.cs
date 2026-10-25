@@ -9,6 +9,7 @@ using Window = ShadUI.Window;
 
 namespace ATLab.Views;
 
+/// <summary>Main window. Restores its size and position and asks about unsaved changes before closing.</summary>
 public partial class MainWindow : Window
 {
     private readonly ISettingsService? _settingsService;

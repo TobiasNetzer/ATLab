@@ -3,6 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>
+/// Named value used in commands and expressions: a runtime variable, a script variable or a system variable.
+/// </summary>
 public partial class CustomVariable : ObservableObject
 {
     [ObservableProperty]

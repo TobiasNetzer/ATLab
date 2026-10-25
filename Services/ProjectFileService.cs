@@ -8,6 +8,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Reads and writes project files as JSON.</summary>
 public class ProjectFileService : IProjectFileService
 {
     private readonly JsonSerializerOptions _options = new() { WriteIndented = true };

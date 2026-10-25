@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>What happens after a step passed or failed: continue, repeat, jump or end the test.</summary>
 public partial class PassFailAction : ObservableObject
 {
 

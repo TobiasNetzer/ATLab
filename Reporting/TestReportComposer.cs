@@ -17,6 +17,10 @@ using QuestPDF.Infrastructure;
 
 namespace ATLab.Reporting;
 
+/// <summary>
+/// Lays out the sections of the PDF test report with QuestPDF: header, test and DUT information, result banner,
+/// step table and test equipment.
+/// </summary>
 public class TestReportComposer
 {
     private readonly List<TestStepViewModel> _testResults;

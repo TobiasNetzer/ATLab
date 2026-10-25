@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Command line of an External Program step and whether its output is evaluated.</summary>
 public partial class ExternalProgram : ObservableObject
 {
     [ObservableProperty]

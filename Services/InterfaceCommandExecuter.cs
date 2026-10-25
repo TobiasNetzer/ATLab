@@ -10,6 +10,9 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Executes Interface Command steps on the I²C and UART interfaces of the adapter and evaluates the response.
+/// </summary>
 public class InterfaceCommandExecuter : IInterfaceCommandExecuter
 {
     private readonly ITestHardware _testHardware;

@@ -21,6 +21,10 @@ public record BoundaryScanChainEntry(
     BoundaryScanInstruction? ActiveInstruction,
     bool[] Outputs);
 
+/// <summary>
+/// Owns the JTAG probe connection and performs chain detection, instruction loading and boundary register scans.
+/// Calls are serialized, so the Boundary Scan tab and test steps can share it.
+/// </summary>
 public interface IBoundaryScanService
 {
     bool IsConnected { get; }

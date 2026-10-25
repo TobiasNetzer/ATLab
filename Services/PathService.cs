@@ -3,6 +3,10 @@ using System.IO;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Converts paths between absolute and relative to the project folder. Relative paths use '/' so projects work on
+/// Windows and Linux.
+/// </summary>
 public class PathService
 {
     private readonly string _root;

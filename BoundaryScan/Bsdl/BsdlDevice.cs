@@ -5,6 +5,7 @@ using ATLab.Enums;
 
 namespace ATLab.BoundaryScan.Bsdl;
 
+/// <summary>Direction of a port as declared in the BSDL file.</summary>
 public enum BsdlPortDirection
 {
     In,
@@ -14,6 +15,7 @@ public enum BsdlPortDirection
     Linkage
 }
 
+/// <summary>Function of a boundary register cell as declared in the BSDL file.</summary>
 public enum BsdlCellFunction
 {
     Input,
@@ -53,6 +55,10 @@ public record BsdlPin(string PinName, string Port);
 /// <param name="Output">Cell that drives the pin, its control cell enables the driver.</param>
 public record BsdlPortCells(BsdlCell? Input, BsdlCell? Output);
 
+/// <summary>
+/// Everything ATLab needs from a BSDL file: instructions, IDCODE, boundary register cells, ports and package pin
+/// maps. Created by BsdlParser.
+/// </summary>
 public class BsdlDevice
 {
     public string EntityName { get; init; } = string.Empty;

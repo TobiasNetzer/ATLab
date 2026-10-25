@@ -2,6 +2,7 @@ using System.ComponentModel;
 
 namespace ATLab.Enums;
 
+/// <summary>Supported JTAG probes for boundary scan.</summary>
 public enum JtagProbeType
 {
     [Description("SEGGER J-Link")]

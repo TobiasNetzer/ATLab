@@ -1,5 +1,6 @@
 ﻿namespace ATLab.Enums;
 
+/// <summary>LED modes of the control module buttons, including the test state indications.</summary>
 public enum ControlModuleColors
 {
     LED_MODE_OFF = 0,

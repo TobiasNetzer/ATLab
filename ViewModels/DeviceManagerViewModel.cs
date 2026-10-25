@@ -12,6 +12,9 @@ using NationalInstruments.Visa;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Device Manager: adds and removes devices and edits their connection settings (serial, TCP, VISA).
+/// </summary>
 public partial class DeviceManagerViewModel : ViewModelBase
 {
     private readonly ILoggingService _loggingService;

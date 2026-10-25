@@ -1,5 +1,8 @@
 ﻿namespace ATLab.Enums;
 
+/// <summary>
+/// Where a test step gets its measured value from. New values are appended so stored projects keep their numbers.
+/// </summary>
 public enum TestEvaluationSource
 {
     NONE,

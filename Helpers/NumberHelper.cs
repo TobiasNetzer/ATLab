@@ -3,6 +3,10 @@ using System.Globalization;
 
 namespace ATLab.Helpers;
 
+/// <summary>
+/// Number parsing that accepts ',' and '.' as decimal separator, and rounding used when comparing values with
+/// limits.
+/// </summary>
 public static class NumberHelper
 {
     public static double RoundToSignificantDigits(double value)

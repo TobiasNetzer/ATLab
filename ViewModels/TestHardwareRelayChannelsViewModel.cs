@@ -4,6 +4,9 @@ using ATLab.Models;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Relay channel names of the project and the channel selectors for stimulus, external stimulus and measurement.
+/// </summary>
 public class TestHardwareRelayChannelsViewModel : ViewModelBase
 {
     private readonly ProjectModel _projectModel;

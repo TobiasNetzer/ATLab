@@ -4,6 +4,7 @@ using Avalonia.Platform;
 
 namespace ATLab.Models;
 
+/// <summary>Shared bitmaps for the pass and fail result icons.</summary>
 public static class Icons
 {
     public static readonly Bitmap Pass;

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Adds and removes the runtime variables of the project.</summary>
 public partial class RuntimeVariableEditorViewModel : ViewModelBase
 {
     private readonly ProjectModel _projectModel;

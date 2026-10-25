@@ -14,6 +14,10 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Executes one step: switches the relays, waits for the delay and acquires the value from the step's evaluation
+/// source.
+/// </summary>
 public class TestStepRunner : ITestStepRunner
 {
     
@@ -52,6 +56,9 @@ public class TestStepRunner : ITestStepRunner
         _boundaryScanSession = boundaryScanSession;
     }
     
+    /// <summary>
+    /// Returns the measured value. NegativeInfinity means the step has nothing to evaluate and passes.
+    /// </summary>
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
     {
         step.ResultDetailLines = [];

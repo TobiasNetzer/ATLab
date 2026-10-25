@@ -11,6 +11,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Step editor for the Interface Command source: I²C or UART settings, data to send and bytes to read.
+/// </summary>
 public partial class TestInterfaceCommunicationViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

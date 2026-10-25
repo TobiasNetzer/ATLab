@@ -3,6 +3,7 @@ using System.Text;
 
 namespace ATLab.CTIA;
 
+/// <summary>Frame of the cTIA serial protocol: header, command, control byte, payload and CRC-8.</summary>
 public class CtiaCommandFrame
 {
     private ushort Header { get; } = 0xAA55;
@@ -54,6 +55,7 @@ public class CtiaCommandFrame
         return $"CMD=0x{Command:X4}, CTRL=0x{ControlByte:X2}, PAYLOAD={asciiString}";
     }
     
+    /// <summary>Parses a received frame and checks header, length and CRC.</summary>
     public static CtiaCommandFrame Parse(byte[] data, ushort expectedHeader = 0xAA55)
     {
         if (data == null || data.Length < CtiaCommandFrame.MinFrameSize)

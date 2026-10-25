@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace ATLab.Interfaces;
 
+/// <summary>
+/// Provides the UI texts in the selected language and notifies bindings when the language changes.
+/// </summary>
 public interface ILocalizationService : INotifyPropertyChanged
 {
     string this[string key] { get; }

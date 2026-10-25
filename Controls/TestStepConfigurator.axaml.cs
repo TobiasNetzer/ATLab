@@ -6,6 +6,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Controls;
 
+/// <summary>Step settings panel, see TestStepConfiguratorViewModel.</summary>
 public partial class TestStepConfigurator : UserControl
 {
     public TestStepConfigurator()

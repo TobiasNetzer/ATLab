@@ -11,6 +11,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Owns the JTAG probe and runs all chain operations on a background thread, serialized by a lock. Converts between
+/// the per-device view of the chain and the bit vectors shifted through it.
+/// </summary>
 public class BoundaryScanService : IBoundaryScanService, IDisposable
 {
     private const string NotConnectedMessage = "No JTAG probe connected.";

@@ -6,6 +6,7 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
+/// <summary>Shows an enum value by its [Description] attribute, falls back to the value name.</summary>
 public class EnumDescriptionConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -5,6 +5,7 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
+/// <summary>True when the bound enum value is none of the comma separated values in the parameter.</summary>
 public class InvertedEnumToBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

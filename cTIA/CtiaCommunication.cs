@@ -6,6 +6,9 @@ using ATLab.Models;
 
 namespace ATLab.CTIA
 {
+    /// <summary>
+    /// Sends cTIA command frames over the serial connection of the adapter and waits for the matching response.
+    /// </summary>
     public class CtiaCommunication: ICtiaCommunication
     {
         private readonly ICommunication _communication;
@@ -18,6 +21,9 @@ namespace ATLab.CTIA
             _loggingService = loggingService;
         }
         
+        /// <summary>
+        /// Sends a frame and returns the response, or null on timeout. Reconnects once if the port was lost.
+        /// </summary>
         public async Task<CtiaCommandFrame?> SendCommandAsync(CtiaCommandFrame frame, int timeoutMs = 1000)
         {
             try

@@ -5,6 +5,7 @@ using System.Globalization;
 
 namespace ATLab.Converters;
 
+/// <summary>Colors a result: valid, invalid, or unknown when the value is not a bool (e.g. null).</summary>
 public class ResultBrushConverter : IValueConverter
 {
     public IBrush? ValidBrush { get; set; }

@@ -2,6 +2,7 @@
 
 namespace ATLab.Enums;
 
+/// <summary>Transport used to reach a device from the Device Manager.</summary>
 public enum DeviceType
 {
     [Description("Serial Port")]

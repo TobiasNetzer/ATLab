@@ -6,6 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Interfaces;
 
+/// <summary>Storage of scripts as JSON files in the script folder.</summary>
 public interface IScriptRepository
 {
     event EventHandler<string?>? RepositoryFolderChanged;

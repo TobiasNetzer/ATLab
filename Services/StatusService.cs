@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Services;
 
+/// <summary>Shared state of the status panel.</summary>
 public partial class StatusService : ObservableObject, IStatusService
 {
     [ObservableProperty]

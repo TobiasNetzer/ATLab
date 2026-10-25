@@ -8,6 +8,7 @@ using QuestPDF.Infrastructure;
 
 namespace ATLab.Reporting;
 
+/// <summary>QuestPDF document of the test report, delegates the layout to TestReportComposer.</summary>
 public class TestReportDocument : IDocument
 {
     private readonly TestReportComposer _composer;

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>A script being edited on the Scripting tab, with its commands and variables.</summary>
 public partial class ScriptViewModel : ViewModelBase
 {
     private readonly IScriptRepository _repository;

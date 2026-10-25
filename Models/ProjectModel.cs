@@ -12,6 +12,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>
+/// The open project: modules and steps, devices, variables, channel names, settings, documentation and boundary
+/// scan setup. Tracks unsaved changes.
+/// </summary>
 public partial class ProjectModel : ObservableObject
 {
     private readonly IHardwareAccessor _hardwareAccessor;
@@ -119,6 +123,9 @@ public partial class ProjectModel : ObservableObject
         IsDirty = false;
     }
     
+    /// <summary>
+    /// Creates the serializable form of the project. Paths inside the project folder are stored relative.
+    /// </summary>
     public AtlabFileDto ToDto()
     {
         var pathService = string.IsNullOrWhiteSpace(FilePath) 
@@ -178,6 +185,9 @@ public partial class ProjectModel : ObservableObject
         }
     }
     
+    /// <summary>
+    /// Takes over a loaded project file, restores absolute paths and the runtime state of the steps.
+    /// </summary>
     public void Load(AtlabFileDto dto)
     {
         var pathService = !string.IsNullOrWhiteSpace(FilePath)

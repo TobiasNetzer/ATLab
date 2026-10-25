@@ -2,6 +2,7 @@
 
 namespace ATLab.Models;
 
+/// <summary>Content of a project file as it is serialized to JSON. ProjectModel converts from and to it.</summary>
 public class AtlabFileDto
 {
     public const int CurrentFormatVersion = 2;

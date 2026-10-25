@@ -5,6 +5,7 @@ using Avalonia.Data.Converters;
 
 namespace ATLab.Converters;
 
+/// <summary>Shows the pass or fail icon for a step result.</summary>
 public class PassFailConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

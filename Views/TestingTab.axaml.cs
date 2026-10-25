@@ -3,6 +3,7 @@ using Avalonia.Input;
 
 namespace ATLab.Views;
 
+/// <summary>Testing tab view.</summary>
 public partial class TestingTab : UserControl
 {
     public TestingTab()

@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace ATLab.Helpers;
 
+/// <summary>Parses and formats values with SI prefixes, e.g. "4k7" or "500ms", relative to a step's unit.</summary>
 public static class UnitParser
 {
     public static bool TryParse(string? input, out double result, string? unit = null)

@@ -5,6 +5,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>
+/// Settings stored in the project: tolerance, serial number handling, result export, control module and log level.
+/// </summary>
 public partial class ProjectSettings : ObservableObject
 {
     public event Action? SettingsChanged;

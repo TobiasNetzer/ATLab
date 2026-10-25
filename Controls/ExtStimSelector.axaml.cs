@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace ATLab.Controls;
 
+/// <summary>Grid of external stimulus relay toggles.</summary>
 public partial class ExtStimSelector : UserControl
 {
     public static readonly StyledProperty<int> GridColumnsProperty =

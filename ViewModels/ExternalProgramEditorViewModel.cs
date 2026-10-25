@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Step editor for the External Program source.</summary>
 public partial class ExternalProgramEditorViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;

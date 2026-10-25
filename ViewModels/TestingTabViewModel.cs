@@ -15,6 +15,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Testing tab: module and step lists, editing commands, test start in all variants (full run, from step, single
+/// step, module, repeat), debug mode and the run statistics.
+/// </summary>
 public partial class TestingTabViewModel : ViewModelBase
 {
     private readonly IHardwareInfo _hardwareInfo;

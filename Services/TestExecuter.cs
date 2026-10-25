@@ -12,6 +12,10 @@ using ATLab.ViewModels;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Runs test sequences. For each step it resolves limits and delay, lets the runner acquire the value, evaluates it
+/// and follows the pass/fail action. Relays, devices and the boundary scan chain are released when a run ends.
+/// </summary>
 public class TestExecutor : ITestExecutor
 {
     private readonly ITestHardware _testHardware;
@@ -89,6 +93,10 @@ public class TestExecutor : ITestExecutor
         }
     }
     
+    /// <summary>
+    /// Runs the steps from the start index: clears the relays, executes the steps and releases all hardware
+    /// afterwards, also when the run is canceled or fails.
+    /// </summary>
     public async Task StartTestAsync(IReadOnlyList<TestStepViewModel> steps, int startIndex, List<CustomVariable> runtimeVariables)
     {
         if (steps.Count == 0)
@@ -253,6 +261,10 @@ public class TestExecutor : ITestExecutor
     
     public void SetDebugMode(bool state) => _isDebugMode = state;
     
+    /// <summary>
+    /// Main loop of a run. Handles debug stepping, the comment dialog, value resolution, evaluation and the jump to
+    /// the next step.
+    /// </summary>
     private async Task ExecuteAsync(
         IReadOnlyList<TestStepViewModel> steps,
         int startIndex,
@@ -484,6 +496,9 @@ public class TestExecutor : ITestExecutor
         return -1;
     }
     
+    /// <summary>
+    /// Applies the pass or fail action of a step and returns the index of the next step, or null to end the run.
+    /// </summary>
     private async Task<int?> EvaluateNextStepIndex(
         IReadOnlyList<TestStepViewModel> steps,
         int currentIndex,

@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
+/// <summary>A module in the module list with view models of its steps and the result of its last run.</summary>
 public partial class TestModuleViewModel : ViewModelBase
 {
     private readonly IHardwareInfo _hardwareInfo;

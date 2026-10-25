@@ -5,6 +5,7 @@ using ATLab.ViewModels;
 
 namespace ATLab.Interfaces;
 
+/// <summary>Creates the PDF test report.</summary>
 public interface IPdfExportService
 {
     Task ExportWithDialogAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo);

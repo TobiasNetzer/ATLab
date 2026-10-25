@@ -5,6 +5,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
+/// <summary>Opens attachments through the shell of the operating system.</summary>
 public class AttachmentLauncherService : IAttachmentLauncherService
 {
     public Task OpenAttachmentAsync(string path)

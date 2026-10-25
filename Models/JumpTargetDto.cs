@@ -1,5 +1,6 @@
 ﻿namespace ATLab.Models;
 
+/// <summary>Entry of the jump target list of the pass/fail actions.</summary>
 public class JumpTargetDto
 {
     // Entry at the top of the jump target list to clear the target

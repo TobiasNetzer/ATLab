@@ -5,6 +5,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
+/// <summary>Takes received data as one message once nothing arrived for the configured time.</summary>
 public class TimeoutMessageFramer : IMessageFramer, IDisposable
 {
     private readonly Timer _timer;

@@ -9,6 +9,10 @@ using ATLab.Records;
 
 namespace ATLab.CTIA;
 
+/// <summary>
+/// The compact Test Interface Adapter (cTIA) as ITestHardware: relays, interfaces and diagnostics via the cTIA
+/// protocol.
+/// </summary>
 public class CtiaHardware : ITestHardware
 {
     private readonly ICtiaCommunication _communication;

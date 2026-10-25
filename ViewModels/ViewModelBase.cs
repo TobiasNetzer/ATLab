@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Base of all view models. Provides a title that follows the selected language.</summary>
 public partial class ViewModelBase : ObservableObject
 {
     [ObservableProperty]

@@ -7,6 +7,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Reads files for the File evaluation source.</summary>
 public class FileContentReader : IFileContentReader
 {
     public async Task<OperationResult<byte[]>> ReadAsync(string path, CancellationToken token = default)

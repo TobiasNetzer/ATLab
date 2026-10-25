@@ -2,6 +2,7 @@
 
 namespace ATLab.Enums;
 
+/// <summary>Severity of a log message, also the minimum level for toasts and the log file.</summary>
 public enum LogLevel
 {
     [Description("Info")]

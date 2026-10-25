@@ -8,6 +8,7 @@ using ShadUI;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Content of a dialog shown by the message box service: confirmation, result or text input.</summary>
 public partial class MessageBoxViewModel : ViewModelBase, IDisposable
 {
     private readonly ControlModuleService _controlModuleService;

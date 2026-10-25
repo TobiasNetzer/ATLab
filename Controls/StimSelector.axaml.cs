@@ -4,6 +4,7 @@ using Avalonia.Controls;
 
 namespace ATLab.Controls;
 
+/// <summary>Grid of stimulus relay toggles.</summary>
 public partial class StimSelector : UserControl
 {
     public static readonly StyledProperty<int> GridColumnsProperty =

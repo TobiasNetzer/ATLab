@@ -4,6 +4,7 @@ using ATLab.Interfaces;
 
 namespace ATLab.Services;
 
+/// <summary>Text and byte queries on top of a transport, used by the command executor.</summary>
 public class TransportService
 {
     private readonly ICommunication _transport;

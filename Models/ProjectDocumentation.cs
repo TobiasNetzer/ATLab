@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Notes, images and attachments of the project from the Documentation tab.</summary>
 public partial class ProjectDocumentation : ObservableObject
 {
     public event Action? DocumentationChanged;

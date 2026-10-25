@@ -6,6 +6,10 @@ using Avalonia.Threading;
 
 namespace ATLab.Helpers;
 
+/// <summary>
+/// Attached properties for keyboard focus: move to the next field on Enter, and focus a control when it becomes
+/// visible.
+/// </summary>
 public static class FocusExtensions
 {
     public static readonly AttachedProperty<bool> MoveFocusOnEnterProperty =

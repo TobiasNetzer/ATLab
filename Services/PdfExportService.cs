@@ -14,6 +14,9 @@ using QuestPDF.Fluent;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Creates the PDF test report, including the identification of the devices marked for the report.
+/// </summary>
 public class PdfExportService : IPdfExportService
 {
     private readonly IFileDialogService _fileDialogService;

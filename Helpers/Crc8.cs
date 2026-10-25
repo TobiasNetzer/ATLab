@@ -1,3 +1,4 @@
+/// <summary>CRC-8 (polynomial 0x07) used by the cTIA command frames.</summary>
 public static class Crc8
 {
     private const byte Polynomial = 0x07;

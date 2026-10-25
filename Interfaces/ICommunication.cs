@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ATLab.Interfaces;
 
+/// <summary>
+/// Byte-level transport to an instrument or the test hardware: serial port, TCP socket or VISA session.
+/// </summary>
 public interface ICommunication : IAsyncDisposable
 {
     bool IsConnected { get; }

@@ -7,6 +7,9 @@ using ShadUI;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Shows the serial number dialog before a run and returns the entered number, or null if canceled.
+/// </summary>
 public partial class SerialNumberDialogService : ObservableObject, ISerialNumberDialogService
 {
     private readonly SerialNumberEntryDialogViewModel _serialNumberEntryDialogViewModel;

@@ -12,6 +12,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>
+/// One test step with limits, delay, relay states, evaluation source settings and pass/fail actions. Changes of
+/// nested settings are reported as property changes of the step.
+/// </summary>
 public partial class TestStep : ObservableObject
 {
     public TestStep()

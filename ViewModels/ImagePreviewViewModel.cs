@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 
 namespace ATLab.ViewModels;
 
+/// <summary>A documentation image with a thumbnail that is loaded on first use.</summary>
 public class ImagePreviewViewModel : IDisposable
 {
     private Bitmap? _thumbnail;

@@ -8,6 +8,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Raw TCP socket transport for LAN instruments (e.g. SCPI port 5025).</summary>
 public class TcpService : ICommunication
 {
     private TcpClient? _client;

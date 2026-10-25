@@ -10,6 +10,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Runs External Program steps: either waits for the exit code or captures the output and evaluates it like a
+/// device response.
+/// </summary>
 public sealed class ExternalProgramRunner : IExternalProgramRunner
 {
     public async Task<OperationResult<double>> RunAsync(

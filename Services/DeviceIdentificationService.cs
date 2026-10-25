@@ -6,6 +6,7 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>Sends a device's identification query for the test equipment section of the report.</summary>
 public class DeviceIdentificationService : IDeviceIdentificationService
 {
     private readonly ICommandExecutor _executor;

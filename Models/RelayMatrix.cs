@@ -2,6 +2,9 @@
 
 namespace ATLab.Models;
 
+/// <summary>
+/// Matrix channels connected to the measurement bus (high and low side) and whether the external probe is used.
+/// </summary>
 public partial class RelayMatrix : ObservableObject
 {
     [ObservableProperty]

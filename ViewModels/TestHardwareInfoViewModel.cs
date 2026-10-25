@@ -2,6 +2,9 @@ using ATLab.Interfaces;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Information reported by the connected adapter: firmware, serial number, channel counts and interfaces.
+/// </summary>
 public class TestHardwareInfoViewModel : ViewModelBase
 {
     public string FirmwareVersion { get; }

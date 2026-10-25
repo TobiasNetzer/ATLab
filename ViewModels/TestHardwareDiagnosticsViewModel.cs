@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>Self test of the adapter and the list of defective relays.</summary>
 public partial class TestHardwareDiagnosticsViewModel : ViewModelBase
 {
     private readonly ITestHardware _testHardware;

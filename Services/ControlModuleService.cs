@@ -9,6 +9,10 @@ using HidSharp;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// USB HID control module with two illuminated buttons: starts and stops tests, answers dialogs and shows the test
+/// state on its LEDs.
+/// </summary>
 public sealed class ControlModuleService : IDisposable
 {
     private readonly ILoggingService _loggingService;

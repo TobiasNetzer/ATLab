@@ -6,6 +6,7 @@ using Avalonia.Media;
 
 namespace ATLab.Controls;
 
+/// <summary>Bar showing the measured value relative to the lower and upper limit.</summary>
 public partial class MeasurementPanel : UserControl
 {
     public static readonly StyledProperty<double> LowerLimitProperty =

@@ -6,6 +6,10 @@ using ATLab.ViewModels;
 
 namespace ATLab.Interfaces;
 
+/// <summary>
+/// Runs test sequences: full runs, repeated runs and single steps, including relay handling, pass/fail actions and
+/// debug stepping.
+/// </summary>
 public interface ITestExecutor
 {
     event Action TestStarted;

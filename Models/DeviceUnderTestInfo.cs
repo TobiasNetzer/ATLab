@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ATLab.Models;
 
+/// <summary>Identification of the device under test, printed in the test report.</summary>
 public partial class DeviceUnderTestInfo : ObservableObject
 {
     public event Action? DeviceUnderTestInfoChanged;

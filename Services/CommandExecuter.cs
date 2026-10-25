@@ -11,6 +11,10 @@ using ATLab.Models;
 
 namespace ATLab.Services;
 
+/// <summary>
+/// Sends commands to devices from the Device Manager. The connection to the last device is kept open between steps
+/// and only recreated when the device or its settings change.
+/// </summary>
 public class CommandExecutor : ICommandExecutor
 {
     private readonly ICommunicationFactory _communicationFactory;

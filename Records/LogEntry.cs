@@ -3,6 +3,7 @@ using ATLab.Enums;
 
 namespace ATLab.Records;
 
+/// <summary>One message of the event log.</summary>
 public sealed record LogEntry(
     DateTime Timestamp,
     LogLevel Level,

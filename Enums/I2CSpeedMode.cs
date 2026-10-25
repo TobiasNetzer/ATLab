@@ -2,6 +2,7 @@ using System.ComponentModel;
 
 namespace ATLab.Enums;
 
+/// <summary>Clock rate of the I²C interface of the test hardware.</summary>
 public enum I2CSpeedMode
 {
     I2C_SPEED_UNDEFINED = -1,

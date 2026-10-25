@@ -10,6 +10,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
+/// <summary>
+/// Project settings editor: result export, serial number validation, tolerance, decimal places and log level.
+/// </summary>
 public partial class ProjectSettingsViewModel : ViewModelBase
 {
     private readonly IFileDialogService _fileDialogService;

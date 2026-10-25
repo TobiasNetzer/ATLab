@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ATLab.Models;
 
+/// <summary>A script as stored in the script folder: variables and commands sent to a device.</summary>
 public class CustomScript
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
