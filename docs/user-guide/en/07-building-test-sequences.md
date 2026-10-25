@@ -26,7 +26,7 @@ To move steps to another module, cut them, select the target module and paste th
 | **No.** | Step number. The coloured stripe on the left shows the step's *Accent Color*. |
 | **Name** | Step name. |
 | **Lower Limit / Nominal Value / Upper Limit** | Limits, formatted with the step's unit and SI prefix (e.g. `10,8V`, `1,3mA`). |
-| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout` or `Overflow`. |
+| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout` or `Overflow`. For some steps, hovering over the value shows details, e.g. the pins that did not match or an I²C NACK. |
 | **Deviation** | Deviation from the nominal value in percent. |
 | **Result** | ✔ or ✘ after the step has been executed. |
 

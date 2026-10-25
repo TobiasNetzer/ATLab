@@ -216,6 +216,8 @@ public class TestExecutor : ITestExecutor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            LogResultDetails(step);
             
         }
         catch (OperationCanceledException)
@@ -259,9 +261,12 @@ public class TestExecutor : ITestExecutor
     {
         for (var i = startIndex; i < steps.Count; i++)
         {
+            TestStepViewModel? currentStep = null;
+
             try
             {
                 var step = steps[i];
+                currentStep = step;
                 
                 OnStepStarted(i, step);
 
@@ -353,12 +358,14 @@ public class TestExecutor : ITestExecutor
                     {
                         _breakRepeatRequested = false;
                         nextIndex = i + 1;
+                        LogResultDetails(step);
                         OnStepCompleted(i, step);
                     }
                 }
                 else
                 {
                     _breakRepeatRequested = false;
+                    LogResultDetails(step);
                     OnStepCompleted(i, step);
                 }
 
@@ -377,6 +384,14 @@ public class TestExecutor : ITestExecutor
                 {
                     await Task.Delay(MinRepeatDelayMs, token); // minimum delay between repeats to prevent UI lockup
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Stopped while the step repeated: its last result is final now
+                if (currentStep != null)
+                    LogResultDetails(currentStep);
+
+                throw;
             }
             finally
             {
@@ -427,6 +442,15 @@ public class TestExecutor : ITestExecutor
         variable?.Value = step.ResultNoFormatting;
     }
     
+    private void LogResultDetails(TestStepViewModel step)
+    {
+        if (step.IsPassed || !step.HasResultDetails)
+            return;
+
+        _loggingService.Warning(
+            $"Module '{step.Module.Name}', step {step.TestStep.Number}: {string.Join("; ", step.ResultDetailLines)}");
+    }
+
     private void TestStepExecutionTimedOut(TestStepViewModel step, List<CustomVariable> runtimeVariables)
     {
         step.Result = "Timeout";

@@ -28,8 +28,6 @@ public class TestStepRunner : ITestStepRunner
     private readonly IStatusService _statusService;
     private readonly IBoundaryScanTestSession _boundaryScanSession;
 
-    private const int MaxResultDetailLines = 20;
-
     public TestStepRunner(
         IHardwareAccessor hardwareAccessor,
         IScriptRunner scriptRunner,
@@ -56,7 +54,7 @@ public class TestStepRunner : ITestStepRunner
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
     {
-        step.ResultDetails = null;
+        step.ResultDetailLines = [];
 
         try
         {
@@ -123,7 +121,12 @@ public class TestStepRunner : ITestStepRunner
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);
 
                 case TestEvaluationSource.INTERFACE:
-                    return await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask);
+                {
+                    var details = new List<string>();
+                    var interfaceResult = await _interfaceCommandExecuter.ExecuteAsync(step.TestStep.InterfaceConfig, runtimeVariables, mask, details);
+                    step.ResultDetailLines = details;
+                    return interfaceResult;
+                }
 
                 case TestEvaluationSource.EXTERNAL_PROGRAM:
                 {
@@ -200,7 +203,7 @@ public class TestStepRunner : ITestStepRunner
 
                     // Steps that only drive pins have nothing to evaluate, checks report the number of mismatches
                     var outcome = boundaryScanResult.Value!;
-                    step.ResultDetails = FormatResultDetails(outcome.Messages);
+                    step.ResultDetailLines = outcome.Messages;
                     return OperationResult<double>.Success(outcome.HasChecks ? outcome.Mismatches : double.NegativeInfinity);
                 }
 
@@ -216,7 +219,7 @@ public class TestStepRunner : ITestStepRunner
                         return OperationResult<double>.Failure(busResult.ErrorMessage);
 
                     var transaction = busResult.Value!;
-                    step.ResultDetails = FormatResultDetails(transaction.Messages);
+                    step.ResultDetailLines = transaction.Messages;
 
                     // Same results as the Interface source: 0 for a NACK, 1 for a completed write, otherwise the response
                     if (!transaction.Acknowledged)
@@ -253,19 +256,5 @@ public class TestStepRunner : ITestStepRunner
         {
             return OperationResult<double>.Failure(ex.Message);
         }
-    }
-
-    // A failing bus can report dozens of pins, the tooltip shows the first ones and the rest is in the event log
-    private static string? FormatResultDetails(IReadOnlyList<string> lines)
-    {
-        if (lines.Count == 0)
-            return null;
-
-        var shown = lines.Take(MaxResultDetailLines).ToList();
-
-        if (lines.Count > MaxResultDetailLines)
-            shown.Add(string.Format(LocalizationService.Instance["Text_MoreResultDetails"], lines.Count - MaxResultDetailLines));
-
-        return string.Join(Environment.NewLine, shown);
     }
 }

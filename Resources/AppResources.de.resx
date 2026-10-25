@@ -1090,8 +1090,8 @@
   <data name="Text_NoChainDevice" xml:space="preserve">
     <value>Probe verbinden und die Kette scannen oder einen Baustein manuell hinzufügen.</value>
   </data>
-  <data name="Label_Entity" xml:space="preserve">
-    <value>Entity</value>
+  <data name="Label_ChipType" xml:space="preserve">
+    <value>Bausteintyp</value>
   </data>
   <data name="Label_BoundaryLength" xml:space="preserve">
     <value>Boundary-Register</value>
@@ -1219,7 +1219,7 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
     <value>Expect 1</value>
   </data>
   <data name="Text_MoreResultDetails" xml:space="preserve">
-    <value>… und {0} weitere, siehe Ereignisprotokoll</value>
+    <value>… und {0} weitere</value>
   </data>
   <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
     <value>Boundary-Scan-Bus</value>
@@ -1274,5 +1274,11 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
   </data>
   <data name="Watermark_SelectBus" xml:space="preserve">
     <value>Busse werden im Boundary-Scan-Tab eingerichtet</value>
+  </data>
+  <data name="Label_VerifyDrivenPins" xml:space="preserve">
+    <value>Getriebene Pins prüfen</value>
+  </data>
+  <data name="ToolTip_VerifyDrivenPins" xml:space="preserve">
+    <value>Liest jeden auf 0 oder 1 getriebenen Pin zurück und zählt einen abweichenden Pegel als Abweichung. Findet Kurzschlüsse und defekte Treiber, aber keine Unterbrechungen weiter im Netz. Pins ohne Eingangszelle und Drive Z werden nicht geprüft.</value>
   </data>
 </root>

@@ -1090,8 +1090,8 @@
   <data name="Text_NoChainDevice" xml:space="preserve">
     <value>Connect a probe and scan the chain, or add a device manually.</value>
   </data>
-  <data name="Label_Entity" xml:space="preserve">
-    <value>Entity</value>
+  <data name="Label_ChipType" xml:space="preserve">
+    <value>Chip Type</value>
   </data>
   <data name="Label_BoundaryLength" xml:space="preserve">
     <value>Boundary Register</value>
@@ -1219,7 +1219,7 @@ Switching this pin to Z disables those outputs as well.</value>
     <value>Expect 1</value>
   </data>
   <data name="Text_MoreResultDetails" xml:space="preserve">
-    <value>… and {0} more, see the event log</value>
+    <value>… and {0} more</value>
   </data>
   <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
     <value>Boundary Scan Bus</value>
@@ -1274,5 +1274,11 @@ Switching this pin to Z disables those outputs as well.</value>
   </data>
   <data name="Watermark_SelectBus" xml:space="preserve">
     <value>Buses are set up in the Boundary Scan tab</value>
+  </data>
+  <data name="Label_VerifyDrivenPins" xml:space="preserve">
+    <value>Verify driven pins</value>
+  </data>
+  <data name="ToolTip_VerifyDrivenPins" xml:space="preserve">
+    <value>Reads back every pin driven to 0 or 1 and counts a different level as mismatch. Finds shorts and broken drivers, but not open connections further along the net. Pins without input cell and Drive Z are not checked.</value>
   </data>
 </root>

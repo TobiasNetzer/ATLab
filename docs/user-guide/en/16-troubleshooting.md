@@ -2,7 +2,7 @@
 
 ## The event log
 
-Most problems are explained by a message in the **event log**. Open it with the info button at the left end of the status bar. Messages are listed newest first and are also appended to the log file:
+Most problems are explained by a message in the **event log**. Open it with the info button at the left end of the status bar. Messages are listed newest first. Messages that reach the project's **Log Level** (see [Configuration](05-configuration.md#general-settings)) are also appended to the log file:
 
 - Windows: `%LOCALAPPDATA%\ATLab\events.log`
 - Linux: `~/.local/share/ATLab/events.log`

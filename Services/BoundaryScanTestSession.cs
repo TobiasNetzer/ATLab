@@ -17,7 +17,6 @@ namespace ATLab.Services;
 public class BoundaryScanTestSession : IBoundaryScanTestSession
 {
     private readonly IBoundaryScanService _boundaryScanService;
-    private readonly ILoggingService _loggingService;
     private readonly ProjectModel _projectModel;
 
     // Steps and the end of the session must not interleave, a cancel waits for the running scan
@@ -43,11 +42,9 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 
     public BoundaryScanTestSession(
         IBoundaryScanService boundaryScanService,
-        ILoggingService loggingService,
         ProjectModel projectModel)
     {
         _boundaryScanService = boundaryScanService;
-        _loggingService = loggingService;
         _projectModel = projectModel;
 
         // Loading or creating a project replaces the chain, the session belongs to the old one
@@ -229,7 +226,7 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
         List<SessionDevice> devices, BoundaryScanStepConfig step, CancellationToken token)
     {
         var drives = new List<(SessionDevice Device, BsdlCell Cell, BoundaryScanPinAction Action)>();
-        var expects = new List<(SessionDevice Device, BsdlCell Cell, BoundaryScanPinAction Action)>();
+        var expects = new List<(SessionDevice Device, BsdlCell Cell, string Port, bool Expected, bool IsVerify)>();
 
         foreach (var action in step.PinActions)
         {
@@ -254,7 +251,21 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
                 if (cells.Input == null)
                     return OperationResult<BoundaryScanStepOutcome>.Failure($"{PinName(device, action.Port)} cannot be read.");
 
-                expects.Add((device, cells.Input, action));
+                expects.Add((device, cells.Input, action.Port, action.Action == BoundaryScanPinActionType.EXPECT_HIGH, false));
+            }
+        }
+
+        // Read back driven pins, an explicit expect action for the same pin takes precedence
+        if (step.IsVerifyDrivenPins)
+        {
+            foreach (var (device, _, action) in drives.Where(d => d.Action.Action != BoundaryScanPinActionType.DRIVE_Z))
+            {
+                var input = device.Bsdl!.GetPortCells(action.Port).Input;
+
+                if (input == null || expects.Any(e => e.Device == device && string.Equals(e.Port, action.Port, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                expects.Add((device, input, action.Port, action.Action == BoundaryScanPinActionType.DRIVE_HIGH, true));
             }
         }
 
@@ -300,18 +311,16 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 
         var messages = new List<string>();
 
-        foreach (var (device, cell, action) in expects)
+        foreach (var (device, cell, port, expected, isVerify) in expects)
         {
-            var expected = action.Action == BoundaryScanPinActionType.EXPECT_HIGH;
             var actual = captured.Value![devices.IndexOf(device)]![cell.Number];
 
             if (actual != expected)
-                messages.Add($"{PinName(device, action.Port)}: expected {(expected ? 1 : 0)}, read {(actual ? 1 : 0)}");
+                messages.Add($"{PinName(device, port)}: {(isVerify ? "driven" : "expected")} {(expected ? 1 : 0)}, read {(actual ? 1 : 0)}");
         }
 
-        foreach (var message in messages)
-            _loggingService.Warning($"Boundary scan: {message}");
-
+        // Mismatches are measured results like an out-of-limit reading, they are shown in the step's result
+        // tooltip but not logged, so a step that repeats until a condition is met does not raise a toast each time
         return OperationResult<BoundaryScanStepOutcome>.Success(new BoundaryScanStepOutcome(true, messages.Count, messages));
     }
 
@@ -382,12 +391,8 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
             })
             .ToList();
 
-        var result = transaction.Decode(samples);
-
-        foreach (var message in result.Messages)
-            _loggingService.Warning($"Boundary scan bus {bus.Name}: {message}");
-
-        return OperationResult<BusTransactionResult>.Success(result);
+        // A NACK is a result, not an error: it is explained in the result tooltip and not logged
+        return OperationResult<BusTransactionResult>.Success(transaction.Decode(samples));
     }
 
     /// <summary>

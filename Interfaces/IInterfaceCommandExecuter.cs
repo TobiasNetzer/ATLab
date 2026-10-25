@@ -9,5 +9,6 @@ public interface IInterfaceCommandExecuter
     Task<OperationResult<double>> ExecuteAsync(
         TestInterfaceConfig config,
         List<CustomVariable> runtimeVariables,
-        ResponseMask? mask);
+        ResponseMask? mask,
+        ICollection<string> details);
 }

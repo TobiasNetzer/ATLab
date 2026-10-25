@@ -19,6 +19,13 @@ public partial class BoundaryScanStepConfig : ObservableObject
     [ObservableProperty]
     private int _settleTimeMs;
 
+    /// <summary>
+    /// Reads back every pin driven to 0 or 1 and counts a different level as mismatch, which finds shorts
+    /// and broken drivers. Pins without input cell are not checked.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isVerifyDrivenPins;
+
     [ObservableProperty]
     private ObservableCollection<BoundaryScanPinAction> _pinActions = new();
 
@@ -31,6 +38,7 @@ public partial class BoundaryScanStepConfig : ObservableObject
     {
         Mode = other.Mode;
         SettleTimeMs = other.SettleTimeMs;
+        IsVerifyDrivenPins = other.IsVerifyDrivenPins;
 
         foreach (var action in other.PinActions)
             PinActions.Add(new BoundaryScanPinAction(action));

@@ -169,6 +169,10 @@
                         </Button>
                     </Grid>
 
+                    <CheckBox Content="{helpers:Localize Label_VerifyDrivenPins}"
+                              ToolTip.Tip="{helpers:Localize ToolTip_VerifyDrivenPins}"
+                              IsChecked="{Binding TestStep.BoundaryScan.IsVerifyDrivenPins, FallbackValue=False}"/>
+
                     <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="5">
                         <Button Grid.Column="0"
                                 Background="{DynamicResource ButtonBackground}"

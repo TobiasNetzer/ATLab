@@ -73,7 +73,15 @@ public partial class LoggingService : ObservableObject, ILoggingService
         ShowToast(level, message, isSuccess);
 
         Events.Insert(0, entry);
+        
+        if (level >= _settings.ToastLogLevel)
+            WriteToFile(entry);
 
+        EventAdded?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void WriteToFile(LogEntry entry)
+    {
         lock (_lock)
         {
             try
@@ -91,8 +99,6 @@ public partial class LoggingService : ObservableObject, ILoggingService
                         $"Could not write to log file: {ex.Message}"));
             }
         }
-
-        EventAdded?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowToast(LogLevel level, string message, bool isSuccess)

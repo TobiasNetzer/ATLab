@@ -2,7 +2,7 @@
 
 ## Das Ereignisprotokoll
 
-Die meisten Probleme erklärt eine Meldung im **Ereignisprotokoll**. Öffnen Sie es mit der Info-Schaltfläche am linken Ende der Statusleiste. Die Meldungen sind nach Aktualität sortiert (neueste zuerst) und werden zusätzlich an die Protokolldatei angehängt:
+Die meisten Probleme erklärt eine Meldung im **Ereignisprotokoll**. Öffnen Sie es mit der Info-Schaltfläche am linken Ende der Statusleiste. Die Meldungen sind nach Aktualität sortiert (neueste zuerst). Meldungen, die den **Protokolliergrad** des Projekts erreichen (siehe [Konfiguration](05-configuration.md#allgemeine-einstellungen)), werden zusätzlich an die Protokolldatei angehängt:
 
 - Windows: `%LOCALAPPDATA%\ATLab\events.log`
 - Linux: `~/.local/share/ATLab/events.log`

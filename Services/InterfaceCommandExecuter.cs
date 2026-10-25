@@ -13,26 +13,24 @@ namespace ATLab.Services;
 public class InterfaceCommandExecuter : IInterfaceCommandExecuter
 {
     private readonly ITestHardware _testHardware;
-    private readonly ILoggingService  _loggingService;
 
-    public InterfaceCommandExecuter(IHardwareAccessor hardwareAccessor,
-        ILoggingService  loggingService)
+    public InterfaceCommandExecuter(IHardwareAccessor hardwareAccessor)
     {
         _testHardware = hardwareAccessor.Hardware;
-        _loggingService = loggingService;
     }
 
     public async Task<OperationResult<double>> ExecuteAsync(
         TestInterfaceConfig config,
         List<CustomVariable> runtimeVariables,
-        ResponseMask? mask)
+        ResponseMask? mask,
+        ICollection<string> details)
     {
         switch (config.InterfaceType)
         {
             case CommunicationInterfaceType.I2C:
-                return await ExecuteI2CAsync(config, runtimeVariables, mask);
+                return await ExecuteI2CAsync(config, runtimeVariables, mask, details);
             case CommunicationInterfaceType.UART:
-                return await ExecuteUartAsync(config, runtimeVariables, mask);
+                return await ExecuteUartAsync(config, runtimeVariables, mask, details);
             default:
                 return OperationResult<double>.Failure("Interface not available");
         }
@@ -41,7 +39,8 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
     private async Task<OperationResult<double>> ExecuteI2CAsync(
         TestInterfaceConfig config,
         List<CustomVariable> runtimeVariables,
-        ResponseMask? mask)
+        ResponseMask? mask,
+        ICollection<string> details)
     {
         if (!_testHardware.HardwareInfo.InterfaceAvailableI2C)
             return OperationResult<double>.Failure("Interface not available");
@@ -70,7 +69,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
             if (status.Value != null && !status.Value.Success)
             {
-                _loggingService.Warning("I²C write failed: NACK received.");
+                details.Add("I²C write failed: NACK received.");
             }
             
             result = Convert.ToDouble(status.Value != null && status.Value.Success);
@@ -91,7 +90,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
         
             if (status.Value != null && !status.Value.Success)
             {
-                _loggingService.Warning("I²C read failed: NACK received.");
+                details.Add("I²C read failed: NACK received.");
                 return OperationResult<double>.Success(0);
             }
 
@@ -117,7 +116,8 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
     private async Task<OperationResult<double>> ExecuteUartAsync(
         TestInterfaceConfig config,
         List<CustomVariable> runtimeVariables,
-        ResponseMask? mask)
+        ResponseMask? mask,
+        ICollection<string> details)
     {
         if (!_testHardware.HardwareInfo.InterfaceAvailableUART)
             return OperationResult<double>.Failure("Interface not available");
@@ -138,7 +138,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
         if (status.Value != null && status.Value.Length != config.BytesToRead)
         {
-            _loggingService.Warning("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
+            details.Add("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
         }
             
         if (status.IsTimeout)

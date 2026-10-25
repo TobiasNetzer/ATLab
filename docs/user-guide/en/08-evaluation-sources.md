@@ -82,10 +82,11 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 - With a command and **Read Bytes** = 0: the bytes are written; the result is `1` if the slave acknowledged, `0` on NACK.
 - With **Read Bytes** > 0: after the optional write, the given number of bytes is read. The received bytes go through response processing; a NACK on read gives `0`.
 - Without response processing, the received bytes are interpreted as ASCII text. For binary registers, enable response processing with e.g. `{byte:2}`.
+- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log once, when the step finally fails. A step that repeats until the DUT answers therefore stays quiet while it repeats.
 
 **UART behaviour**
 
-- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, an error is logged.
+- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the result tooltip and logs it once if it finally fails.
 - With **Read Bytes** = 0, the measured value is `0`.
 
 The interface must be available on the connected adapter (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
@@ -178,6 +179,7 @@ Drives and checks pins of boundary-scan chips. The chain, the BSDL files and the
 | Add row | Choose device, pin and action, then click **+**. A pin is driven and checked at most once per step; adding it again replaces the existing action. JTAG and power pins cannot be selected. |
 | **−** button | Removes the selected action. |
 | Import button | **Take over from the Boundary Scan tab**: every output you changed from its safe value on the tab becomes a drive action, every pin with a user label and a read level becomes an expect action. |
+| **Verify driven pins** | Also reads back every pin driven to `0` or `1` and counts a different level as mismatch, see below. |
 | **Settle time (ms)** | Wait time between driving the outputs and reading the inputs. |
 
 | Action | Effect |
@@ -189,10 +191,14 @@ Drives and checks pins of boundary-scan chips. The chain, the BSDL files and the
 **Execution**
 
 1. All drive actions are applied. Chips with driven pins are switched to EXTEST, chips that are only read to SAMPLE.
-2. After the settle time, all expect actions are read.
+2. After the settle time, all expect actions are read — and with **Verify driven pins** also the driven pins.
 3. The measured value is the **number of mismatches**. Set the limits to `0 … 0`: the step passes when every pin has the expected level.
 
-A step with drive actions only produces no value and always passes, like the source *None*. Pins that a step does not list keep their state from the previous steps. For a failed step, hovering the measured value or the result icon shows which pins did not match, e.g. `U3 IO(5) (FAULT_N): expected 0, read 1`; the same lines are written to the event log.
+A step with drive actions only produces no value and always passes, like the source *None* — unless **Verify driven pins** is enabled. Pins that a step does not list keep their state from the previous steps.
+
+For a failed step, hovering the measured value or the result icon shows which pins did not match (up to 50 lines), e.g. `U3 IO(5) (FAULT_N): expected 0, read 1`. When the step is finished and has failed, the mismatches are written to the event log once, e.g. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. A step that repeats until a condition is met — for example until the operator presses a button — logs nothing while it repeats, and nothing at all if it passes in the end.
+
+**Verify driven pins** reads back each pin with *Drive 0* or *Drive 1* through its own input cell. A different level is reported as e.g. `U1 PB3 (LED_RED): driven 1, read 0`. This finds shorts to GND, VCC or another driver and broken output drivers. It does not find an open connection further along the net, because the driving pin still reads its own level — check the receiving pin with an expect action for that. Pins without input cell and *Drive Z* are not checked; an expect action for the same pin takes precedence over the read-back.
 
 The probe is connected and the chain is checked at the first boundary scan step of the run. A chain that does not match the project, a device without BSDL file or a pin that cannot be driven or read is an execution error and stops the test.
 
@@ -229,7 +235,7 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 
 - With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `0` on an I²C NACK.
 - With **Read Bytes** > 0: the received bytes go through [response processing](10-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `0`.
-- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).*
+- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log once, when the step finally fails, so a step can repeat until a device answers without a warning on every repetition.
 
 Examples:
 

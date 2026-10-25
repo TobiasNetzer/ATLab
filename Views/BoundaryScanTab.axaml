@@ -412,7 +412,7 @@
 
                                 <WrapPanel Grid.Row="0" ItemSpacing="30" LineSpacing="5">
                                     <StackPanel>
-                                        <TextBlock Text="{helpers:Localize Label_Entity}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
+                                        <TextBlock Text="{helpers:Localize Label_ChipType}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
                                         <TextBlock Text="{Binding SelectedDevice.EntityName, FallbackValue=''}" FontWeight="SemiBold"/>
                                     </StackPanel>
                                     <StackPanel>

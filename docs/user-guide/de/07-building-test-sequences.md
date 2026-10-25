@@ -26,7 +26,7 @@ Um Schritte in ein anderes Modul zu verschieben, schneiden Sie sie aus, wählen 
 | **Nr.** | Schrittnummer. Der farbige Streifen links zeigt die *Akzentfarbe* des Schritts. |
 | **Name** | Name des Schritts. |
 | **Untergrenze / Sollwert / Obergrenze** | Grenzwerte, formatiert mit Einheit und SI-Präfix (z. B. `10,8V`, `1,3mA`). |
-| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout` oder `Overflow` zeigen. |
+| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout` oder `Overflow` zeigen. Bei manchen Schritten zeigt die Maus über dem Wert Details an, z. B. die abweichenden Pins oder ein I²C-NACK. |
 | **Abweichung** | Abweichung vom Sollwert in Prozent. |
 | **Ergebnis** | ✔ oder ✘, nachdem der Schritt ausgeführt wurde. |
 

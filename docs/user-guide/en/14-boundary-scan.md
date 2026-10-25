@@ -58,7 +58,7 @@ Probe settings are saved in the project. **Disconnect** returns all chips to nor
 
 The chain list shows the chips in chain order, from **TDI** (top) to **TDO** (bottom). Each entry shows:
 
-- the position in the chain and the name (the **Device Name**, or the BSDL entity if no name is set),
+- the position in the chain and the name (the **Device Name**, or the chip type if no name is set),
 - the IDCODE read from the chip, green if it matches the BSDL file and red if it does not,
 - the instruction currently loaded (`BYPASS`, `SAMPLE`, `EXTEST`) while connected,
 - *No BSDL* if no BSDL file is assigned yet.
@@ -83,7 +83,7 @@ Chips without a BSDL file can stay in the chain; they are always kept in BYPASS.
 
 ## Pins view
 
-The **Pins** view shows the selected chip: **Entity**, **IDCODE**, **Instruction Length** and the length of the **Boundary Register**.
+The **Pins** view shows the selected chip: **Chip Type** (the entity name from the BSDL file, e.g. `STM32F407_LQFP100`), **IDCODE**, **Instruction Length** and the length of the **Boundary Register**.
 
 ### Instructions
 

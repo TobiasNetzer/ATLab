@@ -82,10 +82,11 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 - Mit Befehl und **Bytes lesen** = 0: Die Bytes werden geschrieben; das Ergebnis ist `1`, wenn der Slave quittiert hat, `0` bei NACK.
 - Mit **Bytes lesen** > 0: Nach dem optionalen Schreiben wird die angegebene Anzahl Bytes gelesen. Die empfangenen Bytes durchlaufen die Antwortverarbeitung; ein NACK beim Lesen ergibt `0`.
 - Ohne Antwortverarbeitung werden die empfangenen Bytes als ASCII-Text interpretiert. Für binäre Register aktivieren Sie die Antwortverarbeitung, z. B. mit `{byte:2}`.
+- Ein NACK wird im Ergebnis-Tooltip angezeigt (*I²C write failed: NACK received.*) und einmal ins Ereignisprotokoll geschrieben, wenn der Schritt endgültig fehlschlägt. Ein Schritt, der wiederholt wird, bis der Prüfling antwortet, bleibt daher während der Wiederholungen still.
 
 **Verhalten bei UART**
 
-- Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, wird ein Fehler protokolliert.
+- Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, zeigt der Schritt das im Ergebnis-Tooltip und protokolliert es einmal, wenn er endgültig fehlschlägt.
 - Bei **Bytes lesen** = 0 ist der Messwert `0`.
 
 Die Schnittstelle muss am angeschlossenen Adapter vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
@@ -178,6 +179,7 @@ Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bez
 | Zeile zum Hinzufügen | Baustein, Pin und Aktion wählen, dann **+** klicken. Ein Pin wird pro Schritt höchstens einmal getrieben und einmal geprüft; erneutes Hinzufügen ersetzt die vorhandene Aktion. JTAG- und Versorgungspins sind nicht auswählbar. |
 | Schaltfläche **−** | Entfernt die ausgewählte Aktion. |
 | Import-Schaltfläche | **Aus dem Boundary-Scan-Tab übernehmen**: Jeder Ausgang, den Sie auf der Registerkarte gegenüber seinem sicheren Wert geändert haben, wird zur Drive-Aktion, jeder Pin mit Bezeichnung und gelesenem Pegel zur Expect-Aktion. |
+| **Getriebene Pins prüfen** | Liest zusätzlich jeden auf `0` oder `1` getriebenen Pin zurück und zählt einen abweichenden Pegel als Abweichung, siehe unten. |
 | **Einschwingzeit (ms)** | Wartezeit zwischen dem Treiben der Ausgänge und dem Lesen der Eingänge. |
 
 | Aktion | Wirkung |
@@ -189,10 +191,14 @@ Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bez
 **Ablauf**
 
 1. Alle Drive-Aktionen werden angewendet. Bausteine mit getriebenen Pins werden in EXTEST geschaltet, Bausteine, die nur gelesen werden, in SAMPLE.
-2. Nach der Einschwingzeit werden alle Expect-Aktionen gelesen.
+2. Nach der Einschwingzeit werden alle Expect-Aktionen gelesen – mit **Getriebene Pins prüfen** auch die getriebenen Pins.
 3. Der Messwert ist die **Anzahl der Abweichungen**. Setzen Sie die Grenzwerte auf `0 … 0`: Der Schritt besteht, wenn jeder Pin den erwarteten Pegel hat.
 
-Ein Schritt nur mit Drive-Aktionen liefert keinen Wert und besteht immer, wie die Quelle *Keine*. Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten. Bei einem fehlgeschlagenen Schritt zeigt der Tooltip über dem Messwert oder dem Ergebnissymbol, welche Pins abweichen, z. B. `U3 IO(5) (FAULT_N): expected 0, read 1`; dieselben Zeilen stehen im Ereignisprotokoll.
+Ein Schritt nur mit Drive-Aktionen liefert keinen Wert und besteht immer, wie die Quelle *Keine* – außer **Getriebene Pins prüfen** ist aktiviert. Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten.
+
+Bei einem fehlgeschlagenen Schritt zeigt der Tooltip über dem Messwert oder dem Ergebnissymbol, welche Pins abweichen (bis zu 50 Zeilen), z. B. `U3 IO(5) (FAULT_N): expected 0, read 1`. Ist der Schritt abgeschlossen und fehlgeschlagen, werden die Abweichungen einmal ins Ereignisprotokoll geschrieben, z. B. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. Ein Schritt, der wiederholt wird, bis eine Bedingung erfüllt ist – etwa bis der Bediener einen Taster drückt –, protokolliert während der Wiederholungen nichts und gar nichts, wenn er am Ende besteht.
+
+**Getriebene Pins prüfen** liest jeden Pin mit *Drive 0* oder *Drive 1* über seine eigene Eingangszelle zurück. Ein abweichender Pegel wird z. B. als `U1 PB3 (LED_RED): driven 1, read 0` gemeldet. Damit werden Kurzschlüsse nach GND, VCC oder zu einem anderen Treiber sowie defekte Ausgangstreiber gefunden. Eine Unterbrechung weiter im Netz wird nicht erkannt, weil der treibende Pin weiterhin seinen eigenen Pegel liest – dafür den empfangenden Pin mit einer Expect-Aktion prüfen. Pins ohne Eingangszelle und *Drive Z* werden nicht geprüft; eine Expect-Aktion für denselben Pin hat Vorrang vor dem Zurücklesen.
 
 Die Probe wird beim ersten Boundary-Scan-Schritt des Laufs verbunden und die Kette geprüft. Eine Kette, die nicht zum Projekt passt, ein Baustein ohne BSDL-Datei oder ein Pin, der nicht getrieben oder gelesen werden kann, ist ein Ausführungsfehler und beendet den Test.
 
@@ -229,7 +235,7 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 
 - Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `0` bei einem I²C-NACK.
 - Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](10-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
-- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).*
+- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird einmal ins Ereignisprotokoll geschrieben, wenn der Schritt endgültig fehlschlägt, sodass ein Schritt wiederholt werden kann, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen.
 
 Beispiele:
 

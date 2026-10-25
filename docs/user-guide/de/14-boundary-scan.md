@@ -58,7 +58,7 @@ Die Einstellungen der Probe werden im Projekt gespeichert. **Trennen** versetzt 
 
 Die Liste zeigt die Bausteine in der Reihenfolge der Kette, von **TDI** (oben) nach **TDO** (unten). Jeder Eintrag zeigt:
 
-- die Position in der Kette und den Namen (aus **Gerätename** oder, wenn kein Name vergeben ist, die BSDL-Entity),
+- die Position in der Kette und den Namen (aus **Gerätename** oder, wenn kein Name vergeben ist, den Bausteintyp),
 - den aus dem Baustein gelesenen IDCODE, grün wenn er zur BSDL-Datei passt, rot wenn nicht,
 - den aktuell geladenen Befehl (`BYPASS`, `SAMPLE`, `EXTEST`), solange eine Verbindung besteht,
 - *Keine BSDL*, solange noch keine BSDL-Datei zugeordnet ist.
@@ -83,7 +83,7 @@ Bausteine ohne BSDL-Datei können in der Kette bleiben; sie bleiben immer in BYP
 
 ## Ansicht Pins
 
-Die Ansicht **Pins** zeigt den ausgewählten Baustein: **Entity**, **IDCODE**, **Befehlslänge** und **Boundary-Register** (Anzahl der Zellen).
+Die Ansicht **Pins** zeigt den ausgewählten Baustein: **Bausteintyp** (der Entity-Name aus der BSDL-Datei, z. B. `STM32F407_LQFP100`), **IDCODE**, **Befehlslänge** und **Boundary-Register** (Anzahl der Zellen).
 
 ### Befehle
 

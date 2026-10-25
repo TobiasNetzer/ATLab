@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using ATLab.Services;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,9 +28,29 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isExecuted;
 
-    /// <summary>Explains the result, e.g. the failed pins of a boundary scan step. Null shows no tooltip.</summary>
+    private const int MaxResultDetailLines = 50;
+    
     [ObservableProperty]
-    private string? _resultDetails;
+    [NotifyPropertyChangedFor(nameof(HasResultDetails), nameof(ResultDetails))]
+    private IReadOnlyList<string> _resultDetailLines = [];
+
+    public bool HasResultDetails => ResultDetailLines.Count > 0;
+    
+    public string? ResultDetails
+    {
+        get
+        {
+            if (ResultDetailLines.Count == 0)
+                return null;
+
+            var shown = ResultDetailLines.Take(MaxResultDetailLines).ToList();
+
+            if (ResultDetailLines.Count > MaxResultDetailLines)
+                shown.Add(string.Format(LocalizationService.Instance["Text_MoreResultDetails"], ResultDetailLines.Count - MaxResultDetailLines));
+
+            return string.Join(Environment.NewLine, shown);
+        }
+    }
 
     // The module the step belongs to, used for navigation during execution and in reports
     public TestModule Module { get; }
@@ -57,6 +81,6 @@ public partial class TestStepViewModel : ViewModelBase
         Deviation = null;
         IsPassed  = false;
         IsExecuted = false;
-        ResultDetails = null;
+        ResultDetailLines = [];
     }
 }
