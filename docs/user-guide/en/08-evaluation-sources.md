@@ -82,11 +82,11 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 - With a command and **Read Bytes** = 0: the bytes are written; the result is `1` if the slave acknowledged, `0` on NACK.
 - With **Read Bytes** > 0: after the optional write, the given number of bytes is read. The received bytes go through response processing; a NACK on read gives `0`.
 - Without response processing, the received bytes are interpreted as ASCII text. For binary registers, enable response processing with e.g. `{byte:2}`.
-- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log once, when the step finally fails. A step that repeats until the DUT answers therefore stays quiet while it repeats.
+- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log as a warning once the step has finished, also when its limits let it pass. A step that repeats until the DUT answers stays quiet while it repeats and only warns if the last attempt was still not acknowledged.
 
 **UART behaviour**
 
-- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the result tooltip and logs it once if it finally fails.
+- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the result tooltip and logs it as a warning once the step has finished.
 - With **Read Bytes** = 0, the measured value is `0`.
 
 The interface must be available on the connected adapter (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
@@ -235,7 +235,7 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 
 - With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `0` on an I²C NACK.
 - With **Read Bytes** > 0: the received bytes go through [response processing](10-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `0`.
-- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log once, when the step finally fails, so a step can repeat until a device answers without a warning on every repetition.
+- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished, also when its limits let it pass. A step can repeat until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
 
 Examples:
 

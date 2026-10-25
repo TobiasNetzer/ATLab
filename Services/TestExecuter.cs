@@ -454,9 +454,11 @@ public class TestExecutor : ITestExecutor
         variable?.Value = step.ResultNoFormatting;
     }
     
+    // Called once the step has finished, also after repeats, so a step that repeats until a device answers only
+    // warns when its final attempt still has something to report (e.g. a NACK), even if its limits let it pass
     private void LogResultDetails(TestStepViewModel step)
     {
-        if (step.IsPassed || !step.HasResultDetails)
+        if (!step.HasResultDetails)
             return;
 
         _loggingService.Warning(

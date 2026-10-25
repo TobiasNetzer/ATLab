@@ -82,11 +82,11 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 - Mit Befehl und **Bytes lesen** = 0: Die Bytes werden geschrieben; das Ergebnis ist `1`, wenn der Slave quittiert hat, `0` bei NACK.
 - Mit **Bytes lesen** > 0: Nach dem optionalen Schreiben wird die angegebene Anzahl Bytes gelesen. Die empfangenen Bytes durchlaufen die Antwortverarbeitung; ein NACK beim Lesen ergibt `0`.
 - Ohne Antwortverarbeitung werden die empfangenen Bytes als ASCII-Text interpretiert. Für binäre Register aktivieren Sie die Antwortverarbeitung, z. B. mit `{byte:2}`.
-- Ein NACK wird im Ergebnis-Tooltip angezeigt (*I²C write failed: NACK received.*) und einmal ins Ereignisprotokoll geschrieben, wenn der Schritt endgültig fehlschlägt. Ein Schritt, der wiederholt wird, bis der Prüfling antwortet, bleibt daher während der Wiederholungen still.
+- Ein NACK wird im Ergebnis-Tooltip angezeigt (*I²C write failed: NACK received.*) und nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben, auch wenn der Schritt laut Grenzwerten besteht. Ein Schritt, der wiederholt wird, bis der Prüfling antwortet, bleibt während der Wiederholungen still und warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 **Verhalten bei UART**
 
-- Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, zeigt der Schritt das im Ergebnis-Tooltip und protokolliert es einmal, wenn er endgültig fehlschlägt.
+- Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, zeigt der Schritt das im Ergebnis-Tooltip und protokolliert es nach Abschluss des Schritts als Warnung.
 - Bei **Bytes lesen** = 0 ist der Messwert `0`.
 
 Die Schnittstelle muss am angeschlossenen Adapter vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
@@ -235,7 +235,7 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 
 - Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `0` bei einem I²C-NACK.
 - Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](10-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
-- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird einmal ins Ereignisprotokoll geschrieben, wenn der Schritt endgültig fehlschlägt, sodass ein Schritt wiederholt werden kann, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen.
+- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben, auch wenn der Schritt laut Grenzwerten besteht. Ein Schritt kann wiederholt werden, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen; er warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 Beispiele:
 
