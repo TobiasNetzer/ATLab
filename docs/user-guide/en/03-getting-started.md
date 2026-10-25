@@ -30,12 +30,12 @@ While the simulator is active, the status bar shows **No test hardware connected
 The window has three areas:
 
 1. **Tab bar** at the top:
-   - **Test Execution** – build and run the test sequence ([chapter 7](07-building-test-sequences.md), [chapter 11](11-running-tests.md))
-   - **Configuration** – devices, variables, channel names, project settings ([chapter 5](05-configuration.md))
+   - **Test Execution** – build and run the test sequence ([chapter 8](08-building-test-sequences.md), [chapter 14](14-running-tests.md))
+   - **Configuration** – devices, variables, channel names, project settings ([chapter 6](06-configuration.md))
    - **Documentation** – notes, images, attachments, DUT data ([chapter 13](13-documentation-tab.md))
-   - **Scripting** – the instrument script editor ([chapter 6](06-scripting.md))
-   - **Boundary Scan** – JTAG probe, scan chain, pins and buses ([chapter 14](14-boundary-scan.md))
-   - **Test Hardware** – adapter information and diagnostics ([chapter 15](15-test-hardware.md))
+   - **Scripting** – the instrument script editor ([chapter 7](07-scripting.md))
+   - **Boundary Scan** – JTAG probe, scan chain, pins and buses ([chapter 12](12-boundary-scan.md))
+   - **Test Hardware** – adapter information and diagnostics ([chapter 4](04-test-hardware.md))
    - **About** – version and system information
 2. **Tab content** in the middle.
 3. **Status bar** at the bottom.
@@ -48,12 +48,12 @@ The window title shows the project name, followed by `*` when there are unsaved 
 |---------|----------|
 | Info button (left) | Opens the **event log**: every info, warning and error message of this session, newest first. |
 | **No test hardware connected** | Shown in simulator mode. |
-| Probe button (right) | **Determine matrix channel via external probe** (`F12`). Touch a net with the external probe and ATLab shows `Matrix Channel: n`. See [Test Hardware](15-test-hardware.md#finding-a-matrix-channel-with-the-probe). |
+| Probe button (right) | **Determine matrix channel via external probe** (`F12`). Touch a net with the external probe and ATLab shows `Matrix Channel: n`. See [Test Hardware](04-test-hardware.md#finding-a-matrix-channel-with-the-probe). |
 | Sun/moon button | **Toggle theme** between light and dark. |
 | Languages button | **Toggle language** between English and German. |
 | Book button (far right) | **Open user guide** (`F1`). Opens this guide as a PDF in the current UI language. If the PDF is missing (e.g. in a self-built development version), the English PDF or the online guide on GitHub is opened instead. |
 
-Theme and language are remembered between sessions. Messages also pop up briefly as notifications in the bottom-left corner; the project setting **Log Level** controls which ones (see [Configuration](05-configuration.md#general-settings)).
+Theme and language are remembered between sessions. Messages also pop up briefly as notifications in the bottom-left corner; the project setting **Log Level** controls which ones (see [Configuration](06-configuration.md#general-settings)).
 
 ![Light and dark theme](../../Themes.png)
 
@@ -89,4 +89,4 @@ This walkthrough works in simulator mode and needs no instruments.
    - The second step evaluates `12 / 4 = 3` and passes.
 8. The result bar turns green (**Test Passed**) or red (**Test Failed**). The **Measured Value**, **Deviation** and **Result** columns are filled in.
 
-From here, continue with [Configuration](05-configuration.md) to add real instruments.
+From here, continue with [Configuration](06-configuration.md) to add real instruments.

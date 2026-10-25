@@ -1,4 +1,4 @@
-# 6. Registerkarte Skripte
+# 7. Registerkarte Skripte
 
 Ein **Skript** ist eine benannte, wiederverwendbare Folge von Gerätebefehlen, z. B. *„Configure & Query DC Voltage“*. Statt dieselben SCPI-Befehle in viele Schritte zu tippen, schreiben Sie sie einmal als Skript und wählen das Skript in jedem Schritt aus. Mit Variablen kann ein Skript viele Schritte mit unterschiedlichen Einstellungen bedienen.
 
@@ -42,13 +42,13 @@ Wählen Sie ein Skript in der Liste **Skripte**. Rechts können Sie bearbeiten:
 | **Variablenname** | Nur Buchstaben, Ziffern und `_`. |
 | **Standardwert** | Wert, mit dem ein Schritt beginnt, wenn das Skript erstmals ausgewählt wird. |
 
-Verwenden Sie eine Variable in einem Befehl, indem Sie ihren Namen in geschweifte Klammern setzen, z. B. `SENS:VOLT:DC:RANGE {Range}`. Jeder Testschritt, der das Skript verwendet, erhält eine eigene Kopie der Variablen und kann die Werte überschreiben (siehe [Auswertung Skript](08-evaluation-sources.md#skript)).
+Verwenden Sie eine Variable in einem Befehl, indem Sie ihren Namen in geschweifte Klammern setzen, z. B. `SENS:VOLT:DC:RANGE {Range}`. Jeder Testschritt, der das Skript verwendet, erhält eine eigene Kopie der Variablen und kann die Werte überschreiben (siehe [Auswertung Skript](09-evaluation-sources.md#skript)).
 
 ### Befehle
 
 | Spalte | Beschreibung |
 |--------|--------------|
-| **Befehl** | An das Gerät gesendeter Text. Kann Skriptvariablen, Laufzeitvariablen, Kodierungsblöcke und Ausdrücke enthalten ([Kapitel 9](09-commands-variables-expressions.md)). Leere Befehle werden übersprungen. |
+| **Befehl** | An das Gerät gesendeter Text. Kann Skriptvariablen, Laufzeitvariablen, Kodierungsblöcke und Ausdrücke enthalten ([Kapitel 10](10-commands-variables-expressions.md)). Leere Befehle werden übersprungen. |
 | **Antwort erwarten** | Befehl senden und auf eine Antwort warten (Abfrage). Ist die Option aus, wird nur geschrieben. |
 | **Auswertung** | Die Antwort dieses Befehls als Messwert des Schritts verwenden. Nur **ein** Befehl pro Skript kann markiert sein; das Markieren eines anderen hebt die vorherige Markierung auf. Erfordert, dass auch **Antwort erwarten** aktiv ist. |
 | **Verzögerung (ms)** | Wartezeit **vor** dem Senden des Befehls. |
@@ -79,5 +79,5 @@ Ein Schritt mit diesem Skript sendet die beiden Konfigurationsbefehle, wartet 50
 
 - Halten Sie Skripte klein und allgemein; verlagern Sie schrittspezifische Werte in Variablen.
 - Legen Sie den Skriptordner neben Ihre Projekte und unter Versionsverwaltung.
-- Liefert ein Skript mehr als eine reine Zahl, verwenden Sie im Schritt die [Antwortverarbeitung](10-response-processing.md), um den Wert zu extrahieren.
+- Liefert ein Skript mehr als eine reine Zahl, verwenden Sie im Schritt die [Antwortverarbeitung](11-response-processing.md), um den Wert zu extrahieren.
 - Ist kein Befehl mit **Auswertung** markiert, ist der Messwert des Schritts `0`.

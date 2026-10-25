@@ -1,4 +1,4 @@
-# 7. Building Test Sequences
+# 8. Building Test Sequences
 
 Test sequences are built on the **Test Execution** tab with **development mode** enabled (construction-cone button at the right end of the toolbar). In development mode the configuration panels appear to the right of the step list.
 
@@ -82,7 +82,7 @@ Values are displayed with an automatic SI prefix (`0.0013 A` → `1,3mA`). If yo
 
 **Variables in limits**
 
-Limits, nominal value and delay can reference runtime variables, e.g. `{V_Ref}` or an expression such as `{expr:{V_Ref}*1.05}`. They are resolved each time the step runs. Automatic tolerance calculation is skipped when any of the three values contains a variable. See [chapter 9](09-commands-variables-expressions.md).
+Limits, nominal value and delay can reference runtime variables, e.g. `{V_Ref}` or an expression such as `{expr:{V_Ref}*1.05}`. They are resolved each time the step runs. Automatic tolerance calculation is skipped when any of the three values contains a variable. See [chapter 10](10-commands-variables-expressions.md).
 
 ### Delay
 
@@ -90,7 +90,7 @@ Wait time between switching the relays and acquiring the value, for settling. Th
 
 ### Evaluate
 
-Selects the [evaluation source](08-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **External Program**, **User Confirmation**, **User Input**, **Expression**, **File**, **Boundary Scan** or **Boundary Scan Bus**. The matching editor panel appears below.
+Selects the [evaluation source](09-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **External Program**, **User Confirmation**, **User Input**, **Expression**, **File**, **Boundary Scan** or **Boundary Scan Bus**. The matching editor panel appears below.
 
 ### Comment
 

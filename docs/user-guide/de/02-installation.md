@@ -54,7 +54,7 @@ VISA-Geräte benötigen die **NI-VISA**-Laufzeitumgebung von National Instrument
 
 ## Optional: Treiber für JTAG-Probes
 
-Boundary Scan benötigt den Treiber der JTAG-Probe (siehe [Registerkarte Boundary Scan](14-boundary-scan.md#unterstützte-probes)):
+Boundary Scan benötigt den Treiber der JTAG-Probe (siehe [Registerkarte Boundary Scan](12-boundary-scan.md#unterstützte-probes)):
 
 - **SEGGER J-Link:** *J-Link Software and Documentation Pack* von <https://www.segger.com>.
 - **FTDI FT2232H / FT232H / FT4232H:** *D2XX*-Treiber von <https://ftdichip.com>. Unter Linux das Kernelmodul `ftdi_sio` entladen oder eine udev-Regel anlegen, damit die D2XX-Bibliothek auf das Gerät zugreifen kann.
@@ -63,7 +63,7 @@ Findet ATLab die Bibliothek nicht im Standard-Installationsordner, kopieren Sie 
 
 ## Optional: Steuermodul
 
-Das USB-Steuermodul (ein HID-Gerät mit Start-/Stopp-Tasten) benötigt keinen Treiber. Es wird pro Projekt aktiviert, siehe [Tests ausführen](11-running-tests.md#steuermodul).
+Das USB-Steuermodul (ein HID-Gerät mit Start-/Stopp-Tasten) benötigt keinen Treiber. Es wird pro Projekt aktiviert, siehe [Tests ausführen](14-running-tests.md#steuermodul).
 
 ## Build aus dem Quellcode
 

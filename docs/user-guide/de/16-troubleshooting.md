@@ -2,7 +2,7 @@
 
 ## Das Ereignisprotokoll
 
-Die meisten Probleme erklärt eine Meldung im **Ereignisprotokoll**. Öffnen Sie es mit der Info-Schaltfläche am linken Ende der Statusleiste. Die Meldungen sind nach Aktualität sortiert (neueste zuerst). Meldungen, die den **Protokolliergrad** des Projekts erreichen (siehe [Konfiguration](05-configuration.md#allgemeine-einstellungen)), werden zusätzlich an die Protokolldatei angehängt:
+Die meisten Probleme erklärt eine Meldung im **Ereignisprotokoll**. Öffnen Sie es mit der Info-Schaltfläche am linken Ende der Statusleiste. Die Meldungen sind nach Aktualität sortiert (neueste zuerst). Meldungen, die den **Protokolliergrad** des Projekts erreichen (siehe [Konfiguration](06-configuration.md#allgemeine-einstellungen)), werden zusätzlich an die Protokolldatei angehängt:
 
 - Windows: `%LOCALAPPDATA%\ATLab\events.log`
 - Linux: `~/.local/share/ATLab/events.log`
@@ -37,9 +37,9 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | *Device is required.* / *Script and Device are required.* | Im Schritt ist kein Zielgerät (oder Skript) gewählt. |
 | *TCP connection error* / *Connection timed out.* | Falsche IP-Adresse/Port, Gerät nicht im Netzwerk, Firewall. Port 5025 ist der übliche SCPI-Socket-Port. |
 | *VISA error: …* | NI-VISA nicht installiert, falscher Ressourcenstring oder Gerät in NI MAX nicht sichtbar. VISA gibt es nur unter Windows. |
-| *Failed to convert result '…'* | Die Antwort ist keine reine Zahl. [Antwortverarbeitung](10-response-processing.md) aktivieren, um den Wert zu extrahieren. |
+| *Failed to convert result '…'* | Die Antwort ist keine reine Zahl. [Antwortverarbeitung](11-response-processing.md) aktivieren, um den Wert zu extrahieren. |
 | *Response too short: …* | Die Antwort hat weniger Bytes als **Überspringen** + **Länge** der Antwortverarbeitung. Antwort unter *Empfangene Sequenz* prüfen: Eine abgeschnittene Antwort deutet auf Framing oder Timeout hin; andernfalls Überspringen/Länge korrigieren. |
-| *Numeric extraction … failed …* | Der verarbeitete Teil hat nicht das erwartete Format (z. B. ein übrig gebliebenes Präfix oder zu wenige Bytes für `{byte:N}`). Überspringen/Länge so anpassen, dass nur die Zahl übrig bleibt, oder eine Prüfregel für die Bezeichnung vor die Extraktion setzen, z. B. `"Result=" {float}`. Siehe [Antwortverarbeitung](10-response-processing.md#zahl-hinter-einer-bezeichnung-lesen). |
+| *Numeric extraction … failed …* | Der verarbeitete Teil hat nicht das erwartete Format (z. B. ein übrig gebliebenes Präfix oder zu wenige Bytes für `{byte:N}`). Überspringen/Länge so anpassen, dass nur die Zahl übrig bleibt, oder eine Prüfregel für die Bezeichnung vor die Extraktion setzen, z. B. `"Result=" {float}`. Siehe [Antwortverarbeitung](11-response-processing.md#zahl-hinter-einer-bezeichnung-lesen). |
 | Antworten sind abgeschnitten | Serielles **Chunk**-Framing hat zu früh beendet; der Rest der Antwort wird vor dem nächsten Befehl verworfen. Auf **LF Terminated**, **CRLF Terminated** oder **Timeout Based** umstellen. |
 | Antworten gehören zum vorherigen Befehl | Das Gerät antwortet langsamer als das **Timeout (ms)** des Schritts, und die verspätete Antwort kam erst nach dem Senden des nächsten Befehls an. Verspätete Antworten, die *vor* dem nächsten Befehl eintreffen, werden automatisch verworfen. **Timeout (ms)** für den langsamen Befehl erhöhen. |
 | Gerät ignoriert Befehle über VISA-Socket | Abschlusszeichen explizit anhängen, z. B. `{hex:0A}`. |

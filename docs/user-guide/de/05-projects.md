@@ -1,4 +1,4 @@
-# 4. Arbeiten mit Projekten
+# 5. Arbeiten mit Projekten
 
 Ein **Projekt** wird in einer einzelnen **Projektdatei** mit der Endung `.atlab` gespeichert. Sie enthält alles, was zu einem Test gehört:
 
@@ -12,7 +12,7 @@ Ein **Projekt** wird in einer einzelnen **Projektdatei** mit der Endung `.atlab`
 - die Boundary-Scan-Einrichtung: Probe-Einstellungen, Scan-Kette, Pfade der BSDL-Dateien, Bezeichnungen und Busse,
 - den Pfad des Skriptordners.
 
-Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skriptordner (siehe [Skripte](06-scripting.md)).
+Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skriptordner (siehe [Skripte](07-scripting.md)).
 
 ## Projektbefehle
 

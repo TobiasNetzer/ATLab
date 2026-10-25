@@ -1,4 +1,4 @@
-# 12. Testergebnisse & Berichte
+# 15. Testergebnisse & Berichte
 
 ATLab kann das Ergebnis jedes Laufs automatisch als Datendatei (CSV) und/oder als formatierten Testbericht (PDF) exportieren.
 

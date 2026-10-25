@@ -1,4 +1,4 @@
-# 4. Working with Projects
+# 5. Working with Projects
 
 A **project** is stored in a single **project file** with the extension `.atlab`. It contains everything that belongs to one test:
 
@@ -12,7 +12,7 @@ A **project** is stored in a single **project file** with the extension `.atlab`
 - the boundary scan setup: probe settings, scan chain, BSDL file paths, user labels and buses,
 - the path of the script folder.
 
-Scripts themselves are **not** stored in the project; they live as separate files in the script folder (see [Scripting](06-scripting.md)).
+Scripts themselves are **not** stored in the project; they live as separate files in the script folder (see [Scripting](07-scripting.md)).
 
 ## Project commands
 

@@ -30,12 +30,12 @@ Solange der Simulator aktiv ist, zeigt die Statusleiste in Rot **Keine Test-Hard
 Das Fenster besteht aus drei Bereichen:
 
 1. **Registerkarten** oben:
-   - **Testausführung** – Prüfsequenz erstellen und ausführen ([Kapitel 7](07-building-test-sequences.md), [Kapitel 11](11-running-tests.md))
-   - **Konfiguration** – Geräte, Variablen, Kanalnamen, Projekteinstellungen ([Kapitel 5](05-configuration.md))
+   - **Testausführung** – Prüfsequenz erstellen und ausführen ([Kapitel 8](08-building-test-sequences.md), [Kapitel 14](14-running-tests.md))
+   - **Konfiguration** – Geräte, Variablen, Kanalnamen, Projekteinstellungen ([Kapitel 6](06-configuration.md))
    - **Dokumentation** – Notizen, Bilder, Anhänge, Prüflingsdaten ([Kapitel 13](13-documentation-tab.md))
-   - **Skripte** – der Skript-Editor ([Kapitel 6](06-scripting.md))
-   - **Boundary Scan** – JTAG-Probe, Scan-Kette, Pins und Busse ([Kapitel 14](14-boundary-scan.md))
-   - **Test-Hardware** – Adapterinformationen und Diagnose ([Kapitel 15](15-test-hardware.md))
+   - **Skripte** – der Skript-Editor ([Kapitel 7](07-scripting.md))
+   - **Boundary Scan** – JTAG-Probe, Scan-Kette, Pins und Busse ([Kapitel 12](12-boundary-scan.md))
+   - **Test-Hardware** – Adapterinformationen und Diagnose ([Kapitel 4](04-test-hardware.md))
    - **Info** – Version und Systeminformationen
 2. **Inhalt der Registerkarte** in der Mitte.
 3. **Statusleiste** unten.
@@ -48,12 +48,12 @@ Die Titelleiste zeigt den Projektnamen, gefolgt von `*` bei ungespeicherten Änd
 |---------|----------|
 | Info-Schaltfläche (links) | Öffnet das **Ereignisprotokoll**: alle Info-, Warn- und Fehlermeldungen dieser Sitzung, neueste zuerst. |
 | **Keine Test-Hardware verbunden** | Wird im Simulatormodus angezeigt. |
-| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](15-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
+| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](04-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
 | Sonne/Mond | **Design umschalten** zwischen hell und dunkel. |
 | Sprachen | **Sprache umschalten** zwischen Deutsch und Englisch. |
 | Buch (ganz rechts) | **Benutzerhandbuch öffnen** (`F1`). Öffnet dieses Handbuch als PDF in der aktuellen Oberflächensprache. Fehlt das PDF (z. B. in einer selbst gebauten Entwicklungsversion), wird stattdessen das englische PDF oder das Online-Handbuch auf GitHub geöffnet. |
 
-Design und Sprache werden zwischen Sitzungen gespeichert. Meldungen erscheinen zusätzlich kurz als Benachrichtigung unten links; welche, legt die Projekteinstellung **Protokolliergrad** fest (siehe [Konfiguration](05-configuration.md#allgemeine-einstellungen)).
+Design und Sprache werden zwischen Sitzungen gespeichert. Meldungen erscheinen zusätzlich kurz als Benachrichtigung unten links; welche, legt die Projekteinstellung **Protokolliergrad** fest (siehe [Konfiguration](06-configuration.md#allgemeine-einstellungen)).
 
 ![Helles und dunkles Design](../../Themes.png)
 
@@ -89,4 +89,4 @@ Diese Anleitung funktioniert im Simulatormodus und benötigt keine Messgeräte.
    - Der zweite Schritt berechnet `12 / 4 = 3` und besteht.
 8. Die Ergebnisleiste wird grün (**Test bestanden**) oder rot (**Test fehlgeschlagen**). Die Spalten **Messwert**, **Abweichung** und **Ergebnis** sind ausgefüllt.
 
-Weiter geht es mit der [Konfiguration](05-configuration.md), um echte Messgeräte einzubinden.
+Weiter geht es mit der [Konfiguration](06-configuration.md), um echte Messgeräte einzubinden.

@@ -1,4 +1,4 @@
-# 8. Evaluation Sources
+# 9. Evaluation Sources
 
 The **Evaluate** field of a step decides where its measured value comes from. Every source ultimately produces one number, which is then compared with the step's limits.
 
@@ -25,7 +25,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | `Overflow` | Value ≥ 9.9 × 10³⁷ (the SCPI overload value, e.g. a DMM out of range) | Fail |
 | *(empty)* with ✘ and an error in the event log | The step could not be executed (device not found, connection failed, parse error …). **The test stops** with status *Test Execution Failed*. | Fail |
 
-A response that cannot be converted to a number — for example `OK` or `+1.23E+00 VDC` — is an execution error. Use [Response Processing](10-response-processing.md) to turn such answers into a number. Both `.` and `,` are accepted as decimal separator (`4,5` is 4.5); thousands separators are not supported.
+A response that cannot be converted to a number — for example `OK` or `+1.23E+00 VDC` — is an execution error. Use [Response Processing](11-response-processing.md) to turn such answers into a number. Both `.` and `,` are accepted as decimal separator (`4,5` is 4.5); thousands separators are not supported.
 
 ---
 
@@ -35,7 +35,7 @@ The step only switches relays, waits for its delay and optionally shows its comm
 
 ## Script
 
-Runs a script from the [script folder](06-scripting.md) on a device.
+Runs a script from the [script folder](07-scripting.md) on a device.
 
 **Script Configuration panel**
 
@@ -75,7 +75,7 @@ Communicates with the DUT through the Test Interface Adapter's isolated interfac
 | **Read Bytes** | number of bytes to read (0–255) | number of bytes expected back (0–255) |
 | **Timeout (ms)** | transaction timeout | transaction timeout |
 
-The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send the two bytes 0x0A 0x1F (see [chapter 9](09-commands-variables-expressions.md#encoding-blocks)).
+The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send the two bytes 0x0A 0x1F (see [chapter 10](10-commands-variables-expressions.md#encoding-blocks)).
 
 **I²C behaviour**
 
@@ -98,7 +98,7 @@ Runs a program on the test PC. By default the **exit code** is the measured valu
 | Field | Description |
 |-------|-------------|
 | **Command** | Command line. May contain `{Variable}` references. The first word (or a `"quoted path"`) is the program, the rest are its arguments. |
-| **Evaluate Output** | Off: the exit code is the measured value. On: the program runs without a window, its standard output is evaluated like a device response (with [Response Processing](10-response-processing.md) if configured) and must yield a number. A non-zero exit code fails the step; the error message contains the program's error output. |
+| **Evaluate Output** | Off: the exit code is the measured value. On: the program runs without a window, its standard output is evaluated like a device response (with [Response Processing](11-response-processing.md) if configured) and must yield a number. A non-zero exit code fails the step; the error message contains the program's error output. |
 
 The command is executed exactly as entered — there is no shell in between. To use shell features such as pipes, redirection, built-in commands (`dir`, `echo`, `type`) or batch files, call the shell yourself:
 
@@ -130,7 +130,7 @@ The last example only makes sense with **Evaluate Output** and a response mask t
 
 Shows the step's **Comment** in a dialog titled *Waiting for User Confirmation* with the buttons **Passed** and **Failed**. Clicking **Passed** yields `1`, **Failed** yields `0`. Set all limits to `1` so that only *Passed* passes.
 
-An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](11-running-tests.md#control-module) enabled, the green button answers *Passed* and the red one *Failed*.
+An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](14-running-tests.md#control-module) enabled, the green button answers *Passed* and the red one *Failed*.
 
 ## User Input
 
@@ -138,11 +138,11 @@ Asks the operator to enter a value — for example a reading from an analog gaug
 
 - The entered value is the measured value and is compared with the limits like any other measurement.
 - Both `.` and `,` are accepted as decimal separator (`1.5` and `1,5` both give 1.5). Thousands separators and SI prefixes (`k`, `m` …) are not supported — enter a plain number such as `4700` or `4.7e3`.
-- With [Response Processing](10-response-processing.md) enabled, the entered text is processed like a device answer before it is converted, e.g. to extract the number from a scanned label such as `R=4.7`.
+- With [Response Processing](11-response-processing.md) enabled, the entered text is processed like a device answer before it is converted, e.g. to extract the number from a scanned label such as `R=4.7`.
 - Text that cannot be converted to a number is an execution error and stops the test.
 - **Cancel** stops the test.
 
-An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](11-running-tests.md#control-module) enabled, the green button acts as **Continue** and the red one as **Cancel**.
+An image added with the image button next to *Show Comment* (Advanced Settings) is shown in the dialog. With the [control module](14-running-tests.md#control-module) enabled, the green button acts as **Continue** and the red one as **Cancel**.
 
 ## Expression
 
@@ -154,7 +154,7 @@ Calculates a value. The **Expression** field may contain numbers, runtime variab
 0x3F & {Status}
 ```
 
-The supported operators are listed in [chapter 9](09-commands-variables-expressions.md#expressions). Combined with *Assign Result to Variable*, expression steps can compute derived values, counters or flags. An expression that cannot be evaluated is an execution error.
+The supported operators are listed in [chapter 10](10-commands-variables-expressions.md#expressions). Combined with *Assign Result to Variable*, expression steps can compute derived values, counters or flags. An expression that cannot be evaluated is an execution error.
 
 ## File
 
@@ -164,11 +164,11 @@ Reads a file and extracts a number from its content.
 |-------|-------------|
 | **File Path** | Path to the file. Use the browse button to pick it. Paths inside the project folder are stored relatively. |
 
-Without response processing, the entire file content must be a number (e.g. a file containing `3.274`). Both `.` and `,` are accepted as decimal separator (`3,274` is also 3.274); thousands separators are not supported. With response processing you can cut a fixed-position value out of a larger file with **Skip**/**Length**, or simply check that the file contains a given text (see [Response Processing](10-response-processing.md)). A typical pattern is an External Program step that runs an external tool which writes its result into a file, followed by a File step that evaluates it.
+Without response processing, the entire file content must be a number (e.g. a file containing `3.274`). Both `.` and `,` are accepted as decimal separator (`3,274` is also 3.274); thousands separators are not supported. With response processing you can cut a fixed-position value out of a larger file with **Skip**/**Length**, or simply check that the file contains a given text (see [Response Processing](11-response-processing.md)). A typical pattern is an External Program step that runs an external tool which writes its result into a file, followed by a File step that evaluates it.
 
 ## Boundary Scan
 
-Drives and checks pins of boundary-scan chips. The chain, the BSDL files and the user labels are set up on the [Boundary Scan tab](14-boundary-scan.md).
+Drives and checks pins of boundary-scan chips. The chain, the BSDL files and the user labels are set up on the [Boundary Scan tab](12-boundary-scan.md).
 
 **Boundary Scan panel**
 
@@ -202,7 +202,7 @@ For a failed step, hovering the measured value or the result icon shows which pi
 
 The probe is connected and the chain is checked at the first boundary scan step of the run. A chain that does not match the project, a device without BSDL file or a pin that cannot be driven or read is an execution error and stops the test.
 
-**Turn boundary scan off** returns all chips to normal operation and releases the probe. Use it before steps that need the chips running normally or need the probe themselves, e.g. programming via the same J-Link with an [External Program](#external-program) step. A later boundary scan step reconnects automatically. See also [Boundary scan during test execution](14-boundary-scan.md#boundary-scan-during-test-execution).
+**Turn boundary scan off** returns all chips to normal operation and releases the probe. Use it before steps that need the chips running normally or need the probe themselves, e.g. programming via the same J-Link with an [External Program](#external-program) step. A later boundary scan step reconnects automatically. See also [Boundary scan during test execution](12-boundary-scan.md#boundary-scan-during-test-execution).
 
 Example — check that an LED is driven and its sense line follows:
 
@@ -214,7 +214,7 @@ Example — check that an LED is driven and its sense line follows:
 
 ## Boundary Scan Bus
 
-Runs one transaction on a bus emulated through boundary scan pins: an I²C or SPI device, or a pin group. The buses are set up on the [Boundary Scan tab](14-boundary-scan.md#buses-view); the step works like an [Interface Command](#interface-command).
+Runs one transaction on a bus emulated through boundary scan pins: an I²C or SPI device, or a pin group. The buses are set up on the [Boundary Scan tab](12-boundary-scan.md#buses-view); the step works like an [Interface Command](#interface-command).
 
 **Boundary Scan Bus panel**
 
@@ -222,7 +222,7 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 |-------|-------------|
 | **Bus** | Bus from the Boundary Scan tab, shown as `Name (Type)`. |
 | **Address 0-127** | I²C only: 7-bit target address. Enter it as a decimal number or with `0x` prefix, e.g. `80` or `0x50`. |
-| **Command** | Bytes to write, usually as encoding block, e.g. `{hex:10}`. Supports variables and expressions (see [chapter 9](09-commands-variables-expressions.md)). |
+| **Command** | Bytes to write, usually as encoding block, e.g. `{hex:10}`. Supports variables and expressions (see [chapter 10](10-commands-variables-expressions.md)). |
 | **Read Bytes** | Number of bytes to read afterwards. |
 
 | Bus type | Transaction |
@@ -234,7 +234,7 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 **Result**
 
 - With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `0` on an I²C NACK.
-- With **Read Bytes** > 0: the received bytes go through [response processing](10-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `0`.
+- With **Read Bytes** > 0: the received bytes go through [response processing](11-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `0`.
 - On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished, also when its limits let it pass. A step can repeat until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
 
 Examples:
@@ -246,4 +246,4 @@ Examples:
 | Read the JEDEC ID of an SPI flash | SPI | – | `{hex:9F}` | `3` | `{byte:3}` |
 | Read a 4-bit board ID strap | Pin Group | – | – | `1` | `{byte:1}` |
 
-All signal changes of a transaction are sent to the probe in one transfer. I²C clock stretching is not supported; see [Speed and limitations](14-boundary-scan.md#speed-and-limitations).
+All signal changes of a transaction are sent to the probe in one transfer. I²C clock stretching is not supported; see [Speed and limitations](12-boundary-scan.md#speed-and-limitations).

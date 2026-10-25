@@ -1,4 +1,4 @@
-# 14. Registerkarte Boundary Scan
+# 12. Registerkarte Boundary Scan
 
 **Boundary Scan** (IEEE 1149.1, auch JTAG genannt) ermöglicht den Zugriff auf die Pins von Bausteinen einer Baugruppe, ohne sie mit einer Prüfspitze zu berühren. Jeder Pin eines Boundary-Scan-fähigen Bausteins hat eine Zelle im *Boundary-Register* des Bausteins. Über eine JTAG-Probe kann ATLab die Pegel dieser Pins lesen und die Pins treiben, während die interne Logik des Bausteins von ihnen getrennt ist. Typische Anwendungen:
 
@@ -7,7 +7,7 @@
 - mit I²C- oder SPI-Bausteinen (EEPROMs, Sensoren, Flash-Speicher) kommunizieren, deren Busleitungen an einem Boundary-Scan-Baustein hängen,
 - eine Baugruppe untersuchen, die nicht startet.
 
-Auf der Registerkarte **Boundary Scan** wird die Scan-Kette eingerichtet und manuell mit den Pins gearbeitet. Testschritte nutzen diese Einrichtung über die Auswertungsquellen [Boundary Scan](08-evaluation-sources.md#boundary-scan) und [Boundary-Scan-Bus](08-evaluation-sources.md#boundary-scan-bus).
+Auf der Registerkarte **Boundary Scan** wird die Scan-Kette eingerichtet und manuell mit den Pins gearbeitet. Testschritte nutzen diese Einrichtung über die Auswertungsquellen [Boundary Scan](09-evaluation-sources.md#boundary-scan) und [Boundary-Scan-Bus](09-evaluation-sources.md#boundary-scan-bus).
 
 Boundary Scan verwendet nicht den Test Interface Adapter, sondern eine eigene JTAG-Probe am JTAG-Anschluss der Baugruppe.
 
@@ -145,7 +145,7 @@ Viele Bausteine verwenden eine **Steuerzelle** für mehrere Ausgänge. Wird eine
 
 ## Ansicht Busse
 
-In der Ansicht **Busse** werden Busse festgelegt, die über Boundary-Scan-Pins nachgebildet werden. Testschritte wählen einen Bus über die Auswertungsquelle [Boundary-Scan-Bus](08-evaluation-sources.md#boundary-scan-bus) aus. Die Registerkarte dient nur der Einrichtung der Busse; die Übertragungen führen Testschritte aus.
+In der Ansicht **Busse** werden Busse festgelegt, die über Boundary-Scan-Pins nachgebildet werden. Testschritte wählen einen Bus über die Auswertungsquelle [Boundary-Scan-Bus](09-evaluation-sources.md#boundary-scan-bus) aus. Die Registerkarte dient nur der Einrichtung der Busse; die Übertragungen führen Testschritte aus.
 
 Busse werden mit **+** und **−** hinzugefügt und entfernt. Für den ausgewählten Bus:
 

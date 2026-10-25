@@ -1,4 +1,4 @@
-# 11. Running Tests
+# 14. Running Tests
 
 Tests are run from the **Test Execution** tab. Operators normally work with development mode switched off, so they see only the toolbar, the step list and the result bar.
 
@@ -45,7 +45,7 @@ Before the first step and after the last one, all relays are cleared.
 
 **Start test execution of selected module** and **Start test execution from selected step** are meant for developing a single module. A *Jump To* to a step outside the module ends the run with an error.
 
-**Execute single step** is meant for development: it switches the step's relays, waits, acquires and evaluates the value, and shows the result — nothing else. The relays **stay in the step's state** afterwards. Use it to tune masks, limits and delays. Ignored steps are not executed. A boundary scan chain used by the step also stays under test control, so the next single step continues from its pin states; press **Stop** (`Esc`) to release it (see [Boundary scan during test execution](14-boundary-scan.md#boundary-scan-during-test-execution)).
+**Execute single step** is meant for development: it switches the step's relays, waits, acquires and evaluates the value, and shows the result — nothing else. The relays **stay in the step's state** afterwards. Use it to tune masks, limits and delays. Ignored steps are not executed. A boundary scan chain used by the step also stays under test control, so the next single step continues from its pin states; press **Stop** (`Esc`) to release it (see [Boundary scan during test execution](12-boundary-scan.md#boundary-scan-during-test-execution)).
 
 ## Serial number entry
 

@@ -2,7 +2,7 @@
 
 ## The event log
 
-Most problems are explained by a message in the **event log**. Open it with the info button at the left end of the status bar. Messages are listed newest first. Messages that reach the project's **Log Level** (see [Configuration](05-configuration.md#general-settings)) are also appended to the log file:
+Most problems are explained by a message in the **event log**. Open it with the info button at the left end of the status bar. Messages are listed newest first. Messages that reach the project's **Log Level** (see [Configuration](06-configuration.md#general-settings)) are also appended to the log file:
 
 - Windows: `%LOCALAPPDATA%\ATLab\events.log`
 - Linux: `~/.local/share/ATLab/events.log`
@@ -37,9 +37,9 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *Device is required.* / *Script and Device are required.* | No target device (or script) selected in the step. |
 | *TCP connection error* / *Connection timed out.* | Wrong IP address/port, instrument not on the network, firewall. Port 5025 is the usual SCPI socket port. |
 | *VISA error: …* | NI-VISA not installed, wrong resource string, or instrument not visible in NI MAX. VISA is Windows-only. |
-| *Failed to convert result '…'* | The answer is not a plain number. Enable [Response Processing](10-response-processing.md) to extract the value. |
+| *Failed to convert result '…'* | The answer is not a plain number. Enable [Response Processing](11-response-processing.md) to extract the value. |
 | *Response too short: …* | The answer has fewer bytes than **Skip** + **Length** of the response processing. Check the answer under *Received Sequence*: a truncated answer points to the framing or timeout; otherwise correct Skip/Length. |
-| *Numeric extraction … failed …* | The processed part is not in the expected format (e.g. a prefix left over, or too few bytes for `{byte:N}`). Adjust Skip/Length so that only the number remains, or put a match rule for the label in front of the extraction, e.g. `"Result=" {float}`. See [Response Processing](10-response-processing.md#reading-a-number-after-a-label). |
+| *Numeric extraction … failed …* | The processed part is not in the expected format (e.g. a prefix left over, or too few bytes for `{byte:N}`). Adjust Skip/Length so that only the number remains, or put a match rule for the label in front of the extraction, e.g. `"Result=" {float}`. See [Response Processing](11-response-processing.md#reading-a-number-after-a-label). |
 | Answers are truncated | Serial **Chunk** framing returned early; the rest of the answer is discarded before the next command. Switch to **LF Terminated**, **CRLF Terminated** or **Timeout Based**. |
 | Answers belong to the previous command | The device answers slower than the step's **Timeout (ms)**, and the late answer arrived after the next command was sent. Late answers that arrive *before* the next command are discarded automatically. Increase **Timeout (ms)** for the slow command. |
 | Instrument ignores commands over VISA socket | Append a terminator explicitly, e.g. `{hex:0A}`. |

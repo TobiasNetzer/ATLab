@@ -46,4 +46,4 @@ Existiert ein referenziertes Bild oder eine Datei nicht mehr, wird ein Fehler pr
 
 Leere Felder werden als `-` gedruckt. Die Seriennummer wird nicht hier eingegeben; sie stammt aus dem Seriennummer-Dialog zu Beginn jedes Tests.
 
-Name, Revision, Variante und Teilenummer werden außerdem in der [Ergebnisleiste](11-running-tests.md#die-ergebnisleiste) auf der Registerkarte Testausführung angezeigt, damit der Bediener prüfen kann, ob der richtige Test geladen ist.
+Name, Revision, Variante und Teilenummer werden außerdem in der [Ergebnisleiste](14-running-tests.md#die-ergebnisleiste) auf der Registerkarte Testausführung angezeigt, damit der Bediener prüfen kann, ob der richtige Test geladen ist.

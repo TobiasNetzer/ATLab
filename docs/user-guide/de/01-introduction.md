@@ -24,10 +24,10 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 
 | Begriff | Bedeutung |
 |---------|-----------|
-| **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](04-projects.md). |
-| **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](07-building-test-sequences.md#module). |
-| **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. Siehe [Wie ein Testschritt ausgeführt wird](11-running-tests.md#wie-ein-testschritt-ausgeführt-wird). |
-| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei, Boundary Scan* oder *Boundary-Scan-Bus*. Siehe [Auswertungsquellen](08-evaluation-sources.md). |
+| **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](05-projects.md). |
+| **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](08-building-test-sequences.md#module). |
+| **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. Siehe [Wie ein Testschritt ausgeführt wird](14-running-tests.md#wie-ein-testschritt-ausgeführt-wird). |
+| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei, Boundary Scan* oder *Boundary-Scan-Bus*. Siehe [Auswertungsquellen](09-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
 | **Skriptvariable** | Platzhalter wie `{Range}` in einem Skript, der pro Testschritt einen konkreten Wert erhält. |
@@ -36,10 +36,10 @@ ATLab läuft unter Windows und Linux, bietet ein helles und ein dunkles Design u
 | **Stimulations- / Ext. Stimulationskanäle** | Einzeln schaltbare Relais des Adapters, pro Schritt eingestellt. |
 | **Entwicklungsmodus** | Bearbeitungsmodus der Registerkarte Testausführung. Ist er aus, zeigt die Registerkarte nur Sequenz und Ergebnisse – die Bedieneransicht. |
 | **Simulator** | Virtueller Test Interface Adapter, der verwendet wird, wenn keine Hardware angeschlossen ist. Relais- und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun. |
-| **Boundary-Scan-Kette** | Die Boundary-Scan-fähigen Bausteine der Baugruppe, in Reihe an eine JTAG-Probe angeschlossen. Wird auf der [Registerkarte Boundary Scan](14-boundary-scan.md) eingerichtet. |
+| **Boundary-Scan-Kette** | Die Boundary-Scan-fähigen Bausteine der Baugruppe, in Reihe an eine JTAG-Probe angeschlossen. Wird auf der [Registerkarte Boundary Scan](12-boundary-scan.md) eingerichtet. |
 
 ## Für wen dieses Handbuch gedacht ist
 
-- **Prüfingenieure**, die Sequenzen entwerfen: Kapitel 4–10, für Boundary Scan zusätzlich Kapitel 14.
-- **Bediener**, die freigegebene Sequenzen ausführen: Kapitel 3 und 11 genügen.
-- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und die [Referenz](17-reference.md).
+- **Prüfingenieure**, die Sequenzen entwerfen: Kapitel 5–13 (Kapitel 12 nur bei Einsatz von Boundary Scan).
+- **Bediener**, die freigegebene Sequenzen ausführen: Kapitel 3, 14 und 15 genügen.
+- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und 4 sowie die [Referenz](17-reference.md).

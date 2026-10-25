@@ -1,4 +1,4 @@
-# 14. Boundary Scan Tab
+# 12. Boundary Scan Tab
 
 **Boundary scan** (IEEE 1149.1, also called JTAG) gives access to the pins of chips on a board without touching them with a probe. Every pin of a boundary-scan capable chip has a cell in the chip's *boundary register*. Through a JTAG probe, ATLab can read the levels of these pins and drive them, while the chip's own logic is disconnected from them. Typical uses:
 
@@ -7,7 +7,7 @@
 - talking to I²C or SPI devices (EEPROMs, sensors, flash memories) whose bus lines are connected to a boundary-scan chip,
 - debugging a board that does not boot.
 
-The **Boundary Scan** tab is used to set up the scan chain and to work with the pins by hand. Test steps then use this setup through the evaluation sources [Boundary Scan](08-evaluation-sources.md#boundary-scan) and [Boundary Scan Bus](08-evaluation-sources.md#boundary-scan-bus).
+The **Boundary Scan** tab is used to set up the scan chain and to work with the pins by hand. Test steps then use this setup through the evaluation sources [Boundary Scan](09-evaluation-sources.md#boundary-scan) and [Boundary Scan Bus](09-evaluation-sources.md#boundary-scan-bus).
 
 Boundary scan does not use the Test Interface Adapter. It needs a separate JTAG probe connected to the JTAG header of the board.
 
@@ -145,7 +145,7 @@ Many chips use one **control cell** for several outputs. Switching one of them t
 
 ## Buses view
 
-The **Buses** view defines buses that are emulated through boundary scan pins. Test steps then select a bus with the evaluation source [Boundary Scan Bus](08-evaluation-sources.md#boundary-scan-bus). The tab is only used to set up the buses; transactions are run by test steps.
+The **Buses** view defines buses that are emulated through boundary scan pins. Test steps then select a bus with the evaluation source [Boundary Scan Bus](09-evaluation-sources.md#boundary-scan-bus). The tab is only used to set up the buses; transactions are run by test steps.
 
 Add and remove buses with the **+** and **−** buttons. For the selected bus:
 

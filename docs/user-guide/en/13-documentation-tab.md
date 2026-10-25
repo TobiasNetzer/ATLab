@@ -46,4 +46,4 @@ If a referenced image or file no longer exists, an error is logged (*"Image not 
 
 Empty fields are printed as `-`. The serial number is not entered here; it comes from the serial-number dialog at the start of each test.
 
-Name, revision, variant and part number are also shown in the [result bar](11-running-tests.md#the-result-bar) on the Test Execution tab, so the operator can check that the right test is loaded.
+Name, revision, variant and part number are also shown in the [result bar](14-running-tests.md#the-result-bar) on the Test Execution tab, so the operator can check that the right test is loaded.

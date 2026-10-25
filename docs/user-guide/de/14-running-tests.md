@@ -1,4 +1,4 @@
-# 11. Tests ausführen
+# 14. Tests ausführen
 
 Tests werden auf der Registerkarte **Testausführung** gestartet. Bediener arbeiten normalerweise mit ausgeschaltetem Entwicklungsmodus und sehen nur Werkzeugleiste, Schrittliste und Ergebnisleiste.
 
@@ -45,7 +45,7 @@ Vor dem ersten und nach dem letzten Schritt werden alle Relais zurückgesetzt.
 
 **Testausführung des ausgewählten Moduls starten** und **Testausführung ab ausgewähltem Schritt starten** sind für die Entwicklung einzelner Module gedacht. Ein *Springe zu* auf einen Schritt außerhalb des Moduls beendet den Lauf mit einem Fehler.
 
-**Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt. Eine vom Schritt verwendete Boundary-Scan-Kette bleibt ebenfalls unter Kontrolle des Tests, sodass der nächste Einzelschritt mit ihren Pinzuständen weiterarbeitet; **Stopp** (`Esc`) gibt sie frei (siehe [Boundary Scan während der Testausführung](14-boundary-scan.md#boundary-scan-während-der-testausführung)).
+**Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt. Eine vom Schritt verwendete Boundary-Scan-Kette bleibt ebenfalls unter Kontrolle des Tests, sodass der nächste Einzelschritt mit ihren Pinzuständen weiterarbeitet; **Stopp** (`Esc`) gibt sie frei (siehe [Boundary Scan während der Testausführung](12-boundary-scan.md#boundary-scan-während-der-testausführung)).
 
 ## Eingabe der Seriennummer
 

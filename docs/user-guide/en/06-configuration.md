@@ -1,4 +1,4 @@
-# 5. Configuration Tab
+# 6. Configuration Tab
 
 The **Configuration** tab holds the project-wide setup. Everything here is saved in the project file.
 
@@ -88,7 +88,7 @@ Steps refer to devices by an internal ID, so renaming a device does not break th
 | **Timeout (ms)** | 2000 | VISA I/O timeout. |
 | **Termination Character** | LF | Termination character for *reading* responses. |
 
-> **Note:** For VISA, the termination setting applies to reading. Commands are written exactly as entered. If your instrument needs a terminator on every command (typical for `::SOCKET` resources), append it explicitly, e.g. `MEAS:VOLT?{hex:0A}`. See [Commands, Variables & Expressions](09-commands-variables-expressions.md#encoding-blocks).
+> **Note:** For VISA, the termination setting applies to reading. Commands are written exactly as entered. If your instrument needs a terminator on every command (typical for `::SOCKET` resources), append it explicitly, e.g. `MEAS:VOLT?{hex:0A}`. See [Commands, Variables & Expressions](10-commands-variables-expressions.md#encoding-blocks).
 
 ### Connection handling
 
@@ -114,10 +114,10 @@ Add and remove variables with **+**/**−** or the context menu.
 **Lifetime of values**
 
 - When a project is opened, or when you edit the Runtime Variables table, all variables are reset to their initial values.
-- A step with **Assign Result to Variable** overwrites the value during a run (see [Building Test Sequences](07-building-test-sequences.md#advanced-settings)).
+- A step with **Assign Result to Variable** overwrites the value during a run (see [Building Test Sequences](08-building-test-sequences.md#advanced-settings)).
 - Values written during a run are **kept for the next run** until the project is reopened or the table is edited. If a sequence relies on a variable starting at its initial value every time, set it explicitly in an early step (for example an Expression step that assigns a constant).
 
-How to reference variables is explained in [Commands, Variables & Expressions](09-commands-variables-expressions.md).
+How to reference variables is explained in [Commands, Variables & Expressions](10-commands-variables-expressions.md).
 
 ---
 
@@ -134,13 +134,13 @@ How to reference variables is explained in [Commands, Variables & Expressions](0
 | **Export Test Report (PDF)** | Writes a formatted test report. |
 | **Output Path** | Folder for exported files. Click **…** to choose. Created if it does not exist. |
 
-Details on the exported files: [Test Results & Reports](12-results-and-reports.md).
+Details on the exported files: [Test Results & Reports](15-results-and-reports.md).
 
 ### Control Devices
 
 | Setting | Description |
 |---------|-------------|
-| **Enable Control Module** | Connects the USB control module (Start/Stop buttons with status LEDs). See [Running Tests](11-running-tests.md#control-module). |
+| **Enable Control Module** | Connects the USB control module (Start/Stop buttons with status LEDs). See [Running Tests](14-running-tests.md#control-module). |
 
 ### Serial Number Validation
 

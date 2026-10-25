@@ -1,4 +1,4 @@
-# 9. Commands, Variables & Expressions
+# 10. Commands, Variables & Expressions
 
 Command texts in ATLab are more than plain strings. Inside curly braces you can insert variables, encode binary data and calculate values. This chapter describes the syntax.
 
@@ -111,7 +111,7 @@ The content is evaluated like an [expression](#expressions), so it can be a numb
 | `{u16be:{Setpoint}*10}` with `Setpoint` = `100` | `0x03 0xE8` |
 | `{f32be:3.3}` | `0x40 0x53 0x33 0x33` |
 
-The counterpart for reading binary answers is `{byte:N}` / `{f32}` in [Response Processing](10-response-processing.md#numeric-extraction).
+The counterpart for reading binary answers is `{byte:N}` / `{f32}` in [Response Processing](11-response-processing.md#numeric-extraction).
 
 ## Expressions
 

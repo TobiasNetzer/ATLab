@@ -92,19 +92,19 @@ python scripts/build_user_guide_pdf.py --lang en   # or --lang de
 
 ### Configuration
 Add and configure external test instruments (Serial, TCP/IP, VISA), project settings, custom channel names and runtime variables.
-→ [Configuration Tab](docs/user-guide/en/05-configuration.md)
+→ [Configuration Tab](docs/user-guide/en/06-configuration.md)
 
 ![image](docs/user-guide/en/images/Configuration_Tab_en.png)
 
 ### Scripting
 Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script folder shared across projects.
-→ [Scripting Tab](docs/user-guide/en/06-scripting.md)
+→ [Scripting Tab](docs/user-guide/en/07-scripting.md)
 
 ![image](docs/user-guide/en/images/Scripting_Tab_en.png)
 
 ### Test Execution
 Build the test sequence, configure limits, evaluation sources, response processing and relay routing per step, then run, single-step or debug it.
-→ [Building Test Sequences](docs/user-guide/en/07-building-test-sequences.md) · [Running Tests](docs/user-guide/en/11-running-tests.md)
+→ [Building Test Sequences](docs/user-guide/en/08-building-test-sequences.md) · [Running Tests](docs/user-guide/en/14-running-tests.md)
 
 ![image](docs/user-guide/en/images/Testing_Tab_en.png)
 
@@ -120,11 +120,11 @@ Keep notes, images, attachments and DUT information directly within the project.
 
 ### Boundary Scan
 Connect a SEGGER J-Link or FTDI JTAG probe, detect the scan chain, import BSDL files, watch and drive the pins of the chips on the board, and set up I²C, SPI and pin group buses for test steps.
-→ [Boundary Scan Tab](docs/user-guide/en/14-boundary-scan.md)
+→ [Boundary Scan Tab](docs/user-guide/en/12-boundary-scan.md)
 
 ### Test Hardware
 View information about the attached Test Interface Adapter, its channels and interfaces, and run the relay matrix self-test.
-→ [Test Hardware Tab](docs/user-guide/en/15-test-hardware.md)
+→ [Test Hardware Tab](docs/user-guide/en/04-test-hardware.md)
 
 ![image](docs/user-guide/en/images/Hardware_Tab_en.png)
 

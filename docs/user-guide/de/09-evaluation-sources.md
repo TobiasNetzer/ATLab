@@ -1,4 +1,4 @@
-# 8. Auswertungsquellen
+# 9. Auswertungsquellen
 
 Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jede Quelle liefert letztlich eine Zahl, die anschließend mit den Grenzwerten des Schritts verglichen wird.
 
@@ -25,7 +25,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | `Overflow` | Wert ≥ 9,9 × 10³⁷ (der SCPI-Überlaufwert, z. B. Multimeter außerhalb des Messbereichs) | Fehlgeschlagen |
 | *(leer)* mit ✘ und Fehler im Ereignisprotokoll | Der Schritt konnte nicht ausgeführt werden (Gerät nicht gefunden, Verbindung fehlgeschlagen, Parse-Fehler …). **Der Test stoppt** mit dem Status *Testausführung fehlgeschlagen*. | Fehlgeschlagen |
 
-Eine Antwort, die sich nicht in eine Zahl umwandeln lässt – z. B. `OK` oder `+1.23E+00 VDC` –, ist ein Ausführungsfehler. Verwenden Sie die [Antwortverarbeitung](10-response-processing.md), um solche Antworten in eine Zahl umzuwandeln. Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`4,5` ergibt 4,5); Tausendertrennzeichen werden nicht unterstützt.
+Eine Antwort, die sich nicht in eine Zahl umwandeln lässt – z. B. `OK` oder `+1.23E+00 VDC` –, ist ein Ausführungsfehler. Verwenden Sie die [Antwortverarbeitung](11-response-processing.md), um solche Antworten in eine Zahl umzuwandeln. Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`4,5` ergibt 4,5); Tausendertrennzeichen werden nicht unterstützt.
 
 ---
 
@@ -35,7 +35,7 @@ Der Schritt schaltet nur Relais, wartet seine Verzögerung ab und zeigt optional
 
 ## Skript
 
-Führt ein Skript aus dem [Skriptordner](06-scripting.md) auf einem Gerät aus.
+Führt ein Skript aus dem [Skriptordner](07-scripting.md) auf einem Gerät aus.
 
 **Bereich Skript-Konfiguration**
 
@@ -75,7 +75,7 @@ Kommuniziert über die galvanisch isolierten Schnittstellen des Test Interface A
 | **Bytes lesen** | Anzahl zu lesender Bytes (0–255) | Anzahl erwarteter Antwortbytes (0–255) |
 | **Timeout (ms)** | Transaktions-Timeout | Transaktions-Timeout |
 
-Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zum Senden der beiden Bytes 0x0A 0x1F (siehe [Kapitel 9](09-commands-variables-expressions.md#kodierungsblöcke)).
+Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zum Senden der beiden Bytes 0x0A 0x1F (siehe [Kapitel 10](10-commands-variables-expressions.md#kodierungsblöcke)).
 
 **Verhalten bei I²C**
 
@@ -98,7 +98,7 @@ Führt ein Programm auf dem Prüfrechner aus. Standardmäßig ist der **Exit-Cod
 | Feld | Beschreibung |
 |------|--------------|
 | **Befehl** | Befehlszeile. Darf `{Variable}`-Verweise enthalten. Das erste Wort (oder ein `"Pfad in Anführungszeichen"`) ist das Programm, der Rest sind Argumente. |
-| **Ausgabe auswerten** | Aus: Der Exit-Code ist der Messwert. Ein: Das Programm läuft ohne Fenster, seine Standardausgabe wird wie eine Geräteantwort ausgewertet (bei Bedarf mit [Antwortverarbeitung](10-response-processing.md)) und muss eine Zahl ergeben. Ein Exit-Code ungleich `0` lässt den Schritt fehlschlagen; die Fehlermeldung enthält die Fehlerausgabe des Programms. |
+| **Ausgabe auswerten** | Aus: Der Exit-Code ist der Messwert. Ein: Das Programm läuft ohne Fenster, seine Standardausgabe wird wie eine Geräteantwort ausgewertet (bei Bedarf mit [Antwortverarbeitung](11-response-processing.md)) und muss eine Zahl ergeben. Ein Exit-Code ungleich `0` lässt den Schritt fehlschlagen; die Fehlermeldung enthält die Fehlerausgabe des Programms. |
 
 Der Befehl wird genau so ausgeführt, wie er eingegeben wurde – ohne Shell dazwischen. Für Shell-Funktionen wie Pipes, Umleitungen, eingebaute Befehle (`dir`, `echo`, `type`) oder Batch-Dateien rufen Sie die Shell selbst auf:
 
@@ -130,7 +130,7 @@ Das letzte Beispiel ist nur mit **Ausgabe auswerten** und einer Antwortmaske sin
 
 Zeigt den **Kommentar** des Schritts in einem Dialog mit dem Titel *Warten auf Benutzerbestätigung* und den Schaltflächen **Bestanden** und **Fehlgeschlagen**. **Bestanden** ergibt `1`, **Fehlgeschlagen** ergibt `0`. Setzen Sie alle Grenzwerte auf `1`, damit nur *Bestanden* besteht.
 
-Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](11-running-tests.md#steuermodul) beantwortet die grüne Taste *Bestanden* und die rote *Fehlgeschlagen*.
+Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](14-running-tests.md#steuermodul) beantwortet die grüne Taste *Bestanden* und die rote *Fehlgeschlagen*.
 
 ## Benutzereingabe
 
@@ -138,11 +138,11 @@ Fordert den Bediener auf, einen Wert einzugeben – z. B. die Ablesung eines Zei
 
 - Der eingegebene Wert ist der Messwert und wird wie jede andere Messung mit den Grenzwerten verglichen.
 - Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`1.5` und `1,5` ergeben beide 1,5). Tausendertrennzeichen und SI-Präfixe (`k`, `m` …) werden nicht unterstützt – geben Sie eine einfache Zahl ein, z. B. `4700` oder `4.7e3`.
-- Ist die [Antwortverarbeitung](10-response-processing.md) aktiviert, wird der eingegebene Text vor der Umwandlung wie eine Geräteantwort verarbeitet, z. B. um die Zahl aus einem gescannten Etikett wie `R=4.7` herauszulösen.
+- Ist die [Antwortverarbeitung](11-response-processing.md) aktiviert, wird der eingegebene Text vor der Umwandlung wie eine Geräteantwort verarbeitet, z. B. um die Zahl aus einem gescannten Etikett wie `R=4.7` herauszulösen.
 - Text, der sich nicht in eine Zahl umwandeln lässt, ist ein Ausführungsfehler und stoppt den Test.
 - **Abbrechen** stoppt den Test.
 
-Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](11-running-tests.md#steuermodul) wirkt die grüne Taste als **Weiter** und die rote als **Abbrechen**.
+Ein über die Bild-Schaltfläche neben *Kommentar anzeigen* (Erweiterte Einstellungen) hinzugefügtes Bild wird im Dialog angezeigt. Mit aktiviertem [Steuermodul](14-running-tests.md#steuermodul) wirkt die grüne Taste als **Weiter** und die rote als **Abbrechen**.
 
 ## Ausdruck
 
@@ -154,7 +154,7 @@ Berechnet einen Wert. Das Feld **Ausdruck** darf Zahlen, Laufzeitvariablen und O
 0x3F & {Status}
 ```
 
-Die unterstützten Operatoren sind in [Kapitel 9](09-commands-variables-expressions.md#ausdrücke) aufgeführt. Kombiniert mit *Ergebnis einer Variable zuweisen* lassen sich abgeleitete Werte, Zähler oder Flags berechnen. Ein nicht auswertbarer Ausdruck ist ein Ausführungsfehler.
+Die unterstützten Operatoren sind in [Kapitel 10](10-commands-variables-expressions.md#ausdrücke) aufgeführt. Kombiniert mit *Ergebnis einer Variable zuweisen* lassen sich abgeleitete Werte, Zähler oder Flags berechnen. Ein nicht auswertbarer Ausdruck ist ein Ausführungsfehler.
 
 ## Datei
 
@@ -164,11 +164,11 @@ Liest eine Datei und extrahiert daraus eine Zahl.
 |------|--------------|
 | **Dateipfad** | Pfad zur Datei. Mit der Durchsuchen-Schaltfläche auswählen. Pfade im Projektordner werden relativ gespeichert. |
 
-Ohne Antwortverarbeitung muss der gesamte Dateiinhalt eine Zahl sein (z. B. eine Datei mit `3.274`). Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`3,274` ergibt ebenfalls 3,274); Tausendertrennzeichen werden nicht unterstützt. Mit Antwortverarbeitung können Sie einen Wert an fester Position mit **Überspringen**/**Länge** aus einer größeren Datei herausschneiden oder einfach prüfen, ob die Datei einen bestimmten Text enthält (siehe [Antwortverarbeitung](10-response-processing.md)). Ein typisches Muster ist ein Schritt mit der Auswertungsquelle *Externes Programm*, der ein externes Werkzeug startet, das sein Ergebnis in eine Datei schreibt, gefolgt von einem Datei-Schritt, der sie auswertet.
+Ohne Antwortverarbeitung muss der gesamte Dateiinhalt eine Zahl sein (z. B. eine Datei mit `3.274`). Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`3,274` ergibt ebenfalls 3,274); Tausendertrennzeichen werden nicht unterstützt. Mit Antwortverarbeitung können Sie einen Wert an fester Position mit **Überspringen**/**Länge** aus einer größeren Datei herausschneiden oder einfach prüfen, ob die Datei einen bestimmten Text enthält (siehe [Antwortverarbeitung](11-response-processing.md)). Ein typisches Muster ist ein Schritt mit der Auswertungsquelle *Externes Programm*, der ein externes Werkzeug startet, das sein Ergebnis in eine Datei schreibt, gefolgt von einem Datei-Schritt, der sie auswertet.
 
 ## Boundary Scan
 
-Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bezeichnungen werden auf der [Registerkarte Boundary Scan](14-boundary-scan.md) eingerichtet.
+Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bezeichnungen werden auf der [Registerkarte Boundary Scan](12-boundary-scan.md) eingerichtet.
 
 **Bereich Boundary Scan**
 
@@ -202,7 +202,7 @@ Bei einem fehlgeschlagenen Schritt zeigt der Tooltip über dem Messwert oder dem
 
 Die Probe wird beim ersten Boundary-Scan-Schritt des Laufs verbunden und die Kette geprüft. Eine Kette, die nicht zum Projekt passt, ein Baustein ohne BSDL-Datei oder ein Pin, der nicht getrieben oder gelesen werden kann, ist ein Ausführungsfehler und beendet den Test.
 
-**Boundary Scan ausschalten** versetzt alle Bausteine in den Normalbetrieb und gibt die Probe frei. Verwenden Sie es vor Schritten, die die Bausteine im Normalbetrieb benötigen oder selbst auf die Probe zugreifen, z. B. das Programmieren über denselben J-Link mit einem Schritt [Externes Programm](#externes-programm). Ein späterer Boundary-Scan-Schritt verbindet automatisch neu. Siehe auch [Boundary Scan während der Testausführung](14-boundary-scan.md#boundary-scan-während-der-testausführung).
+**Boundary Scan ausschalten** versetzt alle Bausteine in den Normalbetrieb und gibt die Probe frei. Verwenden Sie es vor Schritten, die die Bausteine im Normalbetrieb benötigen oder selbst auf die Probe zugreifen, z. B. das Programmieren über denselben J-Link mit einem Schritt [Externes Programm](#externes-programm). Ein späterer Boundary-Scan-Schritt verbindet automatisch neu. Siehe auch [Boundary Scan während der Testausführung](12-boundary-scan.md#boundary-scan-während-der-testausführung).
 
 Beispiel – prüfen, dass eine LED angesteuert wird und ihre Rückmeldeleitung folgt:
 
@@ -214,7 +214,7 @@ Beispiel – prüfen, dass eine LED angesteuert wird und ihre Rückmeldeleitung 
 
 ## Boundary-Scan-Bus
 
-Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus aus: mit einem I²C- oder SPI-Baustein oder einer Pin-Gruppe. Die Busse werden auf der [Registerkarte Boundary Scan](14-boundary-scan.md#ansicht-busse) eingerichtet; der Schritt funktioniert wie ein [Schnittstellenbefehl](#schnittstellenbefehl).
+Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus aus: mit einem I²C- oder SPI-Baustein oder einer Pin-Gruppe. Die Busse werden auf der [Registerkarte Boundary Scan](12-boundary-scan.md#ansicht-busse) eingerichtet; der Schritt funktioniert wie ein [Schnittstellenbefehl](#schnittstellenbefehl).
 
 **Bereich Boundary-Scan-Bus**
 
@@ -222,7 +222,7 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 |------|--------------|
 | **Bus** | Bus aus der Registerkarte Boundary Scan, angezeigt als `Name (Typ)`. |
 | **Adresse 0-127** | Nur I²C: 7-Bit-Zieladresse. Als Dezimalzahl oder mit `0x`-Präfix eingeben, z. B. `80` oder `0x50`. |
-| **Befehl** | Zu schreibende Bytes, meist als Kodierungsblock, z. B. `{hex:10}`. Unterstützt Variablen und Ausdrücke (siehe [Kapitel 9](09-commands-variables-expressions.md)). |
+| **Befehl** | Zu schreibende Bytes, meist als Kodierungsblock, z. B. `{hex:10}`. Unterstützt Variablen und Ausdrücke (siehe [Kapitel 10](10-commands-variables-expressions.md)). |
 | **Bytes lesen** | Anzahl der danach zu lesenden Bytes. |
 
 | Bustyp | Übertragung |
@@ -234,7 +234,7 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 **Ergebnis**
 
 - Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `0` bei einem I²C-NACK.
-- Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](10-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
+- Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](11-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
 - Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben, auch wenn der Schritt laut Grenzwerten besteht. Ein Schritt kann wiederholt werden, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen; er warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 Beispiele:
@@ -246,4 +246,4 @@ Beispiele:
 | JEDEC-ID eines SPI-Flash lesen | SPI | – | `{hex:9F}` | `3` | `{byte:3}` |
 | 4-Bit-Baugruppenkennung lesen | Pin Group | – | – | `1` | `{byte:1}` |
 
-Alle Signalwechsel einer Übertragung werden in einem Transfer an die Probe geschickt. I²C-Clock-Stretching wird nicht unterstützt; siehe [Geschwindigkeit und Einschränkungen](14-boundary-scan.md#geschwindigkeit-und-einschränkungen).
+Alle Signalwechsel einer Übertragung werden in einem Transfer an die Probe geschickt. I²C-Clock-Stretching wird nicht unterstützt; siehe [Geschwindigkeit und Einschränkungen](12-boundary-scan.md#geschwindigkeit-und-einschränkungen).

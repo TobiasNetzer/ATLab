@@ -1,4 +1,4 @@
-# 9. Befehle, Variablen & Ausdrücke
+# 10. Befehle, Variablen & Ausdrücke
 
 Befehlstexte in ATLab sind mehr als einfache Zeichenketten. In geschweiften Klammern können Sie Variablen einfügen, Binärdaten kodieren und Werte berechnen. Dieses Kapitel beschreibt die Syntax.
 
@@ -111,7 +111,7 @@ Der Inhalt wird wie ein [Ausdruck](#ausdrücke) ausgewertet und kann daher eine 
 | `{u16be:{Setpoint}*10}` mit `Setpoint` = `100` | `0x03 0xE8` |
 | `{f32be:3.3}` | `0x40 0x53 0x33 0x33` |
 
-Das Gegenstück zum Lesen binärer Antworten ist `{byte:N}` / `{f32}` in der [Antwortverarbeitung](10-response-processing.md#zahlenextraktion).
+Das Gegenstück zum Lesen binärer Antworten ist `{byte:N}` / `{f32}` in der [Antwortverarbeitung](11-response-processing.md#zahlenextraktion).
 
 ## Ausdrücke
 

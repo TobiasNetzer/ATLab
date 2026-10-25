@@ -1,4 +1,4 @@
-# 7. Prüfsequenzen erstellen
+# 8. Prüfsequenzen erstellen
 
 Prüfsequenzen werden auf der Registerkarte **Testausführung** mit aktiviertem **Entwicklungsmodus** erstellt (Baustellen-Schaltfläche am rechten Ende der Werkzeugleiste). Im Entwicklungsmodus erscheinen rechts neben der Schrittliste die Konfigurationsbereiche.
 
@@ -82,7 +82,7 @@ Werte werden mit automatischem SI-Präfix angezeigt (`0.0013 A` → `1,3mA`). Se
 
 **Variablen in Grenzwerten**
 
-Grenzwerte, Sollwert und Verzögerung können Laufzeitvariablen enthalten, z. B. `{V_Ref}` oder einen Ausdruck wie `{expr:{V_Ref}*1.05}`. Sie werden bei jeder Ausführung des Schritts aufgelöst. Die automatische Toleranzberechnung entfällt, sobald einer der drei Werte eine Variable enthält. Siehe [Kapitel 9](09-commands-variables-expressions.md).
+Grenzwerte, Sollwert und Verzögerung können Laufzeitvariablen enthalten, z. B. `{V_Ref}` oder einen Ausdruck wie `{expr:{V_Ref}*1.05}`. Sie werden bei jeder Ausführung des Schritts aufgelöst. Die automatische Toleranzberechnung entfällt, sobald einer der drei Werte eine Variable enthält. Siehe [Kapitel 10](10-commands-variables-expressions.md).
 
 ### Verzögerung
 
@@ -90,7 +90,7 @@ Wartezeit zwischen dem Schalten der Relais und dem Erfassen des Werts, zum Einsc
 
 ### Auswertung
 
-Wählt die [Auswertungsquelle](08-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Externes Programm**, **Benutzerbestätigung**, **Benutzereingabe**, **Ausdruck**, **Datei**, **Boundary Scan** oder **Boundary-Scan-Bus**. Darunter erscheint der passende Editorbereich.
+Wählt die [Auswertungsquelle](09-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Externes Programm**, **Benutzerbestätigung**, **Benutzereingabe**, **Ausdruck**, **Datei**, **Boundary Scan** oder **Boundary-Scan-Bus**. Darunter erscheint der passende Editorbereich.
 
 ### Kommentar
 

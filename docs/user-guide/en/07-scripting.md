@@ -1,4 +1,4 @@
-# 6. Scripting Tab
+# 7. Scripting Tab
 
 A **script** is a named, reusable sequence of instrument commands, for example *"Configure & Query DC Voltage"*. Instead of typing the same SCPI commands into many steps, you write them once as a script and select the script in each step. Variables let one script serve many steps with different settings.
 
@@ -42,13 +42,13 @@ Select a script in the **Scripts** list. On the right you can edit:
 | **Variable Name** | Letters, digits and `_` only. |
 | **Default Value** | Value a step starts with when the script is first selected. |
 
-Use a variable in a command by writing its name in curly braces, e.g. `SENS:VOLT:DC:RANGE {Range}`. Each test step that uses the script gets its own copy of the variables and can override the values (see [Script evaluation](08-evaluation-sources.md#script)).
+Use a variable in a command by writing its name in curly braces, e.g. `SENS:VOLT:DC:RANGE {Range}`. Each test step that uses the script gets its own copy of the variables and can override the values (see [Script evaluation](09-evaluation-sources.md#script)).
 
 ### Commands
 
 | Column | Description |
 |--------|-------------|
-| **Command** | Text sent to the instrument. May contain script variables, runtime variables, encoding blocks and expressions ([chapter 9](09-commands-variables-expressions.md)). Empty commands are skipped. |
+| **Command** | Text sent to the instrument. May contain script variables, runtime variables, encoding blocks and expressions ([chapter 10](10-commands-variables-expressions.md)). Empty commands are skipped. |
 | **Expect Response** | Send the command and wait for an answer (a query). If off, the command is only written. |
 | **Evaluate** | Use the answer of this command as the step's measured value. Only **one** command per script can be marked; marking another clears the previous one. Requires **Expect Response** to be on as well. |
 | **Delay (ms)** | Wait time **before** the command is sent. |
@@ -79,5 +79,5 @@ A step using this script sends the two configuration commands, waits 500 ms, que
 
 - Keep scripts small and generic; push step-specific values into variables.
 - Put the script folder next to your projects and under version control.
-- If a script returns more than a bare number, use [Response Processing](10-response-processing.md) in the step to extract the value.
+- If a script returns more than a bare number, use [Response Processing](11-response-processing.md) in the step to extract the value.
 - If no command is marked **Evaluate**, the step's measured value is `0`.

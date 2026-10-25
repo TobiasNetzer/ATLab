@@ -1,4 +1,4 @@
-# 5. Registerkarte Konfiguration
+# 6. Registerkarte Konfiguration
 
 Die Registerkarte **Konfiguration** enthält die projektweiten Einstellungen. Alles hier wird in der Projektdatei gespeichert.
 
@@ -88,7 +88,7 @@ Schritte verweisen über eine interne ID auf Geräte; Umbenennen eines Geräts s
 | **Timeout (ms)** | 2000 | VISA-I/O-Timeout. |
 | **Abschlusszeichen** | LF | Abschlusszeichen beim *Lesen* von Antworten. |
 
-> **Hinweis:** Bei VISA gilt das Abschlusszeichen für das Lesen. Befehle werden exakt wie eingegeben geschrieben. Benötigt Ihr Gerät ein Abschlusszeichen an jedem Befehl (typisch bei `::SOCKET`-Ressourcen), hängen Sie es explizit an, z. B. `MEAS:VOLT?{hex:0A}`. Siehe [Befehle, Variablen & Ausdrücke](09-commands-variables-expressions.md#kodierungsblöcke).
+> **Hinweis:** Bei VISA gilt das Abschlusszeichen für das Lesen. Befehle werden exakt wie eingegeben geschrieben. Benötigt Ihr Gerät ein Abschlusszeichen an jedem Befehl (typisch bei `::SOCKET`-Ressourcen), hängen Sie es explizit an, z. B. `MEAS:VOLT?{hex:0A}`. Siehe [Befehle, Variablen & Ausdrücke](10-commands-variables-expressions.md#kodierungsblöcke).
 
 ### Verbindungsverwaltung
 
@@ -114,10 +114,10 @@ Variablen mit **+**/**−** oder über das Kontextmenü hinzufügen und entferne
 **Lebensdauer der Werte**
 
 - Beim Öffnen eines Projekts oder beim Bearbeiten der Tabelle Laufzeitvariablen werden alle Variablen auf ihre Initialwerte zurückgesetzt.
-- Ein Schritt mit **Ergebnis einer Variable zuweisen** überschreibt den Wert während eines Laufs (siehe [Prüfsequenzen erstellen](07-building-test-sequences.md#erweiterte-einstellungen)).
+- Ein Schritt mit **Ergebnis einer Variable zuweisen** überschreibt den Wert während eines Laufs (siehe [Prüfsequenzen erstellen](08-building-test-sequences.md#erweiterte-einstellungen)).
 - Während eines Laufs geschriebene Werte **bleiben für den nächsten Lauf erhalten**, bis das Projekt erneut geöffnet oder die Tabelle bearbeitet wird. Muss eine Variable bei jedem Lauf mit ihrem Initialwert beginnen, setzen Sie sie in einem frühen Schritt explizit (z. B. mit einem Ausdruck-Schritt, der eine Konstante zuweist).
 
-Wie Variablen referenziert werden, erklärt [Befehle, Variablen & Ausdrücke](09-commands-variables-expressions.md).
+Wie Variablen referenziert werden, erklärt [Befehle, Variablen & Ausdrücke](10-commands-variables-expressions.md).
 
 ---
 
@@ -134,13 +134,13 @@ Wie Variablen referenziert werden, erklärt [Befehle, Variablen & Ausdrücke](09
 | **Testbericht exportieren (PDF)** | Schreibt einen formatierten Testbericht. |
 | **Ausgabepfad** | Ordner für exportierte Dateien. Mit **…** auswählen. Wird bei Bedarf angelegt. |
 
-Details zu den exportierten Dateien: [Testergebnisse & Berichte](12-results-and-reports.md).
+Details zu den exportierten Dateien: [Testergebnisse & Berichte](15-results-and-reports.md).
 
 ### Steuergeräte
 
 | Einstellung | Beschreibung |
 |-------------|--------------|
-| **Steuermodul aktivieren** | Verbindet das USB-Steuermodul (Start-/Stopp-Tasten mit Status-LEDs). Siehe [Tests ausführen](11-running-tests.md#steuermodul). |
+| **Steuermodul aktivieren** | Verbindet das USB-Steuermodul (Start-/Stopp-Tasten mit Status-LEDs). Siehe [Tests ausführen](14-running-tests.md#steuermodul). |
 
 ### Seriennummer-Validierung
 

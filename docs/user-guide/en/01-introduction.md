@@ -24,10 +24,10 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 
 | Term | Meaning |
 |------|---------|
-| **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](04-projects.md). |
-| **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](07-building-test-sequences.md#modules). |
-| **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. See [How a test step is executed](11-running-tests.md#how-a-test-step-is-executed). |
-| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression, File, Boundary Scan* or *Boundary Scan Bus*. See [Evaluation Sources](08-evaluation-sources.md). |
+| **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](05-projects.md). |
+| **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](08-building-test-sequences.md#modules). |
+| **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. See [How a test step is executed](14-running-tests.md#how-a-test-step-is-executed). |
+| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression, File, Boundary Scan* or *Boundary Scan Bus*. See [Evaluation Sources](09-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
 | **Script variable** | A placeholder such as `{Range}` inside a script, given a concrete value per test step. |
@@ -36,10 +36,10 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | **Stimulation / Ext. stimulation channels** | Individually switchable relays on the adapter, set per step. |
 | **Development mode** | The editing mode of the Test Execution tab. When it is off, the tab shows only the sequence and results — the operator view. |
 | **Simulator** | A virtual Test Interface Adapter used when no hardware is connected. Relay and interface commands succeed without doing anything. |
-| **Boundary scan chain** | The boundary-scan capable chips on the board, connected in series to a JTAG probe. Set up on the [Boundary Scan tab](14-boundary-scan.md). |
+| **Boundary scan chain** | The boundary-scan capable chips on the board, connected in series to a JTAG probe. Set up on the [Boundary Scan tab](12-boundary-scan.md). |
 
 ## Who this guide is for
 
-- **Test engineers** who design sequences: read chapters 4–10, and chapter 14 for boundary scan.
-- **Operators** who run released sequences: chapters 3 and 11 are enough.
-- **Administrators** who install ATLab on test stations: chapter 2 and the [Reference](17-reference.md).
+- **Test engineers** who design sequences: read chapters 5–13 (chapter 12 only if you use boundary scan).
+- **Operators** who run released sequences: chapters 3, 14 and 15 are enough.
+- **Administrators** who install ATLab on test stations: chapters 2 and 4 and the [Reference](17-reference.md).

@@ -54,7 +54,7 @@ VISA devices require the **NI-VISA** runtime from National Instruments. VISA sup
 
 ## Optional: JTAG probe drivers
 
-Boundary scan needs the driver of the JTAG probe (see [Boundary Scan Tab](14-boundary-scan.md#supported-probes)):
+Boundary scan needs the driver of the JTAG probe (see [Boundary Scan Tab](12-boundary-scan.md#supported-probes)):
 
 - **SEGGER J-Link:** *J-Link Software and Documentation Pack* from <https://www.segger.com>.
 - **FTDI FT2232H / FT232H / FT4232H:** *D2XX* driver from <https://ftdichip.com>. On Linux, unload the `ftdi_sio` kernel module or add a udev rule so the D2XX library can access the device.
@@ -63,7 +63,7 @@ If ATLab does not find the library in the default install folder, copy it (`JLin
 
 ## Optional: Control Module
 
-The USB control module (a HID device with Start/Stop buttons) needs no driver. It is enabled per project, see [Running Tests](11-running-tests.md#control-module).
+The USB control module (a HID device with Start/Stop buttons) needs no driver. It is enabled per project, see [Running Tests](14-running-tests.md#control-module).
 
 ## Building from source
 
