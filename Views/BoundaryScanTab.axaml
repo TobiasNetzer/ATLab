@@ -465,11 +465,17 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-                                        <ToggleSwitch IsChecked="{Binding IsAutoRefresh}"
-                                                      IsEnabled="{Binding IsConnected}"
-                                                      OnContent="{helpers:Localize Label_AutoRefresh}"
-                                                      OffContent="{helpers:Localize Label_AutoRefresh}"
-                                                      VerticalAlignment="Center"/>
+                                        <Button Background="{Binding IsAutoRefresh, Converter={StaticResource ButtonEnabledConverter}}"
+                                                Classes="Icon"
+                                                Width="35"
+                                                Height="35"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_AutoRefresh}"
+                                                Command="{Binding ToggleAutoRefreshCommand}"
+                                                IsEnabled="{Binding IsConnected}">
+                                            <shadui:ButtonAssist.Icon>
+                                                <ContentControl Content="{LucideIconContent RefreshCcwDot}"/>
+                                            </shadui:ButtonAssist.Icon>
+                                        </Button>
                                         <Button Background="{DynamicResource ButtonBackground}"
                                                 Classes="Icon"
                                                 Width="35"
@@ -477,7 +483,7 @@
                                                 ToolTip.Tip="{helpers:Localize ToolTip_RefreshPins}"
                                                 Command="{Binding RefreshCommand}">
                                             <shadui:ButtonAssist.Icon>
-                                                <ContentControl Content="{LucideIconContent RefreshCw}"/>
+                                                <ContentControl Content="{LucideIconContent RefreshCcw}"/>
                                             </shadui:ButtonAssist.Icon>
                                         </Button>
                                         <Button Background="{DynamicResource ButtonBackground}"

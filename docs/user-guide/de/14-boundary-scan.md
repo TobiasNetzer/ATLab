@@ -104,7 +104,7 @@ Bevor EXTEST aktiv wird, lädt ATLab zuerst die gewünschten Ausgangswerte (PREL
 
 | Element | Funktion |
 |---------|----------|
-| **Automatisch aktualisieren** | Liest die Pins fortlaufend (etwa zehnmal pro Sekunde), solange ein Baustein in SAMPLE oder EXTEST ist. |
+| Schaltfläche Automatisch aktualisieren | Liest die Pins fortlaufend (etwa zehnmal pro Sekunde), solange ein Baustein in SAMPLE oder EXTEST ist. Erneut klicken zum Beenden; die Schaltfläche ist hervorgehoben, solange sie aktiv ist. |
 | Aktualisieren-Schaltfläche | Liest die Pins einmal. |
 | Schild-Schaltfläche | **Alle Ausgänge auf die sicheren Werte der BSDL-Datei zurücksetzen.** |
 

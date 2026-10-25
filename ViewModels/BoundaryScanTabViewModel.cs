@@ -192,6 +192,9 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ToggleAutoRefresh() => IsAutoRefresh = !IsAutoRefresh;
+
+    [RelayCommand]
     private void ShowPins() => IsBusView = false;
 
     [RelayCommand]

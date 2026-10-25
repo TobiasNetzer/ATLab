@@ -104,7 +104,7 @@ Before EXTEST becomes active, ATLab loads the requested output values first (PRE
 
 | Control | Function |
 |---------|----------|
-| **Auto refresh** | Reads the pins continuously (about 10 times per second) while a chip is in SAMPLE or EXTEST. |
+| Auto refresh button | Reads the pins continuously (about 10 times per second) while a chip is in SAMPLE or EXTEST. Click again to stop; the button is highlighted while active. |
 | Refresh button | Reads the pins once. |
 | Shield button | **Reset all outputs to the safe values of the BSDL file.** |
 

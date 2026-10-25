@@ -1105,8 +1105,8 @@
   <data name="ToolTip_Extest" xml:space="preserve">
     <value>Ausgänge aus dem Boundary-Register treiben. Der Baustein verlässt den Normalbetrieb.</value>
   </data>
-  <data name="Label_AutoRefresh" xml:space="preserve">
-    <value>Automatisch aktualisieren</value>
+  <data name="ToolTip_AutoRefresh" xml:space="preserve">
+    <value>Pinzustände fortlaufend lesen</value>
   </data>
   <data name="ToolTip_RefreshPins" xml:space="preserve">
     <value>Pinzustände einmal lesen</value>

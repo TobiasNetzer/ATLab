@@ -1105,8 +1105,8 @@
   <data name="ToolTip_Extest" xml:space="preserve">
     <value>Drive the outputs from the boundary register. The device stops normal operation.</value>
   </data>
-  <data name="Label_AutoRefresh" xml:space="preserve">
-    <value>Auto refresh</value>
+  <data name="ToolTip_AutoRefresh" xml:space="preserve">
+    <value>Read the pin states continuously</value>
   </data>
   <data name="ToolTip_RefreshPins" xml:space="preserve">
     <value>Read the pin states once</value>
