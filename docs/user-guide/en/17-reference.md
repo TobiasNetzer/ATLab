@@ -1,4 +1,4 @@
-# 16. Reference
+# 17. Reference
 
 ## Keyboard shortcuts
 
@@ -68,6 +68,8 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Interface: type / I²C speed / address | I2C / 100 kHz / 0 |
 | Interface: baud / data bits / parity / stop bits | 9600 / 8 / None / 1 |
 | Interface: timeout | 1000 ms |
+| Boundary scan: mode / settle time | Pin actions / 0 ms |
+| Boundary scan bus: address / read bytes | 0 / 0 |
 
 ### Script command
 
@@ -84,6 +86,18 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Serial Port | 115200 baud, 8 data bits, no parity, 1 stop bit, no handshake, no termination, Chunk framing, framing timeout 100 ms |
 | TCP/IP | Port 5025, timeout 2000 ms, termination LF |
 | VISA | Timeout 2000 ms, termination LF |
+
+### Boundary scan
+
+| Setting | Default |
+|---------|---------|
+| Probe type | SEGGER J-Link |
+| Serial number | *(empty)* — first available probe |
+| TCK frequency | 1000 kHz |
+| FTDI ADBUS value / direction | `08` / `0B` |
+| Boundary register after loading a BSDL file | safe values from the BSDL file |
+| SPI bus | mode 0, CS active low, MSB first |
+| Pin group | 8 pins |
 
 ### Project settings
 
@@ -138,11 +152,18 @@ Personal, per-user settings — not part of any project:
 | Adapter I²C | DUT | adapter with I²C |
 | Adapter UART | DUT | adapter with UART |
 | USB HID | Control module | – |
+| JTAG (SEGGER J-Link) | Boundary scan | J-Link Software and Documentation Pack |
+| JTAG (FTDI FT2232H/FT232H/FT4232H) | Boundary scan | FTDI D2XX driver |
 
 ## Glossary
 
 | Term | Definition |
 |------|------------|
+| **BSDL** | Boundary Scan Description Language. File from the chip manufacturer that describes the boundary register, the instructions and the package pinout of a chip. |
+| **BYPASS / SAMPLE / EXTEST** | Boundary scan instructions: chip bypassed / pins read without affecting the chip / pins read and driven from the boundary register. |
+| **Boundary register** | Chain of cells, one or more per pin, through which boundary scan reads and drives the pins. |
+| **IDCODE** | 32-bit identification of a chip (manufacturer, part number, version), read during chain detection. |
+| **JTAG** | IEEE 1149.1 test access port with the signals TCK, TMS, TDI, TDO (and optionally TRST). |
 | **Adapter / TIA / cTIA** | Test Interface Adapter (compact Test Interface Adapter), the USB relay and interface hardware ATLab controls. |
 | **Deviation** | `(measured − nominal) / nominal × 100 %`. |
 | **DUT** | Device Under Test. |

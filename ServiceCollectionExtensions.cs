@@ -88,6 +88,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ExpressionEditorViewModel>();
         services.AddSingleton<FilePathEditorViewModel>();
         services.AddSingleton<BoundaryScanStepEditorViewModel>();
+        services.AddSingleton<BoundaryScanBusStepEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();

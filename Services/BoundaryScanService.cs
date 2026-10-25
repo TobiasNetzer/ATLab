@@ -141,6 +141,25 @@ public class BoundaryScanService : IBoundaryScanService, IDisposable
                 : ShiftData(tap, chain);
         });
 
+    public Task<OperationResult<IReadOnlyList<IReadOnlyList<bool[]?>>>> ScanSequenceAsync(
+        IReadOnlyList<IReadOnlyList<BoundaryScanChainEntry>> scans) =>
+        RunLocked(tap =>
+        {
+            foreach (var chain in scans)
+            {
+                var validation = Validate(chain);
+                if (validation.IsFailure)
+                    return OperationResult<IReadOnlyList<IReadOnlyList<bool[]?>>>.Failure(validation.ErrorMessage);
+            }
+
+            var result = tap.ScanDrSequence(scans.Select(BuildDataVector).ToList());
+            if (result.IsFailure)
+                return OperationResult<IReadOnlyList<IReadOnlyList<bool[]?>>>.Failure(result.ErrorMessage);
+
+            return OperationResult<IReadOnlyList<IReadOnlyList<bool[]?>>>.Success(
+                scans.Select((chain, i) => SplitCaptured(chain, result.Value![i])).ToList());
+        });
+
     public void Dispose()
     {
         // Devices left in EXTEST would keep driving their pins after the application exits
@@ -217,6 +236,15 @@ public class BoundaryScanService : IBoundaryScanService, IDisposable
 
     private static OperationResult<IReadOnlyList<bool[]?>> ShiftData(JtagTap tap, IReadOnlyList<BoundaryScanChainEntry> chain)
     {
+        var result = tap.ScanDr(BuildDataVector(chain));
+        return result.IsSuccess
+            ? OperationResult<IReadOnlyList<bool[]?>>.Success(SplitCaptured(chain, result.Value!))
+            : OperationResult<IReadOnlyList<bool[]?>>.Failure(result.ErrorMessage);
+    }
+
+    // The first bits shifted end up in the device closest to TDO
+    private static bool[] BuildDataVector(IReadOnlyList<BoundaryScanChainEntry> chain)
+    {
         var bits = new List<bool>();
 
         for (var i = chain.Count - 1; i >= 0; i--)
@@ -227,11 +255,11 @@ public class BoundaryScanService : IBoundaryScanService, IDisposable
                 bits.AddRange(chain[i].Outputs);
         }
 
-        var result = tap.ScanDr(bits.ToArray());
-        if (result.IsFailure)
-            return OperationResult<IReadOnlyList<bool[]?>>.Failure(result.ErrorMessage);
+        return bits.ToArray();
+    }
 
-        var tdo = result.Value!;
+    private static IReadOnlyList<bool[]?> SplitCaptured(IReadOnlyList<BoundaryScanChainEntry> chain, bool[] tdo)
+    {
         var captured = new bool[]?[chain.Count];
         var position = 0;
 
@@ -248,7 +276,7 @@ public class BoundaryScanService : IBoundaryScanService, IDisposable
             position += length;
         }
 
-        return OperationResult<IReadOnlyList<bool[]?>>.Success(captured);
+        return captured;
     }
 
     private Task<OperationResult> RunLocked(Func<JtagTap, OperationResult> action) =>

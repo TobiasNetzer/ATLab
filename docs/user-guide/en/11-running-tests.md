@@ -45,7 +45,7 @@ Before the first step and after the last one, all relays are cleared.
 
 **Start test execution of selected module** and **Start test execution from selected step** are meant for developing a single module. A *Jump To* to a step outside the module ends the run with an error.
 
-**Execute single step** is meant for development: it switches the step's relays, waits, acquires and evaluates the value, and shows the result — nothing else. The relays **stay in the step's state** afterwards. Use it to tune masks, limits and delays. Ignored steps are not executed.
+**Execute single step** is meant for development: it switches the step's relays, waits, acquires and evaluates the value, and shows the result — nothing else. The relays **stay in the step's state** afterwards. Use it to tune masks, limits and delays. Ignored steps are not executed. A boundary scan chain used by the step also stays under test control, so the next single step continues from its pin states; press **Stop** (`Esc`) to release it (see [Boundary scan during test execution](14-boundary-scan.md#boundary-scan-during-test-execution)).
 
 ## Serial number entry
 
@@ -139,4 +139,4 @@ The module's status LEDs show the test state: idle, running, passed, failed and 
 
 ## Stopping a test safely
 
-When a test ends — normally, by failure, or when stopped — ATLab clears all relays of the Test Interface Adapter and closes the connection to the instruments. With **Execute single step** the relays are left as set by the step; run a full test or switch to a step without relays to clear them.
+When a test ends — normally, by failure, or when stopped — ATLab returns all boundary scan chips to normal operation, clears all relays of the Test Interface Adapter and closes the connection to the instruments. With **Execute single step** the relays are left as set by the step; run a full test or switch to a step without relays to clear them.

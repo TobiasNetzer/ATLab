@@ -39,6 +39,12 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
 
     public ObservableCollection<BoundaryScanDeviceViewModel> Devices { get; } = new();
 
+    public BoundaryScanBusEditorViewModel BusEditor { get; }
+
+    /// <summary>The right panel shows either the pins of the selected device or the bus setup.</summary>
+    [ObservableProperty]
+    private bool _isBusView;
+
     [ObservableProperty]
     private JtagProbeInfo? _selectedProbe;
 
@@ -129,6 +135,8 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
 
         SetLocalizedTitle("Tab_BoundaryScan");
 
+        BusEditor = new BoundaryScanBusEditorViewModel(Configuration, Devices);
+
         Configuration.Devices.CollectionChanged += ConfiguredDevicesChanged;
         Configuration.ConfigurationChanged += ConfigurationChanged;
         Configuration.PropertyChanged += (_, e) =>
@@ -172,6 +180,12 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         if (value)
             _ = AutoRefreshLoop();
     }
+
+    [RelayCommand]
+    private void ShowPins() => IsBusView = false;
+
+    [RelayCommand]
+    private void ShowBuses() => IsBusView = true;
 
     private bool CanRefreshProbes() => !IsBusy;
 

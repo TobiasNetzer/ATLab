@@ -13,6 +13,8 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Benutzereingabe](#benutzereingabe) | vom Bediener eingegebene Zahl | – (verwendet den Kommentar) | ✔ |
 | [Ausdruck](#ausdruck) | Ergebnis einer Berechnung | Ausdruck | – |
 | [Datei](#datei) | aus einer Datei gelesene Zahl | Dateipfad | ✔ |
+| [Boundary Scan](#boundary-scan) | Anzahl der Pins ohne den erwarteten Pegel | Boundary Scan | – |
+| [Boundary-Scan-Bus](#boundary-scan-bus) | von einem über Boundary Scan nachgebildeten I²C-/SPI-Baustein oder einer Pin-Gruppe gelesene Daten | Boundary-Scan-Bus | ✔ |
 
 ## Besondere Ergebnisse
 
@@ -162,3 +164,80 @@ Liest eine Datei und extrahiert daraus eine Zahl.
 | **Dateipfad** | Pfad zur Datei. Mit der Durchsuchen-Schaltfläche auswählen. Pfade im Projektordner werden relativ gespeichert. |
 
 Ohne Antwortverarbeitung muss der gesamte Dateiinhalt eine Zahl sein (z. B. eine Datei mit `3.274`). Sowohl `.` als auch `,` werden als Dezimaltrennzeichen akzeptiert (`3,274` ergibt ebenfalls 3,274); Tausendertrennzeichen werden nicht unterstützt. Mit Antwortverarbeitung können Sie einen Wert an fester Position mit **Überspringen**/**Länge** aus einer größeren Datei herausschneiden oder einfach prüfen, ob die Datei einen bestimmten Text enthält (siehe [Antwortverarbeitung](10-response-processing.md)). Ein typisches Muster ist ein Schritt mit der Auswertungsquelle *Externes Programm*, der ein externes Werkzeug startet, das sein Ergebnis in eine Datei schreibt, gefolgt von einem Datei-Schritt, der sie auswertet.
+
+## Boundary Scan
+
+Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bezeichnungen werden auf der [Registerkarte Boundary Scan](14-boundary-scan.md) eingerichtet.
+
+**Bereich Boundary Scan**
+
+| Feld | Beschreibung |
+|------|--------------|
+| **Pin-Aktionen** / **Boundary Scan ausschalten** | Modus des Schritts, siehe unten. |
+| Aktionstabelle | Eine Zeile pro Pin: **Baustein**, **Pin** (Port und Bezeichnung) und **Aktion**. Zum Ändern die Aktion doppelklicken. |
+| Zeile zum Hinzufügen | Baustein, Pin und Aktion wählen, dann **+** klicken. Ein Pin wird pro Schritt höchstens einmal getrieben und einmal geprüft; erneutes Hinzufügen ersetzt die vorhandene Aktion. JTAG- und Versorgungspins sind nicht auswählbar. |
+| Schaltfläche **−** | Entfernt die ausgewählte Aktion. |
+| Import-Schaltfläche | **Aus dem Boundary-Scan-Tab übernehmen**: Jeder Ausgang, den Sie auf der Registerkarte gegenüber seinem sicheren Wert geändert haben, wird zur Drive-Aktion, jeder Pin mit Bezeichnung und gelesenem Pegel zur Expect-Aktion. |
+| **Einschwingzeit (ms)** | Wartezeit zwischen dem Treiben der Ausgänge und dem Lesen der Eingänge. |
+
+| Aktion | Wirkung |
+|--------|---------|
+| **Drive 0** / **Drive 1** | Treibt den Pin auf Low bzw. High. |
+| **Drive Z** | Schaltet den Ausgang ab (nur bei Pins, deren Ausgang abschaltbar ist). |
+| **Expect 0** / **Expect 1** | Liest den Pin und prüft seinen Pegel. |
+
+**Ablauf**
+
+1. Alle Drive-Aktionen werden angewendet. Bausteine mit getriebenen Pins werden in EXTEST geschaltet, Bausteine, die nur gelesen werden, in SAMPLE.
+2. Nach der Einschwingzeit werden alle Expect-Aktionen gelesen.
+3. Der Messwert ist die **Anzahl der Abweichungen**. Setzen Sie die Grenzwerte auf `0 … 0`: Der Schritt besteht, wenn jeder Pin den erwarteten Pegel hat.
+
+Ein Schritt nur mit Drive-Aktionen liefert keinen Wert und besteht immer, wie die Quelle *Keine*. Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten. Bei einem fehlgeschlagenen Schritt zeigt der Tooltip über dem Messwert oder dem Ergebnissymbol, welche Pins abweichen, z. B. `U3 IO(5) (FAULT_N): expected 0, read 1`; dieselben Zeilen stehen im Ereignisprotokoll.
+
+Die Probe wird beim ersten Boundary-Scan-Schritt des Laufs verbunden und die Kette geprüft. Eine Kette, die nicht zum Projekt passt, ein Baustein ohne BSDL-Datei oder ein Pin, der nicht getrieben oder gelesen werden kann, ist ein Ausführungsfehler und beendet den Test.
+
+**Boundary Scan ausschalten** versetzt alle Bausteine in den Normalbetrieb und gibt die Probe frei. Verwenden Sie es vor Schritten, die die Bausteine im Normalbetrieb benötigen oder selbst auf die Probe zugreifen, z. B. das Programmieren über denselben J-Link mit einem Schritt [Externes Programm](#externes-programm). Ein späterer Boundary-Scan-Schritt verbindet automatisch neu. Siehe auch [Boundary Scan während der Testausführung](14-boundary-scan.md#boundary-scan-während-der-testausführung).
+
+Beispiel – prüfen, dass eine LED angesteuert wird und ihre Rückmeldeleitung folgt:
+
+| Schritt | Pin-Aktionen | Grenzwerte |
+|---------|--------------|------------|
+| *LED an* | `U1 PB3 (LED_RED)`: Drive 1 · `U2 PA0 (LED_SENSE)`: Expect 1 | `0 … 0` |
+| *LED aus* | `U1 PB3 (LED_RED)`: Drive 0 · `U2 PA0 (LED_SENSE)`: Expect 0 | `0 … 0` |
+| *Freigeben zum Programmieren* | Boundary Scan ausschalten | – |
+
+## Boundary-Scan-Bus
+
+Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus aus: mit einem I²C- oder SPI-Baustein oder einer Pin-Gruppe. Die Busse werden auf der [Registerkarte Boundary Scan](14-boundary-scan.md#ansicht-busse) eingerichtet; der Schritt funktioniert wie ein [Schnittstellenbefehl](#schnittstellenbefehl).
+
+**Bereich Boundary-Scan-Bus**
+
+| Feld | Beschreibung |
+|------|--------------|
+| **Bus** | Bus aus der Registerkarte Boundary Scan, angezeigt als `Name (Typ)`. |
+| **Adresse 0-127** | Nur I²C: 7-Bit-Zieladresse. Als Dezimalzahl oder mit `0x`-Präfix eingeben, z. B. `80` oder `0x50`. |
+| **Befehl** | Zu schreibende Bytes, meist als Kodierungsblock, z. B. `{hex:10}`. Unterstützt Variablen und Ausdrücke (siehe [Kapitel 9](09-commands-variables-expressions.md)). |
+| **Bytes lesen** | Anzahl der danach zu lesenden Bytes. |
+
+| Bustyp | Übertragung |
+|--------|-------------|
+| **I²C** | Start, Adresse + Schreiben, Befehlsbytes; dann, falls Bytes gelesen werden sollen, Repeated Start, Adresse + Lesen und die Bytes; Stop. Ein Befehl gefolgt von einem Lesezugriff ist ein typischer Registerzugriff. |
+| **SPI** | Chip-Select wird aktiv, die Befehlsbytes werden gesendet, dann werden **Bytes lesen** Bytes eingetaktet, während `0x00` gesendet wird; Chip-Select wird freigegeben. |
+| **Pin Group** | Ein Befehl treibt seinen Wert auf Bit 0 … n (erstes Byte = Bits 0–7). Beim Lesen werden die Pins freigegeben und ihre Pegel gelesen. |
+
+**Ergebnis**
+
+- Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `0` bei einem I²C-NACK.
+- Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](10-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
+- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).*
+
+Beispiele:
+
+| Zweck | Bus | Adresse | Befehl | Bytes lesen | Maske |
+|-------|-----|---------|--------|-------------|-------|
+| 16-Bit-Register 0x10 eines I²C-Bausteins lesen | I²C | `0x48` | `{hex:10}` | `2` | `{byte:2}` |
+| Zwei Bytes ab Adresse 0x00 in ein EEPROM schreiben | I²C | `0x50` | `{hex:00 12 34}` | `0` | – |
+| JEDEC-ID eines SPI-Flash lesen | SPI | – | `{hex:9F}` | `3` | `{byte:3}` |
+| 4-Bit-Baugruppenkennung lesen | Pin Group | – | – | `1` | `{byte:1}` |
+
+Alle Signalwechsel einer Übertragung werden in einem Transfer an die Probe geschickt. I²C-Clock-Stretching wird nicht unterstützt; siehe [Geschwindigkeit und Einschränkungen](14-boundary-scan.md#geschwindigkeit-und-einschränkungen).

@@ -34,7 +34,8 @@ Das Fenster besteht aus drei Bereichen:
    - **Konfiguration** – Geräte, Variablen, Kanalnamen, Projekteinstellungen ([Kapitel 5](05-configuration.md))
    - **Dokumentation** – Notizen, Bilder, Anhänge, Prüflingsdaten ([Kapitel 13](13-documentation-tab.md))
    - **Skripte** – der Skript-Editor ([Kapitel 6](06-scripting.md))
-   - **Test-Hardware** – Adapterinformationen und Diagnose ([Kapitel 14](14-test-hardware.md))
+   - **Boundary Scan** – JTAG-Probe, Scan-Kette, Pins und Busse ([Kapitel 14](14-boundary-scan.md))
+   - **Test-Hardware** – Adapterinformationen und Diagnose ([Kapitel 15](15-test-hardware.md))
    - **Info** – Version und Systeminformationen
 2. **Inhalt der Registerkarte** in der Mitte.
 3. **Statusleiste** unten.
@@ -47,7 +48,7 @@ Die Titelleiste zeigt den Projektnamen, gefolgt von `*` bei ungespeicherten Änd
 |---------|----------|
 | Info-Schaltfläche (links) | Öffnet das **Ereignisprotokoll**: alle Info-, Warn- und Fehlermeldungen dieser Sitzung, neueste zuerst. |
 | **Keine Test-Hardware verbunden** | Wird im Simulatormodus angezeigt. |
-| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](14-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
+| Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](15-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
 | Sonne/Mond | **Design umschalten** zwischen hell und dunkel. |
 | Sprachen | **Sprache umschalten** zwischen Deutsch und Englisch. |
 | Buch (ganz rechts) | **Benutzerhandbuch öffnen** (`F1`). Öffnet dieses Handbuch als PDF in der aktuellen Oberflächensprache. Fehlt das PDF (z. B. in einer selbst gebauten Entwicklungsversion), wird stattdessen das englische PDF oder das Online-Handbuch auf GitHub geöffnet. |

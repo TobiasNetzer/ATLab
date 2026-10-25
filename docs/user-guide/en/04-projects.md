@@ -9,6 +9,7 @@ A **project** is stored in a single **project file** with the extension `.atlab`
 - the project settings (tolerance, serial number, export options …),
 - the documentation (texts, image and attachment paths),
 - the Device Under Test information used in reports,
+- the boundary scan setup: probe settings, scan chain, BSDL file paths, user labels and buses,
 - the path of the script folder.
 
 Scripts themselves are **not** stored in the project; they live as separate files in the script folder (see [Scripting](06-scripting.md)).
@@ -50,6 +51,7 @@ When a project is saved, any referenced file **inside the project folder (or a s
 - documentation images and attachments,
 - message-box images of test steps,
 - file paths of **File** evaluation steps,
+- BSDL files of the boundary scan chain,
 - the test result **Output Path**.
 
 Paths outside the project folder are stored as absolute paths.

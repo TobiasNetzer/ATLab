@@ -892,6 +892,10 @@
                 <controls:BoundaryScanStepEditor
                     BoundaryScanStepEditorVm="{Binding WorkspaceEditor.BoundaryScanStepEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=BOUNDARY_SCAN, TargetNullValue=False}"/>
+
+                <controls:BoundaryScanBusStepEditor
+                    BoundaryScanBusStepEditorVm="{Binding WorkspaceEditor.BoundaryScanBusStepEditor}"
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=BOUNDARY_SCAN_BUS, TargetNullValue=False}"/>
                 
                 <controls:TestInterfaceCommunication
                     TestInterfaceCommunicationVm="{Binding WorkspaceEditor.TestInterfaceCommunication}"
@@ -899,7 +903,7 @@
                 
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding WorkspaceEditor.ResponseMaskEditor}"
-                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE, USER_INPUT, EXTERNAL_PROGRAM', TargetNullValue=False}"/>
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE, USER_INPUT, EXTERNAL_PROGRAM, BOUNDARY_SCAN_BUS', TargetNullValue=False}"/>
                 
                 <controls:MeasSelector
                     DataContext="{Binding WorkspaceEditor.TestHardwareRelayChannels.MeasChannelViewModel}" />

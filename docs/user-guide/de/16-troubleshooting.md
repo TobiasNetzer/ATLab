@@ -1,4 +1,4 @@
-# 15. Fehlerbehebung
+# 16. Fehlerbehebung
 
 ## Das Ereignisprotokoll
 
@@ -59,6 +59,25 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | Eine Laufzeitvariable hat einen unerwarteten Startwert | In einem Lauf zugewiesene Werte bleiben für den nächsten Lauf erhalten. Variable bei Bedarf in einem frühen Schritt zurücksetzen. |
 | Externes Programm schlägt mit *Das System kann die angegebene Datei nicht finden* fehl | Der Befehl wird nicht über eine Shell ausgeführt. Eingebaute Befehle (`dir`, `echo`, …), Pipes und Batch-Dateien benötigen `cmd /c` (Windows) bzw. `bash -c "…"` (Linux) davor. |
 
+## Boundary Scan
+
+| Symptom | Ursache / Lösung |
+|---------|------------------|
+| *The SEGGER J-Link library was not found* / *The FTDI D2XX library was not found* | Software der Probe installieren (siehe [Installation](02-installation.md#optional-treiber-für-jtag-probes)) oder die Bibliothek wie in der Meldung angegeben in den Programmordner von ATLab kopieren. Ein Neustart ist nicht nötig. |
+| *The installed J-Link DLL is not supported* / *The installed FTDI driver is not supported* | Die gefundene Datei ist keine passende Probe-Bibliothek, z. B. eine 32-Bit-DLL oder eine andere Datei mit gleichem Namen. Durch die Bibliothek aus der aktuellen Hersteller-Software ersetzen. |
+| *Could not open FTDI device* | Der Kanal wird von einem anderen Programm oder vom seriellen Treiber des Betriebssystems belegt. Das andere Programm schließen; unter Linux `ftdi_sio` entladen. |
+| *TDO is stuck high* / *TDO is stuck low* | Keine Kette antwortet: JTAG-Kabel, Versorgung der Baugruppe und Referenzspannung der Probe prüfen. Bei FTDI-Adaptern mit Treibern **ADBUS-Wert**/**ADBUS-Richtung** so einstellen, dass die Treiber freigegeben sind. |
+| Kettenerkennung schlägt fehl oder liefert wechselnde Ergebnisse | **TCK-Frequenz (kHz)** verringern, Kabel kürzen, Signalqualität von TCK prüfen. |
+| *Instruction length unknown for some devices* | Ein Baustein hat keine BSDL-Datei und seine Befehlslänge lässt sich nicht berechnen. BSDL-Datei zuordnen oder **Befehlslänge** von Hand eintragen. |
+| *Instruction length mismatch* | Die Befehlslängen der Bausteine ergeben nicht die erkannte Gesamtlänge. Prüfen, ob jede BSDL-Datei zum richtigen Baustein an der richtigen Position der Kette gehört. |
+| IDCODE rot dargestellt | Der IDCODE des Bausteins passt nicht zu seiner BSDL-Datei – falsche Datei, andere Bausteinvariante oder Bausteine in der Kette vertauscht. |
+| Schritt schlägt fehl mit *IDCODE … does not match the project* | Die Baugruppe im Prüfadapter hat nicht die Kette, für die das Projekt eingerichtet ist (falsche Baugruppe, Baustein ohne Versorgung, Kette unterbrochen). |
+| *… cannot be driven* / *cannot be read* / *cannot be switched to Z* | Die Boundary-Zelle des Pins unterstützt die Aktion nicht, z. B. ein reiner Eingang oder ein Ausgang ohne Steuerzelle. |
+| Getriebener Ausgang zeigt sich nicht an einem anderen Pin | Andere Treiber am Netz (Baustein im Normalbetrieb, Pull-Widerstände) oder die Pins sind nicht verbunden. Alle Bausteine am Netz in EXTEST oder SAMPLE schalten und den Schaltplan prüfen. |
+| *SCL is held low* | Ein I²C-Baustein nutzt Clock-Stretching (nicht unterstützt) oder SCL ist kurzgeschlossen bzw. hat keinen Pull-up. |
+| *No ACK from 0x… for address …* | Falsche I²C-Adresse, Baustein ohne Versorgung, fehlende Pull-ups an SCL/SDA oder SCL/SDA in der Buseinrichtung vertauscht. |
+| Programmier-Software kann den J-Link nicht öffnen | Der Test belegt die Probe noch. Vor dem Programmierschritt einen Schritt mit **Boundary Scan ausschalten** einfügen oder nach Einzelschritten **Stopp** drücken. |
+
 ## Ergebnisse und Berichte
 
 | Symptom | Ursache / Lösung |
@@ -77,4 +96,4 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 ## Persönliche Einstellungen zurücksetzen
 
-Fensterposition, Design, Sprache, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](16-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren. Projekte und Skripte sind davon nicht betroffen.
+Fensterposition, Design, Sprache, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](17-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren. Projekte und Skripte sind davon nicht betroffen.

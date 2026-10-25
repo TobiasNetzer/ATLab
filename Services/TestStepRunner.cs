@@ -204,6 +204,42 @@ public class TestStepRunner : ITestStepRunner
                     return OperationResult<double>.Success(outcome.HasChecks ? outcome.Mismatches : double.NegativeInfinity);
                 }
 
+                case TestEvaluationSource.BOUNDARY_SCAN_BUS:
+                {
+                    var busConfig = step.TestStep.BoundaryScanBus;
+                    var write = string.IsNullOrWhiteSpace(busConfig.Command)
+                        ? []
+                        : CommandProcessor.CompileToBytes(busConfig.Command, runtimeVariables);
+
+                    var busResult = await _boundaryScanSession.ExecuteBusTransactionAsync(busConfig, write, token);
+                    if (busResult.IsFailure)
+                        return OperationResult<double>.Failure(busResult.ErrorMessage);
+
+                    var transaction = busResult.Value!;
+                    step.ResultDetails = FormatResultDetails(transaction.Messages);
+
+                    // Same results as the Interface source: 0 for a NACK, 1 for a completed write, otherwise the response
+                    if (!transaction.Acknowledged)
+                        return OperationResult<double>.Success(0);
+
+                    if (busConfig.BytesToRead <= 0)
+                        return OperationResult<double>.Success(1);
+
+                    string processedBusResponse;
+                    try
+                    {
+                        processedBusResponse = ResponseProcessor.Process(transaction.Data, mask);
+                    }
+                    catch (ResponseProcessingException ex)
+                    {
+                        return OperationResult<double>.Failure(ex.Message);
+                    }
+
+                    return NumberHelper.TryParseDecimal(processedBusResponse, out var busValue)
+                        ? OperationResult<double>.Success(busValue)
+                        : OperationResult<double>.Failure($"Failed to convert result '{processedBusResponse}' to a number.");
+                }
+
                 default: return OperationResult<double>.Failure("Unknown evaluation source");
             }
         }

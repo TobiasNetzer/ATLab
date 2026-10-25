@@ -26,7 +26,7 @@ Der Installer
 - registriert die Endung `.atlab`, sodass ein Doppelklick auf eine Projektdatei sie in ATLab öffnet,
 - trägt ein Deinstallationsprogramm unter *Einstellungen → Apps* ein.
 
-Bei der Deinstallation werden Programmordner, Verknüpfungen und Dateizuordnung entfernt. Projekte, Skripte und persönliche Einstellungen bleiben erhalten (siehe [Dateiablage](16-reference.md#dateiablage)).
+Bei der Deinstallation werden Programmordner, Verknüpfungen und Dateizuordnung entfernt. Projekte, Skripte und persönliche Einstellungen bleiben erhalten (siehe [Dateiablage](17-reference.md#dateiablage)).
 
 ### Portables ZIP
 
@@ -51,6 +51,15 @@ sudo usermod -aG dialout $USER   # danach ab- und wieder anmelden
 ## Optional: NI-VISA
 
 VISA-Geräte benötigen die **NI-VISA**-Laufzeitumgebung von National Instruments. VISA wird derzeit **nur unter Windows** unterstützt. Serielle und TCP/IP-Geräte funktionieren ohne.
+
+## Optional: Treiber für JTAG-Probes
+
+Boundary Scan benötigt den Treiber der JTAG-Probe (siehe [Registerkarte Boundary Scan](14-boundary-scan.md#unterstützte-probes)):
+
+- **SEGGER J-Link:** *J-Link Software and Documentation Pack* von <https://www.segger.com>.
+- **FTDI FT2232H / FT232H / FT4232H:** *D2XX*-Treiber von <https://ftdichip.com>. Unter Linux das Kernelmodul `ftdi_sio` entladen oder eine udev-Regel anlegen, damit die D2XX-Bibliothek auf das Gerät zugreifen kann.
+
+Findet ATLab die Bibliothek nicht im Standard-Installationsordner, kopieren Sie sie (`JLink_x64.dll`, `ftd2xx.dll`, `libjlinkarm.so`, `libftd2xx.so`) in den Programmordner von ATLab.
 
 ## Optional: Steuermodul
 

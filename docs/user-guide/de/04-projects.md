@@ -9,6 +9,7 @@ Ein **Projekt** wird in einer einzelnen **Projektdatei** mit der Endung `.atlab`
 - die Projekteinstellungen (Toleranz, Seriennummer, Exportoptionen …),
 - die Dokumentation (Texte, Pfade zu Bildern und Anhängen),
 - die Prüflingsdaten für den Testbericht,
+- die Boundary-Scan-Einrichtung: Probe-Einstellungen, Scan-Kette, Pfade der BSDL-Dateien, Bezeichnungen und Busse,
 - den Pfad des Skriptordners.
 
 Die Skripte selbst sind **nicht** im Projekt gespeichert; sie liegen als eigene Dateien im Skriptordner (siehe [Skripte](06-scripting.md)).
@@ -50,6 +51,7 @@ Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners
 - Bilder und Anhänge der Dokumentation,
 - Bilder in Meldungsfenstern von Testschritten,
 - Dateipfade von Schritten mit Auswertung **Datei**,
+- BSDL-Dateien der Boundary-Scan-Kette,
 - den **Ausgabepfad** für Testergebnisse.
 
 Pfade außerhalb des Projektordners werden absolut gespeichert.

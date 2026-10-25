@@ -1221,4 +1221,58 @@ Switching this pin to Z disables those outputs as well.</value>
   <data name="Text_MoreResultDetails" xml:space="preserve">
     <value>… and {0} more, see the event log</value>
   </data>
+  <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
+    <value>Boundary Scan Bus</value>
+  </data>
+  <data name="Label_PinsView" xml:space="preserve">
+    <value>Pins</value>
+  </data>
+  <data name="Label_BusesView" xml:space="preserve">
+    <value>Buses</value>
+  </data>
+  <data name="Header_Buses" xml:space="preserve">
+    <value>Buses</value>
+  </data>
+  <data name="ToolTip_AddBus" xml:space="preserve">
+    <value>Add bus</value>
+  </data>
+  <data name="ToolTip_RemoveBus" xml:space="preserve">
+    <value>Remove selected bus</value>
+  </data>
+  <data name="Text_NoBus" xml:space="preserve">
+    <value>Add a bus to emulate I²C, SPI or a pin group through boundary scan pins. Test steps select it with the Boundary Scan Bus evaluation source.</value>
+  </data>
+  <data name="Label_BusName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Label_BusType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Label_SpiMode" xml:space="preserve">
+    <value>SPI mode</value>
+  </data>
+  <data name="Label_CsActiveHigh" xml:space="preserve">
+    <value>CS active high</value>
+  </data>
+  <data name="Label_LsbFirst" xml:space="preserve">
+    <value>LSB first</value>
+  </data>
+  <data name="Label_BusWidth" xml:space="preserve">
+    <value>Number of pins</value>
+  </data>
+  <data name="Header_BusSignal" xml:space="preserve">
+    <value>Signal</value>
+  </data>
+  <data name="Text_BusReady" xml:space="preserve">
+    <value>The bus is ready to be used in test steps.</value>
+  </data>
+  <data name="Header_BoundaryScanBusStep" xml:space="preserve">
+    <value>Boundary Scan Bus</value>
+  </data>
+  <data name="Label_Bus" xml:space="preserve">
+    <value>Bus</value>
+  </data>
+  <data name="Watermark_SelectBus" xml:space="preserve">
+    <value>Buses are set up in the Boundary Scan tab</value>
+  </data>
 </root>

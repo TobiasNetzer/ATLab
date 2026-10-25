@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using ATLab.BoundaryScan.Probes;
 using ATLab.Models;
@@ -24,29 +26,55 @@ public class JtagTap
         return result.IsSuccess ? OperationResult.Success() : OperationResult.Failure(result.ErrorMessage);
     }
 
-    public OperationResult<bool[]> ScanIr(bool[] tdi) => Scan(tdi, [true, true, false, false]);
+    public OperationResult<bool[]> ScanIr(bool[] tdi) => Single(ScanSequence([tdi], EnterShiftIr));
 
-    public OperationResult<bool[]> ScanDr(bool[] tdi) => Scan(tdi, [true, false, false]);
+    public OperationResult<bool[]> ScanDr(bool[] tdi) => Single(ScanSequence([tdi], EnterShiftDr));
 
-    private OperationResult<bool[]> Scan(bool[] tdi, bool[] enterShift)
+    /// <summary>
+    /// Runs several data register scans back to back in a single probe transfer. Each scan passes Update-DR,
+    /// so it applies its outputs, and captures the pins that the previous scan left behind.
+    /// </summary>
+    public OperationResult<bool[][]> ScanDrSequence(IReadOnlyList<bool[]> tdis) => ScanSequence(tdis, EnterShiftDr);
+
+    private static OperationResult<bool[]> Single(OperationResult<bool[][]> result) =>
+        result.IsSuccess
+            ? OperationResult<bool[]>.Success(result.Value![0])
+            : OperationResult<bool[]>.Failure(result.ErrorMessage);
+
+    private static readonly bool[] EnterShiftIr = [true, true, false, false];
+    private static readonly bool[] EnterShiftDr = [true, false, false];
+
+    private OperationResult<bool[][]> ScanSequence(IReadOnlyList<bool[]> tdis, bool[] enterShift)
     {
-        if (tdi.Length == 0)
-            return OperationResult<bool[]>.Failure("Scan length must not be zero.");
+        if (tdis.Count == 0 || tdis.Any(t => t.Length == 0))
+            return OperationResult<bool[][]>.Failure("Scan length must not be zero.");
 
-        // Shift state is entered, the last data bit moves to Exit1, then Update and back to Run-Test/Idle
-        var length = enterShift.Length + tdi.Length + 2;
+        // Each scan enters the shift state, the last data bit moves to Exit1, then Update and back to Run-Test/Idle
+        var length = tdis.Sum(t => enterShift.Length + t.Length + 2);
         var tms = new bool[length];
         var input = new bool[length];
+        var dataStarts = new int[tdis.Count];
+        var position = 0;
 
-        enterShift.CopyTo(tms, 0);
-        tdi.CopyTo(input, enterShift.Length);
-        tms[enterShift.Length + tdi.Length - 1] = true;
-        tms[enterShift.Length + tdi.Length] = true;
+        for (var i = 0; i < tdis.Count; i++)
+        {
+            var tdi = tdis[i];
+
+            enterShift.CopyTo(tms, position);
+            dataStarts[i] = position + enterShift.Length;
+            tdi.CopyTo(input, dataStarts[i]);
+            tms[dataStarts[i] + tdi.Length - 1] = true;
+            tms[dataStarts[i] + tdi.Length] = true;
+
+            position = dataStarts[i] + tdi.Length + 2;
+        }
 
         var result = _probe.Shift(tms, input);
         if (result.IsFailure)
-            return result;
+            return OperationResult<bool[][]>.Failure(result.ErrorMessage);
 
-        return OperationResult<bool[]>.Success(result.Value!.Skip(enterShift.Length).Take(tdi.Length).ToArray());
+        var tdo = result.Value!;
+        return OperationResult<bool[][]>.Success(
+            tdis.Select((t, i) => tdo.AsSpan(dataStarts[i], t.Length).ToArray()).ToArray());
     }
 }

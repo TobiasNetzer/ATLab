@@ -1,4 +1,4 @@
-# 15. Troubleshooting
+# 16. Troubleshooting
 
 ## The event log
 
@@ -59,6 +59,25 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
 | External program fails with *The system cannot find the file specified* | The command is not run through a shell. Built-in commands (`dir`, `echo`, …), pipes and batch files need `cmd /c` (Windows) or `bash -c "…"` (Linux) in front. |
 
+## Boundary scan
+
+| Symptom | Cause / solution |
+|---------|------------------|
+| *The SEGGER J-Link library was not found* / *The FTDI D2XX library was not found* | Install the probe software (see [Installation](02-installation.md#optional-jtag-probe-drivers)) or copy the library into the ATLab program folder as shown in the message. No restart is needed. |
+| *The installed J-Link DLL is not supported* / *The installed FTDI driver is not supported* | The file found is not a suitable probe library, e.g. a 32-bit DLL or a different file with the same name. Replace it with the library from the current vendor software. |
+| *Could not open FTDI device* | The channel is used by another program or by the operating system's serial driver. Close the other program; on Linux unload `ftdi_sio`. |
+| *TDO is stuck high* / *TDO is stuck low* | No chain answers: check the JTAG cable, the target power and the probe's target voltage reference. On FTDI adapters with buffers, set **ADBUS Value**/**ADBUS Direction** so the buffers are enabled. |
+| Chain detection fails or gives changing results | Lower **TCK Frequency (kHz)**, shorten the cable, check TCK signal quality. |
+| *Instruction length unknown for some devices* | A chip has no BSDL file and its instruction length cannot be calculated. Assign the BSDL file or enter **Instruction Length** by hand. |
+| *Instruction length mismatch* | The instruction lengths of the chips do not add up to the detected total. Check that each BSDL file belongs to the right chip in the right chain position. |
+| IDCODE shown in red | The chip's IDCODE does not match its BSDL file — wrong file, different chip variant, or chips swapped in the chain. |
+| Step fails with *IDCODE … does not match the project* | The board in the fixture does not have the chain the project was set up for (wrong board, chip not powered, chain broken). |
+| *… cannot be driven* / *cannot be read* / *cannot be switched to Z* | The pin's boundary cell does not support the action, e.g. an input-only pin or an output without control cell. |
+| Driven output does not show up on another pin | Other drivers on the net (chip in normal operation, pull resistors), or the pins are not connected. Put all chips on the net into EXTEST or SAMPLE and check the schematic. |
+| *SCL is held low* | An I²C target stretches the clock (not supported), or SCL is shorted or has no pull-up. |
+| *No ACK from 0x… for address …* | Wrong I²C address, device not powered, missing pull-ups on SCL/SDA, or SCL/SDA swapped in the bus setup. |
+| Programming tool cannot open the J-Link | The test still holds the probe. Add a step with **Turn boundary scan off** before the programming step, or press **Stop** after single steps. |
+
 ## Results and reports
 
 | Symptom | Cause / solution |
@@ -77,4 +96,4 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 ## Resetting personal settings
 
-Window position, theme, language, last port and last project are stored in `settings.json` (see [File locations](16-reference.md#file-locations)). Close ATLab and delete the file to return to defaults. Projects and scripts are not affected.
+Window position, theme, language, last port and last project are stored in `settings.json` (see [File locations](17-reference.md#file-locations)). Close ATLab and delete the file to return to defaults. Projects and scripts are not affected.

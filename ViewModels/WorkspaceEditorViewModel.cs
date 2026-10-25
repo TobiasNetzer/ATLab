@@ -13,6 +13,7 @@ public class WorkspaceEditorViewModel
     public ExpressionEditorViewModel ExpressionEditor { get; }
     public FilePathEditorViewModel FilePathEditor { get; }
     public BoundaryScanStepEditorViewModel BoundaryScanStepEditor { get; }
+    public BoundaryScanBusStepEditorViewModel BoundaryScanBusStepEditor { get; }
     public TestInterfaceCommunicationViewModel TestInterfaceCommunication { get; }
 
     public WorkspaceEditorViewModel(
@@ -25,6 +26,7 @@ public class WorkspaceEditorViewModel
         ExpressionEditorViewModel expressionEditor,
         FilePathEditorViewModel filePathEditor,
         BoundaryScanStepEditorViewModel boundaryScanStepEditor,
+        BoundaryScanBusStepEditorViewModel boundaryScanBusStepEditor,
         TestInterfaceCommunicationViewModel testInterfaceCommunication)
     {
         TestHardwareRelayChannels = testHardwareRelayChannels;
@@ -36,6 +38,7 @@ public class WorkspaceEditorViewModel
         ExpressionEditor = expressionEditor;
         FilePathEditor = filePathEditor;
         BoundaryScanStepEditor = boundaryScanStepEditor;
+        BoundaryScanBusStepEditor = boundaryScanBusStepEditor;
         TestInterfaceCommunication = testInterfaceCommunication;
     }
 
@@ -54,6 +57,7 @@ public class WorkspaceEditorViewModel
         ExpressionEditor.LoadTestStep(vm.TestStep);
         FilePathEditor.LoadTestStep(vm.TestStep);
         BoundaryScanStepEditor.LoadTestStep(vm.TestStep);
+        BoundaryScanBusStepEditor.LoadTestStep(vm.TestStep);
         ResponseMaskEditor.LoadTestStep(vm);
     }
 }

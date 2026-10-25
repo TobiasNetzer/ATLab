@@ -26,7 +26,7 @@ The installer:
 - registers the `.atlab` extension, so double-clicking a project file opens it in ATLab,
 - adds an uninstaller under *Settings → Apps*.
 
-Uninstalling removes the program folder, shortcuts and the file association. Your projects, scripts and personal settings are not removed (see [File locations](16-reference.md#file-locations)).
+Uninstalling removes the program folder, shortcuts and the file association. Your projects, scripts and personal settings are not removed (see [File locations](17-reference.md#file-locations)).
 
 ### Portable ZIP
 
@@ -51,6 +51,15 @@ sudo usermod -aG dialout $USER   # log out and back in afterwards
 ## Optional: NI-VISA
 
 VISA devices require the **NI-VISA** runtime from National Instruments. VISA support is currently **Windows only**. Serial and TCP/IP devices work without it.
+
+## Optional: JTAG probe drivers
+
+Boundary scan needs the driver of the JTAG probe (see [Boundary Scan Tab](14-boundary-scan.md#supported-probes)):
+
+- **SEGGER J-Link:** *J-Link Software and Documentation Pack* from <https://www.segger.com>.
+- **FTDI FT2232H / FT232H / FT4232H:** *D2XX* driver from <https://ftdichip.com>. On Linux, unload the `ftdi_sio` kernel module or add a udev rule so the D2XX library can access the device.
+
+If ATLab does not find the library in the default install folder, copy it (`JLink_x64.dll`, `ftd2xx.dll`, `libjlinkarm.so`, `libftd2xx.so`) into the ATLab program folder.
 
 ## Optional: Control Module
 

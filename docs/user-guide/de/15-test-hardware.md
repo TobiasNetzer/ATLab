@@ -1,4 +1,4 @@
-# 14. Registerkarte Test-Hardware
+# 15. Registerkarte Test-Hardware
 
 Die Registerkarte **Test-Hardware** zeigt, was angeschlossen ist, und ermöglicht die Prüfung der Relais-Matrix.
 

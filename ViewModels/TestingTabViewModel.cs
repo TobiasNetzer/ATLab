@@ -514,6 +514,7 @@ public partial class TestingTabViewModel : ViewModelBase
                 RelayGroup rg => new RelayGroup(rg),
                 TestInterfaceConfig ic => new TestInterfaceConfig(ic),
                 BoundaryScanStepConfig bs => new BoundaryScanStepConfig(bs),
+                BoundaryScanBusStepConfig bb => new BoundaryScanBusStepConfig(bb),
                 _ => sourceValue
             };
 

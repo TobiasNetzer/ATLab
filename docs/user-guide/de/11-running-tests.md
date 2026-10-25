@@ -45,7 +45,7 @@ Vor dem ersten und nach dem letzten Schritt werden alle Relais zurückgesetzt.
 
 **Testausführung des ausgewählten Moduls starten** und **Testausführung ab ausgewähltem Schritt starten** sind für die Entwicklung einzelner Module gedacht. Ein *Springe zu* auf einen Schritt außerhalb des Moduls beendet den Lauf mit einem Fehler.
 
-**Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt.
+**Einzelschritt ausführen** ist für die Entwicklung gedacht: Es schaltet die Relais des Schritts, wartet, erfasst und bewertet den Wert und zeigt das Ergebnis – sonst nichts. Die Relais **bleiben danach im Zustand des Schritts**. Verwenden Sie es zum Abstimmen von Masken, Grenzwerten und Verzögerungen. Ignorierte Schritte werden nicht ausgeführt. Eine vom Schritt verwendete Boundary-Scan-Kette bleibt ebenfalls unter Kontrolle des Tests, sodass der nächste Einzelschritt mit ihren Pinzuständen weiterarbeitet; **Stopp** (`Esc`) gibt sie frei (siehe [Boundary Scan während der Testausführung](14-boundary-scan.md#boundary-scan-während-der-testausführung)).
 
 ## Eingabe der Seriennummer
 
@@ -139,4 +139,4 @@ Die Status-LEDs des Moduls zeigen den Testzustand: Ruhe, läuft, bestanden, fehl
 
 ## Einen Test sicher beenden
 
-Wenn ein Test endet – regulär, durch Fehler oder durch Stoppen –, setzt ATLab alle Relais des Test Interface Adapters zurück und schließt die Verbindungen zu den Messgeräten. Bei **Einzelschritt ausführen** bleiben die Relais so, wie der Schritt sie gesetzt hat; führen Sie einen vollständigen Test aus oder einen Schritt ohne Relais, um sie zurückzusetzen.
+Wenn ein Test endet – regulär, durch Fehler oder durch Stoppen –, versetzt ATLab alle Boundary-Scan-Bausteine in den Normalbetrieb, setzt alle Relais des Test Interface Adapters zurück und schließt die Verbindungen zu den Messgeräten. Bei **Einzelschritt ausführen** bleiben die Relais so, wie der Schritt sie gesetzt hat; führen Sie einen vollständigen Test aus oder einen Schritt ohne Relais, um sie zurückzusetzen.

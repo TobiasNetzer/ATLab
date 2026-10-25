@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:models="clr-namespace:ATLab.Models"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.BoundaryScanBusStepEditor"
+             x:DataType="controls:BoundaryScanBusStepEditor"
+             Width="500">
+
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel DataContext="{Binding $parent[controls:BoundaryScanBusStepEditor].BoundaryScanBusStepEditorVm}"
+                x:DataType="vm:BoundaryScanBusStepEditorViewModel">
+
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding IsExpanded, FallbackValue=False}"
+                Background="{DynamicResource OutlineColor}"
+                Padding="10">
+
+            <DockPanel>
+                <TextBlock Text="{helpers:Localize Header_BoundaryScanBusStep}"
+                           Classes="h4"
+                           VerticalAlignment="Center"/>
+
+                <Button Command="{Binding ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding !IsExpanded, FallbackValue=True}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding IsExpanded, FallbackValue=False}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </DockPanel>
+        </Border>
+
+        <Border CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}"
+                IsVisible="{Binding IsExpanded, FallbackValue=False}">
+
+            <StackPanel Margin="10" Spacing="10" Orientation="Vertical">
+
+                <Grid ColumnDefinitions="Auto,Auto"
+                      ColumnSpacing="20">
+
+                    <StackPanel Grid.Column="0"
+                                Spacing="2">
+
+                        <TextBlock Text="{helpers:Localize Label_Bus}"/>
+
+                        <ComboBox ItemsSource="{Binding Buses}"
+                                  SelectedItem="{Binding SelectedBus}"
+                                  PlaceholderText="{helpers:Localize Watermark_SelectBus}"
+                                  MinWidth="100">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:BoundaryScanBus">
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                        <Run Text="{Binding Type, Converter={StaticResource EnumDescriptionConverter}, StringFormat=' ({0})'}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Spacing="2"
+                                IsVisible="{Binding IsI2C}">
+
+                        <TextBlock Text="{helpers:Localize Label_Address}"/>
+
+                        <TextBox Text="{Binding I2CAddressText, UpdateSourceTrigger=LostFocus}"
+                                 Width="100"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{helpers:Localize Label_Command}"/>
+
+                    <TextBox Text="{Binding TestStep.BoundaryScanBus.Command, FallbackValue=''}"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5"
+                                Margin="0 8 0 0">
+
+                        <TextBlock Text="{helpers:Localize Label_ReadBytes}"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBox Text="{Binding BytesToReadText}"
+                                 Width="100"/>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,4 +1,4 @@
-# 14. Test Hardware Tab
+# 15. Test Hardware Tab
 
 The **Test Hardware** tab shows what is connected and lets you check the relay matrix.
 

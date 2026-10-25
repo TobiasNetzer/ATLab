@@ -180,6 +180,10 @@ public partial class TestStep : ObservableObject
     [ObservableProperty]
     [property: JsonPropertyOrder(33)]
     private BoundaryScanStepConfig _boundaryScan = new();
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(34)]
+    private BoundaryScanBusStepConfig _boundaryScanBus = new();
     
     [JsonIgnore]
     public IBrush StepBrush => new SolidColorBrush(StepColor);
@@ -202,6 +206,7 @@ public partial class TestStep : ObservableObject
         LiveStimState.PropertyChanged += Child_PropertyChanged;
         LiveExtStimState.PropertyChanged += Child_PropertyChanged;
         BoundaryScan.PropertyChanged += Child_PropertyChanged;
+        BoundaryScanBus.PropertyChanged += Child_PropertyChanged;
     }
 
     partial void OnOnPassChanged(PassFailAction? oldValue, PassFailAction newValue)
@@ -241,6 +246,12 @@ public partial class TestStep : ObservableObject
     }
 
     partial void OnBoundaryScanChanged(BoundaryScanStepConfig? oldValue, BoundaryScanStepConfig newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+
+    partial void OnBoundaryScanBusChanged(BoundaryScanBusStepConfig? oldValue, BoundaryScanBusStepConfig newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -303,6 +314,7 @@ public partial class TestStep : ObservableObject
         else if (ReferenceEquals(sender, LiveStimState)) OnPropertyChanged(nameof(LiveStimState));
         else if (ReferenceEquals(sender, LiveExtStimState)) OnPropertyChanged(nameof(LiveExtStimState));
         else if (ReferenceEquals(sender, BoundaryScan)) OnPropertyChanged(nameof(BoundaryScan));
+        else if (ReferenceEquals(sender, BoundaryScanBus)) OnPropertyChanged(nameof(BoundaryScanBus));
         else if (sender is CustomVariable) OnPropertyChanged(nameof(ScriptVariables));
     }
 
@@ -373,7 +385,8 @@ public partial class TestStep : ObservableObject
             LiveStimState = new RelayGroup(LiveStimState),
             LiveExtStimState = new RelayGroup(LiveExtStimState),
             StepColor = StepColor,
-            BoundaryScan = new BoundaryScanStepConfig(BoundaryScan)
+            BoundaryScan = new BoundaryScanStepConfig(BoundaryScan),
+            BoundaryScanBus = new BoundaryScanBusStepConfig(BoundaryScanBus)
         };
         
         clone.ScriptVariables = new ObservableCollection<CustomVariable>(

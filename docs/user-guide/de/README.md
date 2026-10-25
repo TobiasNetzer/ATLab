@@ -1,6 +1,6 @@
 # ATLab Benutzerhandbuch
 
-ATLab ist eine plattformübergreifende Anwendung zum Erstellen und Ausführen automatisierter Prüfabläufe. Sie steuert den **Test Interface Adapter** (Relais-Matrix, Stimulationskanäle, I²C-/UART-Schnittstellen) und bedient externe Messgeräte über **serielle Schnittstelle**, **TCP/IP** und **VISA** fern.
+ATLab ist eine plattformübergreifende Anwendung zum Erstellen und Ausführen automatisierter Prüfabläufe. Sie steuert den **Test Interface Adapter** (Relais-Matrix, Stimulationskanäle, I²C-/UART-Schnittstellen), bedient externe Messgeräte über **serielle Schnittstelle**, **TCP/IP** und **VISA** fern und greift per **Boundary Scan** (JTAG) auf Bausteine der Baugruppe zu.
 
 Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Projekts, das Schreiben von Geräteskripten sowie das Erstellen und Ausführen einer Prüfsequenz in der Fertigung.
 
@@ -17,15 +17,16 @@ Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Proj
 | 5 | [Registerkarte Konfiguration](05-configuration.md) | Kanalnamen, Geräte-Manager, Laufzeitvariablen, Projekteinstellungen |
 | 6 | [Registerkarte Skripte](06-scripting.md) | Skriptordner und Geräteskripte mit mehreren Befehlen |
 | 7 | [Prüfsequenzen erstellen](07-building-test-sequences.md) | Schritte bearbeiten, Grenzwerte, Einheiten, Aktionen, Relais |
-| 8 | [Auswertungsquellen](08-evaluation-sources.md) | Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei |
+| 8 | [Auswertungsquellen](08-evaluation-sources.md) | Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei, Boundary Scan, Boundary-Scan-Bus |
 | 9 | [Befehle, Variablen & Ausdrücke](09-commands-variables-expressions.md) | Platzhalter, Kodierungen, Arithmetik, Einheiten |
 | 10 | [Antwortverarbeitung](10-response-processing.md) | Überspringen/Länge, Masken, Zahlenextraktion |
 | 11 | [Tests ausführen](11-running-tests.md) | Ausführung, fehlgeschlagene Schritte, Debugging, Seriennummern, Steuermodul |
 | 12 | [Testergebnisse & Berichte](12-results-and-reports.md) | CSV-Export und PDF-Testbericht |
 | 13 | [Registerkarte Dokumentation](13-documentation-tab.md) | Projektnotizen, Bilder, Anhänge, Prüflingsdaten |
-| 14 | [Registerkarte Test-Hardware](14-test-hardware.md) | Hardware-Informationen, Relais-Matrix-Test, Prüfspitze |
-| 15 | [Fehlerbehebung](15-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
-| 16 | [Referenz](16-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
+| 14 | [Registerkarte Boundary Scan](14-boundary-scan.md) | JTAG-Probes, Scan-Kette, BSDL-Dateien, Pins lesen und treiben, I²C-/SPI-Busse |
+| 15 | [Registerkarte Test-Hardware](15-test-hardware.md) | Hardware-Informationen, Relais-Matrix-Test, Prüfspitze |
+| 16 | [Fehlerbehebung](16-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
+| 17 | [Referenz](17-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
 
 ## Konventionen
 

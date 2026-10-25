@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ATLab.BoundaryScan;
 using ATLab.BoundaryScan.Bsdl;
+using ATLab.BoundaryScan.Buses;
 using ATLab.BoundaryScan.Probes;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -76,6 +77,35 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
             }
 
             return await ExecutePinActionsAsync(_devices!, step, token);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    public async Task<OperationResult<BusTransactionResult>> ExecuteBusTransactionAsync(
+        BoundaryScanBusStepConfig step, byte[] write, CancellationToken token)
+    {
+        await _lock.WaitAsync(token);
+        try
+        {
+            var bus = _projectModel.BoundaryScan.Buses.FirstOrDefault(b => b.Id == step.BusId);
+            if (bus == null)
+            {
+                return OperationResult<BusTransactionResult>.Failure(string.IsNullOrEmpty(step.BusId)
+                    ? "No boundary scan bus selected."
+                    : "The selected boundary scan bus no longer exists.");
+            }
+
+            if (_devices == null)
+            {
+                var started = await StartAsync();
+                if (started.IsFailure)
+                    return OperationResult<BusTransactionResult>.Failure(started.ErrorMessage);
+            }
+
+            return await ExecuteBusAsync(_devices!, bus, step, write);
         }
         finally
         {
@@ -243,28 +273,14 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
             device.IsExtest = true;
         }
 
-        var readDevices = expects.Select(e => e.Device).ToHashSet();
-        var instructions = devices
-            .Select(d => d.IsExtest ? BoundaryScanInstruction.EXTEST
-                : readDevices.Contains(d) || d.ActiveInstruction == BoundaryScanInstruction.SAMPLE ? BoundaryScanInstruction.SAMPLE
-                : BoundaryScanInstruction.BYPASS)
-            .ToList();
+        var loaded = await LoadInstructionsAsync(devices, expects.Select(e => e.Device).ToHashSet());
+        if (loaded.IsFailure)
+            return OperationResult<BoundaryScanStepOutcome>.Failure(loaded.ErrorMessage);
 
-        var entries = devices
-            .Select((d, i) => new BoundaryScanChainEntry(d.Config.IrLength, d.Bsdl, instructions[i], d.ActiveInstruction, (bool[])d.Outputs.Clone()))
-            .ToList();
+        var entries = Entries(devices);
 
         // Loading instructions also shifts the outputs, otherwise a data scan updates them
-        if (devices.Where((d, i) => d.ActiveInstruction != instructions[i]).Any())
-        {
-            var loaded = await _boundaryScanService.LoadInstructionsAsync(entries);
-            if (loaded.IsFailure)
-                return OperationResult<BoundaryScanStepOutcome>.Failure($"Boundary scan: {loaded.ErrorMessage}");
-
-            for (var i = 0; i < devices.Count; i++)
-                devices[i].ActiveInstruction = instructions[i];
-        }
-        else if (drives.Count > 0)
+        if (!loaded.Value && drives.Count > 0)
         {
             var updated = await _boundaryScanService.ScanAsync(entries);
             if (updated.IsFailure)
@@ -298,6 +314,116 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 
         return OperationResult<BoundaryScanStepOutcome>.Success(new BoundaryScanStepOutcome(true, messages.Count, messages));
     }
+
+    private async Task<OperationResult<BusTransactionResult>> ExecuteBusAsync(
+        List<SessionDevice> devices, BoundaryScanBus bus, BoundaryScanBusStepConfig step, byte[] write)
+    {
+        var readCount = Math.Max(0, step.BytesToRead);
+
+        BusPinDevice? FindDevice(string id) =>
+            devices.FirstOrDefault(d => d.Config.Id == id) is { } d ? new BusPinDevice(d.Name, d.Bsdl) : null;
+
+        var problems = BoundaryScanBusValidator.Validate(bus, FindDevice, write: write.Length > 0, read: readCount > 0);
+        if (problems.Count > 0)
+            return OperationResult<BusTransactionResult>.Failure($"Bus {bus.Name}: {problems[0]}");
+
+        var lines = bus.Pins
+            .Where(p => p.IsAssigned)
+            .ToDictionary(
+                p => new BusLine(p.Signal, p.Index),
+                p =>
+                {
+                    var device = devices.First(d => d.Config.Id == p.DeviceId);
+                    return (Device: device, Cells: device.Bsdl!.GetPortCells(p.Port));
+                });
+
+        IBusTransaction transaction = bus.Type switch
+        {
+            BoundaryScanBusType.I2C => new I2CTransaction(step.I2CAddress, write, readCount),
+            BoundaryScanBusType.SPI => new SpiTransaction(bus.SpiMode, bus.IsCsActiveHigh, bus.IsLsbFirst, write, readCount,
+                lines.Keys.Select(l => l.Signal).ToHashSet()),
+            _ => new PinGroupTransaction(bus.Width, write, readCount)
+        };
+
+        // Bus pins are driven, so their devices switch to EXTEST and stay there like for pin actions
+        foreach (var line in lines.Values)
+            line.Device.IsExtest = true;
+
+        var loaded = await LoadInstructionsAsync(devices, new HashSet<SessionDevice>());
+        if (loaded.IsFailure)
+            return OperationResult<BusTransactionResult>.Failure(loaded.ErrorMessage);
+
+        // Every state is one scan. Scan n captures the pins of state n-1, so one more scan reads the last state.
+        var scans = new List<IReadOnlyList<BoundaryScanChainEntry>>();
+
+        foreach (var state in transaction.Waveform.States)
+        {
+            foreach (var (line, drive) in state)
+            {
+                // Releasing an input-only pin needs nothing, it is never driven
+                if (lines.TryGetValue(line, out var pin) && pin.Cells.Output is { } output)
+                    BsdlDevice.ApplyDrive(pin.Device.Outputs, output, drive);
+            }
+
+            scans.Add(Entries(devices));
+        }
+
+        scans.Add(Entries(devices));
+
+        var captured = await _boundaryScanService.ScanSequenceAsync(scans);
+        if (captured.IsFailure)
+            return OperationResult<BusTransactionResult>.Failure($"Boundary scan: {captured.ErrorMessage}");
+
+        var samples = transaction.Waveform.Samples
+            .Select(s =>
+            {
+                var pin = lines[s.Line];
+                return captured.Value![s.State + 1][devices.IndexOf(pin.Device)]![pin.Cells.Input!.Number];
+            })
+            .ToList();
+
+        var result = transaction.Decode(samples);
+
+        foreach (var message in result.Messages)
+            _loggingService.Warning($"Boundary scan bus {bus.Name}: {message}");
+
+        return OperationResult<BusTransactionResult>.Success(result);
+    }
+
+    /// <summary>
+    /// Puts driven devices in EXTEST and read devices at least in SAMPLE. Returns true if instructions were loaded,
+    /// which also shifted the current outputs.
+    /// </summary>
+    private async Task<OperationResult<bool>> LoadInstructionsAsync(List<SessionDevice> devices, IReadOnlySet<SessionDevice> readDevices)
+    {
+        var instructions = devices
+            .Select(d => d.IsExtest ? BoundaryScanInstruction.EXTEST
+                : readDevices.Contains(d) || d.ActiveInstruction == BoundaryScanInstruction.SAMPLE ? BoundaryScanInstruction.SAMPLE
+                : BoundaryScanInstruction.BYPASS)
+            .ToList();
+
+        if (!devices.Where((d, i) => d.ActiveInstruction != instructions[i]).Any())
+            return OperationResult<bool>.Success(false);
+
+        var entries = devices
+            .Select((d, i) => new BoundaryScanChainEntry(d.Config.IrLength, d.Bsdl, instructions[i], d.ActiveInstruction, (bool[])d.Outputs.Clone()))
+            .ToList();
+
+        var loaded = await _boundaryScanService.LoadInstructionsAsync(entries);
+        if (loaded.IsFailure)
+            return OperationResult<bool>.Failure($"Boundary scan: {loaded.ErrorMessage}");
+
+        for (var i = 0; i < devices.Count; i++)
+            devices[i].ActiveInstruction = instructions[i];
+
+        return OperationResult<bool>.Success(true);
+    }
+
+    private static List<BoundaryScanChainEntry> Entries(List<SessionDevice> devices) =>
+        devices
+            .Select(d => new BoundaryScanChainEntry(d.Config.IrLength, d.Bsdl, d.ActiveInstruction ?? BoundaryScanInstruction.BYPASS,
+                d.ActiveInstruction, (bool[])d.Outputs.Clone()))
+            .ToList();
 
     // Same fallback as the Boundary Scan tab: user name, BSDL entity, position
     private static string DeviceName(BoundaryScanDeviceConfig config, BsdlDevice? bsdl, int position) =>

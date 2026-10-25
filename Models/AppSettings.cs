@@ -27,4 +27,5 @@ public class AppSettings
     public bool IsExpressionEditorExpanded { get; set; }
     public bool IsFilePathEditorExpanded { get; set; }
     public bool IsBoundaryScanEditorExpanded { get; set; }
+    public bool IsBoundaryScanBusEditorExpanded { get; set; }
 }

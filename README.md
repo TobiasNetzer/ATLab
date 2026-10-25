@@ -33,6 +33,7 @@ The guide is also shipped as a PDF with every release package (in the `docs` fol
     -   **File Content**: Read and validate file contents from the local file system.
     -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
     -   **Interface Communication**: Use the Test Interface Adapters onboard interfaces (I2C/UART) to communicate with the DUT.
+    -   **Boundary Scan**: Read and drive pins of JTAG chips on the board through a SEGGER J-Link or FTDI probe, and talk to I2C/SPI devices through boundary scan pins.
     -   **Define Pass/Fail Criteria**:
         -   **Test Step Evaluation**: Define pass/fail criteria based on step results and conditions.
         -   **Conditional Test Execution**: Repeat a step, jump to another step, or end the test depending on the result.
@@ -117,9 +118,13 @@ Keep notes, images, attachments and DUT information directly within the project.
 
 ![image](docs/user-guide/en/images/Documentation_Tab_en.png)
 
+### Boundary Scan
+Connect a SEGGER J-Link or FTDI JTAG probe, detect the scan chain, import BSDL files, watch and drive the pins of the chips on the board, and set up I²C, SPI and pin group buses for test steps.
+→ [Boundary Scan Tab](docs/user-guide/en/14-boundary-scan.md)
+
 ### Test Hardware
 View information about the attached Test Interface Adapter, its channels and interfaces, and run the relay matrix self-test.
-→ [Test Hardware Tab](docs/user-guide/en/14-test-hardware.md)
+→ [Test Hardware Tab](docs/user-guide/en/15-test-hardware.md)
 
 ![image](docs/user-guide/en/images/Hardware_Tab_en.png)
 

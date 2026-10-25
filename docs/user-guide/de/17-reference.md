@@ -1,4 +1,4 @@
-# 16. Referenz
+# 17. Referenz
 
 ## Tastenkürzel
 
@@ -68,6 +68,8 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Schnittstelle: Typ / I²C-Frequenz / Adresse | I2C / 100 kHz / 0 |
 | Schnittstelle: Baudrate / Datenbits / Parität / Stoppbits | 9600 / 8 / None / 1 |
 | Schnittstelle: Timeout | 1000 ms |
+| Boundary Scan: Modus / Einschwingzeit | Pin-Aktionen / 0 ms |
+| Boundary-Scan-Bus: Adresse / Bytes lesen | 0 / 0 |
 
 ### Skriptbefehl
 
@@ -84,6 +86,18 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Serial Port | 115200 Baud, 8 Datenbits, keine Parität, 1 Stoppbit, kein Handshake, kein Abschlusszeichen, Chunk-Framing, Framing-Timeout 100 ms |
 | TCP/IP | Port 5025, Timeout 2000 ms, Abschlusszeichen LF |
 | VISA | Timeout 2000 ms, Abschlusszeichen LF |
+
+### Boundary Scan
+
+| Einstellung | Standard |
+|-------------|----------|
+| Probe-Typ | SEGGER J-Link |
+| Seriennummer | *(leer)* – erste verfügbare Probe |
+| TCK-Frequenz | 1000 kHz |
+| FTDI ADBUS-Wert / -Richtung | `08` / `0B` |
+| Boundary-Register nach dem Laden einer BSDL-Datei | sichere Werte aus der BSDL-Datei |
+| SPI-Bus | Modus 0, CS low-aktiv, MSB zuerst |
+| Pin-Gruppe | 8 Pins |
 
 ### Projekteinstellungen
 
@@ -138,12 +152,19 @@ Persönliche Einstellungen pro Benutzer – nicht Teil eines Projekts:
 | Adapter-I²C | Prüfling | Adapter mit I²C |
 | Adapter-UART | Prüfling | Adapter mit UART |
 | USB-HID | Steuermodul | – |
+| JTAG (SEGGER J-Link) | Boundary Scan | J-Link Software and Documentation Pack |
+| JTAG (FTDI FT2232H/FT232H/FT4232H) | Boundary Scan | FTDI-D2XX-Treiber |
 
 ## Glossar
 
 | Begriff | Definition |
 |---------|------------|
 | **Abweichung** | `(Messwert − Sollwert) / Sollwert × 100 %`. |
+| **BSDL** | Boundary Scan Description Language. Datei des Bausteinherstellers, die Boundary-Register, Befehle und Pinbelegung des Gehäuses eines Bausteins beschreibt. |
+| **BYPASS / SAMPLE / EXTEST** | Boundary-Scan-Befehle: Baustein überbrückt / Pins lesen, ohne den Baustein zu beeinflussen / Pins aus dem Boundary-Register lesen und treiben. |
+| **Boundary-Register** | Kette von Zellen, eine oder mehrere pro Pin, über die Boundary Scan die Pins liest und treibt. |
+| **IDCODE** | 32-Bit-Kennung eines Bausteins (Hersteller, Teilenummer, Version), wird bei der Kettenerkennung gelesen. |
+| **JTAG** | Testzugang nach IEEE 1149.1 mit den Signalen TCK, TMS, TDI, TDO (und optional TRST). |
 | **Adapter / TIA / cTIA** | Test Interface Adapter (compact Test Interface Adapter), die von ATLab gesteuerte USB-Relais- und Schnittstellen-Hardware. |
 | **Auswertungsquelle** | Mechanismus, der den Messwert eines Schritts liefert. |
 | **DUT / Prüfling** | Device Under Test, das zu prüfende Gerät. |

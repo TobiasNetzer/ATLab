@@ -46,6 +46,12 @@ public interface IBoundaryScanService
     /// </summary>
     Task<OperationResult<IReadOnlyList<bool[]?>>> ScanAsync(IReadOnlyList<BoundaryScanChainEntry> chain);
 
+    /// <summary>
+    /// Runs several data scans in one probe transfer, used to bit-bang bus transactions. The instructions must
+    /// already be loaded. Scan n captures the pins as scan n-1 left them, the first one the state before the sequence.
+    /// </summary>
+    Task<OperationResult<IReadOnlyList<IReadOnlyList<bool[]?>>>> ScanSequenceAsync(IReadOnlyList<IReadOnlyList<BoundaryScanChainEntry>> scans);
+
     /// <summary>Resets all TAP controllers, which returns the devices to normal operation.</summary>
     Task<OperationResult> ResetChainAsync();
 }

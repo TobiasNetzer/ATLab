@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:ATLab.Controls"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
              xmlns:converters="clr-namespace:ATLab.Converters"
+             xmlns:models="clr-namespace:ATLab.Models"
              x:Class="ATLab.Views.BoundaryScanTab"
              x:DataType="vm:BoundaryScanTabViewModel">
 
@@ -24,6 +25,10 @@
         <Style Selector="Button.Instruction">
             <Setter Property="MinWidth" Value="90"/>
             <Setter Property="Height" Value="35"/>
+        </Style>
+        <Style Selector="Button.ViewSwitch">
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Height" Value="30"/>
         </Style>
         <Style Selector="Button.Drive">
             <Setter Property="Width" Value="28"/>
@@ -365,9 +370,26 @@
                         Background="{DynamicResource OutlineColor}"
                         CornerRadius="15 15 0 0"
                         Padding="10">
-                    <TextBlock Text="{Binding SelectedDevice.DisplayName, FallbackValue=''}"
-                               Classes="h4"
-                               HorizontalAlignment="Center"/>
+                    <Grid ColumnDefinitions="*,Auto,*">
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                            <Button Classes="ViewSwitch"
+                                    Content="{helpers:Localize Label_PinsView}"
+                                    Background="{Binding !IsBusView, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Command="{Binding ShowPinsCommand}"/>
+                            <Button Classes="ViewSwitch"
+                                    Content="{helpers:Localize Label_BusesView}"
+                                    Background="{Binding IsBusView, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Command="{Binding ShowBusesCommand}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding SelectedDevice.DisplayName, FallbackValue=''}"
+                                   Classes="h4"
+                                   IsVisible="{Binding !IsBusView}"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="{helpers:Localize Header_Buses}"
+                                   Classes="h4"
+                                   IsVisible="{Binding IsBusView}"/>
+                    </Grid>
                 </Border>
 
                 <Border Grid.Row="1"
@@ -376,215 +398,413 @@
                         CornerRadius="0 0 15 15">
 
                     <Panel>
-                        <TextBlock Text="{helpers:Localize Text_NoChainDevice}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource MutedColor}"
-                                   IsVisible="{Binding !HasSelectedDevice}"/>
+                        <Panel IsVisible="{Binding !IsBusView}">
+                            <TextBlock Text="{helpers:Localize Text_NoChainDevice}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MutedColor}"
+                                       IsVisible="{Binding !HasSelectedDevice}"/>
 
-                        <Grid RowDefinitions="Auto,Auto,*"
-                              RowSpacing="10"
-                              Margin="10"
-                              IsVisible="{Binding HasSelectedDevice}">
+                            <Grid RowDefinitions="Auto,Auto,*"
+                                  RowSpacing="10"
+                                  Margin="10"
+                                  IsVisible="{Binding HasSelectedDevice}">
 
-                            <WrapPanel Grid.Row="0" ItemSpacing="30" LineSpacing="5">
-                                <StackPanel>
-                                    <TextBlock Text="{helpers:Localize Label_Entity}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
-                                    <TextBlock Text="{Binding SelectedDevice.EntityName, FallbackValue=''}" FontWeight="SemiBold"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="IDCODE" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
-                                    <TextBlock Text="{Binding SelectedDevice.IdCodeText, FallbackValue=''}"
-                                               FontWeight="SemiBold"
-                                               Foreground="{Binding SelectedDevice.IdCodeMatches, Converter={StaticResource IdCodeBrushConverter}, FallbackValue={x:Null}}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="{helpers:Localize Label_InstructionLength}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
-                                    <TextBlock Text="{Binding SelectedDevice.InstructionLengthText, FallbackValue=''}" FontWeight="SemiBold"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="{helpers:Localize Label_BoundaryLength}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
-                                    <TextBlock Text="{Binding SelectedDevice.BoundaryLengthText, FallbackValue=''}" FontWeight="SemiBold"/>
-                                </StackPanel>
-                            </WrapPanel>
+                                <WrapPanel Grid.Row="0" ItemSpacing="30" LineSpacing="5">
+                                    <StackPanel>
+                                        <TextBlock Text="{helpers:Localize Label_Entity}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
+                                        <TextBlock Text="{Binding SelectedDevice.EntityName, FallbackValue=''}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="IDCODE" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
+                                        <TextBlock Text="{Binding SelectedDevice.IdCodeText, FallbackValue=''}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{Binding SelectedDevice.IdCodeMatches, Converter={StaticResource IdCodeBrushConverter}, FallbackValue={x:Null}}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="{helpers:Localize Label_InstructionLength}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
+                                        <TextBlock Text="{Binding SelectedDevice.InstructionLengthText, FallbackValue=''}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="{helpers:Localize Label_BoundaryLength}" Classes="Small" Foreground="{DynamicResource MutedColor}"/>
+                                        <TextBlock Text="{Binding SelectedDevice.BoundaryLengthText, FallbackValue=''}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </WrapPanel>
 
-                            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
 
-                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
-                                    <Button Classes="Instruction"
-                                            Content="BYPASS"
-                                            ToolTip.Tip="{helpers:Localize ToolTip_Bypass}"
-                                            Background="{Binding SelectedDevice.IsBypassActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
-                                            Command="{Binding LoadInstructionCommand}"
-                                            CommandParameter="{x:Static enums:BoundaryScanInstruction.BYPASS}"/>
-                                    <Button Classes="Instruction"
-                                            Content="SAMPLE"
-                                            ToolTip.Tip="{helpers:Localize ToolTip_Sample}"
-                                            Background="{Binding SelectedDevice.IsSampleActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
-                                            Command="{Binding LoadInstructionCommand}"
-                                            CommandParameter="{x:Static enums:BoundaryScanInstruction.SAMPLE}"/>
-                                    <Button Classes="Instruction"
-                                            Content="EXTEST"
-                                            ToolTip.Tip="{helpers:Localize ToolTip_Extest}"
-                                            Background="{Binding SelectedDevice.IsExtestActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
-                                            Command="{Binding LoadInstructionCommand}"
-                                            CommandParameter="{x:Static enums:BoundaryScanInstruction.EXTEST}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                                        <Button Classes="Instruction"
+                                                Content="BYPASS"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_Bypass}"
+                                                Background="{Binding SelectedDevice.IsBypassActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
+                                                Command="{Binding LoadInstructionCommand}"
+                                                CommandParameter="{x:Static enums:BoundaryScanInstruction.BYPASS}"/>
+                                        <Button Classes="Instruction"
+                                                Content="SAMPLE"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_Sample}"
+                                                Background="{Binding SelectedDevice.IsSampleActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
+                                                Command="{Binding LoadInstructionCommand}"
+                                                CommandParameter="{x:Static enums:BoundaryScanInstruction.SAMPLE}"/>
+                                        <Button Classes="Instruction"
+                                                Content="EXTEST"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_Extest}"
+                                                Background="{Binding SelectedDevice.IsExtestActive, Converter={StaticResource ButtonEnabledConverter}, FallbackValue={x:Null}}"
+                                                Command="{Binding LoadInstructionCommand}"
+                                                CommandParameter="{x:Static enums:BoundaryScanInstruction.EXTEST}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-                                    <ToggleSwitch IsChecked="{Binding IsAutoRefresh}"
-                                                  IsEnabled="{Binding IsConnected}"
-                                                  OnContent="{helpers:Localize Label_AutoRefresh}"
-                                                  OffContent="{helpers:Localize Label_AutoRefresh}"
-                                                  VerticalAlignment="Center"/>
-                                    <Button Background="{DynamicResource ButtonBackground}"
-                                            Classes="Icon"
-                                            Width="35"
-                                            Height="35"
-                                            ToolTip.Tip="{helpers:Localize ToolTip_RefreshPins}"
-                                            Command="{Binding RefreshCommand}">
-                                        <shadui:ButtonAssist.Icon>
-                                            <ContentControl Content="{LucideIconContent RefreshCw}"/>
-                                        </shadui:ButtonAssist.Icon>
-                                    </Button>
-                                    <Button Background="{DynamicResource ButtonBackground}"
-                                            Classes="Icon"
-                                            Width="35"
-                                            Height="35"
-                                            ToolTip.Tip="{helpers:Localize ToolTip_ResetOutputs}"
-                                            Command="{Binding ResetOutputsCommand}">
-                                        <shadui:ButtonAssist.Icon>
-                                            <ContentControl Content="{LucideIconContent ShieldCheck}"/>
-                                        </shadui:ButtonAssist.Icon>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-
-                            <Grid Grid.Row="2" ColumnDefinitions="*,620" ColumnSpacing="10">
-
-                                <Grid Grid.Column="0" RowDefinitions="*,Auto" RowSpacing="5">
-                                    <Border Grid.Row="0"
-                                            BorderBrush="{DynamicResource OutlineColor}"
-                                            BorderThickness="2"
-                                            CornerRadius="10">
-                                        <controls:BoundaryScanPackageView
-                                            Pins="{Binding SelectedDevice.Pins, FallbackValue={x:Null}}"
-                                            PackageName="{Binding SelectedDevice.Config.PackageName, FallbackValue=''}"
-                                            StateVersion="{Binding SelectedDevice.StateVersion, FallbackValue=0}"
-                                            SelectedPin="{Binding SelectedPin}"/>
-                                    </Border>
-
-                                    <WrapPanel Grid.Row="1" ItemSpacing="15" HorizontalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border Width="12" Height="12" CornerRadius="2" Background="#F59E0B"/>
-                                            <TextBlock Text="{helpers:Localize Legend_High}" Classes="Small"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border Width="12" Height="12" CornerRadius="2" Background="#3B82F6"/>
-                                            <TextBlock Text="{helpers:Localize Legend_Low}" Classes="Small"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border Width="12" Height="12" CornerRadius="2" Background="{DynamicResource MutedColor}"/>
-                                            <TextBlock Text="{helpers:Localize Legend_Linkage}" Classes="Small"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border Width="12" Height="12" CornerRadius="2" Background="#A78BFA"/>
-                                            <TextBlock Text="{helpers:Localize Legend_Tap}" Classes="Small"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <Border Width="12" Height="12" CornerRadius="2" BorderThickness="3" BorderBrush="{DynamicResource ForegroundColor}"/>
-                                            <TextBlock Text="{helpers:Localize Legend_Driven}" Classes="Small"/>
-                                        </StackPanel>
-                                    </WrapPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                                        <ToggleSwitch IsChecked="{Binding IsAutoRefresh}"
+                                                      IsEnabled="{Binding IsConnected}"
+                                                      OnContent="{helpers:Localize Label_AutoRefresh}"
+                                                      OffContent="{helpers:Localize Label_AutoRefresh}"
+                                                      VerticalAlignment="Center"/>
+                                        <Button Background="{DynamicResource ButtonBackground}"
+                                                Classes="Icon"
+                                                Width="35"
+                                                Height="35"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_RefreshPins}"
+                                                Command="{Binding RefreshCommand}">
+                                            <shadui:ButtonAssist.Icon>
+                                                <ContentControl Content="{LucideIconContent RefreshCw}"/>
+                                            </shadui:ButtonAssist.Icon>
+                                        </Button>
+                                        <Button Background="{DynamicResource ButtonBackground}"
+                                                Classes="Icon"
+                                                Width="35"
+                                                Height="35"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_ResetOutputs}"
+                                                Command="{Binding ResetOutputsCommand}">
+                                            <shadui:ButtonAssist.Icon>
+                                                <ContentControl Content="{LucideIconContent ShieldCheck}"/>
+                                            </shadui:ButtonAssist.Icon>
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
 
-                                <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="5">
+                                <Grid Grid.Row="2" ColumnDefinitions="*,620" ColumnSpacing="10">
 
-                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                        <TextBox Grid.Column="0"
-                                                 Text="{Binding PinFilter}"
-                                                 PlaceholderText="{helpers:Localize Watermark_FilterPins}"/>
-                                        <CheckBox Grid.Column="1"
-                                                  Content="{helpers:Localize Label_ShowLinkagePins}"
-                                                  IsChecked="{Binding ShowLinkagePins}"/>
+                                    <Grid Grid.Column="0" RowDefinitions="*,Auto" RowSpacing="5">
+                                        <Border Grid.Row="0"
+                                                BorderBrush="{DynamicResource OutlineColor}"
+                                                BorderThickness="2"
+                                                CornerRadius="10">
+                                            <controls:BoundaryScanPackageView
+                                                Pins="{Binding SelectedDevice.Pins, FallbackValue={x:Null}}"
+                                                PackageName="{Binding SelectedDevice.Config.PackageName, FallbackValue=''}"
+                                                StateVersion="{Binding SelectedDevice.StateVersion, FallbackValue=0}"
+                                                SelectedPin="{Binding SelectedPin}"/>
+                                        </Border>
+
+                                        <WrapPanel Grid.Row="1" ItemSpacing="15" HorizontalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Border Width="12" Height="12" CornerRadius="2" Background="#F59E0B"/>
+                                                <TextBlock Text="{helpers:Localize Legend_High}" Classes="Small"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Border Width="12" Height="12" CornerRadius="2" Background="#3B82F6"/>
+                                                <TextBlock Text="{helpers:Localize Legend_Low}" Classes="Small"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Border Width="12" Height="12" CornerRadius="2" Background="{DynamicResource MutedColor}"/>
+                                                <TextBlock Text="{helpers:Localize Legend_Linkage}" Classes="Small"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Border Width="12" Height="12" CornerRadius="2" Background="#A78BFA"/>
+                                                <TextBlock Text="{helpers:Localize Legend_Tap}" Classes="Small"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <Border Width="12" Height="12" CornerRadius="2" BorderThickness="3" BorderBrush="{DynamicResource ForegroundColor}"/>
+                                                <TextBlock Text="{helpers:Localize Legend_Driven}" Classes="Small"/>
+                                            </StackPanel>
+                                        </WrapPanel>
                                     </Grid>
 
-                                    <DataGrid Grid.Row="1"
-                                              ItemsSource="{Binding SelectedDevice.VisiblePins, FallbackValue={x:Null}}"
-                                              SelectedItem="{Binding SelectedPin}"
-                                              AutoGenerateColumns="False"
-                                              IsReadOnly="False"
-                                              CanUserSortColumns="True"
-                                              GridLinesVisibility="All"
-                                              BorderThickness="2"
-                                              BorderBrush="{DynamicResource OutlineColor}"
-                                              VerticalScrollBarVisibility="Auto">
+                                    <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="5">
 
-                                        <DataGrid.Styles>
-                                            <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-                                                <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
-                                                <Setter Property="Opacity" Value="1" />
-                                            </Style>
-                                        </DataGrid.Styles>
+                                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                            <TextBox Grid.Column="0"
+                                                     Text="{Binding PinFilter}"
+                                                     PlaceholderText="{helpers:Localize Watermark_FilterPins}"/>
+                                            <CheckBox Grid.Column="1"
+                                                      Content="{helpers:Localize Label_ShowLinkagePins}"
+                                                      IsChecked="{Binding ShowLinkagePins}"/>
+                                        </Grid>
 
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="{helpers:Localize Header_Pin}" Binding="{Binding PinName}" Width="70" IsReadOnly="True"
-                                                                CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByPin}"/>
-                                            <DataGridTextColumn Header="{helpers:Localize Header_Port}" Binding="{Binding Port}" Width="100" IsReadOnly="True"
-                                                                CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByPort}"/>
-                                            <DataGridTextColumn Header="{helpers:Localize Header_PinLabel}" Binding="{Binding Label, UpdateSourceTrigger=LostFocus}" Width="*"
-                                                                IsReadOnly="False"
-                                                                CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByLabel}"/>
-                                            <DataGridTextColumn Header="{helpers:Localize Header_Type}" Binding="{Binding DirectionText}" Width="80" IsReadOnly="True"/>
-                                            <DataGridTemplateColumn Header="{helpers:Localize Header_Input}" Width="60" SortMemberPath="InputText">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
-                                                        <Border Background="Transparent"
-                                                                ToolTip.Tip="{Binding CellToolTip}">
-                                                            <TextBlock Text="{Binding InputText}"
-                                                                       FontWeight="Bold"
-                                                                       HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Header="{helpers:Localize Header_Output}" Width="110" SortMemberPath="DriveState">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
-                                                        <StackPanel Orientation="Horizontal"
-                                                                    Spacing="3"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    Background="Transparent"
-                                                                    ToolTip.Tip="{Binding CellToolTip}"
-                                                                    IsVisible="{Binding CanDrive}">
-                                                            <Button Classes="Drive"
-                                                                    Content="0"
-                                                                    Background="{Binding IsDrivenLow, Converter={StaticResource ButtonEnabledConverter}}"
-                                                                    IsEnabled="{Binding IsDriveEditable}"
-                                                                    Command="{Binding DriveCommand}"
-                                                                    CommandParameter="{x:Static enums:PinDriveState.LOW}"/>
-                                                            <Button Classes="Drive"
-                                                                    Content="1"
-                                                                    Background="{Binding IsDrivenHigh, Converter={StaticResource ButtonEnabledConverter}}"
-                                                                    IsEnabled="{Binding IsDriveEditable}"
-                                                                    Command="{Binding DriveCommand}"
-                                                                    CommandParameter="{x:Static enums:PinDriveState.HIGH}"/>
-                                                            <Button Classes="Drive"
-                                                                    Content="Z"
-                                                                    Background="{Binding IsHighZ, Converter={StaticResource ButtonEnabledConverter}}"
-                                                                    IsEnabled="{Binding IsTristateEditable}"
-                                                                    IsVisible="{Binding CanTristate}"
-                                                                    Command="{Binding DriveCommand}"
-                                                                    CommandParameter="{x:Static enums:PinDriveState.HIGH_Z}"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                        <DataGrid Grid.Row="1"
+                                                  ItemsSource="{Binding SelectedDevice.VisiblePins, FallbackValue={x:Null}}"
+                                                  SelectedItem="{Binding SelectedPin}"
+                                                  AutoGenerateColumns="False"
+                                                  IsReadOnly="False"
+                                                  CanUserSortColumns="True"
+                                                  GridLinesVisibility="All"
+                                                  BorderThickness="2"
+                                                  BorderBrush="{DynamicResource OutlineColor}"
+                                                  VerticalScrollBarVisibility="Auto">
+
+                                            <DataGrid.Styles>
+                                                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                                    <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
+                                                    <Setter Property="Opacity" Value="1" />
+                                                </Style>
+                                            </DataGrid.Styles>
+
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="{helpers:Localize Header_Pin}" Binding="{Binding PinName}" Width="70" IsReadOnly="True"
+                                                                    CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByPin}"/>
+                                                <DataGridTextColumn Header="{helpers:Localize Header_Port}" Binding="{Binding Port}" Width="100" IsReadOnly="True"
+                                                                    CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByPort}"/>
+                                                <DataGridTextColumn Header="{helpers:Localize Header_PinLabel}" Binding="{Binding Label, UpdateSourceTrigger=LostFocus}" Width="*"
+                                                                    IsReadOnly="False"
+                                                                    CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByLabel}"/>
+                                                <DataGridTextColumn Header="{helpers:Localize Header_Type}" Binding="{Binding DirectionText}" Width="80" IsReadOnly="True"/>
+                                                <DataGridTemplateColumn Header="{helpers:Localize Header_Input}" Width="60" SortMemberPath="InputText">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
+                                                            <Border Background="Transparent"
+                                                                    ToolTip.Tip="{Binding CellToolTip}">
+                                                                <TextBlock Text="{Binding InputText}"
+                                                                           FontWeight="Bold"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Center"/>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="{helpers:Localize Header_Output}" Width="110" SortMemberPath="DriveState">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
+                                                            <StackPanel Orientation="Horizontal"
+                                                                        Spacing="3"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="Transparent"
+                                                                        ToolTip.Tip="{Binding CellToolTip}"
+                                                                        IsVisible="{Binding CanDrive}">
+                                                                <Button Classes="Drive"
+                                                                        Content="0"
+                                                                        Background="{Binding IsDrivenLow, Converter={StaticResource ButtonEnabledConverter}}"
+                                                                        IsEnabled="{Binding IsDriveEditable}"
+                                                                        Command="{Binding DriveCommand}"
+                                                                        CommandParameter="{x:Static enums:PinDriveState.LOW}"/>
+                                                                <Button Classes="Drive"
+                                                                        Content="1"
+                                                                        Background="{Binding IsDrivenHigh, Converter={StaticResource ButtonEnabledConverter}}"
+                                                                        IsEnabled="{Binding IsDriveEditable}"
+                                                                        Command="{Binding DriveCommand}"
+                                                                        CommandParameter="{x:Static enums:PinDriveState.HIGH}"/>
+                                                                <Button Classes="Drive"
+                                                                        Content="Z"
+                                                                        Background="{Binding IsHighZ, Converter={StaticResource ButtonEnabledConverter}}"
+                                                                        IsEnabled="{Binding IsTristateEditable}"
+                                                                        IsVisible="{Binding CanTristate}"
+                                                                        Command="{Binding DriveCommand}"
+                                                                        CommandParameter="{x:Static enums:PinDriveState.HIGH_Z}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
                                 </Grid>
+                            </Grid>
+                        </Panel>
+
+                        <!-- Bus setup -->
+                        <Grid DataContext="{Binding BusEditor}"
+                              x:DataType="vm:BoundaryScanBusEditorViewModel"
+                              IsVisible="{Binding $parent[UserControl].((vm:BoundaryScanTabViewModel)DataContext).IsBusView, FallbackValue=False}"
+                              ColumnDefinitions="260,*"
+                              ColumnSpacing="10"
+                              Margin="10">
+
+                            <Grid Grid.Column="0" RowDefinitions="Auto,*" RowSpacing="5">
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+                                    <Button Background="{DynamicResource ButtonBackground}"
+                                            Classes="Icon"
+                                            Width="35"
+                                            Height="35"
+                                            ToolTip.Tip="{helpers:Localize ToolTip_AddBus}"
+                                            Command="{Binding AddBusCommand}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent Plus}"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                    <Button Background="{DynamicResource ButtonBackground}"
+                                            Classes="Icon"
+                                            Width="35"
+                                            Height="35"
+                                            ToolTip.Tip="{helpers:Localize ToolTip_RemoveBus}"
+                                            Command="{Binding RemoveBusCommand}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent Minus}"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                </StackPanel>
+
+                                <ListBox Grid.Row="1"
+                                         ItemsSource="{Binding Buses}"
+                                         SelectedItem="{Binding SelectedBus}">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                        <Style Selector="ListBoxItem:selected /template/ PathIcon#CheckSelected">
+                                            <Setter Property="IsVisible" Value="False"/>
+                                        </Style>
+                                        <Style Selector="ListBoxItem:selected /template/ Border#SelectionBackground, ListBoxItem:selected:pointerover /template/ Border#SelectionBackground">
+                                            <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+                                            <Setter Property="Opacity" Value="1"/>
+                                        </Style>
+                                        <Style Selector="ListBoxItem:selected:pointerover /template/ Border#HoverBackground">
+                                            <Setter Property="IsVisible" Value="False"/>
+                                        </Style>
+                                    </ListBox.Styles>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:BoundaryScanBus">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding Type, Converter={StaticResource EnumDescriptionConverter}}"
+                                                           Classes="Small"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{helpers:Localize Text_NoBus}"
+                                       TextWrapping="Wrap"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MutedColor}"
+                                       IsVisible="{Binding !HasSelectedBus}"/>
+
+                            <Grid Grid.Column="1"
+                                  RowDefinitions="Auto,Auto,*,Auto"
+                                  RowSpacing="10"
+                                  IsVisible="{Binding HasSelectedBus}">
+
+                                <Grid Grid.Row="0" ColumnDefinitions="*,200" ColumnSpacing="10">
+                                    <StackPanel Grid.Column="0" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_BusName}"/>
+                                        <TextBox Text="{Binding SelectedBus.Name, FallbackValue=''}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_BusType}"/>
+                                        <ComboBox ItemsSource="{Binding AvailableTypes}"
+                                                  SelectedItem="{Binding SelectedBus.Type, FallbackValue={x:Null}}"
+                                                  DisplayMemberBinding="{Binding Converter={StaticResource EnumDescriptionConverter}}"
+                                                  HorizontalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="20">
+                                    <StackPanel Spacing="2" IsVisible="{Binding IsSpi}">
+                                        <TextBlock Text="{helpers:Localize Label_SpiMode}"/>
+                                        <ComboBox ItemsSource="{Binding SpiModes}"
+                                                  SelectedItem="{Binding SelectedBus.SpiMode, FallbackValue=0}"
+                                                  Width="100"/>
+                                    </StackPanel>
+                                    <CheckBox Content="{helpers:Localize Label_CsActiveHigh}"
+                                              IsChecked="{Binding SelectedBus.IsCsActiveHigh, FallbackValue=False}"
+                                              VerticalAlignment="Bottom"
+                                              IsVisible="{Binding IsSpi}"/>
+                                    <CheckBox Content="{helpers:Localize Label_LsbFirst}"
+                                              IsChecked="{Binding SelectedBus.IsLsbFirst, FallbackValue=False}"
+                                              VerticalAlignment="Bottom"
+                                              IsVisible="{Binding IsSpi}"/>
+                                    <StackPanel Spacing="2" IsVisible="{Binding IsPinGroup}">
+                                        <TextBlock Text="{helpers:Localize Label_BusWidth}"/>
+                                        <NumericUpDown Value="{Binding SelectedBus.Width, FallbackValue=8}"
+                                                       Minimum="1"
+                                                       Maximum="32"
+                                                       FormatString="0"
+                                                       Width="140"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <DataGrid Grid.Row="2"
+                                          ItemsSource="{Binding PinRows}"
+                                          AutoGenerateColumns="False"
+                                          CanUserSortColumns="False"
+                                          IsReadOnly="False"
+                                          GridLinesVisibility="All"
+                                          BorderThickness="2"
+                                          BorderBrush="{DynamicResource OutlineColor}"
+                                          VerticalScrollBarVisibility="Auto">
+
+                                    <DataGrid.Styles>
+                                        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                            <Setter Property="Fill" Value="{DynamicResource InfoColor}"/>
+                                            <Setter Property="Opacity" Value="1"/>
+                                        </Style>
+                                    </DataGrid.Styles>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{helpers:Localize Header_BusSignal}" Binding="{Binding SignalName}" Width="90" IsReadOnly="True"/>
+                                        <DataGridTemplateColumn Header="{helpers:Localize Header_ChainDevice}" Width="200" IsReadOnly="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate x:DataType="vm:BoundaryScanBusPinRowViewModel">
+                                                    <TextBlock Text="{Binding DeviceText}" Margin="10 0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate x:DataType="vm:BoundaryScanBusPinRowViewModel">
+                                                    <ComboBox ItemsSource="{Binding Devices}"
+                                                              SelectedItem="{Binding Device}"
+                                                              HorizontalAlignment="Stretch">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate x:DataType="vm:BoundaryScanDeviceViewModel">
+                                                                <TextBlock Text="{Binding DisplayName}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="{helpers:Localize Header_Pin}" Width="*" IsReadOnly="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate x:DataType="vm:BoundaryScanBusPinRowViewModel">
+                                                    <TextBlock Text="{Binding PinText}" Margin="10 0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate x:DataType="vm:BoundaryScanBusPinRowViewModel">
+                                                    <ComboBox ItemsSource="{Binding AvailablePins}"
+                                                              SelectedItem="{Binding Pin}"
+                                                              MaxDropDownHeight="300"
+                                                              HorizontalAlignment="Stretch">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
+                                                                <TextBlock Text="{Binding DisplayText}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <StackPanel Grid.Row="3" Spacing="2">
+                                    <TextBlock Text="{helpers:Localize Text_BusReady}"
+                                               Foreground="{StaticResource IdCodeMatchBrush}"
+                                               IsVisible="{Binding IsBusValid}"/>
+                                    <ItemsControl ItemsSource="{Binding Problems}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <TextBlock Text="{Binding}"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{DynamicResource ErrorColor}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
                             </Grid>
                         </Grid>
                     </Panel>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.BoundaryScan.Buses;
 using ATLab.Models;
 
 namespace ATLab.Interfaces;
@@ -22,6 +23,9 @@ public interface IBoundaryScanTestSession
     event Action? ActiveChanged;
 
     Task<OperationResult<BoundaryScanStepOutcome>> ExecuteStepAsync(BoundaryScanStepConfig step, CancellationToken token);
+
+    /// <summary>Runs one transaction on a bus of the Boundary Scan tab, all edges in a single probe transfer.</summary>
+    Task<OperationResult<BusTransactionResult>> ExecuteBusTransactionAsync(BoundaryScanBusStepConfig step, byte[] write, CancellationToken token);
 
     /// <summary>Resets the chips to normal operation and releases the probe. Does nothing when no session is active.</summary>
     Task EndAsync();

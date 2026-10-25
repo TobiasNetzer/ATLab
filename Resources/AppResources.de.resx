@@ -1221,4 +1221,58 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
   <data name="Text_MoreResultDetails" xml:space="preserve">
     <value>… und {0} weitere, siehe Ereignisprotokoll</value>
   </data>
+  <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
+    <value>Boundary-Scan-Bus</value>
+  </data>
+  <data name="Label_PinsView" xml:space="preserve">
+    <value>Pins</value>
+  </data>
+  <data name="Label_BusesView" xml:space="preserve">
+    <value>Busse</value>
+  </data>
+  <data name="Header_Buses" xml:space="preserve">
+    <value>Busse</value>
+  </data>
+  <data name="ToolTip_AddBus" xml:space="preserve">
+    <value>Bus hinzufügen</value>
+  </data>
+  <data name="ToolTip_RemoveBus" xml:space="preserve">
+    <value>Ausgewählten Bus entfernen</value>
+  </data>
+  <data name="Text_NoBus" xml:space="preserve">
+    <value>Einen Bus hinzufügen, um I²C, SPI oder eine Pin-Gruppe über Boundary-Scan-Pins nachzubilden. Testschritte wählen ihn über die Auswertungsquelle Boundary-Scan-Bus aus.</value>
+  </data>
+  <data name="Label_BusName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Label_BusType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Label_SpiMode" xml:space="preserve">
+    <value>SPI-Modus</value>
+  </data>
+  <data name="Label_CsActiveHigh" xml:space="preserve">
+    <value>CS high-aktiv</value>
+  </data>
+  <data name="Label_LsbFirst" xml:space="preserve">
+    <value>LSB zuerst</value>
+  </data>
+  <data name="Label_BusWidth" xml:space="preserve">
+    <value>Anzahl Pins</value>
+  </data>
+  <data name="Header_BusSignal" xml:space="preserve">
+    <value>Signal</value>
+  </data>
+  <data name="Text_BusReady" xml:space="preserve">
+    <value>Der Bus kann in Testschritten verwendet werden.</value>
+  </data>
+  <data name="Header_BoundaryScanBusStep" xml:space="preserve">
+    <value>Boundary-Scan-Bus</value>
+  </data>
+  <data name="Label_Bus" xml:space="preserve">
+    <value>Bus</value>
+  </data>
+  <data name="Watermark_SelectBus" xml:space="preserve">
+    <value>Busse werden im Boundary-Scan-Tab eingerichtet</value>
+  </data>
 </root>
