@@ -68,7 +68,7 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Schnittstelle: Typ / I²C-Frequenz / Adresse | I2C / 100 kHz / 0 |
 | Schnittstelle: Baudrate / Datenbits / Parität / Stoppbits | 9600 / 8 / None / 1 |
 | Schnittstelle: Timeout | 1000 ms |
-| Boundary Scan: Modus / Einschwingzeit | Pin-Aktionen / 0 ms |
+| Boundary Scan: Modus / Einschwingzeit / getriebene Pins prüfen | Pin-Aktionen / 0 ms / aus |
 | Boundary-Scan-Bus: Adresse / Bytes lesen | 0 / 0 |
 
 ### Skriptbefehl

@@ -68,7 +68,7 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Interface: type / I²C speed / address | I2C / 100 kHz / 0 |
 | Interface: baud / data bits / parity / stop bits | 9600 / 8 / None / 1 |
 | Interface: timeout | 1000 ms |
-| Boundary scan: mode / settle time | Pin actions / 0 ms |
+| Boundary scan: mode / settle time / verify driven pins | Pin actions / 0 ms / off |
 | Boundary scan bus: address / read bytes | 0 / 0 |
 
 ### Script command
