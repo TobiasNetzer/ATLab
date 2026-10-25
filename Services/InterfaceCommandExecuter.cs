@@ -70,7 +70,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
             if (status.Value != null && !status.Value.Success)
             {
-                _loggingService.Error("I²C write failed: NACK received.");
+                _loggingService.Warning("I²C write failed: NACK received.");
             }
             
             result = Convert.ToDouble(status.Value != null && status.Value.Success);
@@ -91,7 +91,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
         
             if (status.Value != null && !status.Value.Success)
             {
-                _loggingService.Error("I²C read failed: NACK received.");
+                _loggingService.Warning("I²C read failed: NACK received.");
                 return OperationResult<double>.Success(0);
             }
 
@@ -138,7 +138,7 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             
         if (status.Value != null && status.Value.Length != config.BytesToRead)
         {
-            _loggingService.Error("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
+            _loggingService.Warning("Not all bytes received. Expected: " + config.BytesToRead + ", Received: " + status.Value.Length + "");
         }
             
         if (status.IsTimeout)
