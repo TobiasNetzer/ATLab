@@ -1281,4 +1281,15 @@ Switching this pin to Z disables those outputs as well.</value>
   <data name="ToolTip_VerifyDrivenPins" xml:space="preserve">
     <value>Reads back every pin driven to 0 or 1 and counts a different level as mismatch. Finds shorts and broken drivers, but not open connections further along the net. Pins without input cell and Drive Z are not checked.</value>
   </data>
+  <data name="ToolTip_AdoptChain" xml:space="preserve">
+    <value>Adopt detected chain: replaces the configured chain with the devices found on the board</value>
+  </data>
+  <data name="Title_AdoptChain" xml:space="preserve">
+    <value>Adopt detected chain</value>
+  </data>
+  <data name="Text_AdoptChain" xml:space="preserve">
+    <value>Replace the configured chain with the {0} detected device(s)?
+
+Devices that are found again keep their settings. All other devices are removed together with their BSDL file, package and user labels.</value>
+  </data>
 </root>

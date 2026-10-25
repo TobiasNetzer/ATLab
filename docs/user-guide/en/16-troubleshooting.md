@@ -68,10 +68,11 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *Could not open FTDI device* | The channel is used by another program or by the operating system's serial driver. Close the other program; on Linux unload `ftdi_sio`. |
 | *TDO is stuck high* / *TDO is stuck low* | No chain answers: check the JTAG cable, the target power and the probe's target voltage reference. On FTDI adapters with buffers, set **ADBUS Value**/**ADBUS Direction** so the buffers are enabled. |
 | Chain detection fails or gives changing results | Lower **TCK Frequency (kHz)**, shorten the cable, check TCK signal quality. |
-| *Instruction length unknown for some devices* | A chip has no BSDL file and its instruction length cannot be calculated. Assign the BSDL file or enter **Instruction Length** by hand. |
-| *Instruction length mismatch* | The instruction lengths of the chips do not add up to the detected total. Check that each BSDL file belongs to the right chip in the right chain position. |
+| *Found … device(s), the project expects …* | Another board, an assembly variant, or a chip that is missing from the chain. The configuration is kept. If the board is right and the project is outdated, use **Adopt detected chain**. |
+| *Device … instruction length unknown* | A chip has no BSDL file and its instruction length cannot be calculated. Assign the BSDL file or enter **Instruction Length** by hand. |
+| *Instruction register is … bits, the devices add up to … bits* | The instruction lengths of the chips do not add up to the detected total. Check that each BSDL file belongs to the right chip in the right chain position. |
 | IDCODE shown in red | The chip's IDCODE does not match its BSDL file — wrong file, different chip variant, or chips swapped in the chain. |
-| Step fails with *IDCODE … does not match the project* | The board in the fixture does not have the chain the project was set up for (wrong board, chip not powered, chain broken). |
+| Step fails with *Boundary scan chain: …* | The board in the fixture does not have the chain the project was set up for (wrong board, chip not powered, chain broken). The message names the difference, like the status line on the Boundary Scan tab. |
 | *… cannot be driven* / *cannot be read* / *cannot be switched to Z* | The pin's boundary cell does not support the action, e.g. an input-only pin or an output without control cell. |
 | Driven output does not show up on another pin | Other drivers on the net (chip in normal operation, pull resistors), or the pins are not connected. Put all chips on the net into EXTEST or SAMPLE and check the schematic. |
 | *SCL is held low* | An I²C target stretches the clock (not supported), or SCL is shorted or has no pull-up. |

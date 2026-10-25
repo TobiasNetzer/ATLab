@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.BoundaryScan;
+using ATLab.Services;
+using ATLab.BoundaryScan.Bsdl;
 using ATLab.BoundaryScan.Probes;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -24,6 +26,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
     private readonly IBoundaryScanTestSession _testSession;
     private readonly ILoggingService _loggingService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectModel _projectModel;
 
     private JtagChainInfo? _detectedChain;
@@ -60,13 +63,14 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotConnected), nameof(CanEditChain))]
     [NotifyCanExecuteChangedFor(nameof(ConnectCommand), nameof(DisconnectCommand), nameof(ScanChainCommand),
-        nameof(LoadInstructionCommand), nameof(RefreshCommand), nameof(AddDeviceCommand), nameof(RemoveDeviceCommand))]
+        nameof(LoadInstructionCommand), nameof(RefreshCommand), nameof(AddDeviceCommand), nameof(RemoveDeviceCommand),
+        nameof(AdoptChainCommand))]
     private bool _isConnected;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanEditChain))]
     [NotifyCanExecuteChangedFor(nameof(ConnectCommand), nameof(DisconnectCommand), nameof(ScanChainCommand),
-        nameof(LoadInstructionCommand), nameof(RefreshCommand), nameof(RefreshProbesCommand))]
+        nameof(LoadInstructionCommand), nameof(RefreshCommand), nameof(RefreshProbesCommand), nameof(AdoptChainCommand))]
     private bool _isBusy;
 
     /// <summary>A running test owns the probe, the tab only shows the configuration meanwhile.</summary>
@@ -121,12 +125,14 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         IBoundaryScanService boundaryScanService,
         ILoggingService loggingService,
         IFileDialogService fileDialogService,
+        IMessageBoxService messageBoxService,
         IBoundaryScanTestSession testSession,
         ProjectModel projectModel)
     {
         _boundaryScanService = boundaryScanService;
         _loggingService = loggingService;
         _fileDialogService = fileDialogService;
+        _messageBoxService = messageBoxService;
         _projectModel = projectModel;
         _testSession = testSession;
 
@@ -221,7 +227,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
 
         IsAutoRefresh = false;
         IsConnected = false;
-        _detectedChain = null;
+        ForgetDetectedChain();
 
         foreach (var device in Devices)
             device.SetActiveInstruction(null);
@@ -274,7 +280,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         {
             await _boundaryScanService.DisconnectAsync();
             IsConnected = false;
-            _detectedChain = null;
+            ForgetDetectedChain();
 
             foreach (var device in Devices)
                 device.SetActiveInstruction(null);
@@ -414,13 +420,17 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         await ApplyOutputs(SelectedDevice);
     }
 
+    /// <summary>
+    /// Scans the chain and compares it with the configuration. An existing configuration is never changed here,
+    /// a different board must not wipe the setup. Only an empty configuration takes over the detected chain.
+    /// </summary>
     private async Task DetectChain()
     {
         var result = await _boundaryScanService.DetectChainAsync();
 
         if (result.IsFailure)
         {
-            _detectedChain = null;
+            ForgetDetectedChain();
             ChainStatus = result.ErrorMessage;
             IsChainValid = false;
             _loggingService.Error($"Scan chain detection failed: {result.ErrorMessage}");
@@ -428,16 +438,56 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         }
 
         _detectedChain = result.Value!;
+        AdoptChainCommand.NotifyCanExecuteChanged();
+
+        if (Configuration.Devices.Count == 0)
+            MergeDetectedChain(_detectedChain);
+
+        ApplyDetectedIdCodes();
+        InferInstructionLength();
+        UpdateChainStatus();
+        ActivateBypassIfValid();
+
+        if (IsChainValid == true)
+            _loggingService.Info($"Scan chain: {_detectedChain.Taps.Count} device(s) found.");
+        else
+            _loggingService.Warning($"The scan chain does not match the project: {ChainStatus}");
+    }
+
+    private bool CanAdoptChain() => IsConnected && !IsBusy && _detectedChain != null;
+
+    /// <summary>Replaces the configured chain with the detected one, on purpose and after confirmation.</summary>
+    [RelayCommand(CanExecute = nameof(CanAdoptChain))]
+    private async Task AdoptChain()
+    {
+        if (_detectedChain == null)
+            return;
+
+        if (Configuration.Devices.Count > 0)
+        {
+            var confirmed = await _messageBoxService.ShowConfirmationDestructiveAsync(
+                LocalizationService.Instance["Title_AdoptChain"],
+                string.Format(LocalizationService.Instance["Text_AdoptChain"], _detectedChain.Taps.Count));
+
+            if (!confirmed)
+                return;
+        }
+
+        IsAutoRefresh = false;
+        await _boundaryScanService.ResetChainAsync();
+
         MergeDetectedChain(_detectedChain);
+        ApplyDetectedIdCodes();
+        InferInstructionLength();
+        UpdateChainStatus();
+        ActivateBypassIfValid();
 
-        foreach (var device in Devices)
-            device.SetActiveInstruction(BoundaryScanInstruction.BYPASS);
-
-        _loggingService.Info($"Scan chain: {_detectedChain.Taps.Count} device(s) found.");
+        _loggingService.Info($"Scan chain: configuration replaced by the {_detectedChain.Taps.Count} detected device(s).");
     }
 
     /// <summary>
-    /// Keeps the configuration of devices that are found again (same IDCODE) and creates entries for new ones.
+    /// Builds the configuration from the detected chain. Devices that are found again (same IDCODE, or matching
+    /// their BSDL file) keep their settings, all others are replaced.
     /// </summary>
     private void MergeDetectedChain(JtagChainInfo chain)
     {
@@ -445,13 +495,19 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         var unused = previous.ToList();
         var merged = new List<BoundaryScanDeviceConfig>();
 
+        BsdlDevice? BsdlOf(BoundaryScanDeviceConfig config) => Devices.FirstOrDefault(d => d.Config == config)?.Bsdl;
+
         for (var i = 0; i < chain.Taps.Count; i++)
         {
-            var idCode = chain.Taps[i].IdCode?.ToString("X8") ?? string.Empty;
+            var found = chain.Taps[i].IdCode;
+            var idCode = found?.ToString("X8") ?? string.Empty;
 
-            var match = i < previous.Count && unused.Contains(previous[i]) && IsSameDevice(previous[i], idCode)
+            // Prefer the device at the same position, then any other device of the same type
+            var match = i < previous.Count && unused.Contains(previous[i]) &&
+                        BoundaryScanChainMatcher.IsSameDevice(previous[i], BsdlOf(previous[i]), found)
                 ? previous[i]
-                : unused.FirstOrDefault(d => idCode.Length > 0 && d.IdCode == idCode);
+                : unused.FirstOrDefault(d => found != null &&
+                                             (d.IdCode == idCode || BsdlOf(d)?.IdCodePattern != null && BoundaryScanChainMatcher.IsSameDevice(d, BsdlOf(d), found)));
 
             match ??= new BoundaryScanDeviceConfig();
             match.IdCode = idCode;
@@ -476,18 +532,37 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
 
             SyncDevices();
         }
+    }
 
-        InferInstructionLength();
-        UpdateChainStatus();
+    private void ApplyDetectedIdCodes()
+    {
+        for (var i = 0; i < Devices.Count; i++)
+            Devices[i].DetectedIdCode = _detectedChain != null && i < _detectedChain.Taps.Count ? _detectedChain.Taps[i].IdCode : null;
+    }
+
+    private void ActivateBypassIfValid()
+    {
+        // After detection all devices are reset, which is equivalent to BYPASS for the data scans that follow
+        foreach (var device in Devices)
+            device.SetActiveInstruction(IsChainValid == true ? BoundaryScanInstruction.BYPASS : null);
+    }
+
+    private void ForgetDetectedChain()
+    {
+        _detectedChain = null;
+        AdoptChainCommand.NotifyCanExecuteChanged();
+
+        foreach (var device in Devices)
+            device.DetectedIdCode = null;
     }
 
     /// <summary>
     /// The instruction register length of a device without BSDL follows from the chain total
-    /// as long as it is the only device whose length is unknown.
+    /// as long as it is the only device whose length is unknown and the chain matches the configuration.
     /// </summary>
     private void InferInstructionLength()
     {
-        if (_detectedChain == null)
+        if (_detectedChain == null || _detectedChain.Taps.Count != Devices.Count)
             return;
 
         var unknown = Devices.Where(d => !d.HasBsdl && d.Config.IrLength <= 0).ToList();
@@ -515,9 +590,6 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         }
     }
 
-    private static bool IsSameDevice(BoundaryScanDeviceConfig config, string idCode) =>
-        string.IsNullOrEmpty(config.IdCode) || config.IdCode == idCode;
-
     private void UpdateChainStatus()
     {
         if (_detectedChain == null)
@@ -527,22 +599,13 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
             return;
         }
 
-        var configuredIrLength = Configuration.Devices.Sum(d => d.IrLength);
-        var devices = Devices.ToList();
+        var problems = BoundaryScanChainMatcher.Compare(
+            Devices.Select(d => new ConfiguredChainDevice(d.DisplayName, d.Config, d.Bsdl)).ToList(),
+            _detectedChain);
 
-        if (devices.Any(d => d.Config.IrLength <= 0))
+        if (problems.Count > 0)
         {
-            ChainStatus = "Instruction length unknown for some devices. Assign BSDL files.";
-            IsChainValid = false;
-        }
-        else if (configuredIrLength != _detectedChain.TotalIrLength)
-        {
-            ChainStatus = $"Instruction length mismatch: chain {_detectedChain.TotalIrLength} bits, devices {configuredIrLength} bits.";
-            IsChainValid = false;
-        }
-        else if (devices.Any(d => d.IdCodeMatches == false))
-        {
-            ChainStatus = "IDCODE does not match the BSDL file for some devices.";
+            ChainStatus = string.Join(Environment.NewLine, problems);
             IsChainValid = false;
         }
         else
@@ -656,7 +719,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         // A project was loaded or created while connected, the loaded instructions no longer belong to this chain
         if (IsConnected && _detectedChain != null)
         {
-            _detectedChain = null;
+            ForgetDetectedChain();
             IsAutoRefresh = false;
             _ = _boundaryScanService.ResetChainAsync();
 
@@ -701,6 +764,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         }
 
         SelectedDevice = Devices.FirstOrDefault(d => d.Config == selected) ?? Devices.FirstOrDefault();
+        ApplyDetectedIdCodes();
         UpdateChainStatus();
     }
 

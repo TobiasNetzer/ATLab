@@ -201,6 +201,16 @@
                                         Classes="Icon"
                                         Width="35"
                                         Height="35"
+                                        ToolTip.Tip="{helpers:Localize ToolTip_AdoptChain}"
+                                        Command="{Binding AdoptChainCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent ListRestart}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                                <Button Background="{DynamicResource ButtonBackground}"
+                                        Classes="Icon"
+                                        Width="35"
+                                        Height="35"
                                         ToolTip.Tip="{helpers:Localize ToolTip_AddChainDevice}"
                                         Command="{Binding AddDeviceCommand}">
                                     <shadui:ButtonAssist.Icon>

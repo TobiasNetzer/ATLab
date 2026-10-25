@@ -194,32 +194,12 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
     /// <summary>Makes sure the board in the fixture has the chain the project was set up for.</summary>
     private static OperationResult VerifyChain(List<SessionDevice> devices, JtagChainInfo chain)
     {
-        if (chain.Taps.Count != devices.Count)
-            return OperationResult.Failure($"Boundary scan chain has {chain.Taps.Count} device(s), the project expects {devices.Count}.");
+        var problems = BoundaryScanChainMatcher.Compare(
+            devices.Select(d => new ConfiguredChainDevice(d.Name, d.Config, d.Bsdl)).ToList(), chain);
 
-        for (var i = 0; i < devices.Count; i++)
-        {
-            var device = devices[i];
-            var found = chain.Taps[i].IdCode;
-            var foundText = found?.ToString("X8") ?? "none";
-
-            // The BSDL pattern masks the bits marked X, usually the version, so those silicon revisions are accepted too
-            var matches = device.Bsdl?.IdCodePattern != null
-                ? found is { } idCode && device.Bsdl.MatchesIdCode(idCode)
-                : string.IsNullOrEmpty(device.Config.IdCode) || device.Config.IdCode == (found?.ToString("X8") ?? string.Empty);
-
-            if (!matches)
-                return OperationResult.Failure($"Boundary scan device {i + 1} ({device.Name}): IDCODE {foundText} does not match the project.");
-
-            if (device.Config.IrLength <= 0)
-                return OperationResult.Failure($"Boundary scan device {i + 1} ({device.Name}): the instruction length is unknown.");
-        }
-
-        var irLength = devices.Sum(d => d.Config.IrLength);
-        if (irLength != chain.TotalIrLength)
-            return OperationResult.Failure($"Boundary scan chain: instruction length is {chain.TotalIrLength} bits, the project expects {irLength}.");
-
-        return OperationResult.Success();
+        return problems.Count == 0
+            ? OperationResult.Success()
+            : OperationResult.Failure($"Boundary scan chain: {problems[0]}");
     }
 
     private async Task<OperationResult<BoundaryScanStepOutcome>> ExecutePinActionsAsync(

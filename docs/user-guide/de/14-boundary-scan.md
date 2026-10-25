@@ -50,7 +50,7 @@ Solange ein Testlauf die Kette steuert, ist die Registerkarte gesperrt und ein b
 | **Seriennummer** | Seriennummer der zu verwendenden Probe. Leer lassen, um die erste verfügbare Probe zu verwenden. Die Suchen-Schaltfläche listet die angeschlossenen Probes auf; ein Eintrag aus der Auswahlliste neben dem Feld übernimmt die Seriennummer. FTDI-Kanäle erscheinen einzeln, z. B. `…A` und `…B`; JTAG verwendet normalerweise Kanal A. |
 | **TCK-Frequenz (kHz)** | JTAG-Taktfrequenz, Standard 1000 kHz. Verringern, wenn die Kettenerkennung bei langen Kabeln oder langsamen Bausteinen fehlschlägt. |
 | **ADBUS-Wert (hex)** / **ADBUS-Richtung (hex)** | Nur FTDI. Startpegel und Richtung von ADBUS0–7. TCK, TDI, TDO und TMS sind fest vorgegeben; mit den übrigen Pins lassen sich Treiber oder Pegelwandler des Adapters freigeben. Standard `08` / `0B`. |
-| **Verbinden** / **Trennen** | Öffnet oder schließt die Probe. Nach dem Verbinden wird die Kette automatisch gescannt. |
+| **Verbinden** / **Trennen** | Öffnet oder schließt die Probe. Nach dem Verbinden wird die Kette automatisch gescannt und mit der eingerichteten Kette verglichen (siehe [Scan-Kette](#scan-kette)). |
 
 Die Einstellungen der Probe werden im Projekt gespeichert. **Trennen** versetzt alle Bausteine in den Normalbetrieb (Test-Logic-Reset), bevor die Probe geschlossen wird; dasselbe geschieht beim Beenden von ATLab.
 
@@ -65,10 +65,15 @@ Die Liste zeigt die Bausteine in der Reihenfolge der Kette, von **TDI** (oben) n
 
 | Schaltfläche | Funktion |
 |--------------|----------|
-| **Bausteine in der Scan-Kette erkennen** | Scannt die Kette erneut: Anzahl der Bausteine, Gesamtlänge der Befehlsregister und IDCODEs. Wiedererkannte Bausteine (gleicher IDCODE) behalten ihre Einstellungen. |
+| **Bausteine in der Scan-Kette erkennen** | Scannt die Kette erneut: Anzahl der Bausteine, Gesamtlänge der Befehlsregister und IDCODEs, und vergleicht sie mit der eingerichteten Kette. |
+| **Erkannte Kette übernehmen** | Ersetzt die eingerichtete Kette nach einer Rückfrage durch die auf der Baugruppe gefundenen Bausteine. Wiedererkannte Bausteine behalten ihre Einstellungen; alle anderen werden mit BSDL-Datei, Gehäuse und Bezeichnungen entfernt. |
 | **Baustein hinzufügen** / **Ausgewählten Baustein entfernen** | Bearbeitet die Kette von Hand, z. B. um ein Projekt ohne Hardware vorzubereiten. Nur ohne Verbindung möglich. |
 
-Die Statuszeile über der Liste zeigt `<n> device(s), instruction register <bits> bits` oder was noch fehlt, z. B. *Instruction length unknown for some devices* oder *IDCODE does not match the BSDL file for some devices*. Befehle können erst geladen werden, wenn der Status grün ist.
+Das Scannen **verändert eine eingerichtete Kette nie**. Ist eine andere Baugruppe angeschlossen, fehlt ein Baustein oder ist die Kette unterbrochen, bleibt Ihre Einrichtung mit BSDL-Dateien und Bezeichnungen erhalten. Nur eine leere Konfiguration übernimmt die erkannte Kette automatisch, was das Einrichten eines neuen Projekts erleichtert. Um eine bestehende Konfiguration aus der Baugruppe neu aufzubauen, verwenden Sie **Erkannte Kette übernehmen**.
+
+Ein Baustein gilt als wiedererkannt, wenn sein IDCODE zu seiner BSDL-Datei passt. Die BSDL-Datei maskiert in der Regel die Versionsbits, sodass auch andere Silizium-Revisionen desselben Bausteins passen. Bausteine ohne BSDL-Datei müssen den gespeicherten IDCODE haben.
+
+Bei bestehender Verbindung zeigt die Kettenliste die von der Baugruppe gelesenen IDCODEs. Die Statuszeile über der Liste zeigt `<n> device(s), instruction register <bits> bits`, wenn die Baugruppe zur Konfiguration passt, sonst jede Abweichung, z. B. *Found 2 device(s), the project expects 3.*, *Device 2 (U3): IDCODE 0x… does not match the BSDL file of …* oder *Device 1 (U1): instruction length unknown*. Befehle können erst geladen werden, wenn der Status grün ist.
 
 ### Baustein-Einstellungen
 
@@ -176,7 +181,7 @@ Alle Signalwechsel einer Übertragung werden in einem einzigen Transfer an die P
 
 Testschritte verwenden die auf dieser Registerkarte eingerichtete Kette:
 
-- Die Probe wird beim **ersten** Boundary-Scan-Schritt eines Laufs verbunden, nicht beim Teststart. Anschließend wird die Kette mit dem Projekt verglichen (Anzahl der Bausteine, IDCODEs, Befehlslängen). Passt sie nicht, z. B. weil die falsche Baugruppe eingelegt ist, schlägt der Schritt mit einer Meldung wie *IDCODE 0ABCD0F3 does not match the project* fehl.
+- Die Probe wird beim **ersten** Boundary-Scan-Schritt eines Laufs verbunden, nicht beim Teststart. Anschließend wird die Kette mit dem Projekt verglichen (Anzahl der Bausteine, IDCODEs, Befehlslängen). Passt sie nicht, z. B. weil die falsche Baugruppe eingelegt ist, schlägt der Schritt mit derselben Meldung wie die Statuszeile dieser Registerkarte fehl, z. B. *Boundary scan chain: Found 2 device(s), the project expects 3.*
 - Eine auf dieser Registerkarte geöffnete Verbindung wird vom Test übernommen. Die Registerkarte bleibt gesperrt, bis der Test die Kette freigibt.
 - Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten. Ein Baustein, dessen Ausgänge getrieben wurden, bleibt in EXTEST, bis die Kette freigegeben wird.
 - Die Kette wird freigegeben – alle Bausteine kehren in den Normalbetrieb zurück und die Probe wird geschlossen –, wenn der Lauf endet, wenn er gestoppt wird (`Esc`), bei einem Schritt im Modus **Boundary Scan ausschalten** und wenn ein anderes Projekt geöffnet wird.

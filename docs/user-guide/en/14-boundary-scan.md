@@ -50,7 +50,7 @@ While a test run controls the chain, the tab is locked and a blue banner says so
 | **Serial Number** | Serial number of the probe to use. Leave it empty to use the first available probe. The search button lists the connected probes; pick one from the drop-down next to the field to fill it in. FTDI channels appear separately, e.g. `…A` and `…B`; JTAG normally uses channel A. |
 | **TCK Frequency (kHz)** | JTAG clock frequency, default 1000 kHz. Reduce it if the chain detection fails on long cables or slow chips. |
 | **ADBUS Value (hex)** / **ADBUS Direction (hex)** | FTDI only. Start level and direction of ADBUS0–7. TCK, TDI, TDO and TMS are fixed; the other pins can enable buffers or level shifters of the adapter board. Defaults `08` / `0B`. |
-| **Connect** / **Disconnect** | Opens or closes the probe. After connecting, the chain is scanned automatically. |
+| **Connect** / **Disconnect** | Opens or closes the probe. After connecting, the chain is scanned automatically and compared with the configured chain (see [Scan chain](#scan-chain)). |
 
 Probe settings are saved in the project. **Disconnect** returns all chips to normal operation (Test-Logic-Reset) before the probe is closed; the same happens when ATLab is closed.
 
@@ -65,10 +65,15 @@ The chain list shows the chips in chain order, from **TDI** (top) to **TDO** (bo
 
 | Button | Function |
 |--------|----------|
-| **Detect the devices in the scan chain** | Scans the chain again: number of chips, total instruction register length and IDCODEs. Chips that are found again (same IDCODE) keep their configuration. |
+| **Detect the devices in the scan chain** | Scans the chain again: number of chips, total instruction register length and IDCODEs, and compares it with the configured chain. |
+| **Adopt detected chain** | Replaces the configured chain with the chips found on the board, after a confirmation. Chips that are found again keep their settings; all others are removed together with their BSDL file, package and user labels. |
 | **Add device** / **Remove selected device** | Edits the chain by hand, for example to prepare a project without hardware. Only possible while disconnected. |
 
-The status line above the list shows `<n> device(s), instruction register <bits> bits`, or what is still missing, for example *Instruction length unknown for some devices* or *IDCODE does not match the BSDL file for some devices*. Instructions can only be loaded once the status is green.
+Scanning **never changes an existing chain configuration**. If another board is connected, a chip is missing or the chain is broken, your setup with its BSDL files and user labels stays as it is. Only an empty configuration takes over the detected chain automatically, which makes setting up a new project easy. To rebuild an existing configuration from the board, use **Adopt detected chain**.
+
+A chip counts as found again if its IDCODE matches its BSDL file. The BSDL file usually masks the version bits, so other silicon revisions of the same chip match as well. Chips without BSDL file must have the stored IDCODE.
+
+While connected, the chain list shows the IDCODEs read from the board. The status line above the list shows `<n> device(s), instruction register <bits> bits` when the board matches the configuration, otherwise every difference, for example *Found 2 device(s), the project expects 3.*, *Device 2 (U3): IDCODE 0x… does not match the BSDL file of …* or *Device 1 (U1): instruction length unknown*. Instructions can only be loaded once the status is green.
 
 ### Device settings
 
@@ -176,7 +181,7 @@ All signal changes of one transaction are sent to the probe in a single transfer
 
 Test steps use the chain configured on this tab:
 
-- The probe is connected at the **first** boundary scan step of a run, not at test start. The chain is then checked against the project (number of chips, IDCODEs, instruction lengths). If it does not match, for example because the wrong board is inserted, the step fails with a message such as *IDCODE 0ABCD0F3 does not match the project*.
+- The probe is connected at the **first** boundary scan step of a run, not at test start. The chain is then checked against the project (number of chips, IDCODEs, instruction lengths). If it does not match, for example because the wrong board is inserted, the step fails with the same message as the status line on this tab, e.g. *Boundary scan chain: Found 2 device(s), the project expects 3.*
 - A connection opened on this tab is taken over by the test. The tab is locked until the test releases the chain.
 - Pins that are not listed in a step keep their state from the previous steps. A chip whose outputs were driven stays in EXTEST until the chain is released.
 - The chain is released — all chips return to normal operation and the probe is closed — when the run ends, when it is stopped (`Esc`), at a step in mode **Turn boundary scan off**, and when another project is opened.

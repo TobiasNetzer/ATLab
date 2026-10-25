@@ -1281,4 +1281,15 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
   <data name="ToolTip_VerifyDrivenPins" xml:space="preserve">
     <value>Liest jeden auf 0 oder 1 getriebenen Pin zurück und zählt einen abweichenden Pegel als Abweichung. Findet Kurzschlüsse und defekte Treiber, aber keine Unterbrechungen weiter im Netz. Pins ohne Eingangszelle und Drive Z werden nicht geprüft.</value>
   </data>
+  <data name="ToolTip_AdoptChain" xml:space="preserve">
+    <value>Erkannte Kette übernehmen: ersetzt die eingerichtete Kette durch die auf der Baugruppe gefundenen Bausteine</value>
+  </data>
+  <data name="Title_AdoptChain" xml:space="preserve">
+    <value>Erkannte Kette übernehmen</value>
+  </data>
+  <data name="Text_AdoptChain" xml:space="preserve">
+    <value>Die eingerichtete Kette durch die {0} erkannten Bausteine ersetzen?
+
+Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine werden mit BSDL-Datei, Gehäuse und Bezeichnungen entfernt.</value>
+  </data>
 </root>

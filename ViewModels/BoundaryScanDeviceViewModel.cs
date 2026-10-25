@@ -40,6 +40,11 @@ public partial class BoundaryScanDeviceViewModel : ObservableObject
     [ObservableProperty]
     private string _bsdlError = string.Empty;
 
+    /// <summary>IDCODE found at this chain position by the last scan, null while not connected.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IdCodeText), nameof(IdCodeMatches))]
+    private uint? _detectedIdCode;
+
     /// <summary>Instruction currently loaded in the device, null while not connected.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsBypassActive), nameof(IsSampleActive), nameof(IsExtestActive), nameof(ActiveInstructionText))]
@@ -76,7 +81,10 @@ public partial class BoundaryScanDeviceViewModel : ObservableObject
     public string EntityName => Bsdl?.EntityName ?? string.Empty;
     public bool IsIrLengthEditable => Bsdl == null;
 
-    public string IdCodeText => string.IsNullOrWhiteSpace(Config.IdCode) ? "—" : $"0x{Config.IdCode}";
+    public string IdCodeText =>
+        DetectedIdCode is { } detected ? $"0x{detected:X8}"
+        : string.IsNullOrWhiteSpace(Config.IdCode) ? "—"
+        : $"0x{Config.IdCode}";
 
     /// <summary>Null when there is nothing to compare.</summary>
     public bool? IdCodeMatches =>
@@ -163,8 +171,15 @@ public partial class BoundaryScanDeviceViewModel : ObservableObject
             VisiblePins.Add(pin);
     }
 
+    /// <summary>The detected IDCODE while connected, otherwise the one stored in the project.</summary>
     public bool TryGetIdCode(out uint idCode)
     {
+        if (DetectedIdCode is { } detected)
+        {
+            idCode = detected;
+            return true;
+        }
+
         return uint.TryParse(Config.IdCode, System.Globalization.NumberStyles.HexNumber, null, out idCode);
     }
 
