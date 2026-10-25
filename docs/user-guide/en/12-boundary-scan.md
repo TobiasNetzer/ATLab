@@ -34,6 +34,8 @@ To read or drive pins, ATLab needs the **BSDL file** (Boundary Scan Description 
 
 ## Overview
 
+![Boundary Scan tab](images/Boundary_Scan_Tab_en.png)
+
 The tab is divided into three areas:
 
 - **JTAG Probe** (top left) – probe selection and connection,

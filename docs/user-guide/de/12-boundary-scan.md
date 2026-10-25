@@ -34,6 +34,8 @@ Zum Lesen und Treiben von Pins benötigt ATLab die **BSDL-Datei** (Boundary Scan
 
 ## Überblick
 
+![Registerkarte Boundary Scan](images/Boundary_Scan_Tab_de.png)
+
 Die Registerkarte ist in drei Bereiche gegliedert:
 
 - **JTAG-Probe** (links oben) – Auswahl und Verbindung der Probe,
