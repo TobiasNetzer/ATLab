@@ -1027,4 +1027,198 @@
   <data name="Header_CustomLabels" xml:space="preserve">
     <value>Kanalbezeichnungen</value>
   </data>
+  <data name="Tab_BoundaryScan" xml:space="preserve">
+    <value>Boundary Scan</value>
+  </data>
+  <data name="Header_JtagProbe" xml:space="preserve">
+    <value>JTAG-Probe</value>
+  </data>
+  <data name="Label_ProbeType" xml:space="preserve">
+    <value>Probe-Typ</value>
+  </data>
+  <data name="Label_ProbeSerialNumber" xml:space="preserve">
+    <value>Seriennummer</value>
+  </data>
+  <data name="Watermark_FirstAvailableProbe" xml:space="preserve">
+    <value>Erste verfügbare Probe</value>
+  </data>
+  <data name="ToolTip_SearchProbes" xml:space="preserve">
+    <value>Angeschlossene Probes suchen</value>
+  </data>
+  <data name="Label_TckFrequency" xml:space="preserve">
+    <value>TCK-Frequenz (kHz)</value>
+  </data>
+  <data name="ToolTip_FtdiLowByte" xml:space="preserve">
+    <value>Startzustand von ADBUS0-7 in Hex. TCK, TDI, TDO und TMS sind fest vorgegeben, die übrigen Pins können Treiber des Adapters freigeben.</value>
+  </data>
+  <data name="Label_FtdiLowByteValue" xml:space="preserve">
+    <value>ADBUS-Wert (hex)</value>
+  </data>
+  <data name="Label_FtdiLowByteDirection" xml:space="preserve">
+    <value>ADBUS-Richtung (hex)</value>
+  </data>
+  <data name="Header_ScanChain" xml:space="preserve">
+    <value>Scan-Kette</value>
+  </data>
+  <data name="ToolTip_ScanChain" xml:space="preserve">
+    <value>Bausteine in der Scan-Kette erkennen</value>
+  </data>
+  <data name="ToolTip_AddChainDevice" xml:space="preserve">
+    <value>Baustein hinzufügen</value>
+  </data>
+  <data name="ToolTip_RemoveChainDevice" xml:space="preserve">
+    <value>Ausgewählten Baustein entfernen</value>
+  </data>
+  <data name="Text_NoBsdl" xml:space="preserve">
+    <value>Keine BSDL</value>
+  </data>
+  <data name="Label_BsdlFile" xml:space="preserve">
+    <value>BSDL-Datei</value>
+  </data>
+  <data name="ToolTip_ImportBsdl" xml:space="preserve">
+    <value>BSDL-Datei importieren</value>
+  </data>
+  <data name="ToolTip_ClearBsdl" xml:space="preserve">
+    <value>BSDL-Datei entfernen</value>
+  </data>
+  <data name="Label_InstructionLength" xml:space="preserve">
+    <value>Befehlslänge</value>
+  </data>
+  <data name="Label_Package" xml:space="preserve">
+    <value>Gehäuse</value>
+  </data>
+  <data name="Text_NoChainDevice" xml:space="preserve">
+    <value>Probe verbinden und die Kette scannen oder einen Baustein manuell hinzufügen.</value>
+  </data>
+  <data name="Label_Entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="Label_BoundaryLength" xml:space="preserve">
+    <value>Boundary-Register</value>
+  </data>
+  <data name="ToolTip_Bypass" xml:space="preserve">
+    <value>Baustein wird überbrückt, die Pins arbeiten normal</value>
+  </data>
+  <data name="ToolTip_Sample" xml:space="preserve">
+    <value>Pinzustände lesen, ohne den Baustein zu beeinflussen</value>
+  </data>
+  <data name="ToolTip_Extest" xml:space="preserve">
+    <value>Ausgänge aus dem Boundary-Register treiben. Der Baustein verlässt den Normalbetrieb.</value>
+  </data>
+  <data name="Label_AutoRefresh" xml:space="preserve">
+    <value>Automatisch aktualisieren</value>
+  </data>
+  <data name="ToolTip_RefreshPins" xml:space="preserve">
+    <value>Pinzustände einmal lesen</value>
+  </data>
+  <data name="ToolTip_ResetOutputs" xml:space="preserve">
+    <value>Alle Ausgänge auf die sicheren Werte der BSDL-Datei zurücksetzen</value>
+  </data>
+  <data name="Legend_High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Legend_Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="Legend_Linkage" xml:space="preserve">
+    <value>Versorgung / Linkage</value>
+  </data>
+  <data name="Legend_Tap" xml:space="preserve">
+    <value>JTAG</value>
+  </data>
+  <data name="Legend_Driven" xml:space="preserve">
+    <value>Getriebener Ausgang (Doppelklick schaltet um)</value>
+  </data>
+  <data name="Watermark_FilterPins" xml:space="preserve">
+    <value>Pin, Port oder Bezeichnung filtern</value>
+  </data>
+  <data name="Label_ShowLinkagePins" xml:space="preserve">
+    <value>Linkage-Pins anzeigen</value>
+  </data>
+  <data name="Header_Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="Header_Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Header_Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="ToolTip_BoundaryCells" xml:space="preserve">
+    <value>Boundary-Register-Zellen: {0}
+I = Eingang, O = Ausgang, C = Steuerung</value>
+  </data>
+  <data name="ToolTip_SharedControlCell" xml:space="preserve">
+    <value>Steuerzelle {0} gibt auch frei: {1}
+Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.</value>
+  </data>
+  <data name="Header_Input" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="Header_Output" xml:space="preserve">
+    <value>Out</value>
+  </data>
+  <data name="Header_PinLabel" xml:space="preserve">
+    <value>Bezeichnung</value>
+  </data>
+  <data name="Text_Cells" xml:space="preserve">
+    <value>Zellen</value>
+  </data>
+  <data name="Text_NoPackageInformation" xml:space="preserve">
+    <value>Keine Gehäuseinformationen</value>
+  </data>
+  <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN" xml:space="preserve">
+    <value>Boundary Scan</value>
+  </data>
+  <data name="Text_BoundaryScanControlledByTest" xml:space="preserve">
+    <value>Die Boundary-Scan-Kette wird von der Testausführung gesteuert. Stopp (Esc) versetzt die Bausteine wieder in den Normalbetrieb.</value>
+  </data>
+  <data name="Header_BoundaryScanStep" xml:space="preserve">
+    <value>Boundary Scan</value>
+  </data>
+  <data name="Label_PinActions" xml:space="preserve">
+    <value>Pin-Aktionen</value>
+  </data>
+  <data name="Label_TurnBoundaryScanOff" xml:space="preserve">
+    <value>Boundary Scan ausschalten</value>
+  </data>
+  <data name="Text_TurnBoundaryScanOff" xml:space="preserve">
+    <value>Versetzt alle Bausteine in den Normalbetrieb und gibt die Probe frei. Ein späterer Boundary-Scan-Schritt verbindet automatisch neu.</value>
+  </data>
+  <data name="Header_ChainDevice" xml:space="preserve">
+    <value>Baustein</value>
+  </data>
+  <data name="Header_PinAction" xml:space="preserve">
+    <value>Aktion</value>
+  </data>
+  <data name="ToolTip_AddPinAction" xml:space="preserve">
+    <value>Pin-Aktion hinzufügen</value>
+  </data>
+  <data name="ToolTip_RemovePinAction" xml:space="preserve">
+    <value>Ausgewählte Pin-Aktion entfernen</value>
+  </data>
+  <data name="ToolTip_TeachInPinActions" xml:space="preserve">
+    <value>Aus dem Boundary-Scan-Tab übernehmen: geänderte Ausgänge werden zu Drive-Aktionen, benannte Pins mit gelesenem Pegel zu Expect-Aktionen</value>
+  </data>
+  <data name="Label_SettleTimeMs" xml:space="preserve">
+    <value>Einschwingzeit (ms)</value>
+  </data>
+  <data name="Enum_BoundaryScanPinActionType_DRIVE_LOW" xml:space="preserve">
+    <value>Drive 0</value>
+  </data>
+  <data name="Enum_BoundaryScanPinActionType_DRIVE_HIGH" xml:space="preserve">
+    <value>Drive 1</value>
+  </data>
+  <data name="Enum_BoundaryScanPinActionType_DRIVE_Z" xml:space="preserve">
+    <value>Drive Z</value>
+  </data>
+  <data name="Enum_BoundaryScanPinActionType_EXPECT_LOW" xml:space="preserve">
+    <value>Expect 0</value>
+  </data>
+  <data name="Enum_BoundaryScanPinActionType_EXPECT_HIGH" xml:space="preserve">
+    <value>Expect 1</value>
+  </data>
+  <data name="Text_MoreResultDetails" xml:space="preserve">
+    <value>… und {0} weitere, siehe Ereignisprotokoll</value>
+  </data>
 </root>

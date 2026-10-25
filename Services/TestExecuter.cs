@@ -21,6 +21,7 @@ public class TestExecutor : ITestExecutor
     private readonly IMessageBoxService _messageBoxService;
     private readonly ProjectSettings _projectSettings;
     private readonly ICommandExecutor _commandExecutor;
+    private readonly IBoundaryScanTestSession _boundaryScanSession;
 
     private CancellationTokenSource? _cts;
     private bool _repeatTest;
@@ -50,7 +51,8 @@ public class TestExecutor : ITestExecutor
         ITestStepEvaluator evaluator,
         IMessageBoxService messageBoxService,
         ProjectModel projectModel,
-        ICommandExecutor commandExecutor)
+        ICommandExecutor commandExecutor,
+        IBoundaryScanTestSession boundaryScanSession)
     {
         _testHardware = hardwareAccessor.Hardware;
         _runner = runner;
@@ -59,6 +61,7 @@ public class TestExecutor : ITestExecutor
         _messageBoxService = messageBoxService;
         _projectSettings = projectModel.Settings;
         _commandExecutor = commandExecutor;
+        _boundaryScanSession = boundaryScanSession;
     }
 
     private void ResetRelayClearFlag() => _relayStatesCleared = false;
@@ -102,6 +105,9 @@ public class TestExecutor : ITestExecutor
             return;
         }
 
+        // A run starts from the safe pin values, state left over from single steps is released
+        await _boundaryScanSession.EndAsync();
+
         ResetRelayClearFlag();
         await EnsureRelayStatesClearedAsync();
         ResetRelayClearFlag();
@@ -125,6 +131,8 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
+            // Release the boundary scan outputs before the relays switch
+            await _boundaryScanSession.EndAsync();
             await EnsureRelayStatesClearedAsync();
             await _commandExecutor.ReleaseDeviceAsync();
             await OnTestCompleted();
@@ -220,6 +228,8 @@ public class TestExecutor : ITestExecutor
         }
         finally
         {
+            // The boundary scan chain stays under test control so the next single step continues from this
+            // pin state, Stop releases it
             _cts?.Dispose();
             _cts = null;
         }
@@ -230,6 +240,7 @@ public class TestExecutor : ITestExecutor
         _cts?.CancelAsync();
         _repeatTest = false;
 
+        await _boundaryScanSession.EndAsync();
         await EnsureRelayStatesClearedAsync();
         await _commandExecutor.ReleaseDeviceAsync();
     }

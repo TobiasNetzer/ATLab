@@ -176,6 +176,10 @@ public partial class TestStep : ObservableObject
     [property: JsonConverter(typeof(ColorJsonConverter))]
     [property: JsonPropertyOrder(32)]
     private Color _stepColor;
+
+    [ObservableProperty]
+    [property: JsonPropertyOrder(33)]
+    private BoundaryScanStepConfig _boundaryScan = new();
     
     [JsonIgnore]
     public IBrush StepBrush => new SolidColorBrush(StepColor);
@@ -197,6 +201,7 @@ public partial class TestStep : ObservableObject
         ResponseMask.PropertyChanged += Child_PropertyChanged;
         LiveStimState.PropertyChanged += Child_PropertyChanged;
         LiveExtStimState.PropertyChanged += Child_PropertyChanged;
+        BoundaryScan.PropertyChanged += Child_PropertyChanged;
     }
 
     partial void OnOnPassChanged(PassFailAction? oldValue, PassFailAction newValue)
@@ -230,6 +235,12 @@ public partial class TestStep : ObservableObject
     }
     
     partial void OnResponseMaskChanged(ResponseMask? oldValue, ResponseMask newValue)
+    {
+        if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
+        newValue.PropertyChanged += Child_PropertyChanged;
+    }
+
+    partial void OnBoundaryScanChanged(BoundaryScanStepConfig? oldValue, BoundaryScanStepConfig newValue)
     {
         if (oldValue != null) oldValue.PropertyChanged -= Child_PropertyChanged;
         newValue.PropertyChanged += Child_PropertyChanged;
@@ -291,6 +302,7 @@ public partial class TestStep : ObservableObject
         else if (ReferenceEquals(sender, MatrixState)) OnPropertyChanged(nameof(MatrixState));
         else if (ReferenceEquals(sender, LiveStimState)) OnPropertyChanged(nameof(LiveStimState));
         else if (ReferenceEquals(sender, LiveExtStimState)) OnPropertyChanged(nameof(LiveExtStimState));
+        else if (ReferenceEquals(sender, BoundaryScan)) OnPropertyChanged(nameof(BoundaryScan));
         else if (sender is CustomVariable) OnPropertyChanged(nameof(ScriptVariables));
     }
 
@@ -360,7 +372,8 @@ public partial class TestStep : ObservableObject
             ExtStimState = ExtStimState != null ? new RelayGroupDto(ExtStimState) : null,
             LiveStimState = new RelayGroup(LiveStimState),
             LiveExtStimState = new RelayGroup(LiveExtStimState),
-            StepColor = StepColor
+            StepColor = StepColor,
+            BoundaryScan = new BoundaryScanStepConfig(BoundaryScan)
         };
         
         clone.ScriptVariables = new ObservableCollection<CustomVariable>(

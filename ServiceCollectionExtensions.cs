@@ -51,6 +51,8 @@ public static class ServiceCollectionExtensions
         
         services.AddSingleton<IExternalProgramRunner, ExternalProgramRunner>();
         services.AddSingleton<ICommunicationFactory, CommunicationFactory>();
+        services.AddSingleton<IBoundaryScanService, BoundaryScanService>();
+        services.AddSingleton<IBoundaryScanTestSession, BoundaryScanTestSession>();
         
         services.AddSingleton<ControlModuleService>();
         
@@ -76,6 +78,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ScriptingTabViewModel>();
         services.AddSingleton<AboutTabViewModel>();
         services.AddSingleton<HardwareTabViewModel>();
+        services.AddSingleton<BoundaryScanTabViewModel>();
         services.AddSingleton<DocumentationTabViewModel>();
         services.AddSingleton<TestHardwareInfoViewModel>();
         services.AddSingleton<ScriptSelectorViewModel>();
@@ -84,6 +87,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ExternalProgramEditorViewModel>();
         services.AddSingleton<ExpressionEditorViewModel>();
         services.AddSingleton<FilePathEditorViewModel>();
+        services.AddSingleton<BoundaryScanStepEditorViewModel>();
         services.AddSingleton<ResponseMaskEditorViewModel>();
         services.AddSingleton<ProjectDocumentationViewModel>();
         services.AddSingleton<DeviceUnderTestInfoPanelViewModel>();

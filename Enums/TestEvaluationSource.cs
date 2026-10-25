@@ -10,5 +10,6 @@ public enum TestEvaluationSource
     USER_CONFIRMATION,
     USER_INPUT,
     EXPRESSION,
-    FILE
+    FILE,
+    BOUNDARY_SCAN
 }

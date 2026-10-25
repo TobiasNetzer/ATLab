@@ -24,6 +24,10 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isExecuted;
 
+    /// <summary>Explains the result, e.g. the failed pins of a boundary scan step. Null shows no tooltip.</summary>
+    [ObservableProperty]
+    private string? _resultDetails;
+
     // The module the step belongs to, used for navigation during execution and in reports
     public TestModule Module { get; }
 
@@ -53,5 +57,6 @@ public partial class TestStepViewModel : ViewModelBase
         Deviation = null;
         IsPassed  = false;
         IsExecuted = false;
+        ResultDetails = null;
     }
 }

@@ -534,6 +534,7 @@
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock Text="{Binding Result}" 
                                            Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
+                                           ToolTip.Tip="{Binding ResultDetails}"
                                            VerticalAlignment="Center" Margin="12,0,0,0"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -544,6 +545,7 @@
                             <DataTemplate>
                                 <Image Width="15" Height="15"
                                        Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}"
+                                       ToolTip.Tip="{ReflectionBinding ResultDetails}"
                                        IsVisible="{Binding IsExecuted}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -886,6 +888,10 @@
                 <controls:FilePathEditor
                     FilePathEditorVm="{Binding WorkspaceEditor.FilePathEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FILE, TargetNullValue=False}"/>
+
+                <controls:BoundaryScanStepEditor
+                    BoundaryScanStepEditorVm="{Binding WorkspaceEditor.BoundaryScanStepEditor}"
+                    IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=BOUNDARY_SCAN, TargetNullValue=False}"/>
                 
                 <controls:TestInterfaceCommunication
                     TestInterfaceCommunicationVm="{Binding WorkspaceEditor.TestInterfaceCommunication}"

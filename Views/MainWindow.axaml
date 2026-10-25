@@ -109,6 +109,10 @@
                         DataContext="{Binding HardwareTab}"
                         IsVisible="{ReflectionBinding $parent[shadui:Window].DataContext?.IsHardwareTabSelected}" />
 
+                    <views:BoundaryScanTab
+                        DataContext="{Binding BoundaryScanTab}"
+                        IsVisible="{ReflectionBinding $parent[shadui:Window].DataContext?.IsBoundaryScanTabSelected}" />
+
                     <views:AboutTab
                         DataContext="{Binding AboutTab}"
                         IsVisible="{ReflectionBinding $parent[shadui:Window].DataContext?.IsAboutTabSelected}" />

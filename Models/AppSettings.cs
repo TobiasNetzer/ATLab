@@ -26,4 +26,5 @@ public class AppSettings
     public bool IsResponseMaskEditorExpanded { get; set; }
     public bool IsExpressionEditorExpanded { get; set; }
     public bool IsFilePathEditorExpanded { get; set; }
+    public bool IsBoundaryScanEditorExpanded { get; set; }
 }

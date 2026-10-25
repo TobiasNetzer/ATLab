@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,9 @@ public class TestStepRunner : ITestStepRunner
     private readonly IInterfaceCommandExecuter _interfaceCommandExecuter;
     private readonly ProjectModel _projectModel;
     private readonly IStatusService _statusService;
+    private readonly IBoundaryScanTestSession _boundaryScanSession;
+
+    private const int MaxResultDetailLines = 20;
 
     public TestStepRunner(
         IHardwareAccessor hardwareAccessor,
@@ -35,7 +39,8 @@ public class TestStepRunner : ITestStepRunner
         IFileContentReader fileContentReader,
         IInterfaceCommandExecuter interfaceCommandExecuter,
         ProjectModel projectModel,
-        IStatusService statusService)
+        IStatusService statusService,
+        IBoundaryScanTestSession boundaryScanSession)
     {
         _testHardware = hardwareAccessor.Hardware;
         _scriptRunner = scriptRunner;
@@ -46,10 +51,13 @@ public class TestStepRunner : ITestStepRunner
         _interfaceCommandExecuter = interfaceCommandExecuter;
         _projectModel = projectModel;
         _statusService = statusService;
+        _boundaryScanSession = boundaryScanSession;
     }
     
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
     {
+        step.ResultDetails = null;
+
         try
         {
             // detect if the matrix channel is unset or not available
@@ -183,6 +191,19 @@ public class TestStepRunner : ITestStepRunner
                         : OperationResult<double>.Failure($"Failed to parse file content to double: {processed}");
                 }
                 
+                case TestEvaluationSource.BOUNDARY_SCAN:
+                {
+                    var boundaryScanResult = await _boundaryScanSession.ExecuteStepAsync(step.TestStep.BoundaryScan, token);
+
+                    if (boundaryScanResult.IsFailure)
+                        return OperationResult<double>.Failure(boundaryScanResult.ErrorMessage);
+
+                    // Steps that only drive pins have nothing to evaluate, checks report the number of mismatches
+                    var outcome = boundaryScanResult.Value!;
+                    step.ResultDetails = FormatResultDetails(outcome.Messages);
+                    return OperationResult<double>.Success(outcome.HasChecks ? outcome.Mismatches : double.NegativeInfinity);
+                }
+
                 default: return OperationResult<double>.Failure("Unknown evaluation source");
             }
         }
@@ -196,5 +217,19 @@ public class TestStepRunner : ITestStepRunner
         {
             return OperationResult<double>.Failure(ex.Message);
         }
+    }
+
+    // A failing bus can report dozens of pins, the tooltip shows the first ones and the rest is in the event log
+    private static string? FormatResultDetails(IReadOnlyList<string> lines)
+    {
+        if (lines.Count == 0)
+            return null;
+
+        var shown = lines.Take(MaxResultDetailLines).ToList();
+
+        if (lines.Count > MaxResultDetailLines)
+            shown.Add(string.Format(LocalizationService.Instance["Text_MoreResultDetails"], lines.Count - MaxResultDetailLines));
+
+        return string.Join(Environment.NewLine, shown);
     }
 }

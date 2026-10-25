@@ -1,0 +1,210 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:controls="clr-namespace:ATLab.Controls"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.BoundaryScanStepEditor"
+             x:DataType="controls:BoundaryScanStepEditor"
+             Width="500">
+
+    <UserControl.Styles>
+        <Style Selector="Border.WithDynamicCorner">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+        <Style Selector="Border.WithDynamicCorner.expanded">
+            <Setter Property="CornerRadius" Value="15 15 0 0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel DataContext="{Binding $parent[controls:BoundaryScanStepEditor].BoundaryScanStepEditorVm}"
+                x:DataType="vm:BoundaryScanStepEditorViewModel">
+
+        <Border Classes="WithDynamicCorner"
+                Classes.expanded="{Binding IsExpanded, FallbackValue=False}"
+                Background="{DynamicResource OutlineColor}"
+                Padding="10">
+
+            <DockPanel>
+                <TextBlock Text="{helpers:Localize Header_BoundaryScanStep}"
+                           Classes="h4"
+                           VerticalAlignment="Center"/>
+
+                <Button Command="{Binding ToggleExpandedCommand}"
+                        Classes="Ghost"
+                        DockPanel.Dock="Right"
+                        HorizontalAlignment="Right">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent ChevronDown}"
+                                            IsVisible="{Binding !IsExpanded, FallbackValue=True}"/>
+                            <ContentControl Content="{LucideIconContent ChevronUp}"
+                                            IsVisible="{Binding IsExpanded, FallbackValue=False}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </DockPanel>
+        </Border>
+
+        <Border CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}"
+                IsVisible="{Binding IsExpanded, FallbackValue=False}">
+
+            <StackPanel Margin="10" Spacing="10">
+
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <RadioButton GroupName="BoundaryScanStepMode"
+                                 Content="{helpers:Localize Label_PinActions}"
+                                 IsChecked="{Binding TestStep.BoundaryScan.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=PIN_ACTIONS, FallbackValue=False}"/>
+                    <RadioButton GroupName="BoundaryScanStepMode"
+                                 Content="{helpers:Localize Label_TurnBoundaryScanOff}"
+                                 IsChecked="{Binding TestStep.BoundaryScan.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TURN_OFF, FallbackValue=False}"/>
+                </StackPanel>
+
+                <TextBlock Text="{helpers:Localize Text_TurnBoundaryScanOff}"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource MutedColor}"
+                           IsVisible="{Binding TestStep.BoundaryScan.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=TURN_OFF, FallbackValue=False}"/>
+
+                <StackPanel Spacing="10"
+                            IsVisible="{Binding TestStep.BoundaryScan.Mode, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=PIN_ACTIONS, FallbackValue=False}">
+
+                    <DataGrid ItemsSource="{Binding Actions}"
+                              SelectedItem="{Binding SelectedAction}"
+                              AutoGenerateColumns="False"
+                              CanUserSortColumns="False"
+                              IsReadOnly="False"
+                              GridLinesVisibility="All"
+                              BorderThickness="2"
+                              BorderBrush="{DynamicResource OutlineColor}"
+                              Height="240">
+
+                        <DataGrid.Styles>
+                            <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="Fill" Value="{DynamicResource InfoColor}"/>
+                                <Setter Property="Opacity" Value="1"/>
+                            </Style>
+                        </DataGrid.Styles>
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{helpers:Localize Header_ChainDevice}" Width="110" IsReadOnly="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:BoundaryScanPinActionViewModel">
+                                        <TextBlock Text="{Binding DeviceName}"
+                                                   Margin="10 0"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{helpers:Localize Header_Pin}" Binding="{Binding PinText}" Width="*" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="{helpers:Localize Header_PinAction}" Width="130" IsReadOnly="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:BoundaryScanPinActionViewModel">
+                                        <TextBlock Text="{Binding Action, Converter={StaticResource EnumLocalizationConverter}}"
+                                                   Margin="10 0"
+                                                   VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate x:DataType="vm:BoundaryScanPinActionViewModel">
+                                        <ComboBox ItemsSource="{Binding $parent[controls:BoundaryScanStepEditor].BoundaryScanStepEditorVm.AvailableActions, FallbackValue={x:Null}}"
+                                                  SelectedItem="{Binding Action}"
+                                                  HorizontalAlignment="Stretch">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Grid ColumnDefinitions="110,*,130,Auto" ColumnSpacing="5">
+                        <ComboBox Grid.Column="0"
+                                  ItemsSource="{Binding Devices}"
+                                  SelectedItem="{Binding NewDevice}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:BoundaryScanDeviceViewModel">
+                                    <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding NewPins}"
+                                  SelectedItem="{Binding NewPin}"
+                                  HorizontalAlignment="Stretch"
+                                  MaxDropDownHeight="300">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
+                                    <TextBlock Text="{Binding DisplayText}" TextTrimming="CharacterEllipsis"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox Grid.Column="2"
+                                  ItemsSource="{Binding AvailableActions}"
+                                  SelectedItem="{Binding NewAction}"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Grid.Column="3"
+                                Background="{DynamicResource ButtonBackground}"
+                                Classes="Icon"
+                                Width="35"
+                                Height="35"
+                                ToolTip.Tip="{helpers:Localize ToolTip_AddPinAction}"
+                                Command="{Binding AddActionCommand}">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent Plus}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="5">
+                        <Button Grid.Column="0"
+                                Background="{DynamicResource ButtonBackground}"
+                                Classes="Icon"
+                                Width="35"
+                                Height="35"
+                                ToolTip.Tip="{helpers:Localize ToolTip_RemovePinAction}"
+                                Command="{Binding RemoveActionCommand}">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent Minus}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Background="{DynamicResource ButtonBackground}"
+                                Classes="Icon"
+                                Width="35"
+                                Height="35"
+                                ToolTip.Tip="{helpers:Localize ToolTip_TeachInPinActions}"
+                                Command="{Binding TeachInCommand}">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent Import}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
+                        <TextBlock Grid.Column="3"
+                                   Text="{helpers:Localize Label_SettleTimeMs}"
+                                   VerticalAlignment="Center"/>
+                        <NumericUpDown Grid.Column="4"
+                                       Value="{Binding TestStep.BoundaryScan.SettleTimeMs, FallbackValue=0}"
+                                       Minimum="0"
+                                       Maximum="60000"
+                                       Increment="10"
+                                       FormatString="0"
+                                       Width="140"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

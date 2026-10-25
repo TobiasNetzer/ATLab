@@ -34,6 +34,7 @@ public partial class ProjectModel : ObservableObject
     public ProjectSettings Settings { get; }
     public ProjectDocumentation Documentation { get; } = new();
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; } = new();
+    public BoundaryScanConfiguration BoundaryScan { get; } = new();
     public ObservableCollection<TestModule> Modules { get; } = new();
     public ObservableCollection<Device> Devices { get; } = new();
     public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
@@ -56,6 +57,7 @@ public partial class ProjectModel : ObservableObject
         Settings.SettingsChanged += MarkDirty;
         Documentation.DocumentationChanged += MarkDirty;
         DeviceUnderTestInfo.DeviceUnderTestInfoChanged += MarkDirty;
+        BoundaryScan.ConfigurationChanged += MarkDirty;
 
         Devices.CollectionChanged += DevicesChanged;
         RuntimeVariables.CollectionChanged += RuntimeVariablesChanged;
@@ -93,6 +95,7 @@ public partial class ProjectModel : ObservableObject
             Settings.ResetToDefault();
             Documentation.ResetToDefault();
             DeviceUnderTestInfo.ResetToDefault();
+            BoundaryScan.ResetToDefault();
             
             Modules.Clear();
             
@@ -125,6 +128,7 @@ public partial class ProjectModel : ObservableObject
         var modulesClone = Modules.Select(module => module.Clone(true)).ToList();
         var documentationClone = Documentation.Clone();
         var settingsClone = Settings.Clone();
+        var boundaryScanClone = BoundaryScan.Clone();
 
         foreach (var step in modulesClone.SelectMany(m => m.TestSteps))
             step.UpdateDtos(pathService);
@@ -133,6 +137,7 @@ public partial class ProjectModel : ObservableObject
         {
             documentationClone.PrepareForSave(pathService);
             settingsClone.PrepareForSave(pathService);
+            boundaryScanClone.PrepareForSave(pathService);
         }
 
         return new AtlabFileDto
@@ -147,7 +152,8 @@ public partial class ProjectModel : ObservableObject
             Devices = Devices.ToList(),
             ProjectSettings = settingsClone,
             ProjectDocumentation = documentationClone,
-            DeviceUnderTestInfo = DeviceUnderTestInfo
+            DeviceUnderTestInfo = DeviceUnderTestInfo,
+            BoundaryScan = boundaryScanClone
         };
     }
     
@@ -222,11 +228,13 @@ public partial class ProjectModel : ObservableObject
         {
             dto.ProjectSettings.RestoreAfterLoad(pathService);
             dto.ProjectDocumentation.RestoreAfterLoad(pathService);
+            dto.BoundaryScan.RestoreAfterLoad(pathService);
         }
 
         Settings.CopyFrom(dto.ProjectSettings);
         Documentation.CopyFrom(dto.ProjectDocumentation);
         DeviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
+        BoundaryScan.CopyFrom(dto.BoundaryScan);
 
         IsDirty = false;
     }

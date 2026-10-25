@@ -512,6 +512,8 @@ public partial class TestingTabViewModel : ViewModelBase
                 ExternalProgram sc => new ExternalProgram(sc),
                 RelayMatrix rm => new RelayMatrix(rm),
                 RelayGroup rg => new RelayGroup(rg),
+                TestInterfaceConfig ic => new TestInterfaceConfig(ic),
+                BoundaryScanStepConfig bs => new BoundaryScanStepConfig(bs),
                 _ => sourceValue
             };
 

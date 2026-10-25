@@ -40,6 +40,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ScriptingTabViewModel ScriptTab { get; }
     public AboutTabViewModel AboutTab { get; }
     public HardwareTabViewModel HardwareTab { get; }
+    public BoundaryScanTabViewModel BoundaryScanTab { get; }
     public DocumentationTabViewModel DocumentationTab { get; }
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
@@ -49,6 +50,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsDocumentationTabSelected => ReferenceEquals(SelectedTab, DocumentationTab);
     public bool IsScriptTabSelected => ReferenceEquals(SelectedTab, ScriptTab);
     public bool IsHardwareTabSelected => ReferenceEquals(SelectedTab, HardwareTab);
+    public bool IsBoundaryScanTabSelected => ReferenceEquals(SelectedTab, BoundaryScanTab);
     public bool IsAboutTabSelected => ReferenceEquals(SelectedTab, AboutTab);
 
     public ObservableCollection<LogEntry> Events => _loggingService.Events;
@@ -73,6 +75,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ScriptingTabViewModel scriptingTabViewModel,
         AboutTabViewModel aboutTab,
         HardwareTabViewModel hardwareTab,
+        BoundaryScanTabViewModel boundaryScanTab,
         DocumentationTabViewModel documentationTab,
         ISettingsService settingsService,
         ILocalizationService localizationService,
@@ -96,6 +99,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ScriptTab = scriptingTabViewModel;
         AboutTab = aboutTab;
         HardwareTab = hardwareTab;
+        BoundaryScanTab = boundaryScanTab;
         DocumentationTab = documentationTab;
 
         _selectedTab = TestingTab;
@@ -104,6 +108,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(ConfigTab);
         Tabs.Add(DocumentationTab);
         Tabs.Add(ScriptTab);
+        Tabs.Add(BoundaryScanTab);
         Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);
 
@@ -216,6 +221,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsDocumentationTabSelected));
         OnPropertyChanged(nameof(IsScriptTabSelected));
         OnPropertyChanged(nameof(IsHardwareTabSelected));
+        OnPropertyChanged(nameof(IsBoundaryScanTabSelected));
         OnPropertyChanged(nameof(IsAboutTabSelected));
     }
     
