@@ -172,7 +172,20 @@ Eine **Pin-Gruppe** behandelt mehrere Pins als eine Zahl: Beim Schreiben wird de
 
 ### Geschwindigkeit und Einschränkungen
 
-Alle Signalwechsel einer Übertragung werden in einem einzigen Transfer an die Probe geschickt; ein I²C-Registerzugriff dauert deshalb nur wenige Millisekunden. Der effektive Bustakt beträgt etwa *TCK ÷ Länge des Boundary-Registers ÷ 4*, also einige kHz. I²C und SPI haben keine Mindesttaktrate; EEPROMs, Sensoren, Port-Expander und Flash-Speicher funktionieren damit.
+Ein Bus wird nachgebildet, indem seine Pins über das Boundary-Register gesetzt werden; jeder Wechsel einer Busleitung kostet daher einen vollständigen Scan der Kette. Der Bustakt ergibt sich somit aus dem JTAG-Takt:
+
+- **Ein Scan** dauert *DR-Länge + 5* TCK-Takte. Die DR-Länge ist die Summe der Boundary-Register-Längen aller Bausteine in EXTEST oder SAMPLE, plus 1 Bit je Baustein in BYPASS.
+- **Ein Bustakt** braucht bei I²C 3 Scans (SDA setzen, SCL high, SCL low; Start, Stopp und ACK kommen hinzu), bei SPI mit CPHA 0 3 Scans und mit CPHA 1 2 Scans. Eine Pin-Gruppe braucht einen Scan je Schreib- und einen je Lesezugriff.
+
+Beispiel: TCK 1000 kHz und ein Baustein mit 100 Zellen im Boundary-Register ergeben (100 + 5) µs je Scan, etwa 315 µs je I²C-Bit, also einen SCL-Takt von rund 3 kHz.
+
+Alle Scans einer Übertragung werden in einem einzigen Transfer an die Probe geschickt; die USB-Latenz spielt daher kaum eine Rolle, und ein I²C-Registerzugriff dauert nur wenige Millisekunden. So wird ein Bus schneller:
+
+- **TCK-Frequenz (kHz)** erhöhen; der Bustakt steigt im gleichen Verhältnis.
+- Bausteine, die der Bus nicht nutzt, in BYPASS lassen. Ein Baustein, der aus einem früheren Schritt oder von dieser Registerkarte noch in EXTEST oder SAMPLE ist, verlängert jeden Scan um sein ganzes Boundary-Register. EXTEST bleibt bis zum Ende des Testlaufs aktiv.
+- Wenn möglich, Pins eines Bausteins mit kurzem Boundary-Register verwenden.
+
+I²C und SPI haben keine Mindesttaktrate; EEPROMs, Sensoren, Port-Expander und Flash-Speicher funktionieren damit.
 
 - I²C-**Clock-Stretching** wird nicht unterstützt. Hält ein Baustein SCL low, schlägt der Schritt mit *SCL is held low* fehl.
 - UART, 1-Wire und andere Protokolle mit festem Timing lassen sich nicht nachbilden.

@@ -172,7 +172,20 @@ A **pin group** treats several pins as one number: a write drives the value onto
 
 ### Speed and limitations
 
-All signal changes of one transaction are sent to the probe in a single transfer, so an I²C register read takes only a few milliseconds. The effective bus clock is roughly *TCK ÷ boundary register length ÷ 4*, i.e. a few kHz. I²C and SPI have no minimum clock rate, so this works with EEPROMs, sensors, GPIO expanders and flash memories.
+A bus is emulated by setting its pins through the boundary register, so every change of a bus line takes one complete scan of the chain. The bus clock therefore follows from the JTAG clock:
+
+- **One scan** takes *DR length + 5* TCK cycles. The DR length is the sum of the boundary register lengths of all chips in EXTEST or SAMPLE, plus 1 bit for each chip in BYPASS.
+- **One bus clock** takes 3 scans for I²C (set SDA, raise SCL, lower SCL; start, stop and ACK add a few more), 3 scans for SPI with CPHA 0 and 2 with CPHA 1. A pin group needs one scan per write and one per read.
+
+Example: TCK 1000 kHz and one chip with a 100-cell boundary register give (100 + 5) µs per scan, about 315 µs per I²C bit, i.e. an SCL clock of roughly 3 kHz.
+
+All scans of one transaction are sent to the probe in a single transfer, so USB latency hardly matters and an I²C register read takes only a few milliseconds. To make a bus faster:
+
+- Increase **TCK Frequency (kHz)**; the bus clock scales with it.
+- Keep chips that the bus does not use in BYPASS. A chip that is still in EXTEST or SAMPLE from an earlier step or from this tab adds its whole boundary register to every scan. EXTEST stays active until the end of the test run.
+- If you have the choice, use pins of a chip with a short boundary register.
+
+I²C and SPI have no minimum clock rate, so this works with EEPROMs, sensors, GPIO expanders and flash memories.
 
 - I²C **clock stretching** is not supported. A target that holds SCL low makes the step fail with *SCL is held low*.
 - UART, 1-Wire and other protocols with fixed timing cannot be emulated.
