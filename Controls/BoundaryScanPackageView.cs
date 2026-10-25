@@ -102,6 +102,8 @@ public partial class BoundaryScanPackageView : Control
     public override void Render(DrawingContext context)
     {
         base.Render(context);
+        
+        context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
 
         var foreground = GetBrush("ForegroundColor", Colors.White);
         var muted = GetBrush("MutedColor", Colors.Gray);
