@@ -26,7 +26,7 @@ Um Schritte in ein anderes Modul zu verschieben, schneiden Sie sie aus, wählen 
 | **Nr.** | Schrittnummer. Der farbige Streifen links zeigt die *Akzentfarbe* des Schritts. |
 | **Name** | Name des Schritts. |
 | **Untergrenze / Sollwert / Obergrenze** | Grenzwerte, formatiert mit Einheit und SI-Präfix (z. B. `10,8V`, `1,3mA`). |
-| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout` oder `Overflow` zeigen. Bei manchen Schritten zeigt die Maus über dem Wert Details an, z. B. die abweichenden Pins oder ein I²C-NACK. |
+| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout`, `NACK` oder `Overflow` zeigen. Bei manchen Schritten zeigt die Maus über dem Wert Details an, z. B. die abweichenden Pins oder ein I²C-NACK. |
 | **Abweichung** | Abweichung vom Sollwert in Prozent. |
 | **Ergebnis** | ✔ oder ✘, nachdem der Schritt ausgeführt wurde. |
 
@@ -108,7 +108,7 @@ Zum Aufklappen auf **Erweiterte Einstellungen** klicken.
 | **Vom Export ausschließen** | Der Schritt läuft und zählt für das Gesamtergebnis, wird aber nicht in CSV oder PDF geschrieben (z. B. Einrichtungsschritte). |
 | **Akzentfarbe** | Farbe des Streifens neben der Schrittnummer. Zum optischen Gruppieren von Schritten. |
 | **Kommentar anzeigen** | Vor der Ausführung des Schritts wird der Kommentar in einem Dialog mit **Weiter** / **Abbrechen** angezeigt. Abbrechen bricht den Test ab. Über die Bild-Schaltfläche daneben (**Bild zu Meldungsfenster hinzufügen**) fügen Sie dem Dialog ein Bild hinzu (PNG, JPG, BMP, GIF, WEBP) – z. B. ein Foto, wo eine Prüfspitze anzusetzen ist. Bei *Benutzerbestätigung*- und *Benutzereingabe*-Schritten ist das Kontrollkästchen deaktiviert, da deren Dialog den Kommentar bereits anzeigt; das Bild erscheint in diesem Dialog. |
-| **Ergebnis einer Variable zuweisen** | Nach der Ausführung wird der Messwert in die gewählte Laufzeitvariable geschrieben. `Timeout` und `Overflow` werden als Text geschrieben. |
+| **Ergebnis einer Variable zuweisen** | Nach der Ausführung wird der Messwert in die gewählte Laufzeitvariable geschrieben. `Timeout`, `NACK` und `Overflow` werden als Text geschrieben; wird eine solche Variable in einer Berechnung oder einem Grenzwert verwendet, stoppt der Test (siehe [Kapitel 10](10-commands-variables-expressions.md#variablen)). |
 
 ### Bestanden-Aktion und Fehlgeschlagen-Aktion
 

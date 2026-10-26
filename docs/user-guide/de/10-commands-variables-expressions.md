@@ -30,6 +30,8 @@ Drei Arten von Variablen sind verfügbar:
 
 Skriptvariablen werden zuerst ersetzt. Namen dürfen Buchstaben, Ziffern und `_` enthalten. Ein Verweis auf eine unbekannte Variable wird durch `0.0` ersetzt – prüfen Sie die Schreibweise daher sorgfältig.
 
+Eine Variable kann auch Text enthalten: *Ergebnis einer Variable zuweisen* schreibt `Timeout`, `NACK` oder `Overflow`, wenn ein Schritt so endet. Eine solche Variable kann nicht verwendet werden, wo eine Zahl erwartet wird. In der Bewertungsquelle Ausdruck oder in einem Grenzwert, Sollwert oder einer Verzögerung ist das ein Ausführungsfehler und **der Test stoppt**, mit einer Meldung, die die Variable nennt, z. B. *Variable 'Reg' holds 'NACK', which is not a number.* Behandeln Sie diese Ergebnisse mit der Fehlgeschlagen-Aktion des Schritts, der sie erzeugt (z. B. *Wiederholen* oder *Springe zu*), bevor ein späterer Schritt die Variable verwendet.
+
 ### Systemvariablen
 
 Systemvariablen beginnen mit `sys.` und sind schreibgeschützt. Sie können überall verwendet werden, wo auch Laufzeitvariablen erlaubt sind, lassen sich aber nicht unter *Ergebnis einer Variable zuweisen* auswählen.

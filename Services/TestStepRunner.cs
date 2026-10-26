@@ -182,9 +182,11 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.EXPRESSION: 
                 {
                     var resolved = CommandProcessor.EvaluateExpression(step.TestStep.Expression, runtimeVariables);
-                    return double.TryParse(resolved, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleResult)
-                        ? OperationResult<double>.Success(doubleResult)
-                        : OperationResult<double>.Failure($"Failed to evaluate expression:{step.TestStep.Expression}. Resolved to: {resolved}");
+                    if (double.TryParse(resolved, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleResult))
+                        return OperationResult<double>.Success(doubleResult);
+
+                    var hint = CommandProcessor.DescribeNonNumericVariable(step.TestStep.Expression, runtimeVariables);
+                    return OperationResult<double>.Failure($"Failed to evaluate expression:{step.TestStep.Expression}. Resolved to: {resolved}. {hint}".TrimEnd());
                 }
 
                 case TestEvaluationSource.FILE:
@@ -228,9 +230,9 @@ public class TestStepRunner : ITestStepRunner
                     var transaction = busResult.Value!;
                     step.ResultDetailLines = transaction.Messages;
 
-                    // Same results as the Interface source: 0 for a NACK, 1 for a completed write, otherwise the response
+                    // Same results as the Interface source: NACK, 1 for a completed write, otherwise the response
                     if (!transaction.Acknowledged)
-                        return OperationResult<double>.Success(0);
+                        return OperationResult<double>.Nack();
 
                     if (busConfig.BytesToRead <= 0)
                         return OperationResult<double>.Success(1);

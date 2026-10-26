@@ -26,7 +26,7 @@ To move steps to another module, cut them, select the target module and paste th
 | **No.** | Step number. The coloured stripe on the left shows the step's *Accent Color*. |
 | **Name** | Step name. |
 | **Lower Limit / Nominal Value / Upper Limit** | Limits, formatted with the step's unit and SI prefix (e.g. `10,8V`, `1,3mA`). |
-| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout` or `Overflow`. For some steps, hovering over the value shows details, e.g. the pins that did not match or an I²C NACK. |
+| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout`, `NACK` or `Overflow`. For some steps, hovering over the value shows details, e.g. the pins that did not match or an I²C NACK. |
 | **Deviation** | Deviation from the nominal value in percent. |
 | **Result** | ✔ or ✘ after the step has been executed. |
 
@@ -108,7 +108,7 @@ Click **Advanced Settings** to expand.
 | **Exclude from Export** | The step runs and counts for pass/fail, but is not written to CSV or PDF (e.g. setup steps). |
 | **Accent Color** | Colour of the stripe next to the step number. Use it to group steps visually. |
 | **Show Comment** | Before the step executes, the comment is shown in a dialog with **Continue** / **Cancel**. Cancel aborts the test. Use the image button next to it to add a picture (PNG, JPG, BMP, GIF, WEBP) to the dialog — e.g. a photo showing where to connect a probe. For *User Confirmation* and *User Input* steps the checkbox is disabled, because their dialog already shows the comment; the image is shown in that dialog. |
-| **Assign Result to Variable** | After execution, the measured value is written to the selected runtime variable. `Timeout` and `Overflow` are written as text. |
+| **Assign Result to Variable** | After execution, the measured value is written to the selected runtime variable. `Timeout`, `NACK` and `Overflow` are written as text; using such a variable in a calculation or limit stops the test (see [chapter 10](10-commands-variables-expressions.md#variables)). |
 
 ### Pass-Action and Fail-Action
 

@@ -47,6 +47,37 @@ public static class CommandProcessor
         return blocks[0].Value;
     }
     
+    /// <summary>
+    /// Explains why an expression did not give a number: names the first variable it uses whose value is not a
+    /// number, e.g. a step result like NACK or Timeout. Null if all variables are numbers.
+    /// </summary>
+    public static string? DescribeNonNumericVariable(string expression, IEnumerable<CustomVariable>? vars)
+    {
+        foreach (Match match in VarRegex.Matches(expression))
+        {
+            var variable = vars?.FirstOrDefault(v => v.Name == match.Groups[1].Value);
+            if (variable == null || IsNumber(variable.Value))
+                continue;
+
+            return $"Variable '{variable.Name}' holds '{variable.Value}', which is not a number.";
+        }
+
+        return null;
+    }
+
+    private static bool IsNumber(string value)
+    {
+        try
+        {
+            ExpressionEvaluator.Evaluate(value.Replace(',', '.'));
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
     private static List<Block> CompileInternal(string command, IEnumerable<CustomVariable>? vars)
     {
         var blocks = Tokenize(command);

@@ -22,6 +22,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 |----------|---------|---------|
 | *(empty)* with ✔ | Source **None** | Pass |
 | `Timeout` | The instrument/interface did not answer within the timeout. The Fail-Action applies and the test continues. | Fail |
+| `NACK` | An I²C device did not acknowledge (Interface or Boundary Scan Bus source). The Fail-Action applies and the test continues. | Fail |
 | `Overflow` | Value ≥ 9.9 × 10³⁷ (the SCPI overload value, e.g. a DMM out of range) | Fail |
 | *(empty)* with ✘ and an error in the event log | The step could not be executed (device not found, connection failed, parse error …). **The test stops** with status *Test Execution Failed*. | Fail |
 
@@ -79,10 +80,10 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 
 **I²C behaviour**
 
-- With a command and **Read Bytes** = 0: the bytes are written; the result is `1` if the slave acknowledged, `0` on NACK.
-- With **Read Bytes** > 0: after the optional write, the given number of bytes is read. The received bytes go through response processing; a NACK on read gives `0`.
+- With a command and **Read Bytes** = 0: the bytes are written; the result is `1` if the slave acknowledged, `NACK` otherwise.
+- With **Read Bytes** > 0: after the optional write, the given number of bytes is read. The received bytes go through response processing; a NACK on write or read gives `NACK`.
 - Without response processing, the received bytes are interpreted as ASCII text. For binary registers, enable response processing with e.g. `{byte:2}`.
-- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log as a warning once the step has finished, also when its limits let it pass. A step that repeats until the DUT answers stays quiet while it repeats and only warns if the last attempt was still not acknowledged.
+- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log as a warning once the step has finished. A step that repeats on fail until the DUT answers stays quiet while it repeats and only warns if the last attempt was still not acknowledged.
 
 **UART behaviour**
 
@@ -233,9 +234,9 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 
 **Result**
 
-- With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `0` on an I²C NACK.
-- With **Read Bytes** > 0: the received bytes go through [response processing](11-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `0`.
-- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished, also when its limits let it pass. A step can repeat until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
+- With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `NACK` on an I²C NACK.
+- With **Read Bytes** > 0: the received bytes go through [response processing](11-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `NACK`.
+- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished. A step can repeat on fail until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
 
 Examples:
 

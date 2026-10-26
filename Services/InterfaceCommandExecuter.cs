@@ -70,12 +70,13 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             if (status.IsFailure)
                 return OperationResult<double>.Failure(status.ErrorMessage);
             
-            if (status.Value != null && !status.Value.Success)
+            if (status.Value is not { Success: true })
             {
                 details.Add("I²C write failed: NACK received.");
+                return OperationResult<double>.Nack();
             }
-            
-            result = Convert.ToDouble(status.Value != null && status.Value.Success);
+
+            result = 1;
         }
         
         if (config.BytesToRead > 0)
@@ -91,10 +92,10 @@ public class InterfaceCommandExecuter : IInterfaceCommandExecuter
             if (status.IsFailure)
                 return OperationResult<double>.Failure(status.ErrorMessage);
         
-            if (status.Value != null && !status.Value.Success)
+            if (status.Value is not { Success: true })
             {
                 details.Add("I²C read failed: NACK received.");
-                return OperationResult<double>.Success(0);
+                return OperationResult<double>.Nack();
             }
 
             string processed;

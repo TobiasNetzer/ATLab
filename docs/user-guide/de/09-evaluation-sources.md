@@ -22,6 +22,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 |---------|-----------|-----------|
 | *(leer)* mit ✔ | Quelle **Keine** | Bestanden |
 | `Timeout` | Messgerät/Schnittstelle hat nicht innerhalb des Timeouts geantwortet. Die Fehlgeschlagen-Aktion greift, der Test läuft weiter. | Fehlgeschlagen |
+| `NACK` | Ein I²C-Baustein hat nicht quittiert (Quelle Schnittstelle oder Boundary Scan Bus). Die Fehlgeschlagen-Aktion greift, der Test läuft weiter. | Fehlgeschlagen |
 | `Overflow` | Wert ≥ 9,9 × 10³⁷ (der SCPI-Überlaufwert, z. B. Multimeter außerhalb des Messbereichs) | Fehlgeschlagen |
 | *(leer)* mit ✘ und Fehler im Ereignisprotokoll | Der Schritt konnte nicht ausgeführt werden (Gerät nicht gefunden, Verbindung fehlgeschlagen, Parse-Fehler …). **Der Test stoppt** mit dem Status *Testausführung fehlgeschlagen*. | Fehlgeschlagen |
 
@@ -79,10 +80,10 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 
 **Verhalten bei I²C**
 
-- Mit Befehl und **Bytes lesen** = 0: Die Bytes werden geschrieben; das Ergebnis ist `1`, wenn der Slave quittiert hat, `0` bei NACK.
-- Mit **Bytes lesen** > 0: Nach dem optionalen Schreiben wird die angegebene Anzahl Bytes gelesen. Die empfangenen Bytes durchlaufen die Antwortverarbeitung; ein NACK beim Lesen ergibt `0`.
+- Mit Befehl und **Bytes lesen** = 0: Die Bytes werden geschrieben; das Ergebnis ist `1`, wenn der Slave quittiert hat, sonst `NACK`.
+- Mit **Bytes lesen** > 0: Nach dem optionalen Schreiben wird die angegebene Anzahl Bytes gelesen. Die empfangenen Bytes durchlaufen die Antwortverarbeitung; ein NACK beim Schreiben oder Lesen ergibt `NACK`.
 - Ohne Antwortverarbeitung werden die empfangenen Bytes als ASCII-Text interpretiert. Für binäre Register aktivieren Sie die Antwortverarbeitung, z. B. mit `{byte:2}`.
-- Ein NACK wird im Ergebnis-Tooltip angezeigt (*I²C write failed: NACK received.*) und nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben, auch wenn der Schritt laut Grenzwerten besteht. Ein Schritt, der wiederholt wird, bis der Prüfling antwortet, bleibt während der Wiederholungen still und warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
+- Ein NACK wird im Ergebnis-Tooltip angezeigt (*I²C write failed: NACK received.*) und nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben. Ein Schritt, der bei Fehlschlag wiederholt wird, bis der Prüfling antwortet, bleibt während der Wiederholungen still und warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 **Verhalten bei UART**
 
@@ -233,9 +234,9 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 
 **Ergebnis**
 
-- Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `0` bei einem I²C-NACK.
-- Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](11-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `0`.
-- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben, auch wenn der Schritt laut Grenzwerten besteht. Ein Schritt kann wiederholt werden, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen; er warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
+- Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `NACK` bei einem I²C-NACK.
+- Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](11-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `NACK`.
+- Bei einem NACK erklärt der Ergebnis-Tooltip die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben. Ein Schritt kann bei Fehlschlag wiederholt werden, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen; er warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 Beispiele:
 

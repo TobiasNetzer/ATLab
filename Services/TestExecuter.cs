@@ -171,36 +171,12 @@ public class TestExecutor : ITestExecutor
         
         try
         {
-            var stepModel = step.TestStep;
-            
-            var nominal = ResolveNumeric(
-                stepModel.NominalValueExpression,
-                stepModel.NominalValue,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var lower = ResolveNumeric(
-                stepModel.LowerLimitExpression,
-                stepModel.LowerLimit,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var upper = ResolveNumeric(
-                stepModel.UpperLimitExpression,
-                stepModel.UpperLimit,
-                stepModel.Unit,
-                runtimeVariables);
-
-            var delaySeconds = ResolveNumeric(
-                stepModel.DelayExpression,
-                stepModel.Delay / 1000.0,
-                "s",
-                runtimeVariables);
-            
-            stepModel.NominalValue = nominal;
-            stepModel.LowerLimit = lower;
-            stepModel.UpperLimit = upper;
-            stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
+            var resolved = ResolveStepValues(step.TestStep, runtimeVariables);
+            if (resolved.IsFailure)
+            {
+                TestStepExecutionFailed(step, resolved.ErrorMessage);
+                return;
+            }
             
             var result = await _runner.ExecuteAsync(step, runtimeVariables, _cts.Token);
 
@@ -214,11 +190,15 @@ public class TestExecutor : ITestExecutor
                     break;
                 
                 case OperationStatus.TIMEOUT:
-                    TestStepExecutionTimedOut(step, runtimeVariables);
+                    SetSpecialResult(step, "Timeout", runtimeVariables);
+                    break;
+                
+                case OperationStatus.NACK:
+                    SetSpecialResult(step, "NACK", runtimeVariables);
                     break;
                 
                 case OperationStatus.FAILURE:
-                    TestStepExecutionFailed(step, result, runtimeVariables);
+                    TestStepExecutionFailed(step, result.ErrorMessage);
                     break;
                 
                 default:
@@ -307,36 +287,14 @@ public class TestExecutor : ITestExecutor
                         throw new OperationCanceledException();
                 }
                 
-                var stepModel = step.TestStep;
-                
-                var nominal = ResolveNumeric(
-                    stepModel.NominalValueExpression,
-                    stepModel.NominalValue,
-                    stepModel.Unit,
-                    runtimeVariables);
-
-                var lower = ResolveNumeric(
-                    stepModel.LowerLimitExpression,
-                    stepModel.LowerLimit,
-                    stepModel.Unit,
-                    runtimeVariables);
-
-                var upper = ResolveNumeric(
-                    stepModel.UpperLimitExpression,
-                    stepModel.UpperLimit,
-                    stepModel.Unit,
-                    runtimeVariables);
-
-                var delaySeconds = ResolveNumeric(
-                    stepModel.DelayExpression,
-                    stepModel.Delay / 1000.0,
-                    "s",
-                    runtimeVariables);
-                
-                stepModel.NominalValue = nominal;
-                stepModel.LowerLimit = lower;
-                stepModel.UpperLimit = upper;
-                stepModel.Delay = (int)Math.Round(delaySeconds * 1000);
+                var resolved = ResolveStepValues(step.TestStep, runtimeVariables);
+                if (resolved.IsFailure)
+                {
+                    TestStepExecutionFailed(step, resolved.ErrorMessage);
+                    OnStepCompleted(i, step);
+                    OnExecutionError();
+                    break; // END_TEST
+                }
                 
                 stepExecutionResult = await _runner.ExecuteAsync(step, runtimeVariables, token);
 
@@ -349,11 +307,15 @@ public class TestExecutor : ITestExecutor
                         break;
                 
                     case OperationStatus.TIMEOUT:
-                        TestStepExecutionTimedOut(step, runtimeVariables);
+                        SetSpecialResult(step, "Timeout", runtimeVariables);
+                        break;
+                
+                    case OperationStatus.NACK:
+                        SetSpecialResult(step, "NACK", runtimeVariables);
                         break;
                 
                     case OperationStatus.FAILURE:
-                        TestStepExecutionFailed(step, stepExecutionResult, runtimeVariables);
+                        TestStepExecutionFailed(step, stepExecutionResult.ErrorMessage);
                         break;
                 
                     default:
@@ -362,7 +324,8 @@ public class TestExecutor : ITestExecutor
                 
                 var nextIndex = await EvaluateNextStepIndex(steps, i, step, runtimeVariables);
 
-                if (i == nextIndex && stepExecutionResult.IsSuccess)
+                // A step that repeats until a device acknowledges stays quiet until its last attempt
+                if (i == nextIndex && (stepExecutionResult.IsSuccess || stepExecutionResult.IsNack))
                 {
                     OnStepRepeated();
                     
@@ -465,10 +428,11 @@ public class TestExecutor : ITestExecutor
             $"Module '{step.Module.Name}', step {step.TestStep.Number}: {string.Join("; ", step.ResultDetailLines)}");
     }
 
-    private void TestStepExecutionTimedOut(TestStepViewModel step, List<CustomVariable> runtimeVariables)
+    // Timeout or NACK: shown as text, fails the step and the Fail-Action applies
+    private void SetSpecialResult(TestStepViewModel step, string text, List<CustomVariable> runtimeVariables)
     {
-        step.Result = "Timeout";
-        step.ResultNoFormatting = "Timeout";
+        step.Result = text;
+        step.ResultNoFormatting = text;
         step.IsPassed = false;
         step.Deviation = string.Empty;
 
@@ -476,13 +440,13 @@ public class TestExecutor : ITestExecutor
             return;
         
         var variable = runtimeVariables.FirstOrDefault(v => v.Name == step.TestStep.VariableName);
-            variable?.Value = "Timeout";
+            variable?.Value = text;
     }
 
-    private void TestStepExecutionFailed(TestStepViewModel step, OperationResult<double> result, List<CustomVariable> runtimeVariables)
+    private void TestStepExecutionFailed(TestStepViewModel step, string errorMessage)
     {
-        if (!string.IsNullOrEmpty(result.ErrorMessage))
-            _loggingService.Error($"Error in module '{step.Module.Name}', step {step.TestStep.Number}: {result.ErrorMessage}");
+        if (!string.IsNullOrEmpty(errorMessage))
+            _loggingService.Error($"Error in module '{step.Module.Name}', step {step.TestStep.Number}: {errorMessage}");
 
         step.Result = string.Empty;
         step.IsPassed = false;
@@ -576,28 +540,58 @@ public class TestExecutor : ITestExecutor
         }
     }
     
-    private double ResolveNumeric(
+    /// <summary>
+    /// Resolves nominal value, limits and delay before the step runs. A variable expression that does not give a
+    /// number is an execution error, so a step is never evaluated against the limits of an earlier run.
+    /// </summary>
+    private static OperationResult ResolveStepValues(TestStep stepModel, List<CustomVariable> runtimeVariables)
+    {
+        var nominal = ResolveNumeric("nominal value", stepModel.NominalValueExpression, stepModel.NominalValue, stepModel.Unit, runtimeVariables);
+        if (nominal.IsFailure)
+            return OperationResult.Failure(nominal.ErrorMessage);
+
+        var lower = ResolveNumeric("lower limit", stepModel.LowerLimitExpression, stepModel.LowerLimit, stepModel.Unit, runtimeVariables);
+        if (lower.IsFailure)
+            return OperationResult.Failure(lower.ErrorMessage);
+
+        var upper = ResolveNumeric("upper limit", stepModel.UpperLimitExpression, stepModel.UpperLimit, stepModel.Unit, runtimeVariables);
+        if (upper.IsFailure)
+            return OperationResult.Failure(upper.ErrorMessage);
+
+        var delaySeconds = ResolveNumeric("delay", stepModel.DelayExpression, stepModel.Delay / 1000.0, "s", runtimeVariables);
+        if (delaySeconds.IsFailure)
+            return OperationResult.Failure(delaySeconds.ErrorMessage);
+
+        stepModel.NominalValue = nominal.Value;
+        stepModel.LowerLimit = lower.Value;
+        stepModel.UpperLimit = upper.Value;
+        stepModel.Delay = (int)Math.Round(delaySeconds.Value * 1000);
+
+        return OperationResult.Success();
+    }
+    
+    private static OperationResult<double> ResolveNumeric(
+        string name,
         string expression,
         double runtimeFallback,
         string unit,
         List<CustomVariable> runtimeVariables)
     {
         if (string.IsNullOrWhiteSpace(expression))
-            return runtimeFallback;
+            return OperationResult<double>.Success(runtimeFallback);
         
         if (expression.Contains("{"))
         {
             var resolved = CommandProcessor.CompileToString(expression, runtimeVariables);
             if (UnitParser.TryParse(resolved, out var result, unit))
-                return result;
+                return OperationResult<double>.Success(result);
 
-            return runtimeFallback;
+            var hint = CommandProcessor.DescribeNonNumericVariable(expression, runtimeVariables);
+            return OperationResult<double>.Failure($"Failed to resolve {name} '{expression}'. Resolved to: '{resolved}'. {hint}".TrimEnd());
         }
         
-        if (UnitParser.TryParse(expression, out var litResult, unit))
-            return litResult;
-        
-        return runtimeFallback;
+        // Literals are already validated by the step editor
+        return OperationResult<double>.Success(UnitParser.TryParse(expression, out var litResult, unit) ? litResult : runtimeFallback);
     }
 
     private bool IsOverflow(double value) =>

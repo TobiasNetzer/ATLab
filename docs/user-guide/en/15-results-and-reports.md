@@ -47,7 +47,7 @@ Despite the `.csv` extension, the file is **tab-separated** (UTF-8). It opens di
 | Step | Step number within the module |
 | Name | Step name |
 | Lower Limit | Lower limit (plain number, `.` as decimal separator) |
-| Measured Value | Measured value, or `Timeout` / `Overflow` |
+| Measured Value | Measured value, or `Timeout` / `NACK` / `Overflow` |
 | Upper Limit | Upper limit |
 | Unit | Unit text (braces removed) |
 | Deviation (%) | Deviation from nominal |

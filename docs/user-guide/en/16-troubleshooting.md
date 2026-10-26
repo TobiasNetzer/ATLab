@@ -50,8 +50,9 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 |---------|------------------|
 | *Matrix Channel is not available.* | The step uses a matrix channel that the connected adapter does not have. |
 | *Interface not available* | The adapter has no I²C/UART interface, or RS485 was selected (not supported for steps). |
-| *I²C write failed: NACK received.* | Wrong address (7-bit, 0–127), DUT not powered, missing pull-ups, or wrong speed mode. |
-| *Failed to evaluate expression* | Syntax error (e.g. missing operand or parenthesis), an unsupported character such as `<`, or a variable that holds text instead of a number (e.g. `Timeout`). |
+| Step shows `NACK`, *I²C write failed: NACK received.* | Wrong address (7-bit, 0–127), DUT not powered, missing pull-ups, or wrong speed mode. |
+| *Failed to evaluate expression* | Syntax error (e.g. missing operand or parenthesis), an unsupported character such as `<`, or a variable that holds text instead of a number (e.g. `Timeout` or `NACK`; the message then names the variable). |
+| *Failed to resolve lower limit …* (or upper limit, nominal value, delay) | A limit, nominal value or delay uses a variable that does not give a number, e.g. *Variable 'Reg' holds 'NACK', which is not a number.* Handle the failed step that wrote the variable with its Fail-Action. |
 | Limits changed after entering the nominal value | Intended: limits are recalculated from the **Default Tolerance**. Enter the nominal first, then the limits. |
 | Delay is much longer than expected | The delay is in **seconds**. Use `500ms` for half a second. |
 | *Lower limit is greater than upper limit* | Fix the limits, typically when they are calculated from variables. |

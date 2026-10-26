@@ -47,7 +47,7 @@ Trotz der Endung `.csv` ist die Datei **tabulatorgetrennt** (UTF-8). Sie lässt 
 | Step | Schrittnummer innerhalb des Moduls |
 | Name | Name des Schritts |
 | Lower Limit | Untergrenze (reine Zahl, `.` als Dezimaltrennzeichen) |
-| Measured Value | Messwert oder `Timeout` / `Overflow` |
+| Measured Value | Messwert oder `Timeout` / `NACK` / `Overflow` |
 | Upper Limit | Obergrenze |
 | Unit | Einheitentext (ohne Klammern) |
 | Deviation (%) | Abweichung vom Sollwert |

@@ -30,6 +30,8 @@ Three kinds of variables can be used:
 
 Script variables are replaced first. Names may contain letters, digits and `_`. A reference to an unknown variable is replaced with `0.0`, so check spelling carefully.
 
+A variable can also hold text: *Assign Result to Variable* writes `Timeout`, `NACK` or `Overflow` when a step ends that way. Such a variable cannot be used where a number is needed. In the Expression evaluation source or a limit, nominal value or delay it is an execution error and **the test stops**, with a message that names the variable, e.g. *Variable 'Reg' holds 'NACK', which is not a number.* Handle these results with the Fail-Action of the step that produced them (e.g. *Repeat* or *Jump To*), before a later step uses the variable.
+
 ### System variables
 
 System variables start with `sys.` and are read-only. They can be used everywhere runtime variables can, but they cannot be selected under *Assign Result to Variable*.

@@ -50,8 +50,9 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 |---------|------------------|
 | *Matrix Channel is not available.* | Der Schritt verwendet einen Matrix-Kanal, den der angeschlossene Adapter nicht hat. |
 | *Interface not available* | Der Adapter hat keine I²C-/UART-Schnittstelle, oder RS485 wurde gewählt (für Schritte nicht unterstützt). |
-| *I²C write failed: NACK received.* | Falsche Adresse (7 Bit, 0–127), Prüfling nicht versorgt, fehlende Pull-ups oder falsche Frequenz. |
-| *Failed to evaluate expression* | Syntaxfehler (z. B. fehlender Operand oder fehlende Klammer), ein nicht unterstütztes Zeichen wie `<` oder eine Variable mit Text statt Zahl (z. B. `Timeout`). |
+| Schritt zeigt `NACK`, *I²C write failed: NACK received.* | Falsche Adresse (7 Bit, 0–127), Prüfling nicht versorgt, fehlende Pull-ups oder falsche Frequenz. |
+| *Failed to evaluate expression* | Syntaxfehler (z. B. fehlender Operand oder fehlende Klammer), ein nicht unterstütztes Zeichen wie `<` oder eine Variable mit Text statt Zahl (z. B. `Timeout` oder `NACK`; die Meldung nennt dann die Variable). |
+| *Failed to resolve lower limit …* (oder upper limit, nominal value, delay) | Ein Grenzwert, Sollwert oder eine Verzögerung verwendet eine Variable, die keine Zahl ergibt, z. B. *Variable 'Reg' holds 'NACK', which is not a number.* Den fehlgeschlagenen Schritt, der die Variable geschrieben hat, mit seiner Fehlgeschlagen-Aktion behandeln. |
 | Grenzwerte haben sich nach Eingabe des Sollwerts geändert | Beabsichtigt: Die Grenzwerte werden aus der **Standardtoleranz** neu berechnet. Zuerst den Sollwert, dann die Grenzwerte eingeben. |
 | Verzögerung ist viel länger als erwartet | Die Verzögerung ist in **Sekunden** angegeben. `500ms` für eine halbe Sekunde verwenden. |
 | *Lower limit is greater than upper limit* | Grenzwerte korrigieren, typischerweise wenn sie aus Variablen berechnet werden. |

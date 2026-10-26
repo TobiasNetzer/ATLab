@@ -5,5 +5,6 @@ public enum OperationStatus
 {
     SUCCESS,
     FAILURE,
-    TIMEOUT
+    TIMEOUT,
+    NACK
 }
