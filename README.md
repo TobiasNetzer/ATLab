@@ -122,6 +122,8 @@ Keep notes, images, attachments and DUT information directly within the project.
 Connect a SEGGER J-Link or FTDI JTAG probe, detect the scan chain, import BSDL files, watch and drive the pins of the chips on the board, and set up I²C, SPI and pin group buses for test steps.
 → [Boundary Scan Tab](docs/user-guide/en/12-boundary-scan.md)
 
+![image](docs/user-guide/en/images/Boundary_Scan_Tab_en.png)
+
 ### Test Hardware
 View information about the attached Test Interface Adapter, its channels and interfaces, and run the relay matrix self-test.
 → [Test Hardware Tab](docs/user-guide/en/04-test-hardware.md)
