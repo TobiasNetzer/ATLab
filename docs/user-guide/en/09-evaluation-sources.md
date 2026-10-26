@@ -67,7 +67,7 @@ Communicates with the DUT through the Test Interface Adapter's isolated interfac
 | Field | I²C | UART |
 |-------|:---:|:---:|
 | **Interface Type** | `I2C` | `UART` |
-| **Address 0-127** | 7-bit slave address | – |
+| **Address 0-127** | 7-bit slave address. Enter it as a decimal number or with `0x` prefix, e.g. `80` or `0x50`. | – |
 | **Speed Mode** | 100 kHz, 400 kHz, 1 MHz | – |
 | **Baud Rate / Data Bits / Parity / Stop Bits** | – | serial parameters (data bits 7 or 8) |
 | **Termination** | – | appended to the command: NONE, LF, CR, CRLF |

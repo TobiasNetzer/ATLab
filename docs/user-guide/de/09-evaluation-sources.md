@@ -67,7 +67,7 @@ Kommuniziert über die galvanisch isolierten Schnittstellen des Test Interface A
 | Feld | I²C | UART |
 |------|:---:|:---:|
 | **Schnittstelle** | `I2C` | `UART` |
-| **Adresse 0-127** | 7-Bit-Slave-Adresse | – |
+| **Adresse 0-127** | 7-Bit-Slave-Adresse. Als Dezimalzahl oder mit `0x`-Präfix eingeben, z. B. `80` oder `0x50`. | – |
 | **Frequenz** | 100 kHz, 400 kHz, 1 MHz | – |
 | **Baudrate / Datenbits / Parität / Stoppbits** | – | serielle Parameter (Datenbits 7 oder 8) |
 | **Abschlusszeichen** | – | wird an den Befehl angehängt: NONE, LF, CR, CRLF |

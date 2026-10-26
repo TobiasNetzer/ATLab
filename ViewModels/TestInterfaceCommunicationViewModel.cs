@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using Avalonia.Threading;
@@ -79,7 +80,7 @@ public partial class TestInterfaceCommunicationViewModel : ViewModelBase
     
     partial void OnI2CAddressChanged(string value)
     {
-        if (int.TryParse(value, out var result) && result > 0 && result < 127)
+        if (NumberHelper.TryParseI2CAddress(value, out var result))
         {
             Config.I2CAddress = result;
         }

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -51,13 +52,8 @@ public partial class BoundaryScanBusStepEditorViewModel : ViewModelBase
             if (TestStep == null)
                 return;
 
-            var text = value.Trim();
-            var parsed = text.StartsWith("0x", System.StringComparison.OrdinalIgnoreCase)
-                ? int.TryParse(text[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex) ? hex : -1
-                : int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dec) ? dec : -1;
-
-            if (parsed is >= 0 and <= 0x7F)
-                TestStep.BoundaryScanBus.I2CAddress = parsed;
+            if (NumberHelper.TryParseI2CAddress(value, out var address))
+                TestStep.BoundaryScanBus.I2CAddress = address;
 
             OnPropertyChanged();
         }
