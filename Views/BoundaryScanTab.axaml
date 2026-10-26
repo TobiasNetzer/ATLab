@@ -407,6 +407,7 @@
                     <Panel>
                         <Panel IsVisible="{Binding !IsBusView}">
                             <TextBlock Text="{helpers:Localize Text_NoChainDevice}"
+                                       Classes="Large"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
                                        Foreground="{DynamicResource MutedColor}"
@@ -691,6 +692,7 @@
 
                             <TextBlock Grid.Column="1"
                                        Text="{helpers:Localize Text_NoBus}"
+                                       Classes="Large"
                                        TextWrapping="Wrap"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
