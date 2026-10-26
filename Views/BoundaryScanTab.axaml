@@ -159,9 +159,6 @@
                                         Content="{helpers:Localize Disconnect}"
                                         Command="{Binding DisconnectCommand}"/>
                             </Grid>
-
-                            <ProgressBar IsIndeterminate="True"
-                                         IsVisible="{Binding IsBusy}"/>
                         </StackPanel>
                     </Border>
                 </Grid>
