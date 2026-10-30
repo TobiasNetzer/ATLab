@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
@@ -129,7 +129,7 @@
                            IsVisible="{Binding Summary, Converter={x:Static ObjectConverters.IsNotNull}}"/>
 
                 <DataGrid Grid.Row="5"
-                          Classes="HorizontalScroll"
+                          Classes="HorizontalScroll Compact"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
                           ItemsSource="{Binding Results}"
@@ -146,7 +146,6 @@
                         <Style Selector="TextBlock.TrimmedCell">
                             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="10 0"/>
                         </Style>
                         <Style Selector="ToolTip">
                             <Setter Property="MaxWidth" Value="600"/>
@@ -180,8 +179,7 @@
                                     <TextBlock Text="{Binding Status}"
                                                Foreground="{Binding IsPassed, Converter={StaticResource RunResultBrushConverter}}"
                                                FontWeight="SemiBold"
-                                               VerticalAlignment="Center"
-                                               Margin="10 0"/>
+                                               VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

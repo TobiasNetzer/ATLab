@@ -179,6 +179,19 @@
             <Setter Property="AllowAutoHide" Value="True"/>
         </Style>
 
+        <!-- Smaller text and tighter cells than ShadUI's defaults (14 px, padding 12,8), so more rows and columns
+             fit. Cells and rows take the font size from the DataGrid. -->
+        <Style Selector="DataGrid.Compact">
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style Selector="DataGrid.Compact DataGridCell">
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+        <Style Selector="DataGrid.Compact DataGridColumnHeader">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
     </Application.Styles>
 
 </Application>

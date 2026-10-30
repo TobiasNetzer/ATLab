@@ -218,7 +218,7 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
-                                  Classes="HorizontalScroll"
+                                  Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding SelectedScript?.Variables}"
                                   SelectedIndex="{Binding SelectedScript?.SelectedVariableIndex}"
                                   AutoGenerateColumns="False"
@@ -291,7 +291,7 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
-                                  Classes="HorizontalScroll"
+                                  Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding SelectedScript?.Commands}"
                                   SelectedIndex="{Binding SelectedScript?.SelectedCommandIndex, Mode=TwoWay}"
                                   AutoGenerateColumns="False"
@@ -312,7 +312,6 @@
                                 <Style Selector="TextBlock.TrimmedCell">
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Margin" Value="10 0"/>
                                 </Style>
                                 <Style Selector="ToolTip">
                                     <Setter Property="MaxWidth" Value="600"/>

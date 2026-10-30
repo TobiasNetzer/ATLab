@@ -417,7 +417,7 @@
         
             <DataGrid Grid.Column="2"
                       x:Name="TestStepPresenter"
-                      Classes="HorizontalScroll"
+                      Classes="HorizontalScroll Compact"
                       ItemsSource="{Binding TestSteps}"
                       SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
                       IsReadOnly="True"
