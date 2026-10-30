@@ -142,19 +142,9 @@
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
                     
-                    <DataGrid.Styles>
-                        <Style Selector="TextBlock.TrimmedCell">
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                        </Style>
-                        <Style Selector="ToolTip">
-                            <Setter Property="MaxWidth" Value="600"/>
-                        </Style>
-                    </DataGrid.Styles>
-
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Number}" x:DataType="vm:ScriptCommandResultRowViewModel"/>
-                        <DataGridTemplateColumn Header="{helpers:Localize Header_Command}" Width="150">
+                        <DataGridTextColumn Header="{helpers:Localize Header_No}" Binding="{Binding Number}" x:DataType="vm:ScriptCommandResultRowViewModel"/>
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Command}" Width="200">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
                                     <TextBlock Classes="TrimmedCell"
@@ -163,7 +153,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="{helpers:Localize Header_Response}" MinWidth="300" Width="2*">
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Response}" MinWidth="200" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
                                     <TextBlock Classes="TrimmedCell"
@@ -183,7 +173,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="{helpers:Localize Header_Message}" MinWidth="200" Width="*">
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Message}" MinWidth="100" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
                                     <TextBlock Classes="TrimmedCell"

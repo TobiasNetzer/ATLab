@@ -93,7 +93,7 @@ Nach der Ausführung zeigen eine Zusammenfassung und eine Tabelle, was passiert 
 
 | Spalte | Inhalt |
 |--------|--------|
-| **#** | Position des Befehls im Skript. |
+| **Nr.** | Position des Befehls im Skript. |
 | **Befehl** | Befehlstext mit ersetzten Skriptvariablen. |
 | **Antwort** | Die empfangene Antwort. Zeilenenden werden als `\r` / `\n` angezeigt, da sie oft entscheiden, ob eine Maske passt. Für binäre Antworten **Anzeigemodus** auf `HEX` stellen. |
 | **Prüfwert** | Ergebnis der Verarbeitung der Antwortprüfung, z. B. `1` für gefundenen Text oder die extrahierte Zahl. |

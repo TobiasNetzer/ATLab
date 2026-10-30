@@ -93,7 +93,7 @@ After the run, a summary line and a table show what happened:
 
 | Column | Content |
 |--------|---------|
-| **#** | Position of the command in the script. |
+| **No.** | Position of the command in the script. |
 | **Command** | Command text with the script variables applied. |
 | **Response** | The answer as received. Line endings are shown as `\r` / `\n`, since they often decide whether a mask matches. Switch **Display Mode** to `HEX` for binary answers. |
 | **Check Value** | Result of the response check's processing, e.g. `1` for a matched text or the extracted number. |

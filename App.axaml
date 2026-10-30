@@ -192,6 +192,15 @@
             <Setter Property="Padding" Value="8,6"/>
         </Style>
 
+        <!-- Cell text of a template column that ends in "…" when it does not fit, with the full text as tooltip -->
+        <Style Selector="DataGridCell TextBlock.TrimmedCell">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="DataGrid ToolTip">
+            <Setter Property="MaxWidth" Value="600"/>
+        </Style>
+
     </Application.Styles>
 
 </Application>
