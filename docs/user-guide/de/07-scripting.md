@@ -80,6 +80,30 @@ Typische Masken: `"OK"` mit Grenzen `1 … 1` (Antwort muss `OK` enthalten), `{d
 
 Der mit **Auswertung** markierte Befehl selbst hat keine Prüfung im Skript; seine Antwort wird mit dem Bereich **Antwortverarbeitung** des Schritts verarbeitet und mit den Grenzwerten des Schritts verglichen.
 
+## Skriptausführung
+
+Der Bereich **Skriptausführung** rechts neben dem Skripteditor führt das ausgewählte Skript ohne Testschritt auf einem Gerät aus – praktisch beim Schreiben eines Skripts oder beim Entwerfen seiner Antwortprüfungen.
+
+1. **Zielgerät** wählen (aus dem Gerätemanager).
+2. **Ausführen** (▶) klicken. **Stoppen** (■) bricht die Ausführung ab.
+
+Das Skript läuft **im aktuellen Bearbeitungsstand**, einschließlich ungespeicherter Änderungen, mit den **Standardwerten** seiner Variablen. Laufzeitvariablen in Befehlen verwenden ihre Anfangswerte aus dem Projekt.
+
+Nach der Ausführung zeigen eine Zusammenfassung und eine Tabelle, was passiert ist:
+
+| Spalte | Inhalt |
+|--------|--------|
+| **#** | Position des Befehls im Skript. |
+| **Befehl** | Befehlstext mit ersetzten Skriptvariablen. |
+| **Antwort** | Die empfangene Antwort. Zeilenenden werden als `\r` / `\n` angezeigt, da sie oft entscheiden, ob eine Maske passt. Für binäre Antworten **Anzeigemodus** auf `HEX` stellen. |
+| **Prüfwert** | Ergebnis der Verarbeitung der Antwortprüfung, z. B. `1` für gefundenen Text oder die extrahierte Zahl. |
+| **Status** | **Bestanden** / **Fehlgeschlagen** für geprüfte Befehle, **Auswertung** für den ausgewerteten Befehl, **Keine Antwort** für den Befehl, bei dem ein Timeout oder Fehler die Ausführung beendet hat. |
+| **Meldung** | Warum eine Prüfung fehlgeschlagen ist – derselbe Text, den ein Testschritt anzeigt. |
+
+Die Antwort des ausgewerteten Befehls wird unverarbeitet angezeigt; sie wird erst bei der Testausführung mit der Antwortverarbeitung des Schritts verarbeitet.
+
+Die Verbindung zum Gerät wird nach jeder Ausführung geschlossen, damit das Gerät für andere Werkzeuge frei bleibt. Während ein Test läuft, ist **Ausführen** gesperrt.
+
 ## Beispiel: Gleichspannungsmessung
 
 **Variablen**

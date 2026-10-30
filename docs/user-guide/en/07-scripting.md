@@ -80,6 +80,30 @@ Typical masks: `"OK"` with limits `1 … 1` (answer must contain `OK`), `{dec}` 
 
 The **Evaluate** command itself has no check in the script; its answer is processed with the step's **Response Processing** panel and compared with the step's limits.
 
+## Script runner
+
+The **Script Runner** panel to the right of the script editor runs the selected script on a device, without a test step — handy while writing a script or designing its response checks.
+
+1. Choose the **Target Device** (from the Device Manager).
+2. Click **Run** (▶). **Stop** (■) aborts the run.
+
+The script runs **as currently edited**, including unsaved changes, with the **default values** of its variables. Runtime variables in commands use their initial values from the project.
+
+After the run, a summary line and a table show what happened:
+
+| Column | Content |
+|--------|---------|
+| **#** | Position of the command in the script. |
+| **Command** | Command text with the script variables applied. |
+| **Response** | The answer as received. Line endings are shown as `\r` / `\n`, since they often decide whether a mask matches. Switch **Display Mode** to `HEX` for binary answers. |
+| **Check Value** | Result of the response check's processing, e.g. `1` for a matched text or the extracted number. |
+| **Status** | **Passed** / **Failed** for checked commands, **Evaluate** for the evaluated command, **No response** for the command at which a timeout or error ended the run. |
+| **Message** | Why a check failed — the same text a test step shows. |
+
+The evaluated command's answer is shown raw; it is processed by the step's Response Processing panel only during test execution.
+
+The connection to the device is closed after each run, so the instrument stays free for other tools. While a test is running, **Run** is disabled.
+
 ## Example: DC voltage measurement
 
 **Variables**

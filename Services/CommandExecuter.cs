@@ -23,6 +23,9 @@ public class CommandExecutor : ICommandExecutor
     private ICommunication? _deviceInterface;
     private DeviceConfiguration? _lastConfig;
 
+    // Test runs and the script runner of the Scripting tab share the connection, one command sequence at a time
+    private readonly SemaphoreSlim _gate = new(1, 1);
+
     private bool _disposed;
 
     public CommandExecutor(
@@ -47,7 +50,7 @@ public class CommandExecutor : ICommandExecutor
         string targetDeviceId,
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null,
-        List<string>? checkFailures = null)
+        List<ScriptCommandResult>? commandResults = null)
     {
         if (_disposed)
             throw new ObjectDisposedException(nameof(CommandExecutor));
@@ -56,6 +59,15 @@ public class CommandExecutor : ICommandExecutor
             return OperationResult<byte[]>.Failure("Device is required.");
 
         byte[] queryResult = [];
+
+        try
+        {
+            await _gate.WaitAsync(token);
+        }
+        catch (OperationCanceledException)
+        {
+            return OperationResult<byte[]>.Failure("Operation canceled by user");
+        }
 
         try
         {
@@ -111,6 +123,16 @@ public class CommandExecutor : ICommandExecutor
                 
                 var compiledCommand = CommandProcessor.CompileToBytes(commandText, runtimeVariables);
 
+                var commandResult = new ScriptCommandResult
+                {
+                    Number = commandNumber,
+                    Command = commandText,
+                    IsExpectResponse = command.IsExpectResponse,
+                    IsEvaluate = command.IsExpectResponse && command.IsEvaluate,
+                    IsResponseChecked = command.IsResponseChecked
+                };
+                commandResults?.Add(commandResult);
+
                 if (command.DelayMs > 0)
                     await Task.Delay(command.DelayMs, token);
 
@@ -118,12 +140,13 @@ public class CommandExecutor : ICommandExecutor
                 {
                     case true when command.IsEvaluate:
                         queryResult = await client.QueryAsync(compiledCommand, command.TimeoutMs);
+                        commandResult.Response = queryResult;
                         break;
                     case true:
-                        var response = await client.QueryAsync(compiledCommand, command.TimeoutMs);
+                        commandResult.Response = await client.QueryAsync(compiledCommand, command.TimeoutMs);
 
-                        if (command.IsResponseChecked && CheckResponse(command, response) is { } checkFailure)
-                            checkFailures?.Add($"Command {commandNumber} '{commandText}': {checkFailure}");
+                        if (command.IsResponseChecked)
+                            CheckResponse(command, commandResult);
                         break;
                     default:
                         await client.WriteAsync(compiledCommand);
@@ -152,6 +175,10 @@ public class CommandExecutor : ICommandExecutor
         catch (Exception ex)
         {
             return OperationResult<byte[]>.Failure(ex.Message);
+        }
+        finally
+        {
+            _gate.Release();
         }
     }
 
@@ -205,9 +232,9 @@ public class CommandExecutor : ICommandExecutor
     
     /// <summary>
     /// Processes the response with the command's check mask and compares it with the check limits like a step
-    /// value. Returns why the check failed, or null if it passed.
+    /// value. Stores the processed value and the outcome in the command result.
     /// </summary>
-    private static string? CheckResponse(ScriptCommand command, byte[] response)
+    private static void CheckResponse(ScriptCommand command, ScriptCommandResult result)
     {
         var mask = new ResponseMask
         {
@@ -216,43 +243,59 @@ public class CommandExecutor : ICommandExecutor
             Length = command.CheckLength
         };
 
+        result.IsCheckPassed = false;
+
         string processedValue;
         try
         {
-            processedValue = ResponseProcessor.Process(response, mask);
+            processedValue = ResponseProcessor.Process(result.Response ?? [], mask);
         }
         catch (ResponseProcessingException ex)
         {
-            return ex.Message;
+            result.CheckMessage = ex.Message;
+            return;
         }
 
+        result.CheckValue = processedValue;
         var received = mask.OriginalResponse.Trim();
 
         if (!NumberHelper.TryParseDecimal(processedValue, out var value))
-            return $"received '{received}', result '{processedValue}' is not a number.";
+        {
+            result.CheckMessage = $"received '{received}', result '{processedValue}' is not a number.";
+            return;
+        }
 
         var roundedValue = NumberHelper.RoundToSignificantDigits(value);
         if (roundedValue >= NumberHelper.RoundToSignificantDigits(command.CheckLowerLimit) &&
             roundedValue <= NumberHelper.RoundToSignificantDigits(command.CheckUpperLimit))
         {
-            return null;
+            result.IsCheckPassed = true;
+            return;
         }
 
-        return string.Format(CultureInfo.CurrentCulture,
+        result.CheckMessage = string.Format(CultureInfo.CurrentCulture,
             "received '{0}', result {1} not within {2} … {3}.",
             received, value, command.CheckLowerLimit, command.CheckUpperLimit);
     }
 
     public async Task ReleaseDeviceAsync()
     {
-        if (_deviceInterface != null)
+        await _gate.WaitAsync();
+        try
         {
-            await _deviceInterface.DisconnectAsync();
-            await _deviceInterface.DisposeAsync();
-            _deviceInterface = null;
-        }
+            if (_deviceInterface != null)
+            {
+                await _deviceInterface.DisconnectAsync();
+                await _deviceInterface.DisposeAsync();
+                _deviceInterface = null;
+            }
 
-        _lastConfig = null;
+            _lastConfig = null;
+        }
+        finally
+        {
+            _gate.Release();
+        }
     }
     
     public async ValueTask DisposeAsync()

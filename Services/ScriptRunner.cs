@@ -47,9 +47,9 @@ public class ScriptRunner : IScriptRunner
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null,
         ResponseMask? mask = null,
-        List<string>? checkFailures = null)
+        List<ScriptCommandResult>? commandResults = null)
     {
-        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables, checkFailures);
+        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables, commandResults);
         
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);
@@ -96,7 +96,7 @@ public class ScriptRunner : IScriptRunner
         IEnumerable<CustomVariable> scriptVariables,
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null,
-        List<string>? checkFailures = null)
+        List<ScriptCommandResult>? commandResults = null)
     {
         if (string.IsNullOrEmpty(scriptId) || string.IsNullOrEmpty(deviceName))
             return OperationResult<byte[]>.Failure("Script and Device are required.");
@@ -109,12 +109,37 @@ public class ScriptRunner : IScriptRunner
                 return OperationResult<byte[]>.Failure($"Script with ID {scriptId} not found.");
             }
 
+            return await ExecuteScriptAsync(script, deviceName, scriptVariables, token, runtimeVariables, commandResults);
+        }
+        catch (OperationCanceledException)
+        {
+            return OperationResult<byte[]>.Failure(string.Empty);
+        }
+        catch (Exception ex)
+        {
+            return OperationResult<byte[]>.Failure(ex.Message);
+        }
+    }
+
+    public async Task<OperationResult<byte[]>> ExecuteScriptAsync(
+        CustomScript script,
+        string deviceId,
+        IEnumerable<CustomVariable> scriptVariables,
+        CancellationToken token,
+        List<CustomVariable>? runtimeVariables = null,
+        List<ScriptCommandResult>? commandResults = null)
+    {
+        if (string.IsNullOrEmpty(deviceId))
+            return OperationResult<byte[]>.Failure("Device is required.");
+
+        try
+        {
             // Clone and apply variables to commands
             var preparedCommands = script.Commands
                 .Select(c => ApplyVariables(c, scriptVariables))
                 .ToList();
 
-            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceName, token, runtimeVariables, checkFailures);
+            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceId, token, runtimeVariables, commandResults);
         }
         catch (OperationCanceledException)
         {

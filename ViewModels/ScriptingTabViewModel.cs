@@ -10,7 +10,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.ViewModels;
 
-/// <summary>Scripting tab: lists, creates, edits and deletes the scripts of the script folder.</summary>
+/// <summary>
+/// Scripting tab: lists, creates, edits and deletes the scripts of the script folder, and runs the selected script
+/// for testing.
+/// </summary>
 public partial class ScriptingTabViewModel : ViewModelBase
 {
     private readonly IScriptService _scriptService;
@@ -20,6 +23,8 @@ public partial class ScriptingTabViewModel : ViewModelBase
 
     public ObservableCollection<ScriptViewModel> Scripts => _scriptService.Scripts;
 
+    public ScriptRunnerViewModel ScriptRunner { get; }
+
     [ObservableProperty]
     private ScriptViewModel? _selectedScript;
 
@@ -27,9 +32,11 @@ public partial class ScriptingTabViewModel : ViewModelBase
         IScriptService scriptService,
         IScriptRepository repository,
         IMessageBoxService messageBoxService,
+        ScriptRunnerViewModel testRun,
         ProjectModel projectModel)
     {
         _scriptService = scriptService;
+        ScriptRunner = testRun;
         _repository = repository;
         _messageBoxService = messageBoxService;
         ScriptFolderPath = projectModel.ScriptFolderPath;
@@ -50,6 +57,7 @@ public partial class ScriptingTabViewModel : ViewModelBase
     {
         DeleteScriptCommand.NotifyCanExecuteChanged();
         SaveScriptCommand.NotifyCanExecuteChanged();
+        ScriptRunner.Script = value;
     }
 
     private void Script_PropertyChanged(object? sender, PropertyChangedEventArgs e)

@@ -5,7 +5,17 @@
              x:Class="ATLab.Views.ScriptTab"
              x:DataType="vm:ScriptingTabViewModel">
     
-        <controls:ScriptEditor DataContext="{Binding }"
-                                Margin="10"/>
+    <Grid ColumnDefinitions="3*,2*"
+          ColumnSpacing="10"
+          Margin="10">
+
+        <controls:ScriptEditor Grid.Column="0"
+                               DataContext="{Binding }"
+                               MinWidth="800"/>
+
+        <controls:ScriptRunnerPanel Grid.Column="1"
+                                    DataContext="{Binding ScriptRunner}"
+                                    MinWidth="420"/>
+    </Grid>
     
 </UserControl>

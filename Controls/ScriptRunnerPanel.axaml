@@ -1,0 +1,202 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:models="clr-namespace:ATLab.Models"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.ScriptRunnerPanel"
+             xmlns:converters="clr-namespace:ATLab.Converters"
+             x:DataType="vm:ScriptRunnerViewModel">
+    
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="RunNeutralBrush" Color="{DynamicResource ForegroundColor}"/>
+        <SolidColorBrush x:Key="RunPassedBrush" Color="#FF00C853"/>
+        <SolidColorBrush x:Key="RunFailedBrush" Color="#FFFF1744"/>
+        <converters:ResultBrushConverter x:Key="RunResultBrushConverter"
+                                         ValidBrush="{StaticResource RunPassedBrush}"
+                                         InvalidBrush="{StaticResource RunFailedBrush}"
+                                         UnknownBrush="{StaticResource RunNeutralBrush}"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Border Grid.Row="0"
+                Background="{DynamicResource OutlineColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+
+            <TextBlock Text="{helpers:Localize Header_ScriptRunner}"
+                       Classes="h4"
+                       HorizontalAlignment="Center"/>
+        </Border>
+
+        <Border Grid.Row="1"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}">
+
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+                  ColumnDefinitions="*,Auto"
+                  Margin="10"
+                  RowSpacing="10"
+                  ColumnSpacing="10">
+
+                <StackPanel Grid.Row="0"
+                            Grid.Column="0"
+                            Spacing="2">
+
+                    <TextBlock Text="{helpers:Localize Label_TargetDevice}"/>
+
+                    <ComboBox ItemsSource="{Binding Devices}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              IsEnabled="{Binding !IsRunning}"
+                              HorizontalAlignment="Stretch">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:Device">
+                                <TextBlock>
+                                    <Run Text="{Binding Name}"/>
+                                    <Run Text=" ("/>
+                                    <Run Text="{Binding ResourceString}"/>
+                                    <Run Text=")"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            Spacing="2">
+
+                    <TextBlock Text="{helpers:Localize Label_DisplayMode}"/>
+
+                    <ComboBox ItemsSource="{Binding DisplayModes}"
+                              SelectedItem="{Binding DisplayMode}"
+                              Width="100"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            Spacing="5">
+
+                    <Button Background="{DynamicResource ButtonBackground}"
+                            Classes="Icon"
+                            ToolTip.Tip="{helpers:Localize ToolTip_RunScript}"
+                            Command="{Binding RunCommand}"
+                            Width="40"
+                            Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Play}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button Background="{DynamicResource ButtonBackground}"
+                            Classes="Icon"
+                            ToolTip.Tip="{helpers:Localize ToolTip_StopScript}"
+                            Command="{Binding StopCommand}"
+                            Width="40"
+                            Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Square}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Text="{helpers:Localize Text_ScriptRunnerHint}"
+                           Classes="Muted"
+                           TextWrapping="Wrap"/>
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Text="{helpers:Localize Text_ScriptRunnerBlocked}"
+                           Foreground="{DynamicResource DestructiveColor}"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding IsTestRunning}"/>
+
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Text="{Binding Summary}"
+                           Foreground="{Binding IsRunPassed, Converter={StaticResource RunResultBrushConverter}}"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding Summary, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                <DataGrid Grid.Row="5"
+                          Classes="HorizontalScroll"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          ItemsSource="{Binding Results}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="All"
+                          BorderThickness="2"
+                          BorderBrush="{DynamicResource OutlineColor}"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                    
+                    <DataGrid.Styles>
+                        <Style Selector="TextBlock.TrimmedCell">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="10 0"/>
+                        </Style>
+                        <Style Selector="ToolTip">
+                            <Setter Property="MaxWidth" Value="600"/>
+                        </Style>
+                    </DataGrid.Styles>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Number}" x:DataType="vm:ScriptCommandResultRowViewModel"/>
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Command}" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
+                                    <TextBlock Classes="TrimmedCell"
+                                               Text="{Binding Command}"
+                                               ToolTip.Tip="{Binding Command}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Response}" MinWidth="300" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
+                                    <TextBlock Classes="TrimmedCell"
+                                               Text="{Binding Response}"
+                                               ToolTip.Tip="{Binding ResponseToolTip}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{helpers:Localize Header_CheckValue}" Binding="{Binding Value}" x:DataType="vm:ScriptCommandResultRowViewModel"/>
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Status}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
+                                    <TextBlock Text="{Binding Status}"
+                                               Foreground="{Binding IsPassed, Converter={StaticResource RunResultBrushConverter}}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Margin="10 0"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{helpers:Localize Header_Message}" MinWidth="200" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="vm:ScriptCommandResultRowViewModel">
+                                    <TextBlock Classes="TrimmedCell"
+                                               Text="{Binding Message}"
+                                               ToolTip.Tip="{Binding Message}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

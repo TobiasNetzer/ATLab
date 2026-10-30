@@ -1364,4 +1364,58 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   <data name="Text_ResponseCheckNotAvailable" xml:space="preserve">
     <value>Nur für Befehle mit Antwort erwarten, die nicht zur Auswertung markiert sind. Die ausgewertete Antwort wird im Testschritt verarbeitet und geprüft.</value>
   </data>
+  <data name="Header_ScriptRunner" xml:space="preserve">
+    <value>Skriptausführung</value>
+  </data>
+  <data name="Header_Response" xml:space="preserve">
+    <value>Antwort</value>
+  </data>
+  <data name="Header_CheckValue" xml:space="preserve">
+    <value>Prüfwert</value>
+  </data>
+  <data name="Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Header_Message" xml:space="preserve">
+    <value>Meldung</value>
+  </data>
+  <data name="ToolTip_RunScript" xml:space="preserve">
+    <value>Skript auf dem ausgewählten Gerät ausführen</value>
+  </data>
+  <data name="ToolTip_StopScript" xml:space="preserve">
+    <value>Skriptausführung stoppen</value>
+  </data>
+  <data name="Text_ScriptRunnerHint" xml:space="preserve">
+    <value>Führt das Skript im aktuellen Bearbeitungsstand aus, einschließlich ungespeicherter Änderungen, mit den Standardwerten der Skriptvariablen und den Anfangswerten der Laufzeitvariablen.</value>
+  </data>
+  <data name="Text_ScriptRunnerBlocked" xml:space="preserve">
+    <value>Ein Test läuft. Das Skript kann wieder ausgeführt werden, wenn er beendet ist.</value>
+  </data>
+  <data name="Text_ScriptRunStopped" xml:space="preserve">
+    <value>Ausführung gestoppt.</value>
+  </data>
+  <data name="Text_ScriptRunTimeout" xml:space="preserve">
+    <value>Timeout: Befehl {0} hat nicht innerhalb seines Timeouts geantwortet.</value>
+  </data>
+  <data name="Text_ScriptRunError" xml:space="preserve">
+    <value>Ausführung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Text_ScriptRunNoChecks" xml:space="preserve">
+    <value>Ausführung abgeschlossen. Das Skript hat keine Antwortprüfungen.</value>
+  </data>
+  <data name="Text_ScriptRunChecksPassed" xml:space="preserve">
+    <value>Ausführung abgeschlossen: alle {0} Antwortprüfungen bestanden.</value>
+  </data>
+  <data name="Text_ScriptRunChecksFailed" xml:space="preserve">
+    <value>Ausführung abgeschlossen: {0} von {1} Antwortprüfungen fehlgeschlagen.</value>
+  </data>
+  <data name="Text_ScriptRunNoResponse" xml:space="preserve">
+    <value>Keine Antwort</value>
+  </data>
+  <data name="Text_CheckPassed" xml:space="preserve">
+    <value>Bestanden</value>
+  </data>
+  <data name="Text_CheckFailed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
 </root>

@@ -117,6 +117,16 @@ public partial class ScriptViewModel : ViewModelBase
         IsDirty = false;
     }
 
+    /// <summary>The script as currently edited, including unsaved changes, for the script runner.</summary>
+    public CustomScript CreateSnapshot() => new()
+    {
+        Id = _model.Id,
+        Name = _model.Name,
+        Description = _model.Description,
+        Commands = Commands.Select(c => new ScriptCommand(c.GetModel())).ToList(),
+        Variables = Variables.Select(v => v.Clone()).ToList()
+    };
+
     private void ApplyToModel()
     {
         _model.Commands = Commands.Select(c => c.GetModel()).ToList();

@@ -1364,4 +1364,58 @@ Devices that are found again keep their settings. All other devices are removed 
   <data name="Text_ResponseCheckNotAvailable" xml:space="preserve">
     <value>Only available for commands with Expect Response that are not marked Evaluate. The evaluated response is processed and checked in the test step.</value>
   </data>
+  <data name="Header_ScriptRunner" xml:space="preserve">
+    <value>Script Runner</value>
+  </data>
+  <data name="Header_Response" xml:space="preserve">
+    <value>Response</value>
+  </data>
+  <data name="Header_CheckValue" xml:space="preserve">
+    <value>Check Value</value>
+  </data>
+  <data name="Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Header_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="ToolTip_RunScript" xml:space="preserve">
+    <value>Run the script on the selected device</value>
+  </data>
+  <data name="ToolTip_StopScript" xml:space="preserve">
+    <value>Stop the script run</value>
+  </data>
+  <data name="Text_ScriptRunnerHint" xml:space="preserve">
+    <value>Runs the script as currently edited, including unsaved changes, with the default values of the script variables and the initial values of the runtime variables.</value>
+  </data>
+  <data name="Text_ScriptRunnerBlocked" xml:space="preserve">
+    <value>A test is running. The script can be run again when it has finished.</value>
+  </data>
+  <data name="Text_ScriptRunStopped" xml:space="preserve">
+    <value>Run stopped.</value>
+  </data>
+  <data name="Text_ScriptRunTimeout" xml:space="preserve">
+    <value>Timeout: command {0} did not answer within its timeout.</value>
+  </data>
+  <data name="Text_ScriptRunError" xml:space="preserve">
+    <value>Run failed: {0}</value>
+  </data>
+  <data name="Text_ScriptRunNoChecks" xml:space="preserve">
+    <value>Run completed. The script has no response checks.</value>
+  </data>
+  <data name="Text_ScriptRunChecksPassed" xml:space="preserve">
+    <value>Run completed: all {0} response checks passed.</value>
+  </data>
+  <data name="Text_ScriptRunChecksFailed" xml:space="preserve">
+    <value>Run completed: {0} of {1} response checks failed.</value>
+  </data>
+  <data name="Text_ScriptRunNoResponse" xml:space="preserve">
+    <value>No response</value>
+  </data>
+  <data name="Text_CheckPassed" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="Text_CheckFailed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
 </root>

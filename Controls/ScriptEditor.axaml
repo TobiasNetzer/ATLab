@@ -4,8 +4,7 @@
              x:Class="ATLab.Controls.ScriptEditor"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
-             x:DataType="vm:ScriptingTabViewModel"
-             Width="1200">
+             x:DataType="vm:ScriptingTabViewModel">
     
     <Grid RowDefinitions="auto, *">
         
@@ -219,6 +218,7 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
+                                  Classes="HorizontalScroll"
                                   ItemsSource="{Binding SelectedScript?.Variables}"
                                   SelectedIndex="{Binding SelectedScript?.SelectedVariableIndex}"
                                   AutoGenerateColumns="False"
@@ -227,6 +227,7 @@
                                   GridLinesVisibility="All"
                                   BorderThickness="2"
                                   BorderBrush="{DynamicResource OutlineColor}"
+                                  HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto"
                                   Height="130">
                             
@@ -238,7 +239,7 @@
                             </DataGrid.Styles>
                             
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="{helpers:Localize Header_VariableName}" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="{helpers:Localize Header_VariableName}" Binding="{Binding Name}" Width="*" MinWidth="150"/>
                                 <DataGridTextColumn Header="{helpers:Localize Header_DefaultValue}" Binding="{Binding Value}" Width="200"/>
                             </DataGrid.Columns>
                         
@@ -290,6 +291,7 @@
                         </StackPanel>
                         
                         <DataGrid Grid.Row="1"
+                                  Classes="HorizontalScroll"
                                   ItemsSource="{Binding SelectedScript?.Commands}"
                                   SelectedIndex="{Binding SelectedScript?.SelectedCommandIndex, Mode=TwoWay}"
                                   AutoGenerateColumns="False"
@@ -298,17 +300,42 @@
                                   GridLinesVisibility="All"
                                   BorderThickness="2"
                                   BorderBrush="{DynamicResource OutlineColor}"
+                                  HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto">
-                            
+
                             <DataGrid.Styles>
                                 <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
                                     <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
                                     <Setter Property="Opacity" Value="1" />
                                 </Style>
+                                
+                                <Style Selector="TextBlock.TrimmedCell">
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="10 0"/>
+                                </Style>
+                                <Style Selector="ToolTip">
+                                    <Setter Property="MaxWidth" Value="600"/>
+                                </Style>
                             </DataGrid.Styles>
-                            
+
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="{helpers:Localize Header_Command}" Binding="{Binding Command}" Width="*"/>
+                                <DataGridTemplateColumn Header="{helpers:Localize Header_Command}" Width="*" MinWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:ScriptCommandViewModel">
+                                            <TextBlock Classes="TrimmedCell"
+                                                       Text="{Binding Command}"
+                                                       ToolTip.Tip="{Binding CommandToolTip}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate x:DataType="vm:ScriptCommandViewModel">
+                                            <TextBox Text="{Binding Command}"
+                                                     VerticalAlignment="Stretch"
+                                                     helpers:FocusExtensions.FocusWhenVisible="True"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="{helpers:Localize Header_ExpectResponse}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -361,6 +388,7 @@
                                 IsVisible="{Binding SelectedScript.SelectedCommand, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}">
 
                             <StackPanel DataContext="{Binding SelectedScript.SelectedCommand}"
+                                        x:CompileBindings="False"
                                         x:DataType="vm:ScriptCommandViewModel"
                                         Spacing="10">
 
@@ -375,10 +403,21 @@
                                            Classes="Muted"
                                            TextWrapping="Wrap"
                                            IsVisible="{Binding !CanCheckResponse}"/>
+                                
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
 
-                                <Grid ColumnDefinitions="*,100,100,150,150"
-                                      ColumnSpacing="10"
+                                <Grid ColumnSpacing="10"
+                                      Margin="0 0 0 12"
                                       IsEnabled="{Binding IsResponseChecked}">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" MinWidth="250"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0" Spacing="2">
                                         <TextBlock Text="{helpers:Localize Label_Mask}"/>
@@ -405,6 +444,7 @@
                                         <TextBox Text="{Binding CheckUpperLimit, UpdateSourceTrigger=LostFocus}"/>
                                     </StackPanel>
                                 </Grid>
+                                </ScrollViewer>
                             </StackPanel>
                         </Border>
                     </Grid>

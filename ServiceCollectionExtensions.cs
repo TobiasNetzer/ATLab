@@ -103,6 +103,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<WorkspaceEditorViewModel>();
         services.AddSingleton<MessageBoxViewModel>();
         services.AddSingleton<AppSettingsDialogViewModel>();
+        services.AddSingleton<ScriptRunnerViewModel>();
 
         return services;
     }

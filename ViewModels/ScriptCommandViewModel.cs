@@ -12,7 +12,10 @@ public partial class ScriptCommandViewModel : ViewModelBase
     private readonly ScriptViewModel _parent;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CommandToolTip))]
     private string _command;
+    
+    public string? CommandToolTip => string.IsNullOrEmpty(Command) ? null : Command;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCheckResponse), nameof(IsResponseChecked))]

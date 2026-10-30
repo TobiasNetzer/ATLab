@@ -123,9 +123,13 @@ public class TestStepRunner : ITestStepRunner
                 
                 case TestEvaluationSource.SCRIPT:
                 {
-                    var checkFailures = new List<string>();
+                    var commandResults = new List<ScriptCommandResult>();
                     var scriptResult = await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDeviceId,
-                        step.TestStep.ScriptVariables, token, runtimeVariables, mask, checkFailures);
+                        step.TestStep.ScriptVariables, token, runtimeVariables, mask, commandResults);
+                    var checkFailures = commandResults
+                        .Where(r => r.IsCheckPassed == false)
+                        .Select(r => r.FailureText)
+                        .ToList();
                     step.ResultDetailLines = checkFailures;
                     step.IsResponseCheckFailed = checkFailures.Count > 0;
                     return scriptResult;
