@@ -100,6 +100,8 @@ Nach der Ausführung zeigen eine Zusammenfassung und eine Tabelle, was passiert 
 | **Status** | **Bestanden** / **Fehlgeschlagen** für geprüfte Befehle, **Auswertung** für den ausgewerteten Befehl, **Keine Antwort** für den Befehl, bei dem ein Timeout oder Fehler die Ausführung beendet hat. |
 | **Meldung** | Warum eine Prüfung fehlgeschlagen ist – derselbe Text, den ein Testschritt anzeigt. |
 
+Lange Befehle, Antworten und Meldungen enden mit „…“; beim Überfahren der Zelle mit der Maus wird der vollständige Text angezeigt.
+
 Die Antwort des ausgewerteten Befehls wird unverarbeitet angezeigt; sie wird erst bei der Testausführung mit der Antwortverarbeitung des Schritts verarbeitet.
 
 Die Verbindung zum Gerät wird nach jeder Ausführung geschlossen, damit das Gerät für andere Werkzeuge frei bleibt. Während ein Test läuft, ist **Ausführen** gesperrt.

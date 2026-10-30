@@ -1,24 +1,51 @@
 # 1. Introduction
 
-ATLab is an automated testing framework for electronic assemblies. A test engineer builds a **test sequence**: a list of steps, grouped into modules, each of which switches relays, talks to an instrument or the device under test, obtains a numeric result and compares it against limits. An operator then runs that sequence, enters a serial number, and gets a pass/fail verdict plus an optional PDF test report.
+ATLab is an application for automated testing of electronic assemblies, for example functional and end-of-line tests. ATLab works with standard test instruments such as multimeters and power supplies and controls them remotely. The **Test Interface Adapter** connects them to the device under test.
+
+A test engineer builds a **test sequence** from test steps that measure values and compare them with limits. An operator runs the sequence and gets a pass/fail result, optionally with a test report.
 
 ![ATLab main window](images/Testing_Tab_en.png)
 
 ## What ATLab can do
 
-- **Route signals** through the Test Interface Adapter's relay matrix and switch its stimulation and external stimulation relays per step.
-- **Remote-control instruments** (multimeters, power supplies, oscilloscopes …) over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
-- **Talk to the DUT** through the adapter's isolated I²C and UART interfaces.
-- **Use boundary scan** (JTAG) with a J-Link or FTDI probe to read and drive the pins of chips on the board, and to talk to I²C and SPI devices through them.
-- **Run external programs** and use their exit code or output as a result.
-- **Ask the operator** to confirm a visual check (Passed / Failed).
-- **Compute values** from runtime variables using expressions.
-- **Read files** from disk and extract a value from them.
-- **Organize** the sequence into modules (e.g. power supply, programming, LED test) that can be enabled individually.
-- **Branch**: repeat a step, jump to another step, or end the test depending on the result.
-- **Document and report**: store test notes, images and attachments in the project, and export results as CSV and PDF.
+### Build test sequences
 
-ATLab runs on Windows and Linux, offers light and dark themes, and is available in English and German.
+- **Organize** a sequence into modules (e.g. power supply, programming, LED test) that can be enabled individually or run on their own.
+- **Route signals** per step through the adapter's relay matrix and switch its stimulation and external stimulation relays.
+- **Check values** against limits with units and SI prefixes, e.g. `500mV` or `4.7kOhm`.
+- **Branch** depending on the result: repeat a step, jump to another step, end the test or show a message to the operator.
+- **Calculate** with runtime and system variables (serial number, user, date …) in commands, limits and expressions.
+
+### Measure and communicate
+
+- **Remote-control instruments** over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
+- **Reuse instrument scripts**: multi-command scripts with variables, shared across projects. Each command can **check its response** with its own mask and limits, e.g. that the instrument reports no error.
+- **Talk to the DUT** through the adapter's isolated I²C and UART interfaces.
+- **Use boundary scan** (JTAG) with a SEGGER J-Link or FTDI probe to read and drive the pins of chips on the board, and to talk to I²C and SPI devices through them.
+- **Extract values** from text or binary answers with response processing (skip/length, match rules, numeric extraction).
+- **Involve the operator**: confirm a visual check (Passed / Failed) or enter a reading, optionally with an image.
+- **Run external programs** and use their exit code or output, or **read a value from a file**.
+
+### Develop and debug
+
+- **Development mode** for editing, separate from the operator view; it can be protected by a password.
+- **Try things out** step by step: execute a single step, start from the selected step or run one module; **debug mode** pauses before every step.
+- **Test scripts** in the Script Runner, which shows every response and the result of each response check.
+- **Work without hardware**: the simulator replaces the Test Interface Adapter, e.g. on an engineering PC.
+
+### Run tests in production
+
+- **Serial number entry** with validation rules; barcode scanners that act as a keyboard are supported.
+- **Continuous runs**, a large **measurement panel** that is readable from a distance, and buttons to jump to failed steps.
+- An optional USB **control module** with illuminated start/stop buttons.
+
+### Document and report
+
+- **Project documentation** with notes, images, attachments and information about the device under test.
+- **CSV data files** and **PDF test reports**, including the instruments used.
+- An **event log** with every message of the session.
+
+ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well suited for version control. The user interface is available in English and German with a light and a dark theme. Language and theme are chosen in the settings dialog. This guide opens with `F1`.
 
 ## Key concepts
 
@@ -34,7 +61,7 @@ ATLab runs on Windows and Linux, offers light and dark themes, and is available 
 | **Runtime variable** | A project-wide variable that can be read in commands, limits and expressions, and written by a step via *Assign Result to Variable*. |
 | **Relay matrix** | The adapter's measurement matrix. Each step selects one channel for **Matrix H** and one for **Matrix L** (or *Off*). |
 | **Stimulation / Ext. stimulation channels** | Individually switchable relays on the adapter, set per step. |
-| **Development mode** | The editing mode of the Test Execution tab. When it is off, the tab shows only the sequence and results — the operator view. |
+| **Development mode** | The editing mode of the Test Execution tab. When it is off, the tab shows only the sequence and results. This is the operator view. |
 | **Simulator** | A virtual Test Interface Adapter used when no hardware is connected. Relay and interface commands succeed without doing anything. |
 | **Boundary scan chain** | The boundary-scan capable chips on the board, connected in series to a JTAG probe. Set up on the [Boundary Scan tab](12-boundary-scan.md). |
 

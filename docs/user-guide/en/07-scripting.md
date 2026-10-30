@@ -100,6 +100,8 @@ After the run, a summary line and a table show what happened:
 | **Status** | **Passed** / **Failed** for checked commands, **Evaluate** for the evaluated command, **No response** for the command at which a timeout or error ended the run. |
 | **Message** | Why a check failed — the same text a test step shows. |
 
+Long commands, responses and messages end with "…"; hover over the cell to see the full text.
+
 The evaluated command's answer is shown raw; it is processed by the step's Response Processing panel only during test execution.
 
 The connection to the device is closed after each run, so the instrument stays free for other tools. While a test is running, **Run** is disabled.

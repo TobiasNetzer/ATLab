@@ -21,34 +21,62 @@ The guide is also shipped as a PDF with every release package (in the `docs` fol
 
 ## Features
 
--   **Custom Test Sequence Creation**: Test steps can be configured to perform various actions:
-    -   **Test Instrument Remote Control**: Send custom commands or predefined scripts to remotely control external instruments (multimeter, oscilloscope, etc.).
-    -   **Response Validation**: Use custom response processing to verify incoming data.
-    -   **External Programs**: Run local programs or scripts and evaluate their exit code or output.
-    -   **Evaluate Runtime Variables**:
-        -   **Dynamic Test Configurations**: Define and use custom variables within test scripts for dynamic test configurations.
-        -   **Expression Evaluation**: Support for evaluating custom expressions to generate dynamic or calculated values.
-    -   **User Confirmation**: Let the operator judge a step as passed or failed.
-    -   **User Input**: Let the operator enter a measured value that is checked against the limits.
-    -   **File Content**: Read and validate file contents from the local file system.
-    -   **Relay Control**: Configure the Relay Matrix and Relay Groups, using the Test Interface Adapter, to route and switch signals to external devices.
-    -   **Interface Communication**: Use the Test Interface Adapters onboard interfaces (I2C/UART) to communicate with the DUT.
-    -   **Boundary Scan**: Read and drive pins of JTAG chips on the board through a SEGGER J-Link or FTDI probe, and talk to I2C/SPI devices through boundary scan pins.
-    -   **Define Pass/Fail Criteria**:
-        -   **Test Step Evaluation**: Define pass/fail criteria based on step results and conditions.
-        -   **Conditional Test Execution**: Repeat a step, jump to another step, or end the test depending on the result.
--   **Test Instrument Interfacing**: Support for **Serial Port (VCOM/RS232)**, **TCP/IP (raw socket)** and **VISA (Virtual Instrument Software Architecture)** interfaces.
--   **Device Management**: Configure and manage multiple devices (Test Instruments or DUTs) with custom settings.
--   **Test Modules**: Organize test sequences into modules (e.g. power supply, programming, LED test) that can be enabled individually or run on their own.
--   **Scripting Engine**: Create test sequences with predefined multicommand scripts.
--   **Debugging & Simulation**: Step through sequences in development mode, or work without hardware using the built-in simulator.
--   **Test Result Exporting**: Export test results to CSV files for analysis and logging.
--   **Test Report Generation**: Automatically generate PDF test reports with detailed test results for documentation and sharing.
--   **Test Documentation**: Ability to add documentation, images, and other assets to the project.
--   **JSON File Format**: All project and script files use a standard JSON file format, perfect for tracking changes through version control.
--   **Cross-Platform Support**: Runs on Windows & Linux.
--   **Themes**: Light and Dark theme available.
--   **Languages**: Currently supports English and German.
+**Test sequences** · [Building Test Sequences](docs/user-guide/en/08-building-test-sequences.md)
+
+-   Organize a sequence into **modules** (e.g. power supply, programming, LED test) that can be enabled individually or run on their own.
+-   Each step routes the relay matrix and stimulation channels, waits for an optional delay and acquires a value that is checked against **limits with units and SI prefixes**.
+-   **Pass/Fail actions**: continue, repeat the step, jump to another step, end the test or show a message to the operator.
+-   **Variables and expressions**: runtime and system variables (serial number, user, date…), encoding blocks for binary data and arithmetic expressions in commands and limits.
+-   **Response processing**: cut values out of text or binary answers with skip/length, match rules and numeric extraction.
+
+Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-evaluation-sources.md)):
+
+| Source | Value |
+|--------|-------|
+| **Script** / **Device Command** | Answer of an external instrument or DUT |
+| **Interface Command** | Data read from the DUT through the adapter's I²C or UART interface |
+| **External Program** | Exit code or output of a local program |
+| **User Confirmation** / **User Input** | The operator's pass/fail judgement or an entered value |
+| **Expression** | A calculation from runtime variables |
+| **File** | A number read from a file |
+| **Boundary Scan** / **Boundary Scan Bus** | Pin levels, or I²C/SPI data accessed through boundary scan pins |
+
+**Instruments and scripting** · [Configuration](docs/user-guide/en/06-configuration.md) · [Scripting](docs/user-guide/en/07-scripting.md)
+
+-   Remote-control instruments and DUTs over **Serial Port (VCOM/RS232)**, **TCP/IP (raw socket)** and **VISA** (NI-VISA, Windows only).
+-   **Device Manager** for all instruments of a project; their identification can be listed in the test report.
+-   **Scripts**: reusable multi-command scripts with variables (e.g. `{Range}`), stored in a script folder shared across projects.
+-   **Response checks**: every command of a script can check its answer with its own mask and limits, e.g. that an instrument reports no error.
+-   **Script Runner**: run a script directly on an instrument and see every response and check result while writing it.
+
+**Test Interface Adapter** · [Test Hardware](docs/user-guide/en/04-test-hardware.md)
+
+-   Relay matrix to route signals to instruments, stimulation and external stimulation channels, and isolated I²C/UART interfaces to the DUT.
+-   Built-in relay matrix self-test and an external probe to find the matrix channel of a net.
+
+**Boundary scan** · [Boundary Scan Tab](docs/user-guide/en/12-boundary-scan.md)
+
+-   Read and drive pins of JTAG chips through a **SEGGER J-Link** or **FTDI MPSSE** probe, based on the chips' BSDL files.
+-   Detect the scan chain, view pins on a package drawing, and talk to I²C/SPI devices or pin groups through boundary scan pins.
+
+**Running tests** · [Running Tests](docs/user-guide/en/14-running-tests.md)
+
+-   Run the full sequence, continuously, from a selected step, a single module or a single step; **debug mode** steps through a run.
+-   **Development mode** for editing and an operator view for production, optionally protected by a password.
+-   **Serial number entry** with validation rules (barcode scanners supported), operator dialogs with images, and an optional USB **control module** with start/stop buttons.
+-   **Simulator**: build and try sequences without the test hardware.
+
+**Results and documentation** · [Test Results & Reports](docs/user-guide/en/15-results-and-reports.md) · [Documentation Tab](docs/user-guide/en/13-documentation-tab.md)
+
+-   Automatic **CSV** data files and **PDF** test reports, including the used test equipment.
+-   Project documentation with notes, images, attachments and information about the device under test.
+
+**Application**
+
+-   Runs on **Windows and Linux**.
+-   Projects and scripts are plain **JSON** files, well suited for version control.
+-   **English and German**, **light and dark theme**, set in the settings dialog.
+-   The user guide is built in: press `F1` to open it.
 
 ![image](docs/Themes.png)
 
@@ -97,7 +125,7 @@ Add and configure external test instruments (Serial, TCP/IP, VISA), project sett
 ![image](docs/user-guide/en/images/Configuration_Tab_en.png)
 
 ### Scripting
-Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script folder shared across projects.
+Create reusable multi-command instrument scripts with variables (e.g. `{Range}`), stored in a script folder shared across projects. Commands can check their responses with their own mask and limits, and the Script Runner next to the editor runs a script on an instrument to test it.
 → [Scripting Tab](docs/user-guide/en/07-scripting.md)
 
 ![image](docs/user-guide/en/images/Scripting_Tab_en.png)

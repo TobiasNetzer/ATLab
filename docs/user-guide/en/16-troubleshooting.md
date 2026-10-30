@@ -59,6 +59,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed, e.g. when starting from the selected step). Choose a new target or enable the module. |
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
 | External program fails with *The system cannot find the file specified* | The command is not run through a shell. Built-in commands (`dir`, `echo`, …), pipes and batch files need `cmd /c` (Windows) or `bash -c "…"` (Linux) in front. |
+| Script step fails although its measured value is within the limits | A [response check](07-scripting.md#response-checks) of the script failed. Hover the result to see which command failed and what it received; the same text is in the event log. Try the script in the [Script Runner](07-scripting.md#script-runner) to see every response. |
 
 ## Boundary scan
 
@@ -98,4 +99,6 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 ## Resetting personal settings
 
-Window position, theme, language, last port and last project are stored in `settings.json` (see [File locations](17-reference.md#file-locations)). Close ATLab and delete the file to return to defaults. Projects and scripts are not affected.
+Window position, theme, language, the *Simulation only* setting, the development mode password, last port and last project are stored in `settings.json` (see [File locations](17-reference.md#file-locations)). Close ATLab and delete the file to return to defaults; this also removes the development mode password. Projects and scripts are not affected.
+
+If only the development mode password is forgotten, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` instead (see [settings.json](17-reference.md#settingsjson)).

@@ -59,6 +59,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | *Step … tries to jump to a step that does not exist or belongs to a disabled module* | Das *Springe zu*-Ziel wurde gelöscht oder sein Modul ist deaktiviert (bzw. nicht Teil des Laufs, wenn nur ein Modul ausgeführt wird, z. B. beim Start ab dem ausgewählten Schritt). Ein neues Ziel wählen oder das Modul aktivieren. |
 | Eine Laufzeitvariable hat einen unerwarteten Startwert | In einem Lauf zugewiesene Werte bleiben für den nächsten Lauf erhalten. Variable bei Bedarf in einem frühen Schritt zurücksetzen. |
 | Externes Programm schlägt mit *Das System kann die angegebene Datei nicht finden* fehl | Der Befehl wird nicht über eine Shell ausgeführt. Eingebaute Befehle (`dir`, `echo`, …), Pipes und Batch-Dateien benötigen `cmd /c` (Windows) bzw. `bash -c "…"` (Linux) davor. |
+| Skriptschritt schlägt fehl, obwohl der Messwert innerhalb der Grenzwerte liegt | Eine [Antwortprüfung](07-scripting.md#antwortprüfungen) des Skripts ist fehlgeschlagen. Das Ergebnis mit der Maus überfahren, um zu sehen, welcher Befehl fehlgeschlagen ist und was er empfangen hat; derselbe Text steht im Ereignisprotokoll. Das Skript in der [Skriptausführung](07-scripting.md#skriptausführung) testen, um jede Antwort zu sehen. |
 
 ## Boundary Scan
 
@@ -98,4 +99,6 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 ## Persönliche Einstellungen zurücksetzen
 
-Fensterposition, Design, Sprache, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](17-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren. Projekte und Skripte sind davon nicht betroffen.
+Fensterposition, Design, Sprache, die Einstellung *Nur Simulation*, das Passwort für den Entwicklungsmodus, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](17-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren; dabei wird auch das Passwort für den Entwicklungsmodus entfernt. Projekte und Skripte sind davon nicht betroffen.
+
+Ist nur das Passwort für den Entwicklungsmodus vergessen, stattdessen `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen (siehe [settings.json](17-reference.md#settingsjson)).

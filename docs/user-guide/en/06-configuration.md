@@ -35,7 +35,7 @@ The Device Manager lists the external devices that steps can talk to: instrument
 
 - **+** (**Add new device**) creates a device named `New Device` with interface *Serial Port*.
 - **−** (**Remove device**) deletes the selected device.
-- Select a device in the table on the right to edit it on the left.
+- Select a device in the table on the right to edit it on the left. A long resource string ends with "…" in the table; hover over it to see it in full.
 
 Steps refer to devices by an internal ID, so renaming a device does not break the steps that use it. Removing a device does: those steps then fail with *"Target Device ID … not found."*
 

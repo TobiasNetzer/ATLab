@@ -35,7 +35,7 @@ Der Geräte-Manager listet die externen Geräte, mit denen Schritte kommuniziere
 
 - **+** (**Neues Gerät hinzufügen**) legt ein Gerät `New Device` mit Schnittstelle *Serial Port* an.
 - **−** (**Gerät entfernen**) löscht das ausgewählte Gerät.
-- Wählen Sie rechts in der Tabelle ein Gerät aus, um es links zu bearbeiten.
+- Wählen Sie rechts in der Tabelle ein Gerät aus, um es links zu bearbeiten. Eine lange Ressourcenangabe endet in der Tabelle mit „…“; beim Überfahren mit der Maus wird sie vollständig angezeigt.
 
 Schritte verweisen über eine interne ID auf Geräte; Umbenennen eines Geräts stört daher keine Schritte. Löschen dagegen schon: Solche Schritte schlagen dann mit *„Target Device ID … not found.“* fehl.
 

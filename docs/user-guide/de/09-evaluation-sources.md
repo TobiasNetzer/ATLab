@@ -22,7 +22,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 |---------|-----------|-----------|
 | *(leer)* mit ✔ | Quelle **Keine** | Bestanden |
 | `Timeout` | Messgerät/Schnittstelle hat nicht innerhalb des Timeouts geantwortet. Die Fehlgeschlagen-Aktion greift, der Test läuft weiter. | Fehlgeschlagen |
-| `NACK` | Ein I²C-Baustein hat nicht quittiert (Quelle Schnittstelle oder Boundary Scan Bus). Die Fehlgeschlagen-Aktion greift, der Test läuft weiter. | Fehlgeschlagen |
+| `NACK` | Ein I²C-Baustein hat nicht quittiert (Quelle Schnittstelle oder Boundary-Scan-Bus). Die Fehlgeschlagen-Aktion greift, der Test läuft weiter. | Fehlgeschlagen |
 | `Overflow` | Wert ≥ 9,9 × 10³⁷ (der SCPI-Überlaufwert, z. B. Multimeter außerhalb des Messbereichs) | Fehlgeschlagen |
 | *(leer)* mit ✘ und Fehler im Ereignisprotokoll | Der Schritt konnte nicht ausgeführt werden (Gerät nicht gefunden, Verbindung fehlgeschlagen, Parse-Fehler …). **Der Test stoppt** mit dem Status *Testausführung fehlgeschlagen*. | Fehlgeschlagen |
 
