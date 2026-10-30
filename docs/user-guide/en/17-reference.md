@@ -137,10 +137,12 @@ Personal, per-user settings — not part of any project:
 | `Language` | `en` or `de` |
 | `IsForceSimulation` | `true` = always start in simulator mode without trying to connect to hardware |
 | `IsDevelopmentMode` | Development mode on/off |
+| `IsDevelopmentModePasswordEnabled` | Development mode requires a password |
+| `DevelopmentModePasswordHash`, `DevelopmentModePasswordSalt` | Salted PBKDF2 hash of the development mode password |
 | `IsShowMeasurementPanel` | Measurement panel visible |
 | `Is…Expanded` | Which editor panels are expanded |
 
-`IsForceSimulation` has no switch in the user interface. To use it, close ATLab, set it to `true` in `settings.json` and restart — handy for an engineering PC that never has hardware attached.
+Language, theme, `IsForceSimulation` and the development mode password are set in the [settings dialog](03-getting-started.md#settings). If the password is forgotten, close ATLab, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` and restart.
 
 ## Supported interfaces at a glance
 

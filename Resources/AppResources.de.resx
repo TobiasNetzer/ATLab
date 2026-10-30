@@ -253,12 +253,6 @@
   <data name="ToolTip_FindMatrixChannel" xml:space="preserve">
     <value>Matrix-Kanal über externe Prüfspitze ermitteln</value>
   </data>
-  <data name="ToolTip_ToggleTheme" xml:space="preserve">
-    <value>Design umschalten</value>
-  </data>
-  <data name="ToolTip_ToggleLanguage" xml:space="preserve">
-    <value>Sprache umschalten</value>
-  </data>
   <data name="ToolTip_OpenUserGuide" xml:space="preserve">
     <value>Benutzerhandbuch öffnen (F1)</value>
   </data>
@@ -1291,5 +1285,71 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
     <value>Die eingerichtete Kette durch die {0} erkannten Bausteine ersetzen?
 
 Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine werden mit BSDL-Datei, Gehäuse und Bezeichnungen entfernt.</value>
+  </data>
+  <data name="ToolTip_OpenAppSettings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Header_AppSettings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Header_Appearance" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Label_Theme" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Header_TestHardware" xml:space="preserve">
+    <value>Test Hardware</value>
+  </data>
+  <data name="Label_ForceSimulation" xml:space="preserve">
+    <value>Nur Simulation (ohne Test Hardware starten)</value>
+  </data>
+  <data name="Text_ForceSimulationRestart" xml:space="preserve">
+    <value>Wird beim nächsten Start von ATLab wirksam.</value>
+  </data>
+  <data name="Header_DevelopmentMode" xml:space="preserve">
+    <value>Entwicklungsmodus</value>
+  </data>
+  <data name="Label_RequireDevelopmentModePassword" xml:space="preserve">
+    <value>Passwort zum Aktivieren des Entwicklungsmodus verlangen</value>
+  </data>
+  <data name="Text_KeepPassword" xml:space="preserve">
+    <value>Felder leer lassen, um das aktuelle Passwort zu behalten.</value>
+  </data>
+  <data name="Label_NewPassword" xml:space="preserve">
+    <value>Neues Passwort</value>
+  </data>
+  <data name="Label_ConfirmPassword" xml:space="preserve">
+    <value>Passwort bestätigen</value>
+  </data>
+  <data name="Label_CurrentPassword" xml:space="preserve">
+    <value>Aktuelles Passwort</value>
+  </data>
+  <data name="Text_EnterCurrentPassword" xml:space="preserve">
+    <value>Aktuelles Passwort eingeben, um die Simulations- oder Passworteinstellungen zu ändern.</value>
+  </data>
+  <data name="Text_EnterPassword" xml:space="preserve">
+    <value>Passwort eingeben.</value>
+  </data>
+  <data name="Text_PasswordsDoNotMatch" xml:space="preserve">
+    <value>Die Passwörter stimmen nicht überein.</value>
+  </data>
+  <data name="Title_DevelopmentModePassword" xml:space="preserve">
+    <value>Entwicklungsmodus</value>
+  </data>
+  <data name="Text_DevelopmentModePassword" xml:space="preserve">
+    <value>Passwort eingeben, um den Entwicklungsmodus zu aktivieren.</value>
+  </data>
+  <data name="Text_WrongPassword" xml:space="preserve">
+    <value>Falsches Passwort.</value>
   </data>
 </root>

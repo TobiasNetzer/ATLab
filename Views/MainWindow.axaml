@@ -201,21 +201,10 @@
                             Background="{DynamicResource ButtonBackground}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            ToolTip.Tip="{helpers:Localize ToolTip_ToggleTheme}"
-                            Command="{Binding ToggleThemeCommand}">
+                            ToolTip.Tip="{helpers:Localize ToolTip_OpenAppSettings}"
+                            Command="{Binding OpenAppSettingsCommand}">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent SunMoon}"/>
-                        </shadui:ButtonAssist.Icon>
-                    </Button>
-                    
-                    <Button Classes="Icon"
-                            Background="{DynamicResource ButtonBackground}"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            ToolTip.Tip="{helpers:Localize ToolTip_ToggleLanguage}"
-                            Command="{Binding ToggleLanguageCommand}">
-                        <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent Languages}"/>
+                            <ContentControl Content="{LucideIconContent Settings}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
 

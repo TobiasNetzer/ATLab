@@ -49,13 +49,25 @@ Die Titelleiste zeigt den Projektnamen, gefolgt von `*` bei ungespeicherten Änd
 | Info-Schaltfläche (links) | Öffnet das **Ereignisprotokoll**: alle Info-, Warn- und Fehlermeldungen dieser Sitzung, neueste zuerst. |
 | **Keine Test-Hardware verbunden** | Wird im Simulatormodus angezeigt. |
 | Prüfspitzen-Schaltfläche (rechts) | **Matrix-Kanal über externe Prüfspitze ermitteln** (`F12`). Berühren Sie ein Netz mit der externen Prüfspitze, und ATLab zeigt `Matrix Channel: n`. Siehe [Test-Hardware](04-test-hardware.md#matrix-kanal-mit-der-prüfspitze-ermitteln). |
-| Sonne/Mond | **Design umschalten** zwischen hell und dunkel. |
-| Sprachen | **Sprache umschalten** zwischen Deutsch und Englisch. |
+| Zahnrad | Öffnet den Dialog **Einstellungen** (siehe [Einstellungen](#einstellungen)). Während ein Test läuft, nicht verfügbar. |
 | Buch (ganz rechts) | **Benutzerhandbuch öffnen** (`F1`). Öffnet dieses Handbuch als PDF in der aktuellen Oberflächensprache. Fehlt das PDF (z. B. in einer selbst gebauten Entwicklungsversion), wird stattdessen das englische PDF oder das Online-Handbuch auf GitHub geöffnet. |
 
-Design und Sprache werden zwischen Sitzungen gespeichert. Meldungen erscheinen zusätzlich kurz als Benachrichtigung unten links; welche, legt die Projekteinstellung **Protokolliergrad** fest (siehe [Konfiguration](06-configuration.md#allgemeine-einstellungen)).
+Meldungen erscheinen zusätzlich kurz als Benachrichtigung unten links; welche, legt die Projekteinstellung **Protokolliergrad** fest (siehe [Konfiguration](06-configuration.md#allgemeine-einstellungen)).
 
 ![Helles und dunkles Design](../../Themes.png)
+
+### Einstellungen
+
+Die Zahnrad-Schaltfläche in der Statusleiste öffnet die persönlichen Einstellungen dieses Rechners (sie liegen in `settings.json`, nicht im Projekt). Änderungen werden mit **Speichern** übernommen; **Abbrechen** verwirft sie.
+
+| Einstellung | Funktion |
+|-------------|----------|
+| **Sprache** | Deutsch oder Englisch. |
+| **Design** | Dunkel oder hell. |
+| **Nur Simulation** | Immer im Simulatormodus starten, ohne Verbindungsversuch zur Testhardware – praktisch für einen Entwicklungsrechner, an dem nie Hardware hängt. Wird beim nächsten Start wirksam. |
+| **Passwort zum Aktivieren des Entwicklungsmodus verlangen** | Schützt den Entwicklungsmodus mit einem Passwort, damit Bediener die Sequenz nicht bearbeiten können. Passwort in **Neues Passwort** und **Passwort bestätigen** eingeben. Zum Ändern ein neues eingeben; beide Felder leer lassen, um das aktuelle Passwort zu behalten. |
+
+Solange ein Passwort gesetzt ist, verlangt das Ausschalten oder Ändern des Passworts sowie das Ändern von **Nur Simulation** das aktuelle Passwort: Es erscheint ein Feld **Aktuelles Passwort**, das beim **Speichern** geprüft wird. Ausschalten des Passworts löscht es. Das Passwort wird nur als gesalzener Hash gespeichert.
 
 ### Bedieneransicht und Entwicklungsmodus
 
@@ -64,7 +76,7 @@ Die Registerkarte Testausführung hat zwei Gesichter:
 - **Bedieneransicht** (Standard): Werkzeugleiste, Modulliste, Schrittliste, Ergebnisleiste. Die Schrittkonfiguration ist ausgeblendet.
 - **Entwicklungsmodus**: umschaltbar über die Baustellen-Schaltfläche am rechten Ende der Werkzeugleiste (**Entwicklungsmodus aktivieren**). Rechts erscheinen die Konfigurationsbereiche, die Modulliste erhält Schaltflächen zum Bearbeiten der Module, außerdem stehen die Debug-Schaltflächen zur Verfügung.
 
-Die Einstellung wird gespeichert, sodass ein Prüfplatz in der Bedieneransicht verbleiben kann.
+Die Einstellung wird gespeichert, sodass ein Prüfplatz in der Bedieneransicht verbleiben kann. Ist ein Passwort für den Entwicklungsmodus gesetzt (siehe [Einstellungen](#einstellungen)), fragt die Schaltfläche danach, und ATLab startet immer in der Bedieneransicht.
 
 ## Ihr erster Test in fünf Minuten
 

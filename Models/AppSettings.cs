@@ -16,6 +16,9 @@ public class AppSettings
     public string Language { get; set; } = "en";
     public bool IsForceSimulation { get; set; }
     public bool IsDevelopmentMode { get; set; }
+    public bool IsDevelopmentModePasswordEnabled { get; set; }
+    public string DevelopmentModePasswordHash { get; set; } = "";
+    public string DevelopmentModePasswordSalt { get; set; } = "";
     public bool IsShowMeasurementPanel { get; set; }
     public bool IsStepConfiguratorExpanded { get; set; }
     public bool IsMeasSelectorExpanded { get; set; }

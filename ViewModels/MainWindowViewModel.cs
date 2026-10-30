@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
@@ -9,8 +8,6 @@ using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
-using Avalonia;
-using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShadUI;
 
@@ -27,6 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ILocalizationService _localizationService;
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
+    private readonly AppSettingsDialogViewModel _appSettingsDialog;
 
     private const string OnlineUserGuideUrl = "https://github.com/TobiasNetzer/ATLab/blob/main/docs/user-guide";
 
@@ -84,6 +82,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ILocalizationService localizationService,
         ProjectModel projectModel,
         ApplicationState applicationState,
+        AppSettingsDialogViewModel appSettingsDialog,
         DialogManager dialogManager,
         ToastManager toastManager)
     {
@@ -94,6 +93,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _localizationService = localizationService;
         _projectModel = projectModel;
         _applicationState = applicationState;
+        _appSettingsDialog = appSettingsDialog;
         DialogManager = dialogManager;
         ToastManager = toastManager;
 
@@ -127,7 +127,10 @@ public partial class MainWindowViewModel : ViewModelBase
         TestingTab.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName is nameof(TestingTabViewModel.TestStatus))
+            {
                 FindMatrixChannelCommand.NotifyCanExecuteChanged();
+                OpenAppSettingsCommand.NotifyCanExecuteChanged();
+            }
         };
     }
     
@@ -154,17 +157,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
-    private void ToggleTheme()
+    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    private void OpenAppSettings()
     {
-        Application.Current!.RequestedThemeVariant =
-            Application.Current!.RequestedThemeVariant == ThemeVariant.Light
-                ? ThemeVariant.Dark
-                : ThemeVariant.Light;
+        _appSettingsDialog.Load();
 
-        _settingsService.Settings.IsDarkMode = Application.Current!.RequestedThemeVariant == ThemeVariant.Dark;
+        DialogManager
+            .CreateDialog(_appSettingsDialog)
+            .Dismissible()
+            .Show();
     }
-    
+
     [RelayCommand]
     private void OpenUserGuide()
     {
@@ -204,19 +207,6 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
-    private void ToggleLanguage()
-    {
-        var currentLanguage = _localizationService.CurrentCulture.TwoLetterISOLanguageName;
-        var nextCulture = currentLanguage.Equals("de", StringComparison.OrdinalIgnoreCase)
-            ? new CultureInfo("en")
-            : new CultureInfo("de");
-
-        _localizationService.ChangeCulture(nextCulture);
-        _settingsService.Settings.Language = nextCulture.TwoLetterISOLanguageName;
-        _settingsService.Save();
-    }
-    
     partial void OnSelectedTabChanged(ViewModelBase value)
     {
         OnPropertyChanged(nameof(IsTestingTabSelected));

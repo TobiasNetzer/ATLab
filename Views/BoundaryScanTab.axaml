@@ -627,7 +627,8 @@
                         </Panel>
 
                         <!-- Bus setup -->
-                        <Grid DataContext="{Binding BusEditor}"
+                        <Grid x:CompileBindings="False"
+                              DataContext="{Binding BusEditor}"
                               x:DataType="vm:BoundaryScanBusEditorViewModel"
                               IsVisible="{Binding $parent[UserControl].((vm:BoundaryScanTabViewModel)DataContext).IsBusView, FallbackValue=False}"
                               ColumnDefinitions="260,*"

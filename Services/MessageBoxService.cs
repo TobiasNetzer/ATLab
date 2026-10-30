@@ -117,6 +117,39 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         return result ? _messageBoxViewModel.InputText : null;
     }
 
+    public async Task<string?> ShowPasswordInputAsync(string title, string message)
+    {
+        _messageBoxViewModel.Initialize(
+            title,
+            message,
+            LocalizationService.Instance["ButtonLabel_Continue"],
+            LocalizationService.Instance["ButtonLabel_Cancel"],
+            DialogFunction.PASSWORD_INPUT);
+
+        var tcs = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        IsDialogOpen = true;
+
+        DialogManager
+            .CreateDialog(_messageBoxViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .WithSuccessCallback(() => tcs.TrySetResult(true))
+            .WithCancelCallback(() => tcs.TrySetResult(false))
+            .Show();
+
+        var result = await tcs.Task;
+
+        IsDialogOpen = false;
+
+        var password = _messageBoxViewModel.InputText;
+        _messageBoxViewModel.InputText = string.Empty;
+
+        return result ? password : null;
+    }
+
     private async Task<bool> ShowImageDialogAsync(
         string title,
         string message,

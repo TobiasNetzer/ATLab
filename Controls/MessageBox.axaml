@@ -50,6 +50,13 @@
                  helpers:FocusExtensions.FocusWhenVisible="True"
                  IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_INPUT}"/>
 
+        <TextBox Grid.Row="5"
+                 Text="{Binding InputText}"
+                 PasswordChar="•"
+                 MaxWidth="1000"
+                 helpers:FocusExtensions.FocusWhenVisible="True"
+                 IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=PASSWORD_INPUT}"/>
+
         <StackPanel Grid.Row="7"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
@@ -93,8 +100,8 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="10"
-                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT'}"
-                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT'}">
+                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT,PASSWORD_INPUT'}"
+                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='CONFIRMATION,USER_INPUT,PASSWORD_INPUT'}">
             
             <Button
                 Content="{Binding CancelText}"

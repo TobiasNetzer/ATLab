@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.Enums;
+using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Services;
@@ -190,7 +191,9 @@ public partial class TestingTabViewModel : ViewModelBase
         _controlModuleService = controlModuleService;
 
         SetLocalizedTitle("Tab_Testing");
-        IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode;
+        // With password protection the operator view is the start-up state, development mode must be unlocked again
+        IsDevelopmentMode = settingsService.Settings.IsDevelopmentMode &&
+                            !settingsService.Settings.IsDevelopmentModePasswordEnabled;
         IsShowMeasurementPanel = settingsService.Settings.IsShowMeasurementPanel;
 
         _projectModel.Modules.CollectionChanged += ProjectModulesChanged;
@@ -1056,7 +1059,38 @@ public partial class TestingTabViewModel : ViewModelBase
     private void ToggleMeasurementPanel() => IsShowMeasurementPanel = !IsShowMeasurementPanel;
     
     [RelayCommand]
-    private void ToggleDevelopmentMode() => IsDevelopmentMode = !IsDevelopmentMode;
+    private async Task ToggleDevelopmentMode()
+    {
+        if (!IsDevelopmentMode && !await IsDevelopmentModePasswordAccepted())
+            return;
+
+        IsDevelopmentMode = !IsDevelopmentMode;
+    }
+
+    private async Task<bool> IsDevelopmentModePasswordAccepted()
+    {
+        var settings = _settingsService.Settings;
+
+        if (!settings.IsDevelopmentModePasswordEnabled)
+            return true;
+
+        var password = await _messageBoxService.ShowPasswordInputAsync(
+            LocalizationService.Instance["Title_DevelopmentModePassword"],
+            LocalizationService.Instance["Text_DevelopmentModePassword"]);
+
+        if (password is null)
+            return false;
+
+        if (PasswordHasher.Verify(password, settings.DevelopmentModePasswordHash, settings.DevelopmentModePasswordSalt))
+            return true;
+
+        _loggingService.Warning("Development mode: wrong password entered.");
+        await _messageBoxService.ShowMessageAsync(
+            LocalizationService.Instance["Title_DevelopmentModePassword"],
+            LocalizationService.Instance["Text_WrongPassword"]);
+
+        return false;
+    }
 
     [RelayCommand(CanExecute = nameof(IsDevelopmentIdle))]
     private void ToggleDebugMode()

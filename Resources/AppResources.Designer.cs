@@ -109,8 +109,7 @@ public class AppResources
     public static string Status_SimulationMode => ResourceManager.GetString("Status_SimulationMode", resourceCulture) ?? "Software is working without test hardware";
     public static string ToolTip_ShowEventLog => ResourceManager.GetString("ToolTip_ShowEventLog", resourceCulture) ?? "Show event log";
     public static string ToolTip_FindMatrixChannel => ResourceManager.GetString("ToolTip_FindMatrixChannel", resourceCulture) ?? "Determine matrix channel via external probe";
-    public static string ToolTip_ToggleTheme => ResourceManager.GetString("ToolTip_ToggleTheme", resourceCulture) ?? "Toggle theme";
-    public static string ToolTip_ToggleLanguage => ResourceManager.GetString("ToolTip_ToggleLanguage", resourceCulture) ?? "Toggle language";
+    public static string ToolTip_OpenAppSettings => ResourceManager.GetString("ToolTip_OpenAppSettings", resourceCulture) ?? "Settings";
     public static string ToolTip_OpenUserGuide => ResourceManager.GetString("ToolTip_OpenUserGuide", resourceCulture) ?? "Open user guide (F1)";
     public static string Button_Connect => ResourceManager.GetString("Button_Connect", resourceCulture) ?? "Connect";
     public static string Button_Simulator => ResourceManager.GetString("Button_Simulator", resourceCulture) ?? "Simulator";

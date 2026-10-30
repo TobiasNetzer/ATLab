@@ -1,0 +1,157 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ATLab.ViewModels"
+             xmlns:globalization="using:System.Globalization"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.AppSettingsDialog"
+             x:DataType="vm:AppSettingsDialogViewModel"
+             Width="460">
+
+    <Grid Margin="20"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+          RowSpacing="15">
+
+        <TextBlock Grid.Row="0"
+                   Text="{helpers:Localize Header_AppSettings}"
+                   FontSize="18"
+                   FontWeight="DemiBold"/>
+
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource OutlineColor}"
+                BorderThickness="2"
+                CornerRadius="10"
+                Padding="10">
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="{helpers:Localize Header_Appearance}"
+                           Classes="Large"/>
+
+                <DockPanel>
+                    <TextBlock Text="{helpers:Localize Label_Language}"
+                               VerticalAlignment="Center"/>
+
+                    <ComboBox ItemsSource="{Binding Languages}"
+                              SelectedItem="{Binding SelectedLanguage}"
+                              HorizontalAlignment="Right"
+                              Width="200">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="globalization:CultureInfo">
+                                <TextBlock Text="{Binding NativeName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </DockPanel>
+
+                <DockPanel>
+                    <TextBlock Text="{helpers:Localize Label_Theme}"
+                               VerticalAlignment="Center"/>
+
+                    <ComboBox ItemsSource="{Binding Themes}"
+                              SelectedItem="{Binding SelectedTheme}"
+                              HorizontalAlignment="Right"
+                              Width="200">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ThemeOption">
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </DockPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource OutlineColor}"
+                BorderThickness="2"
+                CornerRadius="10"
+                Padding="10">
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="{helpers:Localize Header_TestHardware}"
+                           Classes="Large"/>
+
+                <CheckBox Content="{helpers:Localize Label_ForceSimulation}"
+                          IsChecked="{Binding IsForceSimulation}"/>
+
+                <TextBlock Text="{helpers:Localize Text_ForceSimulationRestart}"
+                           Classes="Muted"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3"
+                BorderBrush="{DynamicResource OutlineColor}"
+                BorderThickness="2"
+                CornerRadius="10"
+                Padding="10">
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="{helpers:Localize Header_DevelopmentMode}"
+                           Classes="Large"/>
+
+                <CheckBox Content="{helpers:Localize Label_RequireDevelopmentModePassword}"
+                          IsChecked="{Binding IsDevelopmentModePasswordEnabled}"/>
+
+                <StackPanel Spacing="10"
+                            IsVisible="{Binding IsDevelopmentModePasswordEnabled}">
+
+                    <TextBlock Text="{helpers:Localize Text_KeepPassword}"
+                               Classes="Muted"
+                               TextWrapping="Wrap"
+                               IsVisible="{Binding HasPassword}"/>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{helpers:Localize Label_NewPassword}"/>
+                        <TextBox Text="{Binding NewPassword}"
+                                 PasswordChar="•"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{helpers:Localize Label_ConfirmPassword}"/>
+                        <TextBox Text="{Binding ConfirmPassword}"
+                                 PasswordChar="•"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <StackPanel Spacing="2"
+                            IsVisible="{Binding IsCurrentPasswordRequired}">
+                    <TextBlock Text="{helpers:Localize Label_CurrentPassword}"/>
+                    <TextBox Text="{Binding CurrentPassword}"
+                             PasswordChar="•"
+                             helpers:FocusExtensions.FocusWhenVisible="True"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ValidationMessage}"
+                           Foreground="{DynamicResource DestructiveColor}"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding ValidationMessage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                <TextBlock Text="{Binding WrongPasswordMessage}"
+                           Foreground="{DynamicResource DestructiveColor}"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding WrongPasswordMessage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="4"
+                    Spacing="10">
+
+            <StackPanel HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="10">
+
+                <Button Content="{helpers:Localize Button_Cancel}"
+                        Classes="Outline"
+                        Command="{Binding CancelCommand}"
+                        HotKey="Escape"
+                        Width="130"/>
+
+                <Button Content="{helpers:Localize Button_Save}"
+                        Classes="Primary"
+                        Command="{Binding SaveCommand}"
+                        Width="130"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

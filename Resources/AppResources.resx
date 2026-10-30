@@ -253,12 +253,6 @@
   <data name="ToolTip_FindMatrixChannel" xml:space="preserve">
     <value>Determine matrix channel via external probe</value>
   </data>
-  <data name="ToolTip_ToggleTheme" xml:space="preserve">
-    <value>Toggle theme</value>
-  </data>
-  <data name="ToolTip_ToggleLanguage" xml:space="preserve">
-    <value>Toggle language</value>
-  </data>
   <data name="ToolTip_OpenUserGuide" xml:space="preserve">
     <value>Open user guide (F1)</value>
   </data>
@@ -1291,5 +1285,71 @@ Switching this pin to Z disables those outputs as well.</value>
     <value>Replace the configured chain with the {0} detected device(s)?
 
 Devices that are found again keep their settings. All other devices are removed together with their BSDL file, package and user labels.</value>
+  </data>
+  <data name="ToolTip_OpenAppSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Header_AppSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Header_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Label_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Header_TestHardware" xml:space="preserve">
+    <value>Test hardware</value>
+  </data>
+  <data name="Label_ForceSimulation" xml:space="preserve">
+    <value>Simulation only (start without test hardware)</value>
+  </data>
+  <data name="Text_ForceSimulationRestart" xml:space="preserve">
+    <value>Takes effect the next time ATLab is started.</value>
+  </data>
+  <data name="Header_DevelopmentMode" xml:space="preserve">
+    <value>Development mode</value>
+  </data>
+  <data name="Label_RequireDevelopmentModePassword" xml:space="preserve">
+    <value>Require password to enable development mode</value>
+  </data>
+  <data name="Text_KeepPassword" xml:space="preserve">
+    <value>Leave the fields empty to keep the current password.</value>
+  </data>
+  <data name="Label_NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="Label_ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="Label_CurrentPassword" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="Text_EnterCurrentPassword" xml:space="preserve">
+    <value>Enter the current password to change the simulation or password settings.</value>
+  </data>
+  <data name="Text_EnterPassword" xml:space="preserve">
+    <value>Enter a password.</value>
+  </data>
+  <data name="Text_PasswordsDoNotMatch" xml:space="preserve">
+    <value>The passwords do not match.</value>
+  </data>
+  <data name="Title_DevelopmentModePassword" xml:space="preserve">
+    <value>Development mode</value>
+  </data>
+  <data name="Text_DevelopmentModePassword" xml:space="preserve">
+    <value>Enter the password to enable development mode.</value>
+  </data>
+  <data name="Text_WrongPassword" xml:space="preserve">
+    <value>Wrong password.</value>
   </data>
 </root>

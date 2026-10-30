@@ -137,10 +137,12 @@ Persönliche Einstellungen pro Benutzer – nicht Teil eines Projekts:
 | `Language` | `en` oder `de` |
 | `IsForceSimulation` | `true` = immer im Simulatormodus starten, ohne Verbindungsversuch zur Hardware |
 | `IsDevelopmentMode` | Entwicklungsmodus ein/aus |
+| `IsDevelopmentModePasswordEnabled` | Entwicklungsmodus verlangt ein Passwort |
+| `DevelopmentModePasswordHash`, `DevelopmentModePasswordSalt` | Gesalzener PBKDF2-Hash des Passworts für den Entwicklungsmodus |
 | `IsShowMeasurementPanel` | Messfenster sichtbar |
 | `Is…Expanded` | Welche Editorbereiche aufgeklappt sind |
 
-`IsForceSimulation` hat keinen Schalter in der Oberfläche. Zum Verwenden ATLab schließen, den Wert in `settings.json` auf `true` setzen und neu starten – praktisch für einen Entwicklungsrechner, an dem nie Hardware hängt.
+Sprache, Design, `IsForceSimulation` und das Passwort für den Entwicklungsmodus werden im [Einstellungsdialog](03-getting-started.md#einstellungen) festgelegt. Ist das Passwort vergessen, ATLab schließen, `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen und neu starten.
 
 ## Unterstützte Schnittstellen im Überblick
 

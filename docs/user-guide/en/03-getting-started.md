@@ -49,13 +49,25 @@ The window title shows the project name, followed by `*` when there are unsaved 
 | Info button (left) | Opens the **event log**: every info, warning and error message of this session, newest first. |
 | **No test hardware connected** | Shown in simulator mode. |
 | Probe button (right) | **Determine matrix channel via external probe** (`F12`). Touch a net with the external probe and ATLab shows `Matrix Channel: n`. See [Test Hardware](04-test-hardware.md#finding-a-matrix-channel-with-the-probe). |
-| Sun/moon button | **Toggle theme** between light and dark. |
-| Languages button | **Toggle language** between English and German. |
+| Gear button | Opens the **settings** dialog (see [Settings](#settings)). Not available while a test is running. |
 | Book button (far right) | **Open user guide** (`F1`). Opens this guide as a PDF in the current UI language. If the PDF is missing (e.g. in a self-built development version), the English PDF or the online guide on GitHub is opened instead. |
 
-Theme and language are remembered between sessions. Messages also pop up briefly as notifications in the bottom-left corner; the project setting **Log Level** controls which ones (see [Configuration](06-configuration.md#general-settings)).
+Messages also pop up briefly as notifications in the bottom-left corner; the project setting **Log Level** controls which ones (see [Configuration](06-configuration.md#general-settings)).
 
 ![Light and dark theme](../../Themes.png)
+
+### Settings
+
+The gear button in the status bar opens the personal settings of this PC (they are stored in `settings.json`, not in the project). Changes are applied with **Save**; **Cancel** discards them.
+
+| Setting | Function |
+|---------|----------|
+| **Language** | English or German. |
+| **Theme** | Dark or light. |
+| **Simulation only** | Always start in simulator mode without trying to connect to the test hardware — handy for an engineering PC that never has hardware attached. Takes effect at the next start. |
+| **Require password to enable development mode** | Protects development mode with a password, so operators cannot edit the sequence. Enter the password in **New password** and **Confirm password**. To change it later, enter a new one; leave both fields empty to keep the current password. |
+
+While a password is set, turning it off, changing it or changing **Simulation only** requires the current password: a **Current password** field appears, and **Save** checks it. Turning the password off deletes it. The password is stored only as a salted hash.
 
 ### Operator view vs. development mode
 
@@ -64,7 +76,7 @@ The Test Execution tab has two faces:
 - **Operator view** (default): toolbar, module list, step list, result bar. The step configuration panel is hidden.
 - **Development mode**: toggled with the construction-cone button at the right end of the toolbar (**Enable development mode**). The configuration panels appear on the right, the module list gets buttons for editing modules, and the debug controls become available.
 
-The setting is remembered, so a test station can be left in operator view.
+The setting is remembered, so a test station can be left in operator view. If a development mode password is set (see [Settings](#settings)), the button asks for it, and ATLab always starts in operator view.
 
 ## Your first test in five minutes
 
