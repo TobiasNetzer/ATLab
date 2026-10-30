@@ -28,92 +28,83 @@
                   RowDefinitions="auto, *">
             
                 <StackPanel Grid.Column="0"
-                            Grid.Row="0">
-                    
-                    <Border BorderBrush="{DynamicResource OutlineColor}"
-                            BorderThickness="2"
-                            CornerRadius="10"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            Spacing="5"
                             Margin="10 10 10 0">
-                        
-                        <StackPanel Orientation="Horizontal"
-                                    Spacing="5"
-                                    Margin="10">
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_NewScript}"
-                                Command="{Binding NewScriptCommand}"
-                                Width="40"
-                                Height="40">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent FilePlusCorner}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_SaveScript}"
-                                Command="{Binding SaveScriptCommand}"
-                                Width="40"
-                                Height="40">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Save}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_DeleteScript}"
-                                Command="{Binding DeleteScriptCommand}"
-                                Width="40"
-                                Height="40">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Trash}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                Command="{Binding ChangeRepositoryCommand}"
-                                Width="40"
-                                Height="40">
-                                <Button.Styles>
-                                    <Style Selector="ToolTip">
-                                        <Setter Property="MaxWidth" Value="1500"/>
-                                    </Style>
-                                </Button.Styles>
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent FolderOpen}"/>
-                                </shadui:ButtonAssist.Icon>
-                                <ToolTip.Tip>
-                                    <StackPanel>
-                                        <TextBlock Text="{helpers:Localize ToolTip_ChangeScriptFolder}"/>
-                                        <TextBlock Text="{Binding ScriptFolderPath}"
-                                                   TextWrapping="NoWrap"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   HorizontalAlignment="Left"/>
-                                    </StackPanel>
-                                </ToolTip.Tip>
-                            </Button>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_ReloadScriptFolder}"
-                                Command="{Binding ReloadScriptsCommand}"
-                                Width="40"
-                                Height="40">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent RotateCcw}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                        
-                        </StackPanel>
-                    </Border>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_NewScript}"
+                        Command="{Binding NewScriptCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent FilePlusCorner}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_SaveScript}"
+                        Command="{Binding SaveScriptCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Save}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_DeleteScript}"
+                        Command="{Binding DeleteScriptCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent Trash}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        Command="{Binding ChangeRepositoryCommand}"
+                        Width="40"
+                        Height="40">
+                        <Button.Styles>
+                            <Style Selector="ToolTip">
+                                <Setter Property="MaxWidth" Value="1500"/>
+                            </Style>
+                        </Button.Styles>
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent FolderOpen}"/>
+                        </shadui:ButtonAssist.Icon>
+                        <ToolTip.Tip>
+                            <StackPanel>
+                                <TextBlock Text="{helpers:Localize ToolTip_ChangeScriptFolder}"/>
+                                <TextBlock Text="{Binding ScriptFolderPath}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </ToolTip.Tip>
+                    </Button>
+
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_ReloadScriptFolder}"
+                        Command="{Binding ReloadScriptsCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent RotateCcw}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                 </StackPanel>
                 
                 <Grid Grid.Column="0"
@@ -183,39 +174,42 @@
                           Grid.Column="1"
                           Grid.RowSpan="2"
                           RowDefinitions="Auto,*"
-                          RowSpacing="2">
+                          RowSpacing="5">
                         
-                        <StackPanel Grid.Row="0"
-                                    Orientation="Horizontal"
-                                    Spacing="5">
-                            
-                            <TextBlock Text="{helpers:Localize Label_Variables}" VerticalAlignment="Bottom"/>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_AddVariable}"
-                                Command="{Binding SelectedScript?.AddVariableCommand}"
-                                Width="35"
-                                Height="35">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Plus}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                    
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_RemoveVariable}"
-                                Command="{Binding SelectedScript?.RemoveVariableCommand}"
-                                Width="35"
-                                Height="35">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Minus}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            
-                        </StackPanel>
+                        <DockPanel Grid.Row="0">
+
+                            <StackPanel DockPanel.Dock="Right"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+
+                                <Button
+                                    Background="{DynamicResource ButtonBackground}"
+                                    Classes="Icon"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_AddVariable}"
+                                    Command="{Binding SelectedScript?.AddVariableCommand}"
+                                    Width="35"
+                                    Height="35">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent Plus}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+
+                                <Button
+                                    Background="{DynamicResource ButtonBackground}"
+                                    Classes="Icon"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_RemoveVariable}"
+                                    Command="{Binding SelectedScript?.RemoveVariableCommand}"
+                                    Width="35"
+                                    Height="35">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent Minus}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                            </StackPanel>
+
+                            <TextBlock Text="{helpers:Localize Label_Variables}"
+                                       VerticalAlignment="Center"/>
+                        </DockPanel>
                         
                         <DataGrid Grid.Row="1"
                                   Classes="HorizontalScroll Compact"
@@ -256,39 +250,42 @@
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
                           RowDefinitions="Auto,*,Auto"
-                          RowSpacing="2">
+                          RowSpacing="5">
                         
-                        <StackPanel Grid.Row="0"
-                                    Orientation="Horizontal"
-                                    Spacing="5">
-                            
-                            <TextBlock Text="{helpers:Localize Label_Commands}" VerticalAlignment="Bottom"/>
-                            
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_AddCommand}" 
-                                Command="{Binding SelectedScript?.AddCommandCommand}"
-                                Width="35"
-                                Height="35">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Plus}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                    
-                            <Button
-                                Background="{DynamicResource ButtonBackground}"
-                                Classes="Icon"
-                                ToolTip.Tip="{helpers:Localize ToolTip_RemoveCommand}" 
-                                Command="{Binding SelectedScript?.RemoveCommandCommand}"
-                                Width="35"
-                                Height="35">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Minus}"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            
-                        </StackPanel>
+                        <DockPanel Grid.Row="0">
+
+                            <StackPanel DockPanel.Dock="Right"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+
+                                <Button
+                                    Background="{DynamicResource ButtonBackground}"
+                                    Classes="Icon"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_AddCommand}"
+                                    Command="{Binding SelectedScript?.AddCommandCommand}"
+                                    Width="35"
+                                    Height="35">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent Plus}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+
+                                <Button
+                                    Background="{DynamicResource ButtonBackground}"
+                                    Classes="Icon"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_RemoveCommand}"
+                                    Command="{Binding SelectedScript?.RemoveCommandCommand}"
+                                    Width="35"
+                                    Height="35">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent Minus}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                            </StackPanel>
+
+                            <TextBlock Text="{helpers:Localize Label_Commands}"
+                                       VerticalAlignment="Center"/>
+                        </DockPanel>
                         
                         <DataGrid Grid.Row="1"
                                   Classes="HorizontalScroll Compact"
