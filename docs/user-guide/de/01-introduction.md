@@ -10,42 +10,42 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 
 ### Prüfsequenzen erstellen
 
-- **Gliedern**: die Sequenz in Module aufteilen (z. B. Spannungsversorgung, Programmierung, LED-Test), die sich einzeln aktivieren oder allein ausführen lassen.
-- **Signale routen**: pro Schritt über die Relais-Matrix des Adapters und dessen Stimulations- und externe Stimulationsrelais.
-- **Werte prüfen** gegen Grenzwerte mit Einheiten und SI-Präfixen, z. B. `500mV` oder `4.7kOhm`.
-- **Verzweigen** je nach Ergebnis: einen Schritt wiederholen, zu einem anderen Schritt springen, den Test beenden oder dem Bediener eine Meldung anzeigen.
-- **Rechnen** mit Laufzeit- und Systemvariablen (Seriennummer, Benutzer, Datum …) in Befehlen, Grenzwerten und Ausdrücken.
+- **Module**: Eine Sequenz lässt sich in Module gliedern, z. B. Spannungsversorgung, Programmierung und LED-Test. Module können einzeln aktiviert oder für sich allein ausgeführt werden.
+- **Signalführung**: Jeder Schritt schaltet die Relais-Matrix des Adapters sowie dessen Stimulations- und externe Stimulationsrelais.
+- **Grenzwerte**: Messwerte werden mit Grenzwerten verglichen, die auch Einheiten und SI-Präfixe enthalten dürfen, z. B. `500mV` oder `4.7kOhm`.
+- **Ablaufsteuerung**: Je nach Ergebnis wird ein Schritt wiederholt, zu einem anderen Schritt gesprungen, der Test beendet oder dem Bediener eine Meldung angezeigt.
+- **Variablen und Ausdrücke**: Laufzeit- und Systemvariablen (Seriennummer, Benutzer, Datum …) lassen sich in Befehlen, Grenzwerten und Berechnungen verwenden.
 
 ### Messen und kommunizieren
 
-- **Messgeräte fernsteuern** über serielle Schnittstelle (VCOM/RS232), TCP/IP-Sockets oder NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
-- **Gerätskripte wiederverwenden**: Skripte aus mehreren Befehlen mit Variablen, projektübergreifend nutzbar. Jeder Befehl kann **seine Antwort prüfen**, mit eigener Maske und eigenen Grenzwerten, z. B. dass das Gerät keinen Fehler meldet.
-- **Mit dem Prüfling kommunizieren** über die galvanisch isolierten I²C- und UART-Schnittstellen des Adapters.
-- **Boundary Scan nutzen** (JTAG) mit einem SEGGER J-Link oder einer FTDI-Probe, um Pins von Bausteinen der Baugruppe zu lesen und zu treiben und darüber mit I²C- und SPI-Bausteinen zu kommunizieren.
-- **Werte gewinnen** aus Text- oder Binärantworten mit der Antwortverarbeitung (Überspringen/Länge, Prüfregeln, Zahlenextraktion).
-- **Den Bediener einbeziehen**: eine Sichtprüfung bestätigen (Bestanden / Fehlgeschlagen) oder einen Messwert eingeben lassen, optional mit Bild.
-- **Externe Programme** ausführen und deren Exit-Code oder Ausgabe verwenden oder **einen Wert aus einer Datei lesen**.
+- **Messgeräte**: ATLab steuert Messgeräte über die serielle Schnittstelle (VCOM/RS232), über TCP/IP-Sockets oder über NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
+- **Skripte**: Häufig benötigte Befehlsfolgen werden als Skripte mit Variablen gespeichert und in mehreren Projekten verwendet. Jeder Befehl kann seine Antwort mit eigener Maske und eigenen Grenzwerten prüfen, etwa ob das Gerät einen Fehler meldet.
+- **Prüfling**: Über die galvanisch isolierten I²C- und UART-Schnittstellen des Adapters kommuniziert ATLab direkt mit dem Prüfling.
+- **Boundary Scan**: Mit einem SEGGER J-Link oder einer FTDI-Probe liest und treibt ATLab über JTAG die Pins von Bausteinen auf der Baugruppe und spricht darüber auch I²C- und SPI-Bausteine an.
+- **Antwortverarbeitung**: Aus Text- oder Binärantworten lassen sich Werte gezielt herauslösen (Überspringen/Länge, Prüfregeln, Zahlenextraktion).
+- **Bediener**: Der Bediener kann eine Sichtprüfung bestätigen (Bestanden / Fehlgeschlagen) oder einen Messwert eingeben, auf Wunsch mit einem Bild als Hilfe.
+- **Programme und Dateien**: Externe Programme werden ausgeführt und ihr Exit-Code oder ihre Ausgabe ausgewertet. Werte können außerdem aus Dateien gelesen werden.
 
 ### Entwickeln und Fehler suchen
 
-- **Entwicklungsmodus** zum Bearbeiten, getrennt von der Bedieneransicht; er lässt sich mit einem Passwort schützen.
-- **Schrittweise ausprobieren**: einen Einzelschritt ausführen, ab dem ausgewählten Schritt starten oder ein Modul ausführen; der **Debug-Modus** hält vor jedem Schritt an.
-- **Skripte testen** in der Skriptausführung, die jede Antwort und das Ergebnis jeder Antwortprüfung zeigt.
-- **Ohne Hardware arbeiten**: Der Simulator ersetzt den Test Interface Adapter, z. B. auf einem Entwicklungsrechner.
+- **Entwicklungsmodus**: Bearbeitet wird im Entwicklungsmodus, getrennt von der Bedieneransicht. Der Entwicklungsmodus lässt sich mit einem Passwort schützen.
+- **Gezielt testen**: Ein einzelner Schritt, ein Modul oder die Sequenz ab dem ausgewählten Schritt lässt sich gezielt ausführen. Der **Debug-Modus** hält vor jedem Schritt an.
+- **Skriptausführung**: Skripte lassen sich direkt am Gerät ausprobieren. Dabei werden jede Antwort und das Ergebnis jeder Antwortprüfung angezeigt.
+- **Simulator**: Ohne angeschlossene Hardware ersetzt der Simulator den Test Interface Adapter, z. B. auf einem Entwicklungsrechner.
 
 ### Tests in der Fertigung ausführen
 
-- **Seriennummerneingabe** mit Prüfregeln; Barcodescanner im Tastaturmodus werden unterstützt.
-- **Dauertests**, ein großes **Messfenster**, das auch aus der Entfernung lesbar ist, und Schaltflächen zum Springen zu fehlgeschlagenen Schritten.
-- Ein optionales USB-**Steuermodul** mit beleuchteten Start-/Stopp-Tastern.
+- **Seriennummer**: Auf Wunsch fragt ATLab vor dem Test die Seriennummer ab und prüft sie anhand von Validierungsregeln. Barcodescanner im Tastaturmodus werden unterstützt.
+- **Prüfplatz**: Dauertests, ein großes Messfenster, das auch aus der Entfernung lesbar ist, und Schaltflächen zum Springen zu fehlgeschlagenen Schritten erleichtern die Arbeit am Prüfplatz.
+- **Steuermodul**: Optional lässt sich der Test über ein USB-Steuermodul mit beleuchteten Tastern starten und stoppen.
 
 ### Dokumentieren und berichten
 
-- **Projektdokumentation** mit Notizen, Bildern, Anhängen und Angaben zum Prüfling.
-- **CSV-Datendateien** und **PDF-Testberichte**, einschließlich der verwendeten Messgeräte.
-- Ein **Ereignisprotokoll** mit allen Meldungen der Sitzung.
+- **Projektdokumentation**: Notizen, Bilder, Anhänge und Angaben zum Prüfling werden im Projekt gespeichert.
+- **Berichte**: Die Ergebnisse werden als CSV-Datei und als PDF-Testbericht gespeichert, einschließlich der verwendeten Messgeräte.
+- **Ereignisprotokoll**: Alle Meldungen der Sitzung werden im Ereignisprotokoll gesammelt.
 
-ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Dateien und eignen sich gut für die Versionsverwaltung. Die Oberfläche ist auf Deutsch und Englisch verfügbar, mit hellem und dunklem Design. Sprache und Design werden im Einstellungsdialog gewählt. Dieses Handbuch öffnet sich mit `F1`.
+ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Dateien und eignen sich daher gut für die Versionsverwaltung. Die Oberfläche gibt es auf Deutsch und Englisch, jeweils mit hellem und dunklem Design. Sprache und Design werden im Einstellungsdialog gewählt. Dieses Handbuch öffnet sich mit `F1`.
 
 ## Grundbegriffe
 
