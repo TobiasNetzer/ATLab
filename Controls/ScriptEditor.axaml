@@ -254,7 +254,7 @@
                     <Grid Grid.Row="2"
                           Grid.Column="0"
                           Grid.ColumnSpan="2"
-                          RowDefinitions="Auto,*"
+                          RowDefinitions="Auto,*,Auto"
                           RowSpacing="2">
                         
                         <StackPanel Grid.Row="0"
@@ -329,6 +329,17 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{helpers:Localize Header_CheckResponse}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                IsChecked="{Binding IsCheckResponse}"
+                                                IsEnabled="{Binding CanCheckResponse}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{helpers:Localize Header_DelayMs}" Binding="{Binding DelayMs}"/>
                                 <DataGridTextColumn Header="{helpers:Localize Header_TimeoutMs}" Binding="{Binding TimeoutMs}"/>
                             </DataGrid.Columns>
@@ -340,6 +351,62 @@
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
+
+                        <Border Grid.Row="2"
+                                Margin="0 8 0 0"
+                                BorderBrush="{DynamicResource OutlineColor}"
+                                BorderThickness="2"
+                                CornerRadius="10"
+                                Padding="10"
+                                IsVisible="{Binding SelectedScript.SelectedCommand, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}">
+
+                            <StackPanel DataContext="{Binding SelectedScript.SelectedCommand}"
+                                        x:DataType="vm:ScriptCommandViewModel"
+                                        Spacing="10">
+
+                                <TextBlock Text="{helpers:Localize Header_ResponseCheck}"
+                                           Classes="Large"/>
+
+                                <CheckBox Content="{helpers:Localize Label_CheckResponse}"
+                                          IsChecked="{Binding IsCheckResponse}"
+                                          IsEnabled="{Binding CanCheckResponse}"/>
+
+                                <TextBlock Text="{helpers:Localize Text_ResponseCheckNotAvailable}"
+                                           Classes="Muted"
+                                           TextWrapping="Wrap"
+                                           IsVisible="{Binding !CanCheckResponse}"/>
+
+                                <Grid ColumnDefinitions="*,100,100,150,150"
+                                      ColumnSpacing="10"
+                                      IsEnabled="{Binding IsResponseChecked}">
+
+                                    <StackPanel Grid.Column="0" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_Mask}"/>
+                                        <TextBox Text="{Binding CheckMask, UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_Skip}"/>
+                                        <TextBox Text="{Binding CheckSkip, UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_Length}"/>
+                                        <TextBox Text="{Binding CheckLength, UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_LowerLimit}"/>
+                                        <TextBox Text="{Binding CheckLowerLimit, UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="4" Spacing="2">
+                                        <TextBlock Text="{helpers:Localize Label_UpperLimit}"/>
+                                        <TextBox Text="{Binding CheckUpperLimit, UpdateSourceTrigger=LostFocus}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
                     </Grid>
                 </Grid>
             </Grid>

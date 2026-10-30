@@ -1352,4 +1352,16 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   <data name="Text_WrongPassword" xml:space="preserve">
     <value>Falsches Passwort.</value>
   </data>
+  <data name="Header_CheckResponse" xml:space="preserve">
+    <value>Prüfen</value>
+  </data>
+  <data name="Header_ResponseCheck" xml:space="preserve">
+    <value>Antwortprüfung</value>
+  </data>
+  <data name="Label_CheckResponse" xml:space="preserve">
+    <value>Antwort dieses Befehls prüfen</value>
+  </data>
+  <data name="Text_ResponseCheckNotAvailable" xml:space="preserve">
+    <value>Nur für Befehle mit Antwort erwarten, die nicht zur Auswertung markiert sind. Die ausgewertete Antwort wird im Testschritt verarbeitet und geprüft.</value>
+  </data>
 </root>

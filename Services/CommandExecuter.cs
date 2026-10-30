@@ -46,7 +46,8 @@ public class CommandExecutor : ICommandExecutor
         IEnumerable<ScriptCommand> commands,
         string targetDeviceId,
         CancellationToken token,
-        List<CustomVariable>? runtimeVariables = null)
+        List<CustomVariable>? runtimeVariables = null,
+        List<string>? checkFailures = null)
     {
         if (_disposed)
             throw new ObjectDisposedException(nameof(CommandExecutor));
@@ -95,9 +96,12 @@ public class CommandExecutor : ICommandExecutor
             }
 
             var client = new TransportService(_deviceInterface);
+            var commandNumber = 0;
 
             foreach (var command in commands)
             {
+                commandNumber++;
+
                 if (token.IsCancellationRequested)
                     break;
 
@@ -116,7 +120,10 @@ public class CommandExecutor : ICommandExecutor
                         queryResult = await client.QueryAsync(compiledCommand, command.TimeoutMs);
                         break;
                     case true:
-                        await client.QueryAsync(compiledCommand, command.TimeoutMs);
+                        var response = await client.QueryAsync(compiledCommand, command.TimeoutMs);
+
+                        if (command.IsResponseChecked && CheckResponse(command, response) is { } checkFailure)
+                            checkFailures?.Add($"Command {commandNumber} '{commandText}': {checkFailure}");
                         break;
                     default:
                         await client.WriteAsync(compiledCommand);
@@ -196,6 +203,46 @@ public class CommandExecutor : ICommandExecutor
         }
     }
     
+    /// <summary>
+    /// Processes the response with the command's check mask and compares it with the check limits like a step
+    /// value. Returns why the check failed, or null if it passed.
+    /// </summary>
+    private static string? CheckResponse(ScriptCommand command, byte[] response)
+    {
+        var mask = new ResponseMask
+        {
+            Mask = command.CheckMask ?? string.Empty,
+            Skip = command.CheckSkip,
+            Length = command.CheckLength
+        };
+
+        string processedValue;
+        try
+        {
+            processedValue = ResponseProcessor.Process(response, mask);
+        }
+        catch (ResponseProcessingException ex)
+        {
+            return ex.Message;
+        }
+
+        var received = mask.OriginalResponse.Trim();
+
+        if (!NumberHelper.TryParseDecimal(processedValue, out var value))
+            return $"received '{received}', result '{processedValue}' is not a number.";
+
+        var roundedValue = NumberHelper.RoundToSignificantDigits(value);
+        if (roundedValue >= NumberHelper.RoundToSignificantDigits(command.CheckLowerLimit) &&
+            roundedValue <= NumberHelper.RoundToSignificantDigits(command.CheckUpperLimit))
+        {
+            return null;
+        }
+
+        return string.Format(CultureInfo.CurrentCulture,
+            "received '{0}', result {1} not within {2} … {3}.",
+            received, value, command.CheckLowerLimit, command.CheckUpperLimit);
+    }
+
     public async Task ReleaseDeviceAsync()
     {
         if (_deviceInterface != null)

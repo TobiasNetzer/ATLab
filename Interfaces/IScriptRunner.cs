@@ -12,5 +12,5 @@ namespace ATLab.Interfaces;
 public interface IScriptRunner
 {
     Task<OperationResult> ExecuteAsync(string scriptId, string deviceId, IEnumerable<CustomVariable> scriptVariables, CancellationToken token, List<CustomVariable>? runtimeVariables = null);
-    Task<OperationResult<T>> ExecuteAsync<T>(string scriptId, string deviceId, IEnumerable<CustomVariable> scriptVariables, CancellationToken token,List<CustomVariable>? runtimeVariables = null, ResponseMask? mask = null);
+    Task<OperationResult<T>> ExecuteAsync<T>(string scriptId, string deviceId, IEnumerable<CustomVariable> scriptVariables, CancellationToken token,List<CustomVariable>? runtimeVariables = null, ResponseMask? mask = null, List<string>? checkFailures = null);
 }

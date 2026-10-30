@@ -1352,4 +1352,16 @@ Devices that are found again keep their settings. All other devices are removed 
   <data name="Text_WrongPassword" xml:space="preserve">
     <value>Wrong password.</value>
   </data>
+  <data name="Header_CheckResponse" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="Header_ResponseCheck" xml:space="preserve">
+    <value>Response Check</value>
+  </data>
+  <data name="Label_CheckResponse" xml:space="preserve">
+    <value>Check the response of this command</value>
+  </data>
+  <data name="Text_ResponseCheckNotAvailable" xml:space="preserve">
+    <value>Only available for commands with Expect Response that are not marked Evaluate. The evaluated response is processed and checked in the test step.</value>
+  </data>
 </root>

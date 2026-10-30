@@ -46,7 +46,7 @@ Führt ein Skript aus dem [Skriptordner](07-scripting.md) auf einem Gerät aus.
 | **Skript** | Skript aus dem Skriptordner. Beim Überfahren eines Eintrags erscheint seine Beschreibung. Die ×-Schaltfläche leert die Auswahl. |
 | **Variable / Wert** | Die Variablen des Skripts mit den Werten dieses Schritts. Bei der ersten Auswahl eines Skripts werden die Standardwerte übernommen; bearbeiten Sie sie pro Schritt. |
 
-Ausführung: Alle Befehle des Skripts werden der Reihe nach gesendet; die Antwort des mit **Auswertung** markierten Befehls wird zum Messwert. Zuerst werden Skriptvariablen ersetzt, danach Laufzeitvariablen, Kodierungen und Ausdrücke verarbeitet.
+Ausführung: Alle Befehle des Skripts werden der Reihe nach gesendet; die Antwort des mit **Auswertung** markierten Befehls wird zum Messwert. Befehle mit [Antwortprüfung](07-scripting.md#antwortprüfungen) prüfen ihre eigenen Antworten; schlägt eine fehl, ist der Schritt fehlgeschlagen, auch wenn der Messwert innerhalb der Grenzwerte liegt. Zuerst werden Skriptvariablen ersetzt, danach Laufzeitvariablen, Kodierungen und Ausdrücke verarbeitet.
 
 Erhält das Skript später neue Variablen, werden sie beim Öffnen des Schritts mit ihren Standardwerten ergänzt; aus dem Skript entfernte Variablen werden im Schritt gelöscht.
 

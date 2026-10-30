@@ -11,8 +11,8 @@ using ATLab.Models;
 namespace ATLab.Services;
 
 /// <summary>
-/// Runs a script on a device: applies script and runtime variables to its commands and returns the answer of the
-/// command marked for evaluation.
+/// Runs a script on a device: applies script and runtime variables to its commands, checks the responses of
+/// commands with a response check and returns the answer of the command marked for evaluation.
 /// </summary>
 public class ScriptRunner : IScriptRunner
 {
@@ -46,9 +46,10 @@ public class ScriptRunner : IScriptRunner
         IEnumerable<CustomVariable> scriptVariables,
         CancellationToken token,
         List<CustomVariable>? runtimeVariables = null,
-        ResponseMask? mask = null)
+        ResponseMask? mask = null,
+        List<string>? checkFailures = null)
     {
-        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables);
+        var result = await RunCoreAsync(scriptId, deviceId, scriptVariables, token, runtimeVariables, checkFailures);
         
         if (result.IsTimeout)
             return OperationResult<T>.Timeout(result.ErrorMessage);
@@ -94,7 +95,8 @@ public class ScriptRunner : IScriptRunner
         string deviceName,
         IEnumerable<CustomVariable> scriptVariables,
         CancellationToken token,
-        List<CustomVariable>? runtimeVariables = null)
+        List<CustomVariable>? runtimeVariables = null,
+        List<string>? checkFailures = null)
     {
         if (string.IsNullOrEmpty(scriptId) || string.IsNullOrEmpty(deviceName))
             return OperationResult<byte[]>.Failure("Script and Device are required.");
@@ -112,7 +114,7 @@ public class ScriptRunner : IScriptRunner
                 .Select(c => ApplyVariables(c, scriptVariables))
                 .ToList();
 
-            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceName, token, runtimeVariables);
+            return await _commandExecutor.ExecuteAsync(preparedCommands, deviceName, token, runtimeVariables, checkFailures);
         }
         catch (OperationCanceledException)
         {

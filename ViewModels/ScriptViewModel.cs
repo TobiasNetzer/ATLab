@@ -23,7 +23,12 @@ public partial class ScriptViewModel : ViewModelBase
     public ObservableCollection<CustomVariable> Variables { get; } = new();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedCommand))]
     private int _selectedCommandIndex;
+
+    // Command whose response check is shown below the command list
+    public ScriptCommandViewModel? SelectedCommand =>
+        SelectedCommandIndex >= 0 && SelectedCommandIndex < Commands.Count ? Commands[SelectedCommandIndex] : null;
 
     [ObservableProperty]
     private int _selectedVariableIndex;
@@ -144,6 +149,7 @@ public partial class ScriptViewModel : ViewModelBase
                 added.PropertyChanged += ChildChanged;
         }
 
+        OnPropertyChanged(nameof(SelectedCommand));
         IsDirty = true;
     }
 

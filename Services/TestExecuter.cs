@@ -413,7 +413,7 @@ public class TestExecutor : ITestExecutor
 
         var evaluation = _evaluator.Evaluate(step.TestStep, value);
         step.Deviation = $"{evaluation.Deviation:F2} %";
-        step.IsPassed = evaluation.IsValid;
+        step.IsPassed = evaluation.IsValid && !step.IsResponseCheckFailed;
         variable?.Value = step.ResultNoFormatting;
     }
     

@@ -46,7 +46,7 @@ Runs a script from the [script folder](07-scripting.md) on a device.
 | **Script** | Script from the script folder. Hover over an entry to see its description. The × button clears it. |
 | **Variable / Value** | The script's variables with this step's values. When a script is first selected, its default values are copied in; edit them per step. |
 
-Execution: all commands of the script are sent in order; the answer of the command marked **Evaluate** becomes the measured value. Script variables are substituted first, then runtime variables, encodings and expressions are processed.
+Execution: all commands of the script are sent in order; the answer of the command marked **Evaluate** becomes the measured value. Commands with a [response check](07-scripting.md#response-checks) check their own answers; if one fails, the step fails even when the measured value is within the limits. Script variables are substituted first, then runtime variables, encodings and expressions are processed.
 
 If the script later gains new variables, they are added to the step with their default values when the step is opened; variables removed from the script are dropped from the step.
 

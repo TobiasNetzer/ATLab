@@ -62,6 +62,7 @@ public class TestStepRunner : ITestStepRunner
     public async Task<OperationResult<double>> ExecuteAsync(TestStepViewModel step, List<CustomVariable> runtimeVariables, CancellationToken token)
     {
         step.ResultDetailLines = [];
+        step.IsResponseCheckFailed = false;
 
         try
         {
@@ -121,8 +122,14 @@ public class TestStepRunner : ITestStepRunner
                 case TestEvaluationSource.NONE: return OperationResult<double>.Success(double.NegativeInfinity);
                 
                 case TestEvaluationSource.SCRIPT:
-                    return await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDeviceId,
-                        step.TestStep.ScriptVariables, token, runtimeVariables, mask);
+                {
+                    var checkFailures = new List<string>();
+                    var scriptResult = await _scriptRunner.ExecuteAsync<double>(step.TestStep.ScriptId, step.TestStep.TargetDeviceId,
+                        step.TestStep.ScriptVariables, token, runtimeVariables, mask, checkFailures);
+                    step.ResultDetailLines = checkFailures;
+                    step.IsResponseCheckFailed = checkFailures.Count > 0;
+                    return scriptResult;
+                }
                 
                 case TestEvaluationSource.COMMAND:
                     return await _commandExecutor.ExecuteAsync<double>(step.TestStep.Command, step.TestStep.TargetDeviceId, token, runtimeVariables, mask);

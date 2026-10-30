@@ -36,6 +36,9 @@ public partial class TestStepViewModel : ViewModelBase
     private IReadOnlyList<string> _resultDetailLines = [];
 
     public bool HasResultDetails => ResultDetailLines.Count > 0;
+
+    // A response check of the step's script failed: the step fails even if its value is within the limits
+    public bool IsResponseCheckFailed { get; set; }
     
     public string? ResultDetails
     {
@@ -83,5 +86,6 @@ public partial class TestStepViewModel : ViewModelBase
         IsPassed  = false;
         IsExecuted = false;
         ResultDetailLines = [];
+        IsResponseCheckFailed = false;
     }
 }
