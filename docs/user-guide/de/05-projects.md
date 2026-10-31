@@ -90,4 +90,4 @@ Projektdateien sind lesbares, eingerücktes JSON. Damit eignen sie sich gut für
 
 Die Testschritte werden je Modul gespeichert (`Modules` → `TestSteps`). Jedes Modul und jeder Testschritt hat eine dauerhafte interne ID. *Springe zu*-Ziele verweisen auf die Schritt-ID, sodass Sprünge auch nach Verschieben oder Umnummerieren von Schritten funktionieren.
 
-Die Datei enthält eine `FormatVersion`. Projektdateien aus Versionen vor Einführung der Module (ohne `FormatVersion`) können nicht geöffnet werden.
+Die Datei enthält eine `FormatId`, die sie als ATLab-Projektdatei kennzeichnet, sowie eine `FormatVersion`. Dateien ohne gültige `FormatId` werden abgelehnt. Projektdateien aus Versionen vor Einführung der Module (ohne `FormatVersion`) können nicht geöffnet werden.

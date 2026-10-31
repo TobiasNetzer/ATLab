@@ -6,9 +6,10 @@ namespace ATLab.Models;
 public class AtlabFileDto
 {
     public const int CurrentFormatVersion = 2;
-    public string FormatId => "0xA71AB";
-
-    // Files written before CurrentFormatVersion existed have no version and deserialize as 0
+    public const string CurrentFormatId = "0xA71AB";
+    
+    public string? FormatId { get; init; }
+    
     public int FormatVersion { get; init; }
     public List<TestModule> Modules { get; init; } = new();
     public List<CustomRelayChannelName> StimChannelNames { get; init; } = new();

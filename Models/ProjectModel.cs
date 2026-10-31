@@ -149,6 +149,7 @@ public partial class ProjectModel : ObservableObject
 
         return new AtlabFileDto
         {
+            FormatId = AtlabFileDto.CurrentFormatId,
             FormatVersion = AtlabFileDto.CurrentFormatVersion,
             ScriptFolderPath = pathService?.ToRelative(ScriptFolderPath ?? string.Empty) ?? ScriptFolderPath,
             Modules = modulesClone,

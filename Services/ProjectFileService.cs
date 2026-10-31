@@ -66,6 +66,11 @@ public class ProjectFileService : IProjectFileService
 
             var project = Deserialize(json);
 
+            if (project != null && project.FormatId != AtlabFileDto.CurrentFormatId)
+            {
+                throw new NotSupportedException("The file is not an ATLab project file.");
+            }
+
             if (project != null && project.FormatVersion != AtlabFileDto.CurrentFormatVersion)
             {
                 throw new NotSupportedException(

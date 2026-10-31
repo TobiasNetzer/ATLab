@@ -90,4 +90,4 @@ Project files are human-readable, indented JSON. This makes them well suited to 
 
 The test steps are stored per module (`Modules` → `TestSteps`). Each module and each test step has a permanent internal ID. *Jump To* targets refer to the step ID, so jumps keep working when steps are moved or renumbered.
 
-The file contains a `FormatVersion`. Project files from versions before modules were introduced (without `FormatVersion`) cannot be opened.
+The file contains a `FormatId`, which identifies it as an ATLab project file, and a `FormatVersion`. Files without a valid `FormatId` are rejected. Project files from versions before modules were introduced (without `FormatVersion`) cannot be opened.
