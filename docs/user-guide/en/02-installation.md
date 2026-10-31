@@ -74,7 +74,7 @@ git clone https://github.com/TobiasNetzer/ATLab.git
 cd ATLab
 dotnet restore
 dotnet build -c Release
-dotnet run --project ATLab.csproj
+dotnet run --project src/ATLab/ATLab.csproj
 ```
 
 You can also open `ATLab.sln` in JetBrains Rider, Visual Studio 2022 or VS Code with the C# Dev Kit.

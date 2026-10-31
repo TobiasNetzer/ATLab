@@ -170,7 +170,7 @@ class GuideBuilder:
             meta.append(f"{self.cfg['version']} {html.escape(version)}")
         meta += [date_text, "github.com/TobiasNetzer/ATLab"]
 
-        icon = REPO_ROOT / "Assets" / "AppIcon.png"
+        icon = REPO_ROOT / "src" / "ATLab" / "Assets" / "AppIcon.png"
         logo = f'<img class="logo" src="{icon.as_uri()}">' if icon.exists() else ""
 
         return f"""<!doctype html>

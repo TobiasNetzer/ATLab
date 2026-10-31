@@ -45,6 +45,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ATLab.Results\ATLab.Results.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Assets\Fail.png" />
     <EmbeddedResource Include="Assets\Pass.png" />
     <EmbeddedResource Include="Assets\AppIcon.png" />

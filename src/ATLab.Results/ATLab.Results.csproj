@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- File format of the JSON test result files. Shared by ATLab (writes) and evaluation tools (read);
+       keep it free of UI and hardware dependencies. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ATLab.Results</RootNamespace>
+  </PropertyGroup>
+
+</Project>

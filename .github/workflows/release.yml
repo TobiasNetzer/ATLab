@@ -72,10 +72,10 @@ jobs:
     # libraries for that platform next to ATLab.exe, instead of a "runtimes"
     # folder with binaries for every platform. The app stays framework-dependent.
     - name: Restore
-      run: dotnet restore ATLab.csproj -r ${{ matrix.rid }}
+      run: dotnet restore src/ATLab/ATLab.csproj -r ${{ matrix.rid }}
 
     - name: Build
-      run: dotnet publish ATLab.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out
+      run: dotnet publish src/ATLab/ATLab.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out
 
     # User guides are shipped with every package in out/docs
     - name: Add user guide PDFs
