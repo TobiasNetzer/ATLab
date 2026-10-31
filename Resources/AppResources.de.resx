@@ -341,7 +341,7 @@
     <value>Info</value>
   </data>
   <data name="About_Description" xml:space="preserve">
-    <value>Ein plattformübergreifendes Test-Framework zur Anbindung von Hardware über den Test Interface Adapter und zur Steuerung externer Testgeräte über Fernsteuerungsschnittstellen.</value>
+    <value>Ein plattformübergreifendes Framework für automatisierte Prüfabläufe. Es bindet Hardware über den Test Interface Adapter an und steuert externe Messgeräte über deren Fernsteuerschnittstellen.</value>
   </data>
   <data name="About_Build" xml:space="preserve">
     <value>Build</value>
