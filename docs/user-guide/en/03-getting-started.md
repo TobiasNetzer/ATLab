@@ -74,7 +74,7 @@ While a password is set, turning it off, changing it or changing **Simulation on
 The Test Execution tab has two faces:
 
 - **Operator view** (default): toolbar, module list, step list, result bar. The step configuration panel is hidden, and only the Test Execution and About tabs are shown.
-- **Development mode**: toggled with the construction-cone button at the right end of the toolbar (**Enable development mode**). The configuration panels appear on the right, the module list gets buttons for editing modules, and the debug controls become available.
+- **Development mode**: toggled with the wrench button at the right end of the toolbar (**Enable development mode**). The wrench is crossed out while development mode is off. The configuration panels appear on the right, the module list gets buttons for editing modules, and the debug controls become available.
 
 The setting is remembered, so a test station can be left in operator view. If a development mode password is set (see [Settings](#settings)), the button asks for it, and ATLab always starts in operator view.
 
@@ -83,7 +83,7 @@ The setting is remembered, so a test station can be left in operator view. If a 
 This walkthrough works in simulator mode and needs no instruments.
 
 1. **Create a project.** On the Test Execution tab click **New project** (or press `Ctrl+N`). A new project contains one module, *Module 1*, which is selected in the module list.
-2. **Enable development mode** with the construction-cone button.
+2. **Enable development mode** with the wrench button.
 3. **Add a step.** Click **Add a new test step** (`+`, or press `Insert`). A new row appears and is selected.
 4. **Configure it** in the **Test Step Configuration** panel on the right:
    - **Name**: `Operator check`

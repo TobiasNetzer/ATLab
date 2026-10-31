@@ -388,7 +388,12 @@
                         Width="40"
                         Height="40">
                         <shadui:ButtonAssist.Icon>
-                            <ContentControl Content="{LucideIconContent Construction}"/>
+                            <Panel>
+                                <ContentControl Content="{LucideIconContent Wrench}"
+                                                IsVisible="{Binding IsDevelopmentMode}"/>
+                                <ContentControl Content="{LucideIconContent WrenchOff}"
+                                                IsVisible="{Binding !IsDevelopmentMode}"/>
+                            </Panel>
                         </shadui:ButtonAssist.Icon>
                     </Button>
                     

@@ -1,6 +1,6 @@
 # 8. Building Test Sequences
 
-Test sequences are built on the **Test Execution** tab with **development mode** enabled (construction-cone button at the right end of the toolbar). In development mode the configuration panels appear to the right of the step list.
+Test sequences are built on the **Test Execution** tab with **development mode** enabled (wrench button at the right end of the toolbar). In development mode the configuration panels appear to the right of the step list.
 
 ![Test Execution tab in development mode](images/Testing_Tab_en.png)
 
