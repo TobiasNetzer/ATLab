@@ -453,7 +453,7 @@
                 </DataGrid.Styles>
             
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="70">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="50">
                         <DataGridTemplateColumn.CellStyleClasses>
                             <x:String>StepNumberCell</x:String>
                         </DataGridTemplateColumn.CellStyleClasses>
@@ -484,7 +484,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="140">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -499,7 +499,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_NominalValue}" MinWidth="140">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_NominalValue}" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -514,7 +514,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_UpperLimit}" MinWidth="140">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_UpperLimit}" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock VerticalAlignment="Center" Margin="12,0,0,0">
@@ -529,7 +529,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_MeasuredValue}" MinWidth="140">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_MeasuredValue}" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock Text="{Binding Result}" 
@@ -540,7 +540,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="{helpers:Localize Header_Deviation}" Binding="{Binding Deviation}" MinWidth="110" />
-                    <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="80">
+                    <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="70">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Image Width="15" Height="15"
