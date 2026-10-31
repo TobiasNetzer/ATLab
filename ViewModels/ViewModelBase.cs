@@ -10,6 +10,10 @@ public partial class ViewModelBase : ObservableObject
     [ObservableProperty]
     private string _title = string.Empty;
 
+    /// <summary>False hides and locks the tab header in the main window so the tab cannot be selected.</summary>
+    [ObservableProperty]
+    private bool _isTabEnabled = true;
+
     protected void SetLocalizedTitle(string resourceKey, Func<string, string>? formatTitle = null)
     {
         void Update()

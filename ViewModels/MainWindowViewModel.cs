@@ -115,6 +115,8 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(HardwareTab);
         Tabs.Add(AboutTab);
 
+        UpdateTabAccess();
+
         _projectModel.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName is nameof(ProjectModel.FilePath) or
@@ -131,9 +133,26 @@ public partial class MainWindowViewModel : ViewModelBase
                 FindMatrixChannelCommand.NotifyCanExecuteChanged();
                 OpenAppSettingsCommand.NotifyCanExecuteChanged();
             }
+            else if (e.PropertyName is nameof(TestingTabViewModel.IsDevelopmentMode))
+            {
+                UpdateTabAccess();
+            }
         };
     }
     
+    private void UpdateTabAccess()
+    {
+        var isDevelopmentMode = TestingTab.IsDevelopmentMode;
+
+        foreach (var tab in Tabs)
+        {
+            tab.IsTabEnabled = isDevelopmentMode || ReferenceEquals(tab, TestingTab) || ReferenceEquals(tab, AboutTab);
+        }
+
+        if (!SelectedTab.IsTabEnabled)
+            SelectedTab = TestingTab;
+    }
+
     private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
     
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);

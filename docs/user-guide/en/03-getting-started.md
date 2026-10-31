@@ -73,7 +73,7 @@ While a password is set, turning it off, changing it or changing **Simulation on
 
 The Test Execution tab has two faces:
 
-- **Operator view** (default): toolbar, module list, step list, result bar. The step configuration panel is hidden.
+- **Operator view** (default): toolbar, module list, step list, result bar. The step configuration panel is hidden, and only the Test Execution and About tabs are shown.
 - **Development mode**: toggled with the construction-cone button at the right end of the toolbar (**Enable development mode**). The configuration panels appear on the right, the module list gets buttons for editing modules, and the debug controls become available.
 
 The setting is remembered, so a test station can be left in operator view. If a development mode password is set (see [Settings](#settings)), the button asks for it, and ATLab always starts in operator view.

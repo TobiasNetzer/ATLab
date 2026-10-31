@@ -72,6 +72,13 @@
                                          Color="{DynamicResource InfoColor}" />
                     </TabControl.Resources>
 
+                    <TabControl.Styles>
+                        <Style Selector="TabItem" x:DataType="vm:ViewModelBase">
+                            <Setter Property="IsEnabled" Value="{Binding IsTabEnabled}" />
+                            <Setter Property="IsVisible" Value="{Binding IsTabEnabled}" />
+                        </Style>
+                    </TabControl.Styles>
+
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Title}"

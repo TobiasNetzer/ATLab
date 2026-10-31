@@ -73,7 +73,7 @@ Solange ein Passwort gesetzt ist, verlangt das Ausschalten oder Ändern des Pass
 
 Die Registerkarte Testausführung hat zwei Gesichter:
 
-- **Bedieneransicht** (Standard): Werkzeugleiste, Modulliste, Schrittliste, Ergebnisleiste. Die Schrittkonfiguration ist ausgeblendet.
+- **Bedieneransicht** (Standard): Werkzeugleiste, Modulliste, Schrittliste, Ergebnisleiste. Die Schrittkonfiguration ist ausgeblendet, und nur die Registerkarten Testausführung und Info werden angezeigt.
 - **Entwicklungsmodus**: umschaltbar über die Baustellen-Schaltfläche am rechten Ende der Werkzeugleiste (**Entwicklungsmodus aktivieren**). Rechts erscheinen die Konfigurationsbereiche, die Modulliste erhält Schaltflächen zum Bearbeiten der Module, außerdem stehen die Debug-Schaltflächen zur Verfügung.
 
 Die Einstellung wird gespeichert, sodass ein Prüfplatz in der Bedieneransicht verbleiben kann. Ist ein Passwort für den Entwicklungsmodus gesetzt (siehe [Einstellungen](#einstellungen)), fragt die Schaltfläche danach, und ATLab startet immer in der Bedieneransicht.
