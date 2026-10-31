@@ -40,7 +40,7 @@ Die Trichter-Schaltfläche setzt alle Filter zurück.
 
 ## Registerkarte Übersicht
 
-Die Kacheln oben zeigen die Anzahl der Läufe, bestandene und fehlgeschlagene Läufe, die **Ausbeute** (Anteil bestandener Läufe) und den **First Pass Yield**.
+Die Kacheln oben zeigen die Anzahl der Läufe, bestandene und fehlgeschlagene Läufe, die **Ausbeute** (Anteil bestandener Läufe) und die **Erstausbeute** (First Pass Yield).
 
 **Zusammenfassung**
 
@@ -48,7 +48,7 @@ Die Kacheln oben zeigen die Anzahl der Läufe, bestandene und fehlgeschlagene L�
 |----------|-----------|
 | Zeitraum | Erster und letzter Startzeitpunkt der gefilterten Läufe |
 | Geräte (Seriennummern) | Anzahl verschiedener Seriennummern |
-| First Pass Yield | Anteil der Geräte, deren **erster** Lauf bestanden hat |
+| Erstausbeute | Anteil der Geräte, deren **erster** Lauf bestanden hat (First Pass Yield) |
 | Endausbeute | Anteil der Geräte, deren **letzter** Lauf bestanden hat, also nach Nacharbeit und Nachtests |
 | Mittlere Testdauer | Durchschnittliche Dauer eines Laufs |
 

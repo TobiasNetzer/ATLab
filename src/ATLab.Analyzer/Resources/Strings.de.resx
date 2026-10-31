@@ -115,7 +115,7 @@
     <value>Ausbeute (bestandene Läufe)</value>
   </data>
   <data name="Label_FirstPassYieldDevices" xml:space="preserve">
-    <value>First Pass Yield (Geräte)</value>
+    <value>Erstausbeute (Geräte)</value>
   </data>
   <data name="ToolTip_FirstPassYield" xml:space="preserve">
     <value>Anteil der Seriennummern, deren erster Lauf bestanden hat</value>
@@ -139,7 +139,7 @@
     <value>Geräte (Seriennummern)</value>
   </data>
   <data name="Fact_FirstPassYield" xml:space="preserve">
-    <value>First Pass Yield</value>
+    <value>Erstausbeute</value>
   </data>
   <data name="Fact_FinalYield" xml:space="preserve">
     <value>Endausbeute</value>
