@@ -43,6 +43,7 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 
 - **Projektdokumentation**: Notizen, Bilder, Anhänge und Angaben zum Prüfling werden im Projekt gespeichert.
 - **Berichte**: Die Ergebnisse werden als CSV-Datei, als PDF-Testbericht und als JSON-Datei mit Metadaten gespeichert, einschließlich der verwendeten Messgeräte.
+- **Auswertung**: ATLab Analyzer, ein eigenes Programm, das mit ATLab installiert wird, wertet die JSON-Ergebnisdateien vieler Läufe aus: Ausbeute, häufigste Fehler, Histogramme, Trends und Prozessfähigkeit (siehe [ATLab Analyzer](16-analyzer.md)).
 - **Ereignisprotokoll**: Alle Meldungen der Sitzung werden im Ereignisprotokoll gesammelt.
 
 ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Dateien und eignen sich daher gut für die Versionsverwaltung. Die Oberfläche gibt es auf Deutsch und Englisch, jeweils mit hellem und dunklem Design. Sprache und Design werden im Einstellungsdialog gewählt. Dieses Handbuch öffnet sich mit `F1`.
@@ -69,4 +70,4 @@ ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Da
 
 - **Prüfingenieure**, die Sequenzen entwerfen: Kapitel 5–13 (Kapitel 12 nur bei Einsatz von Boundary Scan).
 - **Bediener**, die freigegebene Sequenzen ausführen: Kapitel 3, 14 und 15 genügen.
-- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und 4 sowie die [Referenz](17-reference.md).
+- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und 4 sowie die [Referenz](18-reference.md).

@@ -35,7 +35,7 @@ To update, run the installer of the new version; close ATLab and ATLab Analyzer 
 are replaced, files you added to the program folder yourself (e.g. a J-Link or FTDI DLL) are kept.
 
 Uninstalling removes the installed files, shortcuts and the file association. Files you added to the program folder
-stay, as do your projects, scripts and personal settings (see [File locations](17-reference.md#file-locations)).
+stay, as do your projects, scripts and personal settings (see [File locations](18-reference.md#file-locations)).
 
 ### Portable ZIP
 

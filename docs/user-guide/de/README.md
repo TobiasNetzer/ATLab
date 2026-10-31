@@ -24,9 +24,10 @@ Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Proj
 | 12 | [Registerkarte Boundary Scan](12-boundary-scan.md) | JTAG-Probes, Scan-Kette, BSDL-Dateien, Pins lesen und treiben, I²C-/SPI-Busse |
 | 13 | [Registerkarte Dokumentation](13-documentation-tab.md) | Projektnotizen, Bilder, Anhänge, Prüflingsdaten |
 | 14 | [Tests ausführen](14-running-tests.md) | Ausführung, fehlgeschlagene Schritte, Debugging, Seriennummern, Steuermodul |
-| 15 | [Testergebnisse & Berichte](15-results-and-reports.md) | CSV-Export und PDF-Testbericht |
-| 16 | [Fehlerbehebung](16-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
-| 17 | [Referenz](17-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
+| 15 | [Testergebnisse & Berichte](15-results-and-reports.md) | CSV-Datendatei, JSON-Ergebnisdatei und PDF-Testbericht |
+| 16 | [ATLab Analyzer](16-analyzer.md) | Auswertung der Ergebnisdateien: Ausbeute, häufigste Fehler, Histogramme, Trends, Prozessfähigkeit, Exporte |
+| 17 | [Fehlerbehebung](17-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
+| 18 | [Referenz](18-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
 
 ## Konventionen
 

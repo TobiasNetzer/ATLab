@@ -262,7 +262,7 @@
     <value>Median</value>
   </data>
   <data name="Fact_StdDev" xml:space="preserve">
-    <value>Standardabweichung (σ)</value>
+    <value>Standardabw. (σ)</value>
   </data>
   <data name="Fact_MinMax" xml:space="preserve">
     <value>Min / Max</value>

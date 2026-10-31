@@ -71,7 +71,7 @@ Numbers are written without SI prefixes, so a value shown as `1,3mA` appears as 
 
 ## JSON result file
 
-The JSON file contains the same steps as the CSV file plus the metadata of the run, so every file is complete on its own. It is meant for evaluation tools and scripts (statistics, yield, trends) rather than for reading in a spreadsheet. Property names, enum values and numbers are independent of the UI language.
+The JSON file contains the same steps as the CSV file plus the metadata of the run, so every file is complete on its own. It is meant for evaluation tools and scripts (statistics, yield, trends) rather than for reading in a spreadsheet; [ATLab Analyzer](16-analyzer.md) reads these files. Property names, enum values and numbers are independent of the UI language.
 
 ```json
 {

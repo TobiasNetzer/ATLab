@@ -43,6 +43,7 @@ A test engineer builds a **test sequence** from test steps that measure values a
 
 - **Project documentation** with notes, images, attachments and information about the device under test.
 - **CSV data files**, **PDF test reports** and **JSON result files** with run metadata, including the instruments used.
+- **ATLab Analyzer**, a separate program installed with ATLab, evaluates the JSON result files of many runs: yield, the steps that fail most often, histograms, trends and process capability (see [ATLab Analyzer](16-analyzer.md)).
 - An **event log** with every message of the session.
 
 ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well suited for version control. The user interface is available in English and German with a light and a dark theme. Language and theme are chosen in the settings dialog. This guide opens with `F1`.
@@ -69,4 +70,4 @@ ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well
 
 - **Test engineers** who design sequences: read chapters 5–13 (chapter 12 only if you use boundary scan).
 - **Operators** who run released sequences: chapters 3, 14 and 15 are enough.
-- **Administrators** who install ATLab on test stations: chapters 2 and 4 and the [Reference](17-reference.md).
+- **Administrators** who install ATLab on test stations: chapters 2 and 4 and the [Reference](18-reference.md).

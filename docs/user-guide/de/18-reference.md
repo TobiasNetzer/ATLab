@@ -1,4 +1,4 @@
-# 17. Referenz
+# 18. Referenz
 
 ## Tastenkürzel
 
@@ -36,6 +36,16 @@
 | `Strg+D` | Ausgewählte Schritte duplizieren (Entwicklungsmodus) |
 | `F2` | Namen des ausgewählten Schritts bearbeiten (Entwicklungsmodus) |
 | `Strg`/`Umschalt` + Klick | Mehrfachauswahl |
+
+### ATLab Analyzer
+
+| Kürzel | Aktion |
+|--------|--------|
+| `Strg+O` | Ergebnisdateien öffnen |
+| `Strg+Umschalt+O` | Ordner mit Ergebnisdateien öffnen (inklusive Unterordner) |
+| `Esc` | Info-Feld schließen |
+| Mausrad / `Strg` + Mausrad | Diagramm zoomen (siehe [Zoomen](16-analyzer.md#zoomen)) |
+| Doppelklick auf ein Diagramm | Zoom zurücksetzen |
 
 ## Werkzeugleiste der Registerkarte Testausführung
 
@@ -120,6 +130,8 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Ereignisprotokoll | `%LOCALAPPDATA%\ATLab\events.log` | `~/.local/share/ATLab/events.log` |
 | Standard-Skriptordner | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
 | Programm (Installer) | `C:\Program Files\ATLab\` | dort, wo Sie es entpackt haben |
+| ATLab Analyzer | `<Programmordner>\Analyzer\ATLab.Analyzer.exe` | `<Programmordner>/Analyzer/ATLab.Analyzer` |
+| Einstellungen von ATLab Analyzer (Sprache, Farbschema) | `%LOCALAPPDATA%\ATLab\analyzer-settings.json` | `~/.local/share/ATLab/analyzer-settings.json` |
 | Benutzerhandbuch (PDF) | `<Programmordner>\docs\ATLab-User-Guide-de.pdf` / `-en.pdf` | `<Programmordner>/docs/ATLab-User-Guide-de.pdf` / `-en.pdf` |
 | Projekte | `*.atlab`, beliebig | `*.atlab`, beliebig |
 | Skripte | `<Skriptordner>\<id>.json` | `<Skriptordner>/<id>.json` |

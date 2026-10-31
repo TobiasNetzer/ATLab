@@ -71,7 +71,7 @@ Die Spaltenüberschriften und Werte sind unabhängig von der Oberflächensprache
 
 ## JSON-Ergebnisdatei
 
-Die JSON-Datei enthält dieselben Schritte wie die CSV-Datei und zusätzlich die Metadaten des Laufs, sodass jede Datei für sich vollständig ist. Sie ist für Auswerteprogramme und Skripte gedacht (Statistik, Ausbeute, Trends), nicht für die Tabellenkalkulation. Feldnamen, Aufzählungswerte und Zahlen sind unabhängig von der Oberflächensprache.
+Die JSON-Datei enthält dieselben Schritte wie die CSV-Datei und zusätzlich die Metadaten des Laufs, sodass jede Datei für sich vollständig ist. Sie ist für Auswerteprogramme und Skripte gedacht (Statistik, Ausbeute, Trends), nicht für die Tabellenkalkulation; [ATLab Analyzer](16-analyzer.md) liest diese Dateien. Feldnamen, Aufzählungswerte und Zahlen sind unabhängig von der Oberflächensprache.
 
 ```json
 {

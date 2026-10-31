@@ -1,4 +1,4 @@
-# 16. Troubleshooting
+# 17. Troubleshooting
 
 ## The event log
 
@@ -90,6 +90,16 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | Report generation is slow | A device marked *Include in Test Report* does not answer its identification query. Switch it on or untick the option. |
 | Device shows `-` under Test Equipment | No identification query configured, or no answer. |
 
+## ATLab Analyzer
+
+| Symptom | Cause / solution |
+|---------|------------------|
+| ATLab or the Analyzer does not start after installation | The **.NET 10 Runtime** (x64) is missing. Install it from <https://dotnet.microsoft.com/download/dotnet/10.0>. |
+| Files are reported as skipped | Click **… file(s) skipped** for the reason. Common: other JSON files in the folder (*Not an ATLab test result file*), damaged files, or files of a newer ATLab version (*Format version … is newer than the supported version*) — update the Analyzer. |
+| No runs appear | Check that ATLab writes JSON files (**Export Result File for Evaluation (JSON)**), and reset the filters with the funnel button. |
+| Histogram and trend show *No measured values* | The step produces no numeric value (e.g. a communication check) or only Timeout/NACK results. Its pass/fail counts are still in the table. |
+| Cp and Cpk are empty | The step has fewer than two values, no spread, or equal lower and upper limits (a pass/fail check). |
+
 ## Control module
 
 | Symptom | Cause / solution |
@@ -99,6 +109,6 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 ## Resetting personal settings
 
-Window position, theme, language, the *Simulation only* setting, the development mode password, last port and last project are stored in `settings.json` (see [File locations](17-reference.md#file-locations)). Close ATLab and delete the file to return to defaults; this also removes the development mode password. Projects and scripts are not affected.
+Window position, theme, language, the *Simulation only* setting, the development mode password, last port and last project are stored in `settings.json` (see [File locations](18-reference.md#file-locations)). Close ATLab and delete the file to return to defaults; this also removes the development mode password. Projects and scripts are not affected.
 
-If only the development mode password is forgotten, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` instead (see [settings.json](17-reference.md#settingsjson)).
+If only the development mode password is forgotten, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` instead (see [settings.json](18-reference.md#settingsjson)).

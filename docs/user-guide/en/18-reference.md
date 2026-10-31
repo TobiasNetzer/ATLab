@@ -1,4 +1,4 @@
-# 17. Reference
+# 18. Reference
 
 ## Keyboard shortcuts
 
@@ -36,6 +36,16 @@
 | `Ctrl+D` | Duplicate selected steps (development mode) |
 | `F2` | Edit the name of the selected step (development mode) |
 | `Ctrl`/`Shift` + click | Multi-select |
+
+### ATLab Analyzer
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+O` | Open result files |
+| `Ctrl+Shift+O` | Open folder with result files (including subfolders) |
+| `Esc` | Close the About panel |
+| Mouse wheel / `Ctrl` + mouse wheel | Zoom a chart (see [Zooming](16-analyzer.md#zooming)) |
+| Double-click on a chart | Reset the zoom |
 
 ## Toolbar of the Test Execution tab
 
@@ -120,6 +130,8 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Event log | `%LOCALAPPDATA%\ATLab\events.log` | `~/.local/share/ATLab/events.log` |
 | Default script folder | `%LOCALAPPDATA%\ATLab\Scripts\` | `~/.local/share/ATLab/Scripts/` |
 | Program (installer) | `C:\Program Files\ATLab\` | wherever you extracted it |
+| ATLab Analyzer | `<program folder>\Analyzer\ATLab.Analyzer.exe` | `<program folder>/Analyzer/ATLab.Analyzer` |
+| ATLab Analyzer settings (language, theme) | `%LOCALAPPDATA%\ATLab\analyzer-settings.json` | `~/.local/share/ATLab/analyzer-settings.json` |
 | User guide PDFs | `<program folder>\docs\ATLab-User-Guide-en.pdf` / `-de.pdf` | `<program folder>/docs/ATLab-User-Guide-en.pdf` / `-de.pdf` |
 | Projects | `*.atlab`, anywhere | `*.atlab`, anywhere |
 | Scripts | `<script folder>\<id>.json` | `<script folder>/<id>.json` |

@@ -1,4 +1,4 @@
-# 16. Fehlerbehebung
+# 17. Fehlerbehebung
 
 ## Das Ereignisprotokoll
 
@@ -90,6 +90,16 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | Berichterzeugung ist langsam | Ein Gerät mit *In Testbericht aufnehmen* antwortet nicht auf seine Identifikationsabfrage. Gerät einschalten oder Option abwählen. |
 | Gerät zeigt `-` unter Prüfmittel | Keine Identifikationsabfrage konfiguriert oder keine Antwort. |
 
+## ATLab Analyzer
+
+| Symptom | Ursache / Lösung |
+|---------|------------------|
+| ATLab oder der Analyzer startet nach der Installation nicht | Die **.NET 10 Runtime** (x64) fehlt. Installieren unter <https://dotnet.microsoft.com/download/dotnet/10.0>. |
+| Dateien werden als übersprungen gemeldet | Auf **… Datei(en) übersprungen** klicken, um den Grund zu sehen. Häufig: andere JSON-Dateien im Ordner (*Not an ATLab test result file*), beschädigte Dateien oder Dateien einer neueren ATLab-Version (*Format version … is newer than the supported version*) — den Analyzer aktualisieren. |
+| Es erscheinen keine Läufe | Prüfen, ob ATLab JSON-Dateien schreibt (**Ergebnisdatei für Auswertung exportieren (JSON)**), und die Filter mit der Trichter-Schaltfläche zurücksetzen. |
+| Histogramm und Trend zeigen *Keine Messwerte* | Der Schritt liefert keinen Zahlenwert (z. B. eine Kommunikationsprüfung) oder nur Timeout/NACK. Seine Bestanden/Fehlgeschlagen-Zahlen stehen trotzdem in der Tabelle. |
+| Cp und Cpk sind leer | Der Schritt hat weniger als zwei Werte, keine Streuung oder gleiche Unter- und Obergrenze (eine Gut/Schlecht-Prüfung). |
+
 ## Steuermodul
 
 | Symptom | Ursache / Lösung |
@@ -99,6 +109,6 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 ## Persönliche Einstellungen zurücksetzen
 
-Fensterposition, Design, Sprache, die Einstellung *Nur Simulation*, das Passwort für den Entwicklungsmodus, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](17-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren; dabei wird auch das Passwort für den Entwicklungsmodus entfernt. Projekte und Skripte sind davon nicht betroffen.
+Fensterposition, Design, Sprache, die Einstellung *Nur Simulation*, das Passwort für den Entwicklungsmodus, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](18-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren; dabei wird auch das Passwort für den Entwicklungsmodus entfernt. Projekte und Skripte sind davon nicht betroffen.
 
-Ist nur das Passwort für den Entwicklungsmodus vergessen, stattdessen `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen (siehe [settings.json](17-reference.md#settingsjson)).
+Ist nur das Passwort für den Entwicklungsmodus vergessen, stattdessen `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen (siehe [settings.json](18-reference.md#settingsjson)).

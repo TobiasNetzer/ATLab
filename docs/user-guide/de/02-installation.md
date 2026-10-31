@@ -37,7 +37,7 @@ bleiben erhalten.
 
 Bei der Deinstallation werden die installierten Dateien, Verknüpfungen und Dateizuordnung entfernt. Selbst in den
 Programmordner kopierte Dateien bleiben erhalten, ebenso Projekte, Skripte und persönliche Einstellungen (siehe
-[Dateiablage](17-reference.md#dateiablage)).
+[Dateiablage](18-reference.md#dateiablage)).
 
 ### Portables ZIP
 
