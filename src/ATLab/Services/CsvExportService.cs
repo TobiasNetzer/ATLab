@@ -164,7 +164,8 @@ public class CsvExportService : ICsvExportService
                     Result: normalizedResult,
                     Unit: ts.Unit.Trim('{', '}'),
                     IsPassed: vm.IsPassed ? "Pass" : "Fail",
-                    Deviation: normalizedDeviation
+                    Deviation: normalizedDeviation,
+                    Details: vm.ResultDetailLines.Count > 0 ? string.Join("; ", vm.ResultDetailLines) : null
                 );
             });
     }
@@ -186,7 +187,8 @@ public class CsvExportService : ICsvExportService
             "Upper Limit",
             "Unit",
             "Deviation (%)",
-            "Result"
+            "Result",
+            "Details"
         }));
 
         foreach (var r in rows)
@@ -201,7 +203,8 @@ public class CsvExportService : ICsvExportService
                 r.UpperLimit.ToString(CultureInfo.CurrentCulture),
                 Escape(r.Unit),
                 Escape(r.Deviation),
-                r.IsPassed
+                r.IsPassed,
+                Escape(r.Details)
             }));
         }
 

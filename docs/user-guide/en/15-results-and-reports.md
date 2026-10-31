@@ -65,6 +65,7 @@ Despite the `.csv` extension, the file is **tab-separated** (UTF-8). It opens di
 | Unit | Unit text (braces removed) |
 | Deviation (%) | Deviation from nominal |
 | Result | `Pass` or `Fail` |
+| Details | Additional messages of the step, e.g. failed response checks or boundary scan pins, separated by `; `, empty if there are none. The same lines as `steps[].details` in the JSON file. |
 
 Numbers are written without SI prefixes, so a value shown as `1,3mA` appears as `0.0013`.
 
@@ -121,6 +122,7 @@ The JSON file contains the same steps as the CSV file plus the metadata of the r
 | `testHardware.isSimulator` | `true` for runs in simulator mode. Exclude these from production statistics. |
 | `testEquipment` | Devices with **Include in Test Report** and their identification string (`null` if the device did not answer). |
 | `steps[].moduleId`, `steps[].stepId` | Stable IDs from the project file. They do not change when modules or steps are renamed, renumbered or moved, so the same step can be compared across runs. |
+| `steps[].unit` | Unit as entered in the step. A unit in braces (e.g. `{°C}`) is shown without SI prefix, see [Name, limits and unit](08-building-test-sequences.md#name-limits-and-unit). Unlike the CSV file and the PDF report, the JSON file keeps the braces so evaluation tools can format values the same way. |
 | `steps[].status` | `Measured`, `NoValue` (step produces no value), `Timeout`, `NACK`, `Overflow` or `Unknown`. |
 | `steps[].value` | Measured value without SI prefix (`1,3mA` → `0.0013`); `null` unless `status` is `Measured`. |
 | `steps[].details` | Additional messages of the step, e.g. failed response checks; `null` if there are none. |

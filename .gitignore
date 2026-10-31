@@ -62,3 +62,6 @@ nunit-*.xml
 # Locally built user guide PDFs (scripts/build_user_guide_pdf.py)
 /ATLab-User-Guide-*.pdf
 /ATLab-User-Guide-*.html
+
+# Output of tools/ATLab.TestDataGenerator
+test-results/

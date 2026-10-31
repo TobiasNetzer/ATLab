@@ -104,6 +104,7 @@ cd ATLab
 dotnet restore
 dotnet build -c Release
 dotnet run --project src/ATLab/ATLab.csproj
+dotnet run --project src/ATLab.Analyzer/ATLab.Analyzer.csproj   # ATLab Analyzer
 ```
 
 Alternatively, open `ATLab.sln` in **JetBrains Rider**, **Visual Studio 2022**, or **VS Code** (with C# Dev Kit).
@@ -157,6 +158,37 @@ View information about the attached Test Interface Adapter, its channels and int
 → [Test Hardware Tab](docs/user-guide/en/04-test-hardware.md)
 
 ![image](docs/user-guide/en/images/Hardware_Tab_en.png)
+
+## ATLab Analyzer
+
+`src/ATLab.Analyzer` is a separate desktop app that evaluates the JSON test result files written by ATLab.
+It reads the files through the shared `ATLab.Results` library, so it always uses the same file format as ATLab.
+
+- **Import:** open single files or a whole folder (subfolders included), drag & drop, or pass paths on the command line.
+  Other JSON files in the folder are skipped and listed.
+- **Filter:** search by serial number, project, device or operator, by result, project and date range, hide simulator
+  runs, or keep only the latest run per device.
+- **Overview:** number of runs, passed/failed, yield, first pass and final yield per serial number, mean test time,
+  and the steps that fail most often.
+- **Steps:** statistics of every step across all runs (fail rate, mean, standard deviation, min/max, Cp, Cpk), with a
+  histogram (normal curve, limits, adjustable bins) and a trend chart (limits, mean, ±3σ band) of the selected step.
+  Steps are matched by their stable step ID, so renaming or renumbering a step does not split its history.
+- **Runs:** all runs with their metadata and the step results of the selected run.
+- **Export:** tab separated CSV with numbers in decimal point format, like ATLab's CSV: step statistics, run list,
+  one step across all runs, all steps of one run (same columns as ATLab's CSV), and all values as one row per run.
+- **Language and theme:** English or German and light or dark mode, switchable in the toolbar and remembered. On the
+  first start the analyzer takes over the language and theme of ATLab.
+
+To try the analyzer without real test data, generate synthetic result files:
+
+```bash
+dotnet run --project tools/ATLab.TestDataGenerator -- --output test-results --runs 1500 --days 21 --sort-by-verdict
+```
+
+The generator simulates a production line with two projects over working days, including retests of failed devices,
+continuous runs on a golden sample, simulator runs, drift, tightened limits, a renamed step, two fixtures with
+different offsets, units with and without braces, and Timeout/NACK failures. The same `--seed` always gives the same
+files; `--help` lists all options.
 
 ## License
 

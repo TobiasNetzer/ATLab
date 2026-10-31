@@ -1,0 +1,192 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:themes="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:controls="clr-namespace:ATLab.Analyzer.Controls"
+             x:Class="ATLab.Analyzer.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="WindowBackground">#FFFAFAFA</Color>
+                    <Color x:Key="ButtonBackground">#FFF2F2F2</Color>
+                    <Color x:Key="PanelBackground">#FFFFFFFF</Color>
+                    <Color x:Key="ChartForeground">#FF27272A</Color>
+                    <Color x:Key="ChartMuted">#FF71717A</Color>
+                    <Color x:Key="ChartGrid">#1F000000</Color>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="WindowBackground">#FF27272A</Color>
+                    <Color x:Key="ButtonBackground">#FF353535</Color>
+                    <Color x:Key="PanelBackground">#FF2E2E33</Color>
+                    <Color x:Key="ChartForeground">#FFE4E4E7</Color>
+                    <Color x:Key="ChartMuted">#FFA1A1AA</Color>
+                    <Color x:Key="ChartGrid">#24FFFFFF</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+
+        <SolidColorBrush x:Key="PassBrush" Color="#FF00C853"/>
+        <SolidColorBrush x:Key="FailBrush" Color="#FFFF1744"/>
+        <SolidColorBrush x:Key="MarginalBrush" Color="Orange"/>
+    </Application.Resources>
+
+    <Application.Styles>
+
+        <themes:ShadTheme/>
+
+        <!-- Charts take their colors from the theme -->
+        <Style Selector=":is(controls|ChartBase)">
+            <Setter Property="Foreground" Value="{DynamicResource ChartForeground}"/>
+            <Setter Property="MutedBrush" Value="{DynamicResource ChartMuted}"/>
+            <Setter Property="GridBrush" Value="{DynamicResource ChartGrid}"/>
+            <Setter Property="AccentBrush" Value="{DynamicResource InfoColor}"/>
+            <Setter Property="PassBrush" Value="{StaticResource PassBrush}"/>
+            <Setter Property="FailBrush" Value="{StaticResource FailBrush}"/>
+        </Style>
+
+        <!-- Button without hover and press effects, from ATLab -->
+        <Style Selector="Button.no-effects">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- Cards of the overview and side panels -->
+        <Style Selector="Border.Panel">
+            <Setter Property="Background" Value="{DynamicResource PanelBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource OutlineColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14"/>
+        </Style>
+
+        <Style Selector="TextBlock.Label">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource ChartMuted}"/>
+        </Style>
+
+        <Style Selector="TextBlock.Figure">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style Selector="TextBlock.Pass">
+            <Setter Property="Foreground" Value="{StaticResource PassBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.Fail">
+            <Setter Property="Foreground" Value="{StaticResource FailBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.Marginal">
+            <Setter Property="Foreground" Value="{StaticResource MarginalBrush}"/>
+        </Style>
+
+        <!-- ShadUI's DataGrid template wraps the rows in a ScrollViewer and has no PART_HorizontalScrollbar,
+             so the DataGrid can't scroll horizontally. This template uses the DataGrid's own scrollbars,
+             laid out like Avalonia's Fluent theme: the rows presenter spans the scrollbar row and column
+             so both scrollbars overlay the cells. The DataGrid derives IsVerticalScrollBarOverCells and
+             IsHorizontalScrollBarOverCells from these spans; if they don't match the actual layout it
+             subtracts unset scrollbar sizes from the cell area and the rows render incorrectly. -->
+        <Style Selector="DataGrid.HorizontalScroll">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="DataGridBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              RowDefinitions="Auto,*,Auto"
+                              ClipToBounds="True">
+
+                            <Border x:Name="PART_HeaderBackground"
+                                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                    BorderBrush="{DynamicResource BorderColor}"
+                                    BorderThickness="0,0,0,1"/>
+
+                            <!-- ColumnSpan 2: horizontal scrollbar is treated as overlaying the cells -->
+                            <DataGridColumnHeadersPresenter Name="PART_ColumnHeadersPresenter"
+                                                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
+
+                            <!-- RowSpan 2 / ColumnSpan 3: rows extend under both scrollbars -->
+                            <DataGridRowsPresenter Name="PART_RowsPresenter"
+                                                   Grid.Row="1" Grid.Column="0"
+                                                   Grid.RowSpan="2" Grid.ColumnSpan="3"
+                                                   ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                                <DataGridRowsPresenter.GestureRecognizers>
+                                    <ScrollGestureRecognizer CanHorizontallyScroll="True"
+                                                             CanVerticallyScroll="True"
+                                                             IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_RowsPresenter}"/>
+                                </DataGridRowsPresenter.GestureRecognizers>
+                            </DataGridRowsPresenter>
+
+                            <ScrollBar Name="PART_VerticalScrollbar"
+                                       Grid.Row="1" Grid.Column="2"
+                                       Orientation="Vertical"/>
+
+                            <Grid Grid.Row="2" Grid.Column="1"
+                                  ColumnDefinitions="Auto,*">
+                                <Rectangle Name="PART_FrozenColumnScrollBarSpacer"/>
+                                <ScrollBar Name="PART_HorizontalScrollbar"
+                                           Grid.Column="1"
+                                           Orientation="Horizontal"/>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- Same hover animation ShadUI applies to ScrollViewer scrollbars. AllowAutoHide must not be
+             set in the template above, template values take precedence over this style. -->
+        <Style Selector="DataGrid.HorizontalScroll:pointerover /template/ ScrollBar">
+            <Setter Property="AllowAutoHide" Value="True"/>
+        </Style>
+
+        <!-- Smaller text and tighter cells than ShadUI's defaults (14 px, padding 12,8), so more rows and columns
+             fit. Cells and rows take the font size from the DataGrid. -->
+        <Style Selector="DataGrid.Compact">
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style Selector="DataGrid.Compact DataGridCell">
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+        <Style Selector="DataGrid.Compact DataGridColumnHeader">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <!-- Cell text of a template column that ends in "…" when it does not fit, with the full text as tooltip -->
+        <Style Selector="DataGridCell TextBlock.TrimmedCell">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="DataGrid ToolTip">
+            <Setter Property="MaxWidth" Value="600"/>
+        </Style>
+
+    </Application.Styles>
+
+</Application>

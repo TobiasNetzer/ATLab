@@ -136,6 +136,7 @@ public class TestExecutor : ITestExecutor
         catch (Exception ex)
         {
             _loggingService.Error("Test execution failed: " + ex.Message);
+            OnExecutionError();
         }
         finally
         {

@@ -95,6 +95,10 @@ public sealed record TestStepResult
 
     public double? LowerLimit { get; init; }
     public double? UpperLimit { get; init; }
+    /// <summary>
+    /// Unit as entered in the project. In braces (e.g. "{°C}") the value is shown without SI prefix, otherwise with
+    /// one (0.0013 "A" → 1.3mA).
+    /// </summary>
     public string Unit { get; init; } = string.Empty;
 
     public TestValueStatus Status { get; init; }

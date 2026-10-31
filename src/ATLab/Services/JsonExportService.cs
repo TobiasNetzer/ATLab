@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
@@ -25,13 +23,6 @@ public class JsonExportService : IJsonExportService
     private readonly ILoggingService _loggingService;
     private readonly IHardwareAccessor _hardwareAccessor;
     private readonly ProjectModel _projectModel;
-
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter() }
-    };
 
     private static string AppVersion =>
         Assembly.GetEntryAssembly()?
@@ -63,7 +54,7 @@ public class JsonExportService : IJsonExportService
             var file = await BuildAsync(steps, testInfo, testEquipment);
 
             await using var stream = File.Open(outputPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            await JsonSerializer.SerializeAsync(stream, file, JsonOptions);
+            await TestResultJson.WriteAsync(stream, file);
 
             _loggingService.Info($"JSON exported to '{outputPath}'.");
         }
@@ -143,7 +134,8 @@ public class JsonExportService : IJsonExportService
             Name = ts.Name,
             LowerLimit = Finite(ts.LowerLimit),
             UpperLimit = Finite(ts.UpperLimit),
-            Unit = ts.Unit.Trim('{', '}'),
+            // Kept with braces so evaluation tools know a {unit} is shown without SI prefix; CSV and PDF strip them
+            Unit = ts.Unit,
             Status = status,
             Value = value,
             DeviationPercent = status == TestValueStatus.Measured ? ParseDeviation(vm.Deviation) : null,

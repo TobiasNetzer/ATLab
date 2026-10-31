@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ATLab.Analyzer.ViewModels"
+             xmlns:loc="clr-namespace:ATLab.Analyzer.Localization"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             x:Class="ATLab.Analyzer.Controls.About"
+             x:DataType="vm:AboutViewModel"
+             Width="560">
+    
+    <Border Classes="Panel" Padding="20" BoxShadow="0 8 32 0 #50000000">
+        <StackPanel Spacing="16">
+            
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                <Image Source="avares://ATLab.Analyzer/Assets/AppIcon.png" Width="48" Height="48"/>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="{Binding AppName}" Classes="h4"/>
+                    <TextBlock Classes="Label">
+                        <Run Text="{loc:Localize About_Version}"/>
+                        <Run Text="{Binding AppVersion}"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <Button Grid.Column="2" Classes="Icon" Width="35" Height="35" VerticalAlignment="Top"
+                        Background="Transparent"
+                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseAboutCommand}"
+                        ToolTip.Tip="{loc:Localize ToolTip_Close}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent X}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </Grid>
+
+            <TextBlock Text="{loc:Localize About_Description}" TextWrapping="Wrap" LineHeight="20"/>
+
+            <Border Height="1" Background="{DynamicResource OutlineColor}"/>
+
+            <!-- Build and system information -->
+            <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+                <TextBlock Grid.Row="0" Text="{loc:Localize About_Date}" Classes="Label" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding BuildDate}"/>
+
+                <TextBlock Grid.Row="1" Text="{loc:Localize About_Configuration}" Classes="Label" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding BuildConfiguration}"/>
+
+                <TextBlock Grid.Row="2" Text="{loc:Localize About_Avalonia}" Classes="Label" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AvaloniaVersion}"/>
+
+                <TextBlock Grid.Row="3" Text="{loc:Localize About_Runtime}" Classes="Label" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding RuntimeFramework}"/>
+
+                <TextBlock Grid.Row="4" Text="{loc:Localize About_System}" Classes="Label" VerticalAlignment="Center"/>
+                <SelectableTextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OSInfo}" TextWrapping="Wrap"/>
+            </Grid>
+
+            <Border Height="1" Background="{DynamicResource OutlineColor}"/>
+
+            <!-- Copyright and links -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Text="{Binding Copyright}" Classes="Label" VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1" Classes="Tool"
+                        Content="{loc:Localize Button_ViewProjectOnGitHub}"
+                        Command="{Binding OpenLinkCommand}"
+                        CommandParameter="{x:Static vm:AboutViewModel.RepositoryUrl}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent ExternalLink, 16}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+
+                <Button Grid.Column="2" Classes="Tool"
+                        Content="{loc:Localize Button_License}"
+                        Command="{Binding OpenLinkCommand}"
+                        CommandParameter="{x:Static vm:AboutViewModel.LicenseUrl}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Scale, 16}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

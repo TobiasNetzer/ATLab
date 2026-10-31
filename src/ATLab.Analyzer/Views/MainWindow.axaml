@@ -1,0 +1,566 @@
+<shadui:Window xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:vm="clr-namespace:ATLab.Analyzer.ViewModels"
+               xmlns:controls="clr-namespace:ATLab.Analyzer.Controls"
+               xmlns:analysis="clr-namespace:ATLab.Analyzer.Analysis"
+               xmlns:loc="clr-namespace:ATLab.Analyzer.Localization"
+               x:Class="ATLab.Analyzer.Views.MainWindow"
+               x:DataType="vm:MainWindowViewModel"
+               Title="ATLab Analyzer"
+               Width="1500" Height="900"
+               MinWidth="1100" MinHeight="650"
+               WindowStartupLocation="CenterScreen"
+               ShowTitlebarBackground="False"
+               DragDrop.AllowDrop="True"
+               Background="{DynamicResource WindowBackground}">
+
+    <shadui:Window.LogoContent>
+        <Image Source="avares://ATLab.Analyzer/Assets/AppIcon.ico"
+               Width="20" Height="20" Margin="8,8,0,8" Stretch="Uniform"/>
+    </shadui:Window.LogoContent>
+
+    <shadui:Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFilesCommand}"/>
+        <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding OpenFolderCommand}"/>
+        <KeyBinding Gesture="Escape" Command="{Binding CloseAboutCommand}"/>
+    </shadui:Window.KeyBindings>
+
+    <shadui:Window.Styles>
+        <Style Selector="Button.Tool">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
+        </Style>
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource InfoColor}"/>
+            <Setter Property="Opacity" Value="0.35"/>
+        </Style>
+        <!-- Larger tab headers than ShadUI's default -->
+        <Style Selector="TabControl > TabItem">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="18,8"/>
+        </Style>
+        <Style Selector="TextBox.Invalid">
+            <Setter Property="BorderBrush" Value="{StaticResource FailBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.Cell">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+    </shadui:Window.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="12,0,12,0">
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,4,0,8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Classes="Tool" Content="{loc:Localize Button_OpenFiles}" Command="{Binding OpenFilesCommand}" ToolTip.Tip="{loc:Localize ToolTip_OpenFiles}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FilePlus, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_OpenFolder}" Command="{Binding OpenFolderCommand}"
+                        ToolTip.Tip="{loc:Localize ToolTip_OpenFolder}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FolderOpen, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_Clear}" Command="{Binding ClearCommand}" IsVisible="{Binding HasRuns}"
+                        ToolTip.Tip="{loc:Localize ToolTip_Clear}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Trash, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_Export}" IsVisible="{Binding HasRuns}" ToolTip.Tip="{loc:Localize ToolTip_Export}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Download, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                            <MenuItem Header="{loc:Localize Menu_ExportStepStatistics}" Command="{Binding ExportStepStatisticsCommand}"/>
+                            <MenuItem Header="{loc:Localize Menu_ExportRuns}" Command="{Binding ExportRunsCommand}"/>
+                            <Separator/>
+                            <MenuItem Header="{loc:Localize Menu_ExportSelectedStep}" Command="{Binding ExportSelectedStepCommand}"/>
+                            <MenuItem Header="{loc:Localize Menu_ExportSelectedRun}" Command="{Binding ExportSelectedRunCommand}"/>
+                            <MenuItem Header="{loc:Localize Menu_ExportValueMatrix}" Command="{Binding ExportValueMatrixCommand}"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+            <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}" Width="120"
+                      VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_Language}"/>
+            <Button Classes="Icon" Width="35" Height="35"
+                    Background="{DynamicResource ButtonBackground}"
+                    Command="{Binding ToggleAboutCommand}" ToolTip.Tip="{loc:Localize ToolTip_About}">
+                <shadui:ButtonAssist.Icon>
+                    <ContentControl Content="{LucideIconContent Info}"/>
+                </shadui:ButtonAssist.Icon>
+            </Button>
+            <Button Classes="Icon" Width="35" Height="35"
+                    Background="{DynamicResource ButtonBackground}"
+                    Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{loc:Localize ToolTip_Theme}">
+                <shadui:ButtonAssist.Icon>
+                    <Grid>
+                        <ContentControl Content="{LucideIconContent Sun}" IsVisible="{Binding IsDarkMode}"/>
+                        <ContentControl Content="{LucideIconContent Moon}" IsVisible="{Binding !IsDarkMode}"/>
+                    </Grid>
+                </shadui:ButtonAssist.Icon>
+            </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Filters -->
+        <WrapPanel Grid.Row="1" IsVisible="{Binding HasRuns}" Margin="0,0,0,10" ItemSpacing="10" LineSpacing="8">
+            <TextBox Text="{Binding SearchText}" Width="400" VerticalAlignment="Center"
+                     PlaceholderText="{loc:Localize Placeholder_Search}"/>
+            <ComboBox ItemsSource="{Binding ResultFilters}" SelectedItem="{Binding ResultFilter}" Width="140"
+                      VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_ResultFilter}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="vm:ResultFilter">
+                        <TextBlock Text="{Binding Converter={x:Static loc:EnumTextConverter.Instance}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}" MinWidth="160"
+                      VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_ProjectFilter}"/>
+            <CalendarDatePicker SelectedDate="{Binding FromDate}" PlaceholderText="{loc:Localize Placeholder_From}" Width="140" VerticalAlignment="Center"/>
+            <CalendarDatePicker SelectedDate="{Binding ToDate}" PlaceholderText="{loc:Localize Placeholder_To}" Width="140" VerticalAlignment="Center"/>
+            <CheckBox Content="{loc:Localize Filter_LatestPerDevice}" IsChecked="{Binding LatestPerDevice}" VerticalAlignment="Center"
+                      ToolTip.Tip="{loc:Localize ToolTip_LatestPerDevice}"/>
+            <CheckBox Content="{loc:Localize Filter_ExcludeSimulator}" IsChecked="{Binding ExcludeSimulator}" VerticalAlignment="Center"
+                      ToolTip.Tip="{loc:Localize ToolTip_ExcludeSimulator}"/>
+            <Button Classes="Icon" Width="35" Height="35" VerticalAlignment="Center"
+                    Background="{DynamicResource ButtonBackground}"
+                    Command="{Binding ResetFiltersCommand}" ToolTip.Tip="{loc:Localize ToolTip_ResetFilters}">
+                <shadui:ButtonAssist.Icon>
+                    <ContentControl Content="{LucideIconContent FunnelX}"/>
+                </shadui:ButtonAssist.Icon>
+            </Button>
+        </WrapPanel>
+
+        <!-- Welcome -->
+        <Border Grid.Row="2" IsVisible="{Binding ShowWelcome}" Classes="Panel"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Padding="40,32" MaxWidth="560">
+            <StackPanel Spacing="14" HorizontalAlignment="Center">
+                <LucideIcon Kind="ChartColumn" Size="48" HorizontalAlignment="Center"/>
+                <TextBlock Text="ATLab Analyzer" Classes="h2" HorizontalAlignment="Center"/>
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Classes="Label" FontSize="14"
+                           Text="{loc:Localize Welcome_Text}"/>
+                <TextBlock TextAlignment="Center" Classes="Label"
+                           Text="{loc:Localize Welcome_Hint}"/>
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,6,0,0">
+                    <Button Classes="Primary" Command="{Binding OpenFolderCommand}" Content="{loc:Localize Button_OpenFolder}"/>
+                    <Button Classes="Outline" Command="{Binding OpenFilesCommand}" Content="{loc:Localize Button_OpenFiles}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Evaluation -->
+        <TabControl Grid.Row="2" IsVisible="{Binding HasRuns}" SelectedIndex="{Binding SelectedTabIndex}">
+
+            <!-- ========== Overview ========== -->
+            <TabItem Header="{loc:Localize Tab_Overview}">
+                <ScrollViewer Margin="0,10,0,0">
+                    <StackPanel Spacing="12">
+                        <UniformGrid Columns="4" ColumnSpacing="12" RowSpacing="12">
+                            <Border Classes="Panel">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{loc:Localize Label_Runs}" Classes="Label"/>
+                                    <TextBlock Text="{Binding Summary.Runs}" Classes="Figure"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="Panel">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{loc:Localize Label_PassedFailed}" Classes="Label"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="{Binding Summary.Passed}" Classes="Figure Pass"/>
+                                        <TextBlock Text="/" Classes="Figure"/>
+                                        <TextBlock Text="{Binding Summary.Failed}" Classes="Figure Fail"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="Panel">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{loc:Localize Label_Yield}" Classes="Label"/>
+                                    <TextBlock Text="{Binding Summary.Yield, StringFormat={}{0:P1}, TargetNullValue=–}" Classes="Figure"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="Panel">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{loc:Localize Label_FirstPassYieldDevices}" Classes="Label"
+                                               ToolTip.Tip="{loc:Localize ToolTip_FirstPassYield}"/>
+                                    <TextBlock Text="{Binding Summary.FirstPassYield, StringFormat={}{0:P1}, TargetNullValue=–}" Classes="Figure"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+
+                        <Grid ColumnDefinitions="2*,3*" ColumnSpacing="12">
+                            <!-- Left column: summary and the yield chart, which takes the height the failure list leaves -->
+                            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+                            <Border Classes="Panel" VerticalAlignment="Top">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="{loc:Localize Header_Summary}" Classes="h4"/>
+                                    <ItemsControl ItemsSource="{Binding SummaryFacts}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="vm:Fact">
+                                                <Grid ColumnDefinitions="180,*" Margin="0,3">
+                                                    <TextBlock Text="{Binding Label}" Classes="Label" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Value}" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="1" Classes="Panel" MinHeight="280">
+                                <Grid RowDefinitions="Auto,*" RowSpacing="6">
+                                    <Panel>
+                                        <TextBlock Text="{loc:Localize Header_YieldPerDay}" Classes="h4" IsVisible="{Binding !IsYieldPerWeek}"/>
+                                        <TextBlock Text="{loc:Localize Header_YieldPerWeek}" Classes="h4" IsVisible="{Binding IsYieldPerWeek}"/>
+                                    </Panel>
+                                    <controls:YieldChart Grid.Row="1" Buckets="{Binding YieldHistory}"/>
+                                </Grid>
+                            </Border>
+                            </Grid>
+
+                            <Border Grid.Column="1" Classes="Panel" VerticalAlignment="Top">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="{loc:Localize Header_MostFailingSteps}" Classes="h4"/>
+                                    <TextBlock Text="{loc:Localize Text_NoFailures}" Classes="Label"
+                                               IsVisible="{Binding !HasTopFailures}"/>
+                                    <ItemsControl ItemsSource="{Binding TopFailures}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="vm:StepRow">
+                                                <!-- The button lies under the content: ShadUI buttons center their content, which would collapse the bar column -->
+                                                <Panel>
+                                                    <Button Classes="Ghost" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                            Height="NaN"
+                                                            Command="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).ShowStepCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            ToolTip.Tip="{loc:Localize ToolTip_ShowStep}"/>
+                                                    <Grid ColumnDefinitions="2*,3*,100" Margin="8,5" IsHitTestVisible="False">
+                                                        <StackPanel VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+                                                            <TextBlock Text="{Binding Module}" Classes="Label" FontSize="11"/>
+                                                        </StackPanel>
+                                                        <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding FailShareOfMax}"
+                                                                     Foreground="{StaticResource FailBrush}" VerticalAlignment="Center"
+                                                                     Margin="10,0"/>
+                                                        <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                            <Run Text="{Binding Failed}" FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding FailRateText, StringFormat=' ({0})'}"/>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Panel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ========== Steps ========== -->
+            <TabItem Header="{loc:Localize Tab_Steps}">
+                <Grid RowDefinitions="*,6,400" Margin="0,10,0,0">
+                    <DataGrid Grid.Row="0"
+                              Classes="HorizontalScroll Compact"
+                              ItemsSource="{Binding Steps}"
+                              SelectedItem="{Binding SelectedStep, Mode=TwoWay}"
+                              SelectionMode="Single"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              BorderThickness="1"
+                              BorderBrush="{DynamicResource OutlineColor}">
+                        <!-- Fixed columns keep their width (MinWidth = Width): with the filling Step column the grid would
+                             otherwise squeeze them to fit a narrow window instead of scrolling horizontally -->
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{loc:Localize Column_Module}" Binding="{Binding Module}" Width="140" MinWidth="140"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Number}" Binding="{Binding Number}" Width="60" MinWidth="60"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Step}" Binding="{Binding Name}" Width="*" MinWidth="200"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Executed}" Binding="{Binding Executed}" Width="80" MinWidth="80"/>
+                            <DataGridTemplateColumn Header="{loc:Localize Column_Failed}" Width="70" MinWidth="70" SortMemberPath="Failed">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="vm:StepRow">
+                                        <TextBlock Text="{Binding Failed}" Classes="Cell" Classes.Fail="{Binding HasFailures}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{loc:Localize Column_FailRate}" Binding="{Binding FailRateText}" SortMemberPath="FailRate" Width="80" MinWidth="80"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_LowerLimit}" Binding="{Binding LowerLimitText}" SortMemberPath="LowerLimit" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_UpperLimit}" Binding="{Binding UpperLimitText}" SortMemberPath="UpperLimit" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Mean}" Binding="{Binding MeanText}" SortMemberPath="Mean" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_StdDev}" Binding="{Binding StdDevText}" SortMemberPath="StdDev" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Min}" Binding="{Binding MinText}" SortMemberPath="Min" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Max}" Binding="{Binding MaxText}" SortMemberPath="Max" Width="100" MinWidth="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Cp}" Binding="{Binding CpText}" SortMemberPath="Cp" Width="60" MinWidth="60"/>
+                            <DataGridTemplateColumn Header="{loc:Localize Column_Cpk}" Width="60" MinWidth="60" SortMemberPath="Cpk">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="vm:StepRow">
+                                        <TextBlock Text="{Binding CpkText}" Classes="Cell" FontWeight="SemiBold"
+                                                   Classes.Fail="{Binding IsCpkPoor}"
+                                                   Classes.Marginal="{Binding IsCpkMarginal}"
+                                                   Classes.Pass="{Binding IsCpkGood}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{loc:Localize Column_Invalid}" Binding="{Binding Invalid}" Width="70" MinWidth="70"/>
+                            <DataGridTemplateColumn Header="" Width="34" MinWidth="34" SortMemberPath="LimitsChanged">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="vm:StepRow">
+                                        <LucideIcon Kind="TriangleAlert" Size="14"
+                                                        Foreground="{StaticResource MarginalBrush}"
+                                                        IsVisible="{Binding LimitsChanged}"
+                                                        ToolTip.Tip="{loc:Localize ToolTip_LimitsChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <GridSplitter Grid.Row="1" ResizeDirection="Rows" Background="Transparent"/>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,12,*,12,320" IsVisible="{Binding HasSelectedStep}">
+                        <Border Grid.Column="0" Classes="Panel" Padding="10">
+                            <Grid RowDefinitions="Auto,Auto,*">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="{loc:Localize Header_Histogram}" Classes="h4" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                        <ComboBox ItemsSource="{Binding BinRules}" SelectedItem="{Binding BinRule}"
+                                                  Width="170" ToolTip.Tip="{loc:Localize ToolTip_BinRule}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate DataType="analysis:BinRule">
+                                                    <TextBlock Text="{Binding Converter={x:Static loc:EnumTextConverter.Instance}}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsBinCountRule}"
+                                                    ToolTip.Tip="{loc:Localize ToolTip_BinCount}">
+                                            <Slider Minimum="2" Maximum="{Binding MaxBinCount}" Value="{Binding BinCount}"
+                                                    IsSnapToTickEnabled="True" TickFrequency="1" Width="110"
+                                                    VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding BinCount, StringFormat={}{0:0}}" Width="28"
+                                                       VerticalAlignment="Center" TextAlignment="Right"/>
+                                        </StackPanel>
+
+                                        <TextBox Text="{Binding BinWidthText}" Width="110" IsVisible="{Binding IsBinWidthRule}"
+                                                 PlaceholderText="{Binding BinWidthPlaceholder}"
+                                                 Classes.Invalid="{Binding IsBinWidthInvalid}"
+                                                 ToolTip.Tip="{loc:Localize ToolTip_BinWidth}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                                    <CheckBox Content="{loc:Localize Option_NormalCurve}" IsChecked="{Binding ShowNormalCurve}"/>
+                                    <CheckBox Content="{loc:Localize Option_ShowLimits}" IsChecked="{Binding IncludeLimitsInHistogram}"/>
+                                </StackPanel>
+                                <controls:HistogramChart Grid.Row="2" Margin="0,6,0,0"
+                                                         Values="{Binding SelectedStepValues}"
+                                                         LowerLimit="{Binding SelectedStep.LowerLimit}"
+                                                         UpperLimit="{Binding SelectedStep.UpperLimit}"
+                                                         Unit="{Binding SelectedStep.Unit}"
+                                                         Bins="{Binding BinSettings}"
+                                                         ShowNormalCurve="{Binding ShowNormalCurve}"
+                                                         IncludeLimitsInRange="{Binding IncludeLimitsInHistogram}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="2" Classes="Panel" Padding="10">
+                            <Grid RowDefinitions="Auto,Auto,*">
+                                <!-- Same height as the histogram header with its bin controls, so both charts line up -->
+                                <TextBlock Text="{loc:Localize Header_Trend}" Classes="h4" VerticalAlignment="Center" MinHeight="35"/>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                                    <CheckBox Content="{loc:Localize Option_SigmaBand}" IsChecked="{Binding ShowSigmaBand}"/>
+                                    <CheckBox Content="{loc:Localize Option_ShowLimits}" IsChecked="{Binding IncludeLimitsInTrend}"/>
+                                </StackPanel>
+                                <controls:TrendChart Grid.Row="2" Margin="0,6,0,0"
+                                                     Points="{Binding SelectedStepTrend}"
+                                                     LowerLimit="{Binding SelectedStep.LowerLimit}"
+                                                     UpperLimit="{Binding SelectedStep.UpperLimit}"
+                                                     Unit="{Binding SelectedStep.Unit}"
+                                                     ShowSigmaBand="{Binding ShowSigmaBand}"
+                                                     IncludeLimitsInRange="{Binding IncludeLimitsInTrend}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="4" Classes="Panel">
+                            <Grid RowDefinitions="Auto,*">
+                                <TextBlock Text="{Binding SelectedStep.Name}" Classes="h4" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <ScrollViewer Grid.Row="1">
+                                    <ItemsControl ItemsSource="{Binding SelectedStepFacts}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="vm:Fact">
+                                                <Grid ColumnDefinitions="130,*" Margin="0,2">
+                                                    <TextBlock Text="{Binding Label}" Classes="Label" TextWrapping="Wrap"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Value}" TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- ========== Runs ========== -->
+            <TabItem Header="{loc:Localize Tab_Runs}">
+                <Grid ColumnDefinitions="5*,6,4*" Margin="0,10,0,0">
+                    <DataGrid Grid.Column="0"
+                              Classes="HorizontalScroll Compact"
+                              ItemsSource="{Binding Runs}"
+                              SelectedItem="{Binding SelectedRun, Mode=TwoWay}"
+                              SelectionMode="Single"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              BorderThickness="1"
+                              BorderBrush="{DynamicResource OutlineColor}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{loc:Localize Column_Start}" Binding="{Binding LocalStartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                                SortMemberPath="StartTime" Width="150"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_SerialNumber}" Binding="{Binding SerialNumber}" Width="130"/>
+                            <DataGridTemplateColumn Header="{loc:Localize Column_Result}" Width="125" SortMemberPath="Result">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="analysis:LoadedRun">
+                                        <TextBlock Text="{Binding Result, Converter={x:Static loc:EnumTextConverter.Instance}}" Classes="Cell" FontWeight="SemiBold"
+                                                   Classes.Pass="{Binding IsPassed}" Classes.Fail="{Binding !IsPassed}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{loc:Localize Column_Failed}" Binding="{Binding FailedSteps}" Width="65"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Duration}" Binding="{Binding DurationSeconds, StringFormat={}{0:0.0}}"
+                                                SortMemberPath="DurationSeconds" Width="85"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Project}" Binding="{Binding ProjectName}" Width="150"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Device}" Binding="{Binding DeviceName}" Width="120"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Variant}" Binding="{Binding Variant}" Width="90"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Operator}" Binding="{Binding Operator}" Width="100"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Station}" Binding="{Binding Station}" Width="110"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Mode}" Binding="{Binding RunMode, Converter={x:Static loc:EnumTextConverter.Instance}}" Width="90"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_Loop}" Binding="{Binding LoopIndex}" Width="60"/>
+                            <DataGridTextColumn Header="{loc:Localize Column_File}" Binding="{Binding FileName}" Width="220"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent"/>
+
+                    <Grid Grid.Column="2" RowDefinitions="Auto,10,*" IsVisible="{Binding HasSelectedRun}">
+                        <Border Classes="Panel" Padding="12,10">
+                            <ScrollViewer MaxHeight="230">
+                                <ItemsControl ItemsSource="{Binding SelectedRunFacts}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:Fact">
+                                            <Grid ColumnDefinitions="130,*" Margin="0,2">
+                                                <TextBlock Text="{Binding Label}" Classes="Label" TextWrapping="Wrap"/>
+                                                <SelectableTextBlock Grid.Column="1" Text="{Binding Value}" TextWrapping="Wrap"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <DataGrid Grid.Row="2"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding SelectedRunSteps}"
+                                  SelectionMode="Single"
+                                  IsReadOnly="True"
+                                  CanUserSortColumns="True"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Module}" Binding="{Binding Module}" Width="110"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Number}" Binding="{Binding Number}" Width="55"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Step}" Width="180" SortMemberPath="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:RunStepRow">
+                                            <TextBlock Text="{Binding Name}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Value}" Width="100" SortMemberPath="Value">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:RunStepRow">
+                                            <TextBlock Text="{Binding ValueText}" Classes="Cell" Classes.Fail="{Binding !IsPassed}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Result}" Width="125" SortMemberPath="Result">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:RunStepRow">
+                                            <TextBlock Text="{Binding Result, Converter={x:Static loc:EnumTextConverter.Instance}}" Classes="Cell" FontWeight="SemiBold"
+                                                       Classes.Pass="{Binding IsPassed}" Classes.Fail="{Binding !IsPassed}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_LowerLimit}" Binding="{Binding LowerLimitText}" Width="90"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_UpperLimit}" Binding="{Binding UpperLimitText}" Width="90"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Deviation}" Binding="{Binding DeviationText}" SortMemberPath="Deviation" Width="85"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Details}" Width="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:RunStepRow">
+                                            <TextBlock Text="{Binding DetailsText}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding DetailsText}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,8,0,8">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <ProgressBar IsIndeterminate="True" Width="80" IsVisible="{Binding IsLoading}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding StatusText}" Classes="Label" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Button Grid.Column="1" Classes="Ghost" IsVisible="{Binding HasLoadErrors}" Padding="8,2" Height="26">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <LucideIcon Kind="CircleAlert" Size="14"
+                                    Foreground="{StaticResource MarginalBrush}"/>
+                    <TextBlock Text="{Binding LoadErrorsText}" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Flyout>
+                    <Flyout Placement="TopEdgeAlignedRight">
+                        <ScrollViewer MaxHeight="400" MaxWidth="800">
+                            <ItemsControl ItemsSource="{Binding LoadErrors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="analysis:LoadError">
+                                        <StackPanel Margin="0,4">
+                                            <SelectableTextBlock Text="{Binding FilePath}" FontSize="12"/>
+                                            <TextBlock Text="{Binding Message}" Classes="Label" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!-- About, over everything; a click on the dimmed background closes it -->
+        <Panel Grid.Row="0" Grid.RowSpan="4" Margin="-12,0,-12,0" IsVisible="{Binding IsAboutOpen}">
+            <Button Classes="no-effects" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="#80000000" Cursor="Arrow"
+                    Command="{Binding CloseAboutCommand}"/>
+            <controls:About DataContext="{Binding About}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Margin="20"/>
+        </Panel>
+    </Grid>
+</shadui:Window>

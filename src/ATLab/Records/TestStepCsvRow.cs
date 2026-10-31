@@ -10,5 +10,6 @@ public sealed record TestStepCsvRow(
     string? Result,
     string Unit,
     string IsPassed,
-    string? Deviation
+    string? Deviation,
+    string? Details
 );

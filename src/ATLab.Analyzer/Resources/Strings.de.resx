@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Button_OpenFiles" xml:space="preserve">
+    <value>Dateien öffnen</value>
+  </data>
+  <data name="Button_OpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+  </data>
+  <data name="Button_Clear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="Button_Export" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
+  <data name="ToolTip_OpenFiles" xml:space="preserve">
+    <value>Testergebnisdateien hinzufügen (Strg+O)</value>
+  </data>
+  <data name="ToolTip_OpenFolder" xml:space="preserve">
+    <value>Alle Testergebnisdateien eines Ordners und seiner Unterordner hinzufügen (Strg+Umschalt+O)</value>
+  </data>
+  <data name="ToolTip_Clear" xml:space="preserve">
+    <value>Alle importierten Läufe entfernen</value>
+  </data>
+  <data name="ToolTip_Export" xml:space="preserve">
+    <value>Tabellen für Excel exportieren</value>
+  </data>
+  <data name="Menu_ExportStepStatistics" xml:space="preserve">
+    <value>Schrittstatistik…</value>
+  </data>
+  <data name="Menu_ExportRuns" xml:space="preserve">
+    <value>Laufliste…</value>
+  </data>
+  <data name="Menu_ExportSelectedStep" xml:space="preserve">
+    <value>Ausgewählter Schritt (alle Läufe)…</value>
+  </data>
+  <data name="Menu_ExportSelectedRun" xml:space="preserve">
+    <value>Ausgewählter Lauf (alle Schritte)…</value>
+  </data>
+  <data name="Menu_ExportValueMatrix" xml:space="preserve">
+    <value>Alle Werte (eine Zeile pro Lauf)…</value>
+  </data>
+  <data name="ToolTip_Theme" xml:space="preserve">
+    <value>Heller / dunkler Modus</value>
+  </data>
+  <data name="ToolTip_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Placeholder_Search" xml:space="preserve">
+    <value>Seriennummer, Projekt, Gerät, Bediener suchen…</value>
+  </data>
+  <data name="ToolTip_ResultFilter" xml:space="preserve">
+    <value>Gesamtergebnis des Laufs</value>
+  </data>
+  <data name="ToolTip_ProjectFilter" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="Placeholder_From" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="Placeholder_To" xml:space="preserve">
+    <value>Bis</value>
+  </data>
+  <data name="Filter_LatestPerDevice" xml:space="preserve">
+    <value>Letzter Lauf je Gerät</value>
+  </data>
+  <data name="ToolTip_LatestPerDevice" xml:space="preserve">
+    <value>Nur der neueste Lauf jeder Seriennummer (nach den anderen Filtern)</value>
+  </data>
+  <data name="Filter_ExcludeSimulator" xml:space="preserve">
+    <value>Simulator ausblenden</value>
+  </data>
+  <data name="ToolTip_ExcludeSimulator" xml:space="preserve">
+    <value>Läufe ausblenden, die mit dem Hardware-Simulator ausgeführt wurden</value>
+  </data>
+  <data name="ToolTip_ResetFilters" xml:space="preserve">
+    <value>Filter zurücksetzen</value>
+  </data>
+  <data name="Filter_AllProjects" xml:space="preserve">
+    <value>Alle Projekte</value>
+  </data>
+  <data name="Welcome_Text" xml:space="preserve">
+    <value>Auswertung der von ATLab geschriebenen JSON-Testergebnisdateien: Ausbeute, fehlgeschlagene Schritte, Histogramme, Trends und Prozessfähigkeit jedes gemessenen Schritts.</value>
+  </data>
+  <data name="Welcome_Hint" xml:space="preserve">
+    <value>Öffnen Sie Dateien oder einen Ordner oder ziehen Sie sie auf dieses Fenster.</value>
+  </data>
+  <data name="Tab_Overview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Tab_Steps" xml:space="preserve">
+    <value>Schritte</value>
+  </data>
+  <data name="Tab_Runs" xml:space="preserve">
+    <value>Läufe</value>
+  </data>
+  <data name="Label_Runs" xml:space="preserve">
+    <value>Läufe</value>
+  </data>
+  <data name="Label_PassedFailed" xml:space="preserve">
+    <value>Bestanden / fehlgeschlagen</value>
+  </data>
+  <data name="Label_Yield" xml:space="preserve">
+    <value>Ausbeute (bestandene Läufe)</value>
+  </data>
+  <data name="Label_FirstPassYieldDevices" xml:space="preserve">
+    <value>First Pass Yield (Geräte)</value>
+  </data>
+  <data name="ToolTip_FirstPassYield" xml:space="preserve">
+    <value>Anteil der Seriennummern, deren erster Lauf bestanden hat</value>
+  </data>
+  <data name="Header_Summary" xml:space="preserve">
+    <value>Zusammenfassung</value>
+  </data>
+  <data name="Header_MostFailingSteps" xml:space="preserve">
+    <value>Häufigste Fehler</value>
+  </data>
+  <data name="Text_NoFailures" xml:space="preserve">
+    <value>In den ausgewählten Läufen ist kein Schritt fehlgeschlagen.</value>
+  </data>
+  <data name="ToolTip_ShowStep" xml:space="preserve">
+    <value>Histogramm und Trend anzeigen</value>
+  </data>
+  <data name="Fact_Period" xml:space="preserve">
+    <value>Zeitraum</value>
+  </data>
+  <data name="Fact_Devices" xml:space="preserve">
+    <value>Geräte (Seriennummern)</value>
+  </data>
+  <data name="Fact_FirstPassYield" xml:space="preserve">
+    <value>First Pass Yield</value>
+  </data>
+  <data name="Fact_FinalYield" xml:space="preserve">
+    <value>Endausbeute</value>
+  </data>
+  <data name="Fact_MeanTestTime" xml:space="preserve">
+    <value>Mittlere Testdauer</value>
+  </data>
+  <data name="Column_Module" xml:space="preserve">
+    <value>Modul</value>
+  </data>
+  <data name="Column_Number" xml:space="preserve">
+    <value>Nr.</value>
+  </data>
+  <data name="Column_Step" xml:space="preserve">
+    <value>Schritt</value>
+  </data>
+  <data name="Column_Executed" xml:space="preserve">
+    <value>Ausgeführt</value>
+  </data>
+  <data name="Column_Failed" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Column_FailRate" xml:space="preserve">
+    <value>Fehlerrate</value>
+  </data>
+  <data name="Column_LowerLimit" xml:space="preserve">
+    <value>Untergrenze</value>
+  </data>
+  <data name="Column_UpperLimit" xml:space="preserve">
+    <value>Obergrenze</value>
+  </data>
+  <data name="Column_Mean" xml:space="preserve">
+    <value>Mittelwert</value>
+  </data>
+  <data name="Column_StdDev" xml:space="preserve">
+    <value>Std.-Abw.</value>
+  </data>
+  <data name="Column_Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="Column_Max" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="Column_Cp" xml:space="preserve">
+    <value>Cp</value>
+  </data>
+  <data name="Column_Cpk" xml:space="preserve">
+    <value>Cpk</value>
+  </data>
+  <data name="Column_Invalid" xml:space="preserve">
+    <value>Ungültig</value>
+  </data>
+  <data name="ToolTip_LimitsChanged" xml:space="preserve">
+    <value>Die Grenzwerte haben sich zwischen den Läufen geändert; die Statistik verwendet die Grenzwerte des neuesten Laufs.</value>
+  </data>
+  <data name="Header_Histogram" xml:space="preserve">
+    <value>Histogramm</value>
+  </data>
+  <data name="Option_NormalCurve" xml:space="preserve">
+    <value>Normalverteilung</value>
+  </data>
+  <data name="ToolTip_BinCount" xml:space="preserve">
+    <value>Anzahl der Klassen</value>
+  </data>
+  <data name="ToolTip_BinWidth" xml:space="preserve">
+    <value>Benutzerdefinierte Klassenbreite, SI-Präfixe erlaubt</value>
+  </data>
+  <data name="ToolTip_BinRule" xml:space="preserve">
+    <value>Klasseneinteilung der Werte</value>
+  </data>
+  <data name="Placeholder_BinWidth" xml:space="preserve">
+    <value>z. B. {0}</value>
+  </data>
+  <data name="Enum_BinRule_Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Enum_BinRule_Count" xml:space="preserve">
+    <value>Anzahl Klassen</value>
+  </data>
+  <data name="Enum_BinRule_Width" xml:space="preserve">
+    <value>Klassenbreite</value>
+  </data>
+  <data name="Header_Trend" xml:space="preserve">
+    <value>Trend</value>
+  </data>
+  <data name="Option_SigmaBand" xml:space="preserve">
+    <value>±3σ-Band</value>
+  </data>
+  <data name="Option_ShowLimits" xml:space="preserve">
+    <value>Grenzwerte zeigen</value>
+  </data>
+  <data name="Fact_Module" xml:space="preserve">
+    <value>Modul</value>
+  </data>
+  <data name="Fact_Limits" xml:space="preserve">
+    <value>Grenzwerte</value>
+  </data>
+  <data name="Fact_LimitsChanged" xml:space="preserve">
+    <value>(geändert)</value>
+  </data>
+  <data name="Fact_Executed" xml:space="preserve">
+    <value>Ausgeführt</value>
+  </data>
+  <data name="Fact_ExecutedValue" xml:space="preserve">
+    <value>{0}  ({1} bestanden, {2} fehlgeschlagen)</value>
+  </data>
+  <data name="Fact_FailRate" xml:space="preserve">
+    <value>Fehlerrate</value>
+  </data>
+  <data name="Fact_MeasuredValues" xml:space="preserve">
+    <value>Messwerte</value>
+  </data>
+  <data name="Fact_Invalid" xml:space="preserve">
+    <value>Ohne gültigen Wert</value>
+  </data>
+  <data name="Fact_Mean" xml:space="preserve">
+    <value>Mittelwert</value>
+  </data>
+  <data name="Fact_Median" xml:space="preserve">
+    <value>Median</value>
+  </data>
+  <data name="Fact_StdDev" xml:space="preserve">
+    <value>Standardabweichung (σ)</value>
+  </data>
+  <data name="Fact_MinMax" xml:space="preserve">
+    <value>Min / Max</value>
+  </data>
+  <data name="Fact_Range" xml:space="preserve">
+    <value>Spannweite</value>
+  </data>
+  <data name="Fact_CpCpk" xml:space="preserve">
+    <value>Cp / Cpk</value>
+  </data>
+  <data name="Column_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Column_SerialNumber" xml:space="preserve">
+    <value>Seriennummer</value>
+  </data>
+  <data name="Column_Result" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="Column_Duration" xml:space="preserve">
+    <value>Laufzeit s</value>
+  </data>
+  <data name="Column_Project" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="Column_Device" xml:space="preserve">
+    <value>Gerät</value>
+  </data>
+  <data name="Column_Variant" xml:space="preserve">
+    <value>Variante</value>
+  </data>
+  <data name="Column_Operator" xml:space="preserve">
+    <value>Bediener</value>
+  </data>
+  <data name="Column_Station" xml:space="preserve">
+    <value>Station</value>
+  </data>
+  <data name="Column_Mode" xml:space="preserve">
+    <value>Modus</value>
+  </data>
+  <data name="Column_Loop" xml:space="preserve">
+    <value>Durchlauf</value>
+  </data>
+  <data name="Column_File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Column_Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="Column_Deviation" xml:space="preserve">
+    <value>Abweichung</value>
+  </data>
+  <data name="Column_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Fact_SerialNumber" xml:space="preserve">
+    <value>Seriennummer</value>
+  </data>
+  <data name="Fact_Result" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="Fact_ResultFail" xml:space="preserve">
+    <value>Fehlgeschlagen ({0} fehlgeschlagene(r) Schritt(e))</value>
+  </data>
+  <data name="Fact_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Fact_Duration" xml:space="preserve">
+    <value>Laufzeit</value>
+  </data>
+  <data name="Fact_RunMode" xml:space="preserve">
+    <value>Ausführungsmodus</value>
+  </data>
+  <data name="Fact_RunModeLoop" xml:space="preserve">
+    <value>{0}, Durchlauf {1}</value>
+  </data>
+  <data name="Fact_Operator" xml:space="preserve">
+    <value>Bediener</value>
+  </data>
+  <data name="Fact_Station" xml:space="preserve">
+    <value>Station</value>
+  </data>
+  <data name="Fact_Project" xml:space="preserve">
+    <value>Projekt</value>
+  </data>
+  <data name="Fact_ProjectFile" xml:space="preserve">
+    <value>Projektdatei</value>
+  </data>
+  <data name="Fact_ProjectNotSaved" xml:space="preserve">
+    <value>nicht gespeichert</value>
+  </data>
+  <data name="Fact_ProjectUnsaved" xml:space="preserve">
+    <value>ungespeicherte Änderungen</value>
+  </data>
+  <data name="Fact_AtlabVersion" xml:space="preserve">
+    <value>ATLab-Version</value>
+  </data>
+  <data name="Fact_Device" xml:space="preserve">
+    <value>Gerät</value>
+  </data>
+  <data name="Fact_PartNumber" xml:space="preserve">
+    <value>Teilenummer</value>
+  </data>
+  <data name="Fact_TestHardware" xml:space="preserve">
+    <value>Test-Hardware</value>
+  </data>
+  <data name="Fact_Simulator" xml:space="preserve">
+    <value>Simulator</value>
+  </data>
+  <data name="Fact_NoAnswer" xml:space="preserve">
+    <value>keine Antwort</value>
+  </data>
+  <data name="Fact_Notes" xml:space="preserve">
+    <value>Notizen</value>
+  </data>
+  <data name="Fact_File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Enum_ResultFilter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Enum_ResultFilter_Passed" xml:space="preserve">
+    <value>Bestanden</value>
+  </data>
+  <data name="Enum_ResultFilter_Failed" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Enum_TestVerdict_Pass" xml:space="preserve">
+    <value>Bestanden</value>
+  </data>
+  <data name="Enum_TestVerdict_Fail" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Enum_TestRunMode_Single" xml:space="preserve">
+    <value>Einzeln</value>
+  </data>
+  <data name="Enum_TestRunMode_Continuous" xml:space="preserve">
+    <value>Dauertest</value>
+  </data>
+  <data name="Enum_TestValueStatus_Measured" xml:space="preserve">
+    <value>Gemessen</value>
+  </data>
+  <data name="Enum_TestValueStatus_NoValue" xml:space="preserve">
+    <value>Kein Wert</value>
+  </data>
+  <data name="Enum_TestValueStatus_Timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="Enum_TestValueStatus_NACK" xml:space="preserve">
+    <value>NACK</value>
+  </data>
+  <data name="Enum_TestValueStatus_Overflow" xml:space="preserve">
+    <value>Überlauf</value>
+  </data>
+  <data name="Enum_TestValueStatus_Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="Status_Start" xml:space="preserve">
+    <value>Öffnen Sie Testergebnisdateien oder einen Ordner, um zu beginnen.</value>
+  </data>
+  <data name="Status_Reading" xml:space="preserve">
+    <value>Dateien werden gelesen…</value>
+  </data>
+  <data name="Status_Loaded" xml:space="preserve">
+    <value>{0} Datei(en) gelesen · {1} Läufe importiert</value>
+  </data>
+  <data name="Status_LoadedWithSkipped" xml:space="preserve">
+    <value>{0} Datei(en) gelesen, {1} übersprungen · {2} Läufe importiert</value>
+  </data>
+  <data name="Status_ReadFailed" xml:space="preserve">
+    <value>Lesen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Status_Exported" xml:space="preserve">
+    <value>Exportiert nach {0}</value>
+  </data>
+  <data name="Status_ExportFailed" xml:space="preserve">
+    <value>Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Status_FilesSkipped" xml:space="preserve">
+    <value>{0} Datei(en) übersprungen</value>
+  </data>
+  <data name="Error_NotFound" xml:space="preserve">
+    <value>Datei oder Ordner nicht gefunden.</value>
+  </data>
+  <data name="Dialog_OpenFiles" xml:space="preserve">
+    <value>Testergebnisdateien öffnen</value>
+  </data>
+  <data name="Dialog_OpenFolder" xml:space="preserve">
+    <value>Ordner mit Testergebnisdateien öffnen (inklusive Unterordner)</value>
+  </data>
+  <data name="Dialog_JsonFiles" xml:space="preserve">
+    <value>ATLab-Testergebnisse (*.json)</value>
+  </data>
+  <data name="Dialog_CsvFiles" xml:space="preserve">
+    <value>Tabulatorgetrennter Text (*.csv)</value>
+  </data>
+  <data name="Dialog_ExportStepStatistics" xml:space="preserve">
+    <value>Schrittstatistik exportieren</value>
+  </data>
+  <data name="Dialog_ExportRuns" xml:space="preserve">
+    <value>Laufliste exportieren</value>
+  </data>
+  <data name="Dialog_ExportSelectedStep" xml:space="preserve">
+    <value>Ausgewählten Schritt exportieren</value>
+  </data>
+  <data name="Dialog_ExportSelectedRun" xml:space="preserve">
+    <value>Ausgewählten Lauf exportieren</value>
+  </data>
+  <data name="Dialog_ExportValueMatrix" xml:space="preserve">
+    <value>Alle Werte exportieren</value>
+  </data>
+  <data name="File_StepStatistics" xml:space="preserve">
+    <value>ATLab Schrittstatistik.csv</value>
+  </data>
+  <data name="File_Runs" xml:space="preserve">
+    <value>ATLab Läufe.csv</value>
+  </data>
+  <data name="File_ValueMatrix" xml:space="preserve">
+    <value>ATLab Werte.csv</value>
+  </data>
+  <data name="Chart_NoValues" xml:space="preserve">
+    <value>Keine Messwerte</value>
+  </data>
+  <data name="Chart_Mean" xml:space="preserve">
+    <value>Mittelwert</value>
+  </data>
+  <data name="Chart_LSL" xml:space="preserve">
+    <value>USG</value>
+  </data>
+  <data name="Chart_USL" xml:space="preserve">
+    <value>OSG</value>
+  </data>
+  <data name="Chart_HistogramInfo" xml:space="preserve">
+    <value>{0} Werte, {1} Klassen à {2}</value>
+  </data>
+  <data name="Chart_BinInfo" xml:space="preserve">
+    <value>{0} … {1}:  {2} Werte ({3})</value>
+  </data>
+  <data name="Chart_TrendInfo" xml:space="preserve">
+    <value>{0} Werte</value>
+  </data>
+  <data name="Chart_TrendInfoFailed" xml:space="preserve">
+    <value>{0} Werte, {1} fehlgeschlagen</value>
+  </data>
+  <data name="Header_YieldPerDay" xml:space="preserve">
+    <value>Läufe und Ausbeute pro Tag</value>
+  </data>
+  <data name="Header_YieldPerWeek" xml:space="preserve">
+    <value>Läufe und Ausbeute pro Woche</value>
+  </data>
+  <data name="Chart_NoRuns" xml:space="preserve">
+    <value>Keine Läufe</value>
+  </data>
+  <data name="Axis_Value" xml:space="preserve">
+    <value>Messwert</value>
+  </data>
+  <data name="Axis_Count" xml:space="preserve">
+    <value>Anzahl</value>
+  </data>
+  <data name="Axis_Run" xml:space="preserve">
+    <value>Lauf</value>
+  </data>
+  <data name="Axis_Runs" xml:space="preserve">
+    <value>Läufe</value>
+  </data>
+  <data name="Axis_Day" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Axis_Week" xml:space="preserve">
+    <value>Woche</value>
+  </data>
+  <data name="Chart_Yield" xml:space="preserve">
+    <value>Ausbeute</value>
+  </data>
+  <data name="Chart_Week" xml:space="preserve">
+    <value>KW {0}</value>
+  </data>
+  <data name="Chart_YieldInfo" xml:space="preserve">
+    <value>{0}:  {1} Läufe, {2} fehlgeschlagen, Ausbeute {3}</value>
+  </data>
+  <data name="Chart_YieldTotal" xml:space="preserve">
+    <value>{0} Läufe, Ausbeute {1}</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="About_Description" xml:space="preserve">
+    <value>Auswertung der von ATLab geschriebenen JSON-Testergebnisdateien: Ausbeute, fehlgeschlagene Schritte, Histogramme, Trends und Prozessfähigkeit über viele Testläufe.</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="About_Date" xml:space="preserve">
+    <value>Build-Datum</value>
+  </data>
+  <data name="About_Configuration" xml:space="preserve">
+    <value>Konfiguration</value>
+  </data>
+  <data name="About_Avalonia" xml:space="preserve">
+    <value>Avalonia</value>
+  </data>
+  <data name="About_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="About_Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="Button_ViewProjectOnGitHub" xml:space="preserve">
+    <value>Projekt auf GitHub ansehen</value>
+  </data>
+  <data name="Button_License" xml:space="preserve">
+    <value>Lizenz</value>
+  </data>
+  <data name="ToolTip_About" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="ToolTip_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+</root>

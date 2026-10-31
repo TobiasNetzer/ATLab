@@ -65,6 +65,7 @@ Trotz der Endung `.csv` ist die Datei **tabulatorgetrennt** (UTF-8). Sie lässt 
 | Unit | Einheitentext (ohne Klammern) |
 | Deviation (%) | Abweichung vom Sollwert |
 | Result | `Pass` oder `Fail` |
+| Details | Zusätzliche Meldungen des Schritts, z. B. fehlgeschlagene Antwortprüfungen oder Boundary-Scan-Pins, getrennt durch `; `, leer, wenn keine vorhanden sind. Dieselben Zeilen wie `steps[].details` in der JSON-Datei. |
 
 Die Spaltenüberschriften und Werte sind unabhängig von der Oberflächensprache englisch, damit Auswertungsskripte stabil bleiben. Zahlen werden ohne SI-Präfixe geschrieben; ein als `1,3mA` angezeigter Wert erscheint als `0.0013`.
 
@@ -121,6 +122,7 @@ Die JSON-Datei enthält dieselben Schritte wie die CSV-Datei und zusätzlich die
 | `testHardware.isSimulator` | `true` für Läufe im Simulatormodus. Diese sollten nicht in Produktionsstatistiken einfließen. |
 | `testEquipment` | Geräte mit **In Testbericht aufnehmen** und ihre Identifikation (`null`, wenn das Gerät nicht geantwortet hat). |
 | `steps[].moduleId`, `steps[].stepId` | Feste IDs aus der Projektdatei. Sie ändern sich nicht, wenn Module oder Schritte umbenannt, umnummeriert oder verschoben werden, sodass derselbe Schritt über mehrere Läufe verglichen werden kann. |
+| `steps[].unit` | Einheit wie im Schritt eingegeben. Eine Einheit in geschweiften Klammern (z. B. `{°C}`) wird ohne SI-Präfix angezeigt, siehe [Name, Grenzwerte und Einheit](08-building-test-sequences.md#name-grenzwerte-und-einheit). Anders als in der CSV-Datei und im PDF-Bericht bleiben die Klammern in der JSON-Datei erhalten, damit Auswertewerkzeuge die Werte genauso formatieren können. |
 | `steps[].status` | `Measured`, `NoValue` (Schritt liefert keinen Wert), `Timeout`, `NACK`, `Overflow` oder `Unknown`. |
 | `steps[].value` | Messwert ohne SI-Präfix (`1,3mA` → `0.0013`); `null`, außer bei `status` = `Measured`. |
 | `steps[].details` | Zusätzliche Meldungen des Schritts, z. B. fehlgeschlagene Antwortprüfungen; `null`, wenn keine vorhanden sind. |
