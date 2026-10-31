@@ -10,6 +10,11 @@ Jedes Release enthält:
 | `ATLab-win-<version>.zip` | Windows | Portable Version, ohne Installation |
 | `ATLab-linux-<version>.tar.gz` | Linux | Portable Version |
 
+**Voraussetzung:** die **.NET 10 Runtime** (x64), kostenlos unter <https://dotnet.microsoft.com/download/dotnet/10.0>.
+ATLab wird ohne eigenes .NET ausgeliefert; fehlt die Runtime, weist der Installer auf die Download-Seite hin.
+
+Alle Pakete enthalten ATLab Analyzer, das Auswerteprogramm für JSON-Ergebnisdateien, im Unterordner `Analyzer`.
+
 Alle Pakete enthalten dieses Benutzerhandbuch als PDF (Deutsch und Englisch) im Unterordner `docs` des Programmordners, z. B. `C:\Program Files\ATLab\docs\ATLab-User-Guide-de.pdf`. In ATLab öffnen Sie es mit der Buch-Schaltfläche in der Statusleiste oder mit `F1`.
 
 ## Windows
@@ -18,15 +23,21 @@ Alle Pakete enthalten dieses Benutzerhandbuch als PDF (Deutsch und Englisch) im 
 
 1. `ATLab-setup-<version>.exe` herunterladen und ausführen. Administratorrechte sind erforderlich.
 2. Lizenz (GNU GPL v3) akzeptieren und Installationsordner wählen. Standard ist `C:\Program Files\ATLab`.
-3. Auf der letzten Seite können Sie ATLab sofort starten und eine Desktop-Verknüpfung anlegen.
+3. Auf der letzten Seite können Sie ATLab sofort starten und Desktop-Verknüpfungen anlegen.
 
 Der Installer
 
-- legt **ATLab** im Startmenü an,
+- legt **ATLab** und **ATLab Analyzer** für alle Benutzer des Computers im Startmenü an,
 - registriert die Endung `.atlab`, sodass ein Doppelklick auf eine Projektdatei sie in ATLab öffnet,
 - trägt ein Deinstallationsprogramm unter *Einstellungen → Apps* ein.
 
-Bei der Deinstallation werden Programmordner, Verknüpfungen und Dateizuordnung entfernt. Projekte, Skripte und persönliche Einstellungen bleiben erhalten (siehe [Dateiablage](17-reference.md#dateiablage)).
+Zum Aktualisieren den Installer der neuen Version ausführen; ATLab und ATLab Analyzer vorher schließen. Die Dateien
+der alten Version werden ersetzt, selbst in den Programmordner kopierte Dateien (z. B. eine J-Link- oder FTDI-DLL)
+bleiben erhalten.
+
+Bei der Deinstallation werden die installierten Dateien, Verknüpfungen und Dateizuordnung entfernt. Selbst in den
+Programmordner kopierte Dateien bleiben erhalten, ebenso Projekte, Skripte und persönliche Einstellungen (siehe
+[Dateiablage](17-reference.md#dateiablage)).
 
 ### Portables ZIP
 

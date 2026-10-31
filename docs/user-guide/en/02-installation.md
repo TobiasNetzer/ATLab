@@ -10,6 +10,11 @@ Each release provides:
 | `ATLab-win-<version>.zip` | Windows | Portable build, no installation |
 | `ATLab-linux-<version>.tar.gz` | Linux | Portable build |
 
+**Requirement:** the **.NET 10 Runtime** (x64), free from <https://dotnet.microsoft.com/download/dotnet/10.0>. ATLab is
+published without its own copy of .NET; if the runtime is missing, the installer points you to the download page.
+
+All packages include ATLab Analyzer, the evaluation tool for JSON result files, in the subfolder `Analyzer`.
+
 All packages include this user guide as PDF (English and German) in the `docs` subfolder of the program folder, e.g. `C:\Program Files\ATLab\docs\ATLab-User-Guide-en.pdf`. Open it from within ATLab with the book button in the status bar or `F1`.
 
 ## Windows
@@ -18,15 +23,19 @@ All packages include this user guide as PDF (English and German) in the `docs` s
 
 1. Download and run `ATLab-setup-<version>.exe`. Administrator rights are required.
 2. Accept the license (GNU GPL v3) and choose an installation folder. The default is `C:\Program Files\ATLab`.
-3. On the last page you can launch ATLab immediately and create a desktop shortcut.
+3. On the last page you can launch ATLab immediately and create desktop shortcuts.
 
 The installer:
 
-- adds **ATLab** to the Start menu,
+- adds **ATLab** and **ATLab Analyzer** to the Start menu for all users of the computer,
 - registers the `.atlab` extension, so double-clicking a project file opens it in ATLab,
 - adds an uninstaller under *Settings → Apps*.
 
-Uninstalling removes the program folder, shortcuts and the file association. Your projects, scripts and personal settings are not removed (see [File locations](17-reference.md#file-locations)).
+To update, run the installer of the new version; close ATLab and ATLab Analyzer first. The files of the old version
+are replaced, files you added to the program folder yourself (e.g. a J-Link or FTDI DLL) are kept.
+
+Uninstalling removes the installed files, shortcuts and the file association. Files you added to the program folder
+stay, as do your projects, scripts and personal settings (see [File locations](17-reference.md#file-locations)).
 
 ### Portable ZIP
 

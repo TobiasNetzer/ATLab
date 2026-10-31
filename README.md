@@ -90,6 +90,11 @@ Download the latest version from the [releases page](https://github.com/TobiasNe
 | `ATLab-win-<version>.zip` | Windows | Portable build, no installation |
 | `ATLab-linux-<version>.tar.gz` | Linux | Portable build |
 
+All packages include ATLab Analyzer in the subfolder `Analyzer`; the installer adds it to the Start menu.
+
+*Required:* the [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (x64); the installer points to
+the download page if it is missing.
+
 *Optional:* NI-VISA runtime for VISA-based instruments (**currently Windows only**).
 
 See the [Installation chapter](docs/user-guide/en/02-installation.md) for details, including Linux serial port permissions.

@@ -72,10 +72,17 @@ jobs:
     # libraries for that platform next to ATLab.exe, instead of a "runtimes"
     # folder with binaries for every platform. The app stays framework-dependent.
     - name: Restore
-      run: dotnet restore src/ATLab/ATLab.csproj -r ${{ matrix.rid }}
+      run: |
+        dotnet restore src/ATLab/ATLab.csproj -r ${{ matrix.rid }}
+        dotnet restore src/ATLab.Analyzer/ATLab.Analyzer.csproj -r ${{ matrix.rid }}
 
     - name: Build
       run: dotnet publish src/ATLab/ATLab.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out
+
+    # ATLab Analyzer gets its own folder: both apps share libraries (Avalonia, ShadUI, ...) and each has its own
+    # .deps.json, so one app can never overwrite a file of the other. Packages and installer take all of out.
+    - name: Build ATLab Analyzer
+      run: dotnet publish src/ATLab.Analyzer/ATLab.Analyzer.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out/Analyzer
 
     # User guides are shipped with every package in out/docs
     - name: Add user guide PDFs
