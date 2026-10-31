@@ -44,6 +44,17 @@ public partial class ProjectSettings : ObservableObject
     partial void OnIsExportPdfChanged(bool value) => OnSettingsChanged();
 
     [ObservableProperty]
+    private bool _isExportJson;
+
+    partial void OnIsExportJsonChanged(bool value) => OnSettingsChanged();
+
+    // Writes passed runs to <output path>\Pass and failed runs to <output path>\Fail
+    [ObservableProperty]
+    private bool _isSortResultsByVerdict;
+
+    partial void OnIsSortResultsByVerdictChanged(bool value) => OnSettingsChanged();
+
+    [ObservableProperty]
     private SaveTestResultOptions _saveTestResultOptions = SaveTestResultOptions.ALWAYS;
 
     partial void OnSaveTestResultOptionsChanged(SaveTestResultOptions value) => OnSettingsChanged();
@@ -100,6 +111,8 @@ public partial class ProjectSettings : ObservableObject
         IsSaveTestResult = false;
         IsExportCsv = false;
         IsExportPdf = false;
+        IsExportJson = false;
+        IsSortResultsByVerdict = false;
         SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
         SaveTestResultFilePath = string.Empty;
         IsEnableSerialNumberValidation = false;
@@ -128,6 +141,8 @@ public partial class ProjectSettings : ObservableObject
         IsSaveTestResult = other.IsSaveTestResult;
         IsExportCsv = other.IsExportCsv;
         IsExportPdf = other.IsExportPdf;
+        IsExportJson = other.IsExportJson;
+        IsSortResultsByVerdict = other.IsSortResultsByVerdict;
         SaveTestResultOptions = other.SaveTestResultOptions;
         SaveTestResultFilePath = other.SaveTestResultFilePath;
         IsEnableSerialNumberValidation = other.IsEnableSerialNumberValidation;

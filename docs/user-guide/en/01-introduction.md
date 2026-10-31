@@ -42,7 +42,7 @@ A test engineer builds a **test sequence** from test steps that measure values a
 ### Document and report
 
 - **Project documentation** with notes, images, attachments and information about the device under test.
-- **CSV data files** and **PDF test reports**, including the instruments used.
+- **CSV data files**, **PDF test reports** and **JSON result files** with run metadata, including the instruments used.
 - An **event log** with every message of the session.
 
 ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well suited for version control. The user interface is available in English and German with a light and a dark theme. Language and theme are chosen in the settings dialog. This guide opens with `F1`.

@@ -105,7 +105,7 @@ Click **Advanced Settings** to expand.
 | Setting | Description |
 |---------|-------------|
 | **Ignore Step** | The step is skipped during execution and omitted from exports. Useful for temporarily disabling a step. |
-| **Exclude from Export** | The step runs and counts for pass/fail, but is not written to CSV or PDF (e.g. setup steps). |
+| **Exclude from Export** | The step runs and counts for pass/fail, but is not written to CSV, PDF or JSON (e.g. setup steps). |
 | **Accent Color** | Colour of the stripe next to the step number. Use it to group steps visually. |
 | **Show Comment** | Before the step executes, the comment is shown in a dialog with **Continue** / **Cancel**. Cancel aborts the test. Use the image button next to it to add a picture (PNG, JPG, BMP, GIF, WEBP) to the dialog — e.g. a photo showing where to connect a probe. For *User Confirmation* and *User Input* steps the checkbox is disabled, because their dialog already shows the comment; the image is shown in that dialog. |
 | **Assign Result to Variable** | After execution, the measured value is written to the selected runtime variable. `Timeout`, `NACK` and `Overflow` are written as text; using such a variable in a calculation or limit stops the test (see [chapter 10](10-commands-variables-expressions.md#variables)). |

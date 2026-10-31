@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,8 +24,6 @@ public class PdfExportService : IPdfExportService
     private readonly IHardwareInfo _hardwareInfo;
     private readonly IDeviceIdentificationService _deviceIdentificationService;
     private readonly ProjectModel _projectModel;
-
-    private readonly List<DeviceIdentification> _devices = new();
 
     public PdfExportService(
         IFileDialogService fileDialogService,
@@ -69,12 +67,16 @@ public class PdfExportService : IPdfExportService
         }
     }
 
-    public async Task ExportToPathAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo, string path)
+    public async Task ExportToPathAsync(
+        IEnumerable<TestStepViewModel> steps,
+        TestInfo testInfo,
+        IReadOnlyList<DeviceIdentification> testEquipment,
+        string path)
     {
         try
         {
             var outputPath = $"{path}.pdf";
-            var pdfBytes = await BuildPdf(steps, testInfo);
+            var pdfBytes = BuildPdf(steps, testInfo, testEquipment);
 
             await File.WriteAllBytesAsync(outputPath, pdfBytes);
 
@@ -90,39 +92,35 @@ public class PdfExportService : IPdfExportService
 
     private async Task ExportToFileAsync(IEnumerable<TestStepViewModel> steps, TestInfo testInfo, IStorageFile file)
     {
-        var pdfBytes = await BuildPdf(steps, testInfo);
+        var pdfBytes = BuildPdf(steps, testInfo, await _deviceIdentificationService.IdentifyReportDevicesAsync(_projectModel.Devices, CancellationToken.None));
 
         await using var stream = await file.OpenWriteAsync();
         await stream.WriteAsync(pdfBytes);
     }
 
-    private async Task<byte[]> BuildPdf(IEnumerable<TestStepViewModel> steps, TestInfo testInfo)
+    private byte[] BuildPdf(
+        IEnumerable<TestStepViewModel> steps,
+        TestInfo testInfo,
+        IReadOnlyList<DeviceIdentification> testEquipment)
     {
-        _devices.Clear();
-
-        foreach (var device in _projectModel.Devices)
-        {
-            if (!device.IsIncludeInReport)
-                continue;
-
-            var identification = await _deviceIdentificationService.GetIdentificationAsync(
-                device,
-                CancellationToken.None);
-
-            _devices.Add(new DeviceIdentification(device.Name, identification));
-        }
-
-        var stepList = steps
-            .Where(vm => !vm.TestStep.IsIgnoreStep &&
-                         !vm.TestStep.IsExcludeFromExport &&
-                         vm.IsExecuted)
+        var executed = steps
+            .Where(vm => !vm.TestStep.IsIgnoreStep && vm.IsExecuted)
             .ToList();
+
+        var stepList = executed
+            .Where(vm => !vm.TestStep.IsExcludeFromExport)
+            .ToList();
+
+        // Failed steps hidden from the table still make the run fail; the report says how many are not shown
+        var failedExcludedSteps = executed
+            .Count(vm => vm.TestStep.IsExcludeFromExport && !vm.IsPassed);
 
         var document = new TestReportDocument(
             stepList,
+            failedExcludedSteps,
             testInfo,
             _hardwareInfo,
-            _devices);
+            testEquipment.ToList());
 
         return document.GeneratePdf();
     }

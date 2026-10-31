@@ -13,9 +13,9 @@ public class TestReportDocument : IDocument
 {
     private readonly TestReportComposer _composer;
 
-    public TestReportDocument(List<TestStepViewModel> testResults, TestInfo testInfo, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
+    public TestReportDocument(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo testInfo, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
     {
-        _composer = new TestReportComposer(testResults, testInfo, hardwareInfo, deviceIdentification);
+        _composer = new TestReportComposer(testResults, failedExcludedSteps, testInfo, hardwareInfo, deviceIdentification);
     }
 
     public void Compose(IDocumentContainer container)

@@ -1,8 +1,10 @@
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Records;
 
 namespace ATLab.Services;
 
@@ -40,5 +42,23 @@ public class DeviceIdentificationService : IDeviceIdentificationService
             return null;
 
         return Encoding.ASCII.GetString(result.Value);
+    }
+
+    public async Task<IReadOnlyList<DeviceIdentification>> IdentifyReportDevicesAsync(
+        IEnumerable<Device> devices,
+        CancellationToken token)
+    {
+        var result = new List<DeviceIdentification>();
+
+        foreach (var device in devices)
+        {
+            if (!device.IsIncludeInReport)
+                continue;
+
+            var identification = await GetIdentificationAsync(device, token);
+            result.Add(new DeviceIdentification(device.Name, identification));
+        }
+
+        return result;
     }
 }

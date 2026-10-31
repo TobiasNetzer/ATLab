@@ -24,6 +24,9 @@ namespace ATLab.Reporting;
 public class TestReportComposer
 {
     private readonly List<TestStepViewModel> _testResults;
+
+    // Failed steps marked "Exclude from Export": not in the table, but they make the run fail
+    private readonly int _failedExcludedSteps;
     private readonly TestInfo _info;
     private readonly IHardwareInfo _hardwareInfo;
     private readonly List<DeviceIdentification> _deviceIdentification;
@@ -50,9 +53,10 @@ public class TestReportComposer
     private static readonly byte[] FailIcon =
         LoadResource("ATLab.Assets.Fail.png");
 
-    public TestReportComposer(List<TestStepViewModel> testResults, TestInfo info, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
+    public TestReportComposer(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo info, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
     {
         _testResults = testResults;
+        _failedExcludedSteps = failedExcludedSteps;
         _info = info;
         _hardwareInfo = hardwareInfo;
         _deviceIdentification = deviceIdentification;
@@ -236,19 +240,36 @@ public class TestReportComposer
 
     private void ComposeResultBanner(IContainer container)
     {
-        var allPassed = _testResults.All(x => x.IsPassed);
+        // Verdict of the whole run, the same as the Testing tab, the Pass/Fail folders and the JSON file
+        var allPassed = _testResults.All(x => x.IsPassed) && _failedExcludedSteps == 0 && _info.FailedSteps == 0;
 
         var text = allPassed ? LocalizationService.Instance["ReportLabel_Pass"] : LocalizationService.Instance["ReportLabel_Fail"];
         var color = allPassed ? Colors.Green.Medium : Colors.Red.Medium;
 
-        container
-            .Background(color)
-            .CornerRadius(5)
-            .AlignCenter()
-            .Text(text)
-            .FontSize(32)
-            .Bold()
-            .FontColor(Colors.White);
+        container.Column(col =>
+        {
+            col.Item()
+                .Background(color)
+                .CornerRadius(5)
+                .AlignCenter()
+                .Text(text)
+                .FontSize(32)
+                .Bold()
+                .FontColor(Colors.White);
+
+            if (_failedExcludedSteps == 0)
+                return;
+
+            var note = _failedExcludedSteps == 1
+                ? LocalizationService.Instance["ReportText_FailedStepExcluded"]
+                : string.Format(LocalizationService.Instance["ReportText_FailedStepsExcluded"], _failedExcludedSteps);
+
+            col.Item()
+                .PaddingTop(4)
+                .AlignCenter()
+                .Text(note)
+                .FontColor(Colors.Red.Darken2);
+        });
     }
 
     private void ComposeTable(IContainer container)

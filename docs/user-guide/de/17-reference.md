@@ -107,7 +107,7 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Angezeigte Nachkommastellen | 3 |
 | Seriennummer abfragen | aus |
 | Testergebnis speichern | aus (Immer) |
-| CSV- / PDF-Export | aus |
+| CSV- / PDF- / JSON-Export | aus |
 | Seriennummer-Validierung | aus |
 | Steuermodul | aus |
 | Protokolliergrad | Info |

@@ -105,7 +105,7 @@ Zum Aufklappen auf **Erweiterte Einstellungen** klicken.
 | Einstellung | Beschreibung |
 |-------------|--------------|
 | **Schritt ignorieren** | Der Schritt wird bei der Ausführung übersprungen und nicht exportiert. Nützlich zum vorübergehenden Deaktivieren. |
-| **Vom Export ausschließen** | Der Schritt läuft und zählt für das Gesamtergebnis, wird aber nicht in CSV oder PDF geschrieben (z. B. Einrichtungsschritte). |
+| **Vom Export ausschließen** | Der Schritt läuft und zählt für das Gesamtergebnis, wird aber nicht in CSV, PDF oder JSON geschrieben (z. B. Einrichtungsschritte). |
 | **Akzentfarbe** | Farbe des Streifens neben der Schrittnummer. Zum optischen Gruppieren von Schritten. |
 | **Kommentar anzeigen** | Vor der Ausführung des Schritts wird der Kommentar in einem Dialog mit **Weiter** / **Abbrechen** angezeigt. Abbrechen bricht den Test ab. Über die Bild-Schaltfläche daneben (**Bild zu Meldungsfenster hinzufügen**) fügen Sie dem Dialog ein Bild hinzu (PNG, JPG, BMP, GIF, WEBP) – z. B. ein Foto, wo eine Prüfspitze anzusetzen ist. Bei *Benutzerbestätigung*- und *Benutzereingabe*-Schritten ist das Kontrollkästchen deaktiviert, da deren Dialog den Kommentar bereits anzeigt; das Bild erscheint in diesem Dialog. |
 | **Ergebnis einer Variable zuweisen** | Nach der Ausführung wird der Messwert in die gewählte Laufzeitvariable geschrieben. `Timeout`, `NACK` und `Overflow` werden als Text geschrieben; wird eine solche Variable in einer Berechnung oder einem Grenzwert verwendet, stoppt der Test (siehe [Kapitel 10](10-commands-variables-expressions.md#variablen)). |

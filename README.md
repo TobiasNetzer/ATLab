@@ -68,7 +68,7 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 
 **Results and documentation** · [Test Results & Reports](docs/user-guide/en/15-results-and-reports.md) · [Documentation Tab](docs/user-guide/en/13-documentation-tab.md)
 
--   Automatic **CSV** data files and **PDF** test reports, including the used test equipment.
+-   Automatic **CSV** data files, **PDF** test reports and **JSON** result files with run metadata, including the used test equipment.
 -   Project documentation with notes, images, attachments and information about the device under test.
 
 **Application**

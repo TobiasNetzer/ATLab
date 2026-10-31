@@ -154,6 +154,8 @@ public class AppResources
     public static string Label_PassedOnly => ResourceManager.GetString("Label_PassedOnly", resourceCulture) ?? "Passed Only";
     public static string Label_ExportTestDataCsv => ResourceManager.GetString("Label_ExportTestDataCsv", resourceCulture) ?? "Export Test Data (CSV)";
     public static string Label_ExportTestReportPdf => ResourceManager.GetString("Label_ExportTestReportPdf", resourceCulture) ?? "Export Test Report (PDF)";
+    public static string Label_SortResultsByVerdict => ResourceManager.GetString("Label_SortResultsByVerdict", resourceCulture) ?? "Sort into Pass / Fail Subfolders";
+    public static string Label_ExportTestDataJson => ResourceManager.GetString("Label_ExportTestDataJson", resourceCulture) ?? "Export Test Data with Metadata (JSON)";
     public static string Label_OutputPath => ResourceManager.GetString("Label_OutputPath", resourceCulture) ?? "Output Path";
     public static string Header_ControlDevices => ResourceManager.GetString("Header_ControlDevices", resourceCulture) ?? "Control Devices";
     public static string Label_EnableControlModule => ResourceManager.GetString("Label_EnableControlModule", resourceCulture) ?? "Enable Control Module";

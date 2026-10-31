@@ -36,6 +36,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITestStepEvaluator, TestStepEvaluator>();
         services.AddSingleton<ICsvExportService, CsvExportService>();
         services.AddSingleton<IPdfExportService, PdfExportService>();
+        services.AddSingleton<IJsonExportService, JsonExportService>();
         services.AddSingleton<ITestResultExportService, TestResultExportService>();
         services.AddSingleton<IProjectController, ProjectController>();
         services.AddSingleton<ITestStepEditor, TestStepEditor>();

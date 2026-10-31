@@ -42,7 +42,7 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 ### Dokumentieren und berichten
 
 - **Projektdokumentation**: Notizen, Bilder, Anhänge und Angaben zum Prüfling werden im Projekt gespeichert.
-- **Berichte**: Die Ergebnisse werden als CSV-Datei und als PDF-Testbericht gespeichert, einschließlich der verwendeten Messgeräte.
+- **Berichte**: Die Ergebnisse werden als CSV-Datei, als PDF-Testbericht und als JSON-Datei mit Metadaten gespeichert, einschließlich der verwendeten Messgeräte.
 - **Ereignisprotokoll**: Alle Meldungen der Sitzung werden im Ereignisprotokoll gesammelt.
 
 ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Dateien und eignen sich daher gut für die Versionsverwaltung. Die Oberfläche gibt es auf Deutsch und Englisch, jeweils mit hellem und dunklem Design. Sprache und Design werden im Einstellungsdialog gewählt. Dieses Handbuch öffnet sich mit `F1`.

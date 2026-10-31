@@ -107,7 +107,7 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Displayed Decimal Places | 3 |
 | Request Serial Number | off |
 | Save Test Result | off (Always) |
-| Export CSV / PDF | off |
+| Export CSV / PDF / JSON | off |
 | Serial number validation | off |
 | Control module | off |
 | Log Level | Info |

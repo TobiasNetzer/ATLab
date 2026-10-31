@@ -385,6 +385,12 @@
   <data name="Label_ExportTestReportPdf" xml:space="preserve">
     <value>Export Test Report (PDF)</value>
   </data>
+  <data name="Label_SortResultsByVerdict" xml:space="preserve">
+    <value>Sort into Pass / Fail Subfolders</value>
+  </data>
+  <data name="Label_ExportTestDataJson" xml:space="preserve">
+    <value>Export Test Data with Metadata (JSON)</value>
+  </data>
   <data name="Label_OutputPath" xml:space="preserve">
     <value>Output Path</value>
   </data>
@@ -939,6 +945,12 @@
   </data>
   <data name="ReportLabel_Pass" xml:space="preserve">
     <value>PASS</value>
+  </data>
+  <data name="ReportText_FailedStepExcluded" xml:space="preserve">
+    <value>1 failed step is excluded from this report.</value>
+  </data>
+  <data name="ReportText_FailedStepsExcluded" xml:space="preserve">
+    <value>{0} failed steps are excluded from this report.</value>
   </data>
   <data name="ReportLabel_Fail" xml:space="preserve">
     <value>FAIL</value>

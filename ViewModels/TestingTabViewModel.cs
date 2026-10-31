@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -10,6 +10,7 @@ using ATLab.Enums;
 using ATLab.Helpers;
 using ATLab.Interfaces;
 using ATLab.Models;
+using ATLab.Results;
 using ATLab.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -126,6 +127,10 @@ public partial class TestingTabViewModel : ViewModelBase
 
     private bool _allowResultSave;
     private DateTimeOffset _startTime;
+
+    // Run mode and loop number of the current run for the JSON result file
+    private TestRunMode _runMode = TestRunMode.Single;
+    private int _loopIndex;
     private TimeSpan Elapsed => DateTimeOffset.Now - _startTime;
 
     private bool IsAnimationEnabled
@@ -918,6 +923,8 @@ public partial class TestingTabViewModel : ViewModelBase
             _executionSteps = BuildExecutionSteps();
 
             _allowResultSave = true;
+            _runMode = TestRunMode.Single;
+            _loopIndex = 1;
             IsShowContinueButton = true;
             await _testExecutor.StartTestAsync(_executionSteps, 0, _runtimeVariables);
             IsShowContinueButton = false;
@@ -947,6 +954,8 @@ public partial class TestingTabViewModel : ViewModelBase
             _executionSteps = BuildExecutionSteps();
 
             _allowResultSave = true;
+            _runMode = TestRunMode.Continuous;
+            _loopIndex = 0; // incremented by TestRepeated before every loop
             IsShowContinueButton = true;
             await _testExecutor.StartRepeatTestAsync(_executionSteps, 0, _runtimeVariables);
             IsShowContinueButton = false;
@@ -1217,12 +1226,17 @@ public partial class TestingTabViewModel : ViewModelBase
                 {
                     ProjectName = _projectModel.ProjectName,
                     Operator = User,
+                    StartTime = _startTime,
                     Duration = TestDuration,
+                    Elapsed = Elapsed,
+                    FailedSteps = NumberFailedSteps,
+                    RunMode = _runMode,
+                    LoopIndex = _runMode == TestRunMode.Continuous ? _loopIndex : null,
                     SerialNumber = SerialNumber,
                     DeviceUnderTestInfo = _projectModel.DeviceUnderTestInfo
                 };
                 
-                await _testResultExportService.SaveAsync(_executionSteps, testInfo, NumberFailedSteps);
+                await _testResultExportService.SaveAsync(_executionSteps, testInfo);
             }
 
             if (NumberFailedSteps > 0)
@@ -1249,6 +1263,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         _testExecutor.TestRepeated += () =>
         {
+            _loopIndex++;
             ResetAllResults();
             TestProgress = 0;
             NumberFailedSteps = 0;
