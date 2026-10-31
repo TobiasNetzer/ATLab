@@ -12,6 +12,7 @@ using ATLab.Analyzer.Services;
 using ATLab.Results;
 using Avalonia;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -228,8 +229,17 @@ public partial class MainWindowViewModel : ObservableObject
     private void ShowStep(StepRow? row)
     {
         if (row is null) return;
-        SelectedStep = row;
+
+        if (SelectedTabIndex == 1)
+        {
+            SelectedStep = row;
+            return;
+        }
+
+        // Switch first and select once the Steps tab has (re)attached its grid, like a click in the grid: a grid that
+        // is not shown does not keep a selection made meanwhile and would hand back the old one
         SelectedTabIndex = 1;
+        Dispatcher.UIThread.Post(() => SelectedStep = row, DispatcherPriority.Loaded);
     }
 
     partial void OnSelectedStepChanged(StepRow? value)

@@ -389,7 +389,7 @@
     <value>Sort into Pass / Fail Subfolders</value>
   </data>
   <data name="Label_ExportTestDataJson" xml:space="preserve">
-    <value>Export Test Data with Metadata (JSON)</value>
+    <value>Export Result File for Evaluation (JSON)</value>
   </data>
   <data name="Label_OutputPath" xml:space="preserve">
     <value>Output Path</value>

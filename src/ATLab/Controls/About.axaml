@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="ATLab.Controls.About"
              x:DataType="vm:AboutTabViewModel"
              Width="780"
@@ -95,13 +96,21 @@
                                     Content="{helpers:Localize Button_ViewProjectOnGitHub}"
                                     Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
-                                    CommandParameter="https://github.com/TobiasNetzer/ATLab"/>
+                                    CommandParameter="https://github.com/TobiasNetzer/ATLab">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent ExternalLink, 16}" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
                                 
                                 <Button
                                     Content="{helpers:Localize Button_License}"
                                     Classes="Outline"
                                     Command="{Binding OpenLinkCommand}"
-                                    CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE"/>
+                                    CommandParameter="https://github.com/TobiasNetzer/ATLab/blob/main/LICENSE">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent Scale, 16}" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
                                 
                             </StackPanel>
                         </Grid>

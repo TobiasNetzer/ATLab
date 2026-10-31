@@ -131,8 +131,8 @@ Wie Variablen referenziert werden, erklärt [Befehle, Variablen & Ausdrücke](10
 | **Testergebnis speichern** | Exportiert die Ergebnisse automatisch nach jedem abgeschlossenen Lauf. Nur verfügbar, wenn *Seriennummer abfragen* aktiv ist, da die Seriennummer Teil des Dateinamens ist. |
 | **Immer / Nur wenn bestanden** | Nach jedem Lauf exportieren oder nur nach bestandenen Läufen. |
 | **Testdaten exportieren (CSV)** | Schreibt eine tabulatorgetrennte Datendatei. |
+| **Ergebnisdatei für Auswertung exportieren (JSON)** | Schreibt die Ergebnisse zusammen mit Metadaten zu Lauf, Projekt, Prüfling und Prüfmitteln für Auswerteprogramme (siehe [JSON-Ergebnisdatei](15-results-and-reports.md#json-ergebnisdatei)). |
 | **Testbericht exportieren (PDF)** | Schreibt einen formatierten Testbericht. |
-| **Testdaten mit Metadaten exportieren (JSON)** | Schreibt die Ergebnisse zusammen mit Metadaten zu Lauf, Projekt, Prüfling und Prüfmitteln für Auswerteprogramme (siehe [JSON-Ergebnisdatei](15-results-and-reports.md#json-ergebnisdatei)). |
 | **In Unterordner Pass / Fail sortieren** | Schreibt die Dateien bestandener Läufe in den Unterordner `Pass` und fehlgeschlagener Läufe in `Fail` im Ausgabepfad (siehe [Ordner](15-results-and-reports.md#ordner)). |
 | **Ausgabepfad** | Ordner für exportierte Dateien. Mit **…** auswählen. Wird bei Bedarf angelegt. |
 

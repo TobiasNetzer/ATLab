@@ -66,12 +66,12 @@
                                           IsChecked="{Binding Settings.IsExportCsv}"
                                           IsEnabled="{Binding CanSaveTestResult}"/>
 
-                                <CheckBox Content="{helpers:Localize Label_ExportTestReportPdf}"
-                                          IsChecked="{Binding Settings.IsExportPdf}"
-                                          IsEnabled="{Binding CanSaveTestResult}"/>
-
                                 <CheckBox Content="{helpers:Localize Label_ExportTestDataJson}"
                                           IsChecked="{Binding Settings.IsExportJson}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
+
+                                <CheckBox Content="{helpers:Localize Label_ExportTestReportPdf}"
+                                          IsChecked="{Binding Settings.IsExportPdf}"
                                           IsEnabled="{Binding CanSaveTestResult}"/>
 
                                 <CheckBox Content="{helpers:Localize Label_SortResultsByVerdict}"

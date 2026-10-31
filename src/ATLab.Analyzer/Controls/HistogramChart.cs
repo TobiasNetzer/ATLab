@@ -24,8 +24,12 @@ public sealed class HistogramChart : ChartBase
     public static readonly StyledProperty<bool> ShowNormalCurveProperty =
         AvaloniaProperty.Register<HistogramChart, bool>(nameof(ShowNormalCurve), true);
 
+    /// <summary>With this many distinct values or fewer (counts, yes/no) the data is not normal; no curve then.</summary>
+    private const int MaxDistinctValuesWithoutCurve = 10;
+
     private Histogram _histogram = new([], 0);
     private DescriptiveStatistics? _statistics;
+    private int _distinctValues;
 
     static HistogramChart()
     {
@@ -45,6 +49,7 @@ public sealed class HistogramChart : ChartBase
             var values = Values ?? [];
             _histogram = Histogram.Create(values.ToArray(), Bins);
             _statistics = DescriptiveStatistics.Compute(values.ToArray(), null, null);
+            _distinctValues = values.Distinct().Take(MaxDistinctValuesWithoutCurve + 1).Count();
 
             // Other values belong to another step; other bins keep the zoomed range
             if (change.Property == ValuesProperty)
@@ -71,7 +76,9 @@ public sealed class HistogramChart : ChartBase
         var sd = _statistics.StdDev;
         var mean = _statistics.Mean;
         var curveScale = _statistics.Count * _histogram.BinWidth;
-        var showCurve = ShowNormalCurve && sd is > 0;
+        // A bell curve over a few discrete values (e.g. 0/1/2 mismatching pins) is misleading and its peak would
+        // squeeze the bars
+        var showCurve = ShowNormalCurve && sd is > 0 && _distinctValues > MaxDistinctValuesWithoutCurve;
 
         // The count axis fits the visible bins and the visible part of the curve
         var visibleMax = bins.Where(b => b.Upper > xMin && b.Lower < xMax).Select(b => b.Count).DefaultIfEmpty(0).Max();

@@ -1,6 +1,6 @@
 # 15. Testergebnisse & Berichte
 
-ATLab kann das Ergebnis jedes Laufs automatisch als Datendatei (CSV), als formatierten Testbericht (PDF) und/oder als Datendatei mit Metadaten für Auswerteprogramme (JSON) exportieren.
+ATLab kann das Ergebnis jedes Laufs automatisch als Datendatei (CSV), als formatierten Testbericht (PDF) und/oder als Ergebnisdatei für Auswerteprogramme (JSON) exportieren.
 
 ## Automatischen Export aktivieren
 
@@ -9,7 +9,7 @@ Registerkarte **Konfiguration** → **Projekteinstellungen** → **Testausführu
 1. **Seriennummer abfragen** aktivieren (erforderlich – die Seriennummer ist Teil des Dateinamens).
 2. **Testergebnis speichern** aktivieren.
 3. **Immer** oder **Nur wenn bestanden** wählen.
-4. Beliebige von **Testdaten exportieren (CSV)**, **Testbericht exportieren (PDF)** und **Testdaten mit Metadaten exportieren (JSON)** aktivieren.
+4. Beliebige von **Testdaten exportieren (CSV)**, **Ergebnisdatei für Auswertung exportieren (JSON)** und **Testbericht exportieren (PDF)** aktivieren.
 5. Optional **In Unterordner Pass / Fail sortieren** aktivieren.
 6. Den **Ausgabepfad** festlegen. Der Ordner wird bei Bedarf angelegt.
 

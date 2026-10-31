@@ -1,6 +1,6 @@
 # 15. Test Results & Reports
 
-ATLab can export the result of every run automatically as a data file (CSV), a formatted test report (PDF) and/or a data file with metadata for evaluation tools (JSON).
+ATLab can export the result of every run automatically as a data file (CSV), a formatted test report (PDF) and/or a result file for evaluation tools (JSON).
 
 ## Enabling automatic export
 
@@ -9,7 +9,7 @@ On the **Configuration** tab → **Project Settings** → **Test Execution Setti
 1. Enable **Request Serial Number** (required — the serial number is part of the file name).
 2. Enable **Save Test Result**.
 3. Choose **Always** or **Passed Only**.
-4. Enable any of **Export Test Data (CSV)**, **Export Test Report (PDF)** and **Export Test Data with Metadata (JSON)**.
+4. Enable any of **Export Test Data (CSV)**, **Export Result File for Evaluation (JSON)** and **Export Test Report (PDF)**.
 5. Optionally enable **Sort into Pass / Fail Subfolders**.
 6. Set the **Output Path**. The folder is created if necessary.
 

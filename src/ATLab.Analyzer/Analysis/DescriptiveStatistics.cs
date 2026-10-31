@@ -46,11 +46,15 @@ public sealed record DescriptiveStatistics(
 
     /// <summary>
     /// Cp needs both limits. Cpk uses the nearer limit; with a single limit it is the one-sided index (Cpl or Cpu).
-    /// Both are undefined without spread.
+    /// Both are undefined without spread, and without tolerance: equal limits (e.g. 0 … 0 mismatching pins, 1 … 1 for
+    /// a confirmation) are pass/fail checks, not a range the scatter has to fit into.
     /// </summary>
     internal static (double? Cp, double? Cpk) Capability(double mean, double? stdDev, double? lowerLimit, double? upperLimit)
     {
         if (stdDev is not { } sd || sd <= 0 || !double.IsFinite(sd))
+            return (null, null);
+
+        if (lowerLimit is { } lower && upperLimit is { } upper && upper <= lower)
             return (null, null);
 
         double? cp = lowerLimit is { } l && upperLimit is { } u ? (u - l) / (6 * sd) : null;
