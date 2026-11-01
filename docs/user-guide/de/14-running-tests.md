@@ -78,6 +78,7 @@ Unterhalb der Schrittliste:
 | Statusbanner | **Test läuft** mit Fortschrittsbalken, danach **Test bestanden** (grün), **Test fehlgeschlagen** (rot), **Test abgebrochen** oder **Testausführung fehlgeschlagen**. |
 | **Testdauer** | Verstrichene Zeit des Laufs. |
 | **Fehlgeschlagene Schritte** | Anzahl fehlgeschlagener Schritte in diesem Lauf. Rot hervorgehoben, wenn größer als null. |
+| **Fehlgeschlagene Schritte (alle Durchläufe)** | Nur sichtbar, nachdem ein Dauertest gestartet wurde: fehlgeschlagene Schritte aller Durchläufe dieses Dauertests. Wird beim nächsten Dauertest zurückgesetzt und ausgeblendet, sobald eine andere Art von Lauf startet. Rot hervorgehoben, wenn größer als null. |
 | **Bestandene Tests** | Bestandene Läufe / alle Läufe seit dem Öffnen des Projekts, mit Prozentangabe. Gezählt werden nur *Testausführung starten* und *Dauertest starten*. Nützlich bei Dauertests. |
 | **Bediener** | Benutzername des Betriebssystems; erscheint auch im Bericht als *Bediener*. |
 | **Prüfling (DUT)** | Gerätename, Revision, Variante und Teilenummer aus der [Registerkarte Dokumentation](13-documentation-tab.md#prüfling-dut), oder `-`. Beim Darüberfahren werden die einzelnen Felder angezeigt. |

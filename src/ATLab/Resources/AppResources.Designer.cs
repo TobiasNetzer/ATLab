@@ -277,4 +277,5 @@ public class AppResources
     public static string Title_WrongTestHardware => ResourceManager.GetString("Title_WrongTestHardware", resourceCulture) ?? "Wrong Test Hardware";
     public static string Text_WrongTestHardware => ResourceManager.GetString("Text_WrongTestHardware", resourceCulture) ?? "The project '{0}' was developed for the test hardware {1}, but {2} is connected. It can only be opened with that test hardware or its simulator.";
     public static string Text_WrongSimulatedTestHardware => ResourceManager.GetString("Text_WrongSimulatedTestHardware", resourceCulture) ?? "The project '{0}' was developed for the test hardware {1}, but {2} is active. It can only be opened with that test hardware or its simulator.";
+    public static string Label_TotalFailedSteps => ResourceManager.GetString("Label_TotalFailedSteps", resourceCulture) ?? "Failed Steps (All Loops)";
 }

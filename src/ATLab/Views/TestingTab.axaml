@@ -757,18 +757,45 @@
                            CornerRadius="1"
                            Background="{DynamicResource MutedColor}"/>
                 
-                <Panel Grid.Column="2">
-                    <Border Classes.error="{Binding NumberFailedSteps}"
-                            CornerRadius="5"
-                            Margin="-6 -2"
-                            Opacity="0.15"/>
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal">
+
+                    <Panel>
+                        <Border Classes.error="{Binding NumberFailedSteps}"
+                                CornerRadius="5"
+                                Margin="-6 -2"
+                                Opacity="0.15"/>
+
+                        <StackPanel Spacing="2"
+                                    Classes.error="{Binding NumberFailedSteps}">
+                            <TextBlock Classes="Small" Text="{helpers:Localize Label_FailedSteps}"/>
+                            <TextBlock Classes="Small" Text="{Binding NumberFailedSteps}"/>
+                        </StackPanel>
+                    </Panel>
                     
-                    <StackPanel Spacing="2"
-                                Classes.error="{Binding NumberFailedSteps}">
-                        <TextBlock Classes="Small" Text="{helpers:Localize Label_FailedSteps}"/>
-                        <TextBlock Classes="Small" Text="{Binding NumberFailedSteps}"/>
+                    <StackPanel Orientation="Horizontal"
+                                IsVisible="{Binding IsShowTotalFailedSteps}">
+
+                        <Separator Width="2"
+                                   Height="40"
+                                   Margin="20 0 20 0"
+                                   CornerRadius="1"
+                                   Background="{DynamicResource MutedColor}"/>
+
+                        <Panel>
+                            <Border Classes.error="{Binding TotalFailedSteps}"
+                                    CornerRadius="5"
+                                    Margin="-6 -2"
+                                    Opacity="0.15"/>
+
+                            <StackPanel Spacing="2"
+                                        Classes.error="{Binding TotalFailedSteps}">
+                                <TextBlock Classes="Small" Text="{helpers:Localize Label_TotalFailedSteps}"/>
+                                <TextBlock Classes="Small" Text="{Binding TotalFailedSteps}"/>
+                            </StackPanel>
+                        </Panel>
                     </StackPanel>
-                </Panel>
+                </StackPanel>
                 
                 <Separator Grid.Column="3"
                            Width="2"

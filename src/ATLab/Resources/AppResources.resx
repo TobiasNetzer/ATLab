@@ -1448,4 +1448,7 @@ Devices that are found again keep their settings. All other devices are removed 
   <data name="Text_WrongSimulatedTestHardware" xml:space="preserve">
     <value>The project '{0}' was developed for the test hardware {1}, but {2} is active. It can only be opened with that test hardware or its simulator.</value>
   </data>
+  <data name="Label_TotalFailedSteps" xml:space="preserve">
+    <value>Failed Steps (All Loops)</value>
+  </data>
 </root>

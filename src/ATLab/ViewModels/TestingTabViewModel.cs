@@ -83,6 +83,12 @@ public partial class TestingTabViewModel : ViewModelBase
     private int _numberFailedSteps;
     
     [ObservableProperty]
+    private int _totalFailedSteps;
+    
+    [ObservableProperty]
+    private bool _isShowTotalFailedSteps;
+    
+    [ObservableProperty]
     private int _numberRunTests;
     
     [ObservableProperty]
@@ -404,6 +410,8 @@ public partial class TestingTabViewModel : ViewModelBase
         NumberPassedTests = 0;
         NumberRunTests = 0;
         NumberFailedSteps = 0;
+        TotalFailedSteps = 0;
+        IsShowTotalFailedSteps = false;
         PassedPercentage = 100;
         TestDuration = "0s";
         TestStatus = TestStatus.IDLE;
@@ -920,6 +928,7 @@ public partial class TestingTabViewModel : ViewModelBase
             }
 
             TestStatus = TestStatus.RUNNING;
+            IsShowTotalFailedSteps = false;
             _executionSteps = BuildExecutionSteps();
 
             _allowResultSave = true;
@@ -951,6 +960,8 @@ public partial class TestingTabViewModel : ViewModelBase
             }
             
             TestStatus = TestStatus.RUNNING;
+            TotalFailedSteps = 0;
+            IsShowTotalFailedSteps = true;
             _executionSteps = BuildExecutionSteps();
 
             _allowResultSave = true;
@@ -981,6 +992,7 @@ public partial class TestingTabViewModel : ViewModelBase
             _isPartialRun = true;
             ResetAllResults();
             NumberFailedSteps = 0;
+            IsShowTotalFailedSteps = false;
             TestStatus = TestStatus.RUNNING;
             TestProgress = 0;
             TestDuration = "0s";
@@ -1011,6 +1023,7 @@ public partial class TestingTabViewModel : ViewModelBase
             _isPartialRun = true;
             ResetAllResults();
             NumberFailedSteps = 0;
+            IsShowTotalFailedSteps = false;
             TestProgress = 0;
             TestDuration = "0s";
             TestStatus = TestStatus.RUNNING;
@@ -1042,6 +1055,7 @@ public partial class TestingTabViewModel : ViewModelBase
         {
             StartSingleStepBusy = true;
             NumberFailedSteps = 0;
+            IsShowTotalFailedSteps = false;
             TestProgress = 0;
             TestDuration = "0s";
             TestStatus = TestStatus.RUNNING;
@@ -1174,7 +1188,12 @@ public partial class TestingTabViewModel : ViewModelBase
                 : (int)Math.Round((double)(index + 1) / _executionSteps.Count * 100);
 
             if (!step.IsPassed)
+            {
                 NumberFailedSteps++;
+
+                if (StartRepeatTestBusy)
+                    TotalFailedSteps++;
+            }
 
             UpdateSystemVariables(step);
 

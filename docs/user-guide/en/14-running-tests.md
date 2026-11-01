@@ -78,6 +78,7 @@ Below the step list:
 | Status banner | **Running Test** with a progress bar, then **Test Passed** (green), **Test Failed** (red), **Test Canceled** or **Test Execution Failed**. |
 | **Test Duration** | Elapsed time of the run. |
 | **Failed Steps** | Number of failed steps in this run. Highlighted in red when greater than zero. |
+| **Failed Steps (All Loops)** | Only shown after a continuous run was started: failed steps of all loops of that continuous run. Reset when the next continuous run starts, hidden when another kind of run starts. Highlighted in red when greater than zero. |
 | **Passed Tests** | Passed runs / total runs since the project was opened, with percentage. Only *Start test execution* and *Start continuous test execution* are counted. Useful for continuous runs. |
 | **Operator** | Operating-system user name; also printed as *Operator* in the report. |
 | **Device Under Test** | Device name, revision, variant and part number from the [Documentation tab](13-documentation-tab.md#device-under-test), or `-`. Hover for the individual fields. |

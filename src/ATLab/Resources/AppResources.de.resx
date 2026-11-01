@@ -1448,4 +1448,7 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   <data name="Text_WrongSimulatedTestHardware" xml:space="preserve">
     <value>Das Projekt '{0}' wurde für die Test-Hardware {1} entwickelt, aktiv ist aber {2}. Es kann nur mit dieser Test-Hardware oder ihrem Simulator geöffnet werden.</value>
   </data>
+  <data name="Label_TotalFailedSteps" xml:space="preserve">
+    <value>Fehlgeschlagene Schritte (alle Durchläufe)</value>
+  </data>
 </root>
