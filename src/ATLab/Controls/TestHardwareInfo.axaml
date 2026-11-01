@@ -28,7 +28,7 @@
                         HorizontalAlignment="Stretch">
 
                 <StackPanel Spacing="5">
-                    <TextBlock Text="{helpers:Localize Header_ConnectedHardware}"
+                    <TextBlock Text="{helpers:Localize Header_HardwareDevice}"
                                Classes="Small"
                                FontWeight="Bold"/>
 

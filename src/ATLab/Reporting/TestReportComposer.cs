@@ -30,6 +30,9 @@ public class TestReportComposer
     private readonly TestInfo _info;
     private readonly IHardwareInfo _hardwareInfo;
     private readonly List<DeviceIdentification> _deviceIdentification;
+
+    // Simulated runs have no real test hardware to list in the report
+    private readonly bool _isSimulation;
     
     private static string AppName =>
         Assembly.GetEntryAssembly()?
@@ -53,12 +56,13 @@ public class TestReportComposer
     private static readonly byte[] FailIcon =
         LoadResource("ATLab.Assets.Fail.png");
 
-    public TestReportComposer(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo info, IHardwareInfo hardwareInfo, List<DeviceIdentification> deviceIdentification)
+    public TestReportComposer(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo info, IHardwareInfo hardwareInfo, bool isSimulation, List<DeviceIdentification> deviceIdentification)
     {
         _testResults = testResults;
         _failedExcludedSteps = failedExcludedSteps;
         _info = info;
         _hardwareInfo = hardwareInfo;
+        _isSimulation = isSimulation;
         _deviceIdentification = deviceIdentification;
     }
 
@@ -106,7 +110,7 @@ public class TestReportComposer
             col.Item().Element(ComposeResultBanner);
             col.Item().Element(ComposeTable);
 
-            if (_hardwareInfo is not DummyHardwareInfo || _deviceIdentification.Count > 0)
+            if (!_isSimulation || _deviceIdentification.Count > 0)
             {
                 col.Item().Element(ComposeEquipmentSection);
             }
@@ -376,7 +380,7 @@ public class TestReportComposer
             
             col.Item().BorderBottom(2).BorderColor(Colors.Grey.Darken1);
 
-            if (_hardwareInfo is not DummyHardwareInfo)
+            if (!_isSimulation)
             {
                 col.Item().PaddingTop(10)
                     .Text(LocalizationService.Instance["ReportLabel_TestHardware"])

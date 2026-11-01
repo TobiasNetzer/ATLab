@@ -22,6 +22,7 @@ public class JsonExportService : IJsonExportService
 {
     private readonly ILoggingService _loggingService;
     private readonly IHardwareAccessor _hardwareAccessor;
+    private readonly ApplicationState _applicationState;
     private readonly ProjectModel _projectModel;
 
     private static string AppVersion =>
@@ -34,10 +35,12 @@ public class JsonExportService : IJsonExportService
     public JsonExportService(
         ILoggingService loggingService,
         IHardwareAccessor hardwareAccessor,
+        ApplicationState applicationState,
         ProjectModel projectModel)
     {
         _loggingService = loggingService;
         _hardwareAccessor = hardwareAccessor;
+        _applicationState = applicationState;
         _projectModel = projectModel;
     }
 
@@ -105,7 +108,7 @@ public class JsonExportService : IJsonExportService
                 Name = hardwareInfo.DeviceName,
                 SerialNumber = hardwareInfo.SerialNumber,
                 FirmwareVersion = hardwareInfo.FirmwareVersion,
-                IsSimulator = hardwareInfo is DummyHardwareInfo
+                IsSimulator = _applicationState.IsSimulationMode
             },
             TestEquipment = testEquipment
                 .Select(d => new TestEquipmentMetadata { Name = d.Name, Identification = d.Identification })

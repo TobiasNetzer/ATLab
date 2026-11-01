@@ -204,7 +204,7 @@ public class AppResources
     public static string Label_PartNumber => ResourceManager.GetString("Label_PartNumber", resourceCulture) ?? "Part Number";
     public static string Label_AdditionalNotes => ResourceManager.GetString("Label_AdditionalNotes", resourceCulture) ?? "Additional Notes";
     public static string Header_TestHardwareInfo => ResourceManager.GetString("Header_TestHardwareInfo", resourceCulture) ?? "Test Hardware Info";
-    public static string Header_ConnectedHardware => ResourceManager.GetString("Header_ConnectedHardware", resourceCulture) ?? "Connected Test Hardware";
+    public static string Header_HardwareDevice => ResourceManager.GetString("Header_HardwareDevice", resourceCulture) ?? "Test Hardware";
     public static string Header_AvailableRelayChannels => ResourceManager.GetString("Header_AvailableRelayChannels", resourceCulture) ?? "Available Relay Channels";
     public static string Header_AvailableInterfaces => ResourceManager.GetString("Header_AvailableInterfaces", resourceCulture) ?? "Available Interfaces";
     public static string Header_TestHardwareDiagnostics => ResourceManager.GetString("Header_TestHardwareDiagnostics", resourceCulture) ?? "Test Hardware Diagnostics";
@@ -274,4 +274,7 @@ public class AppResources
     public static string ToolTip_SelectCsvOutputPath => ResourceManager.GetString("ToolTip_SelectCsvOutputPath", resourceCulture) ?? "Select folder for the CSV data files";
     public static string ToolTip_SelectJsonOutputPath => ResourceManager.GetString("ToolTip_SelectJsonOutputPath", resourceCulture) ?? "Select folder for the JSON result files";
     public static string ToolTip_SelectPdfOutputPath => ResourceManager.GetString("ToolTip_SelectPdfOutputPath", resourceCulture) ?? "Select folder for the PDF test reports";
+    public static string Title_WrongTestHardware => ResourceManager.GetString("Title_WrongTestHardware", resourceCulture) ?? "Wrong Test Hardware";
+    public static string Text_WrongTestHardware => ResourceManager.GetString("Text_WrongTestHardware", resourceCulture) ?? "The project '{0}' was developed for the test hardware {1}, but {2} is connected. It can only be opened with that test hardware or its simulator.";
+    public static string Text_WrongSimulatedTestHardware => ResourceManager.GetString("Text_WrongSimulatedTestHardware", resourceCulture) ?? "The project '{0}' was developed for the test hardware {1}, but {2} is active. It can only be opened with that test hardware or its simulator.";
 }

@@ -535,8 +535,8 @@
   <data name="Header_TestHardwareInfo" xml:space="preserve">
     <value>Test Hardware Info</value>
   </data>
-  <data name="Header_ConnectedHardware" xml:space="preserve">
-    <value>Connected Test Hardware</value>
+  <data name="Header_HardwareDevice" xml:space="preserve">
+    <value>Test Hardware</value>
   </data>
   <data name="Header_AvailableRelayChannels" xml:space="preserve">
     <value>Available Relay Channels</value>
@@ -1438,5 +1438,14 @@ Devices that are found again keep their settings. All other devices are removed 
   </data>
   <data name="ToolTip_SelectPdfOutputPath" xml:space="preserve">
     <value>Select folder for the PDF test reports</value>
+  </data>
+  <data name="Title_WrongTestHardware" xml:space="preserve">
+    <value>Wrong Test Hardware</value>
+  </data>
+  <data name="Text_WrongTestHardware" xml:space="preserve">
+    <value>The project '{0}' was developed for the test hardware {1}, but {2} is connected. It can only be opened with that test hardware or its simulator.</value>
+  </data>
+  <data name="Text_WrongSimulatedTestHardware" xml:space="preserve">
+    <value>The project '{0}' was developed for the test hardware {1}, but {2} is active. It can only be opened with that test hardware or its simulator.</value>
   </data>
 </root>

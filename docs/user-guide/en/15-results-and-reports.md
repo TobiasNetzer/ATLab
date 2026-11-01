@@ -95,7 +95,7 @@ The JSON file contains the same steps as the CSV file plus the metadata of the r
     "atlabVersion": "1.0.0"
   },
   "deviceUnderTest": { "deviceName": "Powerboard", "revision": "B", "variant": "24V", "partNumber": "PB-100" },
-  "testHardware": { "name": "cTIA", "serialNumber": "…", "firmwareVersion": "…", "isSimulator": false },
+  "testHardware": { "name": "compact Test Interface Adapter", "serialNumber": "…", "firmwareVersion": "…", "isSimulator": false },
   "testEquipment": [ { "name": "DMM", "identification": "KEITHLEY,DMM6500,…" } ],
   "notes": null,
   "steps": [
@@ -138,7 +138,7 @@ Contents:
 3. **Device Under Test** – serial number, device name, revision, variant, part number (from the [Documentation tab](13-documentation-tab.md#device-under-test)).
 4. **Additional Notes** – only if filled in.
 5. **Used Test Equipment**
-   - *Test Hardware*: name, serial number and firmware version of the Test Interface Adapter (`Simulator` / `N/A` in simulator mode).
+   - *Test Hardware*: name, serial number and firmware version of the Test Interface Adapter. Not shown for runs in simulator mode.
    - *Test Equipment*: every device with **Include in Test Report** enabled, with the answer to its **Identification Query** (e.g. the `*IDN?` string), or `-` if it did not answer.
 6. **Overall verdict** – a large **PASS** (green) or **FAIL** (red). If failed steps are excluded from export, a note below says how many are not shown.
 7. **Results table** – step, name, lower limit, measured value, upper limit and a pass/fail icon, grouped by module with a heading row per module.

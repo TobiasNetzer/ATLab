@@ -22,6 +22,7 @@ public class PdfExportService : IPdfExportService
     private readonly IFileDialogService _fileDialogService;
     private readonly ILoggingService _loggingService;
     private readonly IHardwareInfo _hardwareInfo;
+    private readonly ApplicationState _applicationState;
     private readonly IDeviceIdentificationService _deviceIdentificationService;
     private readonly ProjectModel _projectModel;
 
@@ -29,12 +30,14 @@ public class PdfExportService : IPdfExportService
         IFileDialogService fileDialogService,
         ILoggingService loggingService,
         IHardwareAccessor hardwareAccessor,
+        ApplicationState applicationState,
         IDeviceIdentificationService deviceIdentificationService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
         _loggingService = loggingService;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
+        _applicationState = applicationState;
         _deviceIdentificationService = deviceIdentificationService;
         _projectModel = projectModel;
     }
@@ -120,6 +123,7 @@ public class PdfExportService : IPdfExportService
             failedExcludedSteps,
             testInfo,
             _hardwareInfo,
+            _applicationState.IsSimulationMode,
             testEquipment.ToList());
 
         return document.GeneratePdf();

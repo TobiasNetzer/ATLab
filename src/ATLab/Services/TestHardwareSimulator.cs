@@ -20,7 +20,7 @@ public class TestHardwareSimulator : ITestHardware
 
     public TestHardwareSimulator()
     {
-        HardwareInfo = new DummyHardwareInfo();
+        HardwareInfo = new CtiaSimulatorHardwareInfo();
         StimChannelStates = new  bool[HardwareInfo.StimChannelCount];
         ExtStimChannelStates = new  bool[HardwareInfo.ExtStimChannelCount];
         MeasChannelStates = new  bool[HardwareInfo.MeasChannelCount];

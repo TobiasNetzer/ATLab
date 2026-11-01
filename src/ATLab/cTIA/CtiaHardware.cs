@@ -15,6 +15,9 @@ namespace ATLab.CTIA;
 /// </summary>
 public class CtiaHardware : ITestHardware
 {
+    /// <summary>Device ID every cTIA reports; the simulator reports it too, so it can open cTIA projects.</summary>
+    public const ushort CtiaDeviceId = 0xA101;
+
     private readonly ICtiaCommunication _communication;
     private readonly CtiaCommand _command;
     public IHardwareInfo HardwareInfo { get; }
@@ -65,8 +68,9 @@ public class CtiaHardware : ITestHardware
             if (!deviceIdResult.IsSuccess)
                 return OperationResult.Failure("Invalid response from device");
 
-            if (deviceIdResult.Value != 0xA101)
+            if (deviceIdResult.Value != CtiaDeviceId)
                 return OperationResult.Failure("Device ID invalid");
+            HardwareInfo.DeviceId = deviceIdResult.Value;
 
             var firmwareVersion = await _command.GetFirmwareVersion();
             if (!firmwareVersion.IsSuccess)

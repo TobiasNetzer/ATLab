@@ -30,6 +30,12 @@ public partial class ProjectModel : ObservableObject
     [ObservableProperty]
     private string? _scriptFolderPath;
 
+    /// <summary>
+    /// Device ID of the test hardware the project is developed for. New projects take the ID of the active hardware
+    /// (or the simulated one); projects only open on hardware with the same ID.
+    /// </summary>
+    public ushort TargetTestHardwareId { get; private set; }
+
     public string ProjectName =>
         string.IsNullOrEmpty(FilePath)
             ? "Untitled"
@@ -54,6 +60,7 @@ public partial class ProjectModel : ObservableObject
     {
         _hardwareAccessor = hardwareAccessor;
         Settings = settings;
+        TargetTestHardwareId = HardwareInfo.DeviceId;
 
         InitializeRelayChannels();
         
@@ -118,6 +125,7 @@ public partial class ProjectModel : ObservableObject
 
             FilePath = null;
             ScriptFolderPath = null;
+            TargetTestHardwareId = HardwareInfo.DeviceId;
         }
 
         IsDirty = false;
@@ -151,6 +159,7 @@ public partial class ProjectModel : ObservableObject
         {
             FormatId = AtlabFileDto.CurrentFormatId,
             FormatVersion = AtlabFileDto.CurrentFormatVersion,
+            TargetTestHardwareId = TestHardwareIdFormat.Format(TargetTestHardwareId),
             ScriptFolderPath = pathService?.ToRelative(ScriptFolderPath ?? string.Empty) ?? ScriptFolderPath,
             Modules = modulesClone,
             StimChannelNames = StimChannelNames.ToList(),
@@ -194,6 +203,8 @@ public partial class ProjectModel : ObservableObject
         var pathService = !string.IsNullOrWhiteSpace(FilePath)
             ? new PathService(FilePath)
             : null;
+
+        TargetTestHardwareId = TestHardwareIdFormat.Parse(dto.TargetTestHardwareId);
 
         Modules.Clear();
         foreach (var module in dto.Modules)

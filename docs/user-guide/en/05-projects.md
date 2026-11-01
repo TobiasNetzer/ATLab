@@ -70,9 +70,17 @@ PowerBoard/
 
 The whole folder can then be copied to another test station or committed to version control and still work.
 
+## Target test hardware
+
+Every project is developed for one kind of test hardware, its *target test hardware*. The test hardware reports a **device ID** and a device name when ATLab connects to it; the Test Interface Adapter reports `0xA101` and *compact Test Interface Adapter*. A new project takes the device ID of the connected test hardware, and it is saved in the project file.
+
+A project can only be opened when the connected test hardware reports the same device ID. Otherwise ATLab refuses to open it with the message *"The project '…' was developed for the test hardware …, but … is connected."*, so a project cannot run on hardware it was not made for.
+
+The **simulator** reports the device ID of the hardware it simulates and is checked the same way: in simulator mode, projects for the Test Interface Adapter can be opened and edited at a desk.
+
 ## Hardware compatibility check
 
-When you open a project, ATLab checks whether the connected adapter has enough channels for it. If the project uses matrix, stimulation or external stimulation channels that the adapter does not have, a warning lists them, for example:
+When you open a project, ATLab also checks whether the connected adapter has enough channels for it. If the project uses matrix, stimulation or external stimulation channels that the adapter does not have, a warning lists them, for example:
 
 ```
 Connected test hardware is missing required channels:
@@ -90,4 +98,4 @@ Project files are human-readable, indented JSON. This makes them well suited to 
 
 The test steps are stored per module (`Modules` → `TestSteps`). Each module and each test step has a permanent internal ID. *Jump To* targets refer to the step ID, so jumps keep working when steps are moved or renumbered.
 
-The file contains a `FormatId`, which identifies it as an ATLab project file, and a `FormatVersion`. Files without a valid `FormatId` are rejected. Project files from versions before modules were introduced (without `FormatVersion`) cannot be opened.
+The file contains a `FormatId`, which identifies it as an ATLab project file, a `FormatVersion` and the `TargetTestHardwareId` (the device ID in hexadecimal, e.g. `0xA101`, see [Target test hardware](#target-test-hardware)). Files without a valid `FormatId` or `TargetTestHardwareId` are rejected.

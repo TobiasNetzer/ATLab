@@ -19,11 +19,11 @@ Die Pintabelle (`a1…a32`, `b1…b32`, `c1…c32`) listet die Signale am prüfl
 
 | Abschnitt | Information |
 |-----------|-------------|
-| **Verbundene Test-Hardware** | Gerätename, Seriennummer, Firmware-Version, Build-Datum und Build-Zeit des Adapters. |
+| **Test-Hardware** | Gerätename, Seriennummer, Firmware-Version, Build-Datum und Build-Zeit des Adapters (im Simulatormodus: des nachgebildeten Adapters). |
 | **Verfügbare Relaiskanäle** | Anzahl der Matrix-, Stimulations- und externen Stimulationskanäle. |
 | **Verfügbare Schnittstellen** | Ob galvanisch isolierter I²C-Bus, UART und RS485 verfügbar sind (`True`/`False`). |
 
-Im Simulatormodus wird das Gerät als `Simulator` mit `N/A` für Seriennummer und Firmware angezeigt, mit 32 / 16 / 4 Kanälen und allen Schnittstellen.
+Im Simulatormodus wird das Gerät als `cTIA Simulator` angezeigt, mit der Geräte-ID des nachgebildeten Test Interface Adapters (`0xA101`), `N/A` für Seriennummer und Firmware sowie 32 / 16 / 4 Kanäle und alle Schnittstellen. Die Statusleiste zeigt in Rot **Keine Test-Hardware verbunden**.
 
 Die Kanalanzahlen bestimmen, wie viele Zeilen die [Kanalbezeichnungen](06-configuration.md#kanalbezeichnungen) und die Relaisauswahlen haben, und werden beim Öffnen eines Projekts geprüft (siehe [Prüfung der Hardware-Kompatibilität](05-projects.md#prüfung-der-hardware-kompatibilität)).
 

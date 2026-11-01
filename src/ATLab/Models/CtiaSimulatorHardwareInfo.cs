@@ -1,11 +1,16 @@
+using ATLab.CTIA;
 using ATLab.Interfaces;
 
 namespace ATLab.Models;
 
-/// <summary>Hardware information of the simulator: a fully equipped adapter.</summary>
-public class DummyHardwareInfo : IHardwareInfo
+/// <summary>
+/// Hardware information of the cTIA simulator: a fully equipped cTIA. It reports the device ID of the real cTIA, so it
+/// opens the same projects, and its own device name.
+/// </summary>
+public class CtiaSimulatorHardwareInfo : IHardwareInfo
 {
-    public string DeviceName { get; set; } = "Simulator";
+    public ushort DeviceId { get; set; } = CtiaHardware.CtiaDeviceId;
+    public string DeviceName { get; set; } = "cTIA Simulator";
     public string SerialNumber { get; set; } = "N/A";
     public string FirmwareVersion { get; set; } = "N/A";
     public string BuildDate { get; set; } = "N/A";

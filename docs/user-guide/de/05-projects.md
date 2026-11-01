@@ -70,9 +70,17 @@ PowerBoard/
 
 Der ganze Ordner kann dann auf einen anderen Prüfplatz kopiert oder in eine Versionsverwaltung eingecheckt werden und funktioniert weiterhin.
 
+## Ziel-Test-Hardware
+
+Jedes Projekt wird für eine bestimmte Art von Test-Hardware entwickelt, seine *Ziel-Test-Hardware*. Die Test-Hardware meldet beim Verbinden eine **Geräte-ID** und einen Gerätenamen; der Test Interface Adapter meldet `0xA101` und *compact Test Interface Adapter*. Ein neues Projekt übernimmt die Geräte-ID der angeschlossenen Test-Hardware, sie wird in der Projektdatei gespeichert.
+
+Ein Projekt lässt sich nur öffnen, wenn die angeschlossene Test-Hardware dieselbe Geräte-ID meldet. Andernfalls verweigert ATLab das Öffnen mit der Meldung *„Das Projekt '…' wurde für die Test-Hardware … entwickelt, angeschlossen ist aber ….“*, damit ein Projekt nicht auf Hardware läuft, für die es nicht gemacht wurde.
+
+Der **Simulator** meldet die Geräte-ID der nachgebildeten Hardware und wird genauso geprüft: Im Simulatormodus lassen sich Projekte für den Test Interface Adapter am Schreibtisch öffnen und bearbeiten.
+
 ## Prüfung der Hardware-Kompatibilität
 
-Beim Öffnen eines Projekts prüft ATLab, ob der angeschlossene Adapter genügend Kanäle hat. Verwendet das Projekt Matrix-, Stimulations- oder externe Stimulationskanäle, die der Adapter nicht besitzt, listet eine Warnung diese auf, z. B.:
+Beim Öffnen eines Projekts prüft ATLab außerdem, ob der angeschlossene Adapter genügend Kanäle hat. Verwendet das Projekt Matrix-, Stimulations- oder externe Stimulationskanäle, die der Adapter nicht besitzt, listet eine Warnung diese auf, z. B.:
 
 ```
 Der angeschlossenen Test-Hardware fehlen benötigte Kanäle:
@@ -90,4 +98,4 @@ Projektdateien sind lesbares, eingerücktes JSON. Damit eignen sie sich gut für
 
 Die Testschritte werden je Modul gespeichert (`Modules` → `TestSteps`). Jedes Modul und jeder Testschritt hat eine dauerhafte interne ID. *Springe zu*-Ziele verweisen auf die Schritt-ID, sodass Sprünge auch nach Verschieben oder Umnummerieren von Schritten funktionieren.
 
-Die Datei enthält eine `FormatId`, die sie als ATLab-Projektdatei kennzeichnet, sowie eine `FormatVersion`. Dateien ohne gültige `FormatId` werden abgelehnt. Projektdateien aus Versionen vor Einführung der Module (ohne `FormatVersion`) können nicht geöffnet werden.
+Die Datei enthält eine `FormatId`, die sie als ATLab-Projektdatei kennzeichnet, eine `FormatVersion` und die `TargetTestHardwareId` (die Geräte-ID hexadezimal, z. B. `0xA101`, siehe [Ziel-Test-Hardware](#ziel-test-hardware)). Dateien ohne gültige `FormatId` oder `TargetTestHardwareId` werden abgelehnt.

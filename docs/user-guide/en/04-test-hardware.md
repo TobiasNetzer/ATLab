@@ -19,11 +19,11 @@ The pin table (`a1…a32`, `b1…b32`, `c1…c32`) lists the signals on the DUT-
 
 | Section | Information |
 |---------|-------------|
-| **Connected Test Hardware** | Device name, serial number, firmware version, build date and build time of the adapter. |
+| **Test Hardware** | Device name, serial number, firmware version, build date and build time of the adapter (in simulator mode: of the simulated adapter). |
 | **Available Relay Channels** | Number of matrix, stimulation and external stimulation channels. |
 | **Available Interfaces** | Whether isolated I²C, UART and RS485 are available (`True`/`False`). |
 
-In simulator mode, the device is shown as `Simulator` with `N/A` for serial number and firmware, and 32 / 16 / 4 channels with all interfaces available.
+In simulator mode, the device is shown as `cTIA Simulator` with the device ID of the Test Interface Adapter it simulates (`0xA101`), `N/A` for serial number and firmware, and 32 / 16 / 4 channels with all interfaces available. The status bar shows **No test hardware connected** in red.
 
 The channel counts determine how many rows appear in the [Channel Labels](06-configuration.md#channel-labels) panel and the relay selectors, and are checked when a project is opened (see [Hardware compatibility check](05-projects.md#hardware-compatibility-check)).
 

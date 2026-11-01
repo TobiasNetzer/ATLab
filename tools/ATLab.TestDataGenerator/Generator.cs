@@ -180,10 +180,10 @@ internal sealed class Generator
                 PartNumber = project.PartNumber
             },
             TestHardware = simulator
-                ? new TestHardwareMetadata { Name = "Simulator", IsSimulator = true }
+                ? new TestHardwareMetadata { Name = "cTIA Simulator", SerialNumber = "N/A", FirmwareVersion = "N/A", IsSimulator = true }
                 : new TestHardwareMetadata
                 {
-                    Name = "cTIA",
+                    Name = "compact Test Interface Adapter",
                     SerialNumber = station == "TEST-PC1" ? "T-0042" : "T-0057",
                     FirmwareVersion = "2.3.1"
                 },

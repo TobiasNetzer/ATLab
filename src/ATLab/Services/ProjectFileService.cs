@@ -77,6 +77,12 @@ public class ProjectFileService : IProjectFileService
                     $"Unsupported project file format version {project.FormatVersion} (expected {AtlabFileDto.CurrentFormatVersion}).");
             }
 
+            if (project != null && !TestHardwareIdFormat.TryParse(project.TargetTestHardwareId, out _))
+            {
+                throw new NotSupportedException(
+                    $"The project file has no valid target test hardware ID ('{project.TargetTestHardwareId}').");
+            }
+
             //_loggingService.Info($"Project '{Path.GetFileName(path)}' loaded.");
 
             return project;

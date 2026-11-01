@@ -95,7 +95,7 @@ Die JSON-Datei enthält dieselben Schritte wie die CSV-Datei und zusätzlich die
     "atlabVersion": "1.0.0"
   },
   "deviceUnderTest": { "deviceName": "Powerboard", "revision": "B", "variant": "24V", "partNumber": "PB-100" },
-  "testHardware": { "name": "cTIA", "serialNumber": "…", "firmwareVersion": "…", "isSimulator": false },
+  "testHardware": { "name": "compact Test Interface Adapter", "serialNumber": "…", "firmwareVersion": "…", "isSimulator": false },
   "testEquipment": [ { "name": "DMM", "identification": "KEITHLEY,DMM6500,…" } ],
   "notes": null,
   "steps": [
@@ -138,7 +138,7 @@ Inhalt:
 3. **Prüfling (DUT)** – Seriennummer, Gerätename, Revision, Variante, Teilenummer (aus der [Registerkarte Dokumentation](13-documentation-tab.md#prüfling-dut)).
 4. **Zusätzliche Informationen** – nur wenn ausgefüllt.
 5. **Verwendete Prüfmittel**
-   - *Test-Hardware*: Name, Seriennummer und Firmware-Version des Test Interface Adapters (`Simulator` / `N/A` im Simulatormodus).
+   - *Test-Hardware*: Name, Seriennummer und Firmware-Version des Test Interface Adapters. Bei Läufen im Simulatormodus nicht enthalten.
    - *Prüfmittel*: jedes Gerät mit aktivierter Option **In Testbericht aufnehmen**, mit der Antwort auf seine **Identifikationsabfrage** (z. B. den `*IDN?`-String) oder `-`, wenn es nicht geantwortet hat.
 6. **Gesamtergebnis** – ein großes **BESTANDEN** (grün) oder **FEHLGESCHLAGEN** (rot). Sind fehlgeschlagene Schritte vom Export ausgeschlossen, nennt ein Hinweis darunter deren Anzahl.
 7. **Ergebnistabelle** – Schritt, Name, Untergrenze, Messwert, Obergrenze und ein Bestanden/Fehlgeschlagen-Symbol, gruppiert nach Modulen mit einer Überschriftszeile je Modul.

@@ -532,8 +532,8 @@
   <data name="Header_TestHardwareInfo" xml:space="preserve">
     <value>Test-Hardware Informationen</value>
   </data>
-  <data name="Header_ConnectedHardware" xml:space="preserve">
-    <value>Verbundene Test-Hardware</value>
+  <data name="Header_HardwareDevice" xml:space="preserve">
+    <value>Test-Hardware</value>
   </data>
   <data name="Header_AvailableRelayChannels" xml:space="preserve">
     <value>Verfügbare Relaiskanäle</value>
@@ -1438,5 +1438,14 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   </data>
   <data name="ToolTip_SelectPdfOutputPath" xml:space="preserve">
     <value>Ordner für die PDF-Testberichte wählen</value>
+  </data>
+  <data name="Title_WrongTestHardware" xml:space="preserve">
+    <value>Falsche Test-Hardware</value>
+  </data>
+  <data name="Text_WrongTestHardware" xml:space="preserve">
+    <value>Das Projekt '{0}' wurde für die Test-Hardware {1} entwickelt, angeschlossen ist aber {2}. Es kann nur mit dieser Test-Hardware oder ihrem Simulator geöffnet werden.</value>
+  </data>
+  <data name="Text_WrongSimulatedTestHardware" xml:space="preserve">
+    <value>Das Projekt '{0}' wurde für die Test-Hardware {1} entwickelt, aktiv ist aber {2}. Es kann nur mit dieser Test-Hardware oder ihrem Simulator geöffnet werden.</value>
   </data>
 </root>

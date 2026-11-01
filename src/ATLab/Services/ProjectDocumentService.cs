@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -13,6 +14,9 @@ public class ProjectDocumentService : IProjectDocumentService
     private readonly IProjectFileService _projectFileService;
     private readonly ISettingsService _settingsService;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly IHardwareAccessor _hardwareAccessor;
+    private readonly ApplicationState _applicationState;
+    private readonly ILoggingService _loggingService;
     private readonly ProjectModel _projectModel;
     
     public ProjectDocumentService(
@@ -20,12 +24,18 @@ public class ProjectDocumentService : IProjectDocumentService
         IProjectFileService projectFileService,
         ISettingsService settingsService,
         IMessageBoxService messageBoxService,
+        IHardwareAccessor hardwareAccessor,
+        ApplicationState applicationState,
+        ILoggingService loggingService,
         ProjectModel projectModel)
     {
         _fileDialogService = fileDialogService;
         _projectFileService = projectFileService;
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
+        _hardwareAccessor = hardwareAccessor;
+        _applicationState = applicationState;
+        _loggingService = loggingService;
         _projectModel = projectModel;
     }
 
@@ -46,10 +56,38 @@ public class ProjectDocumentService : IProjectDocumentService
         var dto = await _projectFileService.LoadAsync(path);
         if (dto == null)
             return dto;
+
+        // Checked before the file becomes the current project, so a refused project cannot be overwritten by Save
+        if (!await IsForActiveTestHardwareAsync(dto, path))
+            return null;
         
         _projectModel.MarkSaved(path);
         _settingsService.Settings.LastOpenedFile = path;
         return dto;
+    }
+
+    /// <summary>
+    /// A project only opens on the test hardware it was developed for, compared by the device ID the hardware
+    /// reports. The simulator is checked the same way: it reports the ID of the hardware it simulates.
+    /// </summary>
+    private async Task<bool> IsForActiveTestHardwareAsync(AtlabFileDto dto, string path)
+    {
+        var targetId = TestHardwareIdFormat.Parse(dto.TargetTestHardwareId);
+        var active = _hardwareAccessor.Hardware.HardwareInfo;
+
+        if (targetId == active.DeviceId)
+            return true;
+
+        var localization = LocalizationService.Instance;
+        var message = string.Format(
+            localization[_applicationState.IsSimulationMode ? "Text_WrongSimulatedTestHardware" : "Text_WrongTestHardware"],
+            Path.GetFileName(path),
+            TestHardwareIdFormat.Format(targetId),
+            TestHardwareIdFormat.GetDisplayName(active.DeviceName, active.DeviceId));
+
+        _loggingService.Error(message);
+        await _messageBoxService.ShowMessageAsync(localization["Title_WrongTestHardware"], message);
+        return false;
     }
 
     public async Task<bool> SaveAsync(AtlabFileDto dto)
