@@ -610,8 +610,13 @@ public class TestExecutor : ITestExecutor
     private void OnStepRepeated() =>
         StepRepeated.Invoke();
 
-    private async Task OnTestCompleted() =>
-        await TestCompleted.Invoke();
+    // Invoking a multicast Func<Task> only returns the last subscriber's task. Every handler is awaited, so a
+    // continuous run starts its next loop only after the previous one is evaluated and exported.
+    private async Task OnTestCompleted()
+    {
+        foreach (var handler in TestCompleted.GetInvocationList().Cast<Func<Task>>())
+            await handler();
+    }
 
     private void OnTestCanceled()
     {
