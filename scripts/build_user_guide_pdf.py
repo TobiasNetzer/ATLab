@@ -77,6 +77,7 @@ tr { page-break-inside:avoid; }
 thead { display:table-header-group; }
 th { text-align:left; background:#eef2f7; font-weight:600; }
 th, td { border:0.4pt solid var(--rule); padding:1.6mm 2.2mm; vertical-align:top; }
+td code { overflow-wrap:anywhere; }  /* long paths must wrap; an over-wide table makes Chromium shrink the whole PDF */
 blockquote { margin:4mm 0; padding:2mm 4mm; border-left:1mm solid var(--accent); background:#f1f6fe; page-break-inside:avoid; }
 blockquote p { margin:1mm 0; }
 figure { margin:4mm 0; text-align:center; page-break-inside:avoid; }
