@@ -85,7 +85,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 | Symptom | Cause / solution |
 |---------|------------------|
-| No files are exported | Check that **Request Serial Number**, **Save Test Result** and at least one export format are enabled, an **Output Path** is set, the run was started with **Start test execution**, and it ended as passed or failed (not canceled). With *Passed Only*, failed runs are not exported. |
+| No files are exported | Check that **Request Serial Number**, **Save Test Result** and at least one export format are enabled, every enabled format has an **output folder**, the run was started with **Start test execution**, and it ended as passed or failed (not canceled). With *Passed Only*, failed runs are not exported. |
 | CSV opens in a single column | The file is tab-separated. Choose *Tab* as delimiter when importing. |
 | Report generation is slow | A device marked *Include in Test Report* does not answer its identification query. Switch it on or untick the option. |
 | Device shows `-` under Test Equipment | No identification query configured, or no answer. |

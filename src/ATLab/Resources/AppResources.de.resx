@@ -391,9 +391,6 @@
   <data name="Label_ExportTestDataJson" xml:space="preserve">
     <value>Ergebnisdatei für Auswertung exportieren (JSON)</value>
   </data>
-  <data name="Label_OutputPath" xml:space="preserve">
-    <value>Ausgabepfad</value>
-  </data>
   <data name="Header_ControlDevices" xml:space="preserve">
     <value>Steuergeräte</value>
   </data>
@@ -1429,5 +1426,17 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   </data>
   <data name="Text_CheckFailed" xml:space="preserve">
     <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Watermark_OutputFolder" xml:space="preserve">
+    <value>Ausgabeordner</value>
+  </data>
+  <data name="ToolTip_SelectCsvOutputPath" xml:space="preserve">
+    <value>Ordner für die CSV-Testdaten wählen</value>
+  </data>
+  <data name="ToolTip_SelectJsonOutputPath" xml:space="preserve">
+    <value>Ordner für die JSON-Ergebnisdateien wählen</value>
+  </data>
+  <data name="ToolTip_SelectPdfOutputPath" xml:space="preserve">
+    <value>Ordner für die PDF-Testberichte wählen</value>
   </data>
 </root>

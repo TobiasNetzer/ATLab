@@ -9,9 +9,9 @@ Registerkarte **Konfiguration** → **Projekteinstellungen** → **Testausführu
 1. **Seriennummer abfragen** aktivieren (erforderlich – die Seriennummer ist Teil des Dateinamens).
 2. **Testergebnis speichern** aktivieren.
 3. **Immer** oder **Nur wenn bestanden** wählen.
-4. Beliebige von **Testdaten exportieren (CSV)**, **Ergebnisdatei für Auswertung exportieren (JSON)** und **Testbericht exportieren (PDF)** aktivieren.
-5. Optional **In Unterordner Pass / Fail sortieren** aktivieren.
-6. Den **Ausgabepfad** festlegen. Der Ordner wird bei Bedarf angelegt.
+4. Optional **In Unterordner Pass / Fail sortieren** aktivieren.
+5. Beliebige von **Testdaten exportieren (CSV)**, **Ergebnisdatei für Auswertung exportieren (JSON)** und **Testbericht exportieren (PDF)** aktivieren.
+6. Für jedes aktivierte Format im Feld unter seiner Checkbox den **Ausgabeordner** festlegen. Formate können sich einen Ordner teilen. Der Ordner wird bei Bedarf angelegt.
 
 ## Wann Dateien geschrieben werden
 
@@ -19,7 +19,7 @@ Dateien werden am Ende eines mit **Testausführung starten** oder **Dauertest st
 
 Keine Dateien entstehen bei abgebrochenen Läufen, bei durch einen Ausführungsfehler beendeten Läufen, bei Läufen ab dem ausgewählten Schritt und bei Einzelschritt-Ausführungen.
 
-Jeder Export erzeugt eine Meldung im Ereignisprotokoll, z. B. `PDF exported to 'D:\Results\PB-2026001_2026-10-17_14-03-22.pdf'.` Ist kein Ausgabepfad gesetzt, wird der Fehler *„No output path for test results provided.“* protokolliert.
+Jeder Export erzeugt eine Meldung im Ereignisprotokoll, z. B. `PDF exported to 'D:\Results\PB-2026001_2026-10-17_14-03-22.pdf'.` Hat ein aktiviertes Format keinen Ausgabeordner, wird es übersprungen und der Fehler *„No output path for the CSV export provided.“* (bzw. PDF / JSON) protokolliert; die anderen Formate werden trotzdem geschrieben.
 
 ## Dateinamen
 
@@ -33,11 +33,11 @@ Datum und Uhrzeit sind der Beginn des Laufs. Beispiel: `Prototype-001_2026-10-18
 
 ## Ordner
 
-Standardmäßig werden alle Dateien direkt in den Ausgabepfad geschrieben. Mit **In Unterordner Pass / Fail sortieren** landen sie je nach Ergebnis des Laufs in einem Unterordner:
+Standardmäßig werden die Dateien direkt in den Ausgabeordner ihres Formats geschrieben. Mit **In Unterordner Pass / Fail sortieren** landen sie je nach Ergebnis des Laufs in einem Unterordner:
 
 ```
-<Ausgabepfad>\Pass\<Seriennummer>_<JJJJ-MM-TT>_<HH-mm-ss>.*
-<Ausgabepfad>\Fail\<Seriennummer>_<JJJJ-MM-TT>_<HH-mm-ss>.*
+<Ausgabeordner>\Pass\<Seriennummer>_<JJJJ-MM-TT>_<HH-mm-ss>.*
+<Ausgabeordner>\Fail\<Seriennummer>_<JJJJ-MM-TT>_<HH-mm-ss>.*
 ```
 
 Die Unterordner werden bei Bedarf angelegt. Sie heißen unabhängig von der Oberflächensprache immer `Pass` und `Fail`. Ein Lauf gilt als fehlgeschlagen, wenn irgendein Schritt fehlgeschlagen ist, auch einer mit **Vom Export ausschließen**. Bei *Nur wenn bestanden* wird nur der Ordner `Pass` verwendet.

@@ -52,7 +52,7 @@ When a project is saved, any referenced file **inside the project folder (or a s
 - message-box images of test steps,
 - file paths of **File** evaluation steps,
 - BSDL files of the boundary scan chain,
-- the test result **Output Path**.
+- the **output folders** of the test result exports.
 
 Paths outside the project folder are stored as absolute paths.
 

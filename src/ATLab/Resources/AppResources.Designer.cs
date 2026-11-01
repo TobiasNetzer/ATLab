@@ -156,7 +156,6 @@ public class AppResources
     public static string Label_ExportTestReportPdf => ResourceManager.GetString("Label_ExportTestReportPdf", resourceCulture) ?? "Export Test Report (PDF)";
     public static string Label_SortResultsByVerdict => ResourceManager.GetString("Label_SortResultsByVerdict", resourceCulture) ?? "Sort into Pass / Fail Subfolders";
     public static string Label_ExportTestDataJson => ResourceManager.GetString("Label_ExportTestDataJson", resourceCulture) ?? "Export Result File for Evaluation (JSON)";
-    public static string Label_OutputPath => ResourceManager.GetString("Label_OutputPath", resourceCulture) ?? "Output Path";
     public static string Header_ControlDevices => ResourceManager.GetString("Header_ControlDevices", resourceCulture) ?? "Control Devices";
     public static string Label_EnableControlModule => ResourceManager.GetString("Label_EnableControlModule", resourceCulture) ?? "Enable Control Module";
     public static string Header_SerialNumberValidation => ResourceManager.GetString("Header_SerialNumberValidation", resourceCulture) ?? "Serial Number Validation";
@@ -271,4 +270,8 @@ public class AppResources
     public static string Label_Script => ResourceManager.GetString("Label_Script", resourceCulture) ?? "Script";
     public static string Header_Variable => ResourceManager.GetString("Header_Variable", resourceCulture) ?? "Variable";
     public static string Header_ExternalStimulationChannels => ResourceManager.GetString("Header_ExternalStimulationChannels", resourceCulture) ?? "External Stimulation Channels";
+    public static string Watermark_OutputFolder => ResourceManager.GetString("Watermark_OutputFolder", resourceCulture) ?? "Output folder";
+    public static string ToolTip_SelectCsvOutputPath => ResourceManager.GetString("ToolTip_SelectCsvOutputPath", resourceCulture) ?? "Select folder for the CSV data files";
+    public static string ToolTip_SelectJsonOutputPath => ResourceManager.GetString("ToolTip_SelectJsonOutputPath", resourceCulture) ?? "Select folder for the JSON result files";
+    public static string ToolTip_SelectPdfOutputPath => ResourceManager.GetString("ToolTip_SelectPdfOutputPath", resourceCulture) ?? "Select folder for the PDF test reports";
 }

@@ -50,28 +50,23 @@ public class TestResultExportService : ITestResultExportService
         {
             var timestamp = testInfo.StartTime.ToString("yyyy-MM-dd_HH-mm-ss");
             var filename = $"{testInfo.SerialNumber}_{timestamp}";
-
-            if (string.IsNullOrWhiteSpace(_settings.SaveTestResultFilePath))
-            {
-                _loggingService.Error("No output path for test results provided.");
-                return;
-            }
-
-            var directory = _settings.SaveTestResultFilePath;
-
-            // Folder names are fixed (not localized) so scripts and tools can rely on them
-            if (_settings.IsSortResultsByVerdict)
-                directory = Path.Combine(directory, testInfo.FailedSteps > 0 ? "Fail" : "Pass");
-
-            Directory.CreateDirectory(directory);
-
-            var fullPath = Path.Combine(directory, filename);
             var stepList = steps.ToList();
 
-            if (_settings.IsExportCsv)
-                await _csvExportService.ExportToPathAsync(stepList, fullPath);
+            // Each format resolves its own folder, so a missing path only skips that format
+            var csvPath = _settings.IsExportCsv
+                ? GetFilePath(_settings.CsvOutputPath, "CSV", filename, testInfo)
+                : null;
+            var pdfPath = _settings.IsExportPdf
+                ? GetFilePath(_settings.PdfOutputPath, "PDF", filename, testInfo)
+                : null;
+            var jsonPath = _settings.IsExportJson
+                ? GetFilePath(_settings.JsonOutputPath, "JSON", filename, testInfo)
+                : null;
 
-            if (!_settings.IsExportPdf && !_settings.IsExportJson)
+            if (csvPath != null)
+                await _csvExportService.ExportToPathAsync(stepList, csvPath);
+
+            if (pdfPath == null && jsonPath == null)
                 return;
 
             // Queried once for PDF and JSON: a device that is switched off delays the export by its timeout
@@ -79,15 +74,36 @@ public class TestResultExportService : ITestResultExportService
                 _projectModel.Devices,
                 CancellationToken.None);
 
-            if (_settings.IsExportPdf)
-                await _pdfExportService.ExportToPathAsync(stepList, testInfo, testEquipment, fullPath);
+            if (pdfPath != null)
+                await _pdfExportService.ExportToPathAsync(stepList, testInfo, testEquipment, pdfPath);
 
-            if (_settings.IsExportJson)
-                await _jsonExportService.ExportToPathAsync(stepList, testInfo, testEquipment, fullPath);
+            if (jsonPath != null)
+                await _jsonExportService.ExportToPathAsync(stepList, testInfo, testEquipment, jsonPath);
         }
         catch (Exception ex)
         {
             _loggingService.Error(ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Path without extension for one export format: its folder plus the Pass/Fail subfolder. Null (and an error
+    /// in the log) if the format has no folder.
+    /// </summary>
+    private string? GetFilePath(string directory, string format, string filename, TestInfo testInfo)
+    {
+        if (string.IsNullOrWhiteSpace(directory))
+        {
+            _loggingService.Error($"No output path for the {format} export provided.");
+            return null;
+        }
+
+        // Folder names are fixed (not localized) so scripts and tools can rely on them
+        if (_settings.IsSortResultsByVerdict)
+            directory = Path.Combine(directory, testInfo.FailedSteps > 0 ? "Fail" : "Pass");
+
+        Directory.CreateDirectory(directory);
+
+        return Path.Combine(directory, filename);
     }
 }

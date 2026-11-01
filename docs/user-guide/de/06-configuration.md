@@ -130,11 +130,11 @@ Wie Variablen referenziert werden, erklärt [Befehle, Variablen & Ausdrücke](10
 | **Seriennummer abfragen** | Vor **Testausführung starten** und **Dauertest starten** muss der Bediener eine Seriennummer eingeben. |
 | **Testergebnis speichern** | Exportiert die Ergebnisse automatisch nach jedem abgeschlossenen Lauf. Nur verfügbar, wenn *Seriennummer abfragen* aktiv ist, da die Seriennummer Teil des Dateinamens ist. |
 | **Immer / Nur wenn bestanden** | Nach jedem Lauf exportieren oder nur nach bestandenen Läufen. |
+| **In Unterordner Pass / Fail sortieren** | Schreibt die Dateien bestandener Läufe in den Unterordner `Pass` und fehlgeschlagener Läufe in `Fail` im Ordner des jeweiligen Formats (siehe [Ordner](15-results-and-reports.md#ordner)). |
 | **Testdaten exportieren (CSV)** | Schreibt eine tabulatorgetrennte Datendatei. |
 | **Ergebnisdatei für Auswertung exportieren (JSON)** | Schreibt die Ergebnisse zusammen mit Metadaten zu Lauf, Projekt, Prüfling und Prüfmitteln für Auswerteprogramme (siehe [JSON-Ergebnisdatei](15-results-and-reports.md#json-ergebnisdatei)). |
 | **Testbericht exportieren (PDF)** | Schreibt einen formatierten Testbericht. |
-| **In Unterordner Pass / Fail sortieren** | Schreibt die Dateien bestandener Läufe in den Unterordner `Pass` und fehlgeschlagener Läufe in `Fail` im Ausgabepfad (siehe [Ordner](15-results-and-reports.md#ordner)). |
-| **Ausgabepfad** | Ordner für exportierte Dateien. Mit **…** auswählen. Wird bei Bedarf angelegt. |
+| **Ausgabeordner** | Erscheint unter jedem aktivierten Exportformat: der Ordner für die Dateien dieses Formats, z. B. die PDF-Berichte auf einer Netzwerkfreigabe und die JSON-Dateien in einem Ordner für die Auswertung. Jedes aktivierte Format braucht einen Ordner; mehrere Formate können denselben verwenden. Mit **…** auswählen. Wird bei Bedarf angelegt. |
 
 Details zu den exportierten Dateien: [Testergebnisse & Berichte](15-results-and-reports.md).
 

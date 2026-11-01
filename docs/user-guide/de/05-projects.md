@@ -52,7 +52,7 @@ Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners
 - Bilder in Meldungsfenstern von Testschritten,
 - Dateipfade von Schritten mit Auswertung **Datei**,
 - BSDL-Dateien der Boundary-Scan-Kette,
-- den **Ausgabepfad** für Testergebnisse.
+- die **Ausgabeordner** der Testergebnis-Exporte.
 
 Pfade außerhalb des Projektordners werden absolut gespeichert.
 

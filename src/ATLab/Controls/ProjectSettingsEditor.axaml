@@ -62,52 +62,94 @@
                                              IsChecked="{Binding Settings.SaveTestResultOptions, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ONLY_WHEN_PASSED}"
                                              IsEnabled="{Binding CanSaveTestResult}"/>
                                 
+                                <CheckBox Content="{helpers:Localize Label_SortResultsByVerdict}"
+                                          IsChecked="{Binding Settings.IsSortResultsByVerdict}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
+
                                 <CheckBox Content="{helpers:Localize Label_ExportTestDataCsv}"
                                           IsChecked="{Binding Settings.IsExportCsv}"
                                           IsEnabled="{Binding CanSaveTestResult}"/>
 
-                                <CheckBox Content="{helpers:Localize Label_ExportTestDataJson}"
-                                          IsChecked="{Binding Settings.IsExportJson}"
-                                          IsEnabled="{Binding CanSaveTestResult}"/>
+                                <DockPanel Margin="30 0 0 0"
+                                           IsVisible="{Binding Settings.IsExportCsv}"
+                                           IsEnabled="{Binding CanSaveTestResult}">
 
-                                <CheckBox Content="{helpers:Localize Label_ExportTestReportPdf}"
-                                          IsChecked="{Binding Settings.IsExportPdf}"
-                                          IsEnabled="{Binding CanSaveTestResult}"/>
-
-                                <CheckBox Content="{helpers:Localize Label_SortResultsByVerdict}"
-                                          IsChecked="{Binding Settings.IsSortResultsByVerdict}"
-                                          IsEnabled="{Binding CanSaveTestResult}"/>
-                                
-                                <DockPanel LastChildFill="False">
-                                    
-                                    <StackPanel Spacing="2"
-                                                Orientation="Vertical"
-                                                DockPanel.Dock="Left">
-                                    
-                                        <TextBlock
-                                            Text="{helpers:Localize Label_OutputPath}"/>
-
-                                       
-                                        <TextBox 
-                                            Width="300"
-                                            Text="{Binding Settings.SaveTestResultFilePath, UpdateSourceTrigger=LostFocus}"/>
-                                        
-                                    </StackPanel>
-                                    
                                     <Button
                                         Background="{DynamicResource ButtonBackground}"
                                         Classes="Icon"
-                                        Command="{Binding SelectSaveTestResultFilePathCommand}"
+                                        Command="{Binding SelectCsvOutputPathCommand}"
+                                        ToolTip.Tip="{helpers:Localize ToolTip_SelectCsvOutputPath}"
                                         Width="35"
                                         Height="35"
-                                        VerticalAlignment="Bottom"
+                                        Margin="5 0 0 0"
                                         DockPanel.Dock="Right">
                                         <shadui:ButtonAssist.Icon>
                                             <ContentControl Content="{LucideIconContent Ellipsis}"/>
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
-                                    
+
+                                    <TextBox
+                                        PlaceholderText="{helpers:Localize Watermark_OutputFolder}"
+                                        Text="{Binding Settings.CsvOutputPath, UpdateSourceTrigger=LostFocus}"/>
+
                                 </DockPanel>
+
+                                <CheckBox Content="{helpers:Localize Label_ExportTestDataJson}"
+                                          IsChecked="{Binding Settings.IsExportJson}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
+
+                                <DockPanel Margin="30 0 0 0"
+                                           IsVisible="{Binding Settings.IsExportJson}"
+                                           IsEnabled="{Binding CanSaveTestResult}">
+
+                                    <Button
+                                        Background="{DynamicResource ButtonBackground}"
+                                        Classes="Icon"
+                                        Command="{Binding SelectJsonOutputPathCommand}"
+                                        ToolTip.Tip="{helpers:Localize ToolTip_SelectJsonOutputPath}"
+                                        Width="35"
+                                        Height="35"
+                                        Margin="5 0 0 0"
+                                        DockPanel.Dock="Right">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent Ellipsis}"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+
+                                    <TextBox
+                                        PlaceholderText="{helpers:Localize Watermark_OutputFolder}"
+                                        Text="{Binding Settings.JsonOutputPath, UpdateSourceTrigger=LostFocus}"/>
+
+                                </DockPanel>
+
+                                <CheckBox Content="{helpers:Localize Label_ExportTestReportPdf}"
+                                          IsChecked="{Binding Settings.IsExportPdf}"
+                                          IsEnabled="{Binding CanSaveTestResult}"/>
+
+                                <DockPanel Margin="30 0 0 0"
+                                           IsVisible="{Binding Settings.IsExportPdf}"
+                                           IsEnabled="{Binding CanSaveTestResult}">
+
+                                    <Button
+                                        Background="{DynamicResource ButtonBackground}"
+                                        Classes="Icon"
+                                        Command="{Binding SelectPdfOutputPathCommand}"
+                                        ToolTip.Tip="{helpers:Localize ToolTip_SelectPdfOutputPath}"
+                                        Width="35"
+                                        Height="35"
+                                        Margin="5 0 0 0"
+                                        DockPanel.Dock="Right">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent Ellipsis}"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+
+                                    <TextBox
+                                        PlaceholderText="{helpers:Localize Watermark_OutputFolder}"
+                                        Text="{Binding Settings.PdfOutputPath, UpdateSourceTrigger=LostFocus}"/>
+
+                                </DockPanel>
+
                                 
                             </StackPanel>
                         </Border>

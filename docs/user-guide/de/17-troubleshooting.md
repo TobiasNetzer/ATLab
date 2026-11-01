@@ -85,7 +85,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 | Symptom | Ursache / Lösung |
 |---------|------------------|
-| Es werden keine Dateien exportiert | Prüfen, ob **Seriennummer abfragen**, **Testergebnis speichern** und mindestens ein Exportformat aktiv sind, ein **Ausgabepfad** gesetzt ist, der Lauf mit **Testausführung starten** begonnen wurde und mit bestanden oder fehlgeschlagen endete (nicht abgebrochen). Bei *Nur wenn bestanden* werden fehlgeschlagene Läufe nicht exportiert. |
+| Es werden keine Dateien exportiert | Prüfen, ob **Seriennummer abfragen**, **Testergebnis speichern** und mindestens ein Exportformat aktiv sind, jedes aktive Format einen **Ausgabeordner** hat, der Lauf mit **Testausführung starten** begonnen wurde und mit bestanden oder fehlgeschlagen endete (nicht abgebrochen). Bei *Nur wenn bestanden* werden fehlgeschlagene Läufe nicht exportiert. |
 | CSV öffnet sich in einer einzigen Spalte | Die Datei ist tabulatorgetrennt. Beim Import *Tabulator* als Trennzeichen wählen. |
 | Berichterzeugung ist langsam | Ein Gerät mit *In Testbericht aufnehmen* antwortet nicht auf seine Identifikationsabfrage. Gerät einschalten oder Option abwählen. |
 | Gerät zeigt `-` unter Prüfmittel | Keine Identifikationsabfrage konfiguriert oder keine Antwort. |

@@ -15,7 +15,7 @@ Starten Sie den Analyzer über das Startmenü (**ATLab Analyzer**) oder aus dem 
 | Aktion | So geht's |
 |--------|-----------|
 | Einzelne Dateien öffnen | **Dateien öffnen** oder `Strg+O` |
-| Ordner öffnen | **Ordner öffnen** oder `Strg+Umschalt+O`. Alle JSON-Dateien im Ordner **und in seinen Unterordnern** werden gelesen, sodass sich der Ausgabepfad von ATLab mit den Unterordnern `Pass` und `Fail` auf einmal öffnen lässt. |
+| Ordner öffnen | **Ordner öffnen** oder `Strg+Umschalt+O`. Alle JSON-Dateien im Ordner **und in seinen Unterordnern** werden gelesen, sodass sich der JSON-Ausgabeordner von ATLab mit den Unterordnern `Pass` und `Fail` auf einmal öffnen lässt. |
 | Drag & Drop | Dateien oder Ordner auf das Fenster ziehen. |
 | Kommandozeile | `ATLab.Analyzer.exe <Datei oder Ordner> …` öffnet die angegebenen Pfade beim Start. |
 

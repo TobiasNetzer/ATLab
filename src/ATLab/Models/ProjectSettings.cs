@@ -59,11 +59,22 @@ public partial class ProjectSettings : ObservableObject
 
     partial void OnSaveTestResultOptionsChanged(SaveTestResultOptions value) => OnSettingsChanged();
 
+    // Output folder of each export format
     [ObservableProperty]
-    private string _saveTestResultFilePath = string.Empty;
+    private string _csvOutputPath = string.Empty;
 
-    partial void OnSaveTestResultFilePathChanged(string value) => OnSettingsChanged();
-    
+    partial void OnCsvOutputPathChanged(string value) => OnSettingsChanged();
+
+    [ObservableProperty]
+    private string _jsonOutputPath = string.Empty;
+
+    partial void OnJsonOutputPathChanged(string value) => OnSettingsChanged();
+
+    [ObservableProperty]
+    private string _pdfOutputPath = string.Empty;
+
+    partial void OnPdfOutputPathChanged(string value) => OnSettingsChanged();
+
     [ObservableProperty]
     private bool _isEnableSerialNumberValidation;
     
@@ -114,7 +125,9 @@ public partial class ProjectSettings : ObservableObject
         IsExportJson = false;
         IsSortResultsByVerdict = false;
         SaveTestResultOptions = SaveTestResultOptions.ALWAYS;
-        SaveTestResultFilePath = string.Empty;
+        CsvOutputPath = string.Empty;
+        JsonOutputPath = string.Empty;
+        PdfOutputPath = string.Empty;
         IsEnableSerialNumberValidation = false;
         SerialNumberValidationLength = 0;
         SerialNumberValidationStartsWith = string.Empty;
@@ -144,7 +157,9 @@ public partial class ProjectSettings : ObservableObject
         IsExportJson = other.IsExportJson;
         IsSortResultsByVerdict = other.IsSortResultsByVerdict;
         SaveTestResultOptions = other.SaveTestResultOptions;
-        SaveTestResultFilePath = other.SaveTestResultFilePath;
+        CsvOutputPath = other.CsvOutputPath;
+        JsonOutputPath = other.JsonOutputPath;
+        PdfOutputPath = other.PdfOutputPath;
         IsEnableSerialNumberValidation = other.IsEnableSerialNumberValidation;
         SerialNumberValidationLength = other.SerialNumberValidationLength;
         SerialNumberValidationStartsWith = other.SerialNumberValidationStartsWith;
@@ -156,12 +171,16 @@ public partial class ProjectSettings : ObservableObject
 
     public void PrepareForSave(PathService pathService)
     {
-        SaveTestResultFilePath = pathService.ToRelative(SaveTestResultFilePath);
+        CsvOutputPath = pathService.ToRelative(CsvOutputPath);
+        JsonOutputPath = pathService.ToRelative(JsonOutputPath);
+        PdfOutputPath = pathService.ToRelative(PdfOutputPath);
     }
 
     public void RestoreAfterLoad(PathService pathService)
     {
-        SaveTestResultFilePath = pathService.ToAbsolute(SaveTestResultFilePath);
+        CsvOutputPath = pathService.ToAbsolute(CsvOutputPath);
+        JsonOutputPath = pathService.ToAbsolute(JsonOutputPath);
+        PdfOutputPath = pathService.ToAbsolute(PdfOutputPath);
     }
     
     private void OnSettingsChanged() => SettingsChanged?.Invoke();

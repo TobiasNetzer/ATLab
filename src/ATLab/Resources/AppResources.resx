@@ -391,9 +391,6 @@
   <data name="Label_ExportTestDataJson" xml:space="preserve">
     <value>Export Result File for Evaluation (JSON)</value>
   </data>
-  <data name="Label_OutputPath" xml:space="preserve">
-    <value>Output Path</value>
-  </data>
   <data name="Header_ControlDevices" xml:space="preserve">
     <value>Control Devices</value>
   </data>
@@ -1429,5 +1426,17 @@ Devices that are found again keep their settings. All other devices are removed 
   </data>
   <data name="Text_CheckFailed" xml:space="preserve">
     <value>Failed</value>
+  </data>
+  <data name="Watermark_OutputFolder" xml:space="preserve">
+    <value>Output folder</value>
+  </data>
+  <data name="ToolTip_SelectCsvOutputPath" xml:space="preserve">
+    <value>Select folder for the CSV data files</value>
+  </data>
+  <data name="ToolTip_SelectJsonOutputPath" xml:space="preserve">
+    <value>Select folder for the JSON result files</value>
+  </data>
+  <data name="ToolTip_SelectPdfOutputPath" xml:space="preserve">
+    <value>Select folder for the PDF test reports</value>
   </data>
 </root>

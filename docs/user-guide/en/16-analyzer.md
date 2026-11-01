@@ -15,7 +15,7 @@ Start the Analyzer from the Start menu (**ATLab Analyzer**) or from the `Analyze
 | Action | How |
 |--------|-----|
 | Open single files | **Open files** or `Ctrl+O` |
-| Open a folder | **Open folder** or `Ctrl+Shift+O`. All JSON files in the folder **and its subfolders** are read, so the output path of ATLab with its `Pass` and `Fail` subfolders can be opened at once. |
+| Open a folder | **Open folder** or `Ctrl+Shift+O`. All JSON files in the folder **and its subfolders** are read, so the JSON output folder of ATLab with its `Pass` and `Fail` subfolders can be opened at once. |
 | Drag & drop | Drop files or folders onto the window. |
 | Command line | `ATLab.Analyzer.exe <file or folder> …` opens the given paths at start. |
 

@@ -130,11 +130,11 @@ How to reference variables is explained in [Commands, Variables & Expressions](1
 | **Request Serial Number** | Before **Start test execution** and **Start continuous test execution**, the operator must enter a serial number. |
 | **Save Test Result** | Exports results automatically after each completed run. Only available when *Request Serial Number* is enabled, because the serial number is part of the file name. |
 | **Always / Passed Only** | Export after every run, or only after passed runs. |
+| **Sort into Pass / Fail Subfolders** | Writes the files of passed runs to the subfolder `Pass` and of failed runs to `Fail` in the folder of each format (see [Folders](15-results-and-reports.md#folders)). |
 | **Export Test Data (CSV)** | Writes a tab-separated data file. |
 | **Export Result File for Evaluation (JSON)** | Writes the results together with run, project, DUT and equipment metadata for evaluation tools (see [JSON result file](15-results-and-reports.md#json-result-file)). |
 | **Export Test Report (PDF)** | Writes a formatted test report. |
-| **Sort into Pass / Fail Subfolders** | Writes the files of passed runs to the subfolder `Pass` and of failed runs to `Fail` in the output path (see [Folders](15-results-and-reports.md#folders)). |
-| **Output Path** | Folder for exported files. Click **…** to choose. Created if it does not exist. |
+| **Output folder** | Appears below each enabled export format: the folder for the files of this format, e.g. the PDF reports on a network share and the JSON files in a folder for evaluation. Every enabled format needs a folder; several formats can use the same one. Click **…** to choose. Created if it does not exist. |
 
 Details on the exported files: [Test Results & Reports](15-results-and-reports.md).
 

@@ -114,12 +114,30 @@ public partial class ProjectSettingsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task SelectSaveTestResultFilePath()
+    private async Task SelectCsvOutputPath()
     {
-        var result = await _fileDialogService.OpenFolderAsync("Select folder for export");
-        if (result == null) return;
+        if (await SelectFolderAsync("Select folder for CSV export") is { } path)
+            Settings.CsvOutputPath = path;
+    }
 
-        Settings.SaveTestResultFilePath = result.Path.LocalPath;
+    [RelayCommand]
+    private async Task SelectJsonOutputPath()
+    {
+        if (await SelectFolderAsync("Select folder for JSON export") is { } path)
+            Settings.JsonOutputPath = path;
+    }
+
+    [RelayCommand]
+    private async Task SelectPdfOutputPath()
+    {
+        if (await SelectFolderAsync("Select folder for PDF export") is { } path)
+            Settings.PdfOutputPath = path;
+    }
+
+    private async Task<string?> SelectFolderAsync(string title)
+    {
+        var result = await _fileDialogService.OpenFolderAsync(title);
+        return result?.Path.LocalPath;
     }
 
     [RelayCommand]

@@ -9,9 +9,9 @@ On the **Configuration** tab → **Project Settings** → **Test Execution Setti
 1. Enable **Request Serial Number** (required — the serial number is part of the file name).
 2. Enable **Save Test Result**.
 3. Choose **Always** or **Passed Only**.
-4. Enable any of **Export Test Data (CSV)**, **Export Result File for Evaluation (JSON)** and **Export Test Report (PDF)**.
-5. Optionally enable **Sort into Pass / Fail Subfolders**.
-6. Set the **Output Path**. The folder is created if necessary.
+4. Optionally enable **Sort into Pass / Fail Subfolders**.
+5. Enable any of **Export Test Data (CSV)**, **Export Result File for Evaluation (JSON)** and **Export Test Report (PDF)**.
+6. For every enabled format, set its **output folder** in the field below its checkbox. Formats can share a folder. The folder is created if necessary.
 
 ## When files are written
 
@@ -19,7 +19,7 @@ Files are written at the end of a run started with **Start test execution** or *
 
 No files are written for canceled runs, runs aborted by an execution error, runs started from the selected step, or single-step executions.
 
-Each export produces a message in the event log, e.g. `PDF exported to 'D:\Results\PB-2026001_2026-10-17_14-03-22.pdf'.` If no output path is set, the error *"No output path for test results provided."* is logged.
+Each export produces a message in the event log, e.g. `PDF exported to 'D:\Results\PB-2026001_2026-10-17_14-03-22.pdf'.` If an enabled format has no output folder, it is skipped and the error *"No output path for the CSV export provided."* (or PDF / JSON) is logged; the other formats are still written.
 
 ## File names
 
@@ -33,11 +33,11 @@ Date and time are the start of the run. Example: `Prototype-001_2026-10-18_18-50
 
 ## Folders
 
-By default all files are written directly to the output path. With **Sort into Pass / Fail Subfolders**, they are written to a subfolder depending on the result of the run:
+By default the files are written directly to the output folder of their format. With **Sort into Pass / Fail Subfolders**, they are written to a subfolder depending on the result of the run:
 
 ```
-<Output Path>\Pass\<SerialNumber>_<yyyy-MM-dd>_<HH-mm-ss>.*
-<Output Path>\Fail\<SerialNumber>_<yyyy-MM-dd>_<HH-mm-ss>.*
+<Output folder>\Pass\<SerialNumber>_<yyyy-MM-dd>_<HH-mm-ss>.*
+<Output folder>\Fail\<SerialNumber>_<yyyy-MM-dd>_<HH-mm-ss>.*
 ```
 
 The subfolders are created when needed. Their names are always `Pass` and `Fail`, regardless of the UI language. A run counts as failed if any step failed, including steps marked **Exclude from Export**. With *Passed Only*, only the `Pass` folder is used.
