@@ -86,6 +86,7 @@ cd ATLab
 dotnet restore
 dotnet build -c Release
 dotnet run --project src/ATLab/ATLab.csproj
+dotnet run --project src/ATLab.Analyzer/ATLab.Analyzer.csproj   # ATLab Analyzer
 ```
 
 Alternativ `ATLab.sln` in JetBrains Rider, Visual Studio 2022 oder VS Code mit C# Dev Kit öffnen.
