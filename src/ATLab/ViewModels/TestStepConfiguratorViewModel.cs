@@ -496,13 +496,15 @@ public partial class TestStepConfiguratorViewModel : ViewModelBase
         TestStepViewModel.TestStep.OnFail.JumpToId = value.Id;
     }
     
+    /// <summary>
+    /// Removes binary floating-point noise from a calculated limit (e.g. 3.3 * 0.9 = 2.9699999999999998 becomes 2.97)
+    /// by rounding to 15 significant digits, the precision a double represents reliably.
+    /// </summary>
     private static double NormalizeDouble(double value)
     {
-        var integer = Math.Round(value);
+        if (double.IsNaN(value) || double.IsInfinity(value)) return value;
 
-        return Math.Abs(value - integer) < 1e-12 * Math.Max(1.0, Math.Abs(value))
-            ? integer
-            : value;
+        return double.Parse(value.ToString("G15", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]
