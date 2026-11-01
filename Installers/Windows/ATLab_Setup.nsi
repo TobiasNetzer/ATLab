@@ -33,7 +33,7 @@
 
 !define MUI_WELCOMEPAGE_TITLE "Welcome to the ${PRODUCT_NAME} Installer"
 !define MUI_WELCOMEPAGE_TITLE_3LINES
-!define MUI_WELCOMEPAGE_TEXT "${PRODUCT_NAME} is a cross-platform automated testing toolkit for interfacing with hardware through a test interface adapter and controlling external test instruments through remote control interfaces.$\r$\n$\nClick Next to continue."
+!define MUI_WELCOMEPAGE_TEXT "${PRODUCT_NAME} is a cross-platform automated testing framework for interfacing with hardware through the Test Interface Adapter and controlling external test instruments through remote control interfaces.$\r$\n$\r$\nClick Next to continue."
 
 ; Launched through a function, so ATLab does not inherit the installer's administrator rights
 !define MUI_FINISHPAGE_RUN
