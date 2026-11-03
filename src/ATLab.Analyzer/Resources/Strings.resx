@@ -550,7 +550,7 @@
     <value>About</value>
   </data>
   <data name="About_Description" xml:space="preserve">
-    <value>Evaluation of the JSON test result files written by ATLab: yield, failing steps, histograms, trends and process capability across many test runs.</value>
+    <value>Evaluation of the JSON test result files written by ATLab.</value>
   </data>
   <data name="About_Version" xml:space="preserve">
     <value>Version</value>

@@ -550,7 +550,7 @@
     <value>Info</value>
   </data>
   <data name="About_Description" xml:space="preserve">
-    <value>Auswertung der von ATLab geschriebenen JSON-Testergebnisdateien: Ausbeute, fehlgeschlagene Schritte, Histogramme, Trends und Prozessfähigkeit über viele Testläufe.</value>
+    <value>Auswertung der von ATLab geschriebenen JSON-Testergebnisdateien.</value>
   </data>
   <data name="About_Version" xml:space="preserve">
     <value>Version</value>

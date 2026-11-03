@@ -396,7 +396,7 @@ public class TestReportComposer
                 col.Item().ShowEntire().Column(item =>
                 {
                     item.Spacing(4);
-                    item.Item().Text($"{view.StepNumber} · {view.StepName}").SemiBold().FontColor(Colors.Red.Darken2);
+                    item.Item().Text($"{view.StepNumber} - {view.StepName}").SemiBold().FontColor(Colors.Red.Darken2);
                     // Color dots are drawn, the report font has no symbol for them
                     item.Item().Inlined(legend =>
                     {
