@@ -166,7 +166,7 @@
         <Border Grid.Row="1" IsVisible="{Binding ShowWelcome}" Classes="Panel"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Padding="40,32" MaxWidth="600">
             <StackPanel Spacing="14" HorizontalAlignment="Center">
-                <Image Source="avares://ATLab.FixtureDesigner/Assets/AppIcon.png" Width="72" Height="72" HorizontalAlignment="Center"/>
+                <Image Source="avares://ATLab.FixtureDesigner/Assets/AppIcon.png" Width="120" Height="120" HorizontalAlignment="Center"/>
                 <TextBlock Text="ATLab Fixture Designer" Classes="h2" HorizontalAlignment="Center"/>
                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Classes="Label" FontSize="14"
                            Text="{loc:Localize Welcome_Text}"/>

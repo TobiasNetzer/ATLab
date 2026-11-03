@@ -201,17 +201,25 @@ public partial class MainWindowViewModel : ObservableObject
     public PadRow? SelectedPadRow
     {
         get => SelectedPad is { } pad && _padRowLookup.TryGetValue(pad, out var row) ? row : null;
-        set => SelectedPad = value?.Pad;
+        set
+        {
+            // A pad the filter hides cannot be selected in the list, which then clears its selection; the pad stays
+            // selected on the board all the same
+            if (value is null && SelectedPad is { } pad && !PadRows.Any(r => r.Pad == pad))
+                return;
+
+            SelectedPad = value?.Pad;
+        }
     }
 
     partial void OnSelectedPadChanged(Pad? value)
     {
-        // Clicking a pad with a probe selects the probe, preferably the one of the viewed side
-        if (value is null)
-            return;
-
-        var probes = Probes.Where(p => p.Pad == value).ToList();
-        if (probes.Count > 0 && (SelectedProbe is null || SelectedProbe.Pad != value))
+        // The probe selection follows the pad: a pad with a probe selects it, preferably the one of the viewed side;
+        // a pad without a probe, or a click beside the pads, clears it, so the last probe does not stay selected
+        var probes = value is null ? [] : Probes.Where(p => p.Pad == value).ToList();
+        if (probes.Count == 0)
+            SelectedProbe = null;
+        else if (SelectedProbe?.Pad != value)
             SelectedProbe = probes.FirstOrDefault(p => p.Side == ViewSide) ?? probes[0];
     }
 
@@ -314,7 +322,7 @@ public partial class MainWindowViewModel : ObservableObject
         var side = pad.HasCopperOn(ViewSide) ? ViewSide : ViewSide == BoardSide.Top ? BoardSide.Bottom : BoardSide.Top;
         var existing = Probes.FirstOrDefault(p => p.Pad == pad && p.Side == side);
         if (existing is not null)
-            RemoveProbe(existing);
+            RemoveProbeCore(existing, selectNext: false);
         else
             AddProbe(pad, side);
     }
@@ -342,7 +350,13 @@ public partial class MainWindowViewModel : ObservableObject
     private bool HasSelectedProbe() => SelectedProbe is not null;
 
     [RelayCommand(CanExecute = nameof(HasSelectedProbe))]
-    private void RemoveProbe(Probe? probe = null)
+    private void RemoveProbe(Probe? probe = null) => RemoveProbeCore(probe, selectNext: true);
+
+    /// <summary>
+    /// Removes the probe. From the list the next row is selected; on the board (selectNext false) the pad stays selected,
+    /// the view does not jump to another probe.
+    /// </summary>
+    private void RemoveProbeCore(Probe? probe, bool selectNext)
     {
         probe ??= SelectedProbe;
         if (probe is null)
@@ -350,7 +364,10 @@ public partial class MainWindowViewModel : ObservableObject
 
         var index = Probes.IndexOf(probe);
         Probes.Remove(probe);
-        SelectedProbe = Probes.Count == 0 ? null : Probes[Math.Clamp(index, 0, Probes.Count - 1)];
+        if (selectNext)
+            SelectedProbe = Probes.Count == 0 ? null : Probes[Math.Clamp(index, 0, Probes.Count - 1)];
+        else if (SelectedProbe == probe)
+            SelectedProbe = Probes.FirstOrDefault(p => p.Pad == probe.Pad && probe.Pad is not null);
         AfterProbesChanged();
         SetStatus(() => Localizer.Format("Status_ProbeRemoved", probe.Name));
     }
@@ -444,7 +461,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void OnProbeChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Note) or nameof(Probe.Number))
+        // The type sets the clearances and spacings the checks use
+        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Type) or nameof(Probe.Note) or nameof(Probe.Number))
         {
             MarkDirty();
             if (e.PropertyName != nameof(Probe.Note) && !_isBatchChange)
