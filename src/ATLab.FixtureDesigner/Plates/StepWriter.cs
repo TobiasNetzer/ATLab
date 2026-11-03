@@ -10,7 +10,8 @@ namespace ATLab.FixtureDesigner.Plates;
 /// <summary>
 /// 3D model of a plate as a STEP file (AP214): a block with the plate outline and thickness, a cylindrical hole through
 /// it for every receptacle and pin, and every cut-out through it. The side facing the board is at z = 0, the plate extends to
-/// z = −thickness. Written as an exact B-rep, so CAD programs import it as a solid.
+/// z = −thickness. Written as an exact B-rep, so CAD programs import it as a solid; arcs of the outline and the cut-outs
+/// stay arcs (circle edges and cylinder walls), not short segments.
 /// </summary>
 public static class StepWriter
 {
@@ -20,28 +21,15 @@ public static class StepWriter
         var z0 = -thickness;
         const double z1 = 0;
 
-        // ----- Block: the outline (counterclockwise) extruded by the thickness -----
-        var corners = plate.Outline.Select(p => (p.X, p.Y)).ToArray();
-        var n = corners.Length;
-        var top = corners.Select(c => w.Vertex(c.Item1, c.Item2, z1)).ToArray();
-        var bottom = corners.Select(c => w.Vertex(c.Item1, c.Item2, z0)).ToArray();
-
-        // Edges along the outline (i to i+1) at the top and the bottom, and the vertical edges at the corners
-        var topEdges = new int[n];
-        var bottomEdges = new int[n];
-        var verticalEdges = new int[n];
-        for (var i = 0; i < n; i++)
-        {
-            var j = (i + 1) % n;
-            topEdges[i] = w.LineEdge(top[i], top[j], corners[i], corners[j], z1, z1);
-            bottomEdges[i] = w.LineEdge(bottom[i], bottom[j], corners[i], corners[j], z0, z0);
-            verticalEdges[i] = w.LineEdge(bottom[i], top[i], corners[i], corners[i], z0, z1);
-        }
-
-        // ----- Holes -----
         var holeTopLoops = new List<int>();
         var holeBottomLoops = new List<int>();
         var faces = new List<int>();
+
+        // ----- Block: the outline (counterclockwise) extruded by the thickness, its arcs as cylinder walls -----
+        var (topEdges, bottomEdges) = Walls(w, plate.Contour, z0, z1, outer: true, faces);
+        var n = plate.Contour.Count;
+
+        // ----- Holes -----
 
         foreach (var hole in plate.Holes)
         {
@@ -67,37 +55,14 @@ public static class StepWriter
         }
 
         // ----- Cut-outs: a counterclockwise loop each; the material is outside it -----
-        foreach (var cutout in plate.CutoutOutlines.Where(c => c.Count >= 3))
+        foreach (var cutout in plate.Cutouts.Where(c => OutlineShape.Flatten(c).Count >= 3))
         {
             var m = cutout.Count;
-            var cTop = cutout.Select(c => w.Vertex(c.X, c.Y, z1)).ToArray();
-            var cBottom = cutout.Select(c => w.Vertex(c.X, c.Y, z0)).ToArray();
-            var cTopEdges = new int[m];
-            var cBottomEdges = new int[m];
-            var cVertical = new int[m];
-            for (var i = 0; i < m; i++)
-            {
-                var j = (i + 1) % m;
-                cTopEdges[i] = w.LineEdge(cTop[i], cTop[j], cutout[i], cutout[j], z1, z1);
-                cBottomEdges[i] = w.LineEdge(cBottom[i], cBottom[j], cutout[i], cutout[j], z0, z0);
-                cVertical[i] = w.LineEdge(cBottom[i], cTop[i], cutout[i], cutout[i], z0, z1);
-            }
+            var (cTopEdges, cBottomEdges) = Walls(w, cutout, z0, z1, outer: false, faces);
 
             // Inner loops run clockwise about the face normal: backwards on the top face (+Z), forwards on the bottom (−Z)
             holeTopLoops.Add(w.Loop(Enumerable.Range(0, m).Reverse().Select(i => (cTopEdges[i], false)).ToArray()));
             holeBottomLoops.Add(w.Loop(Enumerable.Range(0, m).Select(i => (cBottomEdges[i], true)).ToArray()));
-
-            // A wall per edge, facing into the cut-out: the edge direction turned left, the loop the other way round
-            // than on the outside of the block
-            for (var i = 0; i < m; i++)
-            {
-                var j = (i + 1) % m;
-                var loop = w.Loop((cVertical[i], true), (cTopEdges[i], true), (cVertical[j], false), (cBottomEdges[i], false));
-                var (dx, dy) = (cutout[j].X - cutout[i].X, cutout[j].Y - cutout[i].Y);
-                var length = Math.Sqrt(dx * dx + dy * dy);
-                faces.Add(w.PlaneFace(loop, [], (cutout[i].X, cutout[i].Y, z0), (-dy / length, dx / length, 0),
-                    (dx / length, dy / length, 0)));
-            }
         }
 
         // ----- Faces of the block, normals pointing out of the material -----
@@ -107,17 +72,6 @@ public static class StepWriter
 
         var bottomLoop = w.Loop(Enumerable.Range(0, n).Reverse().Select(i => (bottomEdges[i], false)).ToArray());
         faces.Add(w.PlaneFace(bottomLoop, holeBottomLoops, (plate.MinX, plate.MinY, z0), (0, 0, -1), (1, 0, 0)));
-
-        // A side face per edge; for a counterclockwise outline the outward normal is the edge direction turned right
-        for (var i = 0; i < n; i++)
-        {
-            var j = (i + 1) % n;
-            var loop = w.Loop((bottomEdges[i], true), (verticalEdges[j], true), (topEdges[i], false), (verticalEdges[i], false));
-            var (dx, dy) = (corners[j].Item1 - corners[i].Item1, corners[j].Item2 - corners[i].Item2);
-            var length = Math.Sqrt(dx * dx + dy * dy);
-            faces.Add(w.PlaneFace(loop, [], (corners[i].Item1, corners[i].Item2, z0), (dy / length, -dx / length, 0),
-                (dx / length, dy / length, 0)));
-        }
 
         // ----- Solid and product structure -----
         var shell = w.Add($"CLOSED_SHELL('',({string.Join(",", faces.Select(Ref))}))");
@@ -151,6 +105,60 @@ public static class StepWriter
         file.Append(w.Data);
         file.Append("ENDSEC;\nEND-ISO-10303-21;\n");
         return file.ToString();
+    }
+
+    /// <summary>
+    /// A counterclockwise loop extruded from z0 to z1: its edges at the top and the bottom (edge i runs from vertex i to
+    /// i+1, a line or, with a bulge, an arc) and a wall per edge, added to the faces. A straight edge gets a plane wall,
+    /// an arc a cylinder wall. The walls of the outline face out of the block (the edge direction turned right), the
+    /// walls of a cut-out into the cut-out (turned left).
+    /// </summary>
+    private static (int[] Top, int[] Bottom) Walls(EntityWriter w, IReadOnlyList<OutlineVertex> loop, double z0, double z1,
+        bool outer, List<int> faces)
+    {
+        var n = loop.Count;
+        var top = loop.Select(v => w.Vertex(v.X, v.Y, z1)).ToArray();
+        var bottom = loop.Select(v => w.Vertex(v.X, v.Y, z0)).ToArray();
+
+        var topEdges = new int[n];
+        var bottomEdges = new int[n];
+        var verticalEdges = new int[n];
+        for (var i = 0; i < n; i++)
+        {
+            var j = (i + 1) % n;
+            topEdges[i] = w.ContourEdge(top[i], top[j], loop[i], loop[j], z1);
+            bottomEdges[i] = w.ContourEdge(bottom[i], bottom[j], loop[i], loop[j], z0);
+            verticalEdges[i] = w.LineEdge(bottom[i], top[i], (loop[i].X, loop[i].Y), (loop[i].X, loop[i].Y), z0, z1);
+        }
+
+        for (var i = 0; i < n; i++)
+        {
+            var j = (i + 1) % n;
+            var (a, b) = (loop[i], loop[j]);
+
+            // Counterclockwise about the wall's normal; a cut-out wall faces the other way, so its loop runs backwards
+            var wallLoop = outer
+                ? w.Loop((bottomEdges[i], true), (verticalEdges[j], true), (topEdges[i], false), (verticalEdges[i], false))
+                : w.Loop((verticalEdges[i], true), (topEdges[i], true), (verticalEdges[j], false), (bottomEdges[i], false));
+
+            var (cx, cy, radius, _, sweep) = OutlineShape.ArcGeometry(a, b);
+            if (radius > 0)
+            {
+                // The cylinder's normal points away from its axis. A counterclockwise arc has its center on the left,
+                // inside the loop: the outline's wall faces away from the axis, a cut-out's wall towards it. A clockwise
+                // arc the other way round.
+                var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, z0, (0, 0, 1), (1, 0, 0))},{R(radius)})");
+                faces.Add(w.SurfaceFace(wallLoop, cylinder, sameSense: sweep > 0 == outer));
+                continue;
+            }
+
+            var (dx, dy) = (b.X - a.X, b.Y - a.Y);
+            var length = Math.Sqrt(dx * dx + dy * dy);
+            var normal = outer ? (dy / length, -dx / length, 0.0) : (-dy / length, dx / length, 0.0);
+            faces.Add(w.PlaneFace(wallLoop, [], (a.X, a.Y, z0), normal, (dx / length, dy / length, 0)));
+        }
+
+        return (topEdges, bottomEdges);
     }
 
     public static void Save(Plate plate, double thickness, string name, string path) =>
@@ -210,6 +218,24 @@ public static class StepWriter
             var line = Add($"LINE('',{Ref(Point(a.X, a.Y, za))},{Ref(vector)})");
             return Add($"EDGE_CURVE('',{Ref(from)},{Ref(to)},{Ref(line)},.T.)");
         }
+
+        /// <summary>
+        /// Edge of a contour in the plane z from vertex a to b: straight, or with a's bulge an arc, which runs
+        /// counterclockwise about +Z for a positive bulge and clockwise for a negative one.
+        /// </summary>
+        public int ContourEdge(int from, int to, OutlineVertex a, OutlineVertex b, double z)
+        {
+            var (cx, cy, radius, _, sweep) = OutlineShape.ArcGeometry(a, b);
+            if (radius <= 0)
+                return LineEdge(from, to, (a.X, a.Y), (b.X, b.Y), z, z);
+
+            var circle = Add($"CIRCLE('',{Placement(cx, cy, z, (0, 0, sweep > 0 ? 1 : -1), (1, 0, 0))},{R(radius)})");
+            return Add($"EDGE_CURVE('',{Ref(from)},{Ref(to)},{Ref(circle)},.T.)");
+        }
+
+        /// <summary>Face bounded by one loop on a surface; sameSense false turns the face against the surface normal.</summary>
+        public int SurfaceFace(int loop, int surface, bool sameSense) =>
+            Add($"ADVANCED_FACE('',({Ref(Add($"FACE_OUTER_BOUND('',{Ref(loop)},.T.)"))}),{Ref(surface)},{(sameSense ? ".T." : ".F.")})");
 
         /// <summary>Loop of edges, each used forward (true) or backward.</summary>
         public int Loop(params (int Edge, bool Forward)[] edges) =>
