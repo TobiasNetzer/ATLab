@@ -158,9 +158,9 @@ public static class PartLibrary
     /// <summary>Usual sizes as a start; marked as examples to replace with the parts in use.</summary>
     public static List<PartType> Examples() =>
     [
-        new() { Id = "exampleLocatingPin3", Kind = FixturePartKind.LocatingPin, Name = "Locating pin 3 mm", Diameter = 3, DrillDiameter = 3, Length = 25, Height = 12, ComponentClearance = 0},
-        new() { Id = "exampleLocating3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, Length = 20, Height = 8, ComponentClearance = 0.5},
-        new() { Id = "exampleSupport4", Kind = FixturePartKind.SupportPin, Name = "Support pin 4 mm", Diameter = 4, DrillDiameter = 4, Length = 25, Height = 10, ComponentClearance = 1},
-        new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, Length = 40, Height = 15, ComponentClearance = 1}
+        new() { Id = "exampleLocatingPin3", Kind = FixturePartKind.LocatingPin, Name = "Locating pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 12, ComponentClearance = 0},
+        new() { Id = "exampleLocating3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 8, ComponentClearance = 0.5},
+        new() { Id = "exampleSupport4", Kind = FixturePartKind.SupportPin, Name = "Support pin 4 mm", Diameter = 4, DrillDiameter = 4, Height = 10, ComponentClearance = 1},
+        new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, Height = 15, ComponentClearance = 1}
     ];
 }

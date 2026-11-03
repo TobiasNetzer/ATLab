@@ -40,9 +40,6 @@ public partial class PartType : ObservableObject
     /// <summary>Diameter of the hole in the plate, in mm.</summary>
     [ObservableProperty] private double _drillDiameter;
 
-    /// <summary>Overall length of the pin or rod, in mm.</summary>
-    [ObservableProperty] private double _length;
-
     /// <summary>How far it stands out of the plate towards the board, in mm.</summary>
     [ObservableProperty] private double _height;
 
@@ -58,7 +55,6 @@ public partial class PartType : ObservableObject
         Name = Name,
         Diameter = Diameter,
         DrillDiameter = DrillDiameter,
-        Length = Length,
         Height = Height,
         ComponentClearance = ComponentClearance,
         Note = Note

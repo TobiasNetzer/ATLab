@@ -364,14 +364,18 @@ public partial class MainWindowViewModel : ObservableObject
 
     private bool CanEditProbes() => Board is not null;
 
+    /// <summary>MEAS channel the automatic assignment leaves free; it is usually reserved.</summary>
+    private const int ReservedMeasChannel = 1;
+
     /// <summary>
     /// Wires every probe without pin to a matrix channel: probes of a net that is already on a channel join it, the
-    /// others get the next free channel.
+    /// others get the next free channel from MEAS 2 on.
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanEditProbes))]
     private void AutoAssign()
     {
-        var meas = Pinout.FixturePins.Where(p => p.Kind == ResourceKind.Meas).OrderBy(p => p.Channel).ToList();
+        // MEAS 1 is usually reserved, so it is left for the user to assign by hand
+        var meas = Pinout.FixturePins.Where(p => p.Kind == ResourceKind.Meas && p.Channel != ReservedMeasChannel).OrderBy(p => p.Channel).ToList();
         var used = Probes.Where(p => p.Pin is not null).Select(p => p.Pin!).ToHashSet();
         var assigned = 0;
         var failed = 0;

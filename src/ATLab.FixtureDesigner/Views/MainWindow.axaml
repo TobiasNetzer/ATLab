@@ -639,7 +639,9 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="120" MinWidth="120"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_ProbeDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="85" MinWidth="85"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing}" Width="95" MinWidth="95"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
@@ -811,7 +813,6 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartLength}" Binding="{Binding Length}" Width="85" MinWidth="85"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="85" MinWidth="85"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
@@ -822,16 +823,17 @@
 
                 <!-- ========== Checks ========== -->
                 <TabItem x:Name="ChecksTab" Header="{Binding ChecksHeader}" AutomationProperties.Name="{Binding ChecksHeader}">
-                    <Grid RowDefinitions="Auto,*" Margin="0,8,0,0">
+                    <!-- "No problems found" in a row of its own, so notes listed below it stay readable -->
+                    <Grid RowDefinitions="Auto,Auto,*" Margin="0,8,0,0">
                         <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,0,0,8">
                             <LucideIcon Kind="CircleAlert" Size="15" Foreground="{StaticResource FailBrush}" IsVisible="{Binding HasErrors}"/>
                             <LucideIcon Kind="TriangleAlert" Size="15" Foreground="{StaticResource MarginalBrush}"
                                         IsVisible="{Binding HasWarnings}"/>
                             <TextBlock Text="{Binding CheckSummary}" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_ChecksClean}" Classes="Label Pass" Margin="4,4"
+                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_ChecksClean}" Classes="Label Pass" Margin="4,4,4,8"
                                    IsVisible="{Binding IsCheckClean}"/>
-                        <ListBox Grid.Row="1" ItemsSource="{Binding Checks}" SelectedItem="{Binding SelectedCheck}"
+                        <ListBox Grid.Row="2" ItemsSource="{Binding Checks}" SelectedItem="{Binding SelectedCheck}"
                                  Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="fixture:CheckResult">

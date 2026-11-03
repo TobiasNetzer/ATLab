@@ -175,6 +175,7 @@ public partial class MainWindowViewModel
         if (SelectedPart is not { } part)
             return;
 
+        var index = Parts.IndexOf(part);
         Parts.Remove(part);
 
         // Each kind stays numbered without gaps
@@ -182,7 +183,8 @@ public partial class MainWindowViewModel
         foreach (var other in Parts.Where(p => p.Kind == part.Kind).OrderBy(p => p.Number))
             other.Number = number++;
 
-        SelectedPart = null;
+        // The next row moves up into the selection, or the one before when the last row went
+        SelectedPart = Parts.Count == 0 ? null : Parts[Math.Min(index, Parts.Count - 1)];
         AfterPartsChanged();
         SetStatus(() => Localizer.Format("Status_PartRemoved", part.Name));
     }
@@ -360,11 +362,12 @@ public partial class MainWindowViewModel
         if (SelectedPartType is not { } type)
             return;
 
+        var index = PartTypes.IndexOf(type);
         PartTypes.Remove(type);
         foreach (var part in Parts.Where(p => p.Type == type))
             part.Type = PartTypes.FirstOrDefault(t => t.Kind == part.Kind);
 
-        SelectedPartType = null;
+        SelectedPartType = PartTypes.Count == 0 ? null : PartTypes[Math.Min(index, PartTypes.Count - 1)];
         MarkDirty();
         RunChecks();
     }
@@ -400,7 +403,6 @@ public partial class MainWindowViewModel
             existing.Name = libraryType.Name;
             existing.Diameter = libraryType.Diameter;
             existing.DrillDiameter = libraryType.DrillDiameter;
-            existing.Length = libraryType.Length;
             existing.Height = libraryType.Height;
             existing.ComponentClearance = libraryType.ComponentClearance;
             existing.Note = libraryType.Note;

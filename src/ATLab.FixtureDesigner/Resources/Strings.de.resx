@@ -172,7 +172,7 @@
     <value>Aufbaublatt erstellen</value>
   </data>
   <data name="ToolTip_AutoAssign" xml:space="preserve">
-    <value>MEAS-Kanäle zuordnen</value>
+    <value>MEAS-Kanäle zuordnen; MEAS 1 bleibt frei, da er meist reserviert ist</value>
   </data>
   <data name="ToolTip_Renumber" xml:space="preserve">
     <value>Prüfnadeln neu nummerieren</value>
@@ -583,7 +583,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Verdrahtung</value>
   </data>
   <data name="Report_WiringHint" xml:space="preserve">
-    <value>Pins des prüflingsseitigen Steckers {0} ({1}) der Test-Hardware und die Prüfnadeln, die mit ihnen zu verdrahten sind.</value>
+    <value>Pins der Test-Hardware und die Prüfnadeln, die mit ihnen zu verdrahten sind.</value>
   </data>
   <data name="Report_NoWiring" xml:space="preserve">
     <value>Noch keine Prüfnadel ist einem Pin der Test-Hardware zugeordnet.</value>
@@ -724,7 +724,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Neuer Typ</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>Alle Maße in mm. Abstand: kleinster Abstand der Mitten zweier Prüfnadeln einer Platte. Bohrung Ø: Loch für die Hülse in der Platte. Freiraum: kleinster Abstand der Prüfnadel zu einem anderen Bauteil ihrer Seite (Bauteilfläche). Die Typen werden im Nadelbett gespeichert; In Bibliothek speichern übernimmt sie für neue Nadelbetten.</value>
+    <value>Ø der Prüfnadel in mil, alle anderen Maße in mm. Bohrung Ø: Loch für die Hülse in der Platte. Höhe: wie weit die Prüfnadel aus der Platte ragt. Abstand: kleinster Abstand der Mitten zweier Prüfnadeln einer Platte. Freiraum: kleinster Abstand der Prüfnadel zu einem anderen Bauteil ihrer Seite (Bauteilfläche). Die Typen werden im Nadelbett gespeichert; In Bibliothek speichern übernimmt sie für neue Nadelbetten.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plattenrand (mm)</value>
@@ -979,9 +979,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Column_PartDiameter" xml:space="preserve">
     <value>Ø (mm)</value>
   </data>
-  <data name="Column_PartLength" xml:space="preserve">
-    <value>Länge (mm)</value>
-  </data>
   <data name="Column_PartHeight" xml:space="preserve">
     <value>Höhe (mm)</value>
   </data>
@@ -992,7 +989,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Typen</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>Alle Maße in mm. Ø: wo es die Platine berührt. Bohrung Ø: Loch in der Platte. Länge: Gesamtlänge. Höhe: wie weit es aus der Platte ragt. Freiraum: kleinster Abstand vom Rand zu einem Bauteil seiner Seite.</value>
+    <value>Alle Maße in mm. Ø: wo es die Platine berührt. Bohrung Ø: Loch in der Platte. Höhe: wie weit es aus der Platte ragt. Freiraum: kleinster Abstand vom Rand zu einem Bauteil seiner Seite.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>Neuer Typ</value>
@@ -1195,5 +1192,11 @@ unten</value>
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Standardfarben</value>
+  </data>
+  <data name="Column_ProbeDiameter" xml:space="preserve">
+    <value>Ø (mil)</value>
+  </data>
+  <data name="Column_Diameter" xml:space="preserve">
+    <value>Ø</value>
   </data>
 </root>

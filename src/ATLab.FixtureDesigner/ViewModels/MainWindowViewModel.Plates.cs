@@ -174,7 +174,9 @@ public partial class MainWindowViewModel
         {
             existing.Name = libraryType.Name;
             existing.MinPadSize = libraryType.MinPadSize;
+            existing.Diameter = libraryType.Diameter;
             existing.DrillDiameter = libraryType.DrillDiameter;
+            existing.Height = libraryType.Height;
             existing.MinSpacing = libraryType.MinSpacing;
             existing.ComponentClearance = libraryType.ComponentClearance;
             existing.Note = libraryType.Note;

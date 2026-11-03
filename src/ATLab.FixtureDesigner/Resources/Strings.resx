@@ -172,7 +172,7 @@
     <value>Create build sheet</value>
   </data>
   <data name="ToolTip_AutoAssign" xml:space="preserve">
-    <value>Assign MEAS channels</value>
+    <value>Assign MEAS channels; MEAS 1 stays free, as it is usually reserved</value>
   </data>
   <data name="ToolTip_Renumber" xml:space="preserve">
     <value>Renumber probes</value>
@@ -583,7 +583,7 @@ Select the board file at its new location.</value>
     <value>Wiring</value>
   </data>
   <data name="Report_WiringHint" xml:space="preserve">
-    <value>Pins of the test hardware's DUT connector {0} ({1}) and the probes to wire to each of them.</value>
+    <value>Pins of the test hardware and the probes to wire to each of them.</value>
   </data>
   <data name="Report_NoWiring" xml:space="preserve">
     <value>No probe is wired to a pin of the test hardware yet.</value>
@@ -724,7 +724,7 @@ Select the board file at its new location.</value>
     <value>New type</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>All sizes in mm. Spacing: smallest distance between the centers of two probes of one plate. Drill Ø: hole for the receptacle in the plate. Clearance: smallest distance from the probe to another component of its side (courtyard). The types are stored in the fixture; Save to library keeps them for new fixtures.</value>
+    <value>Ø of the probe in mil, all other sizes in mm. Drill Ø: hole for the receptacle in the plate. Height: how far the probe stands out of the plate. Spacing: smallest distance between the centers of two probes of one plate. Clearance: smallest distance from the probe to another component of its side (courtyard). The types are stored in the fixture; Save to library keeps them for new fixtures.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plate margin (mm)</value>
@@ -979,9 +979,6 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Column_PartDiameter" xml:space="preserve">
     <value>Ø (mm)</value>
   </data>
-  <data name="Column_PartLength" xml:space="preserve">
-    <value>Length (mm)</value>
-  </data>
   <data name="Column_PartHeight" xml:space="preserve">
     <value>Height (mm)</value>
   </data>
@@ -992,7 +989,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>Types</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>All sizes in mm. Ø: where it touches the board. Drill Ø: hole in the plate. Length: overall length. Height: how far it stands out of the plate. Clearance: smallest distance from its edge to a component of its side.</value>
+    <value>All sizes in mm. Ø: where it touches the board. Drill Ø: hole in the plate. Height: how far it stands out of the plate. Clearance: smallest distance from its edge to a component of its side.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>New type</value>
@@ -1195,5 +1192,11 @@ bottom</value>
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Default colors</value>
+  </data>
+  <data name="Column_ProbeDiameter" xml:space="preserve">
+    <value>Ø (mil)</value>
+  </data>
+  <data name="Column_Diameter" xml:space="preserve">
+    <value>Ø</value>
   </data>
 </root>

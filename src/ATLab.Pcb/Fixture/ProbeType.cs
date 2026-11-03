@@ -16,8 +16,14 @@ public partial class ProbeType : ObservableObject
     /// <summary>Smallest pad the tip can hit reliably, in mm.</summary>
     [ObservableProperty] private double _minPadSize;
 
+    /// <summary>Diameter of the probe, in mil, as probe data sheets give it.</summary>
+    [ObservableProperty] private double _diameter;
+
     /// <summary>Diameter of the hole in the plate for the receptacle, in mm.</summary>
     [ObservableProperty] private double _drillDiameter;
+
+    /// <summary>How far the probe stands out of the plate towards the board, in mm.</summary>
+    [ObservableProperty] private double _height;
 
     /// <summary>Smallest distance between the centers of two probes, in mm.</summary>
     [ObservableProperty] private double _minSpacing;
@@ -34,7 +40,9 @@ public partial class ProbeType : ObservableObject
         Id = newId ? NewId() : Id,
         Name = Name,
         MinPadSize = MinPadSize,
+        Diameter = Diameter,
         DrillDiameter = DrillDiameter,
+        Height = Height,
         MinSpacing = MinSpacing,
         ComponentClearance = ComponentClearance,
         Note = Note

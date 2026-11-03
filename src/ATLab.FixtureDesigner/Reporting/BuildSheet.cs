@@ -206,7 +206,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             col.Item().EnsureSpace(110).Column(c =>
             {
                 c.Item().Element(x => Section(x, L("Report_Wiring")));
-                c.Item().PaddingTop(6).Text(Localizer.Format("Report_WiringHint", data.Pinout.DutConnector.Reference, data.Pinout.DutConnector.Type))
+                c.Item().PaddingTop(6).Text(L("Report_WiringHint"))
                     .FontColor(Colors.Grey.Darken2);
                 c.Item().PaddingTop(6).Element(ComposeWiringTable);
             });
@@ -409,9 +409,11 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         });
     }
 
-    /// <summary>A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs.</summary>
-    private sealed record BomLine(string Kind, string Type, int Quantity, double? Diameter, double Drill, double? Length, double? Height,
-        string Note);
+    /// <summary>
+    /// A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs. The diameter is
+    /// written with its unit, mil for probes and mm for pins and rods.
+    /// </summary>
+    private sealed record BomLine(string Kind, string Type, int Quantity, string Diameter, double Drill, double Height, string Note);
 
     /// <summary>
     /// The probe types, then the types of the locating, pre-centering and support pins and push rods, each with the
@@ -421,11 +423,13 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     {
         var lines = new List<BomLine>();
         var probe = L("Report_KindProbe");
+        static string Size(double value, string format, string unit) =>
+            value > 0 ? value.ToString(format, CultureInfo.CurrentCulture) + " " + unit : "-";
         foreach (var group in data.Probes.GroupBy(p => p.Type).OrderBy(g => g.Key is null).ThenBy(g => g.Key?.Name, StringComparer.CurrentCulture))
         {
             lines.Add(group.Key is { } type
-                ? new BomLine(probe, type.Name, group.Count(), null, type.DrillDiameter, null, null, type.Note)
-                : new BomLine(probe, L("Report_NoType"), group.Count(), null, 0, null, null, string.Empty));
+                ? new BomLine(probe, type.Name, group.Count(), Size(type.Diameter, "0.#", "mil"), type.DrillDiameter, type.Height, type.Note)
+                : new BomLine(probe, L("Report_NoType"), group.Count(), "-", 0, 0, string.Empty));
         }
 
         foreach (var group in data.Parts.GroupBy(p => (p.Kind, p.Type)).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.Type is null)
@@ -433,8 +437,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         {
             var kind = Localizer.Get(FixturePart.KindKey(group.Key.Kind));
             lines.Add(group.Key.Type is { } type
-                ? new BomLine(kind, type.Name, group.Count(), type.Diameter, type.DrillDiameter, type.Length, type.Height, type.Note)
-                : new BomLine(kind, L("Report_NoType"), group.Count(), null, 0, null, null, string.Empty));
+                ? new BomLine(kind, type.Name, group.Count(), Size(type.Diameter, "0.00", "mm"), type.DrillDiameter, type.Height, type.Note)
+                : new BomLine(kind, L("Report_NoType"), group.Count(), "-", 0, 0, string.Empty));
         }
 
         return lines;
@@ -442,7 +446,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
     private void ComposeBomTable(IContainer container)
     {
-        static string Size(double? value) => value is > 0 ? Mm(value.Value) : "-";
+        static string Size(double value) => value > 0 ? Mm(value) : "-";
 
         container.Table(table =>
         {
@@ -451,9 +455,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(110); // Kind
                 c.ConstantColumn(130); // Type
                 c.ConstantColumn(50);  // Quantity
-                c.ConstantColumn(55);  // Diameter
+                c.ConstantColumn(65);  // Diameter
                 c.ConstantColumn(75);  // Drill
-                c.ConstantColumn(65);  // Length
                 c.ConstantColumn(65);  // Height
                 c.RelativeColumn();    // Note
                 c.ConstantColumn(30);  // Tick
@@ -461,8 +464,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_PartDiameter", "Column_Drill",
-                             "Column_PartLength", "Column_PartHeight", "Column_Note" })
+                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_Diameter", "Column_Drill",
+                             "Column_PartHeight", "Column_Note" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -472,9 +475,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(line.Kind);
                 table.Cell().Element(BodyCell).Text(line.Type).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(line.Quantity.ToString(CultureInfo.CurrentCulture)).SemiBold();
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Diameter));
+                table.Cell().Element(BodyCell).AlignRight().Text(line.Diameter);
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Drill));
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Length));
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Height));
                 table.Cell().Element(BodyCell).Text(line.Note);
                 table.Cell().Element(TickBox);
