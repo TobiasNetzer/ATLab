@@ -87,6 +87,67 @@ public sealed class OutlineShape
         return result;
     }
 
+    /// <summary>
+    /// The closed loop with edges that continue each other joined: arcs on the same circle that turn the same way
+    /// become one arc (drawings often split a round end into two quarter arcs), straight edges on one line one edge.
+    /// So a 3D model gets one face for each, without a seam. A loop keeps at least two vertices, an arc stays short
+    /// of a full circle.
+    /// </summary>
+    public static List<OutlineVertex> Joined(IReadOnlyList<OutlineVertex> loop)
+    {
+        var result = loop.ToList();
+        var changed = true;
+        while (changed && result.Count > 2)
+        {
+            changed = false;
+            for (var i = 0; i < result.Count && result.Count > 2; i++)
+            {
+                // Edge before vertex i (from prev to i) and the edge leaving it (from i to next)
+                var prev = (i - 1 + result.Count) % result.Count;
+                var (a, v, b) = (result[prev], result[i], result[(i + 1) % result.Count]);
+                if (JoinedBulge(a, v, b) is not { } bulge)
+                    continue;
+
+                result[prev] = a with { Bulge = bulge };
+                result.RemoveAt(i);
+                changed = true;
+                i--;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>The bulge of the single edge from a to b, if the edges a→v and v→b continue each other.</summary>
+    private static double? JoinedBulge(OutlineVertex a, OutlineVertex v, OutlineVertex b)
+    {
+        const double tolerance = 1e-4; // mm
+        var firstStraight = Math.Abs(a.Bulge) < 1e-12;
+        var secondStraight = Math.Abs(v.Bulge) < 1e-12;
+
+        if (firstStraight && secondStraight)
+        {
+            // On one line, in the same direction: v is no corner
+            var (ux, uy) = (v.X - a.X, v.Y - a.Y);
+            var (wx, wy) = (b.X - v.X, b.Y - v.Y);
+            var lengths = Math.Sqrt(ux * ux + uy * uy) * Math.Sqrt(wx * wx + wy * wy);
+            return lengths > 0 && Math.Abs(ux * wy - uy * wx) <= 1e-9 * lengths && ux * wx + uy * wy > 0 ? 0 : null;
+        }
+
+        if (firstStraight || secondStraight)
+            return null;
+
+        var (c1x, c1y, r1, _, s1) = ArcGeometry(a, v);
+        var (c2x, c2y, r2, _, s2) = ArcGeometry(v, b);
+        if (r1 <= 0 || r2 <= 0 || Math.Sign(s1) != Math.Sign(s2))
+            return null;
+        if (Math.Abs(c1x - c2x) > tolerance || Math.Abs(c1y - c2y) > tolerance || Math.Abs(r1 - r2) > tolerance)
+            return null;
+
+        var sweep = s1 + s2;
+        return Math.Abs(sweep) < 2 * Math.PI - 1e-3 ? Math.Tan(sweep / 4) : null;
+    }
+
     /// <summary>A closed loop of vertices as points, its arcs in segments of at most 1°.</summary>
     public static List<(double X, double Y)> Flatten(IReadOnlyList<OutlineVertex> vertices)
     {
@@ -313,7 +374,7 @@ public static class OutlineBuilder
         // The closing point is the first one again; its edge is the first vertex's
         if (result.Count > 1 && Near(result[0], result[^1]))
             result.RemoveAt(result.Count - 1);
-        return result;
+        return OutlineShape.Joined(result);
     }
 
     /// <summary>A loop whose points all lie at the same distance from their center is a circle.</summary>

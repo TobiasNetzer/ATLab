@@ -26,8 +26,10 @@ public static class StepWriter
         var faces = new List<int>();
 
         // ----- Block: the outline (counterclockwise) extruded by the thickness, its arcs as cylinder walls -----
-        var (topEdges, bottomEdges) = Walls(w, plate.Contour, z0, z1, outer: true, faces);
-        var n = plate.Contour.Count;
+        // Arcs split in the drawing are joined first, so each round edge is one wall without a seam
+        var contour = OutlineShape.Joined(plate.Contour);
+        var (topEdges, bottomEdges) = Walls(w, contour, z0, z1, outer: true, faces);
+        var n = contour.Count;
 
         // ----- Holes -----
 
@@ -55,7 +57,7 @@ public static class StepWriter
         }
 
         // ----- Cut-outs: a counterclockwise loop each; the material is outside it -----
-        foreach (var cutout in plate.Cutouts.Where(c => OutlineShape.Flatten(c).Count >= 3))
+        foreach (var cutout in plate.Cutouts.Where(c => OutlineShape.Flatten(c).Count >= 3).Select(OutlineShape.Joined))
         {
             var m = cutout.Count;
             var (cTopEdges, cBottomEdges) = Walls(w, cutout, z0, z1, outer: false, faces);
@@ -141,13 +143,14 @@ public static class StepWriter
                 ? w.Loop((bottomEdges[i], true), (verticalEdges[j], true), (topEdges[i], false), (verticalEdges[i], false))
                 : w.Loop((verticalEdges[i], true), (topEdges[i], true), (verticalEdges[j], false), (bottomEdges[i], false));
 
-            var (cx, cy, radius, _, sweep) = OutlineShape.ArcGeometry(a, b);
+            var (cx, cy, radius, start, sweep) = OutlineShape.ArcGeometry(a, b);
             if (radius > 0)
             {
                 // The cylinder's normal points away from its axis. A counterclockwise arc has its center on the left,
                 // inside the loop: the outline's wall faces away from the axis, a cut-out's wall towards it. A clockwise
-                // arc the other way round.
-                var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, z0, (0, 0, 1), (1, 0, 0))},{R(radius)})");
+                // arc the other way round. The seam of the cylinder is put opposite the arc, else CAD programs split
+                // the wall where it crosses the seam (e.g. a slot's end into two quarter circles).
+                var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, z0, (0, 0, 1), AwayFrom(start, sweep))},{R(radius)})");
                 faces.Add(w.SurfaceFace(wallLoop, cylinder, sameSense: sweep > 0 == outer));
                 continue;
             }
@@ -159,6 +162,16 @@ public static class StepWriter
         }
 
         return (topEdges, bottomEdges);
+    }
+
+    /// <summary>
+    /// Reference direction of an arc's circle and cylinder: from the center away from the middle of the arc, so the
+    /// parameter seam at that direction lies outside the arc (any arc short of a full circle).
+    /// </summary>
+    private static (double, double, double) AwayFrom(double start, double sweep)
+    {
+        var opposite = start + sweep / 2 + Math.PI;
+        return (Math.Cos(opposite), Math.Sin(opposite), 0);
     }
 
     public static void Save(Plate plate, double thickness, string name, string path) =>
@@ -225,11 +238,11 @@ public static class StepWriter
         /// </summary>
         public int ContourEdge(int from, int to, OutlineVertex a, OutlineVertex b, double z)
         {
-            var (cx, cy, radius, _, sweep) = OutlineShape.ArcGeometry(a, b);
+            var (cx, cy, radius, start, sweep) = OutlineShape.ArcGeometry(a, b);
             if (radius <= 0)
                 return LineEdge(from, to, (a.X, a.Y), (b.X, b.Y), z, z);
 
-            var circle = Add($"CIRCLE('',{Placement(cx, cy, z, (0, 0, sweep > 0 ? 1 : -1), (1, 0, 0))},{R(radius)})");
+            var circle = Add($"CIRCLE('',{Placement(cx, cy, z, (0, 0, sweep > 0 ? 1 : -1), AwayFrom(start, sweep))},{R(radius)})");
             return Add($"EDGE_CURVE('',{Ref(from)},{Ref(to)},{Ref(circle)},.T.)");
         }
 
