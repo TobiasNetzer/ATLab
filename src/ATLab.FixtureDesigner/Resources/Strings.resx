@@ -514,7 +514,7 @@ Select the board file at its new location.</value>
     <value>External stimulus {0}: line {1} is not wired, so the stimulus has no return path through the fixture.</value>
   </data>
   <data name="Check_StimOneTerminal" xml:space="preserve">
-    <value>STIM {0}: only {1} is on a probe; {2} has to be wired inside the fixture, e.g. to a supply.</value>
+    <value>STIM {0}: only {1} is on a probe; {2} has to be wired inside the fixture.</value>
   </data>
   <data name="Check_BoardChanged" xml:space="preserve">
     <value>The board file changed since the fixture was saved. Positions and nets are taken from the current file; changed probes are listed.</value>

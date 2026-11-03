@@ -312,7 +312,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
     /// <summary>Empty box for ticking off a probe or wire while building.</summary>
     private static void TickBox(IContainer c) =>
-        c.Element(BodyCell).AlignCenter().AlignMiddle().Width(9).Height(9).Border(0.8f).BorderColor(Colors.Grey.Darken2);
+        c.Element(BodyCell).AlignCenter().AlignMiddle().PaddingBottom(3).Width(9).Height(9).Border(0.8f).BorderColor(Colors.Grey.Darken2);
 
     private void ComposeProbeTable(IContainer container)
     {

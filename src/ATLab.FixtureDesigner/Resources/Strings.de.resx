@@ -514,7 +514,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Externer Stimulus {0}: Leitung {1} ist nicht verdrahtet, der Stimulus hat also keinen Rückweg über das Nadelbett.</value>
   </data>
   <data name="Check_StimOneTerminal" xml:space="preserve">
-    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss im Nadelbett verdrahtet werden, z. B. mit einer Versorgung.</value>
+    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss im Nadelbett verdrahtet werden.</value>
   </data>
   <data name="Check_BoardChanged" xml:space="preserve">
     <value>Die Platinendatei hat sich seit dem Speichern geändert. Positionen und Netze stammen aus der aktuellen Datei; geänderte Prüfnadeln sind aufgeführt.</value>
