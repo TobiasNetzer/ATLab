@@ -4,6 +4,7 @@
              xmlns:local="using:ATLab"
              xmlns:converters="clr-namespace:ATLab.Converters"
              xmlns:themes="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:pcb="clr-namespace:ATLab.Pcb.Controls;assembly=ATLab.Pcb"
              RequestedThemeVariant="Dark">
 
     <Application.DataTemplates>
@@ -17,11 +18,23 @@
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="WindowBackground">#FFFAFAFA</Color>
                     <Color x:Key="ButtonBackground">#FFF2F2F2</Color>
+                    <Color x:Key="BoardBackground">#FFF4F4F5</Color>
+                    <Color x:Key="BoardOutline">#FF3F3F46</Color>
+                    <Color x:Key="BoardTopPad">#FFC2410C</Color>
+                    <Color x:Key="BoardBottomPad">#FF2563EB</Color>
+                    <Color x:Key="BoardForeground">#FF27272A</Color>
+                    <Color x:Key="BoardMuted">#FF71717A</Color>
                 </ResourceDictionary>
                 
                 <ResourceDictionary x:Key="Dark">
                     <Color x:Key="WindowBackground">#FF27272A</Color>
                     <Color x:Key="ButtonBackground">#FF353535</Color>
+                    <Color x:Key="BoardBackground">#FF1F1F23</Color>
+                    <Color x:Key="BoardOutline">#FFD4D4D8</Color>
+                    <Color x:Key="BoardTopPad">#FFF59E0B</Color>
+                    <Color x:Key="BoardBottomPad">#FF60A5FA</Color>
+                    <Color x:Key="BoardForeground">#FFE4E4E7</Color>
+                    <Color x:Key="BoardMuted">#FFA1A1AA</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -90,6 +103,17 @@
     <Application.Styles>
         
         <themes:ShadTheme />
+
+        <!-- Board view of the test steps (ATLab.Pcb), colors from the theme -->
+        <Style Selector="pcb|BoardView">
+            <Setter Property="Background" Value="{DynamicResource BoardBackground}"/>
+            <Setter Property="OutlineBrush" Value="{DynamicResource BoardOutline}"/>
+            <Setter Property="TopPadBrush" Value="{DynamicResource BoardTopPad}"/>
+            <Setter Property="BottomPadBrush" Value="{DynamicResource BoardBottomPad}"/>
+            <Setter Property="Foreground" Value="{DynamicResource BoardForeground}"/>
+            <Setter Property="MutedBrush" Value="{DynamicResource BoardMuted}"/>
+            <Setter Property="AccentBrush" Value="{DynamicResource InfoColor}"/>
+        </Style>
         
         <Style Selector="Button.no-effects">
             <Setter Property="Background" Value="Transparent"/>

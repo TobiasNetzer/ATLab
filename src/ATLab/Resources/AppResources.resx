@@ -814,6 +814,12 @@
   <data name="ButtonLabel_Continue" xml:space="preserve">
     <value>Continue</value>
   </data>
+  <data name="ButtonLabel_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ButtonLabel_DontSave" xml:space="preserve">
+    <value>Don't save</value>
+  </data>
   <data name="ButtonLabel_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -830,7 +836,7 @@
     <value>Unsaved Changes</value>
   </data>
   <data name="Text_UnsavedChanges" xml:space="preserve">
-    <value>You have unsaved changes. Continue without saving?</value>
+    <value>The project has unsaved changes. Save them?</value>
   </data>
   <data name="Title_DeleteScript" xml:space="preserve">
     <value>Delete Script</value>
@@ -1450,5 +1456,326 @@ Devices that are found again keep their settings. All other devices are removed 
   </data>
   <data name="Label_TotalFailedSteps" xml:space="preserve">
     <value>Failed Steps (All Loops)</value>
+  </data>
+  <data name="Board_TopView" xml:space="preserve">
+    <value>Top view</value>
+  </data>
+  <data name="Board_BottomView" xml:space="preserve">
+    <value>Bottom view (mirrored, as seen from below)</value>
+  </data>
+  <data name="Board_TopPads" xml:space="preserve">
+    <value>Top pads</value>
+  </data>
+  <data name="Board_BottomPads" xml:space="preserve">
+    <value>Bottom pads</value>
+  </data>
+  <data name="Board_NoNet" xml:space="preserve">
+    <value>no net</value>
+  </data>
+  <data name="Board_SideTop" xml:space="preserve">
+    <value>top</value>
+  </data>
+  <data name="Board_SideBottom" xml:space="preserve">
+    <value>bottom</value>
+  </data>
+  <data name="Board_HoleInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm</value>
+  </data>
+  <data name="Board_LocatingPinInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm · locating pin {2}</value>
+  </data>
+  <data name="Board_Hint" xml:space="preserve">
+    <value>Wheel: zoom · Drag: pan · Double-click or F: whole board</value>
+  </data>
+  <data name="Board_HintViewer" xml:space="preserve">
+    <value>Wheel: zoom · Drag: pan · Click: select pad and its net · Double-click or F: whole board</value>
+  </data>
+  <data name="ToolTip_ShowBoardView" xml:space="preserve">
+    <value>Show board view</value>
+  </data>
+  <data name="Board_ViewTop" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Board_ViewBottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="ToolTip_BoardViewBottom" xml:space="preserve">
+    <value>View from below</value>
+  </data>
+  <data name="Board_Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Label_NetNamesAsChannelLabels" xml:space="preserve">
+    <value>Use net names as channel labels</value>
+  </data>
+  <data name="ToolTip_NetNamesAsChannelLabels" xml:space="preserve">
+    <value>Label channels with their nets</value>
+  </data>
+  <data name="Board_RoleHigh" xml:space="preserve">
+    <value>MEAS H</value>
+  </data>
+  <data name="Board_RoleLow" xml:space="preserve">
+    <value>MEAS L</value>
+  </data>
+  <data name="Board_RoleStimulus" xml:space="preserve">
+    <value>STIM</value>
+  </data>
+  <data name="Board_RoleExternalStimulus" xml:space="preserve">
+    <value>EXT STIM</value>
+  </data>
+  <data name="Board_RoleInterface" xml:space="preserve">
+    <value>Interface</value>
+  </data>
+  <data name="Board_RoleBoundaryScan" xml:space="preserve">
+    <value>Boundary Scan</value>
+  </data>
+  <data name="Board_RoleFailed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Board_RoleDefaultColor" xml:space="preserve">
+    <value>Default color</value>
+  </data>
+  <data name="ToolTip_BoardRoleToggle" xml:space="preserve">
+    <value>Show or hide</value>
+  </data>
+  <data name="ToolTip_BoardRoleColor" xml:space="preserve">
+    <value>Choose color</value>
+  </data>
+  <data name="Button_ReportBoardLayers" xml:space="preserve">
+    <value>Board layers…</value>
+  </data>
+  <data name="ToolTip_ReportBoardLayers" xml:space="preserve">
+    <value>Choose report layers</value>
+  </data>
+  <data name="Header_ReportBoardLayers" xml:space="preserve">
+    <value>Layers in the report</value>
+  </data>
+  <data name="Text_ReportBoardLayers" xml:space="preserve">
+    <value>The top of the list is drawn on top. Layers of the other side are dashed.</value>
+  </data>
+  <data name="ToolTip_ReportLayerOpacity" xml:space="preserve">
+    <value>Layer opacity</value>
+  </data>
+  <data name="Button_DefaultLayerOrder" xml:space="preserve">
+    <value>Default order</value>
+  </data>
+  <data name="ToolTip_LayerUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="ToolTip_LayerDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="Button_DefaultLayerStyle" xml:space="preserve">
+    <value>Default style</value>
+  </data>
+  <data name="Label_ReportBoardSide" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="ReportSide_Automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="ReportSide_Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="ReportSide_Bottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="ToolTip_ReportSideAutomatic" xml:space="preserve">
+    <value>Side with most of the step</value>
+  </data>
+  <data name="Board_Zones" xml:space="preserve">
+    <value>Planes</value>
+  </data>
+  <data name="ToolTip_BoardZones" xml:space="preserve">
+    <value>Highlight planes</value>
+  </data>
+  <data name="ToolTip_BoardCoverage" xml:space="preserve">
+    <value>Show test coverage</value>
+  </data>
+  <data name="Board_CoverageTitle" xml:space="preserve">
+    <value>Coverage: {2} % ({0} of {1} nets are reached by a step)</value>
+  </data>
+  <data name="ToolTip_BoardFit" xml:space="preserve">
+    <value>Fit board</value>
+  </data>
+  <data name="ToolTip_BoardLayers" xml:space="preserve">
+    <value>Choose layers</value>
+  </data>
+  <data name="Board_AllLayers" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <data name="Board_NoLayers" xml:space="preserve">
+    <value>Hide all</value>
+  </data>
+  <data name="Board_LayerHoles" xml:space="preserve">
+    <value>Holes</value>
+  </data>
+  <data name="Board_NoNetAssigned" xml:space="preserve">
+    <value>no net assigned</value>
+  </data>
+  <data name="Board_ExternalProbe" xml:space="preserve">
+    <value>External probe</value>
+  </data>
+  <data name="Board_ScanPins" xml:space="preserve">
+    <value>{0} pins</value>
+  </data>
+  <data name="Board_NoConnection" xml:space="preserve">
+    <value>no connection to the board</value>
+  </data>
+  <data name="Board_NoBoard" xml:space="preserve">
+    <value>The project has no board. Choose the KiCad board in the Configuration tab (Board and nets).</value>
+  </data>
+  <data name="Board_Loading" xml:space="preserve">
+    <value>Reading the board…</value>
+  </data>
+  <data name="Board_LoadFailed" xml:space="preserve">
+    <value>The board could not be read: {0}</value>
+  </data>
+  <data name="Board_ErrorNotFound" xml:space="preserve">
+    <value>file not found</value>
+  </data>
+  <data name="Board_ErrorTooOld" xml:space="preserve">
+    <value>the file was saved by KiCad 5 or older; save it again in a current KiCad version</value>
+  </data>
+  <data name="Board_ChangedNotice" xml:space="preserve">
+    <value>The board file changed since the nets were assigned. Check the nets of the test hardware pins.</value>
+  </data>
+  <data name="Board_AcceptChange" xml:space="preserve">
+    <value>Nets checked</value>
+  </data>
+  <data name="ToolTip_BoardAcceptChange" xml:space="preserve">
+    <value>Accept current board file</value>
+  </data>
+  <data name="Log_BoardChanged" xml:space="preserve">
+    <value>The board file {0} changed since the nets of the test hardware pins were assigned.</value>
+  </data>
+  <data name="Log_BoardNotLoaded" xml:space="preserve">
+    <value>Board not loaded:</value>
+  </data>
+  <data name="Header_BoardLink" xml:space="preserve">
+    <value>Board and Nets</value>
+  </data>
+  <data name="Label_BoardFile" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="BoardLink_NoBoardWatermark" xml:space="preserve">
+    <value>KiCad board (.kicad_pcb), optional</value>
+  </data>
+  <data name="ToolTip_BoardLinkBrowse" xml:space="preserve">
+    <value>Choose board file</value>
+  </data>
+  <data name="ToolTip_BoardLinkReload" xml:space="preserve">
+    <value>Reload board file</value>
+  </data>
+  <data name="ToolTip_BoardLinkRemove" xml:space="preserve">
+    <value>Remove board file</value>
+  </data>
+  <data name="BoardLink_SelectBoard" xml:space="preserve">
+    <value>Select KiCad board</value>
+  </data>
+  <data name="BoardLink_NoBoard" xml:space="preserve">
+    <value>No board: the board view stays empty. The nets can be assigned anyway.</value>
+  </data>
+  <data name="BoardLink_Loaded" xml:space="preserve">
+    <value>{0} · {1} footprints · {2} nets</value>
+  </data>
+  <data name="BoardLink_Import" xml:space="preserve">
+    <value>Import fixture…</value>
+  </data>
+  <data name="ToolTip_BoardLinkImport" xml:space="preserve">
+    <value>Import fixture</value>
+  </data>
+  <data name="BoardLink_SelectFixture" xml:space="preserve">
+    <value>Select fixture</value>
+  </data>
+  <data name="BoardLink_ImportFailed" xml:space="preserve">
+    <value>Fixture could not be imported</value>
+  </data>
+  <data name="BoardLink_NotAFixture" xml:space="preserve">
+    <value>The file is not a fixture of ATLab Fixture Designer, or it was saved by a newer version.</value>
+  </data>
+  <data name="BoardLink_LabelsTitle" xml:space="preserve">
+    <value>Channel labels</value>
+  </data>
+  <data name="BoardLink_LabelsMessage" xml:space="preserve">
+    <value>Also use the nets as channel labels? Channels without a net keep their label.</value>
+  </data>
+  <data name="BoardLink_Imported" xml:space="preserve">
+    <value>Fixture {0} imported: {1} pins with nets.</value>
+  </data>
+  <data name="BoardLink_ClearNets" xml:space="preserve">
+    <value>Clear nets</value>
+  </data>
+  <data name="BoardLink_ClearTitle" xml:space="preserve">
+    <value>Clear nets</value>
+  </data>
+  <data name="BoardLink_ClearMessage" xml:space="preserve">
+    <value>Remove the nets and probes of all test hardware pins?</value>
+  </data>
+  <data name="BoardLink_AssignedOnly" xml:space="preserve">
+    <value>Assigned only</value>
+  </data>
+  <data name="BoardLink_Assigned" xml:space="preserve">
+    <value>{0} of {1} pins with net</value>
+  </data>
+  <data name="BoardLink_NetWatermark" xml:space="preserve">
+    <value>Net</value>
+  </data>
+  <data name="Header_Net" xml:space="preserve">
+    <value>Net</value>
+  </data>
+  <data name="Header_Probes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Label_FootprintReference" xml:space="preserve">
+    <value>Footprint on the board</value>
+  </data>
+  <data name="Placeholder_FootprintReference" xml:space="preserve">
+    <value>e.g. U3</value>
+  </data>
+  <data name="ToolTip_FootprintReference" xml:space="preserve">
+    <value>Footprint reference on the board</value>
+  </data>
+  <data name="Label_IncludeBoardViewInReport" xml:space="preserve">
+    <value>Show failed steps on the board</value>
+  </data>
+  <data name="ToolTip_IncludeBoardViewInReport" xml:space="preserve">
+    <value>Add board pictures of failed steps</value>
+  </data>
+  <data name="ReportLabel_BoardViews" xml:space="preserve">
+    <value>Failed Steps on the Board</value>
+  </data>
+  <data name="ReportLabel_BoardTop" xml:space="preserve">
+    <value>Top view</value>
+  </data>
+  <data name="ReportLabel_BoardBottom" xml:space="preserve">
+    <value>Bottom view (mirrored)</value>
+  </data>
+  <data name="ToolTip_ReportLayerTop" xml:space="preserve">
+    <value>Drawn when the picture shows the top side</value>
+  </data>
+  <data name="ToolTip_ReportLayerBottom" xml:space="preserve">
+    <value>Drawn when the picture shows the bottom side</value>
+  </data>
+  <data name="Board_LayerTopPads" xml:space="preserve">
+    <value>Top pads</value>
+  </data>
+  <data name="Board_LayerBottomPads" xml:space="preserve">
+    <value>Bottom pads</value>
+  </data>
+  <data name="Button_SaveLayersAsDefault" xml:space="preserve">
+    <value>Save as default</value>
+  </data>
+  <data name="ToolTip_SaveLayersAsDefault" xml:space="preserve">
+    <value>Use these layers for new projects and projects without a choice</value>
+  </data>
+  <data name="Button_LoadLayersDefault" xml:space="preserve">
+    <value>Load default</value>
+  </data>
+  <data name="ToolTip_LoadLayersDefault" xml:space="preserve">
+    <value>Take over the layers saved as default</value>
+  </data>
+  <data name="Button_DefaultLayerColors" xml:space="preserve">
+    <value>Default colors</value>
   </data>
 </root>

@@ -4,12 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.Records;
 using ATLab.Reporting;
 using ATLab.ViewModels;
 using Avalonia.Platform.Storage;
+using ATLab.Pcb.Kicad;
+using ATLab.Pcb.Controls;
+using ATLab.Pcb.Rendering;
 using QuestPDF.Fluent;
 
 namespace ATLab.Services;
@@ -25,6 +29,11 @@ public class PdfExportService : IPdfExportService
     private readonly ApplicationState _applicationState;
     private readonly IDeviceIdentificationService _deviceIdentificationService;
     private readonly ProjectModel _projectModel;
+    private readonly BoardService _boardService;
+    private readonly ISettingsService _settingsService;
+
+    /// <summary>More drawings would make the report long without helping the repair.</summary>
+    private const int MaxBoardViews = 10;
 
     public PdfExportService(
         IFileDialogService fileDialogService,
@@ -32,8 +41,12 @@ public class PdfExportService : IPdfExportService
         IHardwareAccessor hardwareAccessor,
         ApplicationState applicationState,
         IDeviceIdentificationService deviceIdentificationService,
-        ProjectModel projectModel)
+        ProjectModel projectModel,
+        BoardService boardService,
+        ISettingsService settingsService)
     {
+        _boardService = boardService;
+        _settingsService = settingsService;
         _fileDialogService = fileDialogService;
         _loggingService = loggingService;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
@@ -124,8 +137,42 @@ public class PdfExportService : IPdfExportService
             testInfo,
             _hardwareInfo,
             _applicationState.IsSimulationMode,
-            testEquipment.ToList());
+            testEquipment.ToList(),
+            CreateBoardViews(stepList));
 
         return document.GeneratePdf();
+    }
+
+    /// <summary>Drawings of the failed steps on the board, if the project asks for them and has a board.</summary>
+    private List<ReportBoardView> CreateBoardViews(IEnumerable<TestStepViewModel> steps)
+    {
+        if (!_projectModel.Settings.IsIncludeBoardViewInReport || _boardService.Board is not { } board)
+            return [];
+
+        var views = new List<ReportBoardView>();
+        foreach (var step in steps.Where(s => !s.IsPassed))
+        {
+            var highlight = _boardService.GetHighlight(step.TestStep);
+            if (highlight.IsEmpty)
+                continue;
+
+            var side = _projectModel.Settings.ReportBoardSide switch
+            {
+                ReportBoardSide.Top => BoardSide.Top,
+                ReportBoardSide.Bottom => BoardSide.Bottom,
+                _ => BoardSvgRenderer.BestSide(board, highlight.Nets, highlight.Pads)
+            };
+            // Each side has layers of its own; what the project leaves open comes from the user's default, else the
+            // pads of the side
+            var style = _projectModel.Settings.ReportLayers().Over(_settingsService.Settings.DefaultReportLayers)
+                .StyleFor(side == BoardSide.Top ? ProjectSettings.TopView : ProjectSettings.BottomView, [LayerColors.PadsOf(side)]);
+            var svg = BoardSvgRenderer.Render(board, side, highlight.Nets, highlight.Pads, highlight.Footprints, highlight.Probes,
+                _settingsService.Settings.IsBoardHighlightZones, style.Layers, style.Opacity, style.Stack, style.Colors);
+            views.Add(new ReportBoardView(step.TestStep.Number, step.TestStep.Name, highlight.Legend, svg, side == BoardSide.Bottom));
+            if (views.Count == MaxBoardViews)
+                break;
+        }
+
+        return views;
     }
 }

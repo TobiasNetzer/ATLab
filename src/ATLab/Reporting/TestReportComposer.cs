@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -31,6 +31,9 @@ public class TestReportComposer
     private readonly IHardwareInfo _hardwareInfo;
     private readonly List<DeviceIdentification> _deviceIdentification;
 
+    // Drawings of the board with the nets of the failed steps, if the project asks for them
+    private readonly IReadOnlyList<ReportBoardView> _boardViews;
+
     // Simulated runs have no real test hardware to list in the report
     private readonly bool _isSimulation;
     
@@ -56,8 +59,10 @@ public class TestReportComposer
     private static readonly byte[] FailIcon =
         LoadResource("ATLab.Assets.Fail.png");
 
-    public TestReportComposer(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo info, IHardwareInfo hardwareInfo, bool isSimulation, List<DeviceIdentification> deviceIdentification)
+    public TestReportComposer(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo info, IHardwareInfo hardwareInfo, bool isSimulation, List<DeviceIdentification> deviceIdentification,
+        IReadOnlyList<ReportBoardView>? boardViews = null)
     {
+        _boardViews = boardViews ?? [];
         _testResults = testResults;
         _failedExcludedSteps = failedExcludedSteps;
         _info = info;
@@ -113,6 +118,12 @@ public class TestReportComposer
             if (!_isSimulation || _deviceIdentification.Count > 0)
             {
                 col.Item().Element(ComposeEquipmentSection);
+            }
+
+            if (_boardViews.Count > 0)
+            {
+                col.Item().PageBreak();
+                col.Item().Element(ComposeBoardViews);
             }
             
         });
@@ -367,6 +378,55 @@ public class TestReportComposer
             c.PaddingTop(8).Padding(4).BorderBottom(1).BorderColor(Colors.Grey.Darken1);
     }
     
+    /// <summary>Every failed step on the board: its nets in the colors of their roles, with the legend.</summary>
+    private void ComposeBoardViews(IContainer container)
+    {
+        container.Column(col =>
+        {
+            col.Spacing(12);
+
+            col.Item().Text(LocalizationService.Instance["ReportLabel_BoardViews"])
+                .FontSize(16)
+                .SemiBold()
+                .FontColor(Colors.Black);
+            col.Item().BorderBottom(2).BorderColor(Colors.Grey.Darken1);
+
+            foreach (var view in _boardViews)
+            {
+                col.Item().ShowEntire().Column(item =>
+                {
+                    item.Spacing(4);
+                    item.Item().Text($"{view.StepNumber} · {view.StepName}").SemiBold().FontColor(Colors.Red.Darken2);
+                    // Color dots are drawn, the report font has no symbol for them
+                    item.Item().Inlined(legend =>
+                    {
+                        legend.Spacing(12);
+                        legend.VerticalSpacing(3);
+                        foreach (var entry in view.Legend)
+                        {
+                            legend.Item().Row(r =>
+                            {
+                                r.ConstantItem(7).AlignMiddle().Height(7)
+                                    .Background($"#{entry.Color.R:X2}{entry.Color.G:X2}{entry.Color.B:X2}").CornerRadius(3.5f);
+                                r.ConstantItem(4);
+                                r.AutoItem().Text(text =>
+                                {
+                                    text.DefaultTextStyle(t => t.FontSize(9));
+                                    text.Span($"{entry.Role} ").SemiBold();
+                                    text.Span($"{entry.Resource} ");
+                                    text.Span(entry.Net.Length > 0 ? entry.Net : LocalizationService.Instance["Board_NoNetAssigned"]);
+                                });
+                            });
+                        }
+                        legend.Item().Text(LocalizationService.Instance[view.IsBottom ? "ReportLabel_BoardBottom" : "ReportLabel_BoardTop"])
+                            .FontSize(9).FontColor(Colors.Grey.Darken1);
+                    });
+                    item.Item().Height(300).AlignCenter().Svg(view.Svg).FitArea();
+                });
+            }
+        });
+    }
+
     private void ComposeEquipmentSection(IContainer container)
     {
         container.Padding(5).Column(col =>

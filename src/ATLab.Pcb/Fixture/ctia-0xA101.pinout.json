@@ -1,0 +1,822 @@
+{
+  "formatId": "atlab-test-hardware-pinout",
+  "formatVersion": 1,
+  "testHardware": {
+    "name": "compact Test Interface Adapter",
+    "deviceId": "0xA101",
+    "measChannels": 32,
+    "stimChannels": 16,
+    "extStimChannels": 4,
+    "source": "cTIA.kicad_pcb (KiCad 10)"
+  },
+  "connectors": [
+    {
+      "reference": "J101",
+      "name": "DUT connector",
+      "type": "DIN 41612 3x32 female",
+      "side": "Fixture",
+      "pins": [
+        {
+          "pin": "a1",
+          "signal": "SENSE_H",
+          "kind": "Sense",
+          "polarity": "H"
+        },
+        {
+          "pin": "a2",
+          "signal": "SENSE_L",
+          "kind": "Sense",
+          "polarity": "L"
+        },
+        {
+          "pin": "a3",
+          "signal": "EXT_STIM_OUT_H_1",
+          "kind": "ExtStim",
+          "channel": 1,
+          "terminal": "Out",
+          "polarity": "H"
+        },
+        {
+          "pin": "a4",
+          "signal": "EXT_STIM_OUT_L_1",
+          "kind": "ExtStim",
+          "channel": 1,
+          "terminal": "Out",
+          "polarity": "L"
+        },
+        {
+          "pin": "a5",
+          "signal": "EXT_STIM_OUT_H_2",
+          "kind": "ExtStim",
+          "channel": 2,
+          "terminal": "Out",
+          "polarity": "H"
+        },
+        {
+          "pin": "a6",
+          "signal": "EXT_STIM_OUT_L_2",
+          "kind": "ExtStim",
+          "channel": 2,
+          "terminal": "Out",
+          "polarity": "L"
+        },
+        {
+          "pin": "a7",
+          "signal": "EXT_STIM_OUT_H_3",
+          "kind": "ExtStim",
+          "channel": 3,
+          "terminal": "Out",
+          "polarity": "H"
+        },
+        {
+          "pin": "a8",
+          "signal": "EXT_STIM_OUT_L_3",
+          "kind": "ExtStim",
+          "channel": 3,
+          "terminal": "Out",
+          "polarity": "L"
+        },
+        {
+          "pin": "a9",
+          "signal": "EXT_STIM_OUT_H_4",
+          "kind": "ExtStim",
+          "channel": 4,
+          "terminal": "Out",
+          "polarity": "H"
+        },
+        {
+          "pin": "a10",
+          "signal": "EXT_STIM_OUT_L_4",
+          "kind": "ExtStim",
+          "channel": 4,
+          "terminal": "Out",
+          "polarity": "L"
+        },
+        {
+          "pin": "a11",
+          "signal": "EXT_IO_1",
+          "kind": "ProgPassThrough",
+          "line": 1
+        },
+        {
+          "pin": "a12",
+          "signal": "EXT_IO_2",
+          "kind": "ProgPassThrough",
+          "line": 2
+        },
+        {
+          "pin": "a13",
+          "signal": "EXT_IO_3",
+          "kind": "ProgPassThrough",
+          "line": 3
+        },
+        {
+          "pin": "a14",
+          "signal": "EXT_IO_4",
+          "kind": "ProgPassThrough",
+          "line": 4
+        },
+        {
+          "pin": "a15",
+          "signal": "EXT_IO_5",
+          "kind": "ProgPassThrough",
+          "line": 5
+        },
+        {
+          "pin": "a16",
+          "signal": "EXT_IO_6",
+          "kind": "ProgPassThrough",
+          "line": 6
+        },
+        {
+          "pin": "a17",
+          "signal": "EXT_IO_7",
+          "kind": "ProgPassThrough",
+          "line": 7
+        },
+        {
+          "pin": "a18",
+          "signal": "EXT_IO_8",
+          "kind": "ProgPassThrough",
+          "line": 8
+        },
+        {
+          "pin": "a19",
+          "signal": "EXT_IO_9",
+          "kind": "ProgPassThrough",
+          "line": 9
+        },
+        {
+          "pin": "a20",
+          "signal": "EXT_IO_10",
+          "kind": "ProgPassThrough",
+          "line": 10
+        },
+        {
+          "pin": "a21",
+          "signal": "RS485_A",
+          "kind": "Interface",
+          "interface": "RS485",
+          "role": "A"
+        },
+        {
+          "pin": "a22",
+          "signal": "RS485_B",
+          "kind": "Interface",
+          "interface": "RS485",
+          "role": "B"
+        },
+        {
+          "pin": "a23",
+          "signal": "RS485_VREF",
+          "kind": "Interface",
+          "interface": "RS485",
+          "role": "VREF"
+        },
+        {
+          "pin": "a24",
+          "signal": "RS485_GND",
+          "kind": "Interface",
+          "interface": "RS485",
+          "role": "GND"
+        },
+        {
+          "pin": "a25",
+          "signal": "I2C_SCL",
+          "kind": "Interface",
+          "interface": "I2C",
+          "role": "SCL"
+        },
+        {
+          "pin": "a26",
+          "signal": "I2C_SDA",
+          "kind": "Interface",
+          "interface": "I2C",
+          "role": "SDA"
+        },
+        {
+          "pin": "a27",
+          "signal": "I2C_VREF",
+          "kind": "Interface",
+          "interface": "I2C",
+          "role": "VREF"
+        },
+        {
+          "pin": "a28",
+          "signal": "I2C_GND",
+          "kind": "Interface",
+          "interface": "I2C",
+          "role": "GND"
+        },
+        {
+          "pin": "a29",
+          "signal": "UART_RXD",
+          "kind": "Interface",
+          "interface": "UART",
+          "role": "RXD"
+        },
+        {
+          "pin": "a30",
+          "signal": "UART_TXD",
+          "kind": "Interface",
+          "interface": "UART",
+          "role": "TXD"
+        },
+        {
+          "pin": "a31",
+          "signal": "UART_VREF",
+          "kind": "Interface",
+          "interface": "UART",
+          "role": "VREF"
+        },
+        {
+          "pin": "a32",
+          "signal": "UART_GND",
+          "kind": "Interface",
+          "interface": "UART",
+          "role": "GND"
+        },
+        {
+          "pin": "b1",
+          "signal": "STIM_CH_IN_1",
+          "kind": "Stim",
+          "channel": 1,
+          "terminal": "In"
+        },
+        {
+          "pin": "b2",
+          "signal": "STIM_CH_OUT_1",
+          "kind": "Stim",
+          "channel": 1,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b3",
+          "signal": "STIM_CH_IN_2",
+          "kind": "Stim",
+          "channel": 2,
+          "terminal": "In"
+        },
+        {
+          "pin": "b4",
+          "signal": "STIM_CH_OUT_2",
+          "kind": "Stim",
+          "channel": 2,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b5",
+          "signal": "STIM_CH_IN_3",
+          "kind": "Stim",
+          "channel": 3,
+          "terminal": "In"
+        },
+        {
+          "pin": "b6",
+          "signal": "STIM_CH_OUT_3",
+          "kind": "Stim",
+          "channel": 3,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b7",
+          "signal": "STIM_CH_IN_4",
+          "kind": "Stim",
+          "channel": 4,
+          "terminal": "In"
+        },
+        {
+          "pin": "b8",
+          "signal": "STIM_CH_OUT_4",
+          "kind": "Stim",
+          "channel": 4,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b9",
+          "signal": "STIM_CH_IN_5",
+          "kind": "Stim",
+          "channel": 5,
+          "terminal": "In"
+        },
+        {
+          "pin": "b10",
+          "signal": "STIM_CH_OUT_5",
+          "kind": "Stim",
+          "channel": 5,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b11",
+          "signal": "STIM_CH_IN_6",
+          "kind": "Stim",
+          "channel": 6,
+          "terminal": "In"
+        },
+        {
+          "pin": "b12",
+          "signal": "STIM_CH_OUT_6",
+          "kind": "Stim",
+          "channel": 6,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b13",
+          "signal": "STIM_CH_IN_7",
+          "kind": "Stim",
+          "channel": 7,
+          "terminal": "In"
+        },
+        {
+          "pin": "b14",
+          "signal": "STIM_CH_OUT_7",
+          "kind": "Stim",
+          "channel": 7,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b15",
+          "signal": "STIM_CH_IN_8",
+          "kind": "Stim",
+          "channel": 8,
+          "terminal": "In"
+        },
+        {
+          "pin": "b16",
+          "signal": "STIM_CH_OUT_8",
+          "kind": "Stim",
+          "channel": 8,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b17",
+          "signal": "STIM_CH_IN_9",
+          "kind": "Stim",
+          "channel": 9,
+          "terminal": "In"
+        },
+        {
+          "pin": "b18",
+          "signal": "STIM_CH_OUT_9",
+          "kind": "Stim",
+          "channel": 9,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b19",
+          "signal": "STIM_CH_IN_10",
+          "kind": "Stim",
+          "channel": 10,
+          "terminal": "In"
+        },
+        {
+          "pin": "b20",
+          "signal": "STIM_CH_OUT_10",
+          "kind": "Stim",
+          "channel": 10,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b21",
+          "signal": "STIM_CH_IN_11",
+          "kind": "Stim",
+          "channel": 11,
+          "terminal": "In"
+        },
+        {
+          "pin": "b22",
+          "signal": "STIM_CH_OUT_11",
+          "kind": "Stim",
+          "channel": 11,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b23",
+          "signal": "STIM_CH_IN_12",
+          "kind": "Stim",
+          "channel": 12,
+          "terminal": "In"
+        },
+        {
+          "pin": "b24",
+          "signal": "STIM_CH_OUT_12",
+          "kind": "Stim",
+          "channel": 12,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b25",
+          "signal": "STIM_CH_IN_13",
+          "kind": "Stim",
+          "channel": 13,
+          "terminal": "In"
+        },
+        {
+          "pin": "b26",
+          "signal": "STIM_CH_OUT_13",
+          "kind": "Stim",
+          "channel": 13,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b27",
+          "signal": "STIM_CH_IN_14",
+          "kind": "Stim",
+          "channel": 14,
+          "terminal": "In"
+        },
+        {
+          "pin": "b28",
+          "signal": "STIM_CH_OUT_14",
+          "kind": "Stim",
+          "channel": 14,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b29",
+          "signal": "STIM_CH_IN_15",
+          "kind": "Stim",
+          "channel": 15,
+          "terminal": "In"
+        },
+        {
+          "pin": "b30",
+          "signal": "STIM_CH_OUT_15",
+          "kind": "Stim",
+          "channel": 15,
+          "terminal": "Out"
+        },
+        {
+          "pin": "b31",
+          "signal": "STIM_CH_IN_16",
+          "kind": "Stim",
+          "channel": 16,
+          "terminal": "In"
+        },
+        {
+          "pin": "b32",
+          "signal": "STIM_CH_OUT_16",
+          "kind": "Stim",
+          "channel": 16,
+          "terminal": "Out"
+        },
+        {
+          "pin": "c1",
+          "signal": "MEAS_CH_1",
+          "kind": "Meas",
+          "channel": 1
+        },
+        {
+          "pin": "c2",
+          "signal": "MEAS_CH_2",
+          "kind": "Meas",
+          "channel": 2
+        },
+        {
+          "pin": "c3",
+          "signal": "MEAS_CH_3",
+          "kind": "Meas",
+          "channel": 3
+        },
+        {
+          "pin": "c4",
+          "signal": "MEAS_CH_4",
+          "kind": "Meas",
+          "channel": 4
+        },
+        {
+          "pin": "c5",
+          "signal": "MEAS_CH_5",
+          "kind": "Meas",
+          "channel": 5
+        },
+        {
+          "pin": "c6",
+          "signal": "MEAS_CH_6",
+          "kind": "Meas",
+          "channel": 6
+        },
+        {
+          "pin": "c7",
+          "signal": "MEAS_CH_7",
+          "kind": "Meas",
+          "channel": 7
+        },
+        {
+          "pin": "c8",
+          "signal": "MEAS_CH_8",
+          "kind": "Meas",
+          "channel": 8
+        },
+        {
+          "pin": "c9",
+          "signal": "MEAS_CH_9",
+          "kind": "Meas",
+          "channel": 9
+        },
+        {
+          "pin": "c10",
+          "signal": "MEAS_CH_10",
+          "kind": "Meas",
+          "channel": 10
+        },
+        {
+          "pin": "c11",
+          "signal": "MEAS_CH_11",
+          "kind": "Meas",
+          "channel": 11
+        },
+        {
+          "pin": "c12",
+          "signal": "MEAS_CH_12",
+          "kind": "Meas",
+          "channel": 12
+        },
+        {
+          "pin": "c13",
+          "signal": "MEAS_CH_13",
+          "kind": "Meas",
+          "channel": 13
+        },
+        {
+          "pin": "c14",
+          "signal": "MEAS_CH_14",
+          "kind": "Meas",
+          "channel": 14
+        },
+        {
+          "pin": "c15",
+          "signal": "MEAS_CH_15",
+          "kind": "Meas",
+          "channel": 15
+        },
+        {
+          "pin": "c16",
+          "signal": "MEAS_CH_16",
+          "kind": "Meas",
+          "channel": 16
+        },
+        {
+          "pin": "c17",
+          "signal": "MEAS_CH_17",
+          "kind": "Meas",
+          "channel": 17
+        },
+        {
+          "pin": "c18",
+          "signal": "MEAS_CH_18",
+          "kind": "Meas",
+          "channel": 18
+        },
+        {
+          "pin": "c19",
+          "signal": "MEAS_CH_19",
+          "kind": "Meas",
+          "channel": 19
+        },
+        {
+          "pin": "c20",
+          "signal": "MEAS_CH_20",
+          "kind": "Meas",
+          "channel": 20
+        },
+        {
+          "pin": "c21",
+          "signal": "MEAS_CH_21",
+          "kind": "Meas",
+          "channel": 21
+        },
+        {
+          "pin": "c22",
+          "signal": "MEAS_CH_22",
+          "kind": "Meas",
+          "channel": 22
+        },
+        {
+          "pin": "c23",
+          "signal": "MEAS_CH_23",
+          "kind": "Meas",
+          "channel": 23
+        },
+        {
+          "pin": "c24",
+          "signal": "MEAS_CH_24",
+          "kind": "Meas",
+          "channel": 24
+        },
+        {
+          "pin": "c25",
+          "signal": "MEAS_CH_25",
+          "kind": "Meas",
+          "channel": 25
+        },
+        {
+          "pin": "c26",
+          "signal": "MEAS_CH_26",
+          "kind": "Meas",
+          "channel": 26
+        },
+        {
+          "pin": "c27",
+          "signal": "MEAS_CH_27",
+          "kind": "Meas",
+          "channel": 27
+        },
+        {
+          "pin": "c28",
+          "signal": "MEAS_CH_28",
+          "kind": "Meas",
+          "channel": 28
+        },
+        {
+          "pin": "c29",
+          "signal": "MEAS_CH_29",
+          "kind": "Meas",
+          "channel": 29
+        },
+        {
+          "pin": "c30",
+          "signal": "MEAS_CH_30",
+          "kind": "Meas",
+          "channel": 30
+        },
+        {
+          "pin": "c31",
+          "signal": "MEAS_CH_31",
+          "kind": "Meas",
+          "channel": 31
+        },
+        {
+          "pin": "c32",
+          "signal": "MEAS_CH_32",
+          "kind": "Meas",
+          "channel": 32
+        }
+      ]
+    },
+    {
+      "reference": "J102",
+      "name": "Interface connector",
+      "type": "Phoenix MC 1,5/12 3.5 mm",
+      "side": "Instruments",
+      "pins": [
+        {
+          "pin": "1",
+          "signal": "DMM_ANALOG_BUS_H",
+          "kind": "MeasBus",
+          "polarity": "H"
+        },
+        {
+          "pin": "2",
+          "signal": "DMM_ANALOG_BUS_L",
+          "kind": "MeasBus",
+          "polarity": "L"
+        },
+        {
+          "pin": "3",
+          "signal": "SENSE_H",
+          "kind": "Sense",
+          "polarity": "H"
+        },
+        {
+          "pin": "4",
+          "signal": "SENSE_L",
+          "kind": "Sense",
+          "polarity": "L"
+        },
+        {
+          "pin": "5",
+          "signal": "EXT_STIM_IN_H_1",
+          "kind": "ExtStim",
+          "channel": 1,
+          "terminal": "In",
+          "polarity": "H"
+        },
+        {
+          "pin": "6",
+          "signal": "EXT_STIM_IN_L_1",
+          "kind": "ExtStim",
+          "channel": 1,
+          "terminal": "In",
+          "polarity": "L"
+        },
+        {
+          "pin": "7",
+          "signal": "EXT_STIM_IN_H_2",
+          "kind": "ExtStim",
+          "channel": 2,
+          "terminal": "In",
+          "polarity": "H"
+        },
+        {
+          "pin": "8",
+          "signal": "EXT_STIM_IN_L_2",
+          "kind": "ExtStim",
+          "channel": 2,
+          "terminal": "In",
+          "polarity": "L"
+        },
+        {
+          "pin": "9",
+          "signal": "EXT_STIM_IN_H_3",
+          "kind": "ExtStim",
+          "channel": 3,
+          "terminal": "In",
+          "polarity": "H"
+        },
+        {
+          "pin": "10",
+          "signal": "EXT_STIM_IN_L_3",
+          "kind": "ExtStim",
+          "channel": 3,
+          "terminal": "In",
+          "polarity": "L"
+        },
+        {
+          "pin": "11",
+          "signal": "EXT_STIM_IN_H_4",
+          "kind": "ExtStim",
+          "channel": 4,
+          "terminal": "In",
+          "polarity": "H"
+        },
+        {
+          "pin": "12",
+          "signal": "EXT_STIM_IN_L_4",
+          "kind": "ExtStim",
+          "channel": 4,
+          "terminal": "In",
+          "polarity": "L"
+        }
+      ]
+    },
+    {
+      "reference": "J104",
+      "name": "Programming connector",
+      "type": "IDC 2x05 2.54 mm",
+      "side": "Programmer",
+      "pins": [
+        {
+          "pin": "1",
+          "signal": "EXT_IO_1",
+          "kind": "ProgPassThrough",
+          "line": 1
+        },
+        {
+          "pin": "2",
+          "signal": "EXT_IO_2",
+          "kind": "ProgPassThrough",
+          "line": 2
+        },
+        {
+          "pin": "3",
+          "signal": "EXT_IO_3",
+          "kind": "ProgPassThrough",
+          "line": 3
+        },
+        {
+          "pin": "4",
+          "signal": "EXT_IO_4",
+          "kind": "ProgPassThrough",
+          "line": 4
+        },
+        {
+          "pin": "5",
+          "signal": "EXT_IO_5",
+          "kind": "ProgPassThrough",
+          "line": 5
+        },
+        {
+          "pin": "6",
+          "signal": "EXT_IO_6",
+          "kind": "ProgPassThrough",
+          "line": 6
+        },
+        {
+          "pin": "7",
+          "signal": "EXT_IO_7",
+          "kind": "ProgPassThrough",
+          "line": 7
+        },
+        {
+          "pin": "8",
+          "signal": "EXT_IO_8",
+          "kind": "ProgPassThrough",
+          "line": 8
+        },
+        {
+          "pin": "9",
+          "signal": "EXT_IO_9",
+          "kind": "ProgPassThrough",
+          "line": 9
+        },
+        {
+          "pin": "10",
+          "signal": "EXT_IO_10",
+          "kind": "ProgPassThrough",
+          "line": 10
+        }
+      ]
+    }
+  ]
+}

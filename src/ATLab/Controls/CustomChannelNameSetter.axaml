@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ATLab.Controls.CustomChannelNameSetter"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
@@ -21,7 +21,15 @@
                 CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}">
-        <StackPanel 
+        <Grid RowDefinitions="Auto,*">
+        
+        <CheckBox Grid.Row="0"
+                  HorizontalAlignment="Center"
+                  Margin="0 10 0 0"
+                  IsChecked="{Binding IsNetNamesAsChannelLabels}"
+                  Content="{helpers:Localize Label_NetNamesAsChannelLabels}"
+                  ToolTip.Tip="{helpers:Localize ToolTip_NetNamesAsChannelLabels}"/>
+        <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
             
@@ -42,6 +50,7 @@
                                                HorizontalAlignment="Right" Margin="0,0,10,0"
                                                VerticalAlignment="Center"/>
                                     <TextBox Text="{Binding ChannelName, Mode=TwoWay}"
+                                             IsEnabled="{Binding $parent[UserControl].((vm:TestHardwareRelayChannelsViewModel)DataContext).IsLabelEditingEnabled}"
                                              Grid.Column="1"
                                              Width="150"
                                              Margin="0 0 20 0 "/>
@@ -69,6 +78,7 @@
                                                HorizontalAlignment="Right" Margin="0,0,10,0"
                                                VerticalAlignment="Center"/>
                                     <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"
+                                             IsEnabled="{Binding $parent[UserControl].((vm:TestHardwareRelayChannelsViewModel)DataContext).IsLabelEditingEnabled}"
                                              Grid.Column="1"
                                              Width="150"
                                              Margin="0 0 20 0 "/>
@@ -96,6 +106,7 @@
                                                    HorizontalAlignment="Right" Margin="0,0,10,0"
                                                    VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding CustomName.ChannelName, Mode=TwoWay}"
+                                             IsEnabled="{Binding $parent[UserControl].((vm:TestHardwareRelayChannelsViewModel)DataContext).IsLabelEditingEnabled}"
                                                  Grid.Column="1"
                                                  Width="150"
                                                  Margin="0 0 20 0 "/>
@@ -106,6 +117,7 @@
                     </ScrollViewer>
                 </Grid>
             </StackPanel>
+        </Grid>
         </Border>
     </Grid>
 </UserControl>

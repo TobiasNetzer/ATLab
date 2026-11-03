@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- KiCad boards, the board view and the fixture file format. Shared by ATLab (board view of the test steps) and
+       ATLab Fixture Designer (fixture design). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ATLab.Pcb</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Adapter pinouts, generated from the KiCad board of each Test Interface Adapter type -->
+    <EmbeddedResource Include="Fixture\*.pinout.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.4" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+</Project>

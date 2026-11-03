@@ -105,6 +105,59 @@ public partial class ProjectSettings : ObservableObject
     
     [ObservableProperty]
     private LogLevel _toastLogLevel = LogLevel.INFO;
+
+    /// <summary>Adds a drawing of the board with the nets of every failed step to the PDF test report.</summary>
+    [ObservableProperty]
+    private bool _isIncludeBoardViewInReport;
+
+    partial void OnIsIncludeBoardViewInReportChanged(bool value) => OnSettingsChanged();
+
+    /// <summary>
+    /// KiCad layers drawn when a board picture of the report shows the top side ("@PadsTop", "@PadsBottom" and
+    /// "@Holes" for pads and holes); null for the default, the top pads.
+    /// </summary>
+    [ObservableProperty]
+    private System.Collections.Generic.List<string>? _reportBoardLayers;
+
+    partial void OnReportBoardLayersChanged(System.Collections.Generic.List<string>? value) => OnSettingsChanged();
+
+    /// <summary>
+    /// Layers drawn when a board picture shows the bottom side; null for the default, the bottom pads.
+    /// </summary>
+    [ObservableProperty]
+    private System.Collections.Generic.List<string>? _reportBoardLayersBottom;
+
+    partial void OnReportBoardLayersBottomChanged(System.Collections.Generic.List<string>? value) => OnSettingsChanged();
+
+    /// <summary>
+    /// Opacity in percent of layers in the board pictures of the report, for layers the user changed; the others use
+    /// their default (copper faint, silkscreen strong).
+    /// </summary>
+    [ObservableProperty]
+    private System.Collections.Generic.Dictionary<string, int>? _reportBoardLayerOpacity;
+
+    partial void OnReportBoardLayerOpacityChanged(System.Collections.Generic.Dictionary<string, int>? value) => OnSettingsChanged();
+
+    /// <summary>
+    /// Order of the layers in the board pictures of the report, the topmost first ("@Pads" and "@Holes" included);
+    /// null for the automatic order (the viewed side over the far side, pads and holes on top).
+    /// </summary>
+    [ObservableProperty]
+    private System.Collections.Generic.List<string>? _reportBoardLayerOrder;
+
+    partial void OnReportBoardLayerOrderChanged(System.Collections.Generic.List<string>? value) => OnSettingsChanged();
+
+    /// <summary>Colors ("#RRGGBB") of layers in the board pictures of the report the user changed; the others are black.</summary>
+    [ObservableProperty]
+    private System.Collections.Generic.Dictionary<string, string>? _reportBoardLayerColors;
+
+    partial void OnReportBoardLayerColorsChanged(System.Collections.Generic.Dictionary<string, string>? value) => OnSettingsChanged();
+
+    /// <summary>Side the board pictures of the report show; automatic: the side with more of the step's copper.</summary>
+    [ObservableProperty]
+    private ReportBoardSide _reportBoardSide;
+
+    partial void OnReportBoardSideChanged(ReportBoardSide value) => OnSettingsChanged();
     
     partial void OnToastLogLevelChanged(LogLevel value) => OnSettingsChanged();
 
@@ -135,10 +188,38 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationContains = string.Empty;
         IsControlModuleEnabled = false;
         ToastLogLevel = LogLevel.INFO;
+        IsIncludeBoardViewInReport = false;
+        ReportBoardLayers = null;
+        ReportBoardLayersBottom = null;
+        ReportBoardLayerOpacity = null;
+        ReportBoardLayerOrder = null;
+        ReportBoardLayerColors = null;
+        ReportBoardSide = ReportBoardSide.Automatic;
 
         OnSettingsChanged();
     }
     
+    /// <summary>The report layers of the project as the shared layer settings (copies).</summary>
+    public ATLab.Pcb.Rendering.ReportLayerSettings ReportLayers()
+    {
+        var settings = new ATLab.Pcb.Rendering.ReportLayerSettings
+        {
+            Opacity = ReportBoardLayerOpacity is null ? null : new(ReportBoardLayerOpacity),
+            Order = ReportBoardLayerOrder is null ? null : [.. ReportBoardLayerOrder],
+            Colors = ReportBoardLayerColors is null ? null : new(ReportBoardLayerColors)
+        };
+        if (ReportBoardLayers is not null)
+            settings.SetLayers(TopView, [.. ReportBoardLayers]);
+        if (ReportBoardLayersBottom is not null)
+            settings.SetLayers(BottomView, [.. ReportBoardLayersBottom]);
+        return settings;
+    }
+
+    /// <summary>Keys of the two views of the report's board pictures in the shared layer settings.</summary>
+    public const string TopView = "top";
+
+    public const string BottomView = "bottom";
+
     public ProjectSettings Clone()
     {
         var clone = new ProjectSettings();
@@ -167,6 +248,13 @@ public partial class ProjectSettings : ObservableObject
         SerialNumberValidationContains = other.SerialNumberValidationContains;
         IsControlModuleEnabled = other.IsControlModuleEnabled;
         ToastLogLevel = other.ToastLogLevel;
+        IsIncludeBoardViewInReport = other.IsIncludeBoardViewInReport;
+        ReportBoardLayers = other.ReportBoardLayers is null ? null : [.. other.ReportBoardLayers];
+        ReportBoardLayersBottom = other.ReportBoardLayersBottom is null ? null : [.. other.ReportBoardLayersBottom];
+        ReportBoardLayerOpacity = other.ReportBoardLayerOpacity is null ? null : new(other.ReportBoardLayerOpacity);
+        ReportBoardLayerOrder = other.ReportBoardLayerOrder is null ? null : [.. other.ReportBoardLayerOrder];
+        ReportBoardLayerColors = other.ReportBoardLayerColors is null ? null : new(other.ReportBoardLayerColors);
+        ReportBoardSide = other.ReportBoardSide;
     }
 
     public void PrepareForSave(PathService pathService)

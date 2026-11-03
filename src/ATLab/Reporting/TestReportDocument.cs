@@ -13,9 +13,10 @@ public class TestReportDocument : IDocument
 {
     private readonly TestReportComposer _composer;
 
-    public TestReportDocument(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo testInfo, IHardwareInfo hardwareInfo, bool isSimulation, List<DeviceIdentification> deviceIdentification)
+    public TestReportDocument(List<TestStepViewModel> testResults, int failedExcludedSteps, TestInfo testInfo, IHardwareInfo hardwareInfo, bool isSimulation, List<DeviceIdentification> deviceIdentification,
+        IReadOnlyList<ReportBoardView>? boardViews = null)
     {
-        _composer = new TestReportComposer(testResults, failedExcludedSteps, testInfo, hardwareInfo, isSimulation, deviceIdentification);
+        _composer = new TestReportComposer(testResults, failedExcludedSteps, testInfo, hardwareInfo, isSimulation, deviceIdentification, boardViews);
     }
 
     public void Compose(IDocumentContainer container)

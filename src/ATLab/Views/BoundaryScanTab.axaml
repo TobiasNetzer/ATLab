@@ -364,6 +364,13 @@
                                                   HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Grid>
+                                
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{helpers:Localize Label_FootprintReference}"/>
+                                    <TextBox Text="{Binding SelectedDevice?.Config.FootprintReference}"
+                                             PlaceholderText="{helpers:Localize Placeholder_FootprintReference}"
+                                             ToolTip.Tip="{helpers:Localize ToolTip_FootprintReference}"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </Border>

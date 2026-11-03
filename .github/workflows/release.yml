@@ -75,6 +75,7 @@ jobs:
       run: |
         dotnet restore src/ATLab/ATLab.csproj -r ${{ matrix.rid }}
         dotnet restore src/ATLab.Analyzer/ATLab.Analyzer.csproj -r ${{ matrix.rid }}
+        dotnet restore src/ATLab.FixtureDesigner/ATLab.FixtureDesigner.csproj -r ${{ matrix.rid }}
 
     - name: Build
       run: dotnet publish src/ATLab/ATLab.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out
@@ -83,6 +84,10 @@ jobs:
     # .deps.json, so one app can never overwrite a file of the other. Packages and installer take all of out.
     - name: Build ATLab Analyzer
       run: dotnet publish src/ATLab.Analyzer/ATLab.Analyzer.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out/Analyzer
+
+    # ATLab Fixture Designer, also in its own folder for the same reason
+    - name: Build ATLab Fixture Designer
+      run: dotnet publish src/ATLab.FixtureDesigner/ATLab.FixtureDesigner.csproj -c Release -r ${{ matrix.rid }} --self-contained false --no-restore -o out/FixtureDesigner
 
     # User guides are shipped with every package in out/docs
     - name: Add user guide PDFs

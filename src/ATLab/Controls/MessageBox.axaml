@@ -123,6 +123,35 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="10"
+                    IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SAVE_CHANGES}"
+                    IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SAVE_CHANGES}">
+
+            <Button
+                Content="{Binding OkText}"
+                Classes="Primary"
+                Command="{Binding SubmitCommand}"
+                HotKey="Enter"
+                Width="130"/>
+
+            <Button
+                Content="{Binding DiscardText}"
+                Classes="Outline"
+                Command="{Binding DiscardCommand}"
+                Width="130"/>
+
+            <Button
+                Content="{Binding CancelText}"
+                Classes="Outline"
+                Command="{Binding CancelCommand}"
+                HotKey="Escape"
+                Width="130"/>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="7"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="10"
                     IsVisible="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_CONFIRMATION}"
                     IsEnabled="{Binding DialogFunction, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=USER_CONFIRMATION}">
 

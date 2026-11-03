@@ -71,10 +71,11 @@ public class ProjectFileService : IProjectFileService
                 throw new NotSupportedException("The file is not an ATLab project file.");
             }
 
-            if (project != null && project.FormatVersion != AtlabFileDto.CurrentFormatVersion)
+            if (project != null && (project.FormatVersion < AtlabFileDto.MinimumFormatVersion ||
+                                    project.FormatVersion > AtlabFileDto.CurrentFormatVersion))
             {
                 throw new NotSupportedException(
-                    $"Unsupported project file format version {project.FormatVersion} (expected {AtlabFileDto.CurrentFormatVersion}).");
+                    $"Unsupported project file format version {project.FormatVersion} (expected {AtlabFileDto.MinimumFormatVersion} to {AtlabFileDto.CurrentFormatVersion}).");
             }
 
             if (project != null && !TestHardwareIdFormat.TryParse(project.TargetTestHardwareId, out _))

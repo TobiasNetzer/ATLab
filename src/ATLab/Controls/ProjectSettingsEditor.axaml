@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:rendering="clr-namespace:ATLab.Pcb.Rendering;assembly=ATLab.Pcb"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
              x:Class="ATLab.Controls.ProjectSettingsEditor"
              x:DataType="vm:ProjectSettingsViewModel"
@@ -149,6 +150,170 @@
                                         Text="{Binding Settings.PdfOutputPath, UpdateSourceTrigger=LostFocus}"/>
 
                                 </DockPanel>
+
+                                <!-- Failed steps drawn on the KiCad board of the project, with the chosen layers. The button on a
+                                     line of its own, so a long label (German) does not run into the next panel -->
+                                <StackPanel Spacing="6" Margin="30 0 0 0"
+                                            IsVisible="{Binding Settings.IsExportPdf}">
+                                    <!-- The check box gives its text any width; the limit (room left in the column after indent and box) lets
+                                         a long label wrap -->
+                                    <CheckBox IsChecked="{Binding Settings.IsIncludeBoardViewInReport}"
+                                              IsEnabled="{Binding CanSaveTestResult}"
+                                              ToolTip.Tip="{helpers:Localize ToolTip_IncludeBoardViewInReport}">
+                                        <TextBlock Text="{helpers:Localize Label_IncludeBoardViewInReport}"
+                                                   TextWrapping="Wrap" MaxWidth="260"/>
+                                    </CheckBox>
+                                    <Button Classes="Outline" Height="28" Padding="10,0" Margin="28 0 0 0"
+                                            HorizontalAlignment="Left"
+                                            Content="{helpers:Localize Button_ReportBoardLayers}"
+                                            ToolTip.Tip="{helpers:Localize ToolTip_ReportBoardLayers}"
+                                            VerticalAlignment="Center">
+                                        <Button.IsEnabled>
+                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                <Binding Path="Settings.IsIncludeBoardViewInReport"/>
+                                                <Binding Path="CanSaveTestResult"/>
+                                                <Binding Path="ReportLayers.HasOptions"/>
+                                            </MultiBinding>
+                                        </Button.IsEnabled>
+                                        <Button.Flyout>
+                                            <Flyout Placement="BottomEdgeAlignedLeft">
+                                                <StackPanel Spacing="6" MinWidth="220">
+                                                    <!-- Side of the pictures: automatic per step, or always the top or the bottom -->
+                                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                                        <TextBlock Text="{helpers:Localize Label_ReportBoardSide}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                        <RadioButton GroupName="ReportBoardSide" Content="{helpers:Localize ReportSide_Automatic}"
+                                                                     IsChecked="{Binding IsReportSideAutomatic}"
+                                                                     ToolTip.Tip="{helpers:Localize ToolTip_ReportSideAutomatic}"/>
+                                                        <RadioButton GroupName="ReportBoardSide" Content="{helpers:Localize ReportSide_Top}"
+                                                                     IsChecked="{Binding IsReportSideTop}"/>
+                                                        <RadioButton GroupName="ReportBoardSide" Content="{helpers:Localize ReportSide_Bottom}"
+                                                                     IsChecked="{Binding IsReportSideBottom}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{helpers:Localize Header_ReportBoardLayers}" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="{helpers:Localize Text_ReportBoardLayers}" Classes="Small"
+                                                               TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Left"
+                                                               Foreground="{DynamicResource MutedColor}"/>
+                                                    <WrapPanel ItemSpacing="8" LineSpacing="6" MaxWidth="380" HorizontalAlignment="Left">
+                                                        <Button Classes="Outline" Height="28" Padding="10,0"
+                                                                Content="{helpers:Localize Board_AllLayers}"
+                                                                Command="{Binding ReportLayers.ShowAllCommand}" CommandParameter="all"/>
+                                                        <Button Classes="Outline" Height="28" Padding="10,0"
+                                                                Content="{helpers:Localize Board_NoLayers}"
+                                                                Command="{Binding ReportLayers.ShowAllCommand}" CommandParameter="-"/>
+                                                        <Button Classes="Outline" Height="28" Padding="10,0"
+                                                                Content="{helpers:Localize Button_DefaultLayerStyle}"
+                                                                Command="{Binding ReportLayers.ResetStyleCommand}"/>
+                                                        <Button Classes="Outline" Height="28" Padding="10,0"
+                                                                Content="{helpers:Localize Button_DefaultLayerOrder}"
+                                                                IsEnabled="{Binding ReportLayers.HasCustomOrder}"
+                                                                Command="{Binding ReportLayers.ResetOrderCommand}"/>
+                                                        <Button Classes="Outline" Height="28" Padding="10,0" Content="{helpers:Localize Button_SaveLayersAsDefault}"
+                                                                ToolTip.Tip="{helpers:Localize ToolTip_SaveLayersAsDefault}"
+                                                                Command="{Binding ReportLayers.SaveAsDefaultCommand}"/>
+                                                        <Button Classes="Outline" Height="28" Padding="10,0" Content="{helpers:Localize Button_LoadLayersDefault}"
+                                                                ToolTip.Tip="{helpers:Localize ToolTip_LoadLayersDefault}"
+                                                                Command="{Binding ReportLayers.LoadDefaultCommand}"/>
+                                                    </WrapPanel>
+                                                    <!-- The columns line up with the rows below: order, color, top view, bottom view, name, opacity -->
+                                                    <StackPanel Grid.IsSharedSizeScope="True" Spacing="2">
+                                                        <Grid ColumnSpacing="10" Margin="0,0,18,0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerOrder"/>
+                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerColor"/>
+                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerViews"/>
+                                                                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerName"/>
+                                                                <ColumnDefinition Width="120"/>
+                                                                <ColumnDefinition Width="40"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ItemsControl Grid.Column="2" ItemsSource="{Binding ReportLayers.Views}">
+                                                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate DataType="rendering:ReportLayerView">
+                                                                        <TextBlock Text="{Binding Label}" ToolTip.Tip="{Binding ToolTip}" Classes="Small" FontWeight="SemiBold"
+                                                                                   Width="{x:Static rendering:ReportLayerColumns.Width}" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </Grid>
+                                                        <ScrollViewer MaxHeight="420">
+                                                            <!-- The right margin is the room of the scrollbar -->
+                                                            <ItemsControl ItemsSource="{Binding ReportLayers.Options}" Margin="0,0,18,0">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <!-- A layer: drawn in the top and the bottom view or not, its color and opacity -->
+                                                                    <DataTemplate DataType="rendering:ReportLayerOption">
+                                                                        <Grid ColumnSpacing="10" Margin="0,1">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerOrder"/>
+                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerColor"/>
+                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerViews"/>
+                                                                                                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerName"/>
+                                                                                <ColumnDefinition Width="120"/>
+                                                                                <ColumnDefinition Width="40"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <!-- Order: the top row is drawn on top -->
+                                                                            <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                                                                                <Button Classes="Icon" Width="22" Height="22" Padding="0"
+                                                                                        Background="Transparent"
+                                                                                        ToolTip.Tip="{helpers:Localize ToolTip_LayerUp}"
+                                                                                        Command="{Binding $parent[ItemsControl].((vm:ProjectSettingsViewModel)DataContext).ReportLayers.MoveUpCommand}"
+                                                                                        CommandParameter="{Binding}">
+                                                                                    <shadui:ButtonAssist.Icon>
+                                                                                        <ContentControl Content="{LucideIconContent ChevronUp, 14}"/>
+                                                                                    </shadui:ButtonAssist.Icon>
+                                                                                </Button>
+                                                                                <Button Classes="Icon" Width="22" Height="22" Padding="0"
+                                                                                        Background="Transparent"
+                                                                                        ToolTip.Tip="{helpers:Localize ToolTip_LayerDown}"
+                                                                                        Command="{Binding $parent[ItemsControl].((vm:ProjectSettingsViewModel)DataContext).ReportLayers.MoveDownCommand}"
+                                                                                        CommandParameter="{Binding}">
+                                                                                    <shadui:ButtonAssist.Icon>
+                                                                                        <ContentControl Content="{LucideIconContent ChevronDown, 14}"/>
+                                                                                    </shadui:ButtonAssist.Icon>
+                                                                                </Button>
+                                                                            </StackPanel>
+                                                                            <!-- The swatch opens the color picker; it shows color and opacity -->
+                                                                            <ColorPicker Grid.Column="1"
+                                                                                         Color="{Binding Color, Mode=TwoWay}"
+                                                                                         IsAlphaEnabled="False" IsAlphaVisible="False"
+                                                                                         CornerRadius="6"
+                                                                                         VerticalAlignment="Center"
+                                                                                         ToolTip.Tip="{helpers:Localize ToolTip_BoardRoleColor}">
+                                                                                <Border Width="14" Height="14" CornerRadius="3"
+                                                                                        BorderThickness="1" BorderBrush="{DynamicResource OutlineColor}"
+                                                                                        Background="{Binding Brush}"/>
+                                                                            </ColorPicker>
+                                                                            <ItemsControl Grid.Column="2" ItemsSource="{Binding Toggles}">
+                                                                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                                                <ItemsControl.ItemTemplate>
+                                                                                    <DataTemplate DataType="rendering:ReportLayerToggle">
+                                                                                        <Panel Width="{x:Static rendering:ReportLayerColumns.Width}">
+                                                                                            <CheckBox IsChecked="{Binding IsVisible}" ToolTip.Tip="{Binding View.ToolTip}" HorizontalAlignment="Center"/>
+                                                                                        </Panel>
+                                                                                    </DataTemplate>
+                                                                                </ItemsControl.ItemTemplate>
+                                                                            </ItemsControl>
+                                                                            <TextBlock Grid.Column="3" Text="{Binding Display}" VerticalAlignment="Center"/>
+                                                                            <Slider Grid.Column="4" Minimum="0" Maximum="100"
+                                                                                    SmallChange="5" LargeChange="10"
+                                                                                    TickFrequency="5" IsSnapToTickEnabled="True"
+                                                                                    Value="{Binding Opacity}"
+                                                                                    IsEnabled="{Binding IsUsed}"
+                                                                                    VerticalAlignment="Center"
+                                                                                    ToolTip.Tip="{helpers:Localize ToolTip_ReportLayerOpacity}"/>
+                                                                            <TextBlock Grid.Column="5" Text="{Binding OpacityText}"
+                                                                                       Classes="Small" VerticalAlignment="Center" TextAlignment="Right"
+                                                                                       IsEnabled="{Binding IsUsed}"/>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </ScrollViewer>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                </StackPanel>
 
                                 
                             </StackPanel>

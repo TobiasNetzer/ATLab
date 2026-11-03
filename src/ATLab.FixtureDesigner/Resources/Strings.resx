@@ -1,0 +1,1199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About_Avalonia" xml:space="preserve">
+    <value>Avalonia</value>
+  </data>
+  <data name="About_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="About_Date" xml:space="preserve">
+    <value>Build date</value>
+  </data>
+  <data name="About_Description" xml:space="preserve">
+    <value>Design test fixtures from KiCad board files.</value>
+  </data>
+  <data name="About_Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="About_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Button_License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Button_ViewProjectOnGitHub" xml:space="preserve">
+    <value>View project on GitHub</value>
+  </data>
+  <data name="ToolTip_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ToolTip_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ToolTip_Theme" xml:space="preserve">
+    <value>Toggle theme</value>
+  </data>
+  <data name="ToolTip_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Enum_BoardSide_Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Enum_BoardSide_Bottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="Enum_CheckSeverity_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Enum_CheckSeverity_Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Enum_CheckSeverity_Info" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Access_Both" xml:space="preserve">
+    <value>Both sides</value>
+  </data>
+  <data name="Access_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Board_TopView" xml:space="preserve">
+    <value>Top view</value>
+  </data>
+  <data name="Board_BottomView" xml:space="preserve">
+    <value>Bottom view (mirrored, as seen from below)</value>
+  </data>
+  <data name="Board_Hint" xml:space="preserve">
+    <value>Wheel: zoom · Drag: pan · Click: select pad · Double-click pad: add/remove probe · Double-click background or F: fit</value>
+  </data>
+  <data name="Board_TopPads" xml:space="preserve">
+    <value>Top pads</value>
+  </data>
+  <data name="Board_BottomPads" xml:space="preserve">
+    <value>Bottom pads</value>
+  </data>
+  <data name="Board_NoNet" xml:space="preserve">
+    <value>no net</value>
+  </data>
+  <data name="Board_SideTop" xml:space="preserve">
+    <value>top</value>
+  </data>
+  <data name="Board_SideBottom" xml:space="preserve">
+    <value>bottom</value>
+  </data>
+  <data name="Button_New" xml:space="preserve">
+    <value>New from board…</value>
+  </data>
+  <data name="Button_Open" xml:space="preserve">
+    <value>Open…</value>
+  </data>
+  <data name="Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Button_SaveAs" xml:space="preserve">
+    <value>Save as…</value>
+  </data>
+  <data name="Button_ReloadBoard" xml:space="preserve">
+    <value>Reload board</value>
+  </data>
+  <data name="Button_ChangeBoard" xml:space="preserve">
+    <value>Change board…</value>
+  </data>
+  <data name="Button_BuildSheet" xml:space="preserve">
+    <value>Build sheet (PDF)…</value>
+  </data>
+  <data name="Button_AutoAssign" xml:space="preserve">
+    <value>Assign MEAS channels</value>
+  </data>
+  <data name="Button_Renumber" xml:space="preserve">
+    <value>Renumber</value>
+  </data>
+  <data name="Button_Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="Button_RemoveProbe" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Button_AddBottom" xml:space="preserve">
+    <value>Add probe from bottom</value>
+  </data>
+  <data name="Button_AddTop" xml:space="preserve">
+    <value>Add probe from top</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_DontSave" xml:space="preserve">
+    <value>Don't save</value>
+  </data>
+  <data name="Button_Export" xml:space="preserve">
+    <value>Export anyway</value>
+  </data>
+  <data name="Button_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Button_SelectBoard" xml:space="preserve">
+    <value>Select board…</value>
+  </data>
+  <data name="ToolTip_New" xml:space="preserve">
+    <value>New fixture</value>
+  </data>
+  <data name="ToolTip_Open" xml:space="preserve">
+    <value>Open file</value>
+  </data>
+  <data name="ToolTip_Save" xml:space="preserve">
+    <value>Save fixture</value>
+  </data>
+  <data name="ToolTip_SaveAs" xml:space="preserve">
+    <value>Save fixture as</value>
+  </data>
+  <data name="ToolTip_ReloadBoard" xml:space="preserve">
+    <value>Reload board</value>
+  </data>
+  <data name="ToolTip_ChangeBoard" xml:space="preserve">
+    <value>Change board</value>
+  </data>
+  <data name="ToolTip_BuildSheet" xml:space="preserve">
+    <value>Create build sheet</value>
+  </data>
+  <data name="ToolTip_AutoAssign" xml:space="preserve">
+    <value>Assign MEAS channels</value>
+  </data>
+  <data name="ToolTip_Renumber" xml:space="preserve">
+    <value>Renumber probes</value>
+  </data>
+  <data name="ToolTip_Disconnect" xml:space="preserve">
+    <value>Disconnect probe</value>
+  </data>
+  <data name="ToolTip_RemoveProbe" xml:space="preserve">
+    <value>Remove probe</value>
+  </data>
+  <data name="ToolTip_AddBottom" xml:space="preserve">
+    <value>Add probe from below</value>
+  </data>
+  <data name="ToolTip_AddTop" xml:space="preserve">
+    <value>Add probe from above</value>
+  </data>
+  <data name="ToolTip_PadSearch" xml:space="preserve">
+    <value>Search pads</value>
+  </data>
+  <data name="ToolTip_TestPoints" xml:space="preserve">
+    <value>Test points only</value>
+  </data>
+  <data name="ToolTip_ViewBottom" xml:space="preserve">
+    <value>View from below</value>
+  </data>
+  <data name="ToolTip_ViewTop" xml:space="preserve">
+    <value>View from above</value>
+  </data>
+  <data name="ToolTip_Fit" xml:space="preserve">
+    <value>Fit board</value>
+  </data>
+  <data name="ToolTip_ShowChecks" xml:space="preserve">
+    <value>Show checks</value>
+  </data>
+  <data name="Label_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="View_Bottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="View_Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Label_FixtureName" xml:space="preserve">
+    <value>Fixture name</value>
+  </data>
+  <data name="Label_DeviceName" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="Label_DeviceRevision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="Label_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Label_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Label_Adapter" xml:space="preserve">
+    <value>Test hardware</value>
+  </data>
+  <data name="Label_FixtureFile" xml:space="preserve">
+    <value>Fixture file</value>
+  </data>
+  <data name="Label_BoardFile" xml:space="preserve">
+    <value>Board file</value>
+  </data>
+  <data name="Tab_Probes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Tab_Pads" xml:space="preserve">
+    <value>Pads</value>
+  </data>
+  <data name="Tab_Adapter" xml:space="preserve">
+    <value>Test Hardware</value>
+  </data>
+  <data name="Tab_Checks" xml:space="preserve">
+    <value>Checks</value>
+  </data>
+  <data name="Tab_ChecksCount" xml:space="preserve">
+    <value>Checks ({0})</value>
+  </data>
+  <data name="Tab_Fixture" xml:space="preserve">
+    <value>Fixture</value>
+  </data>
+  <data name="Column_Probe" xml:space="preserve">
+    <value>Probe</value>
+  </data>
+  <data name="Column_Pad" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="Column_Net" xml:space="preserve">
+    <value>Net</value>
+  </data>
+  <data name="Column_Side" xml:space="preserve">
+    <value>Side</value>
+  </data>
+  <data name="Column_Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="Column_X" xml:space="preserve">
+    <value>X (mm)</value>
+  </data>
+  <data name="Column_Y" xml:space="preserve">
+    <value>Y (mm)</value>
+  </data>
+  <data name="Column_Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Column_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+  <data name="Column_PadNumber" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="Column_Access" xml:space="preserve">
+    <value>Reachable</value>
+  </data>
+  <data name="Column_Probes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Column_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Column_Size" xml:space="preserve">
+    <value>Size (mm)</value>
+  </data>
+  <data name="Column_Footprint" xml:space="preserve">
+    <value>Footprint</value>
+  </data>
+  <data name="Column_Resource" xml:space="preserve">
+    <value>Resource</value>
+  </data>
+  <data name="Column_Signal" xml:space="preserve">
+    <value>Signal</value>
+  </data>
+  <data name="Column_PadType" xml:space="preserve">
+    <value>Pad (mm)</value>
+  </data>
+  <data name="Placeholder_Pin" xml:space="preserve">
+    <value>Not wired</value>
+  </data>
+  <data name="Placeholder_PadSearch" xml:space="preserve">
+    <value>Search reference, net, footprint… (e.g. TP*)</value>
+  </data>
+  <data name="Filter_TestPoints" xml:space="preserve">
+    <value>Test points only</value>
+  </data>
+  <data name="Filter_WithNet" xml:space="preserve">
+    <value>With net only</value>
+  </data>
+  <data name="Text_Unsaved" xml:space="preserve">
+    <value>Not saved yet</value>
+  </data>
+  <data name="Text_NewFixture" xml:space="preserve">
+    <value>New fixture</value>
+  </data>
+  <data name="Text_PadCount" xml:space="preserve">
+    <value>{0} of {1} pads</value>
+  </data>
+  <data name="Text_ProbeCount" xml:space="preserve">
+    <value>{0} probes ({1} top, {2} bottom)</value>
+  </data>
+  <data name="Text_NoProbes" xml:space="preserve">
+    <value>No probes yet. Double-click a pad on the board or in the Pads list to add a probe.</value>
+  </data>
+  <data name="Text_CheckSummary" xml:space="preserve">
+    <value>{0} errors, {1} warnings</value>
+  </data>
+  <data name="Text_ChecksClean" xml:space="preserve">
+    <value>No problems found.</value>
+  </data>
+  <data name="Text_UsedPins" xml:space="preserve">
+    <value>{0} of {1} pins used, {2} of {3} MEAS channels</value>
+  </data>
+  <data name="Info_Board" xml:space="preserve">
+    <value>{0} · {1} footprints · {2} pads · {3}</value>
+  </data>
+  <data name="Welcome_Text" xml:space="preserve">
+    <value>Design a bed-of-nails fixture for your test hardware: open the KiCad board of the device, choose the pads to probe from the top or bottom, wire every probe to a pin of the test hardware and create the build sheet.</value>
+  </data>
+  <data name="Welcome_Hint" xml:space="preserve">
+    <value>Open a KiCad board (.kicad_pcb, KiCad 6 or newer) to start a new fixture, or an existing fixture file (.atlabfix). You can also drop a file onto the window.</value>
+  </data>
+  <data name="Status_Start" xml:space="preserve">
+    <value>Open a KiCad board or a fixture file.</value>
+  </data>
+  <data name="Status_BoardOpened" xml:space="preserve">
+    <value>Board {0} opened. Double-click pads to add probes.</value>
+  </data>
+  <data name="Status_FixtureOpened" xml:space="preserve">
+    <value>Fixture {0} opened with {1} probes.</value>
+  </data>
+  <data name="Status_BoardReloaded" xml:space="preserve">
+    <value>Board {0} read again.</value>
+  </data>
+  <data name="Status_BoardReloadedMissing" xml:space="preserve">
+    <value>Board {0} read again; {1} probes have no pad any more, see Checks.</value>
+  </data>
+  <data name="Status_Saved" xml:space="preserve">
+    <value>Saved as {0}.</value>
+  </data>
+  <data name="Status_ProbeAdded" xml:space="preserve">
+    <value>{0} added on {1} from the {2}.</value>
+  </data>
+  <data name="Side_Top" xml:space="preserve">
+    <value>top side</value>
+  </data>
+  <data name="Side_Bottom" xml:space="preserve">
+    <value>bottom side</value>
+  </data>
+  <data name="Column_Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Status_ProbeRemoved" xml:space="preserve">
+    <value>{0} removed.</value>
+  </data>
+  <data name="Status_AutoAssigned" xml:space="preserve">
+    <value>{0} probes assigned to MEAS channels.</value>
+  </data>
+  <data name="Status_AutoAssignedPartly" xml:space="preserve">
+    <value>{0} probes assigned; {1} remain unwired because all MEAS channels are used.</value>
+  </data>
+  <data name="Status_Renumbered" xml:space="preserve">
+    <value>Probes renumbered.</value>
+  </data>
+  <data name="Status_BuildSheetSaved" xml:space="preserve">
+    <value>Build sheet {0} saved.</value>
+  </data>
+  <data name="Dialog_Open" xml:space="preserve">
+    <value>Open fixture or board</value>
+  </data>
+  <data name="Dialog_OpenBoard" xml:space="preserve">
+    <value>Open KiCad board</value>
+  </data>
+  <data name="Dialog_SaveFixture" xml:space="preserve">
+    <value>Save fixture</value>
+  </data>
+  <data name="Dialog_SaveBuildSheet" xml:space="preserve">
+    <value>Save build sheet</value>
+  </data>
+  <data name="Dialog_FixtureFiles" xml:space="preserve">
+    <value>ATLab fixture (*.atlabfix)</value>
+  </data>
+  <data name="Dialog_BoardFiles" xml:space="preserve">
+    <value>KiCad board (*.kicad_pcb)</value>
+  </data>
+  <data name="Dialog_SupportedFiles" xml:space="preserve">
+    <value>Fixtures and KiCad boards</value>
+  </data>
+  <data name="Dialog_PdfFiles" xml:space="preserve">
+    <value>PDF document (*.pdf)</value>
+  </data>
+  <data name="Dialog_UnsavedTitle" xml:space="preserve">
+    <value>Unsaved changes</value>
+  </data>
+  <data name="Dialog_Unsaved" xml:space="preserve">
+    <value>The fixture has unsaved changes. Save them?</value>
+  </data>
+  <data name="Dialog_BoardMissingTitle" xml:space="preserve">
+    <value>Board not found</value>
+  </data>
+  <data name="Dialog_BoardMissing" xml:space="preserve">
+    <value>The board file of this fixture was not found:
+{0}
+
+Select the board file at its new location.</value>
+  </data>
+  <data name="Dialog_ExportWithErrorsTitle" xml:space="preserve">
+    <value>Checks found errors</value>
+  </data>
+  <data name="Dialog_ExportWithErrors" xml:space="preserve">
+    <value>The checks found {0} errors. A fixture built from this build sheet may not work. Export anyway?</value>
+  </data>
+  <data name="Error_OpenFixture" xml:space="preserve">
+    <value>Fixture could not be opened</value>
+  </data>
+  <data name="Error_FixtureInvalid" xml:space="preserve">
+    <value>{0} is not an ATLab fixture file or is damaged.</value>
+  </data>
+  <data name="Error_FixtureNewer" xml:space="preserve">
+    <value>{0} was saved by a newer version of the Fixture Designer. Update the Fixture Designer to open it.</value>
+  </data>
+  <data name="Error_UnknownAdapter" xml:space="preserve">
+    <value>The fixture is made for the test hardware {0}, which this version does not know.</value>
+  </data>
+  <data name="Error_OpenBoard" xml:space="preserve">
+    <value>Board could not be opened</value>
+  </data>
+  <data name="Error_NotABoard" xml:space="preserve">
+    <value>{0} is not a KiCad board file (.kicad_pcb).</value>
+  </data>
+  <data name="Error_BoardTooOld" xml:space="preserve">
+    <value>{0} was saved by KiCad 5 or older. Open it in a current KiCad version and save it again.</value>
+  </data>
+  <data name="Error_BoardDamaged" xml:space="preserve">
+    <value>{0} could not be read: {1}</value>
+  </data>
+  <data name="Error_SaveFixture" xml:space="preserve">
+    <value>Fixture could not be saved</value>
+  </data>
+  <data name="Error_BuildSheet" xml:space="preserve">
+    <value>Build sheet could not be saved</value>
+  </data>
+  <data name="Check_PadMissing" xml:space="preserve">
+    <value>{0}: pad {1} no longer exists on the board.</value>
+  </data>
+  <data name="Check_NoCopper" xml:space="preserve">
+    <value>{0}: pad {1} has no copper on the {2}.</value>
+  </data>
+  <data name="Check_MaskCovered" xml:space="preserve">
+    <value>{0}: pad {1} is covered by solder mask on the {2}.</value>
+  </data>
+  <data name="Check_NoNet" xml:space="preserve">
+    <value>{0}: pad {1} has no net.</value>
+  </data>
+  <data name="Check_NetChanged" xml:space="preserve">
+    <value>{0}: the net of pad {1} changed from {2} to {3} since the fixture was saved.</value>
+  </data>
+  <data name="Check_PadMoved" xml:space="preserve">
+    <value>{0}: pad {1} moved by {2:0.00} mm since the fixture was saved.</value>
+  </data>
+  <data name="Check_DuplicateProbe" xml:space="preserve">
+    <value>{0} are on the same pad {1} from the {2}.</value>
+  </data>
+  <data name="Check_Short" xml:space="preserve">
+    <value>Pin {0} connects different nets: {1}. Wired like this, the fixture shorts these nets.</value>
+  </data>
+  <data name="Check_NotWired" xml:space="preserve">
+    <value>{0} ({1}, {2}) is not wired to a pin of the test hardware.</value>
+  </data>
+  <data name="Check_NetOnSeveralChannels" xml:space="preserve">
+    <value>Net {0} is on several matrix channels: {1}. One channel per net is usually enough.</value>
+  </data>
+  <data name="Check_InterfaceIncomplete" xml:space="preserve">
+    <value>{0}: {1} not wired. The isolated interface needs all of its lines from the device, including VREF and GND.</value>
+  </data>
+  <data name="Check_ExtStimIncomplete" xml:space="preserve">
+    <value>External stimulus {0}: line {1} is not wired, so the stimulus has no return path through the fixture.</value>
+  </data>
+  <data name="Check_StimOneTerminal" xml:space="preserve">
+    <value>STIM {0}: only {1} is on a probe; {2} has to be wired inside the fixture, e.g. to a supply.</value>
+  </data>
+  <data name="Check_BoardChanged" xml:space="preserve">
+    <value>The board file changed since the fixture was saved. Positions and nets are taken from the current file; changed probes are listed.</value>
+  </data>
+  <data name="Report_Title" xml:space="preserve">
+    <value>Fixture Build Sheet</value>
+  </data>
+  <data name="Report_FileSuffix" xml:space="preserve">
+    <value>Build Sheet</value>
+  </data>
+  <data name="Report_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Report_Page" xml:space="preserve">
+    <value>Page </value>
+  </data>
+  <data name="Report_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Report_Fixture" xml:space="preserve">
+    <value>Fixture</value>
+  </data>
+  <data name="Report_FixtureName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Report_FixtureFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Report_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Report_Adapter" xml:space="preserve">
+    <value>Test hardware</value>
+  </data>
+  <data name="Report_ProbeCount" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Report_Board" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="Report_Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="Report_Revision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="Report_BoardFile" xml:space="preserve">
+    <value>Board file</value>
+  </data>
+  <data name="Report_BoardSize" xml:space="preserve">
+    <value>Board size</value>
+  </data>
+  <data name="Report_Origin" xml:space="preserve">
+    <value>Coordinates</value>
+  </data>
+  <data name="Report_OriginFile" xml:space="preserve">
+    <value>mm from the drill/place file origin of the board, Y up, seen from the top</value>
+  </data>
+  <data name="Report_OriginCorner" xml:space="preserve">
+    <value>mm from the bottom left corner of the board, Y up, seen from the top</value>
+  </data>
+  <data name="Report_Probes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Report_Wiring" xml:space="preserve">
+    <value>Wiring</value>
+  </data>
+  <data name="Report_WiringHint" xml:space="preserve">
+    <value>Pins of the test hardware's DUT connector {0} ({1}) and the probes to wire to each of them.</value>
+  </data>
+  <data name="Report_NoWiring" xml:space="preserve">
+    <value>No probe is wired to a pin of the test hardware yet.</value>
+  </data>
+  <data name="Report_NotWired" xml:space="preserve">
+    <value>not wired</value>
+  </data>
+  <data name="Report_PadMissing" xml:space="preserve">
+    <value>pad missing</value>
+  </data>
+  <data name="Board_HoleInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm</value>
+  </data>
+  <data name="Board_LocatingPinInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm · locating pin {2}</value>
+  </data>
+  <data name="Button_Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="ToolTip_Layers" xml:space="preserve">
+    <value>Choose layers</value>
+  </data>
+  <data name="Button_AllLayers" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <data name="Button_NoLayers" xml:space="preserve">
+    <value>Hide all</value>
+  </data>
+  <data name="Layer_Holes" xml:space="preserve">
+    <value>Holes</value>
+  </data>
+  <data name="Layer_F_Cu" xml:space="preserve">
+    <value>Top copper</value>
+  </data>
+  <data name="Layer_B_Cu" xml:space="preserve">
+    <value>Bottom copper</value>
+  </data>
+  <data name="Layer_Inner" xml:space="preserve">
+    <value>Inner copper {0}</value>
+  </data>
+  <data name="Layer_F_SilkS" xml:space="preserve">
+    <value>Top silkscreen</value>
+  </data>
+  <data name="Layer_B_SilkS" xml:space="preserve">
+    <value>Bottom silkscreen</value>
+  </data>
+  <data name="Layer_F_Mask" xml:space="preserve">
+    <value>Top solder mask</value>
+  </data>
+  <data name="Layer_B_Mask" xml:space="preserve">
+    <value>Bottom solder mask</value>
+  </data>
+  <data name="Layer_F_Paste" xml:space="preserve">
+    <value>Top paste</value>
+  </data>
+  <data name="Layer_B_Paste" xml:space="preserve">
+    <value>Bottom paste</value>
+  </data>
+  <data name="Layer_F_Fab" xml:space="preserve">
+    <value>Top fabrication</value>
+  </data>
+  <data name="Layer_B_Fab" xml:space="preserve">
+    <value>Bottom fabrication</value>
+  </data>
+  <data name="Layer_F_CrtYd" xml:space="preserve">
+    <value>Top courtyard</value>
+  </data>
+  <data name="Layer_B_CrtYd" xml:space="preserve">
+    <value>Bottom courtyard</value>
+  </data>
+  <data name="Layer_Dwgs_User" xml:space="preserve">
+    <value>User drawings</value>
+  </data>
+  <data name="Layer_Cmts_User" xml:space="preserve">
+    <value>User comments</value>
+  </data>
+  <data name="Layer_Margin" xml:space="preserve">
+    <value>Board margin</value>
+  </data>
+  <data name="Button_PlateFiles" xml:space="preserve">
+    <value>Export…</value>
+  </data>
+  <data name="ToolTip_PlateFiles" xml:space="preserve">
+    <value>Export manufacturing files</value>
+  </data>
+  <data name="Tab_Plates" xml:space="preserve">
+    <value>Manufacturing</value>
+  </data>
+  <data name="Column_ProbeType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Placeholder_ProbeType" xml:space="preserve">
+    <value>No type</value>
+  </data>
+  <data name="Column_TypeName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Column_MinPad" xml:space="preserve">
+    <value>Min. pad (mm)</value>
+  </data>
+  <data name="Column_Drill" xml:space="preserve">
+    <value>Drill Ø (mm)</value>
+  </data>
+  <data name="Column_MinSpacing" xml:space="preserve">
+    <value>Spacing (mm)</value>
+  </data>
+  <data name="Column_Clearance" xml:space="preserve">
+    <value>Clearance (mm)</value>
+  </data>
+  <data name="Button_AddType" xml:space="preserve">
+    <value>Add type</value>
+  </data>
+  <data name="Button_FromLibrary" xml:space="preserve">
+    <value>From library</value>
+  </data>
+  <data name="ToolTip_FromLibrary" xml:space="preserve">
+    <value>Add from library</value>
+  </data>
+  <data name="Button_SaveToLibrary" xml:space="preserve">
+    <value>Save to library</value>
+  </data>
+  <data name="ToolTip_SaveToLibrary" xml:space="preserve">
+    <value>Save to library</value>
+  </data>
+  <data name="Button_ApplyToAll" xml:space="preserve">
+    <value>Use for all probes</value>
+  </data>
+  <data name="ToolTip_ApplyToAll" xml:space="preserve">
+    <value>Apply to all probes</value>
+  </data>
+  <data name="Button_RemoveType" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Label_DefaultType" xml:space="preserve">
+    <value>Type for new probes</value>
+  </data>
+  <data name="Text_NewProbeType" xml:space="preserve">
+    <value>New type</value>
+  </data>
+  <data name="Text_ProbeTypesHint" xml:space="preserve">
+    <value>All sizes in mm. Spacing: smallest distance between the centers of two probes of one plate. Drill Ø: hole for the receptacle in the plate. Clearance: smallest distance from the probe to another component of its side (courtyard). The types are stored in the fixture; Save to library keeps them for new fixtures.</value>
+  </data>
+  <data name="Label_PlateMargin" xml:space="preserve">
+    <value>Plate margin (mm)</value>
+  </data>
+  <data name="ToolTip_PlateMargin" xml:space="preserve">
+    <value>Plate margin</value>
+  </data>
+  <data name="Label_PlateThickness" xml:space="preserve">
+    <value>Plate thickness (mm)</value>
+  </data>
+  <data name="ToolTip_PlateThickness" xml:space="preserve">
+    <value>Plate thickness</value>
+  </data>
+  <data name="Header_Plates" xml:space="preserve">
+    <value>Probe plates</value>
+  </data>
+  <data name="Text_NoPlates" xml:space="preserve">
+    <value>No plate yet: add probes or locating pins.</value>
+  </data>
+  <data name="Text_PlateSummary" xml:space="preserve">
+    <value>{0}: {1} × {2} mm, {3} probe holes, {4} locating pin holes, {5} frame holes, {6} pin and rod holes, {7} cut-outs</value>
+  </data>
+  <data name="Text_PlateFilesHint" xml:space="preserve">
+    <value>Each plate is written as seen from its side facing the board: the bottom plate from above, the top plate from below (mirrored). Coordinates in mm from the origin of the build sheet.</value>
+  </data>
+  <data name="Plate_Top" xml:space="preserve">
+    <value>Top plate</value>
+  </data>
+  <data name="Plate_Bottom" xml:space="preserve">
+    <value>Bottom plate</value>
+  </data>
+  <data name="File_TopPlate" xml:space="preserve">
+    <value>top plate</value>
+  </data>
+  <data name="File_BottomPlate" xml:space="preserve">
+    <value>bottom plate</value>
+  </data>
+  <data name="Plate_NoDrill" xml:space="preserve">
+    <value>{0} has no drill diameter (probe type)</value>
+  </data>
+  <data name="Plate_Edge" xml:space="preserve">
+    <value>{0} is too close to the plate edge</value>
+  </data>
+  <data name="Plate_Overlap" xml:space="preserve">
+    <value>the holes of {0} and {1} overlap</value>
+  </data>
+  <data name="Dialog_PlateFolder" xml:space="preserve">
+    <value>Folder for the manufacturing files</value>
+  </data>
+  <data name="Dialog_OverwriteTitle" xml:space="preserve">
+    <value>Files exist</value>
+  </data>
+  <data name="Dialog_Overwrite" xml:space="preserve">
+    <value>These files exist already and will be replaced:
+{0}</value>
+  </data>
+  <data name="Button_Overwrite" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="Error_Plates" xml:space="preserve">
+    <value>Manufacturing files could not be written</value>
+  </data>
+  <data name="Error_PlateProblems" xml:space="preserve">
+    <value>The plates cannot be made as planned:
+{0}
+
+Fix the spacing, probe types or locating pins, see Checks.</value>
+  </data>
+  <data name="Error_Library" xml:space="preserve">
+    <value>Probe library could not be saved</value>
+  </data>
+  <data name="Status_PlatesSaved" xml:space="preserve">
+    <value>{0} manufacturing files written to {1}.</value>
+  </data>
+  <data name="Status_TypeApplied" xml:space="preserve">
+    <value>All {1} probes are now of type {0}.</value>
+  </data>
+  <data name="Status_TypeStored" xml:space="preserve">
+    <value>{0} saved in the probe library.</value>
+  </data>
+  <data name="Check_NoProbeType" xml:space="preserve">
+    <value>{0} have no probe type, so spacing and plate holes cannot be checked.</value>
+  </data>
+  <data name="Check_NoDrill" xml:space="preserve">
+    <value>Probe type {0} has no drill diameter; its probes get no hole in the plate files.</value>
+  </data>
+  <data name="Check_Spacing" xml:space="preserve">
+    <value>{0} and {1} are {2} mm apart; their probe types need at least {3} mm.</value>
+  </data>
+  <data name="Check_PadTooSmall" xml:space="preserve">
+    <value>{0}: pad {1} is {2} mm, probe type {3} needs at least {4} mm.</value>
+  </data>
+  <data name="Check_OnComponent" xml:space="preserve">
+    <value>{0} lies on component {1}: the probe would hit it.</value>
+  </data>
+  <data name="Check_NearComponent" xml:space="preserve">
+    <value>{0} is {1} mm from component {2}; the probe type needs {3} mm.</value>
+  </data>
+  <data name="Check_LocatingPinOverlap" xml:space="preserve">
+    <value>The hole of {0} overlaps the hole of locating pin {1}.</value>
+  </data>
+  <data name="Header_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Label_ExportFiles" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="Label_ExportPlates" xml:space="preserve">
+    <value>Plates</value>
+  </data>
+  <data name="Export_Dxf" xml:space="preserve">
+    <value>Drawing (DXF)</value>
+  </data>
+  <data name="Export_Step" xml:space="preserve">
+    <value>3D model (STEP)</value>
+  </data>
+  <data name="Button_ExportFiles" xml:space="preserve">
+    <value>Export…</value>
+  </data>
+  <data name="Label_PlateOutline" xml:space="preserve">
+    <value>Plate outline</value>
+  </data>
+  <data name="ToolTip_PlateOutline" xml:space="preserve">
+    <value>Choose plate outline</value>
+  </data>
+  <data name="Outline_Automatic" xml:space="preserve">
+    <value>Board outline + margin</value>
+  </data>
+  <data name="Outline_FixedSize" xml:space="preserve">
+    <value>Fixed size</value>
+  </data>
+  <data name="Outline_Dxf" xml:space="preserve">
+    <value>DXF file</value>
+  </data>
+  <data name="Outline_Svg" xml:space="preserve">
+    <value>SVG file</value>
+  </data>
+  <data name="Outline_BoardLayer" xml:space="preserve">
+    <value>Board layer</value>
+  </data>
+  <data name="Label_PlateWidth" xml:space="preserve">
+    <value>Width (mm)</value>
+  </data>
+  <data name="Label_PlateHeight" xml:space="preserve">
+    <value>Height (mm)</value>
+  </data>
+  <data name="Label_OffsetX" xml:space="preserve">
+    <value>Offset X (mm)</value>
+  </data>
+  <data name="Label_OffsetY" xml:space="preserve">
+    <value>Offset Y (mm)</value>
+  </data>
+  <data name="ToolTip_OutlineOffset" xml:space="preserve">
+    <value>Shift from the centered position</value>
+  </data>
+  <data name="Label_OutlineFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Button_ChooseOutline" xml:space="preserve">
+    <value>Choose…</value>
+  </data>
+  <data name="ToolTip_ChooseOutline" xml:space="preserve">
+    <value>Choose outline file</value>
+  </data>
+  <data name="ToolTip_ReloadOutline" xml:space="preserve">
+    <value>Reload outline file</value>
+  </data>
+  <data name="Label_OutlineLayer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="Placeholder_OutlineLayer" xml:space="preserve">
+    <value>No user layer on the board</value>
+  </data>
+  <data name="Outline_Status" xml:space="preserve">
+    <value>Plate {0} × {1} mm, {2} frame holes, {3} cut-outs</value>
+  </data>
+  <data name="Outline_Missing" xml:space="preserve">
+    <value>No outline yet: the board outline plus the margin is used.</value>
+  </data>
+  <data name="Outline_NoLayerOutline" xml:space="preserve">
+    <value>No closed outline on layer {0}: the board outline plus the margin is used.</value>
+  </data>
+  <data name="Outline_OpenLines" xml:space="preserve">
+    <value>Some lines do not form a closed outline and were left out.</value>
+  </data>
+  <data name="Outline_Skipped" xml:space="preserve">
+    <value>Not used: {0}</value>
+  </data>
+  <data name="Outline_None" xml:space="preserve">
+    <value>No closed outline found in {0}.</value>
+  </data>
+  <data name="Error_Outline" xml:space="preserve">
+    <value>Outline could not be read</value>
+  </data>
+  <data name="Dialog_OpenOutline" xml:space="preserve">
+    <value>Plate outline</value>
+  </data>
+  <data name="Dialog_DxfFiles" xml:space="preserve">
+    <value>DXF drawings</value>
+  </data>
+  <data name="Dialog_SvgFiles" xml:space="preserve">
+    <value>SVG drawings</value>
+  </data>
+  <data name="Export_Svg" xml:space="preserve">
+    <value>Drawing (SVG)</value>
+  </data>
+  <data name="Tab_Mechanics" xml:space="preserve">
+    <value>Mechanics</value>
+  </data>
+  <data name="Part_PreCenteringPin" xml:space="preserve">
+    <value>Pre-centering pin</value>
+  </data>
+  <data name="Part_SupportPin" xml:space="preserve">
+    <value>Support pin</value>
+  </data>
+  <data name="Part_PushRod" xml:space="preserve">
+    <value>Push rod</value>
+  </data>
+  <data name="Button_PlacePreCenteringPin" xml:space="preserve">
+    <value>Pre-centering pin</value>
+  </data>
+  <data name="Button_PlaceSupportPin" xml:space="preserve">
+    <value>Support pin</value>
+  </data>
+  <data name="Button_PlacePushRod" xml:space="preserve">
+    <value>Push rod</value>
+  </data>
+  <data name="ToolTip_PlacePreCenteringPin" xml:space="preserve">
+    <value>Place pre-centering pins</value>
+  </data>
+  <data name="ToolTip_PlaceSupportPin" xml:space="preserve">
+    <value>Place support pins</value>
+  </data>
+  <data name="ToolTip_PlacePushRod" xml:space="preserve">
+    <value>Place push rods</value>
+  </data>
+  <data name="Button_RemovePart" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Text_PartsHint" xml:space="preserve">
+    <value>Choose a kind, then click on the board to place; drag to move, Esc ends placing. Locating pins go into a hole of the board, plated or not; pre-centering pins snap to the board edge. Push rods go into the top plate, all others into the bottom plate.</value>
+  </data>
+  <data name="Column_Part" xml:space="preserve">
+    <value>Part</value>
+  </data>
+  <data name="Column_PartKind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="Column_PartType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Column_PartDiameter" xml:space="preserve">
+    <value>Ø (mm)</value>
+  </data>
+  <data name="Column_PartLength" xml:space="preserve">
+    <value>Length (mm)</value>
+  </data>
+  <data name="Column_PartHeight" xml:space="preserve">
+    <value>Height (mm)</value>
+  </data>
+  <data name="Placeholder_PartType" xml:space="preserve">
+    <value>No type</value>
+  </data>
+  <data name="Header_Types" xml:space="preserve">
+    <value>Types</value>
+  </data>
+  <data name="Text_PartTypesHint" xml:space="preserve">
+    <value>All sizes in mm. Ø: where it touches the board. Drill Ø: hole in the plate. Length: overall length. Height: how far it stands out of the plate. Clearance: smallest distance from its edge to a component of its side.</value>
+  </data>
+  <data name="Text_NewPartType" xml:space="preserve">
+    <value>New type</value>
+  </data>
+  <data name="Status_Placing" xml:space="preserve">
+    <value>Click on the board to place a {0}; Esc ends.</value>
+  </data>
+  <data name="Status_PartPlaced" xml:space="preserve">
+    <value>{0} ({1}) placed.</value>
+  </data>
+  <data name="Status_PartRemoved" xml:space="preserve">
+    <value>{0} removed.</value>
+  </data>
+  <data name="Check_PartNoType" xml:space="preserve">
+    <value>{0} has no type, so its size and hole are unknown.</value>
+  </data>
+  <data name="Check_PartNoDrill" xml:space="preserve">
+    <value>{0}: type {1} has no drill diameter, so it gets no hole in the plate.</value>
+  </data>
+  <data name="Check_PreCenteringOnBoard" xml:space="preserve">
+    <value>{0} overlaps the board; a pre-centering pin stands beside it.</value>
+  </data>
+  <data name="Check_PreCenteringGap" xml:space="preserve">
+    <value>{0} does not touch the board edge ({1} mm gap).</value>
+  </data>
+  <data name="Check_PartOffBoard" xml:space="preserve">
+    <value>{0} is not under the board.</value>
+  </data>
+  <data name="Check_PartOnComponent" xml:space="preserve">
+    <value>{0} touches {1}.</value>
+  </data>
+  <data name="Check_PartNearComponent" xml:space="preserve">
+    <value>{0} is {1} mm from {2}, less than its clearance of {3} mm.</value>
+  </data>
+  <data name="Report_Parts" xml:space="preserve">
+    <value>Pins and push rods</value>
+  </data>
+  <data name="Column_Plate" xml:space="preserve">
+    <value>Plate</value>
+  </data>
+  <data name="Board_LegendProbes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Board_LegendLocatingPins" xml:space="preserve">
+    <value>Locating pins</value>
+  </data>
+  <data name="Board_LegendPreCenteringPins" xml:space="preserve">
+    <value>Pre-centering pins</value>
+  </data>
+  <data name="Board_LegendSupportPins" xml:space="preserve">
+    <value>Support pins</value>
+  </data>
+  <data name="Board_LegendPushRods" xml:space="preserve">
+    <value>Push rods</value>
+  </data>
+  <data name="Board_LegendPlateOutline" xml:space="preserve">
+    <value>Plate outline</value>
+  </data>
+  <data name="Part_LocatingPin" xml:space="preserve">
+    <value>Locating pin</value>
+  </data>
+  <data name="Button_PlaceLocatingPin" xml:space="preserve">
+    <value>Locating pin</value>
+  </data>
+  <data name="ToolTip_PlaceLocatingPin" xml:space="preserve">
+    <value>Place locating pins</value>
+  </data>
+  <data name="Status_LocatingNeedsHole" xml:space="preserve">
+    <value>A locating pin goes into a hole of the board: click on or next to a hole.</value>
+  </data>
+  <data name="Check_LocatingNoHole" xml:space="preserve">
+    <value>{0} is not in a hole of the board.</value>
+  </data>
+  <data name="Check_LocatingTooBig" xml:space="preserve">
+    <value>{0}: the pin (Ø {1} mm) does not fit into the hole of {2} (Ø {3} mm).</value>
+  </data>
+  <data name="Report_Bom" xml:space="preserve">
+    <value>Bill of materials</value>
+  </data>
+  <data name="Report_KindProbe" xml:space="preserve">
+    <value>Probe</value>
+  </data>
+  <data name="Report_NoType" xml:space="preserve">
+    <value>No type</value>
+  </data>
+  <data name="Column_Quantity" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="Report_AssemblyTop" xml:space="preserve">
+    <value>Top plate – assembly</value>
+  </data>
+  <data name="Report_AssemblyBottom" xml:space="preserve">
+    <value>Bottom plate – assembly</value>
+  </data>
+  <data name="Report_WiringTop" xml:space="preserve">
+    <value>Top plate – wiring</value>
+  </data>
+  <data name="Report_WiringBottom" xml:space="preserve">
+    <value>Bottom plate – wiring</value>
+  </data>
+  <data name="Report_ViewFromTop" xml:space="preserve">
+    <value>View from top</value>
+  </data>
+  <data name="Report_ViewFromBottom" xml:space="preserve">
+    <value>View from bottom (mirrored)</value>
+  </data>
+  <data name="Label_BuildSheet" xml:space="preserve">
+    <value>Build sheet</value>
+  </data>
+  <data name="Button_BuildSheetLayers" xml:space="preserve">
+    <value>Board layers…</value>
+  </data>
+  <data name="ToolTip_BuildSheetLayers" xml:space="preserve">
+    <value>Layers of the board in the build sheet drawings</value>
+  </data>
+  <data name="Header_BuildSheetLayers" xml:space="preserve">
+    <value>Layers in the drawings</value>
+  </data>
+  <data name="Text_BuildSheetLayers" xml:space="preserve">
+    <value>The top of the list is drawn on top. Layers of the other side are dashed.</value>
+  </data>
+  <data name="Button_DefaultLayerStyle" xml:space="preserve">
+    <value>Default style</value>
+  </data>
+  <data name="Button_DefaultLayerOrder" xml:space="preserve">
+    <value>Default order</value>
+  </data>
+  <data name="ToolTip_LayerTop" xml:space="preserve">
+    <value>Drawn when a drawing shows the top side of the board</value>
+  </data>
+  <data name="ToolTip_LayerBottom" xml:space="preserve">
+    <value>Drawn when a drawing shows the bottom side of the board</value>
+  </data>
+  <data name="ToolTip_LayerUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="ToolTip_LayerDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="ToolTip_LayerColor" xml:space="preserve">
+    <value>Choose color</value>
+  </data>
+  <data name="ToolTip_LayerOpacity" xml:space="preserve">
+    <value>Opacity of the layer</value>
+  </data>
+  <data name="Column_LayerTop" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Column_LayerBottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="Layer_TopPads" xml:space="preserve">
+    <value>Top pads</value>
+  </data>
+  <data name="Layer_BottomPads" xml:space="preserve">
+    <value>Bottom pads</value>
+  </data>
+  <data name="Button_SaveLayersAsDefault" xml:space="preserve">
+    <value>Save as default</value>
+  </data>
+  <data name="ToolTip_SaveLayersAsDefault" xml:space="preserve">
+    <value>Use these layers for new fixtures and fixtures without a choice</value>
+  </data>
+  <data name="Status_LayersDefaultSaved" xml:space="preserve">
+    <value>Layers saved as default for new fixtures.</value>
+  </data>
+  <data name="LayerView_AssemblyTop" xml:space="preserve">
+    <value>Assembly
+top</value>
+  </data>
+  <data name="LayerView_AssemblyBottom" xml:space="preserve">
+    <value>Assembly
+bottom</value>
+  </data>
+  <data name="LayerView_WiringTop" xml:space="preserve">
+    <value>Wiring
+top</value>
+  </data>
+  <data name="LayerView_WiringBottom" xml:space="preserve">
+    <value>Wiring
+bottom</value>
+  </data>
+  <data name="Button_LoadLayersDefault" xml:space="preserve">
+    <value>Load default</value>
+  </data>
+  <data name="ToolTip_LoadLayersDefault" xml:space="preserve">
+    <value>Take over the layers saved as default</value>
+  </data>
+  <data name="Plate_Cutout" xml:space="preserve">
+    <value>{0} runs into a cut-out of the plate.</value>
+  </data>
+  <data name="Label_SeparateOutlines" xml:space="preserve">
+    <value>Own outline for the top plate</value>
+  </data>
+  <data name="ToolTip_SeparateOutlines" xml:space="preserve">
+    <value>Give the top plate an outline of its own; otherwise both plates have the same outline</value>
+  </data>
+  <data name="Label_EditedOutline" xml:space="preserve">
+    <value>Outline of</value>
+  </data>
+  <data name="Button_DefaultLayerColors" xml:space="preserve">
+    <value>Default colors</value>
+  </data>
+</root>

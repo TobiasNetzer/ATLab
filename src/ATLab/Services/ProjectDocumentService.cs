@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using ATLab.Enums;
 using ATLab.Interfaces;
 using ATLab.Models;
 
@@ -123,14 +124,27 @@ public class ProjectDocumentService : IProjectDocumentService
         return true;
     }
 
+    /// <summary>
+    /// Unsaved changes: saves them (Save As for a new project) or discards them, as the user chooses. False if the
+    /// user canceled, also when the Save As dialog was canceled.
+    /// </summary>
     public async Task<bool> ConfirmAndContinueIfDirtyAsync()
     {
         if (_projectModel.IsDirty)
         {
-            var result = await _messageBoxService.ShowConfirmationDestructiveAsync(
-                LocalizationService.Instance["Title_UnsavedChanges"], 
+            var choice = await _messageBoxService.ShowSaveChangesAsync(
+                LocalizationService.Instance["Title_UnsavedChanges"],
                 LocalizationService.Instance["Text_UnsavedChanges"]);
-            if (!result) return false;
+
+            switch (choice)
+            {
+                case SaveChangesChoice.Save:
+                    if (!await SaveAsync(_projectModel.ToDto()))
+                        return false;
+                    break;
+                case SaveChangesChoice.Cancel:
+                    return false;
+            }
         }
         _projectModel.MarkSaved();
         return true;

@@ -14,12 +14,16 @@ public partial class ConfigTabViewModel : ViewModelBase
     
     public RuntimeVariableEditorViewModel RuntimeVariableEditorViewModel { get; }
 
+    public BoardLinkEditorViewModel BoardLinkEditor { get; }
+
     public ConfigTabViewModel(
         TestHardwareRelayChannelsViewModel testHardwareRelayChannelsViewModel,
         DeviceManagerViewModel deviceManagerViewModel,
         ProjectSettingsViewModel projectSettingsViewModel,
-        RuntimeVariableEditorViewModel runtimeVariableEditorViewModel)
+        RuntimeVariableEditorViewModel runtimeVariableEditorViewModel,
+        BoardLinkEditorViewModel boardLinkEditor)
     {
+        BoardLinkEditor = boardLinkEditor;
         TestHardwareRelayChannels = testHardwareRelayChannelsViewModel;
         DeviceManager = deviceManagerViewModel;
         ProjectSettingsViewModel = projectSettingsViewModel;

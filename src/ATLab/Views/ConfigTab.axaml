@@ -6,8 +6,10 @@
              x:DataType="vm:ConfigTabViewModel">
     
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-        <Grid ColumnDefinitions="*, *"
+        
+        <Grid ColumnDefinitions="Auto, Auto, Auto"
               RowDefinitions="*, *"
+              HorizontalAlignment="Center"
               Margin="10">
                 
             <controls:CustomChannelNameSetter
@@ -37,6 +39,13 @@
                 HorizontalAlignment="Left"
                 DataContext="{Binding ProjectSettingsViewModel}"
                 Margin="5 0 0 0"/>
+            
+            <controls:BoardLinkEditor
+                Grid.Column="2"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                DataContext="{Binding BoardLinkEditor}"
+                Margin="10 0 0 0"/>
                 
         </Grid>
     </ScrollViewer>

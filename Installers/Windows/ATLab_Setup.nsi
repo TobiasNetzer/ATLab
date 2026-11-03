@@ -7,7 +7,12 @@
 !define ANALYZER_EXE "ATLab.Analyzer.exe"
 !define ANALYZER_DIR "$INSTDIR\Analyzer"
 
-; Both apps are published framework dependent and need this .NET runtime
+; ATLab Fixture Designer as well, published to out\FixtureDesigner
+!define DESIGNER_NAME "ATLab Fixture Designer"
+!define DESIGNER_EXE "ATLab.FixtureDesigner.exe"
+!define DESIGNER_DIR "$INSTDIR\FixtureDesigner"
+
+; All apps are published framework dependent and need this .NET runtime
 !define DOTNET_MAJOR "10"
 !define DOTNET_DOWNLOAD_URL "https://dotnet.microsoft.com/download/dotnet/10.0"
 
@@ -92,8 +97,9 @@ Function ${un}EnsureAppsClosed
     StrCpy $1 0
     !insertmacro CHECK_LOCKED "$INSTDIR\${PRODUCT_NAME}.exe"
     !insertmacro CHECK_LOCKED "${ANALYZER_DIR}\${ANALYZER_EXE}"
+    !insertmacro CHECK_LOCKED "${DESIGNER_DIR}\${DESIGNER_EXE}"
     StrCmp $1 0 done
-    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "${PRODUCT_NAME} or ${ANALYZER_NAME} is still running.$\r$\n$\r$\nClose it and click Retry." /SD IDCANCEL IDRETRY check
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "${PRODUCT_NAME}, ${ANALYZER_NAME} or ${DESIGNER_NAME} is still running.$\r$\n$\r$\nClose it and click Retry." /SD IDCANCEL IDRETRY check
     Quit
   done:
 FunctionEnd
@@ -156,7 +162,7 @@ Function CheckDotNetRuntime
   FindClose $0
   StrCmp $1 "" 0 done
 
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "${PRODUCT_NAME} and ${ANALYZER_NAME} need the .NET ${DOTNET_MAJOR} Runtime (x64), which is not installed on this computer.$\r$\n$\r$\nOpen the download page now? Setup continues either way; install the runtime before you start ${PRODUCT_NAME}." IDNO done
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "${PRODUCT_NAME}, ${ANALYZER_NAME} and ${DESIGNER_NAME} need the .NET ${DOTNET_MAJOR} Runtime (x64), which is not installed on this computer.$\r$\n$\r$\nOpen the download page now? Setup continues either way; install the runtime before you start ${PRODUCT_NAME}." IDNO done
   ; Through Explorer, so the browser does not run with the installer's administrator rights
   Exec '"$WINDIR\explorer.exe" "${DOTNET_DOWNLOAD_URL}"'
   done:
@@ -171,6 +177,7 @@ FunctionEnd
 Function CreateDesktopShortcut
     CreateShortcut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}.exe"
     CreateShortcut "$DESKTOP\${ANALYZER_NAME}.lnk" "${ANALYZER_DIR}\${ANALYZER_EXE}"
+    CreateShortcut "$DESKTOP\${DESIGNER_NAME}.lnk" "${DESIGNER_DIR}\${DESIGNER_EXE}"
 FunctionEnd
 
 ; Earlier installers created the shortcuts for the installing user only and wrote the uninstall entry to the 32-bit
@@ -179,9 +186,11 @@ Function RemoveLegacyEntries
   SetShellVarContext current
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\${ANALYZER_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${DESIGNER_NAME}.lnk"
   RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   Delete "$DESKTOP\${ANALYZER_NAME}.lnk"
+  Delete "$DESKTOP\${DESIGNER_NAME}.lnk"
   SetShellVarContext all
 
   SetRegView 32
@@ -220,6 +229,17 @@ Section "Install ATLab"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${ANALYZER_EXE}" "" "${ANALYZER_DIR}\${ANALYZER_EXE}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${ANALYZER_EXE}" "Path" "${ANALYZER_DIR}"
 
+  ; ATLab Fixture Designer: Start menu, App Paths and the .atlabfix file association
+  CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\${DESIGNER_NAME}.lnk" "${DESIGNER_DIR}\${DESIGNER_EXE}"
+
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${DESIGNER_EXE}" "" "${DESIGNER_DIR}\${DESIGNER_EXE}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${DESIGNER_EXE}" "Path" "${DESIGNER_DIR}"
+
+  WriteRegStr HKLM "Software\Classes\.atlabfix" "" "${PRODUCT_NAME}FixtureFile"
+  WriteRegStr HKLM "Software\Classes\${PRODUCT_NAME}FixtureFile" "" "${DESIGNER_NAME} Fixture"
+  WriteRegStr HKLM "Software\Classes\${PRODUCT_NAME}FixtureFile\DefaultIcon" "" "${DESIGNER_DIR}\${DESIGNER_EXE},0"
+  WriteRegStr HKLM "Software\Classes\${PRODUCT_NAME}FixtureFile\shell\open\command" "" '"${DESIGNER_DIR}\${DESIGNER_EXE}" "%1"'
+
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   WriteRegStr HKLM "${UNINSTALL_KEY}" "DisplayName" "${PRODUCT_NAME}"
@@ -255,9 +275,11 @@ Section "Uninstall"
 
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\${ANALYZER_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${DESIGNER_NAME}.lnk"
   RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   Delete "$DESKTOP\${ANALYZER_NAME}.lnk"
+  Delete "$DESKTOP\${DESIGNER_NAME}.lnk"
 
   ; Only the installed files; the program folder itself only if nothing else is left in it
   Call un.RemoveInstalledFiles
@@ -268,6 +290,9 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Classes\.atlab"
   DeleteRegKey HKLM "Software\Classes\${PRODUCT_NAME}File"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${ANALYZER_EXE}"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\${DESIGNER_EXE}"
+  DeleteRegKey HKLM "Software\Classes\.atlabfix"
+  DeleteRegKey HKLM "Software\Classes\${PRODUCT_NAME}FixtureFile"
 
   ; Uninstall entry of earlier installers in the 32-bit registry
   SetRegView 32

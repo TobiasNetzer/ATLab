@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ATLab.Results\ATLab.Results.csproj" />
+    <ProjectReference Include="..\ATLab.Pcb\ATLab.Pcb.csproj" />
   </ItemGroup>
 
   <ItemGroup>

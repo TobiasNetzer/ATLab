@@ -5,6 +5,8 @@
              xmlns:behaviors="clr-namespace:ATLab.Behaviors"
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              xmlns:helpers="clr-namespace:ATLab.Helpers"
+             xmlns:services="clr-namespace:ATLab.Services"
+             xmlns:pcb="clr-namespace:ATLab.Pcb.Controls;assembly=ATLab.Pcb"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
         
@@ -378,6 +380,18 @@
                             <ContentControl Content="{LucideIconContent Search}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
+
+                    <Button
+                        Background="{Binding BoardViewer.IsVisible, Converter={StaticResource ButtonEnabledConverter}}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_ShowBoardView}"
+                        Command="{Binding BoardViewer.ToggleVisibleCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent CircuitBoard}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
                     
                     <Button
                         Background="{Binding IsDevelopmentMode, Converter={StaticResource ButtonEnabledConverter}}"
@@ -410,8 +424,13 @@
                               IsVisible="{Binding StatusService.IsVisible}"/>
         
         <Grid Grid.Column="0" Grid.Row="2"
-              ColumnDefinitions="250,Auto,*"
               Margin="10">
+            <!-- Minimum sizes, so the splitters cannot collapse a panel by accident -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" MinWidth="180"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="400"/>
+            </Grid.ColumnDefinitions>
             
             <controls:ModuleExplorer Grid.Column="0"/>
             
@@ -420,7 +439,9 @@
                           Background="Transparent"
                           ResizeDirection="Columns"/>
         
-            <DataGrid Grid.Column="2"
+            <Grid Grid.Column="2" x:Name="StepArea" RowDefinitions="*,Auto,Auto">
+
+            <DataGrid Grid.Row="0"
                       x:Name="TestStepPresenter"
                       Classes="HorizontalScroll Compact"
                       ItemsSource="{Binding TestSteps}"
@@ -586,6 +607,243 @@
                 </DataGrid.KeyBindings>
             
             </DataGrid>
+
+            <GridSplitter Grid.Row="1"
+                          x:Name="BoardSplitter"
+                          Height="10"
+                          Background="Transparent"
+                          ResizeDirection="Rows"
+                          IsVisible="{Binding BoardViewer.IsVisible}"/>
+
+            <!-- Board view: where the selected (or running) step connects to the board -->
+            <Border Grid.Row="2"
+                    x:Name="BoardPanel"
+                    BorderThickness="2"
+                    BorderBrush="{DynamicResource OutlineColor}"
+                    CornerRadius="10"
+                    ClipToBounds="True"
+                    IsVisible="{Binding BoardViewer.IsVisible}">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="10,6,8,4">
+                        <TextBlock Text="{Binding BoardViewer.Title}"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Classes.BoardFailed="{Binding BoardViewer.IsTitleFailed}">
+                            <TextBlock.Styles>
+                                <Style Selector="TextBlock.BoardFailed">
+                                    <Setter Property="Foreground" Value="{DynamicResource ErrorColor}"/>
+                                </Style>
+                            </TextBlock.Styles>
+                        </TextBlock>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <RadioButton GroupName="BoardSide" Content="{helpers:Localize Board_ViewTop}"
+                                         IsChecked="{Binding BoardViewer.IsTopView}" VerticalAlignment="Center"/>
+                            <RadioButton GroupName="BoardSide" Content="{helpers:Localize Board_ViewBottom}"
+                                         IsChecked="{Binding BoardViewer.IsBottomView}" VerticalAlignment="Center"
+                                         ToolTip.Tip="{helpers:Localize ToolTip_BoardViewBottom}"/>
+                            <Button Background="{Binding BoardViewer.IsCoverageMode, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Content="{helpers:Localize Board_Coverage}"
+                                    Command="{Binding BoardViewer.ToggleCoverageCommand}"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_BoardCoverage}"
+                                    Height="30" Padding="10,0"/>
+                            <Button Background="{Binding BoardViewer.IsHighlightZones, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Content="{helpers:Localize Board_Zones}"
+                                    Command="{Binding BoardViewer.ToggleHighlightZonesCommand}"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_BoardZones}"
+                                    Height="30" Padding="10,0"/>
+                            <Button Classes="Icon" Width="30" Height="30"
+                                    Background="{DynamicResource ButtonBackground}"
+                                    Click="OnBoardFitClicked"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_BoardFit}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Maximize, 16}"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Icon" Width="30" Height="30"
+                                    Background="{DynamicResource ButtonBackground}"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_BoardLayers}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Layers, 16}"/>
+                                </shadui:ButtonAssist.Icon>
+                                <Button.Flyout>
+                                    <Flyout Placement="BottomEdgeAlignedRight">
+                                        <StackPanel Spacing="6" MinWidth="220">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Button Classes="Outline" Height="28" Padding="10,0"
+                                                        Content="{helpers:Localize Board_AllLayers}"
+                                                        Command="{Binding BoardViewer.ShowAllLayersCommand}" CommandParameter="{x:True}"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0"
+                                                        Content="{helpers:Localize Board_NoLayers}"
+                                                        Command="{Binding BoardViewer.ShowAllLayersCommand}" CommandParameter="{x:False}"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0"
+                                                        Content="{helpers:Localize Button_DefaultLayerColors}"
+                                                        Command="{Binding BoardViewer.ResetLayerColorsCommand}"/>
+                                            </StackPanel>
+                                            <ScrollViewer MaxHeight="420">
+                                                <ItemsControl ItemsSource="{Binding BoardViewer.LayerOptions}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <!-- The swatch opens the color picker -->
+                                                        <DataTemplate DataType="vm:BoardLayerOption">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,1">
+                                                                <StackPanel Orientation="Horizontal" Width="64" VerticalAlignment="Center">
+                                                                    <ColorPicker Color="{Binding Color, Mode=TwoWay}" IsAlphaEnabled="False" IsAlphaVisible="False" CornerRadius="6"
+                                                                                 ToolTip.Tip="{helpers:Localize ToolTip_BoardRoleColor}">
+                                                                        <Border Width="12" Height="12" CornerRadius="2" Background="{Binding Brush}"/>
+                                                                    </ColorPicker>
+                                                                </StackPanel>
+                                                                <CheckBox IsChecked="{Binding IsVisible}">
+                                                                    <TextBlock Text="{Binding Display}" VerticalAlignment="Center"/>
+                                                                </CheckBox>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Roles shown on the board: click the name to show or hide it, the color picker beside it to choose
+                         its color. One line; a narrow window scrolls it sideways -->
+                    <ScrollViewer Grid.Row="1"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  Margin="10,0,10,0">
+                    <!-- The bottom margin is the room of the scrollbar, which would otherwise lie on the buttons -->
+                    <ItemsControl ItemsSource="{Binding BoardViewer.RoleOptions}" Margin="0,0,0,10">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="6"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:BoardRoleOption">
+                                <!-- Outer radius = inner radius 6 + gap 2 + border 1, so the corners run in parallel -->
+                                <Border CornerRadius="9" BorderThickness="1" Padding="2"
+                                        BorderBrush="{DynamicResource OutlineColor}"
+                                        Background="{DynamicResource ButtonBackground}"
+                                        Classes.RoleHidden="{Binding !IsShown}">
+                                    <Border.Styles>
+                                        <Style Selector="Border.RoleHidden">
+                                            <Setter Property="Opacity" Value="0.45"/>
+                                        </Style>
+                                    </Border.Styles>
+                                    <StackPanel Orientation="Horizontal" Spacing="2">
+                                        <!-- The same color picker as the accent color of a step, without alpha -->
+                                        <ColorPicker Color="{Binding Color, Mode=TwoWay}"
+                                                     CornerRadius="6"
+                                                     IsAlphaEnabled="False"
+                                                     IsAlphaVisible="False"
+                                                     VerticalAlignment="Center"
+                                                     ToolTip.Tip="{helpers:Localize ToolTip_BoardRoleColor}">
+                                            <!-- Only a dot of the color on the button, the chip stays small -->
+                                            <Border Width="14" Height="14" CornerRadius="7" Background="{Binding Brush}"/>
+                                        </ColorPicker>
+                                        <Button Command="{Binding ToggleCommand}"
+                                                Background="Transparent"
+                                                CornerRadius="6"
+                                                Height="32" MinHeight="0" Padding="8,0,10,0"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                ToolTip.Tip="{helpers:Localize ToolTip_BoardRoleToggle}">
+                                            <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                                            <Button.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="{helpers:Localize Board_RoleDefaultColor}"
+                                                              Command="{Binding ResetColorCommand}"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- What the step connects: role, adapter resource and net in the color of the role. One line that
+                         is always there, also when empty, so the board keeps its size from step to step; a narrow
+                         window scrolls it sideways -->
+                    <ScrollViewer Grid.Row="2"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  Margin="10,0,10,0">
+                    <ItemsControl ItemsSource="{Binding BoardViewer.Legend}"
+                                  MinHeight="20"
+                                  Margin="0,0,0,10">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="14"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="services:BoardLegendItem">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Width="10" Height="10" CornerRadius="5" Background="{Binding Brush}"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Classes="Small" VerticalAlignment="Center">
+                                        <Run Text="{Binding Role}" FontWeight="Bold"/>
+                                        <Run Text="{Binding Resource}"/>
+                                    </TextBlock>
+                                    <TextBlock Classes="Small" Text="{Binding Net}" FontWeight="SemiBold"
+                                               VerticalAlignment="Center" IsVisible="{Binding HasNet}"/>
+                                    <TextBlock Classes="Small" Text="{helpers:Localize Board_NoNetAssigned}"
+                                               Foreground="{DynamicResource MutedColor}"
+                                               VerticalAlignment="Center" IsVisible="{Binding !HasNet}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- No board, loading, error, or a board file that changed since the nets were assigned -->
+                    <Border Grid.Row="3"
+                            IsVisible="{Binding BoardViewer.HasNotice}"
+                            Background="{DynamicResource WarningColor10}"
+                            Padding="10,6"
+                            Margin="8,0,8,6"
+                            CornerRadius="6">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <TextBlock Text="{Binding BoardViewer.Notice}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Classes="Outline" Height="28" Padding="10,0"
+                                    Content="{helpers:Localize Board_AcceptChange}"
+                                    ToolTip.Tip="{helpers:Localize ToolTip_BoardAcceptChange}"
+                                    Command="{Binding BoardViewer.AcceptBoardChangeCommand}">
+                                <Button.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BoardViewer.IsBoardChanged"/>
+                                        <Binding Path="IsDevelopmentMode"/>
+                                    </MultiBinding>
+                                </Button.IsVisible>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <pcb:BoardView Grid.Row="4"
+                                   x:Name="BoardView"
+                                   MinHeight="120"
+                                   Board="{Binding BoardViewer.Board}"
+                                   ViewSide="{Binding BoardViewer.ViewSide}"
+                                   Markers="{Binding BoardViewer.Markers}"
+                                   NetHighlights="{Binding BoardViewer.NetHighlights}"
+                                   PadHighlights="{Binding BoardViewer.PadHighlights}"
+                                   FootprintHighlights="{Binding BoardViewer.FootprintHighlights}"
+                                   VisibleLayers="{Binding BoardViewer.VisibleLayers}"
+                                   LayerColors="{Binding BoardViewer.LayerColors}"
+                                   IsZoneHighlightEnabled="{Binding BoardViewer.IsHighlightZones}"
+                                   HintKey="Board_HintViewer"
+                                   CornerRadius="0,0,8,8"
+                                   IsVisible="{Binding BoardViewer.ShowBoard}"/>
+                </Grid>
+            </Border>
+            </Grid>
         </Grid>
         
         <Border Grid.Column="0" Grid.Row="3"

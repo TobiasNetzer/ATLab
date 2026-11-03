@@ -1,0 +1,1199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About_Avalonia" xml:space="preserve">
+    <value>Avalonia</value>
+  </data>
+  <data name="About_Configuration" xml:space="preserve">
+    <value>Konfiguration</value>
+  </data>
+  <data name="About_Date" xml:space="preserve">
+    <value>Build-Datum</value>
+  </data>
+  <data name="About_Description" xml:space="preserve">
+    <value>Nadeladapter aus KiCad-Platinendateien entwerfen.</value>
+  </data>
+  <data name="About_Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="About_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Button_License" xml:space="preserve">
+    <value>Lizenz</value>
+  </data>
+  <data name="Button_ViewProjectOnGitHub" xml:space="preserve">
+    <value>Projekt auf GitHub ansehen</value>
+  </data>
+  <data name="ToolTip_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="ToolTip_About" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="ToolTip_Theme" xml:space="preserve">
+    <value>Design umschalten</value>
+  </data>
+  <data name="ToolTip_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Enum_BoardSide_Top" xml:space="preserve">
+    <value>Oben</value>
+  </data>
+  <data name="Enum_BoardSide_Bottom" xml:space="preserve">
+    <value>Unten</value>
+  </data>
+  <data name="Enum_CheckSeverity_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Enum_CheckSeverity_Warning" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="Enum_CheckSeverity_Info" xml:space="preserve">
+    <value>Hinweis</value>
+  </data>
+  <data name="Access_Both" xml:space="preserve">
+    <value>Beide Seiten</value>
+  </data>
+  <data name="Access_None" xml:space="preserve">
+    <value>Keine</value>
+  </data>
+  <data name="Board_TopView" xml:space="preserve">
+    <value>Ansicht von oben</value>
+  </data>
+  <data name="Board_BottomView" xml:space="preserve">
+    <value>Ansicht von unten (gespiegelt, wie von unten gesehen)</value>
+  </data>
+  <data name="Board_Hint" xml:space="preserve">
+    <value>Mausrad: Zoom · Ziehen: Verschieben · Klick: Pad auswählen · Doppelklick auf Pad: Prüfnadel hinzufügen/entfernen · Doppelklick daneben oder F: ganze Platine</value>
+  </data>
+  <data name="Board_TopPads" xml:space="preserve">
+    <value>Pads oben</value>
+  </data>
+  <data name="Board_BottomPads" xml:space="preserve">
+    <value>Pads unten</value>
+  </data>
+  <data name="Board_NoNet" xml:space="preserve">
+    <value>kein Netz</value>
+  </data>
+  <data name="Board_SideTop" xml:space="preserve">
+    <value>oben</value>
+  </data>
+  <data name="Board_SideBottom" xml:space="preserve">
+    <value>unten</value>
+  </data>
+  <data name="Button_New" xml:space="preserve">
+    <value>Neu aus Platine…</value>
+  </data>
+  <data name="Button_Open" xml:space="preserve">
+    <value>Öffnen…</value>
+  </data>
+  <data name="Button_Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Button_SaveAs" xml:space="preserve">
+    <value>Speichern unter…</value>
+  </data>
+  <data name="Button_ReloadBoard" xml:space="preserve">
+    <value>Platine neu laden</value>
+  </data>
+  <data name="Button_ChangeBoard" xml:space="preserve">
+    <value>Platine wechseln…</value>
+  </data>
+  <data name="Button_BuildSheet" xml:space="preserve">
+    <value>Aufbaublatt (PDF)…</value>
+  </data>
+  <data name="Button_AutoAssign" xml:space="preserve">
+    <value>MEAS-Kanäle zuweisen</value>
+  </data>
+  <data name="Button_Renumber" xml:space="preserve">
+    <value>Neu nummerieren</value>
+  </data>
+  <data name="Button_Disconnect" xml:space="preserve">
+    <value>Trennen</value>
+  </data>
+  <data name="Button_RemoveProbe" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Button_AddBottom" xml:space="preserve">
+    <value>Prüfnadel von unten</value>
+  </data>
+  <data name="Button_AddTop" xml:space="preserve">
+    <value>Prüfnadel von oben</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Button_DontSave" xml:space="preserve">
+    <value>Nicht speichern</value>
+  </data>
+  <data name="Button_Export" xml:space="preserve">
+    <value>Trotzdem exportieren</value>
+  </data>
+  <data name="Button_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Button_SelectBoard" xml:space="preserve">
+    <value>Platine auswählen…</value>
+  </data>
+  <data name="ToolTip_New" xml:space="preserve">
+    <value>Neues Nadelbett</value>
+  </data>
+  <data name="ToolTip_Open" xml:space="preserve">
+    <value>Datei öffnen</value>
+  </data>
+  <data name="ToolTip_Save" xml:space="preserve">
+    <value>Nadelbett speichern</value>
+  </data>
+  <data name="ToolTip_SaveAs" xml:space="preserve">
+    <value>Nadelbett speichern unter</value>
+  </data>
+  <data name="ToolTip_ReloadBoard" xml:space="preserve">
+    <value>Platine neu laden</value>
+  </data>
+  <data name="ToolTip_ChangeBoard" xml:space="preserve">
+    <value>Platine wechseln</value>
+  </data>
+  <data name="ToolTip_BuildSheet" xml:space="preserve">
+    <value>Aufbaublatt erstellen</value>
+  </data>
+  <data name="ToolTip_AutoAssign" xml:space="preserve">
+    <value>MEAS-Kanäle zuordnen</value>
+  </data>
+  <data name="ToolTip_Renumber" xml:space="preserve">
+    <value>Prüfnadeln neu nummerieren</value>
+  </data>
+  <data name="ToolTip_Disconnect" xml:space="preserve">
+    <value>Prüfnadel trennen</value>
+  </data>
+  <data name="ToolTip_RemoveProbe" xml:space="preserve">
+    <value>Prüfnadel entfernen</value>
+  </data>
+  <data name="ToolTip_AddBottom" xml:space="preserve">
+    <value>Prüfnadel von unten hinzufügen</value>
+  </data>
+  <data name="ToolTip_AddTop" xml:space="preserve">
+    <value>Prüfnadel von oben hinzufügen</value>
+  </data>
+  <data name="ToolTip_PadSearch" xml:space="preserve">
+    <value>Pads suchen</value>
+  </data>
+  <data name="ToolTip_TestPoints" xml:space="preserve">
+    <value>Nur Testpunkte</value>
+  </data>
+  <data name="ToolTip_ViewBottom" xml:space="preserve">
+    <value>Ansicht von unten</value>
+  </data>
+  <data name="ToolTip_ViewTop" xml:space="preserve">
+    <value>Ansicht von oben</value>
+  </data>
+  <data name="ToolTip_Fit" xml:space="preserve">
+    <value>Platine einpassen</value>
+  </data>
+  <data name="ToolTip_ShowChecks" xml:space="preserve">
+    <value>Prüfungen anzeigen</value>
+  </data>
+  <data name="Label_View" xml:space="preserve">
+    <value>Ansicht</value>
+  </data>
+  <data name="View_Bottom" xml:space="preserve">
+    <value>Unten</value>
+  </data>
+  <data name="View_Top" xml:space="preserve">
+    <value>Oben</value>
+  </data>
+  <data name="Label_FixtureName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Label_DeviceName" xml:space="preserve">
+    <value>Prüfling</value>
+  </data>
+  <data name="Label_DeviceRevision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="Label_Author" xml:space="preserve">
+    <value>Ersteller</value>
+  </data>
+  <data name="Label_Notes" xml:space="preserve">
+    <value>Notizen</value>
+  </data>
+  <data name="Label_Adapter" xml:space="preserve">
+    <value>Test-Hardware</value>
+  </data>
+  <data name="Label_FixtureFile" xml:space="preserve">
+    <value>Nadelbett-Datei</value>
+  </data>
+  <data name="Label_BoardFile" xml:space="preserve">
+    <value>Platinendatei</value>
+  </data>
+  <data name="Tab_Probes" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Tab_Pads" xml:space="preserve">
+    <value>Pads</value>
+  </data>
+  <data name="Tab_Adapter" xml:space="preserve">
+    <value>Test-Hardware</value>
+  </data>
+  <data name="Tab_Checks" xml:space="preserve">
+    <value>Prüfungen</value>
+  </data>
+  <data name="Tab_ChecksCount" xml:space="preserve">
+    <value>Prüfungen ({0})</value>
+  </data>
+  <data name="Tab_Fixture" xml:space="preserve">
+    <value>Nadelbett</value>
+  </data>
+  <data name="Column_Probe" xml:space="preserve">
+    <value>Nadel</value>
+  </data>
+  <data name="Column_Pad" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="Column_Net" xml:space="preserve">
+    <value>Netz</value>
+  </data>
+  <data name="Column_Side" xml:space="preserve">
+    <value>Seite</value>
+  </data>
+  <data name="Column_Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="Column_X" xml:space="preserve">
+    <value>X (mm)</value>
+  </data>
+  <data name="Column_Y" xml:space="preserve">
+    <value>Y (mm)</value>
+  </data>
+  <data name="Column_Note" xml:space="preserve">
+    <value>Bemerkung</value>
+  </data>
+  <data name="Column_Reference" xml:space="preserve">
+    <value>Referenz</value>
+  </data>
+  <data name="Column_PadNumber" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="Column_Access" xml:space="preserve">
+    <value>Erreichbar</value>
+  </data>
+  <data name="Column_Probes" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Column_Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Column_Size" xml:space="preserve">
+    <value>Größe (mm)</value>
+  </data>
+  <data name="Column_Footprint" xml:space="preserve">
+    <value>Footprint</value>
+  </data>
+  <data name="Column_Resource" xml:space="preserve">
+    <value>Ressource</value>
+  </data>
+  <data name="Column_Signal" xml:space="preserve">
+    <value>Signal</value>
+  </data>
+  <data name="Column_PadType" xml:space="preserve">
+    <value>Pad (mm)</value>
+  </data>
+  <data name="Placeholder_Pin" xml:space="preserve">
+    <value>Nicht verdrahtet</value>
+  </data>
+  <data name="Placeholder_PadSearch" xml:space="preserve">
+    <value>Referenz, Netz, Footprint suchen… (z. B. TP*)</value>
+  </data>
+  <data name="Filter_TestPoints" xml:space="preserve">
+    <value>Nur Testpunkte</value>
+  </data>
+  <data name="Filter_WithNet" xml:space="preserve">
+    <value>Nur mit Netz</value>
+  </data>
+  <data name="Text_Unsaved" xml:space="preserve">
+    <value>Noch nicht gespeichert</value>
+  </data>
+  <data name="Text_NewFixture" xml:space="preserve">
+    <value>Neues Nadelbett</value>
+  </data>
+  <data name="Text_PadCount" xml:space="preserve">
+    <value>{0} von {1} Pads</value>
+  </data>
+  <data name="Text_ProbeCount" xml:space="preserve">
+    <value>{0} Prüfnadeln ({1} oben, {2} unten)</value>
+  </data>
+  <data name="Text_NoProbes" xml:space="preserve">
+    <value>Noch keine Prüfnadeln. Doppelklick auf ein Pad auf der Platine oder in der Pad-Liste fügt eine Prüfnadel hinzu.</value>
+  </data>
+  <data name="Text_CheckSummary" xml:space="preserve">
+    <value>{0} Fehler, {1} Warnungen</value>
+  </data>
+  <data name="Text_ChecksClean" xml:space="preserve">
+    <value>Keine Probleme gefunden.</value>
+  </data>
+  <data name="Text_UsedPins" xml:space="preserve">
+    <value>{0} von {1} Pins belegt, {2} von {3} MEAS-Kanälen</value>
+  </data>
+  <data name="Info_Board" xml:space="preserve">
+    <value>{0} · {1} Footprints · {2} Pads · {3}</value>
+  </data>
+  <data name="Welcome_Text" xml:space="preserve">
+    <value>Nadelbett für die Test-Hardware entwerfen: KiCad-Platine des Prüflings öffnen, die zu kontaktierenden Pads von oben oder unten wählen, jede Prüfnadel einem Pin der Test-Hardware zuordnen und das Aufbaublatt erstellen.</value>
+  </data>
+  <data name="Welcome_Hint" xml:space="preserve">
+    <value>Eine KiCad-Platine (.kicad_pcb, ab KiCad 6) öffnen, um ein neues Nadelbett zu beginnen, oder eine vorhandene Nadelbett-Datei (.atlabfix). Dateien können auch auf das Fenster gezogen werden.</value>
+  </data>
+  <data name="Status_Start" xml:space="preserve">
+    <value>KiCad-Platine oder Nadelbett-Datei öffnen.</value>
+  </data>
+  <data name="Status_BoardOpened" xml:space="preserve">
+    <value>Platine {0} geöffnet. Doppelklick auf Pads fügt Prüfnadeln hinzu.</value>
+  </data>
+  <data name="Status_FixtureOpened" xml:space="preserve">
+    <value>Nadelbett {0} mit {1} Prüfnadeln geöffnet.</value>
+  </data>
+  <data name="Status_BoardReloaded" xml:space="preserve">
+    <value>Platine {0} neu eingelesen.</value>
+  </data>
+  <data name="Status_BoardReloadedMissing" xml:space="preserve">
+    <value>Platine {0} neu eingelesen; {1} Prüfnadeln haben kein Pad mehr, siehe Prüfungen.</value>
+  </data>
+  <data name="Status_Saved" xml:space="preserve">
+    <value>Als {0} gespeichert.</value>
+  </data>
+  <data name="Status_ProbeAdded" xml:space="preserve">
+    <value>{0} auf {1} von der {2} hinzugefügt.</value>
+  </data>
+  <data name="Side_Top" xml:space="preserve">
+    <value>Oberseite</value>
+  </data>
+  <data name="Side_Bottom" xml:space="preserve">
+    <value>Unterseite</value>
+  </data>
+  <data name="Column_Done" xml:space="preserve">
+    <value>Erl.</value>
+  </data>
+  <data name="Status_ProbeRemoved" xml:space="preserve">
+    <value>{0} entfernt.</value>
+  </data>
+  <data name="Status_AutoAssigned" xml:space="preserve">
+    <value>{0} Prüfnadeln MEAS-Kanälen zugewiesen.</value>
+  </data>
+  <data name="Status_AutoAssignedPartly" xml:space="preserve">
+    <value>{0} Prüfnadeln zugewiesen; {1} bleiben unverdrahtet, weil alle MEAS-Kanäle belegt sind.</value>
+  </data>
+  <data name="Status_Renumbered" xml:space="preserve">
+    <value>Prüfnadeln neu nummeriert.</value>
+  </data>
+  <data name="Status_BuildSheetSaved" xml:space="preserve">
+    <value>Aufbaublatt {0} gespeichert.</value>
+  </data>
+  <data name="Dialog_Open" xml:space="preserve">
+    <value>Nadelbett oder Platine öffnen</value>
+  </data>
+  <data name="Dialog_OpenBoard" xml:space="preserve">
+    <value>KiCad-Platine öffnen</value>
+  </data>
+  <data name="Dialog_SaveFixture" xml:space="preserve">
+    <value>Nadelbett speichern</value>
+  </data>
+  <data name="Dialog_SaveBuildSheet" xml:space="preserve">
+    <value>Aufbaublatt speichern</value>
+  </data>
+  <data name="Dialog_FixtureFiles" xml:space="preserve">
+    <value>ATLab-Nadelbett (*.atlabfix)</value>
+  </data>
+  <data name="Dialog_BoardFiles" xml:space="preserve">
+    <value>KiCad-Platine (*.kicad_pcb)</value>
+  </data>
+  <data name="Dialog_SupportedFiles" xml:space="preserve">
+    <value>Nadelbetten und KiCad-Platinen</value>
+  </data>
+  <data name="Dialog_PdfFiles" xml:space="preserve">
+    <value>PDF-Dokument (*.pdf)</value>
+  </data>
+  <data name="Dialog_UnsavedTitle" xml:space="preserve">
+    <value>Nicht gespeicherte Änderungen</value>
+  </data>
+  <data name="Dialog_Unsaved" xml:space="preserve">
+    <value>Das Nadelbett hat nicht gespeicherte Änderungen. Speichern?</value>
+  </data>
+  <data name="Dialog_BoardMissingTitle" xml:space="preserve">
+    <value>Platine nicht gefunden</value>
+  </data>
+  <data name="Dialog_BoardMissing" xml:space="preserve">
+    <value>Die Platinendatei dieses Nadelbetts wurde nicht gefunden:
+{0}
+
+Platinendatei am neuen Ort auswählen.</value>
+  </data>
+  <data name="Dialog_ExportWithErrorsTitle" xml:space="preserve">
+    <value>Prüfungen haben Fehler gefunden</value>
+  </data>
+  <data name="Dialog_ExportWithErrors" xml:space="preserve">
+    <value>Die Prüfungen haben {0} Fehler gefunden. Ein nach diesem Aufbaublatt gebautes Nadelbett funktioniert womöglich nicht. Trotzdem exportieren?</value>
+  </data>
+  <data name="Error_OpenFixture" xml:space="preserve">
+    <value>Nadelbett konnte nicht geöffnet werden</value>
+  </data>
+  <data name="Error_FixtureInvalid" xml:space="preserve">
+    <value>{0} ist keine ATLab-Nadelbett-Datei oder beschädigt.</value>
+  </data>
+  <data name="Error_FixtureNewer" xml:space="preserve">
+    <value>{0} wurde mit einer neueren Version des Fixture Designers gespeichert. Den Fixture Designer aktualisieren, um sie zu öffnen.</value>
+  </data>
+  <data name="Error_UnknownAdapter" xml:space="preserve">
+    <value>Das Nadelbett ist für die Test-Hardware {0} gemacht, die diese Version nicht kennt.</value>
+  </data>
+  <data name="Error_OpenBoard" xml:space="preserve">
+    <value>Platine konnte nicht geöffnet werden</value>
+  </data>
+  <data name="Error_NotABoard" xml:space="preserve">
+    <value>{0} ist keine KiCad-Platinendatei (.kicad_pcb).</value>
+  </data>
+  <data name="Error_BoardTooOld" xml:space="preserve">
+    <value>{0} wurde mit KiCad 5 oder älter gespeichert. Die Datei in einer aktuellen KiCad-Version öffnen und erneut speichern.</value>
+  </data>
+  <data name="Error_BoardDamaged" xml:space="preserve">
+    <value>{0} konnte nicht gelesen werden: {1}</value>
+  </data>
+  <data name="Error_SaveFixture" xml:space="preserve">
+    <value>Nadelbett konnte nicht gespeichert werden</value>
+  </data>
+  <data name="Error_BuildSheet" xml:space="preserve">
+    <value>Aufbaublatt konnte nicht gespeichert werden</value>
+  </data>
+  <data name="Check_PadMissing" xml:space="preserve">
+    <value>{0}: Pad {1} gibt es auf der Platine nicht mehr.</value>
+  </data>
+  <data name="Check_NoCopper" xml:space="preserve">
+    <value>{0}: Pad {1} hat auf der {2} kein Kupfer.</value>
+  </data>
+  <data name="Check_MaskCovered" xml:space="preserve">
+    <value>{0}: Pad {1} ist auf der {2} von Lötstopplack bedeckt.</value>
+  </data>
+  <data name="Check_NoNet" xml:space="preserve">
+    <value>{0}: Pad {1} hat kein Netz.</value>
+  </data>
+  <data name="Check_NetChanged" xml:space="preserve">
+    <value>{0}: Das Netz von Pad {1} hat sich seit dem Speichern von {2} auf {3} geändert.</value>
+  </data>
+  <data name="Check_PadMoved" xml:space="preserve">
+    <value>{0}: Pad {1} hat sich seit dem Speichern um {2:0.00} mm verschoben.</value>
+  </data>
+  <data name="Check_DuplicateProbe" xml:space="preserve">
+    <value>{0} liegen auf demselben Pad {1} von der {2}.</value>
+  </data>
+  <data name="Check_Short" xml:space="preserve">
+    <value>Pin {0} verbindet verschiedene Netze: {1}. So verdrahtet schließt das Nadelbett diese Netze kurz.</value>
+  </data>
+  <data name="Check_NotWired" xml:space="preserve">
+    <value>{0} ({1}, {2}) ist keinem Pin der Test-Hardware zugeordnet.</value>
+  </data>
+  <data name="Check_NetOnSeveralChannels" xml:space="preserve">
+    <value>Netz {0} liegt auf mehreren Matrixkanälen: {1}. Meist genügt ein Kanal pro Netz.</value>
+  </data>
+  <data name="Check_InterfaceIncomplete" xml:space="preserve">
+    <value>{0}: {1} nicht verdrahtet. Die isolierte Schnittstelle braucht alle ihre Leitungen vom Prüfling, auch VREF und GND.</value>
+  </data>
+  <data name="Check_ExtStimIncomplete" xml:space="preserve">
+    <value>Externer Stimulus {0}: Leitung {1} ist nicht verdrahtet, der Stimulus hat also keinen Rückweg über das Nadelbett.</value>
+  </data>
+  <data name="Check_StimOneTerminal" xml:space="preserve">
+    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss im Nadelbett verdrahtet werden, z. B. mit einer Versorgung.</value>
+  </data>
+  <data name="Check_BoardChanged" xml:space="preserve">
+    <value>Die Platinendatei hat sich seit dem Speichern geändert. Positionen und Netze stammen aus der aktuellen Datei; geänderte Prüfnadeln sind aufgeführt.</value>
+  </data>
+  <data name="Report_Title" xml:space="preserve">
+    <value>Nadelbett-Aufbaublatt</value>
+  </data>
+  <data name="Report_FileSuffix" xml:space="preserve">
+    <value>Aufbaublatt</value>
+  </data>
+  <data name="Report_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Report_Page" xml:space="preserve">
+    <value>Seite </value>
+  </data>
+  <data name="Report_Notes" xml:space="preserve">
+    <value>Notizen</value>
+  </data>
+  <data name="Report_Fixture" xml:space="preserve">
+    <value>Nadelbett</value>
+  </data>
+  <data name="Report_FixtureName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Report_FixtureFile" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Report_Author" xml:space="preserve">
+    <value>Ersteller</value>
+  </data>
+  <data name="Report_Adapter" xml:space="preserve">
+    <value>Test-Hardware</value>
+  </data>
+  <data name="Report_ProbeCount" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Report_Board" xml:space="preserve">
+    <value>Platine</value>
+  </data>
+  <data name="Report_Device" xml:space="preserve">
+    <value>Prüfling</value>
+  </data>
+  <data name="Report_Revision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="Report_BoardFile" xml:space="preserve">
+    <value>Platinendatei</value>
+  </data>
+  <data name="Report_BoardSize" xml:space="preserve">
+    <value>Platinengröße</value>
+  </data>
+  <data name="Report_Origin" xml:space="preserve">
+    <value>Koordinaten</value>
+  </data>
+  <data name="Report_OriginFile" xml:space="preserve">
+    <value>mm vom Bohr-/Bestückungsursprung der Platine, Y nach oben, von oben gesehen</value>
+  </data>
+  <data name="Report_OriginCorner" xml:space="preserve">
+    <value>mm von der linken unteren Ecke der Platine, Y nach oben, von oben gesehen</value>
+  </data>
+  <data name="Report_Probes" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Report_Wiring" xml:space="preserve">
+    <value>Verdrahtung</value>
+  </data>
+  <data name="Report_WiringHint" xml:space="preserve">
+    <value>Pins des prüflingsseitigen Steckers {0} ({1}) der Test-Hardware und die Prüfnadeln, die mit ihnen zu verdrahten sind.</value>
+  </data>
+  <data name="Report_NoWiring" xml:space="preserve">
+    <value>Noch keine Prüfnadel ist einem Pin der Test-Hardware zugeordnet.</value>
+  </data>
+  <data name="Report_NotWired" xml:space="preserve">
+    <value>nicht verdrahtet</value>
+  </data>
+  <data name="Report_PadMissing" xml:space="preserve">
+    <value>Pad fehlt</value>
+  </data>
+  <data name="Board_HoleInfo" xml:space="preserve">
+    <value>Bohrung {0} · Ø {1} mm</value>
+  </data>
+  <data name="Board_LocatingPinInfo" xml:space="preserve">
+    <value>Bohrung {0} · Ø {1} mm · Fangstift {2}</value>
+  </data>
+  <data name="Button_Layers" xml:space="preserve">
+    <value>Lagen</value>
+  </data>
+  <data name="ToolTip_Layers" xml:space="preserve">
+    <value>Lagen wählen</value>
+  </data>
+  <data name="Button_AllLayers" xml:space="preserve">
+    <value>Alle anzeigen</value>
+  </data>
+  <data name="Button_NoLayers" xml:space="preserve">
+    <value>Alle ausblenden</value>
+  </data>
+  <data name="Layer_Holes" xml:space="preserve">
+    <value>Bohrungen</value>
+  </data>
+  <data name="Layer_F_Cu" xml:space="preserve">
+    <value>Kupfer oben</value>
+  </data>
+  <data name="Layer_B_Cu" xml:space="preserve">
+    <value>Kupfer unten</value>
+  </data>
+  <data name="Layer_Inner" xml:space="preserve">
+    <value>Kupfer innen {0}</value>
+  </data>
+  <data name="Layer_F_SilkS" xml:space="preserve">
+    <value>Bestückungsdruck oben</value>
+  </data>
+  <data name="Layer_B_SilkS" xml:space="preserve">
+    <value>Bestückungsdruck unten</value>
+  </data>
+  <data name="Layer_F_Mask" xml:space="preserve">
+    <value>Lötstopplack oben</value>
+  </data>
+  <data name="Layer_B_Mask" xml:space="preserve">
+    <value>Lötstopplack unten</value>
+  </data>
+  <data name="Layer_F_Paste" xml:space="preserve">
+    <value>Lotpaste oben</value>
+  </data>
+  <data name="Layer_B_Paste" xml:space="preserve">
+    <value>Lotpaste unten</value>
+  </data>
+  <data name="Layer_F_Fab" xml:space="preserve">
+    <value>Fertigung oben</value>
+  </data>
+  <data name="Layer_B_Fab" xml:space="preserve">
+    <value>Fertigung unten</value>
+  </data>
+  <data name="Layer_F_CrtYd" xml:space="preserve">
+    <value>Bauteilfläche oben</value>
+  </data>
+  <data name="Layer_B_CrtYd" xml:space="preserve">
+    <value>Bauteilfläche unten</value>
+  </data>
+  <data name="Layer_Dwgs_User" xml:space="preserve">
+    <value>Benutzerzeichnungen</value>
+  </data>
+  <data name="Layer_Cmts_User" xml:space="preserve">
+    <value>Benutzerkommentare</value>
+  </data>
+  <data name="Layer_Margin" xml:space="preserve">
+    <value>Platinenrand</value>
+  </data>
+  <data name="Button_PlateFiles" xml:space="preserve">
+    <value>Exportieren…</value>
+  </data>
+  <data name="ToolTip_PlateFiles" xml:space="preserve">
+    <value>Fertigungsdateien exportieren</value>
+  </data>
+  <data name="Tab_Plates" xml:space="preserve">
+    <value>Fertigung</value>
+  </data>
+  <data name="Column_ProbeType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Placeholder_ProbeType" xml:space="preserve">
+    <value>Kein Typ</value>
+  </data>
+  <data name="Column_TypeName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Column_MinPad" xml:space="preserve">
+    <value>Min. Pad (mm)</value>
+  </data>
+  <data name="Column_Drill" xml:space="preserve">
+    <value>Bohrung Ø (mm)</value>
+  </data>
+  <data name="Column_MinSpacing" xml:space="preserve">
+    <value>Abstand (mm)</value>
+  </data>
+  <data name="Column_Clearance" xml:space="preserve">
+    <value>Freiraum (mm)</value>
+  </data>
+  <data name="Button_AddType" xml:space="preserve">
+    <value>Typ hinzufügen</value>
+  </data>
+  <data name="Button_FromLibrary" xml:space="preserve">
+    <value>Aus Bibliothek</value>
+  </data>
+  <data name="ToolTip_FromLibrary" xml:space="preserve">
+    <value>Aus Bibliothek hinzufügen</value>
+  </data>
+  <data name="Button_SaveToLibrary" xml:space="preserve">
+    <value>In Bibliothek speichern</value>
+  </data>
+  <data name="ToolTip_SaveToLibrary" xml:space="preserve">
+    <value>In Bibliothek speichern</value>
+  </data>
+  <data name="Button_ApplyToAll" xml:space="preserve">
+    <value>Für alle Prüfnadeln</value>
+  </data>
+  <data name="ToolTip_ApplyToAll" xml:space="preserve">
+    <value>Auf alle Prüfnadeln anwenden</value>
+  </data>
+  <data name="Button_RemoveType" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Label_DefaultType" xml:space="preserve">
+    <value>Typ für neue Prüfnadeln</value>
+  </data>
+  <data name="Text_NewProbeType" xml:space="preserve">
+    <value>Neuer Typ</value>
+  </data>
+  <data name="Text_ProbeTypesHint" xml:space="preserve">
+    <value>Alle Maße in mm. Abstand: kleinster Abstand der Mitten zweier Prüfnadeln einer Platte. Bohrung Ø: Loch für die Hülse in der Platte. Freiraum: kleinster Abstand der Prüfnadel zu einem anderen Bauteil ihrer Seite (Bauteilfläche). Die Typen werden im Nadelbett gespeichert; In Bibliothek speichern übernimmt sie für neue Nadelbetten.</value>
+  </data>
+  <data name="Label_PlateMargin" xml:space="preserve">
+    <value>Plattenrand (mm)</value>
+  </data>
+  <data name="ToolTip_PlateMargin" xml:space="preserve">
+    <value>Plattenrand</value>
+  </data>
+  <data name="Label_PlateThickness" xml:space="preserve">
+    <value>Plattendicke (mm)</value>
+  </data>
+  <data name="ToolTip_PlateThickness" xml:space="preserve">
+    <value>Plattendicke</value>
+  </data>
+  <data name="Header_Plates" xml:space="preserve">
+    <value>Nadelplatten</value>
+  </data>
+  <data name="Text_NoPlates" xml:space="preserve">
+    <value>Noch keine Platte: Prüfnadeln oder Fangstifte hinzufügen.</value>
+  </data>
+  <data name="Text_PlateSummary" xml:space="preserve">
+    <value>{0}: {1} × {2} mm, {3} Nadelbohrungen, {4} Fangstiftbohrungen, {5} Rahmenbohrungen, {6} Bohrungen für Vorzentrierungs-/Stützstifte und Niederhalter, {7} Ausschnitte</value>
+  </data>
+  <data name="Text_PlateFilesHint" xml:space="preserve">
+    <value>Jede Platte wird von ihrer der Platine zugewandten Seite gesehen geschrieben: die untere Platte von oben, die obere Platte von unten (gespiegelt). Koordinaten in mm vom Ursprung des Aufbaublatts.</value>
+  </data>
+  <data name="Plate_Top" xml:space="preserve">
+    <value>Obere Platte</value>
+  </data>
+  <data name="Plate_Bottom" xml:space="preserve">
+    <value>Untere Platte</value>
+  </data>
+  <data name="File_TopPlate" xml:space="preserve">
+    <value>obere Platte</value>
+  </data>
+  <data name="File_BottomPlate" xml:space="preserve">
+    <value>untere Platte</value>
+  </data>
+  <data name="Plate_NoDrill" xml:space="preserve">
+    <value>{0} hat keinen Bohrdurchmesser (Nadeltyp)</value>
+  </data>
+  <data name="Plate_Edge" xml:space="preserve">
+    <value>{0} liegt zu nah am Plattenrand</value>
+  </data>
+  <data name="Plate_Overlap" xml:space="preserve">
+    <value>die Bohrungen von {0} und {1} überschneiden sich</value>
+  </data>
+  <data name="Dialog_PlateFolder" xml:space="preserve">
+    <value>Ordner für die Fertigungsdateien</value>
+  </data>
+  <data name="Dialog_OverwriteTitle" xml:space="preserve">
+    <value>Dateien vorhanden</value>
+  </data>
+  <data name="Dialog_Overwrite" xml:space="preserve">
+    <value>Diese Dateien gibt es schon, sie werden ersetzt:
+{0}</value>
+  </data>
+  <data name="Button_Overwrite" xml:space="preserve">
+    <value>Ersetzen</value>
+  </data>
+  <data name="Error_Plates" xml:space="preserve">
+    <value>Fertigungsdateien konnten nicht geschrieben werden</value>
+  </data>
+  <data name="Error_PlateProblems" xml:space="preserve">
+    <value>Die Platten lassen sich so nicht fertigen:
+{0}
+
+Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
+  </data>
+  <data name="Error_Library" xml:space="preserve">
+    <value>Nadelbibliothek konnte nicht gespeichert werden</value>
+  </data>
+  <data name="Status_PlatesSaved" xml:space="preserve">
+    <value>{0} Fertigungsdateien in {1} geschrieben.</value>
+  </data>
+  <data name="Status_TypeApplied" xml:space="preserve">
+    <value>Alle {1} Prüfnadeln haben jetzt den Typ {0}.</value>
+  </data>
+  <data name="Status_TypeStored" xml:space="preserve">
+    <value>{0} in der Nadelbibliothek gespeichert.</value>
+  </data>
+  <data name="Check_NoProbeType" xml:space="preserve">
+    <value>{0} haben keinen Nadeltyp, Abstände und Plattenbohrungen lassen sich also nicht prüfen.</value>
+  </data>
+  <data name="Check_NoDrill" xml:space="preserve">
+    <value>Nadeltyp {0} hat keinen Bohrdurchmesser; seine Prüfnadeln bekommen in den Plattendateien keine Bohrung.</value>
+  </data>
+  <data name="Check_Spacing" xml:space="preserve">
+    <value>{0} und {1} liegen {2} mm auseinander; ihre Nadeltypen brauchen mindestens {3} mm.</value>
+  </data>
+  <data name="Check_PadTooSmall" xml:space="preserve">
+    <value>{0}: Pad {1} misst {2} mm, Nadeltyp {3} braucht mindestens {4} mm.</value>
+  </data>
+  <data name="Check_OnComponent" xml:space="preserve">
+    <value>{0} liegt auf Bauteil {1}: Die Prüfnadel würde es treffen.</value>
+  </data>
+  <data name="Check_NearComponent" xml:space="preserve">
+    <value>{0} ist {1} mm von Bauteil {2} entfernt; der Nadeltyp braucht {3} mm.</value>
+  </data>
+  <data name="Check_LocatingPinOverlap" xml:space="preserve">
+    <value>Die Bohrung von {0} überschneidet sich mit der Bohrung von Fangstift {1}.</value>
+  </data>
+  <data name="Header_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Label_ExportFiles" xml:space="preserve">
+    <value>Dateien</value>
+  </data>
+  <data name="Label_ExportPlates" xml:space="preserve">
+    <value>Platten</value>
+  </data>
+  <data name="Export_Dxf" xml:space="preserve">
+    <value>Zeichnung (DXF)</value>
+  </data>
+  <data name="Export_Step" xml:space="preserve">
+    <value>3D-Modell (STEP)</value>
+  </data>
+  <data name="Button_ExportFiles" xml:space="preserve">
+    <value>Exportieren…</value>
+  </data>
+  <data name="Label_PlateOutline" xml:space="preserve">
+    <value>Plattenumriss</value>
+  </data>
+  <data name="ToolTip_PlateOutline" xml:space="preserve">
+    <value>Plattenumriss wählen</value>
+  </data>
+  <data name="Outline_Automatic" xml:space="preserve">
+    <value>Platinenumriss + Rand</value>
+  </data>
+  <data name="Outline_FixedSize" xml:space="preserve">
+    <value>Feste Größe</value>
+  </data>
+  <data name="Outline_Dxf" xml:space="preserve">
+    <value>DXF-Datei</value>
+  </data>
+  <data name="Outline_Svg" xml:space="preserve">
+    <value>SVG-Datei</value>
+  </data>
+  <data name="Outline_BoardLayer" xml:space="preserve">
+    <value>Platinenlage</value>
+  </data>
+  <data name="Label_PlateWidth" xml:space="preserve">
+    <value>Breite (mm)</value>
+  </data>
+  <data name="Label_PlateHeight" xml:space="preserve">
+    <value>Höhe (mm)</value>
+  </data>
+  <data name="Label_OffsetX" xml:space="preserve">
+    <value>Versatz X (mm)</value>
+  </data>
+  <data name="Label_OffsetY" xml:space="preserve">
+    <value>Versatz Y (mm)</value>
+  </data>
+  <data name="ToolTip_OutlineOffset" xml:space="preserve">
+    <value>Verschiebung aus der Mitte</value>
+  </data>
+  <data name="Label_OutlineFile" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Button_ChooseOutline" xml:space="preserve">
+    <value>Auswählen…</value>
+  </data>
+  <data name="ToolTip_ChooseOutline" xml:space="preserve">
+    <value>Umrissdatei wählen</value>
+  </data>
+  <data name="ToolTip_ReloadOutline" xml:space="preserve">
+    <value>Umrissdatei neu laden</value>
+  </data>
+  <data name="Label_OutlineLayer" xml:space="preserve">
+    <value>Lage</value>
+  </data>
+  <data name="Placeholder_OutlineLayer" xml:space="preserve">
+    <value>Keine Benutzerlage auf der Platine</value>
+  </data>
+  <data name="Outline_Status" xml:space="preserve">
+    <value>Platte {0} × {1} mm, {2} Rahmenbohrungen, {3} Ausschnitte</value>
+  </data>
+  <data name="Outline_Missing" xml:space="preserve">
+    <value>Noch kein Umriss: Platinenumriss plus Rand wird verwendet.</value>
+  </data>
+  <data name="Outline_NoLayerOutline" xml:space="preserve">
+    <value>Kein geschlossener Umriss auf Lage {0}: Platinenumriss plus Rand wird verwendet.</value>
+  </data>
+  <data name="Outline_OpenLines" xml:space="preserve">
+    <value>Einige Linien ergeben keinen geschlossenen Umriss und wurden weggelassen.</value>
+  </data>
+  <data name="Outline_Skipped" xml:space="preserve">
+    <value>Nicht verwendet: {0}</value>
+  </data>
+  <data name="Outline_None" xml:space="preserve">
+    <value>Kein geschlossener Umriss in {0} gefunden.</value>
+  </data>
+  <data name="Error_Outline" xml:space="preserve">
+    <value>Umriss konnte nicht gelesen werden</value>
+  </data>
+  <data name="Dialog_OpenOutline" xml:space="preserve">
+    <value>Plattenumriss</value>
+  </data>
+  <data name="Dialog_DxfFiles" xml:space="preserve">
+    <value>DXF-Zeichnungen</value>
+  </data>
+  <data name="Dialog_SvgFiles" xml:space="preserve">
+    <value>SVG-Zeichnungen</value>
+  </data>
+  <data name="Export_Svg" xml:space="preserve">
+    <value>Zeichnung (SVG)</value>
+  </data>
+  <data name="Tab_Mechanics" xml:space="preserve">
+    <value>Mechanik</value>
+  </data>
+  <data name="Part_PreCenteringPin" xml:space="preserve">
+    <value>Vorzentrierungsstift</value>
+  </data>
+  <data name="Part_SupportPin" xml:space="preserve">
+    <value>Stützstift</value>
+  </data>
+  <data name="Part_PushRod" xml:space="preserve">
+    <value>Niederhalter</value>
+  </data>
+  <data name="Button_PlacePreCenteringPin" xml:space="preserve">
+    <value>Vorzentrierungsstift</value>
+  </data>
+  <data name="Button_PlaceSupportPin" xml:space="preserve">
+    <value>Stützstift</value>
+  </data>
+  <data name="Button_PlacePushRod" xml:space="preserve">
+    <value>Niederhalter</value>
+  </data>
+  <data name="ToolTip_PlacePreCenteringPin" xml:space="preserve">
+    <value>Vorzentrierungsstifte setzen</value>
+  </data>
+  <data name="ToolTip_PlaceSupportPin" xml:space="preserve">
+    <value>Stützstifte setzen</value>
+  </data>
+  <data name="ToolTip_PlacePushRod" xml:space="preserve">
+    <value>Niederhalter setzen</value>
+  </data>
+  <data name="Button_RemovePart" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Text_PartsHint" xml:space="preserve">
+    <value>Art wählen, dann auf die Platine klicken; ziehen verschiebt, Esc beendet das Setzen. Fangstifte kommen in eine Bohrung der Platine, durchkontaktiert oder nicht; Vorzentrierungsstifte rasten an der Platinenkante ein. Niederhalter kommen in die obere Platte, alle anderen in die untere.</value>
+  </data>
+  <data name="Column_Part" xml:space="preserve">
+    <value>Teil</value>
+  </data>
+  <data name="Column_PartKind" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Column_PartType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Column_PartDiameter" xml:space="preserve">
+    <value>Ø (mm)</value>
+  </data>
+  <data name="Column_PartLength" xml:space="preserve">
+    <value>Länge (mm)</value>
+  </data>
+  <data name="Column_PartHeight" xml:space="preserve">
+    <value>Höhe (mm)</value>
+  </data>
+  <data name="Placeholder_PartType" xml:space="preserve">
+    <value>Kein Typ</value>
+  </data>
+  <data name="Header_Types" xml:space="preserve">
+    <value>Typen</value>
+  </data>
+  <data name="Text_PartTypesHint" xml:space="preserve">
+    <value>Alle Maße in mm. Ø: wo es die Platine berührt. Bohrung Ø: Loch in der Platte. Länge: Gesamtlänge. Höhe: wie weit es aus der Platte ragt. Freiraum: kleinster Abstand vom Rand zu einem Bauteil seiner Seite.</value>
+  </data>
+  <data name="Text_NewPartType" xml:space="preserve">
+    <value>Neuer Typ</value>
+  </data>
+  <data name="Status_Placing" xml:space="preserve">
+    <value>Auf die Platine klicken, um einen {0} zu setzen; Esc beendet.</value>
+  </data>
+  <data name="Status_PartPlaced" xml:space="preserve">
+    <value>{0} ({1}) gesetzt.</value>
+  </data>
+  <data name="Status_PartRemoved" xml:space="preserve">
+    <value>{0} entfernt.</value>
+  </data>
+  <data name="Check_PartNoType" xml:space="preserve">
+    <value>{0} hat keinen Typ, Größe und Bohrung sind also unbekannt.</value>
+  </data>
+  <data name="Check_PartNoDrill" xml:space="preserve">
+    <value>{0}: Typ {1} hat keinen Bohrdurchmesser und bekommt daher keine Bohrung in der Platte.</value>
+  </data>
+  <data name="Check_PreCenteringOnBoard" xml:space="preserve">
+    <value>{0} überdeckt die Platine; ein Vorzentrierungsstift steht neben ihr.</value>
+  </data>
+  <data name="Check_PreCenteringGap" xml:space="preserve">
+    <value>{0} berührt die Platinenkante nicht ({1} mm Spalt).</value>
+  </data>
+  <data name="Check_PartOffBoard" xml:space="preserve">
+    <value>{0} liegt nicht unter der Platine.</value>
+  </data>
+  <data name="Check_PartOnComponent" xml:space="preserve">
+    <value>{0} berührt {1}.</value>
+  </data>
+  <data name="Check_PartNearComponent" xml:space="preserve">
+    <value>{0} ist {1} mm von {2} entfernt, weniger als sein Freiraum von {3} mm.</value>
+  </data>
+  <data name="Report_Parts" xml:space="preserve">
+    <value>Stifte und Niederhalter</value>
+  </data>
+  <data name="Column_Plate" xml:space="preserve">
+    <value>Platte</value>
+  </data>
+  <data name="Board_LegendProbes" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Board_LegendLocatingPins" xml:space="preserve">
+    <value>Fangstifte</value>
+  </data>
+  <data name="Board_LegendPreCenteringPins" xml:space="preserve">
+    <value>Vorzentrierungsstifte</value>
+  </data>
+  <data name="Board_LegendSupportPins" xml:space="preserve">
+    <value>Stützstifte</value>
+  </data>
+  <data name="Board_LegendPushRods" xml:space="preserve">
+    <value>Niederhalter</value>
+  </data>
+  <data name="Board_LegendPlateOutline" xml:space="preserve">
+    <value>Plattenumriss</value>
+  </data>
+  <data name="Part_LocatingPin" xml:space="preserve">
+    <value>Fangstift</value>
+  </data>
+  <data name="Button_PlaceLocatingPin" xml:space="preserve">
+    <value>Fangstift</value>
+  </data>
+  <data name="ToolTip_PlaceLocatingPin" xml:space="preserve">
+    <value>Fangstifte setzen</value>
+  </data>
+  <data name="Status_LocatingNeedsHole" xml:space="preserve">
+    <value>Ein Fangstift kommt in eine Bohrung der Platine: auf oder neben eine Bohrung klicken.</value>
+  </data>
+  <data name="Check_LocatingNoHole" xml:space="preserve">
+    <value>{0} steht in keiner Bohrung der Platine.</value>
+  </data>
+  <data name="Check_LocatingTooBig" xml:space="preserve">
+    <value>{0}: Der Stift (Ø {1} mm) passt nicht in die Bohrung von {2} (Ø {3} mm).</value>
+  </data>
+  <data name="Report_Bom" xml:space="preserve">
+    <value>Stückliste</value>
+  </data>
+  <data name="Report_KindProbe" xml:space="preserve">
+    <value>Prüfnadel</value>
+  </data>
+  <data name="Report_NoType" xml:space="preserve">
+    <value>Kein Typ</value>
+  </data>
+  <data name="Column_Quantity" xml:space="preserve">
+    <value>Anzahl</value>
+  </data>
+  <data name="Report_AssemblyTop" xml:space="preserve">
+    <value>Obere Platte – Montage</value>
+  </data>
+  <data name="Report_AssemblyBottom" xml:space="preserve">
+    <value>Untere Platte – Montage</value>
+  </data>
+  <data name="Report_WiringTop" xml:space="preserve">
+    <value>Obere Platte – Verdrahtung</value>
+  </data>
+  <data name="Report_WiringBottom" xml:space="preserve">
+    <value>Untere Platte – Verdrahtung</value>
+  </data>
+  <data name="Report_ViewFromTop" xml:space="preserve">
+    <value>Ansicht von oben</value>
+  </data>
+  <data name="Report_ViewFromBottom" xml:space="preserve">
+    <value>Ansicht von unten (gespiegelt)</value>
+  </data>
+  <data name="Label_BuildSheet" xml:space="preserve">
+    <value>Aufbaublatt</value>
+  </data>
+  <data name="Button_BuildSheetLayers" xml:space="preserve">
+    <value>Platinenlagen…</value>
+  </data>
+  <data name="ToolTip_BuildSheetLayers" xml:space="preserve">
+    <value>Lagen der Platine in den Zeichnungen des Aufbaublatts</value>
+  </data>
+  <data name="Header_BuildSheetLayers" xml:space="preserve">
+    <value>Lagen in den Zeichnungen</value>
+  </data>
+  <data name="Text_BuildSheetLayers" xml:space="preserve">
+    <value>Oben in der Liste liegt oben. Lagen der anderen Seite erscheinen gestrichelt.</value>
+  </data>
+  <data name="Button_DefaultLayerStyle" xml:space="preserve">
+    <value>Standarddarstellung</value>
+  </data>
+  <data name="Button_DefaultLayerOrder" xml:space="preserve">
+    <value>Standardreihenfolge</value>
+  </data>
+  <data name="ToolTip_LayerTop" xml:space="preserve">
+    <value>Gezeichnet, wenn eine Zeichnung die Oberseite der Platine zeigt</value>
+  </data>
+  <data name="ToolTip_LayerBottom" xml:space="preserve">
+    <value>Gezeichnet, wenn eine Zeichnung die Unterseite der Platine zeigt</value>
+  </data>
+  <data name="ToolTip_LayerUp" xml:space="preserve">
+    <value>Nach oben</value>
+  </data>
+  <data name="ToolTip_LayerDown" xml:space="preserve">
+    <value>Nach unten</value>
+  </data>
+  <data name="ToolTip_LayerColor" xml:space="preserve">
+    <value>Farbe wählen</value>
+  </data>
+  <data name="ToolTip_LayerOpacity" xml:space="preserve">
+    <value>Deckkraft der Lage</value>
+  </data>
+  <data name="Column_LayerTop" xml:space="preserve">
+    <value>Oben</value>
+  </data>
+  <data name="Column_LayerBottom" xml:space="preserve">
+    <value>Unten</value>
+  </data>
+  <data name="Layer_TopPads" xml:space="preserve">
+    <value>Pads oben</value>
+  </data>
+  <data name="Layer_BottomPads" xml:space="preserve">
+    <value>Pads unten</value>
+  </data>
+  <data name="Button_SaveLayersAsDefault" xml:space="preserve">
+    <value>Als Standard speichern</value>
+  </data>
+  <data name="ToolTip_SaveLayersAsDefault" xml:space="preserve">
+    <value>Diese Lagen für neue Nadelbetten und Nadelbetten ohne eigene Auswahl verwenden</value>
+  </data>
+  <data name="Status_LayersDefaultSaved" xml:space="preserve">
+    <value>Lagen als Standard für neue Nadelbetten gespeichert.</value>
+  </data>
+  <data name="LayerView_AssemblyTop" xml:space="preserve">
+    <value>Montage
+oben</value>
+  </data>
+  <data name="LayerView_AssemblyBottom" xml:space="preserve">
+    <value>Montage
+unten</value>
+  </data>
+  <data name="LayerView_WiringTop" xml:space="preserve">
+    <value>Verdrahtung
+oben</value>
+  </data>
+  <data name="LayerView_WiringBottom" xml:space="preserve">
+    <value>Verdrahtung
+unten</value>
+  </data>
+  <data name="Button_LoadLayersDefault" xml:space="preserve">
+    <value>Standard laden</value>
+  </data>
+  <data name="ToolTip_LoadLayersDefault" xml:space="preserve">
+    <value>Die als Standard gespeicherten Lagen übernehmen</value>
+  </data>
+  <data name="Plate_Cutout" xml:space="preserve">
+    <value>{0} reicht in einen Ausschnitt der Platte.</value>
+  </data>
+  <data name="Label_SeparateOutlines" xml:space="preserve">
+    <value>Eigener Umriss für die obere Platte</value>
+  </data>
+  <data name="ToolTip_SeparateOutlines" xml:space="preserve">
+    <value>Der oberen Platte einen eigenen Umriss geben; sonst haben beide Platten denselben Umriss</value>
+  </data>
+  <data name="Label_EditedOutline" xml:space="preserve">
+    <value>Umriss der</value>
+  </data>
+  <data name="Button_DefaultLayerColors" xml:space="preserve">
+    <value>Standardfarben</value>
+  </data>
+</root>

@@ -69,6 +69,32 @@ public partial class MessageBoxService : ObservableObject, IMessageBoxService
         
     }
     
+    public async Task<SaveChangesChoice> ShowSaveChangesAsync(string title, string message)
+    {
+        var l = LocalizationService.Instance;
+        _messageBoxViewModel.Initialize(title, message, l["ButtonLabel_Save"], l["ButtonLabel_Cancel"], DialogFunction.SAVE_CHANGES);
+        _messageBoxViewModel.DiscardText = l["ButtonLabel_DontSave"];
+
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        IsDialogOpen = true;
+
+        DialogManager
+            .CreateDialog(_messageBoxViewModel)
+            .WithMaxWidth(1000)
+            .WithMinWidth(300)
+            .Dismissible()
+            .WithSuccessCallback(() => tcs.TrySetResult(true))
+            .WithCancelCallback(() => tcs.TrySetResult(false))
+            .Show();
+
+        var saved = await tcs.Task;
+        IsDialogOpen = false;
+
+        if (saved)
+            return SaveChangesChoice.Save;
+        return _messageBoxViewModel.IsDiscardChosen ? SaveChangesChoice.Discard : SaveChangesChoice.Cancel;
+    }
+
     public Task<bool> ShowConfirmationImageAsync(
         string title,
         string message,

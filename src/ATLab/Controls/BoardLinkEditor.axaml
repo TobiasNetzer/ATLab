@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:vm="clr-namespace:ATLab.ViewModels"
+             xmlns:helpers="clr-namespace:ATLab.Helpers"
+             x:Class="ATLab.Controls.BoardLinkEditor"
+             x:DataType="vm:BoardLinkEditorViewModel"
+             Width="640">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Border Grid.Row="0" Background="{DynamicResource OutlineColor}"
+                CornerRadius="15 15 0 0"
+                Padding="10">
+            <TextBlock Text="{helpers:Localize Header_BoardLink}"
+                       Classes="h4"
+                       HorizontalAlignment="Center"/>
+        </Border>
+
+        <Border Grid.Row="1"
+                CornerRadius="0 0 15 15"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource OutlineColor}">
+            <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="12" RowSpacing="8">
+
+                <!-- Board file -->
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+                    <TextBlock Text="{helpers:Localize Label_BoardFile}" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Text="{Binding BoardFilePath, Mode=OneWay}" IsReadOnly="True"
+                             PlaceholderText="{helpers:Localize BoardLink_NoBoardWatermark}"/>
+                    <Button Grid.Column="2" Classes="Icon" Width="34" Height="34"
+                            Background="{DynamicResource ButtonBackground}"
+                            Command="{Binding BrowseBoardCommand}"
+                            ToolTip.Tip="{helpers:Localize ToolTip_BoardLinkBrowse}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent FolderOpen, 16}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    <Button Grid.Column="3" Classes="Icon" Width="34" Height="34"
+                            Background="{DynamicResource ButtonBackground}"
+                            Command="{Binding ReloadBoardCommand}"
+                            IsEnabled="{Binding HasBoardFile}"
+                            ToolTip.Tip="{helpers:Localize ToolTip_BoardLinkReload}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent RefreshCw, 16}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                    <Button Grid.Column="4" Classes="Icon" Width="34" Height="34"
+                            Background="{DynamicResource ButtonBackground}"
+                            Command="{Binding RemoveBoardCommand}"
+                            IsEnabled="{Binding HasBoardFile}"
+                            ToolTip.Tip="{helpers:Localize ToolTip_BoardLinkRemove}">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent X, 16}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+                </Grid>
+
+                <!-- State of the board -->
+                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <TextBlock Text="{Binding Status}" Classes="Small" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Classes="Outline" Height="28" Padding="10,0"
+                            Content="{helpers:Localize Board_AcceptChange}"
+                            ToolTip.Tip="{helpers:Localize ToolTip_BoardAcceptChange}"
+                            Command="{Binding AcceptBoardChangeCommand}"
+                            IsVisible="{Binding IsBoardChanged}"/>
+                </Grid>
+
+                <!-- Fixture import and the table filter; the count of assigned pins on the right -->
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <WrapPanel ItemSpacing="8" LineSpacing="6">
+                        <Button Classes="Outline" Height="32" Padding="12,0"
+                                Content="{helpers:Localize BoardLink_Import}"
+                                Command="{Binding ImportFixtureCommand}"
+                                ToolTip.Tip="{helpers:Localize ToolTip_BoardLinkImport}"/>
+                        <Button Classes="Outline" Height="32" Padding="12,0"
+                                Content="{helpers:Localize BoardLink_ClearNets}"
+                                Command="{Binding ClearNetsCommand}"/>
+                        <CheckBox Content="{helpers:Localize BoardLink_AssignedOnly}" IsChecked="{Binding AssignedOnly}"
+                                  VerticalAlignment="Center"/>
+                    </WrapPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding AssignedText}" Classes="Small"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Pins of the DUT connector with their nets; a plain list, so no row is reused for another pin -->
+                <Grid Grid.Row="3" RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="50,120,*,80" ColumnSpacing="8" Margin="4,0,16,4">
+                        <TextBlock Text="{helpers:Localize Header_Pin}" Classes="Small" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="1" Text="{helpers:Localize Header_Resource}" Classes="Small" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="2" Text="{helpers:Localize Header_Net}" Classes="Small" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Column="3" Text="{helpers:Localize Header_Probes}" Classes="Small" FontWeight="SemiBold"/>
+                    </Grid>
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Rows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="vm:PinNetRow">
+                                    <Grid ColumnDefinitions="50,120,*,80" ColumnSpacing="8" Margin="4,2,12,2">
+                                        <TextBlock Text="{Binding Pin}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Resource}" VerticalAlignment="Center"
+                                                   ToolTip.Tip="{Binding Signal}"/>
+                                        <AutoCompleteBox Grid.Column="2"
+                                                         Text="{Binding Net, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                         ItemsSource="{Binding $parent[ItemsControl].((vm:BoardLinkEditorViewModel)DataContext).NetNames}"
+                                                         FilterMode="ContainsOrdinal"
+                                                         MinimumPrefixLength="1"
+                                                         PlaceholderText="{helpers:Localize BoardLink_NetWatermark}"
+                                                         TextChanged="OnNetTextChanged"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Probes}" Classes="Small"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                   ToolTip.Tip="{Binding Probes}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

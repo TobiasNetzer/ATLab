@@ -43,6 +43,13 @@ public partial class BoundaryScanDeviceConfig : ObservableObject
     private string _packageName = string.Empty;
 
     /// <summary>
+    /// Reference of the component on the KiCad board, e.g. "U3". Links the device to its footprint, so the board view
+    /// shows the pins a boundary scan step uses.
+    /// </summary>
+    [ObservableProperty]
+    private string _footprintReference = string.Empty;
+
+    /// <summary>
     /// User defined signal names keyed by port, e.g. "IO(3)" = "LED_RED". Keyed by port rather than package pin
     /// so the labels survive a package change. Labels of ports missing in the current BSDL are kept.
     /// </summary>
@@ -72,6 +79,7 @@ public partial class BoundaryScanDeviceConfig : ObservableObject
         IdCode = IdCode,
         IrLength = IrLength,
         PackageName = PackageName,
+        FootprintReference = FootprintReference,
         PinLabels = new Dictionary<string, string>(PinLabels, StringComparer.OrdinalIgnoreCase)
     };
 }

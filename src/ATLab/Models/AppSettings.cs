@@ -13,6 +13,9 @@ public class AppSettings
     public string? LastComPort { get; set; } = "";
     public string LastOpenedFile { get; set; } = "";
     public bool IsDarkMode { get; set; } = true;
+
+    /// <summary>The user's default layers of the report's board pictures, for projects without a choice.</summary>
+    public ATLab.Pcb.Rendering.ReportLayerSettings? DefaultReportLayers { get; set; }
     public string Language { get; set; } = "en";
     public bool IsForceSimulation { get; set; }
     public bool IsDevelopmentMode { get; set; }
@@ -32,4 +35,26 @@ public class AppSettings
     public bool IsFilePathEditorExpanded { get; set; }
     public bool IsBoundaryScanEditorExpanded { get; set; }
     public bool IsBoundaryScanBusEditorExpanded { get; set; }
+    public bool IsShowBoardView { get; set; }
+
+    /// <summary>Share of the height of the step list area taken by the board view.</summary>
+    public double BoardViewHeightRatio { get; set; } = 0.45;
+
+    /// <summary>0 = top, 1 = bottom.</summary>
+    public int BoardViewSide { get; set; }
+
+    /// <summary>Whether the board view (and the board pictures of the PDF report) also highlight the zones of a net.</summary>
+    public bool IsBoardHighlightZones { get; set; }
+
+    /// <summary>Roles hidden in the board view (BoardRole names, e.g. "Stimulus").</summary>
+    public System.Collections.Generic.List<string>? BoardHiddenRoles { get; set; }
+
+    /// <summary>Colors the user chose for the roles of the board view: role name → "#RRGGBB".</summary>
+    public System.Collections.Generic.Dictionary<string, string>? BoardRoleColors { get; set; }
+
+    /// <summary>KiCad layers shown in the board view; null for the defaults.</summary>
+    public System.Collections.Generic.List<string>? BoardVisibleLayers { get; set; }
+
+    /// <summary>Colors ("#RRGGBB") the user chose for KiCad layers in the board view; the others keep their default.</summary>
+    public System.Collections.Generic.Dictionary<string, string>? BoardLayerColors { get; set; }
 }

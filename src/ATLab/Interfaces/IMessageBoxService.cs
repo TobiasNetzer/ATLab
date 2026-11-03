@@ -13,4 +13,5 @@ public interface IMessageBoxService
     Task<string?> ShowInputImageAsync(string title, string message, string imagePath);
     Task<string?> ShowPasswordInputAsync(string title, string message);
     Task ShowMessageAsync(string title, string message);
+    Task<SaveChangesChoice> ShowSaveChangesAsync(string title, string message);
 }

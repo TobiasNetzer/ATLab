@@ -53,6 +53,15 @@ public class App : Application
             localizationService.ChangeCulture(new CultureInfo(settingsService.Settings.Language));
         }
 
+        // The board view of ATLab.Pcb shows its texts in the language of ATLab
+        ATLab.Pcb.Controls.BoardTexts.Lookup = key =>
+            localizationService.GetString(key) is { } text && !text.StartsWith('[') ? text : null;
+        localizationService.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ILocalizationService.CurrentCulture))
+                ATLab.Pcb.Controls.BoardTexts.Refresh();
+        };
+
         Current!.RequestedThemeVariant = settingsService.Settings.IsDarkMode
             ? ThemeVariant.Dark
             : ThemeVariant.Light;

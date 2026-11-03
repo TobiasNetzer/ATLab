@@ -28,6 +28,13 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private string _cancelText = "Cancel";
+
+    /// <summary>Third button of the unsaved-changes question: continue without saving.</summary>
+    [ObservableProperty]
+    private string _discardText = "Don't save";
+
+    /// <summary>The dialog was closed with the discard button.</summary>
+    public bool IsDiscardChosen { get; private set; }
     
     [ObservableProperty]
     private bool _isPassed;
@@ -76,6 +83,7 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
         Bitmap = bitmap;
         IsPassed = isPassed;
         InputText = string.Empty;
+        IsDiscardChosen = false;
     }
 
     [RelayCommand]
@@ -87,6 +95,13 @@ public partial class MessageBoxViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void Cancel()
     {
+        _dialogManager.Close(this);
+    }
+
+    [RelayCommand]
+    private void Discard()
+    {
+        IsDiscardChosen = true;
         _dialogManager.Close(this);
     }
     

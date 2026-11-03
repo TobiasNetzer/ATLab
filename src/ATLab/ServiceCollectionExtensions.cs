@@ -63,6 +63,7 @@ public static class ServiceCollectionExtensions
         
         services.AddSingleton<ProjectSettings>();
         services.AddSingleton<ProjectModel>();
+        services.AddSingleton<BoardService>();
         services.AddSingleton<ApplicationState>();
 
         services.AddSingleton<DialogManager>();
@@ -78,7 +79,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<DeviceManagerViewModel>();
         services.AddSingleton<ProjectSettingsViewModel>();
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<BoardViewerViewModel>();
         services.AddSingleton<TestingTabViewModel>();
+        services.AddSingleton<BoardLinkEditorViewModel>();
         services.AddSingleton<ConfigTabViewModel>();
         services.AddSingleton<ScriptingTabViewModel>();
         services.AddSingleton<AboutTabViewModel>();

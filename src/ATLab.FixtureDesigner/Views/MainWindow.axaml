@@ -1,0 +1,1032 @@
+﻿<shadui:Window xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:vm="clr-namespace:ATLab.FixtureDesigner.ViewModels"
+               xmlns:fixture="clr-namespace:ATLab.FixtureDesigner.Fixture"
+               xmlns:controls="clr-namespace:ATLab.FixtureDesigner.Controls"
+               xmlns:pcb="clr-namespace:ATLab.Pcb.Controls;assembly=ATLab.Pcb"
+               xmlns:rendering="clr-namespace:ATLab.Pcb.Rendering;assembly=ATLab.Pcb"
+               xmlns:pcbfix="clr-namespace:ATLab.Pcb.Fixture;assembly=ATLab.Pcb"
+               xmlns:loc="clr-namespace:ATLab.FixtureDesigner.Localization"
+               x:Class="ATLab.FixtureDesigner.Views.MainWindow"
+               x:DataType="vm:MainWindowViewModel"
+               Title="{Binding WindowTitle}"
+               Width="1600" Height="950"
+               MinWidth="1150" MinHeight="680"
+               WindowStartupLocation="CenterScreen"
+               ShowTitlebarBackground="False"
+               DragDrop.AllowDrop="True"
+               Background="{DynamicResource WindowBackground}">
+
+    <shadui:Window.LogoContent>
+        <Image Source="avares://ATLab.FixtureDesigner/Assets/AppIcon.ico"
+               Width="20" Height="20" Margin="8,8,0,8" Stretch="Uniform"/>
+    </shadui:Window.LogoContent>
+
+    <shadui:Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewCommand}"/>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenCommand}"/>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}"/>
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+        <KeyBinding Gesture="F5" Command="{Binding ReloadBoardCommand}"/>
+        <KeyBinding Gesture="Ctrl+P" Command="{Binding ExportBuildSheetCommand}"/>
+        <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportPlatesCommand}"/>
+        <KeyBinding Gesture="Escape" Command="{Binding EscapeCommand}"/>
+        <KeyBinding Gesture="Delete" Command="{Binding DeleteSelectedCommand}"/>
+    </shadui:Window.KeyBindings>
+
+    <shadui:Window.Styles>
+        <Style Selector="Button.Tool">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
+        </Style>
+        <!-- The place mode in use (Mechanics tab) -->
+        <Style Selector="Button.Tool.Active">
+            <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+        </Style>
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource InfoColor}"/>
+            <Setter Property="Opacity" Value="0.35"/>
+        </Style>
+        <Style Selector="TabControl > TabItem">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,7"/>
+        </Style>
+        <Style Selector="TextBox.Number">
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style Selector="TextBlock.Cell">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+        <Style Selector="RadioButton.Side">
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.FormLabel">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource ChartMuted}"/>
+        </Style>
+    </shadui:Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="12,0,12,0">
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,4,0,8">
+            <WrapPanel ItemSpacing="8" LineSpacing="6">
+                <Button Classes="Tool" Content="{loc:Localize Button_New}" Command="{Binding NewCommand}" ToolTip.Tip="{loc:Localize ToolTip_New}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent CircuitBoard, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_Open}" Command="{Binding OpenCommand}" ToolTip.Tip="{loc:Localize ToolTip_Open}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FolderOpen, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_Save}" Command="{Binding SaveCommand}" ToolTip.Tip="{loc:Localize ToolTip_Save}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Save, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_SaveAs}" Command="{Binding SaveAsCommand}" ToolTip.Tip="{loc:Localize ToolTip_SaveAs}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent SaveAll, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Border Width="1" Height="24" Background="{DynamicResource OutlineColor}" Margin="4,0" VerticalAlignment="Center"/>
+                <Button Classes="Tool" Content="{loc:Localize Button_ReloadBoard}" Command="{Binding ReloadBoardCommand}" ToolTip.Tip="{loc:Localize ToolTip_ReloadBoard}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent RefreshCw, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Tool" Content="{loc:Localize Button_ChangeBoard}" Command="{Binding ChangeBoardCommand}" IsVisible="{Binding HasBoard}"
+                        ToolTip.Tip="{loc:Localize ToolTip_ChangeBoard}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Replace, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Border Width="1" Height="24" Background="{DynamicResource OutlineColor}" Margin="4,0" VerticalAlignment="Center"/>
+                <Button Classes="Tool" Content="{loc:Localize Button_BuildSheet}" Command="{Binding ExportBuildSheetCommand}" ToolTip.Tip="{loc:Localize ToolTip_BuildSheet}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FileText, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <!-- The manufacturing export: the choice of files and plates first, then the folder -->
+                <Button Classes="Tool" Content="{loc:Localize Button_PlateFiles}" IsEnabled="{Binding HasBoard}" ToolTip.Tip="{loc:Localize ToolTip_PlateFiles}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent FileDown, 18}" Margin="0,0,8,0"/>
+                    </shadui:ButtonAssist.Icon>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <StackPanel Spacing="10" MinWidth="230">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="FormLabel"/>
+                                    <CheckBox Content="{loc:Localize Export_Dxf}" IsChecked="{Binding IsExportDxf}"/>
+                                    <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
+                                    <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
+                                    <CheckBox Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsExportTopPlate}" IsEnabled="{Binding HasTopPlate}"/>
+                                    <CheckBox Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsExportBottomPlate}" IsEnabled="{Binding HasBottomPlate}"/>
+                                </StackPanel>
+                                <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportFiles}"
+                                        Command="{Binding ExportPlatesCommand}"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </WrapPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top">
+                <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}" Width="120"
+                          VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_Language}"/>
+                <Button Classes="Icon" Width="35" Height="35"
+                        Background="{DynamicResource ButtonBackground}"
+                        Command="{Binding ToggleAboutCommand}" ToolTip.Tip="{loc:Localize ToolTip_About}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Info}"/>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+                <Button Classes="Icon" Width="35" Height="35"
+                        Background="{DynamicResource ButtonBackground}"
+                        Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{loc:Localize ToolTip_Theme}">
+                    <shadui:ButtonAssist.Icon>
+                        <Grid>
+                            <ContentControl Content="{LucideIconContent Sun}" IsVisible="{Binding IsDarkMode}"/>
+                            <ContentControl Content="{LucideIconContent Moon}" IsVisible="{Binding !IsDarkMode}"/>
+                        </Grid>
+                    </shadui:ButtonAssist.Icon>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Welcome -->
+        <Border Grid.Row="1" IsVisible="{Binding ShowWelcome}" Classes="Panel"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Padding="40,32" MaxWidth="600">
+            <StackPanel Spacing="14" HorizontalAlignment="Center">
+                <Image Source="avares://ATLab.FixtureDesigner/Assets/AppIcon.png" Width="72" Height="72" HorizontalAlignment="Center"/>
+                <TextBlock Text="ATLab Fixture Designer" Classes="h2" HorizontalAlignment="Center"/>
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Classes="Label" FontSize="14"
+                           Text="{loc:Localize Welcome_Text}"/>
+                <TextBlock TextAlignment="Center" Classes="Label" TextWrapping="Wrap"
+                           Text="{loc:Localize Welcome_Hint}"/>
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,6,0,0">
+                    <Button Classes="Primary" Command="{Binding NewCommand}" Content="{loc:Localize Button_New}"/>
+                    <Button Classes="Outline" Command="{Binding OpenCommand}" Content="{loc:Localize Button_Open}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Fixture -->
+        <Grid Grid.Row="1" IsVisible="{Binding HasBoard}" ColumnDefinitions="5*,6,4*">
+
+            <!-- Board -->
+            <Border Grid.Column="0" Classes="Panel" Padding="0">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="Auto,Auto,Auto,*" Margin="12,8">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Localize Label_View}" Classes="FormLabel" Margin="0,0,10,0"/>
+                            <RadioButton Classes="Side" GroupName="ViewSide" Content="{loc:Localize View_Top}" IsChecked="{Binding IsTopView}"
+                                         ToolTip.Tip="{loc:Localize ToolTip_ViewTop}"/>
+                            <RadioButton Classes="Side" GroupName="ViewSide" Content="{loc:Localize View_Bottom}" IsChecked="{Binding IsBottomView}"
+                                         ToolTip.Tip="{loc:Localize ToolTip_ViewBottom}"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Classes="Icon" Width="32" Height="32" Background="{DynamicResource ButtonBackground}"
+                                Click="OnFitClicked" ToolTip.Tip="{loc:Localize ToolTip_Fit}">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent Maximize, 16}"/>
+                            </shadui:ButtonAssist.Icon>
+                        </Button>
+                        <Button Grid.Column="2" Classes="Tool" Height="32" Margin="8,0,0,0" Content="{loc:Localize Button_Layers}"
+                                ToolTip.Tip="{loc:Localize ToolTip_Layers}">
+                            <shadui:ButtonAssist.Icon>
+                                <ContentControl Content="{LucideIconContent Layers, 16}" Margin="0,0,8,0"/>
+                            </shadui:ButtonAssist.Icon>
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedLeft">
+                                    <StackPanel Spacing="6" MinWidth="260">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_AllLayers}"
+                                                    Command="{Binding ShowAllLayersCommand}" CommandParameter="{x:True}"/>
+                                            <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_NoLayers}"
+                                                    Command="{Binding ShowAllLayersCommand}" CommandParameter="{x:False}"/>
+                                            <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_DefaultLayerColors}"
+                                                    Command="{Binding ResetLayerColorsCommand}"/>
+                                        </StackPanel>
+                                        <ScrollViewer MaxHeight="520">
+                                            <ItemsControl ItemsSource="{Binding LayerOptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <!-- The swatch opens the color picker -->
+                                                    <DataTemplate DataType="vm:LayerOption">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,1">
+                                                            <StackPanel Orientation="Horizontal" Width="64" VerticalAlignment="Center">
+                                                                <ColorPicker Color="{Binding Color, Mode=TwoWay}" IsAlphaEnabled="False" IsAlphaVisible="False" CornerRadius="6"
+                                                                             ToolTip.Tip="{loc:Localize ToolTip_LayerColor}">
+                                                                    <Border Width="12" Height="12" CornerRadius="2" Background="{Binding Brush}"/>
+                                                                </ColorPicker>
+                                                            </StackPanel>
+                                                            <CheckBox IsChecked="{Binding IsVisible}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                    <TextBlock Text="{Binding Display}" VerticalAlignment="Center" MinWidth="80"/>
+                                                                    <TextBlock Text="{Binding Description}" Classes="Label" VerticalAlignment="Center"/>
+                                                                </StackPanel>
+                                                            </CheckBox>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <TextBlock Grid.Column="3" Text="{Binding BoardInfo}" Classes="Label" HorizontalAlignment="Right"
+                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="12,0,0,0"/>
+                    </Grid>
+                    <Border Grid.Row="1" CornerRadius="0,0,8,8" ClipToBounds="True">
+                        <pcb:BoardView x:Name="Board"
+                                            Board="{Binding Board}"
+                                            Markers="{Binding Probes}"
+                                            ViewSide="{Binding ViewSide}"
+                                            HighlightedPads="{Binding HighlightedPads}"
+                                            SelectedPad="{Binding SelectedPad, Mode=TwoWay}"
+                                            SelectedMarker="{Binding SelectedProbe}"
+                                            PadActivatedCommand="{Binding TogglePadCommand}"
+                                            OverlayOutlines="{Binding OutlineOverlay}"
+                                            ShowMarkerLegend="True"
+                                            PartMarkers="{Binding Parts}"
+                                            SelectedPartMarker="{Binding SelectedPartMarker, Mode=TwoWay}"
+                                            IsPlacementActive="{Binding IsPlacing}"
+                                            PlaceCommand="{Binding PlaceAtCommand}"
+                                            PartMovedCommand="{Binding PartMovedCommand}"
+                                            VisibleLayers="{Binding VisibleLayers}"
+                                            LayerColors="{Binding LayerColors}"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent"/>
+
+            <TabControl Grid.Column="2" SelectedIndex="{Binding SelectedTabIndex}">
+                <!-- The steps wrap onto a second row instead of being cut off when the panel is narrow -->
+                <TabControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </TabControl.ItemsPanel>
+
+                <!-- ========== Fixture ========== -->
+                <TabItem Header="{loc:Localize Tab_Fixture}" AutomationProperties.Name="{loc:Localize Tab_Fixture}">
+                    <ScrollViewer Margin="0,8,0,0">
+                        <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" Margin="2,0,8,0">
+                            <TextBlock Grid.Row="0" Text="{loc:Localize Label_FixtureName}" Classes="FormLabel"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="1" Text="{loc:Localize Label_DeviceName}" Classes="FormLabel"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DeviceName}"/>
+                            <TextBlock Grid.Row="2" Text="{loc:Localize Label_DeviceRevision}" Classes="FormLabel"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DeviceRevision}"/>
+                            <TextBlock Grid.Row="3" Text="{loc:Localize Label_Author}" Classes="FormLabel"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Author}"/>
+                            <TextBlock Grid.Row="4" Text="{loc:Localize Label_Notes}" Classes="FormLabel" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Notes}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="110"/>
+                            <TextBlock Grid.Row="5" Text="{loc:Localize Label_Adapter}" Classes="FormLabel"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding AdapterName}" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="6" Text="{loc:Localize Label_FixtureFile}" Classes="FormLabel"/>
+                            <SelectableTextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FixturePathText}"
+                                                 TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="7" Text="{loc:Localize Label_BoardFile}" Classes="FormLabel"/>
+                            <SelectableTextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Board.FilePath, FallbackValue=''}"
+                                                 TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="8" Text="{loc:Localize Label_BuildSheet}" Classes="FormLabel"/>
+                            <Button Grid.Row="8" Grid.Column="1" Classes="Outline" Height="28" Padding="10,0" HorizontalAlignment="Left"
+                                    Content="{loc:Localize Button_BuildSheetLayers}" ToolTip.Tip="{loc:Localize ToolTip_BuildSheetLayers}"
+                                    IsEnabled="{Binding BuildSheetLayers.HasOptions}">
+                                <Button.Flyout>
+                                    <Flyout Placement="BottomEdgeAlignedLeft">
+                                        <StackPanel Spacing="6" MinWidth="220">
+                                            <TextBlock Text="{loc:Localize Header_BuildSheetLayers}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{loc:Localize Text_BuildSheetLayers}" Classes="Label"
+                                                       TextWrapping="Wrap" MaxWidth="380" HorizontalAlignment="Left"/>
+                                            <WrapPanel ItemSpacing="8" LineSpacing="6" MaxWidth="400" HorizontalAlignment="Left">
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_AllLayers}"
+                                                        Command="{Binding BuildSheetLayers.ShowAllCommand}" CommandParameter="all"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_NoLayers}"
+                                                        Command="{Binding BuildSheetLayers.ShowAllCommand}" CommandParameter="-"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_DefaultLayerStyle}"
+                                                        Command="{Binding BuildSheetLayers.ResetStyleCommand}"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_DefaultLayerOrder}"
+                                                        IsEnabled="{Binding BuildSheetLayers.HasCustomOrder}"
+                                                        Command="{Binding BuildSheetLayers.ResetOrderCommand}"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_SaveLayersAsDefault}"
+                                                        ToolTip.Tip="{loc:Localize ToolTip_SaveLayersAsDefault}"
+                                                        Command="{Binding BuildSheetLayers.SaveAsDefaultCommand}"/>
+                                                <Button Classes="Outline" Height="28" Padding="10,0" Content="{loc:Localize Button_LoadLayersDefault}"
+                                                        ToolTip.Tip="{loc:Localize ToolTip_LoadLayersDefault}"
+                                                        Command="{Binding BuildSheetLayers.LoadDefaultCommand}"/>
+                                            </WrapPanel>
+                                            <!-- The columns line up with the rows below: order, color, top, bottom, name, opacity -->
+                                            <StackPanel Grid.IsSharedSizeScope="True" Spacing="2">
+                                                <Grid ColumnSpacing="10" Margin="0,0,18,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerOrder"/>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerColor"/>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerViews"/>
+                                                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerName"/>
+                                                        <ColumnDefinition Width="120"/>
+                                                        <ColumnDefinition Width="40"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ItemsControl Grid.Column="2" ItemsSource="{Binding BuildSheetLayers.Views}">
+                                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate DataType="rendering:ReportLayerView">
+                                                                <TextBlock Text="{Binding Label}" ToolTip.Tip="{Binding ToolTip}" Classes="Label" FontWeight="SemiBold"
+                                                                           Width="{x:Static rendering:ReportLayerColumns.Width}" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                                <ScrollViewer MaxHeight="420">
+                                                    <ItemsControl ItemsSource="{Binding BuildSheetLayers.Options}" Margin="0,0,18,0">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate DataType="rendering:ReportLayerOption">
+                                                                <Grid ColumnSpacing="10" Margin="0,1">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerOrder"/>
+                                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerColor"/>
+                                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="LayerViews"/>
+                                                                                                                                                <ColumnDefinition Width="Auto" SharedSizeGroup="LayerName"/>
+                                                                        <ColumnDefinition Width="120"/>
+                                                                        <ColumnDefinition Width="40"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <!-- Order: the top row is drawn on top -->
+                                                                    <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                                                                        <Button Classes="Icon" Width="22" Height="22" Padding="0" Background="Transparent"
+                                                                                ToolTip.Tip="{loc:Localize ToolTip_LayerUp}"
+                                                                                Command="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).BuildSheetLayers.MoveUpCommand}"
+                                                                                CommandParameter="{Binding}">
+                                                                            <shadui:ButtonAssist.Icon>
+                                                                                <ContentControl Content="{LucideIconContent ChevronUp, 14}"/>
+                                                                            </shadui:ButtonAssist.Icon>
+                                                                        </Button>
+                                                                        <Button Classes="Icon" Width="22" Height="22" Padding="0" Background="Transparent"
+                                                                                ToolTip.Tip="{loc:Localize ToolTip_LayerDown}"
+                                                                                Command="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).BuildSheetLayers.MoveDownCommand}"
+                                                                                CommandParameter="{Binding}">
+                                                                            <shadui:ButtonAssist.Icon>
+                                                                                <ContentControl Content="{LucideIconContent ChevronDown, 14}"/>
+                                                                            </shadui:ButtonAssist.Icon>
+                                                                        </Button>
+                                                                    </StackPanel>
+                                                                    <!-- The swatch opens the color picker; it shows color and opacity -->
+                                                                    <ColorPicker Grid.Column="1" Color="{Binding Color, Mode=TwoWay}"
+                                                                                 IsAlphaEnabled="False" IsAlphaVisible="False" CornerRadius="6"
+                                                                                 VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_LayerColor}">
+                                                                        <Border Width="14" Height="14" CornerRadius="3"
+                                                                                BorderThickness="1" BorderBrush="{DynamicResource OutlineColor}"
+                                                                                Background="{Binding Brush}"/>
+                                                                    </ColorPicker>
+                                                                    <ItemsControl Grid.Column="2" ItemsSource="{Binding Toggles}">
+                                                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate DataType="rendering:ReportLayerToggle">
+                                                                                <Panel Width="{x:Static rendering:ReportLayerColumns.Width}">
+                                                                                    <CheckBox IsChecked="{Binding IsVisible}" ToolTip.Tip="{Binding View.ToolTip}" HorizontalAlignment="Center"/>
+                                                                                </Panel>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                    <TextBlock Grid.Column="3" Text="{Binding Display}" VerticalAlignment="Center"/>
+                                                                    <Slider Grid.Column="4" Minimum="0" Maximum="100" SmallChange="5" LargeChange="10"
+                                                                            TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding Opacity}"
+                                                                            IsEnabled="{Binding IsUsed}" VerticalAlignment="Center"
+                                                                            ToolTip.Tip="{loc:Localize ToolTip_LayerOpacity}"/>
+                                                                    <TextBlock Grid.Column="5" Text="{Binding OpacityText}" Classes="Label"
+                                                                               VerticalAlignment="Center" TextAlignment="Right" IsEnabled="{Binding IsUsed}"/>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ========== Pads ========== -->
+                <TabItem Header="{loc:Localize Tab_Pads}" AutomationProperties.Name="{loc:Localize Tab_Pads}">
+                    <Grid RowDefinitions="Auto,Auto,*" Margin="0,8,0,0">
+                        <WrapPanel ItemSpacing="10" LineSpacing="6" Margin="0,0,0,8">
+                            <TextBox Text="{Binding PadSearch}" Width="260" VerticalAlignment="Center"
+                                     PlaceholderText="{loc:Localize Placeholder_PadSearch}" ToolTip.Tip="{loc:Localize ToolTip_PadSearch}"/>
+                            <CheckBox Content="{loc:Localize Filter_TestPoints}" IsChecked="{Binding TestPointsOnly}" VerticalAlignment="Center"
+                                      ToolTip.Tip="{loc:Localize ToolTip_TestPoints}"/>
+                            <CheckBox Content="{loc:Localize Filter_WithNet}" IsChecked="{Binding WithNetOnly}" VerticalAlignment="Center"/>
+                        </WrapPanel>
+                        <WrapPanel Grid.Row="1" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddBottom}" Command="{Binding AddProbeBottomCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddBottom}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddTop}" Command="{Binding AddProbeTopCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddTop}"/>
+                            <TextBlock Text="{Binding PadCountText}" Classes="Label" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        </WrapPanel>
+                        <DataGrid Grid.Row="2" x:Name="PadsGrid"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding PadRows}"
+                                  SelectedItem="{Binding SelectedPadRow, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  IsReadOnly="True"
+                                  CanUserSortColumns="True"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}"
+                                  DoubleTapped="OnPadRowDoubleTapped">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Reference}" Binding="{Binding Reference}" Width="80" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PadNumber}" Binding="{Binding Number}" Width="55" MinWidth="55"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Net}" Width="130" MinWidth="130" SortMemberPath="Net">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:PadRow">
+                                            <TextBlock Text="{Binding Net}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding FullNet}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Access}" Binding="{Binding Access}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Probes}" Binding="{Binding Probes}" Width="70" MinWidth="70"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Type}" Binding="{Binding Kind}" Width="55" MinWidth="55"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Size}" Binding="{Binding Size}" Width="85" MinWidth="85"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Footprint}" Width="*" MinWidth="160" SortMemberPath="Footprint">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:PadRow">
+                                            <TextBlock Text="{Binding Footprint}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Footprint}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== Probes ========== -->
+                <TabItem Header="{loc:Localize Tab_Probes}" AutomationProperties.Name="{loc:Localize Tab_Probes}">
+                    <Grid RowDefinitions="Auto,2*,Auto,Auto,Auto,*" Margin="0,8,0,0">
+                        <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AutoAssign}" Command="{Binding AutoAssignCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AutoAssign}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Wand, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_Renumber}" Command="{Binding RenumberCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_Renumber}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent ListOrdered, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_Disconnect}" Command="{Binding DisconnectProbeCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_Disconnect}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Unplug, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveProbe}" Command="{Binding RemoveProbeCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_RemoveProbe}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <TextBlock Text="{Binding ProbeCountText}" Classes="Label" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        </WrapPanel>
+
+                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_NoProbes}" Classes="Label" TextWrapping="Wrap"
+                                   IsVisible="{Binding !HasProbes}" Margin="4,8"/>
+
+                        <DataGrid Grid.Row="1" x:Name="ProbesGrid"
+                                  IsVisible="{Binding HasProbes}"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Probes}"
+                                  SelectedItem="{Binding SelectedProbe, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Probe}" Width="70" MinWidth="70" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <StackPanel Orientation="Horizontal" Spacing="5" Margin="8,0" VerticalAlignment="Center">
+                                                <LucideIcon Kind="CircleAlert" Size="13" Foreground="{StaticResource FailBrush}" IsVisible="{Binding HasError}"/>
+                                                <LucideIcon Kind="TriangleAlert" Size="13" Foreground="{StaticResource MarginalBrush}" IsVisible="{Binding HasWarning}"/>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Pad}" Binding="{Binding PadDisplay}" Width="80" MinWidth="80" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Net}" Width="120" MinWidth="120" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <TextBlock Text="{Binding ShortNet}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Net}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Side}" Binding="{Binding Side, Converter={x:Static loc:EnumTextConverter.Instance}}"
+                                                    Width="70" MinWidth="70" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Pin}" Width="210" MinWidth="210">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PinOptions}"
+                                                      SelectedValueBinding="{ReflectionBinding Pin}"
+                                                      SelectedValue="{Binding Pin, Mode=OneWay}"
+                                                      SelectionChanged="OnPinSelectionChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_Pin}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12"
+                                                      MaxDropDownHeight="420">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="vm:PinOption">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                            <TextBlock Text="{Binding Display}" FontSize="12"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding UsedBy}" Classes="Label" FontSize="11"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_ProbeType}" Width="130" MinWidth="130">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).ProbeTypes}"
+                                                      SelectedItem="{Binding Type, Mode=OneWay}"
+                                                      SelectionChanged="OnTypeSelectionChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_ProbeType}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="pcbfix:ProbeType">
+                                                        <TextBlock Text="{Binding Name}" FontSize="12"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="70" MinWidth="70" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="70" MinWidth="70" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="140"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Probe types, like the part types in the Mechanics tab -->
+                        <TextBlock Grid.Row="2" Text="{loc:Localize Header_Types}" Classes="h4" Margin="2,14,0,6"/>
+                        <WrapPanel Grid.Row="3" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddProbeTypeCommand}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_FromLibrary}" ToolTip.Tip="{loc:Localize ToolTip_FromLibrary}">
+                                <Button.Flyout>
+                                    <Flyout Placement="BottomEdgeAlignedLeft">
+                                        <ItemsControl ItemsSource="{Binding LibraryTypes}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="pcbfix:ProbeType">
+                                                    <Button Classes="Ghost" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Height="NaN" Padding="10,6"
+                                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddFromLibraryCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                                            <TextBlock Text="{Binding Note}" Classes="Label" FontSize="11"/>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_SaveToLibrary}" Command="{Binding SaveTypeToLibraryCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_ApplyToAll}" Command="{Binding ApplyTypeToAllCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_ApplyToAll}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemoveProbeTypeCommand}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="8,0,0,0">
+                                <TextBlock Text="{loc:Localize Label_DefaultType}" Classes="FormLabel"/>
+                                <ComboBox ItemsSource="{Binding ProbeTypes}" SelectedItem="{Binding DefaultProbeType}" MinWidth="180">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate DataType="pcbfix:ProbeType">
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </WrapPanel>
+                        <TextBlock Grid.Row="4" Text="{loc:Localize Text_ProbeTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                        <DataGrid Grid.Row="5"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding ProbeTypes}"
+                                  SelectedItem="{Binding SelectedProbeType, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="120" MinWidth="120"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== Test hardware ========== -->
+                <TabItem Header="{loc:Localize Tab_Adapter}" AutomationProperties.Name="{loc:Localize Tab_Adapter}">
+                    <Grid RowDefinitions="Auto,*" Margin="0,8,0,0">
+                        <StackPanel Spacing="2" Margin="2,0,0,8">
+                            <TextBlock Text="{Binding AdapterName}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding UsedPinCountText}" Classes="Label"/>
+                        </StackPanel>
+                        <DataGrid Grid.Row="1"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding AdapterRows}"
+                                  SelectionMode="Single"
+                                  IsReadOnly="True"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Pin}" Binding="{Binding PinName}" Width="50" MinWidth="50"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Resource}" Width="120" MinWidth="120">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:AdapterRow">
+                                            <TextBlock Text="{Binding Resource}" Classes="Cell" FontWeight="SemiBold" Opacity="0.55"
+                                                       Classes.Used="{Binding IsUsed}">
+                                                <TextBlock.Styles>
+                                                    <Style Selector="TextBlock.Used">
+                                                        <Setter Property="Opacity" Value="1"/>
+                                                    </Style>
+                                                </TextBlock.Styles>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Probes}" Binding="{Binding Probes}" Width="110" MinWidth="110"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Net}" Width="140" MinWidth="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:AdapterRow">
+                                            <TextBlock Text="{Binding Nets}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Nets}"
+                                                       Classes.Fail="{Binding IsShort}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Signal}" Binding="{Binding Signal}" Width="*" MinWidth="150"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== Mechanics: locating pins, pre-centering pins, support pins, push rods ========== -->
+                <TabItem Header="{loc:Localize Tab_Mechanics}" AutomationProperties.Name="{loc:Localize Tab_Mechanics}">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,*" Margin="0,8,0,0">
+                        <!-- Place mode: a click on the board places a part of the chosen kind; Escape ends it -->
+                        <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingLocatingPin}" Content="{loc:Localize Button_PlaceLocatingPin}"
+                                    Command="{Binding PlaceLocatingPinCommand}" IsEnabled="{Binding HasBoard}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceLocatingPin}"/>
+                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingPreCenteringPin}" Content="{loc:Localize Button_PlacePreCenteringPin}"
+                                    Command="{Binding PlacePreCenteringPinCommand}" IsEnabled="{Binding HasBoard}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePreCenteringPin}"/>
+                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingSupportPin}" Content="{loc:Localize Button_PlaceSupportPin}"
+                                    Command="{Binding PlaceSupportPinCommand}" IsEnabled="{Binding HasBoard}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceSupportPin}"/>
+                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingPushRod}" Content="{loc:Localize Button_PlacePushRod}"
+                                    Command="{Binding PlacePushRodCommand}" IsEnabled="{Binding HasBoard}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePushRod}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemovePart}" Command="{Binding RemovePartCommand}"/>
+                        </WrapPanel>
+                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_PartsHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                        <DataGrid Grid.Row="2"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Parts}"
+                                  SelectedItem="{Binding SelectedPart, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Part}" Binding="{Binding Name}" Width="60" MinWidth="60" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartKind}" Binding="{Binding KindLabel}" Width="160" MinWidth="150" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_PartType}" Width="230" MinWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:FixturePart">
+                                            <ComboBox ItemsSource="{Binding AvailableTypes}"
+                                                      SelectedItem="{Binding Type, Mode=OneWay}"
+                                                      SelectionChanged="OnPartTypeSelectionChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_PartType}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="pcbfix:PartType">
+                                                        <TextBlock Text="{Binding Name}" FontSize="12"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Types of the parts, like the probe types -->
+                        <TextBlock Grid.Row="3" Text="{loc:Localize Header_Types}" Classes="h4" Margin="2,14,0,6"/>
+                        <WrapPanel Grid.Row="4" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddPartTypeCommand}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_FromLibrary}" ToolTip.Tip="{loc:Localize ToolTip_FromLibrary}">
+                                <Button.Flyout>
+                                    <Flyout Placement="BottomEdgeAlignedLeft">
+                                        <ItemsControl ItemsSource="{Binding LibraryPartTypes}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="pcbfix:PartType">
+                                                    <Button Classes="Ghost" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Height="NaN" Padding="10,6"
+                                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddPartTypeFromLibraryCommand}"
+                                                            CommandParameter="{Binding}">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                                            <TextBlock Text="{Binding Note}" Classes="Label" FontSize="11"/>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_SaveToLibrary}" Command="{Binding SavePartTypeToLibraryCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemovePartTypeCommand}"/>
+                        </WrapPanel>
+                        <TextBlock Grid.Row="5" Text="{loc:Localize Text_PartTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                        <DataGrid Grid.Row="6"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding PartTypes}"
+                                  SelectedItem="{Binding SelectedPartType, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="200" MinWidth="170"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="210" MinWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="pcbfix:PartType">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PartKinds}"
+                                                      SelectedValueBinding="{Binding Kind, x:DataType=vm:PartKindOption}"
+                                                      SelectedValue="{Binding Kind, Mode=OneWay}"
+                                                      SelectionChanged="OnPartKindSelectionChanged"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="vm:PartKindOption">
+                                                        <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartLength}" Binding="{Binding Length}" Width="85" MinWidth="85"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="85" MinWidth="85"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== Checks ========== -->
+                <TabItem x:Name="ChecksTab" Header="{Binding ChecksHeader}" AutomationProperties.Name="{Binding ChecksHeader}">
+                    <Grid RowDefinitions="Auto,*" Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,0,0,8">
+                            <LucideIcon Kind="CircleAlert" Size="15" Foreground="{StaticResource FailBrush}" IsVisible="{Binding HasErrors}"/>
+                            <LucideIcon Kind="TriangleAlert" Size="15" Foreground="{StaticResource MarginalBrush}"
+                                        IsVisible="{Binding HasWarnings}"/>
+                            <TextBlock Text="{Binding CheckSummary}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_ChecksClean}" Classes="Label Pass" Margin="4,4"
+                                   IsVisible="{Binding IsCheckClean}"/>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Checks}" SelectedItem="{Binding SelectedCheck}"
+                                 Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="fixture:CheckResult">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Panel VerticalAlignment="Top" Margin="0,2,0,0">
+                                            <LucideIcon Kind="CircleAlert" Size="15" Foreground="{StaticResource FailBrush}" IsVisible="{Binding IsError}"/>
+                                            <LucideIcon Kind="TriangleAlert" Size="15" Foreground="{StaticResource MarginalBrush}" IsVisible="{Binding IsWarning}"/>
+                                            <LucideIcon Kind="Info" Size="15" Foreground="{StaticResource InfoBrush}" IsVisible="{Binding IsInfo}"/>
+                                        </Panel>
+                                        <TextBlock Grid.Column="1" Text="{Binding Message}" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+
+                <!-- ========== Plates ========== -->
+                <TabItem Header="{loc:Localize Tab_Plates}" AutomationProperties.Name="{loc:Localize Tab_Plates}">
+                    <ScrollViewer Margin="0,8,0,0">
+                        <StackPanel Spacing="12" Margin="2,0,8,0">
+                            <!-- Outline of the probe plates, shared by both or one each: automatic, fixed size, DXF/SVG file
+                                 or a layer of the board; a fixed size or a file is centered on the board and moved by the offset -->
+                            <StackPanel Spacing="8">
+                                <CheckBox Content="{loc:Localize Label_SeparateOutlines}" IsChecked="{Binding IsSeparateOutlines}"
+                                          ToolTip.Tip="{loc:Localize ToolTip_SeparateOutlines}"/>
+                                <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsSeparateOutlines}">
+                                    <TextBlock Text="{loc:Localize Label_EditedOutline}" Classes="FormLabel"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
+                                        <RadioButton GroupName="EditedOutline" Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsEditingBottomOutline}"/>
+                                        <RadioButton GroupName="EditedOutline" Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsEditingTopOutline}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid ColumnDefinitions="170,*">
+                                    <TextBlock Text="{loc:Localize Label_PlateOutline}" Classes="FormLabel"/>
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding OutlineModes}"
+                                              SelectedItem="{Binding SelectedOutlineMode}"
+                                              ToolTip.Tip="{loc:Localize ToolTip_PlateOutline}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="vm:OutlineModeOption">
+                                                <TextBlock Text="{Binding Label}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsOutlineAutomatic}">
+                                    <TextBlock Text="{loc:Localize Label_PlateMargin}" Classes="FormLabel"/>
+                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding PlateMargin}" ToolTip.Tip="{loc:Localize ToolTip_PlateMargin}"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" RowSpacing="8" IsVisible="{Binding IsOutlineFixedSize}">
+                                    <TextBlock Text="{loc:Localize Label_PlateWidth}" Classes="FormLabel"/>
+                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding OutlineWidth}"/>
+                                    <TextBlock Grid.Row="1" Text="{loc:Localize Label_PlateHeight}" Classes="FormLabel"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number" Text="{Binding OutlineHeight}"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*,Auto,Auto" ColumnSpacing="6" IsVisible="{Binding IsOutlineImported}">
+                                    <TextBlock Text="{loc:Localize Label_OutlineFile}" Classes="FormLabel"/>
+                                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding OutlineFileName, Mode=OneWay}"
+                                             ToolTip.Tip="{Binding OutlineFile}"/>
+                                    <Button Grid.Column="2" Classes="Tool" Content="{loc:Localize Button_ChooseOutline}"
+                                            Command="{Binding ChooseOutlineFileCommand}" ToolTip.Tip="{loc:Localize ToolTip_ChooseOutline}"/>
+                                    <Button Grid.Column="3" Classes="Tool" Command="{Binding ReloadOutlineFileCommand}"
+                                            ToolTip.Tip="{loc:Localize ToolTip_ReloadOutline}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent RefreshCw, 16}"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsOutlineBoardLayer}">
+                                    <TextBlock Text="{loc:Localize Label_OutlineLayer}" Classes="FormLabel"/>
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding OutlineLayerNames}"
+                                              SelectedItem="{Binding OutlineLayer}"
+                                              PlaceholderText="{loc:Localize Placeholder_OutlineLayer}"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" RowSpacing="8" IsVisible="{Binding HasOutlineOffset}">
+                                    <TextBlock Text="{loc:Localize Label_OffsetX}" Classes="FormLabel"/>
+                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding OutlineOffsetX}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
+                                    <TextBlock Grid.Row="1" Text="{loc:Localize Label_OffsetY}" Classes="FormLabel"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number" Text="{Binding OutlineOffsetY}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="170,*">
+                                    <TextBlock Text="{loc:Localize Label_PlateThickness}" Classes="FormLabel"/>
+                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding PlateThickness}" ToolTip.Tip="{loc:Localize ToolTip_PlateThickness}"/>
+                                </Grid>
+
+                                <TextBlock Text="{Binding OutlineStatus}" TextWrapping="Wrap" Classes="Label"
+                                           IsVisible="{Binding !IsOutlineAutomatic}"
+                                           Classes.Missing="{Binding IsOutlineMissing}">
+                                    <TextBlock.Styles>
+                                        <Style Selector="TextBlock.Missing">
+                                            <Setter Property="Foreground" Value="{StaticResource MarginalBrush}"/>
+                                        </Style>
+                                    </TextBlock.Styles>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{loc:Localize Header_Plates}" Classes="h4"/>
+                                <TextBlock Text="{Binding PlateSummary}" TextWrapping="Wrap"/>
+                                <ItemsControl ItemsSource="{Binding PlateProblems}" IsVisible="{Binding HasPlateProblems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2">
+                                                <LucideIcon Kind="CircleAlert" Size="14" Foreground="{StaticResource FailBrush}"/>
+                                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <!-- Export: which files of which plates -->
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="{loc:Localize Header_Export}" Classes="h4"/>
+                                <TextBlock Text="{loc:Localize Text_PlateFilesHint}" Classes="Label" TextWrapping="Wrap"/>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="FormLabel"/>
+                                    <CheckBox Content="{loc:Localize Export_Dxf}" IsChecked="{Binding IsExportDxf}"/>
+                                    <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
+                                    <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
+                                    <CheckBox Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsExportTopPlate}" IsEnabled="{Binding HasTopPlate}"/>
+                                    <CheckBox Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsExportBottomPlate}" IsEnabled="{Binding HasBottomPlate}"/>
+                                </StackPanel>
+                                <Button Classes="Tool" HorizontalAlignment="Left" Margin="0,4,0,0" Content="{loc:Localize Button_ExportFiles}"
+                                        Command="{Binding ExportPlatesCommand}"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,8,0,8">
+            <TextBlock Text="{Binding StatusText}" Classes="Label" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+            <Button Grid.Column="1" Classes="Ghost" IsVisible="{Binding HasBoard}" Padding="8,2" Height="26" Click="OnChecksClicked"
+                    ToolTip.Tip="{loc:Localize ToolTip_ShowChecks}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <LucideIcon Kind="CircleAlert" Size="14" Foreground="{StaticResource FailBrush}" IsVisible="{Binding HasErrors}"/>
+                    <LucideIcon Kind="TriangleAlert" Size="14" Foreground="{StaticResource MarginalBrush}" IsVisible="{Binding HasWarnings}"/>
+                    <TextBlock Text="{Binding CheckSummary}" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- About, over everything; a click on the dimmed background closes it -->
+        <Panel Grid.Row="0" Grid.RowSpan="3" Margin="-12,0,-12,0" IsVisible="{Binding IsAboutOpen}">
+            <Button Classes="no-effects" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="#80000000" Cursor="Arrow"
+                    Command="{Binding CloseAboutCommand}"/>
+            <controls:About DataContext="{Binding About}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Margin="20"/>
+        </Panel>
+
+        <!-- Message or question; a click beside it is the same as its last button -->
+        <Panel Grid.Row="0" Grid.RowSpan="3" Margin="-12,0,-12,0" IsVisible="{Binding IsDialogOpen}">
+            <Button Classes="no-effects" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="#80000000" Cursor="Arrow"
+                    Command="{Binding Dialog.DismissCommand, FallbackValue={x:Null}}"/>
+            <Border Classes="Panel" Padding="22" Width="520" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 8 32 0 #50000000">
+                <StackPanel Spacing="14">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <LucideIcon Kind="CircleAlert" Size="20" Foreground="{StaticResource FailBrush}"
+                                    IsVisible="{Binding Dialog.IsError, FallbackValue=False}"/>
+                        <TextBlock Text="{Binding Dialog.Title, FallbackValue=''}" Classes="h4" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <SelectableTextBlock Text="{Binding Dialog.Message, FallbackValue=''}" TextWrapping="Wrap" LineHeight="20"/>
+                    <ItemsControl ItemsSource="{Binding Dialog.Buttons, FallbackValue={x:Null}}" HorizontalAlignment="Right">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="8"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:DialogButton">
+                                <Button Content="{Binding Text}" Classes.Primary="{Binding IsPrimary}" Classes.Outline="{Binding !IsPrimary}"
+                                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Dialog.ChooseCommand, FallbackValue={x:Null}}"
+                                        CommandParameter="{Binding Result}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </Panel>
+    </Grid>
+</shadui:Window>

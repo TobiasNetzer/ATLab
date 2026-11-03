@@ -183,8 +183,10 @@ public partial class TestingTabViewModel : ViewModelBase
         ISerialNumberDialogService serialNumberDialogService,
         ITestResultExportService testResultExportService,
         IMessageBoxService messageBoxService,
-        IStatusService statusService)
+        IStatusService statusService,
+        BoardViewerViewModel boardViewer)
     {
+        BoardViewer = boardViewer;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _settingsService = settingsService;
         _loggingService = loggingService;
@@ -553,8 +555,13 @@ public partial class TestingTabViewModel : ViewModelBase
     
     private bool _isChangingSelection;
     
+    /// <summary>The board view below the step list.</summary>
+    public BoardViewerViewModel BoardViewer { get; }
+
     partial void OnSelectedStepChanged(TestStepViewModel? value)
     {
+        BoardViewer.ShowStep(value);
+
         // Without a selection the (disabled) editor shows a blank step that isn't part of the project,
         // so it doesn't keep displaying the previously selected step
         var stepToLoad = value ?? new TestStepViewModel(new TestStep(), new TestModule(), _hardwareInfo);

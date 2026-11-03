@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using ATLab.Helpers;
+using ATLab.Pcb.Fixture;
 using ATLab.Services;
 using ATLab.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,6 +46,10 @@ public partial class ProjectModel : ObservableObject
     public ProjectDocumentation Documentation { get; } = new();
     public DeviceUnderTestInfo DeviceUnderTestInfo { get; } = new();
     public BoundaryScanConfiguration BoundaryScan { get; } = new();
+
+    /// <summary>KiCad board of the device under test and the nets of the adapter pins.</summary>
+    public BoardLink Board { get; } = new();
+
     public ObservableCollection<TestModule> Modules { get; } = new();
     public ObservableCollection<Device> Devices { get; } = new();
     public ObservableCollection<CustomVariable> RuntimeVariables { get; } = new();
@@ -69,6 +74,8 @@ public partial class ProjectModel : ObservableObject
         Documentation.DocumentationChanged += MarkDirty;
         DeviceUnderTestInfo.DeviceUnderTestInfoChanged += MarkDirty;
         BoundaryScan.ConfigurationChanged += MarkDirty;
+        Board.ConfigurationChanged += MarkDirty;
+        Board.ConfigurationChanged += ApplyNetChannelLabels;
 
         Devices.CollectionChanged += DevicesChanged;
         RuntimeVariables.CollectionChanged += RuntimeVariablesChanged;
@@ -107,6 +114,7 @@ public partial class ProjectModel : ObservableObject
             Documentation.ResetToDefault();
             DeviceUnderTestInfo.ResetToDefault();
             BoundaryScan.ResetToDefault();
+            Board.ResetToDefault();
             
             Modules.Clear();
             
@@ -115,13 +123,13 @@ public partial class ProjectModel : ObservableObject
             RuntimeVariables.Clear();
             
             foreach (var channel in StimChannelNames)
-                channel.ChannelName = string.Empty;
+                channel.SetManualName(string.Empty);
 
             foreach (var channel in ExtStimChannelNames)
-                channel.ChannelName = string.Empty;
+                channel.SetManualName(string.Empty);
 
             foreach (var channel in MeasChannelNames)
-                channel.ChannelName = string.Empty;
+                channel.SetManualName(string.Empty);
 
             FilePath = null;
             ScriptFolderPath = null;
@@ -162,15 +170,19 @@ public partial class ProjectModel : ObservableObject
             TargetTestHardwareId = TestHardwareIdFormat.Format(TargetTestHardwareId),
             ScriptFolderPath = pathService?.ToRelative(ScriptFolderPath ?? string.Empty) ?? ScriptFolderPath,
             Modules = modulesClone,
-            StimChannelNames = StimChannelNames.ToList(),
-            ExtStimChannelNames = ExtStimChannelNames.ToList(),
-            MeasChannelNames = MeasChannelNames.ToList(),
+            // The labels entered by the user, also while net names are shown instead
+            StimChannelNames = StimChannelNames.Select(c => new CustomRelayChannelName(c.ManualName, c.ChannelIndex)).ToList(),
+            ExtStimChannelNames = ExtStimChannelNames.Select(c => new CustomRelayChannelName(c.ManualName, c.ChannelIndex)).ToList(),
+            MeasChannelNames = MeasChannelNames.Select(c => new CustomRelayChannelName(c.ManualName, c.ChannelIndex)).ToList(),
             RuntimeVariables = RuntimeVariables.ToList(),
             Devices = Devices.ToList(),
             ProjectSettings = settingsClone,
             ProjectDocumentation = documentationClone,
             DeviceUnderTestInfo = DeviceUnderTestInfo,
-            BoundaryScan = boundaryScanClone
+            BoundaryScan = boundaryScanClone,
+            Board = Board.HasBoard || Board.IsNetNamesAsChannelLabels || Board.PinNets.Any(p => p.Net.Length > 0)
+                ? Board.ForSave(pathService)
+                : null
         };
     }
     
@@ -258,9 +270,42 @@ public partial class ProjectModel : ObservableObject
         DeviceUnderTestInfo.CopyFrom(dto.DeviceUnderTestInfo);
         BoundaryScan.CopyFrom(dto.BoundaryScan);
 
+        var board = dto.Board ?? new BoardLink();
+        if (pathService != null)
+            board.RestoreAfterLoad(pathService);
+        Board.CopyFrom(board);
+        ApplyNetChannelLabels();
+
         IsDirty = false;
     }
     
+    /// <summary>
+    /// Shows the nets of the channels as their labels while the project asks for it, otherwise the labels of the user.
+    /// The nets come from the pinout of the target test hardware.
+    /// </summary>
+    public void ApplyNetChannelLabels()
+    {
+        var pinout = Board.IsNetNamesAsChannelLabels
+            ? AdapterPinout.Find(TestHardwareIdFormat.Format(TargetTestHardwareId))
+            : null;
+
+        // Showing other labels does not change the project
+        using (SuppressDirtyTracking())
+        {
+            Apply(MeasChannelNames, ResourceKind.Meas);
+            Apply(StimChannelNames, ResourceKind.Stim);
+            Apply(ExtStimChannelNames, ResourceKind.ExtStim);
+        }
+
+        void Apply(IEnumerable<CustomRelayChannelName> channels, ResourceKind kind)
+        {
+            foreach (var channel in channels)
+                channel.NetLabel = pinout is not null && channel.ChannelIndex is { } index
+                    ? Board.ChannelLabel(pinout, kind, index)
+                    : null;
+        }
+    }
+
     public IDisposable SuppressDirtyTracking()
     {
         _suppressChangesCount++;
@@ -506,7 +551,7 @@ public partial class ProjectModel : ObservableObject
     {
         for (var i = 0; i < Math.Min(target.Count, source.Count); i++)
         {
-            target[i].ChannelName = source[i].ChannelName;
+            target[i].SetManualName(source[i].ChannelName);
         }
     }
     
