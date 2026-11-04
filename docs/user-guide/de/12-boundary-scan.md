@@ -253,7 +253,22 @@ Lässt die Einrichtung das nicht zu, läuft der Test gar nicht. Die Spalte **Hin
 
 ### So funktioniert der Test
 
-Jedes Drive-Netz bekommt einen eigenen Code. In einem **Durchgang** werden zuerst die Bits aller Codes getrieben und danach die invertierten Bits. Dadurch liegt jedes Netz einmal auf 0 und einmal auf 1, und zwei kurzgeschlossene Netze können nicht beide ihren eigenen Code zurücklesen. Bei *n* Drive-Netzen besteht ein Durchgang aus 2 × ⌈log₂(*n* + 2)⌉ Mustern, bei 100 Netzen also aus 14.
+Statt die Netze nacheinander zu treiben, bekommt jedes Drive-Netz eine eigene Nummer – 1, 2, 3 … –, binär geschrieben als **Code**. Jedes Muster treibt auf allen Netzen gleichzeitig ein Bit dieser Codes, und jeder lesende Pin hält fest, was er sieht. Auf einer fehlerfreien Platine liest jeder Pin genau den Code seines Netzes.
+
+In einem **Durchgang** werden zuerst die Bits aller Codes getrieben und danach die invertierten Bits. Bei drei Drive-Netzen haben die Codes drei Bits:
+
+| Netz | Code | Bits | Invertierte Bits | Ein Pin am Netz liest |
+|------|------|------|------------------|-----------------------|
+| A    | 1    | 1 0 0 | 0 1 1 | `100011` |
+| B    | 2    | 0 1 0 | 1 0 1 | `010101` |
+| C    | 3    | 1 1 0 | 0 0 1 | `110001` |
+
+Die invertierten Bits sorgen für zweierlei:
+
+- **Jedes Netz liegt einmal auf 0 und einmal auf 1.** Liest ein Pin nur Nullen oder nur Einsen, ist das nie ein gültiger Code: Das Netz hängt fest, oder der Pin hat keine Verbindung.
+- **Kurzgeschlossene Netze lesen nicht ihren eigenen Code.** Kurzgeschlossene Netze lesen alle dasselbe, eine Mischung ihrer Codes: Wo sich die Codes unterscheiden, setzt sich der stärkere Pegel durch. Sind A und C kurzgeschlossen und setzt sich die 0 durch, lesen beide `100001` – weder der Code von A noch der von C. Ohne die invertierten Bits läsen sie `100`, also den Code von A: A sähe fehlerfrei aus, und nur C fiele durch.
+
+Bei *n* Drive-Netzen besteht ein Durchgang aus 2 × ⌈log₂(*n* + 2)⌉ Mustern, bei 100 Netzen also aus 14 statt 100. Die Codes aus lauter Nullen oder lauter Einsen werden nicht vergeben, daher das + 2.
 
 Es gibt so viele Durchgänge, wie ein Netz höchstens Pins mit Ausgang hat. Liegen an einem Netz Pins von U1 und U2, treibt im ersten Durchgang U1 und im zweiten U2; die übrigen Pins lesen jedes Mal mit. Netze mit weniger Treibern setzen ihre Treiber erneut ein, sodass jedes Netz in jedem Durchgang getrieben wird. Ein Pin ohne Ausgangsfreigabe lässt sich nicht abschalten und ist deshalb der einzige Treiber seines Netzes (die Spalte **Hinweis** weist darauf hin). Alle Durchgänge gehen in einer einzigen Übertragung an die Probe.
 

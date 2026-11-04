@@ -253,7 +253,22 @@ If the setup does not allow this, the test does not run at all. The **Note** col
 
 ### How the test works
 
-Every Drive net gets a code of its own. A **round** first drives the bits of all codes and then the inverted bits. This way every net is driven to 0 and to 1, and two shorted nets cannot both read back their own code. For *n* Drive nets a round has 2 × ⌈log₂(*n* + 2)⌉ patterns, e.g. 14 for 100 nets.
+Instead of driving the nets one after the other, the test gives every Drive net a number of its own, 1, 2, 3 …, written as a binary **code**. Each pattern drives one bit of these codes on all nets at once, and every reading pin records what it sees. On a good board, each pin reads exactly the code of its net.
+
+A **round** first drives the bits of all codes and then the inverted bits. With three Drive nets, the codes have three bits:
+
+| Net | Code | Bits | Inverted bits | A pin on the net reads |
+|-----|------|------|---------------|------------------------|
+| A   | 1    | 1 0 0 | 0 1 1 | `100011` |
+| B   | 2    | 0 1 0 | 1 0 1 | `010101` |
+| C   | 3    | 1 1 0 | 0 0 1 | `110001` |
+
+The inverted bits make sure of two things:
+
+- **Every net is driven to 0 and to 1.** A pin that reads only 0 or only 1 never reads a valid code. The net is stuck, or the pin is not connected.
+- **Shorted nets cannot read their own code.** Shorted nets all read the same thing, a mix of their codes: where the codes differ, the stronger level wins. If A and C are shorted and 0 wins, both read `100001`. That is neither A's code nor C's. Without the inverted bits, they would read `100`, which is A's code: A would look fine, and only C would fail.
+
+For *n* Drive nets, a round has 2 × ⌈log₂(*n* + 2)⌉ patterns. For 100 nets that is 14, not 100. The codes that are all 0 or all 1 are never given out, hence the + 2.
 
 There are as many rounds as the largest number of output pins on one net. On a net with pins of U1 and U2, U1 drives in the first round and U2 in the second; the other pins read every time. Nets with fewer drivers use their drivers again, so every net is driven in every round. A pin without output enable cannot be switched off, so it is the only driver of its net (the **Note** column says so). All rounds are sent to the probe in a single transfer.
 
