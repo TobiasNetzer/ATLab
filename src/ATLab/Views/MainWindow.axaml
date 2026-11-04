@@ -24,7 +24,7 @@
             Manager="{Binding DialogManager}"
             x:Name="PART_DialogHost"/>
     </shadui:Window.Hosts>
-    
+
     <shadui:Window.KeyBindings>
         <KeyBinding Gesture="Ctrl+N" Command="{Binding TestingTab.NewFileCommand}"/>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding TestingTab.LoadFileWithDialogCommand}" />
@@ -53,11 +53,11 @@
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
     </shadui:Window.Styles>
-        
+
     <Grid RowDefinitions="*,Auto">
-        
+
         <Panel Grid.Row="0">
-            
+
             <Grid RowDefinitions="Auto,*">
 
                 <TabControl Grid.Row="0"
@@ -86,7 +86,7 @@
                                        FontSize="28" />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
-                    
+
                     <TabControl.ContentTemplate>
                         <DataTemplate>
                             <Panel />
@@ -95,8 +95,8 @@
 
                 </TabControl>
 
-                <Grid Grid.Row="1">
-                    
+                <Grid Grid.Row="1" x:Name="TabViews">
+
                     <!-- Welcome: no project open yet -->
                     <Border IsVisible="{Binding ShowWelcome}"
                             HorizontalAlignment="Center"
@@ -168,26 +168,47 @@
                 </Grid>
 
             </Grid>
+            <!-- Opening a project, e.g. from a network share: dims the window and names the file instead of showing the welcome screen -->
+            <Panel IsVisible="{Binding ShowLoadingDialog}"
+                   Background="#80000000">
+                <Border HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="420"
+                        Padding="24,20"
+                        CornerRadius="15"
+                        Background="{DynamicResource BackgroundColor}"
+                        BorderBrush="{DynamicResource OutlineColor}"
+                        BorderThickness="2">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="{helpers:Localize Text_OpeningProject}"
+                                   Classes="h4"/>
+                        <TextBlock Text="{Binding LoadingProjectName}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Classes="Caption"/>
+                    </StackPanel>
+                </Border>
+            </Panel>
+
             <shadui:ToastHost Manager="{Binding ToastManager}" />
         </Panel>
-        
+
         <Border Grid.Row="1"
         Background="{DynamicResource OutlineColor}"
         Height="45">
 
             <Grid ColumnDefinitions="Auto,*,Auto">
-                
+
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             Spacing="10"
                             VerticalAlignment="Center"
                             Margin="5">
-                    
+
                     <Button
                         Classes="Icon"
                         Background="{DynamicResource ButtonBackground}"
                         ToolTip.Tip="{helpers:Localize ToolTip_ShowEventLog}">
-                        
+
                         <shadui:ButtonAssist.Icon>
                             <ContentControl Content="{LucideIconContent Info}"/>
                         </shadui:ButtonAssist.Icon>
@@ -220,12 +241,12 @@
                                VerticalAlignment="Center"
                                IsVisible="{Binding IsSimulation}"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Column="2" Orientation="Horizontal"
                             Spacing="10"
                             VerticalAlignment="Center"
                             Margin="5">
-                    
+
                     <Button Classes="Icon"
                             Background="{DynamicResource ButtonBackground}"
                             ToolTip.Tip="{helpers:Localize ToolTip_FindMatrixChannel}"
@@ -234,17 +255,17 @@
                             <ContentControl Content="{LucideIconContent ScanSearch}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <TextBlock Text="{Binding MatrixChannel, StringFormat='Matrix Channel: {0}'}"
                                VerticalAlignment="Center"
                                IsVisible="{Binding MatrixChannel, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-                    
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
                                Background="{DynamicResource MutedColor}"/>
-                    
+
                     <Button Classes="Icon"
                             Background="{DynamicResource ButtonBackground}"
                             HorizontalAlignment="Right"
@@ -266,7 +287,7 @@
                             <ContentControl Content="{LucideIconContent BookOpen}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                 </StackPanel>
             </Grid>
         </Border>

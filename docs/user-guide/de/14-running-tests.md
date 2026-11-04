@@ -125,7 +125,7 @@ Für den ausgewählten Schritt hebt die Ansicht ganze Netze hervor – Pads, Lei
 | Grün | Geschlossene Stimulationsrelais (ihr In- und Out-Pin) |
 | Orange | Geschaltete externe Stimuli (H und L) |
 | Lila | Schnittstelle eines Schritts **Interface-Befehl** (Leitungen von I²C, UART oder RS485, einschließlich VREF und GND) |
-| Cyan | Pins eines Schritts **Boundary Scan** oder **Boundary-Scan-Bus** am umrandeten Baustein |
+| Cyan | Pins eines Schritts **Boundary Scan** oder **Boundary-Scan-Bus** am umrandeten Baustein; die geprüften Netze eines Schritts **Boundary-Scan-Verbindungstest** |
 
 Über der Platine zeigt oder verbirgt je eine Schaltfläche pro Rolle (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Schnittstelle**, **Boundary Scan**, **Fehlgeschlagen**) diese: Ein Klick auf den Namen blendet die Rolle auf der Platine, in der Legende und in der Abdeckung aus. Ein Klick auf den farbigen Punkt wählt eine andere Farbe aus der Palette oder als `#RRGGBB`; **Standard** stellt die ursprüngliche Farbe wieder her. Die Farben gelten auch für die Platinenbilder im PDF-Bericht.
 

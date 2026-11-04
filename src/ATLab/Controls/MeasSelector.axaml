@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:ATLab.ViewModels"
              x:DataType="vm:MeasChannelViewModel"
              Width="500">
-    
+
     <UserControl.Styles>
         <Style Selector="Border.WithDynamicCorner">
             <Setter Property="CornerRadius" Value="15"/>
@@ -14,12 +14,17 @@
         <Style Selector="Border.WithDynamicCorner.expanded">
             <Setter Property="CornerRadius" Value="15 15 0 0"/>
         </Style>
-        
+
         <Style Selector="ComboBox /template/ Popup#PART_Popup">
             <Setter Property="Width" Value="{Binding $parent[ComboBox].Bounds.Width}"/>
         </Style>
+
+        <!-- Matrix H and L: room for many channels in the drop-down -->
+        <Style Selector="ComboBox">
+            <Setter Property="MaxDropDownHeight" Value="520"/>
+        </Style>
     </UserControl.Styles>
-    
+
     <StackPanel>
         <Border Classes="WithDynamicCorner"
                 Classes.expanded="{Binding IsExpanded}"
@@ -30,7 +35,7 @@
                            Classes="h4"
                            VerticalAlignment="Center"
                            DockPanel.Dock="Left"/>
-                
+
                 <Button Command="{Binding ToggleExpandedCommand}"
                         Classes="Ghost"
                         DockPanel.Dock="Right"
@@ -46,21 +51,21 @@
                 </Button>
             </DockPanel>
         </Border>
-        
+
         <Border CornerRadius="0 0 15 15"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
                 IsVisible="{Binding IsExpanded}">
-            
+
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="20"
                         Margin="10">
-                
+
                 <StackPanel>
                     <TextBlock Text="{helpers:Localize Label_MatrixH}"
                                FontSize="16"/>
-                    
+
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
                               SelectedIndex="{Binding IsSelectedH, Mode=TwoWay}"
                               Width="150">
@@ -79,7 +84,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-                
+
                 <Button
                     Background="{DynamicResource ButtonBackground}"
                     Classes="Icon"
@@ -92,11 +97,11 @@
                         <ContentControl Content="{LucideIconContent ArrowLeftRight}"/>
                     </shadui:ButtonAssist.Icon>
                 </Button>
-                
+
                 <StackPanel>
                     <TextBlock Text="{helpers:Localize Label_MatrixL}"
                                FontSize="16"/>
-                
+
                     <ComboBox ItemsSource="{Binding CustomChannelNamesWithOffMember}"
                               SelectedIndex="{Binding IsSelectedL, Mode=TwoWay}"
                               Width="150">
@@ -115,7 +120,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-                
+
                 <Button
                     Background="{Binding IsExternalProbeEnabled, Converter={StaticResource ButtonEnabledConverter}}"
                     Classes="Icon"
@@ -128,7 +133,7 @@
                         <ContentControl Content="{LucideIconContent Cable}"/>
                     </shadui:ButtonAssist.Icon>
                 </Button>
-                
+
             </StackPanel>
         </Border>
     </StackPanel>

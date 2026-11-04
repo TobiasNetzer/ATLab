@@ -27,6 +27,12 @@ public interface IBoundaryScanTestSession
     /// <summary>Runs one transaction on a bus of the Boundary Scan tab, all edges in a single probe transfer.</summary>
     Task<OperationResult<BusTransactionResult>> ExecuteBusTransactionAsync(BoundaryScanBusStepConfig step, byte[] write, CancellationToken token);
 
+    /// <summary>
+    /// Interconnect test of the nets set up in the Boundary Scan tab. The outcome counts the faults (opens, shorts,
+    /// stuck nets); a set-up that could drive against another output is not run but fails.
+    /// </summary>
+    Task<OperationResult<BoundaryScanStepOutcome>> ExecuteInterconnectAsync(CancellationToken token);
+
     /// <summary>Resets the chips to normal operation and releases the probe. Does nothing when no session is active.</summary>
     Task EndAsync();
 }

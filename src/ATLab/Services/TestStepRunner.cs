@@ -227,6 +227,17 @@ public class TestStepRunner : ITestStepRunner
                     return OperationResult<double>.Success(outcome.HasChecks ? outcome.Mismatches : double.NegativeInfinity);
                 }
 
+                case TestEvaluationSource.BOUNDARY_SCAN_INTERCONNECT:
+                {
+                    var interconnect = await _boundaryScanSession.ExecuteInterconnectAsync(token);
+                    if (interconnect.IsFailure)
+                        return OperationResult<double>.Failure(interconnect.ErrorMessage);
+
+                    // The number of faults: opens, shorts and stuck nets
+                    step.ResultDetailLines = interconnect.Value!.Messages;
+                    return OperationResult<double>.Success(interconnect.Value.Mismatches);
+                }
+
                 case TestEvaluationSource.BOUNDARY_SCAN_BUS:
                 {
                     var busConfig = step.TestStep.BoundaryScanBus;

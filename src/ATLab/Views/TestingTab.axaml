@@ -9,21 +9,21 @@
              xmlns:pcb="clr-namespace:ATLab.Pcb.Controls;assembly=ATLab.Pcb"
              x:Class="ATLab.Views.TestingTab"
              x:DataType="vm:TestingTabViewModel">
-        
+
     <Grid ColumnDefinitions="*,Auto"
           RowDefinitions="auto,auto,*,auto,auto">
-        
+
         <Border Grid.Column="0" Grid.Row="0" 
                 BorderBrush="{DynamicResource OutlineColor}"
                 BorderThickness="2"
                 CornerRadius="10"
                 Margin="10 10 10 0">
-            
+
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Horizontal"
                             Margin="5"
                             Spacing="5">
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -36,7 +36,7 @@
                             <ContentControl Content="{LucideIconContent FilePlusCorner}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -48,7 +48,7 @@
                             <ContentControl Content="{LucideIconContent FolderOpen}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -92,7 +92,7 @@
                                Margin="5 0 5 0"
                                CornerRadius="1"
                                Background="{DynamicResource MutedColor}"/>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -118,7 +118,7 @@
                             <ContentControl Content="{LucideIconContent Minus}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -131,7 +131,7 @@
                             <ContentControl Content="{LucideIconContent ArrowUp}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -144,7 +144,7 @@
                             <ContentControl Content="{LucideIconContent ArrowDown}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -157,7 +157,7 @@
                             <ContentControl Content="{LucideIconContent CopyPlus}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -170,7 +170,7 @@
                             <ContentControl Content="{LucideIconContent Scissors}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -183,7 +183,7 @@
                             <ContentControl Content="{LucideIconContent Copy}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -196,13 +196,13 @@
                             <ContentControl Content="{LucideIconContent ClipboardPaste}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
                                Background="{DynamicResource MutedColor}"/>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -216,7 +216,7 @@
                             <ContentControl Content="{LucideIconContent CornerDownLeft}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -230,7 +230,7 @@
                             <ContentControl Content="{LucideIconContent ListVideo}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -258,7 +258,7 @@
                         <ContentControl Content="{LucideIconContent Repeat}"/>
                     </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -271,7 +271,7 @@
                             <ContentControl Content="{LucideIconContent Play}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource SuccessColor60}"
                         Classes="Icon"
@@ -284,7 +284,7 @@
                             <ContentControl Content="{LucideIconContent SkipForward}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -297,7 +297,7 @@
                             <ContentControl Content="{LucideIconContent Square}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ErrorColor60}"
                         Classes="Icon"
@@ -310,7 +310,7 @@
                             <ContentControl Content="{LucideIconContent Square}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
@@ -340,14 +340,14 @@
                             <ContentControl Content="{LucideIconContent ArrowBigDownDash}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"
                                CornerRadius="1"
                                IsVisible="{Binding IsDevelopmentMode}"
                                Background="{DynamicResource MutedColor}"/>
-                    
+
                     <Button
                         Background="{Binding IsDebugMode, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
@@ -361,7 +361,7 @@
                             <ContentControl Content="{LucideIconContent Bug}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{DynamicResource ButtonBackground}"
                         Classes="Icon"
@@ -404,7 +404,7 @@
                             <ContentControl Content="{LucideIconContent CircuitBoard}"/>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                     <Button
                         Background="{Binding IsDevelopmentMode, Converter={StaticResource ButtonEnabledConverter}}"
                         Classes="Icon"
@@ -422,11 +422,11 @@
                             </Panel>
                         </shadui:ButtonAssist.Icon>
                     </Button>
-                    
+
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        
+
         <controls:StatusPanel Grid.Column="0" Grid.Row="1"
                               ProgressValue="{Binding StatusService.Progress}"
                               StatusText="{Binding StatusService.Text}"
@@ -434,7 +434,7 @@
                               AnimationDurationValue="{Binding StatusService.AnimationDuration}"
                               Margin="10 10 10 0"
                               IsVisible="{Binding StatusService.IsVisible}"/>
-        
+
         <Grid Grid.Column="0" Grid.Row="2"
               Margin="10">
             <!-- Minimum sizes, so the splitters cannot collapse a panel by accident -->
@@ -443,14 +443,14 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" MinWidth="400"/>
             </Grid.ColumnDefinitions>
-            
+
             <controls:ModuleExplorer Grid.Column="0"/>
-            
+
             <GridSplitter Grid.Column="1"
                           Width="10"
                           Background="Transparent"
                           ResizeDirection="Columns"/>
-        
+
             <Grid Grid.Column="2" x:Name="StepArea" RowDefinitions="*,Auto,Auto">
 
             <DataGrid Grid.Row="0"
@@ -470,7 +470,7 @@
                       BorderBrush="{DynamicResource OutlineColor}"
                       behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedSteps}"
                       IsEnabled="{Binding TestStatus, Converter={StaticResource InvertedEnumToBoolConverter}, ConverterParameter=RUNNING}">
-            
+
                 <DataGrid.Styles>
                     <Style Selector="DataGridCell.StepNumberCell">
                         <Setter Property="Padding" Value="0"/>
@@ -481,7 +481,7 @@
                         <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
                         <Setter Property="Opacity" Value="1" />
                     </Style>
-                
+
                     <Style Selector="DataGridRow">
                         <Setter Property="Opacity"
                                 Value="{ReflectionBinding DataContext.TestStep.IsIgnoreStep,
@@ -489,7 +489,7 @@
                                 Converter={StaticResource BoolToOpacityConverter}}" />
                     </Style>
                 </DataGrid.Styles>
-            
+
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="{helpers:Localize Header_No}" MinWidth="50">
                         <DataGridTemplateColumn.CellStyleClasses>
@@ -521,7 +521,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                
+
                     <DataGridTemplateColumn Header="{helpers:Localize Header_LowerLimit}" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="vm:TestStepViewModel">
@@ -589,7 +589,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-        
+
                 <DataGrid.ContextMenu>
                     <ContextMenu IsEnabled="{Binding IsDevelopmentMode}">
                         <MenuItem Header="{helpers:Localize Menu_Add}" Command="{Binding AddTestStepCommand}"/>
@@ -602,7 +602,7 @@
                         <MenuItem Header="{helpers:Localize Menu_Paste}" Command="{Binding PasteTestStepsCommand}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
-            
+
                 <DataGrid.KeyBindings>
                     <KeyBinding Gesture="Insert"
                                 Command="{Binding AddTestStepCommand}" />
@@ -617,7 +617,7 @@
                     <KeyBinding Gesture="Ctrl+D"
                                 Command="{Binding DuplicateTestStepsCommand}" />
                 </DataGrid.KeyBindings>
-            
+
             </DataGrid>
 
             <GridSplitter Grid.Row="1"
@@ -857,30 +857,30 @@
             </Border>
             </Grid>
         </Grid>
-        
+
         <Border Grid.Column="0" Grid.Row="3"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10"
                 IsVisible="{Binding IsShowMeasurementPanel}">
-            
-            
+
+
             <controls:MeasurementPanel
                 LowerLimit="{Binding SelectedStep?.TestStep.LowerLimit, TargetNullValue=0}"
                 UpperLimit="{Binding SelectedStep?.TestStep.UpperLimit, TargetNullValue=0}"
                 MeasuredValue="{Binding SelectedStep?.ResultNoFormatting}"
                 Unit="{Binding SelectedStep?.TestStep.Unit}"
                 Valid="{Binding SelectedStep?.IsPassed, TargetNullValue=False}"/>
-            
+
         </Border>
-        
+
         <Border Grid.Column="0" Grid.Row="4"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource OutlineColor}"
                 CornerRadius="10"
                 Margin="10 0 10 10">
-            
+
             <Grid ColumnDefinitions="*,*,*,*,*"
                   RowDefinitions="Auto,10,*"
                   Margin="10 10 10 10">
@@ -895,13 +895,13 @@
                          Value="{Binding TestProgress}"
                          Background="{DynamicResource OutlineColor}"
                          Foreground="{Binding TestStatus, Converter={StaticResource TestStatusToBrushConverter}}">
-                
+
                 <ProgressBar.Styles>
                     <Style Selector="ProgressBar /template/ Border#PART_Indicator">
                         <Setter Property="CornerRadius" Value="5"/>
                     </Style>
                 </ProgressBar.Styles>
-                
+
                 <ProgressBar.Transitions>
                     <Transitions>
                         <DoubleTransition Property="Value"
@@ -912,9 +912,9 @@
                         </DoubleTransition>
                     </Transitions>
                 </ProgressBar.Transitions>
-                
+
             </ProgressBar>
-            
+
             <StackPanel Grid.Column="0"
                         Grid.ColumnSpan="5"
                         Grid.Row="0"
@@ -944,7 +944,7 @@
                            FontWeight="Bold"
                            FontSize="24"/>
             </StackPanel>
-            
+
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
@@ -954,7 +954,7 @@
                        FontWeight="Bold"
                        FontSize="24"
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=PASSED}"/>
-            
+
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
@@ -964,7 +964,7 @@
                        FontWeight="Bold"
                        FontSize="24"
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=FAILED}"/>
-            
+
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
@@ -974,7 +974,7 @@
                        FontWeight="Bold"
                        FontSize="24"
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=CANCELED}"/>
-            
+
             <TextBlock Grid.Column="0"
                        Grid.ColumnSpan="5"
                        Grid.Row="0"
@@ -984,13 +984,13 @@
                        FontWeight="Bold"
                        FontSize="24"
                        IsVisible="{Binding TestStatus, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXECUTION_ERROR}"/>
-            
+
             <Grid Grid.Column="0"
                   Grid.ColumnSpan="5"
                   Grid.Row="2"
                   ColumnSpacing="10"
                   ClipToBounds="True">
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -1004,7 +1004,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Grid.Styles>
                     <Style Selector="Border.error">
                         <Setter Property="Background" Value="{DynamicResource ErrorColor}"/>
@@ -1013,20 +1013,20 @@
                         <Setter Property="Foreground" Value="{DynamicResource ErrorColor}"/>
                     </Style>
                 </Grid.Styles>
-                
+
                 <StackPanel Grid.Column="0"
                             Spacing="2">
                     <TextBlock Classes="Small" Text="{helpers:Localize Label_TestDuration}"/>
                     <TextBlock Classes="Small" Text="{Binding TestDuration}"/>
                 </StackPanel>
-                
+
                 <Separator Grid.Column="1"
                            Width="2"
                            Height="40"
                            Margin="10 0 10 0"
                            CornerRadius="1"
                            Background="{DynamicResource MutedColor}"/>
-                
+
                 <StackPanel Grid.Column="2"
                             Orientation="Horizontal">
 
@@ -1042,7 +1042,7 @@
                             <TextBlock Classes="Small" Text="{Binding NumberFailedSteps}"/>
                         </StackPanel>
                     </Panel>
-                    
+
                     <StackPanel Orientation="Horizontal"
                                 IsVisible="{Binding IsShowTotalFailedSteps}">
 
@@ -1066,14 +1066,14 @@
                         </Panel>
                     </StackPanel>
                 </StackPanel>
-                
+
                 <Separator Grid.Column="3"
                            Width="2"
                            Height="40"
                            Margin="10 0 10 0"
                            CornerRadius="1"
                            Background="{DynamicResource MutedColor}"/>
-                
+
                 <StackPanel Grid.Column="4"
                             Spacing="2">
                     <TextBlock Classes="Small" Text="{helpers:Localize Label_PassedTests}"/>
@@ -1087,14 +1087,14 @@
                         </TextBlock.Text>
                     </TextBlock>
                 </StackPanel>
-                
+
                 <Separator Grid.Column="5"
                            Width="2"
                            Height="40"
                            Margin="10 0 10 0"
                            CornerRadius="1"
                            Background="{DynamicResource MutedColor}"/>
-                
+
                 <StackPanel Grid.Column="6"
                             Spacing="2">
                     <TextBlock Classes="Small" Text="{helpers:Localize Label_Operator}"/>
@@ -1137,7 +1137,7 @@
                            Margin="10 0 10 0"
                            CornerRadius="1"
                            Background="{DynamicResource MutedColor}"/>
-                
+
                 <StackPanel Grid.Column="10"
                             Spacing="2"
                             ToolTip.Tip="{Binding SerialNumber}">
@@ -1146,27 +1146,27 @@
                     <TextBlock Classes="Small" Text="{Binding SerialNumber}"
                                TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
-                
+
             </Grid>
-            
+
         </Grid>
-            
+
         </Border>
-        
+
         <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="5"
                       Margin="0 10 0 10"
                       IsVisible="{Binding IsDevelopmentMode}">
             <StackPanel HorizontalAlignment="Right"
                         Spacing="10"
                         Margin="0 0 10 0">
-                
+
                 <StackPanel.IsEnabled>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                         <Binding Path="TestStatus" Converter="{StaticResource InvertedEnumToBoolConverter}" ConverterParameter="RUNNING"/>
                         <Binding Path="SelectedStep" Converter="{x:Static ObjectConverters.IsNotNull}"/>
                     </MultiBinding>
                 </StackPanel.IsEnabled>
-                
+
                 <controls:TestStepConfigurator
                     x:Name="StepConfigurator"
                     DataContext="{Binding WorkspaceEditor.TestStepConfigurator}"/>
@@ -1174,15 +1174,15 @@
                 <controls:ScriptSelector
                     ScriptSelectorVm="{Binding WorkspaceEditor.ScriptSelector}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SCRIPT, TargetNullValue=False}"/>
-                
+
                 <controls:CommandEditor
                     CommandEditorVm="{Binding WorkspaceEditor.CommandEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=COMMAND, TargetNullValue=False}"/>
-                
+
                 <controls:ExternalProgramEditor
                     ExternalProgramEditorVm="{Binding WorkspaceEditor.ExternalProgramEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXTERNAL_PROGRAM, TargetNullValue=False}"/>
-                
+
                 <controls:ExpressionEditor
                     ExpressionEditorVm="{Binding WorkspaceEditor.ExpressionEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=EXPRESSION, TargetNullValue=False}"/>
@@ -1198,15 +1198,15 @@
                 <controls:BoundaryScanBusStepEditor
                     BoundaryScanBusStepEditorVm="{Binding WorkspaceEditor.BoundaryScanBusStepEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=BOUNDARY_SCAN_BUS, TargetNullValue=False}"/>
-                
+
                 <controls:TestInterfaceCommunication
                     TestInterfaceCommunicationVm="{Binding WorkspaceEditor.TestInterfaceCommunication}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=INTERFACE, TargetNullValue=False}"/>
-                
+
                 <controls:ResponseMaskEditor
                     ResponseMaskEditorVm="{Binding WorkspaceEditor.ResponseMaskEditor}"
                     IsVisible="{Binding SelectedStep?.TestStep.EvaluationSource, Converter={StaticResource EnumToBoolConverter}, ConverterParameter='SCRIPT, COMMAND, FILE, INTERFACE, USER_INPUT, EXTERNAL_PROGRAM, BOUNDARY_SCAN_BUS', TargetNullValue=False}"/>
-                
+
                 <controls:MeasSelector
                     DataContext="{Binding WorkspaceEditor.TestHardwareRelayChannels.MeasChannelViewModel}" />
 

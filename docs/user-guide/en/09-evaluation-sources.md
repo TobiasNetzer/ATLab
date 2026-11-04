@@ -15,6 +15,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [File](#file) | number read from a file | File Path | ✔ |
 | [Boundary Scan](#boundary-scan) | number of pins that do not have the expected level | Boundary Scan | – |
 | [Boundary Scan Bus](#boundary-scan-bus) | data read from an I²C/SPI device or pin group emulated via boundary scan | Boundary Scan Bus | ✔ |
+| [Boundary Scan Interconnect](#boundary-scan-interconnect) | number of faults in the connections between boundary scan pins | – | – |
 
 ## Special results
 
@@ -248,3 +249,11 @@ Examples:
 | Read a 4-bit board ID strap | Pin Group | – | – | `1` | `{byte:1}` |
 
 All signal changes of a transaction are sent to the probe in one transfer. I²C clock stretching is not supported; see [Speed and limitations](12-boundary-scan.md#speed-and-limitations).
+
+## Boundary Scan Interconnect
+
+Runs the interconnect test of the nets set up in the [Interconnect view](12-boundary-scan.md#interconnect-view) of the Boundary Scan tab. The step has no settings of its own.
+
+- **Result:** the number of faults (opens, shorts, stuck nets). Set both limits to `0`. The result tooltip lists every fault, e.g. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).*; a passed test shows how many nets were driven and checked.
+- The step **fails without testing** if the project has no board, if no net is set to Drive, Expect 1 or Expect 0, or if the set-up has a problem shown in the Interconnect view (e.g. a pin that would drive against another output).
+- The board view highlights the tested nets.

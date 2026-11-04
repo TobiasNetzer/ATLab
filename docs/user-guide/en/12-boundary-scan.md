@@ -40,7 +40,7 @@ The tab is divided into three areas:
 
 - **JTAG Probe** (top left) – probe selection and connection,
 - **Scan Chain** (bottom left) – the chips in the chain and their settings,
-- the right panel, which shows either the **Pins** of the selected chip or the **Buses**. Switch between them with the two buttons in its header.
+- the right panel, which shows the **Pins** of the selected chip, the **Buses** or the **Interconnect** test. Switch between them with the buttons in its header.
 
 While a test run controls the chain, the tab is locked and a blue banner says so (see [Boundary scan during test execution](#boundary-scan-during-test-execution)).
 
@@ -193,13 +193,90 @@ I²C and SPI have no minimum clock rate, so this works with EEPROMs, sensors, GP
 - I²C **clock stretching** is not supported. A target that holds SCL low makes the step fail with *SCL is held low*.
 - UART, 1-Wire and other protocols with fixed timing cannot be emulated.
 
+## Interconnect view
+
+The interconnect test checks the connections between the boundary scan pins of the board: it finds **opens** (a pin that does not see its net), **shorts** between nets and nets **stuck** at 0 or 1. It needs the KiCad board in the project ([Board and Nets](06-configuration.md#board-and-nets)) and, for every chip, a BSDL file and its **Footprint on the board**. The view lists every net of the board that has at least one boundary scan pin.
+
+| Column | Content |
+|--------|---------|
+| **Net** | Net name from KiCad |
+| **Role** | What the test does with the net, see below |
+| **Connected to** | Another net this one is connected to, e.g. through a series resistor, see [Connected nets](#connected-nets) |
+| **Boundary scan pins** | The pins of the chain on the net, e.g. `U3 pin 12 (PA3)`; with a signal name from the pin table instead of the port |
+| **Other pads** | The other pads on the net, e.g. `R5.1, J1.3`, to judge whether the net may be driven |
+| **Note** | Problems that keep the test from running (red) and hints |
+
+**Every net starts as Safe.** Select one or more rows (`Ctrl`/`Shift`+click) and click a role button to set the role of all selected rows:
+
+| Role | Effect |
+|------|--------|
+| **Safe** | The net is not touched: its pins keep their BSDL safe values and are not read. |
+| **Drive** | Every boundary scan pin on the net that has an output drives it in turn, while all others read it. This also tests the output of every pin. Choose Drive only for nets that nothing else drives: no output of another chip, no supply, no oscillator. |
+| **Expect 1** / **Expect 0** | The net is only read and must stay at this level, e.g. a pull-up, an enable tied to the supply, or GND. A driven net shorted to it is found too. |
+
+#### Connected nets
+
+A series resistor splits a signal into two KiCad nets, e.g. `/SDA_MCU` and `/SDA`. To test the connection through the resistor, enter the other net in **Connected to**; the box suggests the nets of the list. Both nets are then tested as one net: every boundary scan pin of both drives in turn, and all of them read. A missing or open resistor shows as an open between the pins on both sides.
+
+- Connected nets always have the same role: setting the role of one sets it for all of them. When a net is connected, it takes the role of the net it is connected to (or keeps its own if that one is Safe).
+- Several nets can be chained: `A` connected to `B` and `B` to `C` makes one net of three. The Note column names the nets tested together, and messages name them as `/SDA_MCU + /SDA`.
+- Clear the box to remove the connection.
+
+The filter finds nets, pins and pads; **Tested only** hides the Safe nets; the refresh button reads the board and the BSDL files again. The line below the table counts the nets per role and the nets with problems.
+
+#### When the test does not run
+
+Two pins must never drive the same net at the same time, with one driving 1 and the other 0. This would short the outputs against each other. To prevent that, the test switches off every pin of a tested net except the one whose turn it is. A pin is switched off through its **output enable**, a cell in the BSDL file that turns the pin's output driver on and off.
+
+Some setups don't allow this. The test then does not run at all. The Note column shows the problem in red, and a step of the test fails with the same message.
+
+| Problem | Why the test refuses | What to do |
+|---------|----------------------|------------|
+| Two pins on a Drive net **always drive** (*… always drive (no output enable)*), or one on an Expect net. | These pins have no output enable, so they cannot be switched off. They would drive against each other, or against the level the net should have. | Set the net to Safe. |
+| A pin **shares its output enable** with other pins (*… shares its output enable with PA4, PA5*). | Some chips switch several pins with one output enable. When this pin drives, PA4 and PA5 would drive too, on nets that are not set up for it. | Set the nets of PA4 and PA5 to Drive as well; then they drive in the same turn and are tested too. Or set this net to Safe. |
+| **No pin can drive** or **no pin can read** the net. | The test has nothing to drive or nothing to read. | Set the net to Safe. |
+| The net is **no longer on the board**. | The board changed since the role was set. | Set the net to Safe. |
+
+The role of a net is saved in the project; nets that are Safe are not stored. Run the test with a step of the evaluation source [Boundary Scan Interconnect](09-evaluation-sources.md#boundary-scan-interconnect).
+
+### How the test works
+
+Every Drive net gets a code of its own. A **round** drives the bits of all codes and then their complements, so every net is driven 0 and 1 and two shorted nets cannot both read their own code. For *n* Drive nets a round has 2 × ⌈log₂(*n* + 2)⌉ patterns, e.g. 14 for 100 nets.
+
+There is one round per pin that can drive: on a net with pins of U1 and U2, U1 drives in the first round and U2 in the second, and the other pins read each time. A net with fewer drivers uses its drivers again, so every net is driven in every round. A pin without output enable is the only driver of its net, as it cannot be switched off (the note says so). All rounds are sent to the probe in one transfer.
+
+All chips with a BSDL file are in EXTEST. All cells start at their safe values; in every pattern only the pins whose turn it is are switched on, and after the last pattern all cells return to their safe values.
+
+Comparing the rounds tells where a fault is:
+
+| Result | Meaning |
+|--------|---------|
+| Nobody reads the net in any round | The net itself: a short or a stuck net |
+| Nobody reads the net while one pin drives, everything is fine otherwise | The output of this pin is defective |
+| Only one pin reads wrong, also while it drives itself | The input of this pin is defective |
+| One pin does not see the others, and they do not see it | Open at this pin, e.g. a bad solder joint. With only two pins on the net the test cannot tell which end is open. |
+
+| Message | Meaning |
+|---------|---------|
+| *Short between nets A, B.* | The nets read a combination of their codes. |
+| *Nets A, B all read 0: shorted to each other or each to GND.* | Several nets read a constant level; the data cannot tell the two cases apart. |
+| *Net A is stuck at 0: short to GND or to a stronger driver.* | The driver cannot change the net. |
+| *Net A: U2 pin 4 (PB1) does not drive the net, the other drivers do: its output is defective.* | The net works with every driver except this one. |
+| *Net A: U2 pin 4 (PB1) does not read the net, the others see it drive: its input is defective.* | The pin drives the net, but cannot read it. |
+| *Open at U3 pin 7 (PA3) on net A: …* | The pin is cut off from the net. |
+| *Open on net A between U1 pin 3 (P3) and U2 pin 3 (P3): …* | Two pins do not see each other; either end can be open. |
+| *Open on net A: U5 pin 4 (SDA) does not see the net (reads 1); open at the pin or defective input.* | A pin that cannot drive does not follow the net. |
+| *Short between nets GND and A: U3 pin 7 follows the driven net.* | An Expect net reads the code of a Drive net. |
+
+Limits: a connection through a series resistor is only tested if the two nets are [connected](#connected-nets). A net with a single boundary scan pin shows shorts and stuck levels, but no opens (the note says so).
+
 ## Boundary scan during test execution
 
 Test steps use the chain configured on this tab:
 
 - The probe is connected at the **first** boundary scan step of a run, not at test start. The chain is then checked against the project (number of chips, IDCODEs, instruction lengths). If it does not match, for example because the wrong board is inserted, the step fails with the same message as the status line on this tab, e.g. *Boundary scan chain: Found 2 device(s), the project expects 3.*
 - A connection opened on this tab is taken over by the test. The tab is locked until the test releases the chain.
-- Pins that are not listed in a step keep their state from the previous steps. A chip whose outputs were driven stays in EXTEST until the chain is released.
+- Pins that are not listed in a step keep their state from the previous steps. A **Boundary Scan Interconnect** step is the exception: it starts from the safe values and leaves all pins at their safe values. A chip whose outputs were driven stays in EXTEST until the chain is released.
 - The chain is released — all chips return to normal operation and the probe is closed — when the run ends, when it is stopped (`Esc`), at a step in mode **Turn boundary scan off**, and when another project is opened.
 - **Execute single step** (`F3`) keeps the chain under test control after the step, so several single steps can build on each other. Press **Stop** (`Esc`) to release it. A full run always starts from the safe values.
 

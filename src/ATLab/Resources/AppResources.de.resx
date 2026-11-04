@@ -1793,4 +1793,76 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   <data name="ToolTip_CloseFile" xml:space="preserve">
     <value>Projekt schließen (Strg+W)</value>
   </data>
+  <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_INTERCONNECT" xml:space="preserve">
+    <value>Boundary-Scan-Verbindungstest</value>
+  </data>
+  <data name="Enum_InterconnectNetRole_SAFE" xml:space="preserve">
+    <value>Sicher</value>
+  </data>
+  <data name="Enum_InterconnectNetRole_DRIVE" xml:space="preserve">
+    <value>Drive</value>
+  </data>
+  <data name="Enum_InterconnectNetRole_EXPECT_HIGH" xml:space="preserve">
+    <value>Expect 1</value>
+  </data>
+  <data name="Enum_InterconnectNetRole_EXPECT_LOW" xml:space="preserve">
+    <value>Expect 0</value>
+  </data>
+  <data name="Board_InterconnectLegend" xml:space="preserve">
+    <value>Verbindungstest</value>
+  </data>
+  <data name="Board_InterconnectNets" xml:space="preserve">
+    <value>{0} Netze</value>
+  </data>
+  <data name="Label_InterconnectView" xml:space="preserve">
+    <value>Verbindungstest</value>
+  </data>
+  <data name="Header_Interconnect" xml:space="preserve">
+    <value>Verbindungstest</value>
+  </data>
+  <data name="Text_InterconnectNoBoard" xml:space="preserve">
+    <value>Das Projekt hat keine Platine. Die KiCad-Platine auf der Registerkarte Konfiguration wählen (Platine und Netze).</value>
+  </data>
+  <data name="Text_InterconnectNoNets" xml:space="preserve">
+    <value>Kein Netz mit Boundary-Scan-Pins. Den Bausteinen der Kette eine BSDL-Datei und die Referenz ihres Footprints geben.</value>
+  </data>
+  <data name="Text_InterconnectSummary" xml:space="preserve">
+    <value>{0} Netze · {1} Drive · {2} Expect 1 · {3} Expect 0 · {4} mit Problemen</value>
+  </data>
+  <data name="Watermark_FilterNets" xml:space="preserve">
+    <value>Netz, Pin oder Pad filtern</value>
+  </data>
+  <data name="Label_InterconnectTestedOnly" xml:space="preserve">
+    <value>Nur geprüfte</value>
+  </data>
+  <data name="ToolTip_InterconnectRefresh" xml:space="preserve">
+    <value>Netze neu lesen</value>
+  </data>
+  <data name="Label_InterconnectSetRole" xml:space="preserve">
+    <value>Auswahl setzen auf</value>
+  </data>
+  <data name="Header_InterconnectRole" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
+  <data name="Header_InterconnectPins" xml:space="preserve">
+    <value>Boundary-Scan-Pins</value>
+  </data>
+  <data name="Header_InterconnectOtherPads" xml:space="preserve">
+    <value>Weitere Pads</value>
+  </data>
+  <data name="Header_InterconnectNote" xml:space="preserve">
+    <value>Hinweis</value>
+  </data>
+  <data name="Text_OpeningProject" xml:space="preserve">
+    <value>Projekt wird geöffnet…</value>
+  </data>
+  <data name="Header_InterconnectConnectedTo" xml:space="preserve">
+    <value>Verbunden mit</value>
+  </data>
+  <data name="Watermark_InterconnectConnectedTo" xml:space="preserve">
+    <value>Netz</value>
+  </data>
+  <data name="Text_InterconnectTestedTogether" xml:space="preserve">
+    <value>Als ein Netz geprüft: {0}.</value>
+  </data>
 </root>

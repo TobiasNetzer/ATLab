@@ -48,9 +48,20 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
 
     public BoundaryScanBusEditorViewModel BusEditor { get; }
 
-    /// <summary>The right panel shows either the pins of the selected device or the bus setup.</summary>
+    public BoundaryScanInterconnectViewModel Interconnect { get; }
+
+    /// <summary>The right panel shows the pins of the selected device, the bus setup or the interconnect test.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPinsView))]
     private bool _isBusView;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPinsView))]
+    private bool _isInterconnectView;
+
+    public bool IsPinsView => !IsBusView && !IsInterconnectView;
+
+    partial void OnIsInterconnectViewChanged(bool value) => Interconnect.IsVisible = value;
 
     [ObservableProperty]
     private JtagProbeInfo? _selectedProbe;
@@ -131,7 +142,8 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         IFileDialogService fileDialogService,
         IMessageBoxService messageBoxService,
         IBoundaryScanTestSession testSession,
-        ProjectModel projectModel)
+        ProjectModel projectModel,
+        BoardService boardService)
     {
         _boundaryScanService = boundaryScanService;
         _loggingService = loggingService;
@@ -146,6 +158,7 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
         SetLocalizedTitle("Tab_BoundaryScan");
 
         BusEditor = new BoundaryScanBusEditorViewModel(Configuration, Devices);
+        Interconnect = new BoundaryScanInterconnectViewModel(Configuration, Devices, boardService);
 
         Configuration.Devices.CollectionChanged += ConfiguredDevicesChanged;
         Configuration.ConfigurationChanged += ConfigurationChanged;
@@ -195,10 +208,25 @@ public partial class BoundaryScanTabViewModel : ViewModelBase
     private void ToggleAutoRefresh() => IsAutoRefresh = !IsAutoRefresh;
 
     [RelayCommand]
-    private void ShowPins() => IsBusView = false;
+    private void ShowPins()
+    {
+        IsBusView = false;
+        IsInterconnectView = false;
+    }
 
     [RelayCommand]
-    private void ShowBuses() => IsBusView = true;
+    private void ShowBuses()
+    {
+        IsInterconnectView = false;
+        IsBusView = true;
+    }
+
+    [RelayCommand]
+    private void ShowInterconnect()
+    {
+        IsBusView = false;
+        IsInterconnectView = true;
+    }
 
     private bool CanRefreshProbes() => !IsBusy;
 

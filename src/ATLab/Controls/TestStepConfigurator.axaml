@@ -125,9 +125,11 @@
                     <StackPanel Orientation="Vertical"
                                 Spacing="2">
                         <TextBlock Text="{helpers:Localize Label_Evaluate}"/>
+                        <!-- Tall enough for all evaluation sources without scrolling -->
                         <ComboBox ItemsSource="{Binding EvaluationSources}"
                                   SelectedItem="{Binding TestStepViewModel.TestStep.EvaluationSource}"
-                                  MinWidth="100">
+                                  MinWidth="100"
+                                  MaxDropDownHeight="520">
 
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia;
+using Avalonia.Data;
+using Avalonia.Threading;
 using ATLab.Interfaces;
 using ATLab.Models;
 using ATLab.ViewModels;
@@ -15,7 +19,7 @@ public partial class MainWindow : Window
     private readonly ISettingsService? _settingsService;
     private readonly IProjectDocumentService? _projectDocumentService;
     private readonly ProjectModel? _projectModel;
-    
+
     private const int ShadUiWidthOffset = 16;
     private const int ShadUiHeightOffset = 9;
 
@@ -78,6 +82,40 @@ public partial class MainWindow : Window
         : this(settingsService, projectDocumentService, projectModel)
     {
         DataContext = vm;
+        vm.ProjectOpened += () => _ = PrepareViewsAsync(vm);
+    }
+
+    /// <summary>
+    /// Lays out every tab that is not shown, one after the other, so it opens at once when it is clicked the first
+    /// time. A hidden control is not laid out, so each tab is shown for one layout pass, fully transparent and not
+    /// clickable, under the loading dialog. The values are set above the tab bindings and removed again.
+    /// </summary>
+    private async Task PrepareViewsAsync(MainWindowViewModel vm)
+    {
+        if (vm.IsPreparingViews)
+            return;
+
+        vm.IsPreparingViews = true;
+        try
+        {
+            // Let the dialog appear before the first tab is laid out
+            await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
+
+            foreach (var view in TabViews.Children.OfType<UserControl>().Where(v => !v.IsVisible).ToList())
+            {
+                using (view.SetValue(IsVisibleProperty, true, BindingPriority.Animation))
+                using (view.SetValue(OpacityProperty, 0d, BindingPriority.Animation))
+                using (view.SetValue(IsHitTestVisibleProperty, false, BindingPriority.Animation))
+                {
+                    UpdateLayout();
+                    await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
+                }
+            }
+        }
+        finally
+        {
+            vm.IsPreparingViews = false;
+        }
     }
 
     private async void MainWindow_Closing(
@@ -105,7 +143,7 @@ public partial class MainWindow : Window
             return;
 
         var settings = _settingsService.Settings;
-        
+
         if (WindowState == WindowState.Maximized)
         {
             settings.WindowState = WindowState.Maximized;

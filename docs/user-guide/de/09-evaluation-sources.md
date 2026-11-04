@@ -15,6 +15,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Datei](#datei) | aus einer Datei gelesene Zahl | Dateipfad | ✔ |
 | [Boundary Scan](#boundary-scan) | Anzahl der Pins ohne den erwarteten Pegel | Boundary Scan | – |
 | [Boundary-Scan-Bus](#boundary-scan-bus) | von einem über Boundary Scan nachgebildeten I²C-/SPI-Baustein oder einer Pin-Gruppe gelesene Daten | Boundary-Scan-Bus | ✔ |
+| [Boundary-Scan-Verbindungstest](#boundary-scan-verbindungstest) | Zahl der Fehler in den Verbindungen zwischen Boundary-Scan-Pins | – | – |
 
 ## Besondere Ergebnisse
 
@@ -248,3 +249,11 @@ Beispiele:
 | 4-Bit-Baugruppenkennung lesen | Pin Group | – | – | `1` | `{byte:1}` |
 
 Alle Signalwechsel einer Übertragung werden in einem Transfer an die Probe geschickt. I²C-Clock-Stretching wird nicht unterstützt; siehe [Geschwindigkeit und Einschränkungen](12-boundary-scan.md#geschwindigkeit-und-einschränkungen).
+
+## Boundary-Scan-Verbindungstest
+
+Führt den Verbindungstest der Netze aus, die in der [Ansicht Verbindungstest](12-boundary-scan.md#ansicht-verbindungstest) der Registerkarte Boundary Scan eingerichtet sind. Der Schritt hat keine eigenen Einstellungen.
+
+- **Ergebnis:** die Zahl der Fehler (Unterbrechungen, Kurzschlüsse, festhängende Netze). Beide Grenzen auf `0` setzen. Der Ergebnis-Tooltip listet jeden Fehler, z. B. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).*; ein bestandener Test zeigt, wie viele Netze getrieben und geprüft wurden.
+- Der Schritt **schlägt ohne Test fehl**, wenn das Projekt keine Platine hat, kein Netz auf Drive, Expect 1 oder Expect 0 steht oder die Einrichtung ein Problem hat, das die Ansicht Verbindungstest zeigt (z. B. ein Pin, der gegen einen anderen Ausgang treiben würde).
+- Die Platinenansicht hebt die geprüften Netze hervor.

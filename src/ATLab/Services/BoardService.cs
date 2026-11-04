@@ -309,6 +309,17 @@ public partial class BoardService : ObservableObject
             foreach (var pin in bus.Pins.Where(p => p.IsAssigned))
                 AddScanPin(pin.DeviceId, pin.Port, pin.SignalName, pads, nets, footprints);
         }
+        else if (step.EvaluationSource == TestEvaluationSource.BOUNDARY_SCAN_INTERCONNECT)
+        {
+            // The nets the interconnect test drives or checks; nets in their safe state are not touched
+            var tested = _project.BoundaryScan.InterconnectNets.Where(n => n.Role != InterconnectNetRole.SAFE).Select(n => n.Net).ToList();
+            foreach (var net in tested.Where(n => nets.All(h => h.Net != n)))
+                nets.Add(new NetHighlight(net, BoardColors.BoundaryScan));
+
+            if (tested.Count > 0)
+                legend.Add(new BoardLegendItem(string.Empty, l.GetString("Board_InterconnectLegend"),
+                    l.GetString("Board_InterconnectNets").Replace("{0}", tested.Count.ToString()), BoardColors.BoundaryScan));
+        }
 
         foreach (var footprint in footprints)
         {

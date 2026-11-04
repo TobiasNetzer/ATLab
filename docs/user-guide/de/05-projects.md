@@ -50,6 +50,8 @@ Das Ausführen eines Tests markiert das Projekt nicht als geändert.
 ATLab.exe "D:\Tests\PowerBoard.atlab"
 ```
 
+Während eine Projektdatei gelesen wird, etwa von einer Netzwerkfreigabe, zeigt ein Dialog **Projekt wird geöffnet…** mit ihrem Dateinamen.
+
 ## Relative Pfade
 
 Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners (oder eines Unterordners)** mit relativem Pfad gespeichert. Das gilt für

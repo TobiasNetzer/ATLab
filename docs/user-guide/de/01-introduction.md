@@ -21,7 +21,7 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 - **Messgeräte**: ATLab steuert Messgeräte über die serielle Schnittstelle (VCOM/RS232), über TCP/IP-Sockets oder über NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
 - **Skripte**: Häufig benötigte Befehlsfolgen werden als Skripte mit Variablen gespeichert und in mehreren Projekten verwendet. Jeder Befehl kann seine Antwort mit eigener Maske und eigenen Grenzwerten prüfen, etwa ob das Gerät einen Fehler meldet.
 - **Prüfling**: Über die galvanisch isolierten I²C- und UART-Schnittstellen der Test-Hardware kommuniziert ATLab direkt mit dem Prüfling.
-- **Boundary Scan**: Mit einem SEGGER J-Link oder einer FTDI-Probe liest und treibt ATLab über JTAG die Pins von Bausteinen auf der Baugruppe und spricht darüber auch I²C- und SPI-Bausteine an.
+- **Boundary Scan**: Mit einem SEGGER J-Link oder einer FTDI-Probe liest und treibt ATLab über JTAG die Pins von Bausteinen auf der Baugruppe, spricht darüber auch I²C- und SPI-Bausteine an und prüft mit einem Verbindungstest anhand der KiCad-Netze die Verbindungen zwischen ihnen.
 - **Antwortverarbeitung**: Aus Text- oder Binärantworten lassen sich Werte gezielt herauslösen (Überspringen/Länge, Prüfregeln, Zahlenextraktion).
 - **Bediener**: Der Bediener kann eine Sichtprüfung bestätigen (Bestanden / Fehlgeschlagen) oder einen Messwert eingeben, auf Wunsch mit einem Bild als Hilfe.
 - **Programme und Dateien**: Externe Programme werden ausgeführt und ihr Exit-Code oder ihre Ausgabe ausgewertet. Werte können außerdem aus Dateien gelesen werden.
@@ -57,7 +57,7 @@ ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Da
 | **Projekt** | Eine `.atlab`-Datei mit Prüfsequenz, Geräten, Laufzeitvariablen, Kanalnamen, Projekteinstellungen, Dokumentation und Prüflingsdaten. Siehe [Arbeiten mit Projekten](05-projects.md). |
 | **Modul** | Eine benannte Gruppe von Testschritten im Projekt, z. B. *Spannungsversorgung* oder *LED-Test*. Module werden der Reihe nach ausgeführt; deaktivierte Module werden übersprungen. Siehe [Module](08-building-test-sequences.md#module). |
 | **Testschritt** | Eine Zeile in einem Modul mit Name, Grenzwerten, Einheit, Verzögerung, Auswertungsquelle, Relaiszuständen und Bestanden-/Fehlgeschlagen-Aktion. Siehe [Wie ein Testschritt ausgeführt wird](14-running-tests.md#wie-ein-testschritt-ausgeführt-wird). |
-| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei, Boundary Scan* oder *Boundary-Scan-Bus*. Siehe [Auswertungsquellen](09-evaluation-sources.md). |
+| **Auswertungsquelle** | Woher ein Schritt seinen Messwert bekommt: *Keine, Skript, Gerätebefehl, Schnittstellenbefehl, Externes Programm, Benutzerbestätigung, Benutzereingabe, Ausdruck, Datei, Boundary Scan, Boundary-Scan-Bus* oder *Boundary-Scan-Verbindungstest*. Siehe [Auswertungsquellen](09-evaluation-sources.md). |
 | **Gerät** | Ein externes Messgerät (oder ein über Seriell/TCP/VISA erreichbarer Prüfling), angelegt im Geräte-Manager. |
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
 | **Skriptvariable** | Platzhalter wie `{Range}` in einem Skript, der pro Testschritt einen konkreten Wert erhält. |

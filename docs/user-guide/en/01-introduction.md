@@ -21,7 +21,7 @@ A test engineer builds a **test sequence** from test steps that measure values a
 - **Remote-control instruments** over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
 - **Reuse instrument scripts**: multi-command scripts with variables, shared across projects. Each command can **check its response** with its own mask and limits, e.g. that the instrument reports no error.
 - **Talk to the DUT** through the isolated I²C and UART interfaces of the test hardware.
-- **Use boundary scan** (JTAG) with a SEGGER J-Link or FTDI probe to read and drive the pins of chips on the board, and to talk to I²C and SPI devices through them.
+- **Use boundary scan** (JTAG) with a SEGGER J-Link or FTDI probe to read and drive the pins of chips on the board, to talk to I²C and SPI devices through them, and to test the connections between them with an interconnect test based on the KiCad nets.
 - **Extract values** from text or binary answers with response processing (skip/length, match rules, numeric extraction).
 - **Involve the operator**: confirm a visual check (Passed / Failed) or enter a reading, optionally with an image.
 - **Run external programs** and use their exit code or output, or **read a value from a file**.
@@ -57,7 +57,7 @@ ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well
 | **Project** | One `.atlab` file containing the test sequence, devices, runtime variables, channel names, project settings, documentation and DUT information. See [Working with Projects](05-projects.md). |
 | **Module** | A named group of test steps within the project, e.g. *Power Supply* or *LED Test*. Modules run in order; disabled modules are skipped. See [Modules](08-building-test-sequences.md#modules). |
 | **Test step** | One row in a module. It has a name, limits, a unit, a delay, an evaluation source, relay states and pass/fail actions. See [How a test step is executed](14-running-tests.md#how-a-test-step-is-executed). |
-| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression, File, Boundary Scan* or *Boundary Scan Bus*. See [Evaluation Sources](09-evaluation-sources.md). |
+| **Evaluation source** | Where a step gets its measured value from: *None, Script, Device Command, Interface Command, External Program, User Confirmation, User Input, Expression, File, Boundary Scan, Boundary Scan Bus* or *Boundary Scan Interconnect*. See [Evaluation Sources](09-evaluation-sources.md). |
 | **Device** | An external instrument (or a DUT reachable over serial/TCP/VISA) defined in the Device Manager. |
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
 | **Script variable** | A placeholder such as `{Range}` inside a script, given a concrete value per test step. |

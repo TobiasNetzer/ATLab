@@ -19,6 +19,7 @@ public class ProjectController : IProjectController
     private readonly ProjectModel _projectModel;
     private readonly IMessageBoxService _messageBoxService;
     private readonly IScriptRepository _scriptRepository;
+    private readonly ApplicationState _applicationState;
 
     public ProjectController(
         IProjectDocumentService projectDocumentService,
@@ -26,15 +27,17 @@ public class ProjectController : IProjectController
         IHardwareAccessor hardwareAccessor,
         ProjectModel projectModel,
         IMessageBoxService messageBoxService,
-        IScriptRepository scriptRepository)
+        IScriptRepository scriptRepository,
+        ApplicationState applicationState)
     {
+        _applicationState = applicationState;
         _projectDocumentService = projectDocumentService;
         _loggingService = loggingService;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _projectModel = projectModel;
         _messageBoxService = messageBoxService;
         _scriptRepository = scriptRepository;
-        
+
         _scriptRepository.RepositoryFolderChanged += (_, folderPath) =>
         {
             _projectModel.ScriptFolderPath = folderPath;
@@ -69,7 +72,7 @@ public class ProjectController : IProjectController
     {
         if (!await _projectDocumentService.NewProjectAsync())
             return false;
-        
+
         _projectModel.CreateEmptyProject();
         _scriptRepository.SetRepositoryFolder(null);
         return true;
@@ -89,21 +92,39 @@ public class ProjectController : IProjectController
     {
         if (!await ResetProjectAsync())
             return;
-        
+
         try
         {
-            var dto = await _projectDocumentService.OpenFileAsync();
+            var path = await _projectDocumentService.PickProjectFileAsync();
+            if (path != null)
+                await OpenPathAsync(path);
+        }
+        catch (Exception ex)
+        {
+            _loggingService.Error("Failed to load file: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Reads the project file and takes it over. The main window shows the progress dialog meanwhile; reading a file
+    /// on a network share can take a while.
+    /// </summary>
+    private async Task OpenPathAsync(string path)
+    {
+        _applicationState.LoadingProjectPath = path;
+        try
+        {
+            var dto = await _projectDocumentService.OpenAsync(path);
             if (dto != null)
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
                 _projectModel.IsProjectOpen = true;
             }
-            
         }
-        catch (Exception ex)
+        finally
         {
-            _loggingService.Error("Failed to load file: " + ex.Message);
+            _applicationState.LoadingProjectPath = null;
         }
     }
 
@@ -114,14 +135,7 @@ public class ProjectController : IProjectController
             if (!await ResetProjectAsync())
                 return;
 
-            var dto = await _projectDocumentService.OpenAsync(path);
-            if (dto != null)
-            {
-                await CheckForHardwareCompatibility(_hardwareInfo, dto);
-                ApplyDto(dto);
-                _projectModel.IsProjectOpen = true;
-            }
-                
+            await OpenPathAsync(path);
         }
         catch (Exception ex)
         {
@@ -163,7 +177,7 @@ public class ProjectController : IProjectController
                 .SelectMany(s => s.ExtStimState!.EnabledChannels)
                 .DefaultIfEmpty(-1)
                 .Max();
-        
+
         var localization = LocalizationService.Instance;
 
         if (hardwareInfo.MeasChannelCount < highestUsedMatrixChannel)

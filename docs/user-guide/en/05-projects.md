@@ -50,6 +50,8 @@ Running a test does not mark the project as modified.
 ATLab.exe "D:\Tests\PowerBoard.atlab"
 ```
 
+While a project file is read, for example from a network share, a dialog shows **Opening project…** with its file name.
+
 ## Relative paths
 
 When a project is saved, any referenced file **inside the project folder (or a sub-folder)** is stored with a relative path. This applies to:

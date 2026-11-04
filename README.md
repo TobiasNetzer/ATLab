@@ -40,6 +40,7 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 | **Expression** | A calculation from runtime variables |
 | **File** | A number read from a file |
 | **Boundary Scan** / **Boundary Scan Bus** | Pin levels, or I²C/SPI data accessed through boundary scan pins |
+| **Boundary Scan Interconnect** | Number of opens, shorts and stuck nets between the boundary scan pins of the board |
 
 **Instruments and scripting** · [Configuration](docs/user-guide/en/06-configuration.md) · [Scripting](docs/user-guide/en/07-scripting.md)
 
@@ -59,6 +60,7 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 
 -   Read and drive pins of JTAG chips through a **SEGGER J-Link** or **FTDI MPSSE** probe, based on the chips' BSDL files.
 -   Detect the scan chain, view pins on a package drawing, and talk to I²C/SPI devices or pin groups through boundary scan pins.
+-   **Interconnect test** based on the KiCad nets: every pin that can drive a net drives it in turn, finding opens, shorts, stuck nets and defective drivers; nets joined by a series resistor can be tested as one.
 
 **Running tests** · [Running Tests](docs/user-guide/en/14-running-tests.md)
 

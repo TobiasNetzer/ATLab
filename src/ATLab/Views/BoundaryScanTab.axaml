@@ -22,6 +22,14 @@
     </UserControl.Resources>
 
     <UserControl.Styles>
+        <!-- Texts in the cells of all tables of the tab: one line, cut off with "…", the full text in the tooltip.
+             Only the cell's own text, not the texts inside combo boxes or edit fields of a cell -->
+        <Style Selector="DataGridCell > TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="ToolTip.Tip" Value="{Binding $self.Text, Converter={x:Static converters:EmptyToNullConverter.Instance}}"/>
+        </Style>
+
         <Style Selector="Button.Instruction">
             <Setter Property="MinWidth" Value="90"/>
             <Setter Property="Height" Value="35"/>
@@ -29,6 +37,8 @@
         <Style Selector="Button.ViewSwitch">
             <Setter Property="MinWidth" Value="80"/>
             <Setter Property="Height" Value="30"/>
+            <!-- Room around longer labels such as "Interconnect" / "Verbindungstest" -->
+            <Setter Property="Padding" Value="16,0"/>
         </Style>
         <Style Selector="Button.Drive">
             <Setter Property="Width" Value="28"/>
@@ -364,7 +374,7 @@
                                                   HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Grid>
-                                
+
                                 <StackPanel Spacing="2">
                                     <TextBlock Text="{helpers:Localize Label_FootprintReference}"/>
                                     <TextBox Text="{Binding SelectedDevice?.Config.FootprintReference}"
@@ -388,21 +398,29 @@
                         <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
                             <Button Classes="ViewSwitch"
                                     Content="{helpers:Localize Label_PinsView}"
-                                    Background="{Binding !IsBusView, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Background="{Binding IsPinsView, Converter={StaticResource ButtonEnabledConverter}}"
                                     Command="{Binding ShowPinsCommand}"/>
                             <Button Classes="ViewSwitch"
                                     Content="{helpers:Localize Label_BusesView}"
                                     Background="{Binding IsBusView, Converter={StaticResource ButtonEnabledConverter}}"
                                     Command="{Binding ShowBusesCommand}"/>
+                            <Button Classes="ViewSwitch"
+                                    Content="{helpers:Localize Label_InterconnectView}"
+                                    Background="{Binding IsInterconnectView, Converter={StaticResource ButtonEnabledConverter}}"
+                                    Command="{Binding ShowInterconnectCommand}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1"
                                    Text="{Binding SelectedDevice.DisplayName, FallbackValue=''}"
                                    Classes="h4"
-                                   IsVisible="{Binding !IsBusView}"/>
+                                   IsVisible="{Binding IsPinsView}"/>
                         <TextBlock Grid.Column="1"
                                    Text="{helpers:Localize Header_Buses}"
                                    Classes="h4"
                                    IsVisible="{Binding IsBusView}"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="{helpers:Localize Header_Interconnect}"
+                                   Classes="h4"
+                                   IsVisible="{Binding IsInterconnectView}"/>
                     </Grid>
                 </Border>
 
@@ -412,7 +430,7 @@
                         CornerRadius="0 0 15 15">
 
                     <Panel>
-                        <Panel IsVisible="{Binding !IsBusView}">
+                        <Panel IsVisible="{Binding IsPinsView}">
                             <TextBlock Text="{helpers:Localize Text_NoChainDevice}"
                                        Classes="Large"
                                        HorizontalAlignment="Center"
@@ -579,7 +597,7 @@
                                                 <DataGridTextColumn Header="{helpers:Localize Header_PinLabel}" Binding="{Binding Label, UpdateSourceTrigger=LostFocus}" Width="*"
                                                                     IsReadOnly="False"
                                                                     CustomSortComparer="{x:Static helpers:BoundaryScanPinComparer.ByLabel}"/>
-                                                <DataGridTextColumn Header="{helpers:Localize Header_Type}" Binding="{Binding DirectionText}" Width="80" IsReadOnly="True"/>
+                                                <DataGridTextColumn Header="{helpers:Localize Header_Type}" Binding="{Binding DirectionText}" Width="100" IsReadOnly="True"/>
                                                 <DataGridTemplateColumn Header="{helpers:Localize Header_Input}" Width="60" SortMemberPath="InputText">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate x:DataType="vm:BoundaryScanPinViewModel">
@@ -632,6 +650,136 @@
                                 </Grid>
                             </Grid>
                         </Panel>
+
+                        <!-- Interconnect test: every net with boundary scan pins and its role; all start in their safe state -->
+                        <Grid DataContext="{Binding Interconnect}"
+                              x:DataType="vm:BoundaryScanInterconnectViewModel"
+                              IsVisible="{Binding $parent[UserControl].((vm:BoundaryScanTabViewModel)DataContext).IsInterconnectView, FallbackValue=False}"
+                              RowDefinitions="Auto,Auto,*,Auto"
+                              RowSpacing="8"
+                              Margin="10">
+
+                            <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding Filter}"
+                                         PlaceholderText="{helpers:Localize Watermark_FilterNets}"/>
+                                <CheckBox Grid.Column="1"
+                                          Content="{helpers:Localize Label_InterconnectTestedOnly}"
+                                          IsChecked="{Binding IsTestedOnly}"/>
+                                <Button Grid.Column="2"
+                                        Classes="Icon"
+                                        Background="{DynamicResource ButtonBackground}"
+                                        ToolTip.Tip="{helpers:Localize ToolTip_InterconnectRefresh}"
+                                        Command="{Binding RefreshCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent RefreshCw}"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                            </Grid>
+
+                            <!-- The roles apply to all selected rows -->
+                            <WrapPanel Grid.Row="1" ItemSpacing="8" LineSpacing="6">
+                                <TextBlock Text="{helpers:Localize Label_InterconnectSetRole}"
+                                           VerticalAlignment="Center"/>
+                                <Button Classes="Outline" Height="32" Padding="12,0"
+                                        Content="{helpers:Localize Enum_InterconnectNetRole_SAFE}"
+                                        Command="{Binding SetSafeCommand}"
+                                        CommandParameter="{Binding #InterconnectGrid.SelectedItems}"/>
+                                <Button Classes="Outline" Height="32" Padding="12,0"
+                                        Content="{helpers:Localize Enum_InterconnectNetRole_DRIVE}"
+                                        Command="{Binding SetDriveCommand}"
+                                        CommandParameter="{Binding #InterconnectGrid.SelectedItems}"/>
+                                <Button Classes="Outline" Height="32" Padding="12,0"
+                                        Content="{helpers:Localize Enum_InterconnectNetRole_EXPECT_HIGH}"
+                                        Command="{Binding SetExpectHighCommand}"
+                                        CommandParameter="{Binding #InterconnectGrid.SelectedItems}"/>
+                                <Button Classes="Outline" Height="32" Padding="12,0"
+                                        Content="{helpers:Localize Enum_InterconnectNetRole_EXPECT_LOW}"
+                                        Command="{Binding SetExpectLowCommand}"
+                                        CommandParameter="{Binding #InterconnectGrid.SelectedItems}"/>
+                            </WrapPanel>
+
+                            <Panel Grid.Row="2">
+                                <TextBlock Text="{Binding Message}"
+                                           IsVisible="{Binding HasMessage}"
+                                           Classes="Large"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MutedColor}"/>
+
+                                <DataGrid x:Name="InterconnectGrid"
+                                          ItemsSource="{Binding Rows}"
+                                          IsVisible="{Binding !HasMessage}"
+                                          SelectionMode="Extended"
+                                          AutoGenerateColumns="False"
+                                          CanUserSortColumns="True"
+                                          CanUserResizeColumns="True"
+                                          GridLinesVisibility="All"
+                                          BorderThickness="2"
+                                          BorderBrush="{DynamicResource OutlineColor}"
+                                          VerticalScrollBarVisibility="Auto">
+
+                                    <DataGrid.Styles>
+                                        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                                            <Setter Property="Fill" Value="{DynamicResource InfoColor}" />
+                                            <Setter Property="Opacity" Value="1" />
+                                        </Style>
+                                    </DataGrid.Styles>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{helpers:Localize Header_Net}" Binding="{Binding Net}" Width="160" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="{helpers:Localize Header_InterconnectRole}" Binding="{Binding RoleText}" Width="110" IsReadOnly="True"
+                                                            SortMemberPath="Role"/>
+                                        <!-- The net on the other side of a series resistor or similar: both are tested as one net -->
+                                        <DataGridTemplateColumn Header="{helpers:Localize Header_InterconnectConnectedTo}" Width="180" SortMemberPath="ConnectedTo">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate x:DataType="vm:InterconnectNetRowViewModel">
+                                                    <AutoCompleteBox Text="{Binding ConnectedTo, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                                     ItemsSource="{Binding $parent[DataGrid].((vm:BoundaryScanInterconnectViewModel)DataContext).NetNames}"
+                                                                     FilterMode="ContainsOrdinal"
+                                                                     MinimumPrefixLength="1"
+                                                                     PlaceholderText="{helpers:Localize Watermark_InterconnectConnectedTo}"
+                                                                     TextChanged="OnConnectedNetTextChanged"
+                                                                     Margin="2"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="{helpers:Localize Header_InterconnectPins}" Width="260" SortMemberPath="PinsText">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate x:DataType="vm:InterconnectNetRowViewModel">
+                                                    <TextBlock Text="{Binding PinsText}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="12,0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="{helpers:Localize Header_InterconnectOtherPads}" Binding="{Binding OtherPadsText}" Width="180" IsReadOnly="True"/>
+                                        <DataGridTemplateColumn Header="{helpers:Localize Header_InterconnectNote}" Width="*" MinWidth="200">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate x:DataType="vm:InterconnectNetRowViewModel">
+                                                    <TextBlock Text="{Binding Note}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="6,2"
+                                                               Classes.Problem="{Binding HasProblem}">
+                                                        <TextBlock.Styles>
+                                                            <Style Selector="TextBlock.Problem">
+                                                                <Setter Property="Foreground" Value="{DynamicResource ErrorColor}"/>
+                                                            </Style>
+                                                        </TextBlock.Styles>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Panel>
+
+                            <TextBlock Grid.Row="3"
+                                       Text="{Binding Summary}"
+                                       Classes="Small"/>
+                        </Grid>
 
                         <!-- Bus setup -->
                         <Grid x:CompileBindings="False"

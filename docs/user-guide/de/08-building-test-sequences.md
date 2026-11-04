@@ -90,7 +90,7 @@ Wartezeit zwischen dem Schalten der Relais und dem Erfassen des Werts, zum Einsc
 
 ### Auswertung
 
-Wählt die [Auswertungsquelle](09-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Externes Programm**, **Benutzerbestätigung**, **Benutzereingabe**, **Ausdruck**, **Datei**, **Boundary Scan** oder **Boundary-Scan-Bus**. Darunter erscheint der passende Editorbereich.
+Wählt die [Auswertungsquelle](09-evaluation-sources.md): **Keine**, **Skript**, **Gerätebefehl**, **Schnittstellenbefehl**, **Externes Programm**, **Benutzerbestätigung**, **Benutzereingabe**, **Ausdruck**, **Datei**, **Boundary Scan**, **Boundary-Scan-Bus** oder **Boundary-Scan-Verbindungstest**. Darunter erscheint der passende Editorbereich.
 
 ### Kommentar
 

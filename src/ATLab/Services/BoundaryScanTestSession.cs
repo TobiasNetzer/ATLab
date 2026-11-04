@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ATLab.BoundaryScan;
 using ATLab.BoundaryScan.Bsdl;
 using ATLab.BoundaryScan.Buses;
+using ATLab.BoundaryScan.Interconnect;
 using ATLab.BoundaryScan.Probes;
 using ATLab.Enums;
 using ATLab.Interfaces;
@@ -22,6 +23,7 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 {
     private readonly IBoundaryScanService _boundaryScanService;
     private readonly ProjectModel _projectModel;
+    private readonly BoardService _boardService;
 
     // Steps and the end of the session must not interleave, a cancel waits for the running scan
     private readonly SemaphoreSlim _lock = new(1, 1);
@@ -46,10 +48,12 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 
     public BoundaryScanTestSession(
         IBoundaryScanService boundaryScanService,
-        ProjectModel projectModel)
+        ProjectModel projectModel,
+        BoardService boardService)
     {
         _boundaryScanService = boundaryScanService;
         _projectModel = projectModel;
+        _boardService = boardService;
 
         // Loading or creating a project replaces the chain, the session belongs to the old one
         _projectModel.BoundaryScan.Devices.CollectionChanged += (_, _) =>
@@ -107,6 +111,33 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
             }
 
             return await ExecuteBusAsync(_devices!, bus, step, write);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    public async Task<OperationResult<BoundaryScanStepOutcome>> ExecuteInterconnectAsync(CancellationToken token)
+    {
+        if (_boardService.Board is not { } board)
+        {
+            return OperationResult<BoundaryScanStepOutcome>.Failure(_boardService.LoadError.Length > 0
+                ? $"Interconnect test: the board could not be read: {_boardService.LoadError}"
+                : "Interconnect test: the project has no board. Choose the KiCad board in the Configuration tab (Board and Nets).");
+        }
+
+        await _lock.WaitAsync(token);
+        try
+        {
+            if (_devices == null)
+            {
+                var started = await StartAsync();
+                if (started.IsFailure)
+                    return OperationResult<BoundaryScanStepOutcome>.Failure(started.ErrorMessage);
+            }
+
+            return await ExecuteInterconnectAsync(_devices!, board);
         }
         finally
         {
@@ -377,6 +408,95 @@ public class BoundaryScanTestSession : IBoundaryScanTestSession
 
         // A NACK is a result, not an error: it is explained in the result tooltip and not logged
         return OperationResult<BusTransactionResult>.Success(transaction.Decode(samples));
+    }
+
+    /// <summary>
+    /// The interconnect test of the nets set up in the Boundary Scan tab. Starts from the safe values of all cells, so
+    /// pins driven by earlier steps are released, keeps every pin of a tested net from driving except its driver, runs
+    /// all patterns in one sequence of scans and returns all cells to their safe values at the end.
+    /// </summary>
+    private async Task<OperationResult<BoundaryScanStepOutcome>> ExecuteInterconnectAsync(List<SessionDevice> devices, Pcb.Kicad.Board board)
+    {
+        var nets = InterconnectNetlist.Build(board, devices.Select(d => new InterconnectDevice(d.Config, d.Name, d.Bsdl)).ToList());
+        var plan = InterconnectPlan.Create(nets, _projectModel.BoundaryScan.InterconnectNets);
+
+        if (plan.IsEmpty)
+            return OperationResult<BoundaryScanStepOutcome>.Failure("Interconnect test: no net is set to Drive, Expect high or Expect low in the Boundary Scan tab.");
+
+        if (plan.HasProblems)
+        {
+            var first = plan.Problems.First();
+            return OperationResult<BoundaryScanStepOutcome>.Failure(
+                $"Interconnect test not run, net {first.Key}: {first.Value[0]}" +
+                (plan.Problems.Count > 1 ? $" ({plan.Problems.Count} nets with problems, see the Boundary Scan tab)" : ""));
+        }
+
+        SessionDevice Of(InterconnectPin pin) => devices.First(d => d.Config.Id == pin.DeviceId);
+
+        // Safe values everywhere, then every pin of a tested net released; only the drivers are enabled below
+        foreach (var device in devices)
+            ResetToSafe(device);
+
+        var outputs = plan.DriveNets.SelectMany(n => n.Outputs).ToList();
+        foreach (var pin in outputs.Concat(plan.ExpectNets.SelectMany(n => n.Released)))
+            BsdlDevice.ApplyDrive(Of(pin).Outputs, pin.Output!, PinDriveState.HIGH_Z);
+
+        foreach (var device in devices.Where(d => d.Bsdl != null))
+            device.IsExtest = true;
+
+        var loaded = await LoadInstructionsAsync(devices, new HashSet<SessionDevice>());
+        if (loaded.IsFailure)
+            return OperationResult<BoundaryScanStepOutcome>.Failure(loaded.ErrorMessage);
+
+        // Every pattern is one scan; scan n captures the pins of pattern n-1, so one more scan reads the last one.
+        // Each round has other drivers: all outputs of the drive nets are switched off first, then the drivers of the
+        // round are switched on, so a shared output enable is never switched off again by another pin
+        var scans = new List<IReadOnlyList<BoundaryScanChainEntry>>();
+        for (var pattern = 0; pattern < plan.PatternCount; pattern++)
+        {
+            var round = plan.RoundOf(pattern);
+
+            foreach (var pin in outputs)
+                BsdlDevice.ApplyDrive(Of(pin).Outputs, pin.Output!, PinDriveState.HIGH_Z);
+
+            for (var i = 0; i < plan.DriveNets.Count; i++)
+            {
+                var driver = plan.DriveNets[i].DriverIn(round);
+                BsdlDevice.ApplyDrive(Of(driver).Outputs, driver.Output!,
+                    plan.DriveLevel(i, pattern) ? PinDriveState.HIGH : PinDriveState.LOW);
+            }
+
+            scans.Add(Entries(devices));
+        }
+
+        // The last scan already releases the drivers again
+        foreach (var device in devices)
+            ResetToSafe(device);
+        scans.Add(Entries(devices));
+
+        var captured = await _boundaryScanService.ScanSequenceAsync(scans);
+        if (captured.IsFailure)
+            return OperationResult<BoundaryScanStepOutcome>.Failure($"Boundary scan: {captured.ErrorMessage}");
+
+        var faults = plan.Evaluate((pin, pattern) =>
+            captured.Value![pattern + 1][devices.IndexOf(Of(pin))]![pin.Input!.Number]);
+
+        var messages = faults.Count > 0
+            ? faults
+            : [$"{plan.DriveNets.Count} nets driven by {plan.DriveNets.Sum(n => n.Drivers.Count)} pins in turn, " +
+               $"{plan.ExpectNets.Count} nets checked for a fixed level, {plan.PatternCount} patterns."];
+
+        // Faults are measured results like an out-of-limit reading: shown in the result tooltip, not logged
+        return OperationResult<BoundaryScanStepOutcome>.Success(new BoundaryScanStepOutcome(true, faults.Count, messages));
+    }
+
+    private static void ResetToSafe(SessionDevice device)
+    {
+        if (device.Bsdl == null)
+            return;
+
+        var safe = device.Bsdl.CreateSafeOutputs();
+        Array.Copy(safe, device.Outputs, safe.Length);
     }
 
     /// <summary>

@@ -15,5 +15,6 @@ public enum TestEvaluationSource
     EXPRESSION,
     FILE,
     BOUNDARY_SCAN,
-    BOUNDARY_SCAN_BUS
+    BOUNDARY_SCAN_BUS,
+    BOUNDARY_SCAN_INTERCONNECT
 }

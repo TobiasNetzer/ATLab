@@ -42,14 +42,14 @@ public class ProjectDocumentService : IProjectDocumentService
 
     public async Task<AtlabFileDto?> OpenFileAsync()
     {
+        var path = await PickProjectFileAsync();
+        return path is null ? null : await OpenAsync(path);
+    }
+
+    public async Task<string?> PickProjectFileAsync()
+    {
         var file = await _fileDialogService.OpenFileAsync("ATLab files", new[] { "atlab" });
-
-        if (file is not null)
-        {
-            return await OpenAsync(file.Path.LocalPath);
-        }
-
-        return null;
+        return file?.Path.LocalPath;
     }
 
     public async Task<AtlabFileDto?> OpenAsync(string path)

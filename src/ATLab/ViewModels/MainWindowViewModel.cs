@@ -25,6 +25,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ProjectModel _projectModel;
     private readonly ApplicationState _applicationState;
     private readonly AppSettingsDialogViewModel _appSettingsDialog;
+    private readonly IMessageBoxService _messageBoxService;
 
     private const string OnlineUserGuideUrl = "https://github.com/TobiasNetzer/ATLab/blob/main/docs/user-guide";
 
@@ -33,7 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
         : "ATLab";
 
     public bool IsProjectOpen => _projectModel.IsProjectOpen;
-    
+
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
 
@@ -49,10 +50,28 @@ public partial class MainWindowViewModel : ViewModelBase
     public DocumentationTabViewModel DocumentationTab { get; }
 
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
-    
+
     public bool IsTestingTabSelected => ReferenceEquals(SelectedTab, TestingTab);
     public bool IsTestingViewVisible => IsTestingTabSelected && IsProjectOpen;
-    public bool ShowWelcome => IsTestingTabSelected && !IsProjectOpen;
+    public bool ShowWelcome => IsTestingTabSelected && !IsProjectOpen && !IsLoadingProject;
+
+    /// <summary>A project file is being opened, or the tabs are prepared for it; hidden while a message is shown.</summary>
+    public bool IsLoadingProject => _applicationState.IsLoadingProject || IsPreparingViews;
+    public bool ShowLoadingDialog => IsLoadingProject && !_messageBoxService.IsDialogOpen;
+    public string LoadingProjectName => _applicationState.IsLoadingProject ? _applicationState.LoadingProjectName : _lastLoadingProjectName;
+
+    private string _lastLoadingProjectName = string.Empty;
+
+    /// <summary>
+    /// The window lays out the tabs that are not shown, so the first click on one of them is not slow. The loading
+    /// dialog stays meanwhile.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoadingProject), nameof(ShowLoadingDialog), nameof(ShowWelcome), nameof(LoadingProjectName))]
+    private bool _isPreparingViews;
+
+    /// <summary>Raised when a project was opened from a file, for the window to prepare its tabs.</summary>
+    public event Action? ProjectOpened;
     public bool IsConfigTabSelected => ReferenceEquals(SelectedTab, ConfigTab);
     public bool IsDocumentationTabSelected => ReferenceEquals(SelectedTab, DocumentationTab);
     public bool IsScriptTabSelected => ReferenceEquals(SelectedTab, ScriptTab);
@@ -61,15 +80,15 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsAboutTabSelected => ReferenceEquals(SelectedTab, AboutTab);
 
     public ObservableCollection<LogEntry> Events => _loggingService.Events;
-    
+
     public bool IsSimulation => _applicationState.IsSimulationMode;
 
     [ObservableProperty]
     private string? _matrixChannel;
-    
+
     [ObservableProperty]
     private DialogManager _dialogManager;
-    
+
     [ObservableProperty]
     private ToastManager _toastManager;
 
@@ -89,6 +108,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ProjectModel projectModel,
         ApplicationState applicationState,
         AppSettingsDialogViewModel appSettingsDialog,
+        IMessageBoxService messageBoxService,
         DialogManager dialogManager,
         ToastManager toastManager)
     {
@@ -100,6 +120,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _projectModel = projectModel;
         _applicationState = applicationState;
         _appSettingsDialog = appSettingsDialog;
+        _messageBoxService = messageBoxService;
         DialogManager = dialogManager;
         ToastManager = toastManager;
 
@@ -112,7 +133,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DocumentationTab = documentationTab;
 
         _selectedTab = TestingTab;
-        
+
         Tabs.Add(TestingTab);
         Tabs.Add(ConfigTab);
         Tabs.Add(DocumentationTab);
@@ -122,6 +143,32 @@ public partial class MainWindowViewModel : ViewModelBase
         Tabs.Add(AboutTab);
 
         UpdateTabAccess();
+
+        _applicationState.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(ApplicationState.LoadingProjectPath))
+            {
+                // A file was read: the name stays in the dialog while the tabs are prepared
+                if (_applicationState.LoadingProjectPath is { } path)
+                    _lastLoadingProjectName = Path.GetFileName(path);
+                else if (_projectModel.IsProjectOpen && !string.IsNullOrEmpty(_projectModel.FilePath))
+                    ProjectOpened?.Invoke();
+
+                OnPropertyChanged(nameof(IsLoadingProject));
+                OnPropertyChanged(nameof(ShowLoadingDialog));
+                OnPropertyChanged(nameof(LoadingProjectName));
+                OnPropertyChanged(nameof(ShowWelcome));
+            }
+        };
+
+        if (_messageBoxService is System.ComponentModel.INotifyPropertyChanged messageBoxNotifier)
+        {
+            messageBoxNotifier.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(IMessageBoxService.IsDialogOpen))
+                    OnPropertyChanged(nameof(ShowLoadingDialog));
+            };
+        }
 
         _projectModel.PropertyChanged += (s, e) =>
         {
@@ -153,7 +200,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         };
     }
-    
+
     private void UpdateTabAccess()
     {
         // The development tabs need an open project; without one only Test Execution (welcome screen) and Info remain
@@ -169,7 +216,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
-    
+
     // Probing talks to the test hardware, which must not happen in the middle of a run
     private bool IsNotTestRunning() => TestingTab.TestStatus != TestStatus.RUNNING;
 
@@ -251,7 +298,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsBoundaryScanTabSelected));
         OnPropertyChanged(nameof(IsAboutTabSelected));
     }
-    
+
     /// <summary>
     /// Opens the project given on the command line, otherwise the last opened project. If neither opens, the welcome
     /// screen stays until the user creates or opens a project.
@@ -261,16 +308,33 @@ public partial class MainWindowViewModel : ViewModelBase
         var args = Environment.GetCommandLineArgs();
         var fileFromArgs = args.Length > 1 ? args[1] : null;
 
-        if (!string.IsNullOrWhiteSpace(fileFromArgs) && File.Exists(fileFromArgs))
+        if (!string.IsNullOrWhiteSpace(fileFromArgs) && await ExistsAsync(fileFromArgs))
         {
             await TryLoadFile(fileFromArgs);
             return;
         }
-        
+
         var lastFile = _settingsService.Settings.LastOpenedFile;
 
-        if (File.Exists(lastFile))
+        if (!string.IsNullOrWhiteSpace(lastFile) && await ExistsAsync(lastFile))
             await TryLoadFile(lastFile);
+    }
+
+    /// <summary>
+    /// Checks a file off the UI thread: on a network share that is not reachable this can take seconds, the loading
+    /// dialog is shown meanwhile instead of a frozen welcome screen.
+    /// </summary>
+    private async Task<bool> ExistsAsync(string path)
+    {
+        _applicationState.LoadingProjectPath = path;
+        try
+        {
+            return await Task.Run(() => File.Exists(path));
+        }
+        finally
+        {
+            _applicationState.LoadingProjectPath = null;
+        }
     }
 
     private async Task TryLoadFile(string path)
