@@ -556,7 +556,7 @@
                                   IsVisible="{Binding HasProbes}"
                                   Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding Probes}"
-                                  SelectedItem="{Binding SelectedProbe, Mode=TwoWay}"
+                                  SelectedItem="{Binding SelectedProbeItem, Mode=TwoWay}"
                                   SelectionMode="Single"
                                   CanUserSortColumns="False"
                                   CanUserResizeColumns="True"

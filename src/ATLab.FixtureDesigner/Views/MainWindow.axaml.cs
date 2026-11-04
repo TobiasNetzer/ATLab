@@ -24,6 +24,24 @@ public partial class MainWindow : ShadUI.Window
 
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
         AddHandler(DragDrop.DropEvent, OnDrop);
+
+        // A list on a hidden tab cannot take a new selection and keeps its old one; it catches up when shown
+        ProbesGrid.AttachedToVisualTree += (_, _) => Resync(ProbesGrid, () => _viewModel?.SelectedProbeItem);
+        PadsGrid.AttachedToVisualTree += (_, _) => Resync(PadsGrid, () => _viewModel?.SelectedPadRow);
+    }
+
+    private static void Resync(DataGrid grid, System.Func<object?> selected)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var item = selected();
+            if (!grid.IsVisible || Equals(grid.SelectedItem, item))
+                return;
+
+            grid.SelectedItem = item;
+            if (item is not null)
+                grid.ScrollIntoView(item, null);
+        }, DispatcherPriority.Loaded);
     }
 
     protected override void OnDataContextChanged(System.EventArgs e)
@@ -42,8 +60,8 @@ public partial class MainWindow : ShadUI.Window
     /// <summary>A probe or pad selected on the board is revealed in its list.</summary>
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainWindowViewModel.SelectedProbe))
-            Reveal(ProbesGrid, _viewModel?.SelectedProbe);
+        if (e.PropertyName == nameof(MainWindowViewModel.SelectedProbeItem))
+            Reveal(ProbesGrid, _viewModel?.SelectedProbeItem);
         else if (e.PropertyName == nameof(MainWindowViewModel.SelectedPadRow))
             Reveal(PadsGrid, _viewModel?.SelectedPadRow);
     }

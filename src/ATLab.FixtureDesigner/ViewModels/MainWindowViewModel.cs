@@ -211,8 +211,35 @@ public partial class MainWindowViewModel : ObservableObject
             // selected on the board all the same
             if (value is null && SelectedPad is { } pad && !PadRows.Any(r => r.Pad == pad))
                 return;
+            if (_isSyncingSelection)
+                return;
 
             SelectedPad = value?.Pad;
+        }
+    }
+
+    /// <summary>
+    /// Set while the pad and probe selections follow each other. A list that cannot take the new selection, e.g. on a
+    /// hidden tab, writes its previous item back; that must not undo the selection the user just made.
+    /// </summary>
+    private bool _isSyncingSelection;
+
+    private void SyncSelection(Action apply)
+    {
+        if (_isSyncingSelection)
+        {
+            apply();
+            return;
+        }
+
+        _isSyncingSelection = true;
+        try
+        {
+            apply();
+        }
+        finally
+        {
+            _isSyncingSelection = false;
         }
     }
 
@@ -222,9 +249,9 @@ public partial class MainWindowViewModel : ObservableObject
         // a pad without a probe, or a click beside the pads, clears it, so the last probe does not stay selected
         var probes = value is null ? [] : Probes.Where(p => p.Pad == value).ToList();
         if (probes.Count == 0)
-            SelectedProbe = null;
+            SyncSelection(() => SelectedProbe = null);
         else if (SelectedProbe?.Pad != value)
-            SelectedProbe = probes.FirstOrDefault(p => p.Side == ViewSide) ?? probes[0];
+            SyncSelection(() => SelectedProbe = probes.FirstOrDefault(p => p.Side == ViewSide) ?? probes[0]);
     }
 
     private void BuildPadRows()
@@ -285,14 +312,26 @@ public partial class MainWindowViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RemoveProbeCommand), nameof(DisconnectProbeCommand), nameof(DeleteSelectedCommand))]
+    [NotifyPropertyChangedFor(nameof(SelectedProbeItem))]
     private Probe? _selectedProbe;
+
+    /// <summary>Selected row of the probe list; ignores what the list writes back while the selections sync.</summary>
+    public Probe? SelectedProbeItem
+    {
+        get => SelectedProbe;
+        set
+        {
+            if (!_isSyncingSelection)
+                SelectedProbe = value;
+        }
+    }
 
     partial void OnSelectedProbeChanged(Probe? value)
     {
         if (value is not null)
             _isPartSelectedLast = false;
         if (value?.Pad is { } pad && SelectedPad != pad)
-            SelectedPad = pad;
+            SyncSelection(() => SelectedPad = pad);
     }
 
     /// <summary>Pins for the selection boxes of the probe list.</summary>
