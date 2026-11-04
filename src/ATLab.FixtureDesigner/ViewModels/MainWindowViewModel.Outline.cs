@@ -20,10 +20,10 @@ public sealed record OutlineModeOption(PlateOutlineMode Mode, string LabelKey)
 }
 
 /// <summary>
-/// The outline of the probe plates: the board outline plus the margin, a fixed size, an outline imported from a DXF or
-/// SVG file, or one drawn on a layer of the board. A fixed size or an imported outline is centered on the board and
-/// moved by the offset. Both plates share one outline, or each has its own: then the properties below are those of the
-/// plate being edited, and the other plate's are kept aside until the user switches to it.
+/// The outlines of the plates: the board outline plus the margin, a fixed size, an outline imported from a DXF or SVG
+/// file, or one drawn on a layer of the board. A fixed size or an imported outline is centered on the board and moved
+/// by the offset. The plates share one outline, and any plate can have its own instead: the properties below are those
+/// of the outline being edited, the others are kept aside until the user switches to them.
 /// </summary>
 public partial class MainWindowViewModel
 {
@@ -56,6 +56,9 @@ public partial class MainWindowViewModel
     public bool IsOutlineImported => OutlineMode is PlateOutlineMode.Dxf or PlateOutlineMode.Svg;
     public bool IsOutlineBoardLayer => OutlineMode == PlateOutlineMode.BoardLayer;
     public bool HasOutlineOffset => IsOutlineFixedSize || IsOutlineImported;
+
+    /// <summary>Distance of the automatic outline from the board outline, mm.</summary>
+    [ObservableProperty] private double _plateMargin = FixtureFile.DefaultPlateMargin;
 
     /// <summary>Size of the fixed-size outline, mm.</summary>
     [ObservableProperty] private double _outlineWidth = 200;
@@ -90,42 +93,22 @@ public partial class MainWindowViewModel
     /// <summary>The outline in board coordinates, drawn over the board so its position can be checked.</summary>
     [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlineOverlay;
 
-    // ----- One outline for both plates, or one each -----
+    // ----- One outline for all plates, and the plates' own -----
 
-    /// <summary>The top plate has an outline of its own; otherwise both plates share one.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsEditingTopOutline), nameof(IsEditingBottomOutline))]
-    private bool _isSeparateOutlines;
+    /// <summary>The outlines that can be edited: the shared one and those of the plates with their own.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<OutlineTarget> OutlineTargets { get; } = [new(null)];
 
-    /// <summary>The plate whose outline the properties above show, while each plate has its own.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsEditingTopOutline), nameof(IsEditingBottomOutline))]
-    private BoardSide _editedOutlineSide = BoardSide.Bottom;
+    /// <summary>The outline the properties above show.</summary>
+    [ObservableProperty] private OutlineTarget? _selectedOutlineTarget;
 
-    public bool IsEditingTopOutline
-    {
-        get => IsSeparateOutlines && EditedOutlineSide == BoardSide.Top;
-        set
-        {
-            if (value)
-                EditedOutlineSide = BoardSide.Top;
-        }
-    }
+    /// <summary>Several outlines to choose from, so the choice is shown.</summary>
+    public bool HasOwnOutlines => OutlineTargets.Count > 1;
 
-    public bool IsEditingBottomOutline
-    {
-        get => IsSeparateOutlines && EditedOutlineSide == BoardSide.Bottom;
-        set
-        {
-            if (value)
-                EditedOutlineSide = BoardSide.Bottom;
-        }
-    }
-
-    /// <summary>The settings of an outline, as kept for the plate that is not being edited.</summary>
+    /// <summary>The settings of an outline, as kept for the outlines not being edited.</summary>
     private sealed class OutlineState
     {
         public PlateOutlineMode Mode { get; init; }
+        public double Margin { get; init; } = FixtureFile.DefaultPlateMargin;
         public double Width { get; init; } = 200;
         public double Height { get; init; } = 150;
         public double OffsetX { get; init; }
@@ -136,8 +119,14 @@ public partial class MainWindowViewModel
         public PlateOutlineMode ImportedMode { get; init; }
     }
 
-    /// <summary>The outline of the plate that is not being edited, while each plate has its own.</summary>
-    private OutlineState? _otherOutline;
+    /// <summary>The outline being edited: null for the shared one, else the plate whose own outline it is.</summary>
+    private FixturePlate? _editedOutline;
+
+    /// <summary>The shared outline while a plate's own is being edited.</summary>
+    private OutlineState _sharedOutline = new();
+
+    /// <summary>The plates with an outline of their own; the one being edited is in the properties instead.</summary>
+    private readonly Dictionary<FixturePlate, OutlineState> _ownOutlines = [];
 
     /// <summary>True while the properties are filled from a kept outline: no change of the user.</summary>
     private bool _isApplyingOutline;
@@ -145,6 +134,7 @@ public partial class MainWindowViewModel
     private OutlineState CaptureOutline() => new()
     {
         Mode = OutlineMode,
+        Margin = PlateMargin,
         Width = OutlineWidth,
         Height = OutlineHeight,
         OffsetX = OutlineOffsetX,
@@ -164,6 +154,7 @@ public partial class MainWindowViewModel
             _importedMode = state.ImportedMode;
             OutlineFile = state.File;
             OutlineLayer = state.Layer;
+            PlateMargin = state.Margin;
             OutlineWidth = state.Width;
             OutlineHeight = state.Height;
             OutlineOffsetX = state.OffsetX;
@@ -176,34 +167,106 @@ public partial class MainWindowViewModel
         }
     }
 
-    /// <summary>
-    /// Switched on, the top plate starts with the outline both plates had; switched off, both get the outline being
-    /// edited.
-    /// </summary>
-    partial void OnIsSeparateOutlinesChanged(bool value)
-    {
-        _otherOutline = value ? CaptureOutline() : null;
-        if (!value)
-            EditedOutlineSide = BoardSide.Bottom;
-        if (!_isApplyingOutline)
-            OnOutlineChanged();
-    }
+    /// <summary>An outline's settings: the edited one from the properties, the others as kept aside.</summary>
+    private OutlineState StateOf(FixturePlate? key) =>
+        key == _editedOutline ? CaptureOutline() : key is { } plate ? _ownOutlines[plate] : _sharedOutline;
 
-    /// <summary>The outline of the other plate comes into the properties, the edited one is kept aside.</summary>
-    partial void OnEditedOutlineSideChanged(BoardSide oldValue, BoardSide newValue)
-    {
-        if (!IsSeparateOutlines || _otherOutline is null || _isApplyingOutline)
-            return;
+    /// <summary>The outline settings a plate gets: its own, or the shared ones.</summary>
+    private OutlineState OutlineOf(FixturePlate plate) => StateOf(_ownOutlines.ContainsKey(plate) ? plate : null);
 
-        var edited = CaptureOutline();
-        ApplyOutline(_otherOutline);
-        _otherOutline = edited;
+    /// <summary>The edited outline is kept aside and the chosen one comes into the properties.</summary>
+    private void EditOutline(FixturePlate? key)
+    {
+        if (key != _editedOutline)
+        {
+            var edited = CaptureOutline();
+            var next = StateOf(key);
+            if (_editedOutline is { } plate)
+            {
+                if (_ownOutlines.ContainsKey(plate))
+                    _ownOutlines[plate] = edited;
+            }
+            else
+            {
+                _sharedOutline = edited;
+            }
+
+            _editedOutline = key;
+            ApplyOutline(next);
+        }
+
+        var target = OutlineTargets.FirstOrDefault(t => t.Plate == key);
+        if (SelectedOutlineTarget != target)
+            SelectedOutlineTarget = target;
         UpdatePlateSummary();
     }
 
-    /// <summary>The outline settings of a plate: the edited ones, or for the other plate those kept aside.</summary>
-    private OutlineState OutlineOf(BoardSide side) =>
-        IsSeparateOutlines && side != EditedOutlineSide && _otherOutline is not null ? _otherOutline : CaptureOutline();
+    partial void OnSelectedOutlineTargetChanged(OutlineTarget? value)
+    {
+        if (value is not null && !_isApplyingOutline)
+            EditOutline(value.Plate);
+    }
+
+    /// <summary>
+    /// Switched on, the plate starts with the shared outline and it is edited; switched off, the plate has the shared
+    /// outline again.
+    /// </summary>
+    private void OnOwnOutlineChanged(PlateRow row)
+    {
+        if (_isApplyingOutline || row.HasOwnOutline == _ownOutlines.ContainsKey(row.Plate))
+            return;
+
+        if (row.HasOwnOutline)
+        {
+            _ownOutlines[row.Plate] = StateOf(null);
+            OutlineTargets.Add(new OutlineTarget(row.Plate));
+            SortOutlineTargets();
+            EditOutline(row.Plate);
+        }
+        else
+        {
+            if (_editedOutline == row.Plate)
+                EditOutline(null);
+            _ownOutlines.Remove(row.Plate);
+            if (OutlineTargets.FirstOrDefault(t => t.Plate == row.Plate) is { } target)
+                OutlineTargets.Remove(target);
+        }
+
+        OnPropertyChanged(nameof(HasOwnOutlines));
+        MarkDirty();
+        UpdatePlateSummary();
+    }
+
+    /// <summary>The shared outline first, then the plates from the bottom up.</summary>
+    private void SortOutlineTargets()
+    {
+        var sorted = OutlineTargets.OrderBy(t => t.Plate is null ? -1 : (int)t.Plate).ToList();
+        for (var i = 0; i < sorted.Count; i++)
+        {
+            var index = OutlineTargets.IndexOf(sorted[i]);
+            if (index != i)
+                OutlineTargets.Move(index, i);
+        }
+    }
+
+    /// <summary>The labels of the outline choice in the new language.</summary>
+    private void RefreshOutlineTargets()
+    {
+        var selected = SelectedOutlineTarget?.Plate;
+        _isApplyingOutline = true;
+        try
+        {
+            var targets = OutlineTargets.Select(t => t.Plate).ToList();
+            OutlineTargets.Clear();
+            foreach (var plate in targets)
+                OutlineTargets.Add(new OutlineTarget(plate));
+            SelectedOutlineTarget = OutlineTargets.FirstOrDefault(t => t.Plate == selected);
+        }
+        finally
+        {
+            _isApplyingOutline = false;
+        }
+    }
 
     partial void OnOutlineModeChanged(PlateOutlineMode value)
     {
@@ -220,6 +283,7 @@ public partial class MainWindowViewModel
         OnOutlineChanged();
     }
 
+    partial void OnPlateMarginChanged(double value) => OnOutlineChanged();
     partial void OnOutlineWidthChanged(double value) => OnOutlineChanged();
     partial void OnOutlineHeightChanged(double value) => OnOutlineChanged();
     partial void OnOutlineOffsetXChanged(double value) => OnOutlineChanged();
@@ -239,10 +303,11 @@ public partial class MainWindowViewModel
     /// The outline a plate gets, in build sheet coordinates. Without a usable outline of the chosen kind, the board
     /// outline plus the margin, and the status says so.
     /// </summary>
-    private OutlineShape CurrentOutline(BoardSide side)
+    private OutlineShape CurrentOutline(FixturePlate plate)
     {
         var board = Board!;
-        return SelectedOutline(board, OutlineOf(side)) ?? PlateOutlines.Automatic(board, PlateMargin);
+        var state = OutlineOf(plate);
+        return SelectedOutline(board, state) ?? PlateOutlines.Automatic(board, state.Margin);
     }
 
     private OutlineShape? SelectedOutline(Board board, OutlineState s) => s.Mode switch
@@ -253,7 +318,7 @@ public partial class MainWindowViewModel
             PlateOutlines.Centered(board, s.Imported, s.OffsetX, s.OffsetY),
         PlateOutlineMode.BoardLayer when s.Layer is not null =>
             PlateOutlines.FromBoardLayer(board, s.Layer, Localizer.Get),
-        PlateOutlineMode.Automatic => PlateOutlines.Automatic(board, PlateMargin),
+        PlateOutlineMode.Automatic => PlateOutlines.Automatic(board, s.Margin),
         _ => null
     };
 
@@ -314,7 +379,7 @@ public partial class MainWindowViewModel
     }
 
     /// <summary>The outline of a plate over the board, for its drawings in the build sheet.</summary>
-    private IReadOnlyList<IReadOnlyList<Point2>>? PlateOverlay(BoardSide side) => Board is { } board ? Overlay(board, CurrentOutline(side)) : null;
+    private IReadOnlyList<IReadOnlyList<Point2>>? PlateOverlay(FixturePlate plate) => Board is { } board ? Overlay(board, CurrentOutline(plate)) : null;
 
     // ----- Import -----
 
@@ -368,47 +433,36 @@ public partial class MainWindowViewModel
 
     // ----- File -----
 
-    private void ResetOutline()
+    private void ResetOutline() => LoadOutline(null, null, string.Empty);
+
+    /// <summary>The outlines of a file: the shared one, which is edited first, and the plates' own.</summary>
+    private void LoadOutline(PlateOutlineEntry? shared, IReadOnlyDictionary<FixturePlate, PlateOutlineEntry>? own, string fixturePath)
     {
         _isApplyingOutline = true;
         try
         {
-            IsSeparateOutlines = false;
-            EditedOutlineSide = BoardSide.Bottom;
+            _ownOutlines.Clear();
+            foreach (var (plate, entry) in own ?? new Dictionary<FixturePlate, PlateOutlineEntry>())
+                _ownOutlines[plate] = StateOf(entry, fixturePath);
+
+            OutlineTargets.Clear();
+            OutlineTargets.Add(new OutlineTarget(null));
+            foreach (var plate in _ownOutlines.Keys.Order())
+                OutlineTargets.Add(new OutlineTarget(plate));
+            foreach (var row in PlateRows)
+                row.HasOwnOutline = _ownOutlines.ContainsKey(row.Plate);
+
+            _editedOutline = null;
+            _sharedOutline = new OutlineState();
+            SelectedOutlineTarget = OutlineTargets[0];
         }
         finally
         {
             _isApplyingOutline = false;
         }
 
-        _otherOutline = null;
-        ApplyOutline(new OutlineState());
-    }
-
-    /// <summary>
-    /// The outlines of a file: the bottom plate's (and the top plate's while it has none of its own), and the top
-    /// plate's if it has one. The bottom plate's is the one edited first.
-    /// </summary>
-    private void LoadOutline(PlateOutlineEntry? entry, PlateOutlineEntry? topEntry, string fixturePath)
-    {
-        ResetOutline();
-        var bottom = StateOf(entry, fixturePath);
-        if (topEntry is not null)
-        {
-            _isApplyingOutline = true;
-            try
-            {
-                IsSeparateOutlines = true;
-            }
-            finally
-            {
-                _isApplyingOutline = false;
-            }
-
-            _otherOutline = StateOf(topEntry, fixturePath);
-        }
-
-        ApplyOutline(bottom);
+        OnPropertyChanged(nameof(HasOwnOutlines));
+        ApplyOutline(StateOf(shared, fixturePath));
     }
 
     private static OutlineState StateOf(PlateOutlineEntry? entry, string fixturePath)
@@ -434,6 +488,7 @@ public partial class MainWindowViewModel
         return new OutlineState
         {
             Mode = entry.Mode,
+            Margin = entry.Margin,
             Width = entry.Width > 0 ? entry.Width : 200,
             Height = entry.Height > 0 ? entry.Height : 150,
             OffsetX = entry.OffsetX,
@@ -452,20 +507,20 @@ public partial class MainWindowViewModel
         ? [Math.Round(v.X, 4), Math.Round(v.Y, 4)]
         : [Math.Round(v.X, 4), Math.Round(v.Y, 4), Math.Round(v.Bulge, 8)];
 
-    /// <summary>The outline of the bottom plate (and of the top plate while it shares it), and the top plate's own.</summary>
-    private (PlateOutlineEntry? Bottom, PlateOutlineEntry? Top) SaveOutline(string fixturePath) =>
-        IsSeparateOutlines
-            ? (EntryOf(OutlineOf(BoardSide.Bottom), fixturePath, always: true), EntryOf(OutlineOf(BoardSide.Top), fixturePath, always: true))
-            : (EntryOf(CaptureOutline(), fixturePath, always: false), null);
+    /// <summary>The shared outline (null for the automatic one) and the plates' own.</summary>
+    private (PlateOutlineEntry? Shared, Dictionary<FixturePlate, PlateOutlineEntry>? Own) SaveOutline(string fixturePath) =>
+        (EntryOf(StateOf(null), fixturePath, always: false),
+            _ownOutlines.Count == 0 ? null : _ownOutlines.Keys.ToDictionary(p => p, p => EntryOf(StateOf(p), fixturePath, always: true)!));
 
     private static PlateOutlineEntry? EntryOf(OutlineState s, string fixturePath, bool always)
     {
-        if (s.Mode == PlateOutlineMode.Automatic && !always)
+        if (s.Mode == PlateOutlineMode.Automatic && s.Margin == FixtureFile.DefaultPlateMargin && !always)
             return null;
 
         var entry = new PlateOutlineEntry
         {
             Mode = s.Mode,
+            Margin = s.Margin,
             Width = s.Width,
             Height = s.Height,
             OffsetX = s.OffsetX,

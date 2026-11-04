@@ -11,6 +11,7 @@ using ATLab.FixtureDesigner.Fixture;
 using ATLab.Pcb.Fixture;
 using ATLab.Pcb.Kicad;
 using ATLab.FixtureDesigner.Localization;
+using ATLab.FixtureDesigner.Plates;
 using ATLab.FixtureDesigner.Reporting;
 using ATLab.FixtureDesigner.Services;
 using Avalonia;
@@ -462,7 +463,7 @@ public partial class MainWindowViewModel : ObservableObject
     private void OnProbeChanged(object? sender, PropertyChangedEventArgs e)
     {
         // The type sets the clearances and spacings the checks use
-        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Type) or nameof(Probe.Note) or nameof(Probe.Number))
+        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Type) or nameof(Probe.Note) or nameof(Probe.Number) or nameof(Probe.OpeningOverride))
         {
             MarkDirty();
             if (e.PropertyName != nameof(Probe.Note) && !_isBatchChange)
@@ -695,6 +696,7 @@ public partial class MainWindowViewModel : ObservableObject
                     Pin = pinout.FindFixturePin(entry.Pin),
                     Note = entry.Note,
                     Type = TypeOf(entry.ProbeType),
+                    OpeningOverride = entry.Opening is > 0 ? entry.Opening : null,
                     SavedNet = entry.Net,
                     SavedPosition = entry.Net.Length > 0 || entry.X != 0 || entry.Y != 0 ? new Point2(entry.X, entry.Y) : null
                 };
@@ -828,6 +830,7 @@ public partial class MainWindowViewModel : ObservableObject
                 Pin = p.Pin?.Pin,
                 Note = p.Note,
                 ProbeType = p.Type?.Id,
+                Opening = p.OpeningOverride,
                 // A probe whose pad disappeared keeps what was known about it
                 Net = p.Pad?.Net ?? p.SavedNet,
                 X = p.Pad?.Position.X ?? p.SavedPosition?.X ?? 0,
@@ -906,8 +909,8 @@ public partial class MainWindowViewModel : ObservableObject
             Pinout = Pinout,
             Probes = Probes.OrderBy(p => p.Number).ToList(),
             Parts = Parts.ToList(),
-            TopPlateOutline = PlateOverlay(BoardSide.Top),
-            BottomPlateOutline = PlateOverlay(BoardSide.Bottom),
+            PlateOutlines = Plate.PlatesOf(Probes, IsBoardFlipped).ToDictionary(p => p, p => PlateOverlay(p)!),
+            IsBoardFlipped = IsBoardFlipped,
             Layers = BuildSheetLayers.Effective
         };
 
@@ -1071,6 +1074,9 @@ public partial class MainWindowViewModel : ObservableObject
         RunChecks();
         foreach (var row in _allPadRows)
             row.RefreshTexts();
+        foreach (var row in PlateRows)
+            row.RefreshTexts();
+        RefreshOutlineTargets();
         OnPropertyChanged(nameof(StatusText));
         OnPropertyChanged(nameof(PadCountText));
         OnPropertyChanged(nameof(ProbeCountText));

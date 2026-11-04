@@ -9,29 +9,49 @@ using ATLab.Pcb.Fixture;
 using ATLab.Pcb.Rendering;
 using ATLab.Pcb.Kicad;
 using ATLab.FixtureDesigner.Localization;
+using ATLab.FixtureDesigner.Plates;
+using ATLab.FixtureDesigner.ViewModels;
 
 namespace ATLab.FixtureDesigner.Reporting;
 
+/// <summary>The outline of a plate with its frame holes and cut-outs in board coordinates, for a drawing.</summary>
+public sealed record PlateOutlineDrawing(FixturePlate Plate, IReadOnlyList<IReadOnlyList<Point2>> Outline);
+
 /// <summary>
-/// Drawing of one plate's probes and parts on the board for the build sheet, in millimeters: outline, pads, holes, the
+/// Drawing of one side's probes and parts on the board for the build sheet, in millimeters: outline, pads, holes, the
 /// origin and the numbered probes. Seen from the top, or from below and then mirrored.
 /// </summary>
 public static class BoardSvg
 {
     private const string ProbeColor = MarkerColors.Probe;
-    private const string PlateOutlineColor = "#52525B";
     private const string OriginColor = "#16A34A";
+
+    /// <summary>
+    /// Color of each plate's outline and openings: the probe plates gray, the moving plate orange, the pressure plate
+    /// blue, apart from the colors of the probes and parts drawn with them.
+    /// </summary>
+    public static string PlateColor(FixturePlate plate) => plate switch
+    {
+        FixturePlate.MovingPlate => "#EA580C",
+        FixturePlate.PressurePlate => "#2563EB",
+        _ => "#52525B"
+    };
 
     /// <param name="side">The plate: its probes and parts are drawn.</param>
     /// <param name="view">Where the drawing is seen from; from the bottom it is mirrored.</param>
     /// <param name="style">Layers of the board side seen, with their order, colors and opacity.</param>
+    /// <param name="plates">The outlines of the plates drawn, each in its color; outlines plates share are drawn once in their colors by turns.</param>
     /// <param name="withPins">Each probe is labelled with the pin of the test hardware it is wired to, e.g. "P1 - c10".</param>
+    /// <param name="withOpenings">The openings of the moving plate for the bottom probes, of the top probe plate for the push rods.</param>
     public static string Render(Board board, IReadOnlyList<Probe> probes, BoardSide side, BoardSide view, BoardLayerStyle style,
-        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<IReadOnlyList<Point2>>? plateOutline = null, bool withPins = false)
+        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<PlateOutlineDrawing>? plates = null, bool withPins = false,
+        bool withOpenings = false)
     {
-        // Pre-centering pins stand beside the board and the plate is larger: the drawing includes both
+        plates ??= [];
+
+        // Pre-centering pins stand beside the board and the plates are larger: the drawing includes both
         var bounds = board.Bounds;
-        foreach (var p in plateOutline?.SelectMany(l => l) ?? [])
+        foreach (var p in plates.SelectMany(d => d.Outline).SelectMany(l => l))
             bounds = new Bounds2(Math.Min(bounds.MinX, p.X), Math.Min(bounds.MinY, p.Y), Math.Max(bounds.MaxX, p.X), Math.Max(bounds.MaxY, p.Y));
         foreach (var part in parts ?? [])
         {
@@ -61,11 +81,24 @@ public static class BoardSvg
         // default, as in ATLab's report); over them the plate outline
         BoardSvgRenderer.AppendBoard(svg, board, view, mirror, Map, bounds, margin, font, style);
 
-        // Plate outline and frame holes, dashed as in the board view
-        foreach (var polyline in plateOutline ?? [])
+        // Plate outlines and frame holes, dashed as in the board view, each plate in its color; an outline that several
+        // plates share is drawn once, its dashes in their colors by turns
+        var dash = font * 0.6;
+        var gap = font * 0.4;
+        foreach (var group in GroupByOutline(plates))
         {
-            var points = string.Join(" ", polyline.Select(p => Map(p)).Select(p => Invariant($"{p.X:0.###},{p.Y:0.###}")));
-            svg.Append(Invariant($"<polyline points=\"{points}\" fill=\"none\" stroke=\"{PlateOutlineColor}\" stroke-width=\"{font * 0.12:0.###}\" stroke-dasharray=\"{font * 0.6:0.###} {font * 0.4:0.###}\"/>"));
+            for (var i = 0; i < group.Count; i++)
+            {
+                var pattern = group.Count == 1
+                    ? Invariant($"{dash:0.###} {gap:0.###}")
+                    : Invariant($"{dash:0.###} {(group.Count - 1) * (dash + gap) + gap:0.###}");
+                var offset = -i * (dash + gap);
+                foreach (var polyline in group[i].Outline)
+                {
+                    var points = string.Join(" ", polyline.Select(p => Map(p)).Select(p => Invariant($"{p.X:0.###},{p.Y:0.###}")));
+                    svg.Append(Invariant($"<polyline points=\"{points}\" fill=\"none\" stroke=\"{PlateColor(group[i].Plate)}\" stroke-width=\"{font * 0.12:0.###}\" stroke-dasharray=\"{pattern}\" stroke-dashoffset=\"{offset:0.###}\"/>"));
+                }
+            }
         }
 
         AppendOrigin(svg, board, Map, mirror, font);
@@ -102,6 +135,32 @@ public static class BoardSvg
         foreach (var (probe, c, r) in markers)
         {
             svg.Append(Invariant($"<circle cx=\"{c.X:0.###}\" cy=\"{c.Y:0.###}\" r=\"{r:0.###}\" fill=\"{ProbeColor}\" fill-opacity=\"0.85\" stroke=\"#FFFFFF\" stroke-width=\"{font * 0.06:0.###}\"/>"));
+        }
+
+        // Openings at their real size, thin in the color of their plate and over the probes, which may be larger: the
+        // bottom probes come through the moving plate, the push rods through the top probe plate, if the drawing has it
+        if (withOpenings && OpeningPlate(plates.Select(p => p.Plate)) is { } openingPlate)
+        {
+            // Openings too close to each other are merged as in the plate files and drawn with their outline
+            var openings = openingPlate == FixturePlate.MovingPlate
+                ? probes.Where(p => p.Side == side && p.HasOpening && p.Pad is not null && p.Opening > 0)
+                    .Select(p => new OpeningCircle(p.Name, p.Pad!.Position.X, p.Pad.Position.Y, p.Opening))
+                : (parts ?? []).Where(p => p.Kind == FixturePartKind.PushRod && p.Opening > 0)
+                    .Select(p => new OpeningCircle(p.Name, p.BoardX, p.BoardY, p.Opening));
+            var (single, merged) = OpeningMerge.Merge(openings.ToList(), Plate.MinimumWall);
+            var stroke = Invariant($"fill=\"none\" stroke=\"{PlateColor(openingPlate)}\" stroke-width=\"{font * 0.08:0.###}\"");
+            foreach (var opening in single)
+            {
+                var c = Map(new Point2(opening.X, opening.Y));
+                svg.Append(Invariant($"<circle cx=\"{c.X:0.###}\" cy=\"{c.Y:0.###}\" r=\"{opening.Diameter / 2:0.###}\" {stroke}/>"));
+            }
+
+            foreach (var opening in merged)
+            {
+                var points = string.Join(" ", OutlineShape.Flatten(opening.Contour)
+                    .Select(p => Map(new Point2(p.X, p.Y))).Select(p => Invariant($"{p.X:0.###},{p.Y:0.###}")));
+                svg.Append($"<polygon points=\"{points}\" {stroke}/>");
+            }
         }
 
         // Numbers next to their marker, at the first of eight places around it that overlaps no other number or marker;
@@ -162,12 +221,40 @@ public static class BoardSvg
         _ => MarkerColors.PushRod
     };
 
+    /// <summary>The plate of a drawing with openings: the moving plate below the board, the top probe plate above it; null for none.</summary>
+    private static FixturePlate? OpeningPlate(IEnumerable<FixturePlate> plates)
+    {
+        var list = plates.ToList();
+        return list.Contains(FixturePlate.MovingPlate) ? FixturePlate.MovingPlate
+            : list.Contains(FixturePlate.TopProbePlate) ? FixturePlate.TopProbePlate
+            : null;
+    }
+
+    /// <summary>Plates with the same outline together, in the order they come.</summary>
+    private static List<List<PlateOutlineDrawing>> GroupByOutline(IReadOnlyList<PlateOutlineDrawing> plates)
+    {
+        static bool Same(IReadOnlyList<IReadOnlyList<Point2>> a, IReadOnlyList<IReadOnlyList<Point2>> b) =>
+            a.Count == b.Count && a.Zip(b).All(l => l.First.Count == l.Second.Count &&
+                                                    l.First.Zip(l.Second).All(p => p.First.DistanceTo(p.Second) < 1e-6));
+
+        var groups = new List<List<PlateOutlineDrawing>>();
+        foreach (var plate in plates)
+        {
+            if (groups.FirstOrDefault(g => Same(g[0].Outline, plate.Outline)) is { } group)
+                group.Add(plate);
+            else
+                groups.Add([plate]);
+        }
+
+        return groups;
+    }
+
     /// <summary>
-    /// The probes and parts the drawing of this side shows, each with its symbol as a small SVG (12 × 12) and its name:
-    /// only the kinds the drawing has.
+    /// The probes, parts and plates the drawing of this side shows, each with its symbol as a small SVG (12 × 12) and its
+    /// name: only the kinds the drawing has.
     /// </summary>
     public static IReadOnlyList<(string Symbol, string Label)> Legend(IReadOnlyList<Probe> probes, BoardSide side,
-        IReadOnlyList<FixturePart>? parts = null, bool hasPlateOutline = false)
+        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<FixturePlate>? plates = null, bool withOpenings = false)
     {
         static string Symbol(string body) =>
             $"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\">{body}</svg>";
@@ -205,9 +292,22 @@ public static class BoardSvg
             items.Add((Symbol(Ring(color) + mark), Localizer.Get(key)));
         }
 
-        if (hasPlateOutline)
-            items.Add((Symbol($"<line x1=\"0.5\" y1=\"6\" x2=\"11.5\" y2=\"6\" stroke=\"{PlateOutlineColor}\" stroke-width=\"1.2\" stroke-dasharray=\"3 2\"/>"),
-                Localizer.Get("Board_LegendPlateOutline")));
+        foreach (var plate in plates ?? [])
+            items.Add((Symbol($"<line x1=\"0.5\" y1=\"6\" x2=\"11.5\" y2=\"6\" stroke=\"{PlateColor(plate)}\" stroke-width=\"1.2\" stroke-dasharray=\"3 2\"/>"),
+                Localizer.Format("Report_LegendPlateOutline", PlateRow.NameOf(plate))));
+
+        // Openings only where the drawing has them
+        if (withOpenings)
+        {
+            var plate = OpeningPlate(plates ?? []);
+            var any = plate == FixturePlate.MovingPlate
+                ? probes.Any(p => p.Side == side && p.HasOpening && p.Pad is not null && p.Opening > 0)
+                : (parts ?? []).Any(p => p.Kind == FixturePartKind.PushRod && p.Opening > 0);
+            if (plate is not null && any)
+                items.Add((Symbol($"<circle cx=\"6\" cy=\"6\" r=\"4.5\" fill=\"none\" stroke=\"{PlateColor(plate.Value)}\" stroke-width=\"1\"/>"),
+                    Localizer.Format("Board_LegendOpenings", PlateRow.NameOf(plate.Value))));
+        }
+
         return items;
     }
 
@@ -243,15 +343,10 @@ public static class BoardSvg
     private static string Escape(string text) =>
         text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
 
-    /// <summary>Caption of the drawing: assembly or wiring of the top or bottom plate.</summary>
-    public static string Caption(BoardSide side, bool wiring) =>
-        Localizer.Get((side, wiring) switch
-        {
-            (BoardSide.Top, false) => "Report_AssemblyTop",
-            (BoardSide.Bottom, false) => "Report_AssemblyBottom",
-            (BoardSide.Top, true) => "Report_WiringTop",
-            _ => "Report_WiringBottom"
-        });
+    /// <summary>Caption of the drawing: the assembly of a side of the board, or the wiring of the probe plate of that side.</summary>
+    public static string Caption(BoardSide side, bool wiring, bool isBoardFlipped) => wiring
+        ? Localizer.Format("Report_WiringOf", PlateRow.NameOf(FixturePlates.ProbePlate(side, isBoardFlipped)))
+        : Localizer.Get(side == BoardSide.Top ? "Report_AssemblyTop" : "Report_AssemblyBottom");
 
     public static string ViewHint(BoardSide view) =>
         Localizer.Get(view == BoardSide.Top ? "Report_ViewFromTop" : "Report_ViewFromBottom");

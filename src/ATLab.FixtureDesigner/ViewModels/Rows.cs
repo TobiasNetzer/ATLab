@@ -87,6 +87,40 @@ public partial class PinOption(AdapterPin pin) : ObservableObject
     public override string ToString() => Display;
 }
 
+/// <summary>
+/// A plate of the fixture in the Manufacturing tab: whether the fixture has it, whether it has an outline of its own,
+/// its thickness, whether it is exported, and what it contains.
+/// </summary>
+public partial class PlateRow(FixturePlate plate) : ObservableObject
+{
+    public FixturePlate Plate { get; } = plate;
+
+    public string Name => PlateRow.NameOf(Plate);
+
+    public static string NameOf(FixturePlate plate) => Localizer.Get("Plate_" + plate);
+
+    /// <summary>The fixture has this plate: the top probe plate only with top probes.</summary>
+    [ObservableProperty] private bool _isPresent;
+
+    [ObservableProperty] private bool _hasOwnOutline;
+
+    /// <summary>Thickness in the STEP file, mm.</summary>
+    [ObservableProperty] private double _thickness = FixtureFile.DefaultPlateThickness;
+
+    [ObservableProperty] private bool _isExported = true;
+
+    /// <summary>Size and holes of the plate.</summary>
+    [ObservableProperty] private string _summary = string.Empty;
+
+    public void RefreshTexts() => OnPropertyChanged(nameof(Name));
+}
+
+/// <summary>An outline that can be edited: the one the plates share, or a plate's own.</summary>
+public sealed record OutlineTarget(FixturePlate? Plate)
+{
+    public string Label => Plate is { } plate ? PlateRow.NameOf(plate) : Localizer.Get("Outline_Shared");
+}
+
 /// <summary>Language in the selection box, in its own language (English, Deutsch).</summary>
 public sealed record LanguageOption(CultureInfo Culture)
 {

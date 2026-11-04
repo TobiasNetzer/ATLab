@@ -63,8 +63,16 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
     /// <summary>Worst result of the checks for this part.</summary>
     [ObservableProperty] private BoardMarkerState _state;
 
-    /// <summary>Plate the part goes into: locating, pre-centering and support pins the bottom one, push rods the top one.</summary>
-    public BoardSide PlateSide => Kind == FixturePartKind.PushRod ? BoardSide.Top : BoardSide.Bottom;
+    /// <summary>Plate the part goes into: locating, pre-centering and support pins the moving plate, push rods the pressure plate.</summary>
+    public FixturePlate Plate => Kind == FixturePartKind.PushRod ? FixturePlate.PressurePlate : FixturePlate.MovingPlate;
+
+    /// <summary>The board lies upside down in the fixture: the pins are at its top side, the push rods at its bottom side.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PlateSide))]
+    private bool _isBoardFlipped;
+
+    /// <summary>The side of the board the part is on.</summary>
+    public BoardSide PlateSide => Plate.Side(IsBoardFlipped);
 
     /// <summary>The last hole a locating pin stood in, where it goes back to when dropped beside any hole.</summary>
     public Point2? Anchor { get; set; }
@@ -75,7 +83,44 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
         BoardY = boardPoint.Y;
     }
 
-    partial void OnTypeChanged(PartType? value) => OnPropertyChanged(nameof(IBoardMarker.MarkerSize));
+    partial void OnTypeChanged(PartType? value)
+    {
+        OnPropertyChanged(nameof(IBoardMarker.MarkerSize));
+        RefreshOpening();
+    }
+
+    /// <summary>Push rods: Ø of the opening in the top probe plate if not the type's, in mm.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Opening), nameof(OpeningText))]
+    private double? _openingOverride;
+
+    /// <summary>Push rods come through an opening of the top probe plate; the pins have none.</summary>
+    public bool HasOpening => Kind == FixturePartKind.PushRod;
+
+    /// <summary>Ø of the opening in the top probe plate: the rod's own, else the type's, else the type's drill Ø; 0 for none.</summary>
+    public double Opening => !HasOpening ? 0 : OpeningOverride ?? TypeOpening(Type);
+
+    public static double TypeOpening(PartType? type) =>
+        type is null ? 0 : type.OpeningDiameter > 0 ? type.OpeningDiameter : type.DrillDiameter;
+
+    /// <summary>The rod's own opening as typed in the list; empty for the type's.</summary>
+    public string OpeningText
+    {
+        get => OpeningOverride?.ToString("0.###", System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
+        set => OpeningOverride = Probe.ParseOverride(value, OpeningOverride);
+    }
+
+    /// <summary>The type's opening, shown in the empty cell.</summary>
+    public string TypeOpeningText => HasOpening && TypeOpening(Type) > 0
+        ? TypeOpening(Type).ToString("0.###", System.Globalization.CultureInfo.CurrentCulture)
+        : string.Empty;
+
+    /// <summary>The type's sizes changed: the opening may follow them.</summary>
+    public void RefreshOpening()
+    {
+        OnPropertyChanged(nameof(Opening));
+        OnPropertyChanged(nameof(TypeOpeningText));
+    }
 
     // ----- Drawing on the board -----
 
@@ -159,8 +204,8 @@ public static class PartLibrary
     public static List<PartType> Examples() =>
     [
         new() { Id = "exampleLocatingPin3", Kind = FixturePartKind.LocatingPin, Name = "Locating pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 12, ComponentClearance = 0},
-        new() { Id = "exampleLocating3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 8, ComponentClearance = 0.5},
+        new() { Id = "exampleLocating3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, EdgeGap = 0.3, Height = 8, ComponentClearance = 0.5},
         new() { Id = "exampleSupport4", Kind = FixturePartKind.SupportPin, Name = "Support pin 4 mm", Diameter = 4, DrillDiameter = 4, Height = 10, ComponentClearance = 1},
-        new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, Height = 15, ComponentClearance = 1}
+        new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, OpeningDiameter = 6, Height = 15, ComponentClearance = 1}
     ];
 }

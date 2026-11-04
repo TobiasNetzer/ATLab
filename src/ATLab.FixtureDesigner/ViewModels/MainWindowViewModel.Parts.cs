@@ -203,7 +203,7 @@ public partial class MainWindowViewModel
 
     /// <summary>
     /// A locating pin moves into the nearest hole, or back into its last one if there is none nearby; a pre-centering pin
-    /// moves to touch the board edge from outside; other parts stay where they are.
+    /// moves beside the board edge, its type's gap away from it; other parts stay where they are.
     /// </summary>
     private void Snap(FixturePart part)
     {
@@ -228,7 +228,7 @@ public partial class MainWindowViewModel
                 break;
 
             case FixturePartKind.PreCenteringPin:
-                part.MoveTo(BoardEdge.Snap(Board, position, (part.Type?.Diameter ?? 0) / 2));
+                part.MoveTo(BoardEdge.Snap(Board, position, (part.Type?.Diameter ?? 0) / 2 + Math.Max(part.Type?.EdgeGap ?? 0, 0)));
                 break;
         }
     }
@@ -279,6 +279,10 @@ public partial class MainWindowViewModel
                 SyncFromBoard(part);
                 break;
 
+            case nameof(FixturePart.OpeningOverride):
+                AfterPartsChanged();
+                break;
+
             // The hole of a locating pin does not depend on its type
             case nameof(FixturePart.Type) when part.Kind == FixturePartKind.LocatingPin:
                 AfterPartsChanged();
@@ -327,9 +331,14 @@ public partial class MainWindowViewModel
         MarkDirty();
         if (e.PropertyName == nameof(PartType.Kind))
             UpdateAvailableTypes();
-        if (e.PropertyName is nameof(PartType.Diameter) && sender is PartType type)
+        if (e.PropertyName is nameof(PartType.OpeningDiameter) or nameof(PartType.DrillDiameter))
         {
-            // A pre-centering pin of another size touches the edge at another place
+            foreach (var part in Parts.Where(p => p.Type == sender))
+                part.RefreshOpening();
+        }
+        if (e.PropertyName is nameof(PartType.Diameter) or nameof(PartType.EdgeGap) && sender is PartType type)
+        {
+            // A pre-centering pin of another size or gap stands at another place
             foreach (var part in Parts.Where(p => p.Type == type && p.Kind == FixturePartKind.PreCenteringPin))
             {
                 Snap(part);
@@ -403,6 +412,8 @@ public partial class MainWindowViewModel
             existing.Name = libraryType.Name;
             existing.Diameter = libraryType.Diameter;
             existing.DrillDiameter = libraryType.DrillDiameter;
+            existing.OpeningDiameter = libraryType.OpeningDiameter;
+            existing.EdgeGap = libraryType.EdgeGap;
             existing.Height = libraryType.Height;
             existing.ComponentClearance = libraryType.ComponentClearance;
             existing.Note = libraryType.Note;
@@ -454,7 +465,8 @@ public partial class MainWindowViewModel
                 Type = PartTypes.FirstOrDefault(t => t.Id == entry.Type && t.Kind == entry.Kind)
                        ?? PartTypes.FirstOrDefault(t => t.Kind == entry.Kind),
                 BoardX = entry.X,
-                BoardY = entry.Y
+                BoardY = entry.Y,
+                OpeningOverride = entry.Kind == FixturePartKind.PushRod && entry.Opening is > 0 ? entry.Opening : null
             };
             part.AvailableTypes = TypesOf(entry.Kind);
             if (entry.Kind == FixturePartKind.LocatingPin)
@@ -472,7 +484,8 @@ public partial class MainWindowViewModel
             Kind = p.Kind,
             Type = p.Type?.Id,
             X = Math.Round(p.BoardX, 4),
-            Y = Math.Round(p.BoardY, 4)
+            Y = Math.Round(p.BoardY, 4),
+            Opening = p.HasOpening ? p.OpeningOverride : null
         }).ToList();
     }
 }

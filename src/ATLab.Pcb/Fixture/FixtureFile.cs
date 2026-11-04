@@ -17,11 +17,11 @@ public sealed class FixtureFile
     public const string ExpectedFormatId = "atlab-fixture";
 
     /// <summary>
-    /// Version 1: first format. Version 2: probe types, locating pins and plate settings. Version 3: the outline of the
-    /// probe plates (fixed size, imported from DXF or SVG, or a layer of the board). Version 4: pre-centering pins, support
-    /// pins and push rods with their types. Version 5: locating pins are parts with types as well, in any hole of the board.
+    /// Version 1: the board, the probes with their types and wiring, the parts (locating, pre-centering and support pins,
+    /// push rods) with their types, and the plates (probe plates, moving plate, pressure plate) with their outlines,
+    /// thicknesses and openings.
     /// </summary>
-    public const int CurrentFormatVersion = 5;
+    public const int CurrentFormatVersion = 1;
 
     public string FormatId { get; set; } = ExpectedFormatId;
     public int FormatVersion { get; set; } = CurrentFormatVersion;
@@ -55,20 +55,20 @@ public sealed class FixtureFile
     /// <summary>The placed locating, pre-centering and support pins and push rods.</summary>
     public List<FixturePartEntry> Parts { get; set; } = [];
 
-    /// <summary>Distance of the plate outline from the board outline, in mm.</summary>
-    public double PlateMargin { get; set; } = DefaultPlateMargin;
+    /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
+    public bool IsBoardFlipped { get; set; }
 
-    /// <summary>Thickness of the plates in the STEP files, in mm.</summary>
-    public double PlateThickness { get; set; } = DefaultPlateThickness;
+    /// <summary>Thickness of each plate in the STEP files, in mm; a plate not listed has the default.</summary>
+    public Dictionary<FixturePlate, double>? PlateThicknesses { get; set; }
 
     /// <summary>Board layers of the build sheet drawings per side, their order, colors and opacity; null for the defaults.</summary>
     public ATLab.Pcb.Rendering.ReportLayerSettings? BuildSheetLayers { get; set; }
 
-    /// <summary>Outline of the bottom plate, and of the top plate too while it has none of its own; null for the board outline plus the margin.</summary>
-    public PlateOutlineEntry? BottomPlateOutline { get; set; }
+    /// <summary>Outline every plate has unless it has one of its own; null for the board outline plus the margin.</summary>
+    public PlateOutlineEntry? PlateOutline { get; set; }
 
-    /// <summary>Outline of the top plate if it has one of its own; null when it has the bottom plate's.</summary>
-    public PlateOutlineEntry? TopPlateOutline { get; set; }
+    /// <summary>The plates with an outline of their own.</summary>
+    public Dictionary<FixturePlate, PlateOutlineEntry>? OwnPlateOutlines { get; set; }
 
     public const double DefaultPlateMargin = 10;
     public const double DefaultPlateThickness = 8;
@@ -146,8 +146,11 @@ public sealed class ProbeEntry
 
     public string Note { get; set; } = string.Empty;
 
-    /// <summary>ID of the probe type; files of version 1 have none and get the default type.</summary>
+    /// <summary>ID of the probe type; a probe without one, or with an unknown one, gets the default type.</summary>
     public string? ProbeType { get; set; }
+
+    /// <summary>Bottom probes: Ø of its opening in the moving plate if not the type's, in mm.</summary>
+    public double? Opening { get; set; }
 
     /// <summary>Net and position (mm, board coordinates) when saved, to notice changes of the board.</summary>
     public string Net { get; set; } = string.Empty;
@@ -167,7 +170,7 @@ public sealed class FixtureFileException(FixtureFileError error) : Exception(err
     public FixtureFileError Error { get; } = error;
 }
 
-/// <summary>Where the outline of the probe plates comes from.</summary>
+/// <summary>Where the outline of a plate comes from.</summary>
 public enum PlateOutlineMode
 {
     /// <summary>The board outline plus the plate margin.</summary>
@@ -187,12 +190,15 @@ public enum PlateOutlineMode
 }
 
 /// <summary>
-/// Outline of the probe plates, shared by the top and the bottom plate. A fixed size or an imported outline is
+/// Outline of a plate, or the one the plates share. A fixed size or an imported outline is
 /// centered on the board and moved by the offset; an outline on a board layer is used where it is drawn.
 /// </summary>
 public sealed class PlateOutlineEntry
 {
     public PlateOutlineMode Mode { get; set; }
+
+    /// <summary>Distance of the automatic outline from the board outline, in mm.</summary>
+    public double Margin { get; set; } = FixtureFile.DefaultPlateMargin;
 
     /// <summary>Size of a fixed-size outline, in mm.</summary>
     public double Width { get; set; }

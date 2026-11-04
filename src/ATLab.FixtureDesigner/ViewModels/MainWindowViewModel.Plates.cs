@@ -32,6 +32,13 @@ public partial class MainWindowViewModel
             ProbeTypes.Add(type.Copy());
         DefaultProbeType = ProbeTypes.FirstOrDefault();
 
+        foreach (var row in PlateRows)
+            row.PropertyChanged += OnPlateRowChanged;
+
+        // New probes and parts learn which way the board lies
+        Probes.CollectionChanged += (_, _) => ApplyBoardOrientation();
+        Parts.CollectionChanged += (_, _) => ApplyBoardOrientation();
+
         BuildLayerOptions();
         BuildSheetLayers.Changed += MarkDirty;
         BuildSheetLayers.DefaultSaved += OnBuildSheetLayersDefaultSaved;
@@ -70,6 +77,12 @@ public partial class MainWindowViewModel
     private void OnProbeTypeChanged(object? sender, PropertyChangedEventArgs e)
     {
         MarkDirty();
+        if (e.PropertyName is nameof(ProbeType.OpeningDiameter) or nameof(ProbeType.DrillDiameter))
+        {
+            foreach (var probe in Probes.Where(p => p.Type == sender))
+                probe.RefreshOpening();
+        }
+
         if (e.PropertyName != nameof(ProbeType.Note))
             RunChecks();
     }
@@ -176,6 +189,7 @@ public partial class MainWindowViewModel
             existing.MinPadSize = libraryType.MinPadSize;
             existing.Diameter = libraryType.Diameter;
             existing.DrillDiameter = libraryType.DrillDiameter;
+            existing.OpeningDiameter = libraryType.OpeningDiameter;
             existing.Height = libraryType.Height;
             existing.MinSpacing = libraryType.MinSpacing;
             existing.ComponentClearance = libraryType.ComponentClearance;
@@ -195,22 +209,50 @@ public partial class MainWindowViewModel
 
     // ----- Plates -----
 
-    /// <summary>Distance of the plate outline from the board outline, mm.</summary>
-    [ObservableProperty] private double _plateMargin = FixtureFile.DefaultPlateMargin;
+    /// <summary>The plates of a fixture from the bottom up; the top probe plate only counts with top probes.</summary>
+    public IReadOnlyList<PlateRow> PlateRows { get; } = Enum.GetValues<FixturePlate>().Select(p => new PlateRow(p)).ToList();
 
-    /// <summary>Thickness of the plates in the STEP files, mm.</summary>
-    [ObservableProperty] private double _plateThickness = FixtureFile.DefaultPlateThickness;
+    private PlateRow RowOf(FixturePlate plate) => PlateRows.First(r => r.Plate == plate);
 
-    partial void OnPlateMarginChanged(double value)
+    /// <summary>
+    /// The board lies upside down in the fixture: its top side faces the bottom probe plate and the moving plate, its
+    /// bottom side the top probe plate and the pressure plate.
+    /// </summary>
+    [ObservableProperty] private bool _isBoardFlipped;
+
+    partial void OnIsBoardFlippedChanged(bool value)
     {
+        ApplyBoardOrientation();
         MarkDirty();
-        UpdatePlateSummary();
+        RunChecks();
     }
 
-    partial void OnPlateThicknessChanged(double value) => MarkDirty();
+    private void ApplyBoardOrientation()
+    {
+        foreach (var probe in Probes)
+            probe.IsBoardFlipped = IsBoardFlipped;
+        foreach (var part in Parts)
+            part.IsBoardFlipped = IsBoardFlipped;
+    }
 
-    /// <summary>Which plates the plate files contain, with their holes and problems.</summary>
-    [ObservableProperty] private string _plateSummary = string.Empty;
+    private void OnPlateRowChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not PlateRow row)
+            return;
+
+        switch (e.PropertyName)
+        {
+            case nameof(PlateRow.HasOwnOutline):
+                OnOwnOutlineChanged(row);
+                break;
+            case nameof(PlateRow.Thickness) when !_isApplyingOutline:
+                MarkDirty();
+                break;
+            case nameof(PlateRow.IsExported) or nameof(PlateRow.IsPresent):
+                ExportPlatesCommand.NotifyCanExecuteChanged();
+                break;
+        }
+    }
 
     [ObservableProperty] private IReadOnlyList<string> _plateProblems = [];
 
@@ -232,23 +274,6 @@ public partial class MainWindowViewModel
     [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
     private bool _isExportSvg;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _isExportTopPlate = true;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _isExportBottomPlate = true;
-
-    /// <summary>Which plates the fixture has; only those can be chosen for the export.</summary>
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _hasTopPlate;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _hasBottomPlate;
-
     partial void OnIsExportDxfChanged(bool value) => SaveExportChoice();
     partial void OnIsExportStepChanged(bool value) => SaveExportChoice();
     partial void OnIsExportSvgChanged(bool value) => SaveExportChoice();
@@ -265,41 +290,61 @@ public partial class MainWindowViewModel
         _settings.Save();
     }
 
-    private bool IsSideExported(BoardSide side) => side == BoardSide.Top ? IsExportTopPlate : IsExportBottomPlate;
-
     private bool CanExportPlates() =>
         Board is not null &&
         (IsExportDxf || IsExportStep || IsExportSvg) &&
-        ((HasTopPlate && IsExportTopPlate) || (HasBottomPlate && IsExportBottomPlate));
+        PlateRows.Any(r => r.IsPresent && r.IsExported);
+
+    private List<Plate> BuildPlates() => Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped);
 
     private void UpdatePlateSummary()
     {
         if (Board is null)
         {
-            PlateSummary = string.Empty;
             PlateProblems = [];
-            HasTopPlate = false;
-            HasBottomPlate = false;
+            foreach (var row in PlateRows)
+            {
+                row.IsPresent = false;
+                row.Summary = string.Empty;
+            }
+
             return;
         }
 
-        var plates = Plate.Build(Board, Probes, CurrentOutline, Parts);
+        var plates = BuildPlates();
         UpdateOutlineState();
-        HasTopPlate = plates.Any(p => p.Side == BoardSide.Top);
-        HasBottomPlate = plates.Any(p => p.Side == BoardSide.Bottom);
-        PlateSummary = plates.Count == 0
-            ? Localizer.Get("Text_NoPlates")
-            : string.Join("\n", plates.Select(p => Localizer.Format("Text_PlateSummary", PlateName(p.Side),
-                p.Width.ToString("0.0", System.Globalization.CultureInfo.CurrentCulture),
-                p.Height.ToString("0.0", System.Globalization.CultureInfo.CurrentCulture),
-                p.Holes.Count(h => h.Kind == PlateHoleKind.Probe), p.Holes.Count(h => h.Kind == PlateHoleKind.LocatingPin),
-                p.Holes.Count(h => h.Kind == PlateHoleKind.Frame),
-                p.Holes.Count(h => h.Kind is PlateHoleKind.PreCenteringPin or PlateHoleKind.SupportPin or PlateHoleKind.PushRod),
-                p.Cutouts.Count)));
-        PlateProblems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateName(p.Side)}: {problem}")).ToList();
+        var culture = System.Globalization.CultureInfo.CurrentCulture;
+        foreach (var row in PlateRows)
+        {
+            var plate = plates.FirstOrDefault(p => p.Kind == row.Plate);
+            row.IsPresent = plate is not null;
+            row.Summary = plate is null ? Localizer.Get("Text_PlateNotNeeded") : PlateSummaryOf(plate, culture);
+        }
+
+        PlateProblems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem}")).ToList();
     }
 
-    private static string PlateName(BoardSide side) => Localizer.Get(side == BoardSide.Top ? "Plate_Top" : "Plate_Bottom");
+    /// <summary>Size of the plate and what it has, e.g. "169.0 × 119.6 mm, 12 probe holes, 2 frame holes".</summary>
+    private static string PlateSummaryOf(Plate plate, System.Globalization.CultureInfo culture)
+    {
+        var parts = new List<string> { Localizer.Format("Text_PlateSize", plate.Width.ToString("0.0", culture), plate.Height.ToString("0.0", culture)) };
+        foreach (var (count, key) in new[]
+                 {
+                     (plate.Holes.Count(h => h.Kind == PlateHoleKind.Probe), "Text_PlateProbeHoles"),
+                     (plate.Holes.Count(h => h.Kind is PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening), "Text_PlateOpenings"),
+                     (plate.MergedOpenings.Count, "Text_PlateMergedOpenings"),
+                     (plate.Holes.Count(h => h.Kind is PlateHoleKind.LocatingPin or PlateHoleKind.PreCenteringPin or PlateHoleKind.SupportPin
+                         or PlateHoleKind.PushRod), "Text_PlatePartHoles"),
+                     (plate.Holes.Count(h => h.Kind == PlateHoleKind.Frame), "Text_PlateFrameHoles"),
+                     (plate.Cutouts.Count, "Text_PlateCutouts")
+                 })
+        {
+            if (count > 0)
+                parts.Add(Localizer.Format(key, count));
+        }
+
+        return string.Join(", ", parts);
+    }
 
     /// <summary>
     /// Writes the chosen manufacturing files of the chosen plates into a folder: drawing (DXF and SVG)
@@ -312,14 +357,14 @@ public partial class MainWindowViewModel
         if (Dialogs is null || Board is null)
             return;
 
-        var plates = Plate.Build(Board, Probes, CurrentOutline, Parts).Where(p => IsSideExported(p.Side)).ToList();
+        var plates = BuildPlates().Where(p => RowOf(p.Kind).IsExported).ToList();
         if (plates.Count == 0)
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"), Localizer.Get("Text_NoPlates"));
             return;
         }
 
-        var problems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateName(p.Side)}: {problem}")).ToList();
+        var problems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem}")).ToList();
         if (problems.Count > 0)
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"),
@@ -333,7 +378,7 @@ public partial class MainWindowViewModel
         var baseName = SafeFileName(FixturePath is not null ? Path.GetFileNameWithoutExtension(FixturePath) : Name.Length > 0 ? Name : "Fixture");
         var files = plates.SelectMany(p =>
         {
-            var name = $"{baseName} - {Localizer.Get(p.Side == BoardSide.Top ? "File_TopPlate" : "File_BottomPlate")}";
+            var name = $"{baseName} - {Localizer.Get("File_" + p.Kind)}";
             var extensions = new List<string>();
             if (IsExportDxf) extensions.Add(".dxf");
             if (IsExportStep) extensions.Add(".step");
@@ -353,8 +398,7 @@ public partial class MainWindowViewModel
 
         try
         {
-            var title = Name.Length > 0 ? Name : baseName;
-            var thickness = PlateThickness > 0 ? PlateThickness : FixtureFile.DefaultPlateThickness;
+            var thickness = PlateRows.ToDictionary(r => r.Plate, r => r.Thickness > 0 ? r.Thickness : FixtureFile.DefaultPlateThickness);
             await Task.Run(() =>
             {
                 foreach (var (plate, name, path) in files)
@@ -364,7 +408,7 @@ public partial class MainWindowViewModel
                     else if (path.EndsWith(".svg", StringComparison.Ordinal))
                         SvgWriter.Save(plate, path);
                     else
-                        StepWriter.Save(plate, thickness, name, path);
+                        StepWriter.Save(plate, thickness[plate.Kind], name, path);
                 }
             });
             SetStatus(() => Localizer.Format("Status_PlatesSaved", files.Count, folder));
@@ -386,15 +430,15 @@ public partial class MainWindowViewModel
             ProbeTypes.Add(type.Copy());
         DefaultProbeType = ProbeTypes.FirstOrDefault();
         SelectedProbeType = null;
-        PlateMargin = FixtureFile.DefaultPlateMargin;
-        PlateThickness = FixtureFile.DefaultPlateThickness;
+        IsBoardFlipped = false;
+        LoadThicknesses(null);
         ResetOutline();
         ResetParts();
         _buildSheetLayerSettings = new();
         LoadBuildSheetLayers();
     }
 
-    /// <summary>Types, parts and plate settings of a file; a file of version 1 gets the types of the library.</summary>
+    /// <summary>Types, parts and plate settings of a file; a file without probe types gets the types of the library.</summary>
     private void LoadPlates(FixtureFile file, string fixturePath)
     {
         ProbeTypes.Clear();
@@ -406,21 +450,39 @@ public partial class MainWindowViewModel
         DefaultProbeType = ProbeTypes.FirstOrDefault(t => t.Id == file.DefaultProbeType) ?? ProbeTypes.FirstOrDefault();
         SelectedProbeType = null;
 
-        PlateMargin = file.PlateMargin;
-        PlateThickness = file.PlateThickness > 0 ? file.PlateThickness : FixtureFile.DefaultPlateThickness;
-        LoadOutline(file.BottomPlateOutline, file.TopPlateOutline, fixturePath);
+        IsBoardFlipped = file.IsBoardFlipped;
+        LoadThicknesses(file.PlateThicknesses);
+        LoadOutline(file.PlateOutline, file.OwnPlateOutlines, fixturePath);
         LoadParts(file);
         _buildSheetLayerSettings = file.BuildSheetLayers?.Copy() ?? new();
         LoadBuildSheetLayers();
+    }
+
+    /// <summary>The thickness of every plate, the default for a plate the file does not list; every plate is exported again.</summary>
+    private void LoadThicknesses(IReadOnlyDictionary<FixturePlate, double>? thicknesses)
+    {
+        _isApplyingOutline = true;
+        try
+        {
+            foreach (var row in PlateRows)
+            {
+                row.Thickness = thicknesses?.TryGetValue(row.Plate, out var t) == true && t > 0 ? t : FixtureFile.DefaultPlateThickness;
+                row.IsExported = true;
+            }
+        }
+        finally
+        {
+            _isApplyingOutline = false;
+        }
     }
 
     private void SavePlates(FixtureFile file, string fixturePath)
     {
         file.ProbeTypes = ProbeTypes.ToList();
         file.DefaultProbeType = DefaultProbeType?.Id;
-        file.PlateMargin = PlateMargin;
-        file.PlateThickness = PlateThickness;
-        (file.BottomPlateOutline, file.TopPlateOutline) = SaveOutline(fixturePath);
+        file.IsBoardFlipped = IsBoardFlipped;
+        file.PlateThicknesses = PlateRows.ToDictionary(r => r.Plate, r => r.Thickness);
+        (file.PlateOutline, file.OwnPlateOutlines) = SaveOutline(fixturePath);
         file.BuildSheetLayers = BuildSheetLayers.Settings.Copy();
         SaveParts(file);
     }

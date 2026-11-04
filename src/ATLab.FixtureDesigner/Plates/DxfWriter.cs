@@ -16,21 +16,25 @@ public static class DxfWriter
 {
     public const string PlateLayer = "PLATE_OUTLINE";
     public const string ProbeLayer = "PROBE_HOLES";
+    public const string ProbeOpeningLayer = "PROBE_OPENINGS";
     public const string LocatingPinLayer = "LOCATING_PIN_HOLES";
     public const string FrameLayer = "FRAME_HOLES";
     public const string PreCenteringPinLayer = "PRE_CENTERING_PINS";
     public const string SupportPinLayer = "SUPPORT_PINS";
     public const string PushRodLayer = "PUSH_RODS";
+    public const string PushRodOpeningLayer = "PUSH_ROD_OPENINGS";
     public const string CutoutLayer = "CUTOUTS";
 
     /// <summary>The layer of a kind of hole, the same in the DXF and the SVG.</summary>
     public static string LayerOf(PlateHoleKind kind) => kind switch
     {
         PlateHoleKind.Probe => ProbeLayer,
+        PlateHoleKind.ProbeOpening => ProbeOpeningLayer,
         PlateHoleKind.LocatingPin => LocatingPinLayer,
         PlateHoleKind.Frame => FrameLayer,
         PlateHoleKind.PreCenteringPin => PreCenteringPinLayer,
         PlateHoleKind.SupportPin => SupportPinLayer,
+        PlateHoleKind.PushRodOpening => PushRodOpeningLayer,
         _ => PushRodLayer
     };
 
@@ -38,7 +42,7 @@ public static class DxfWriter
     private static readonly (string Name, int Color)[] Layers =
     [
         (PlateLayer, 7), (ProbeLayer, 1), (LocatingPinLayer, 3), (FrameLayer, 4), (PreCenteringPinLayer, 5), (SupportPinLayer, 6),
-        (PushRodLayer, 30), (CutoutLayer, 2)
+        (PushRodLayer, 30), (CutoutLayer, 2), (ProbeOpeningLayer, 11), (PushRodOpeningLayer, 40)
     ];
 
     public static string Write(Plate plate)
@@ -122,6 +126,10 @@ public static class DxfWriter
         Contour(plate.Contour, PlateLayer);
         foreach (var cutout in plate.Cutouts)
             Contour(cutout, CutoutLayer);
+
+        // Merged openings on the layer of the openings, milled along their outline
+        foreach (var opening in plate.MergedOpenings)
+            Contour(opening.Contour, LayerOf(plate.OpeningKind));
 
         foreach (var hole in plate.Holes)
         {

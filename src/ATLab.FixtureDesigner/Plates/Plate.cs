@@ -10,36 +10,53 @@ namespace ATLab.FixtureDesigner.Plates;
 
 public enum PlateHoleKind
 {
+    /// <summary>A receptacle of a probe (probe plates).</summary>
     Probe,
+
+    /// <summary>An opening a bottom probe comes through (moving plate).</summary>
+    ProbeOpening,
+
     LocatingPin,
 
     /// <summary>A circle of the plate outline, e.g. a screw of the fixture frame.</summary>
     Frame,
 
-    /// <summary>A pre-centering pin beside the board (bottom plate).</summary>
+    /// <summary>A pre-centering pin beside the board (moving plate).</summary>
     PreCenteringPin,
 
-    /// <summary>A support pin under the board (bottom plate).</summary>
+    /// <summary>A support pin under the board (moving plate).</summary>
     SupportPin,
 
-    /// <summary>A push rod above the board (top plate).</summary>
-    PushRod
+    /// <summary>A push rod above the board (pressure plate).</summary>
+    PushRod,
+
+    /// <summary>An opening a push rod comes through (top probe plate).</summary>
+    PushRodOpening
 }
 
 /// <summary>Hole of a plate in plate coordinates (mm, Y up).</summary>
 public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double Y, double Diameter);
 
 /// <summary>
-/// A probe plate as the plate files describe it: seen from its side facing the board, where the receptacles are
-/// inserted. The bottom plate is seen from above and has the coordinates of the build sheet; the top plate is seen
-/// from below and is therefore mirrored left to right. The origin is the origin of the build sheet.
+/// A plate of the fixture as the plate files describe it: seen from its side facing the board. The plates below the
+/// board are seen from above and have the coordinates of the build sheet; the plates above it are seen from below and
+/// are therefore mirrored left to right. The origin is the origin of the build sheet.
 /// </summary>
 public sealed class Plate
 {
-    public required BoardSide Side { get; init; }
+    public required FixturePlate Kind { get; init; }
 
-    /// <summary>True for the top plate: X runs the other way than in the build sheet.</summary>
-    public bool IsMirrored => Side == BoardSide.Top;
+    /// <summary>The board lies upside down in the fixture.</summary>
+    public bool IsBoardFlipped { get; init; }
+
+    /// <summary>The side of the board the plate faces.</summary>
+    public BoardSide Side => Kind.Side(IsBoardFlipped);
+
+    /// <summary>
+    /// True when X runs the other way than in the build sheet: for the plates above the board, or, with the board
+    /// upside down, for the plates below it.
+    /// </summary>
+    public bool IsMirrored => !Kind.IsBelowBoard() != IsBoardFlipped;
 
     /// <summary>Outline of the plate, counterclockwise, in plate coordinates, its arcs as arcs: what the drawings cut.</summary>
     public required IReadOnlyList<OutlineVertex> Contour { get; init; }
@@ -68,6 +85,15 @@ public sealed class Plate
     /// <summary>The cut-outs in short segments, for the checks and the 3D model.</summary>
     public IEnumerable<IReadOnlyList<(double X, double Y)>> CutoutOutlines => Cutouts.Select(OutlineShape.Flatten);
 
+    /// <summary>Openings too close to each other, merged into one each; their circles are not in <see cref="Holes"/>.</summary>
+    public List<MergedOpening> MergedOpenings { get; } = [];
+
+    /// <summary>The kind of the plate's openings, for the layer of the merged ones.</summary>
+    public PlateHoleKind OpeningKind => Kind == FixturePlate.TopProbePlate ? PlateHoleKind.PushRodOpening : PlateHoleKind.ProbeOpening;
+
+    /// <summary>Everything cut out inside the outline that is not round: the cut-outs and the merged openings.</summary>
+    public IEnumerable<IReadOnlyList<OutlineVertex>> CutContours => Cutouts.Concat(MergedOpenings.Select(m => m.Contour));
+
     /// <summary>Board outline in plate coordinates, as a reference for placing the board.</summary>
     public List<IReadOnlyList<(double X, double Y)>> BoardOutline { get; } = [];
 
@@ -78,29 +104,33 @@ public sealed class Plate
     public const double MinimumWall = 0.2;
 
     /// <summary>
-    /// One plate for every side with probes; the bottom plate also when locating, pre-centering or support pins are
-    /// planned, since the board rests on it, and the top plate when push rods are. Probes without pad or without drill
-    /// diameter are left out. The outline of each plate is in build sheet coordinates, as seen from the top.
+    /// The plates the fixture has: the bottom probe plate, the moving plate and the pressure plate always, the top probe
+    /// plate when there are probes from above.
     /// </summary>
-    public static List<Plate> Build(Board board, IReadOnlyList<Probe> probes, Func<BoardSide, OutlineShape> outlineOf,
-        IReadOnlyList<FixturePart>? parts = null)
+    public static IReadOnlyList<FixturePlate> PlatesOf(IReadOnlyList<Probe> probes, bool isBoardFlipped) =>
+        probes.Any(p => p.Side != FixturePlates.DownSide(isBoardFlipped))
+            ? [FixturePlate.BottomProbePlate, FixturePlate.MovingPlate, FixturePlate.TopProbePlate, FixturePlate.PressurePlate]
+            : [FixturePlate.BottomProbePlate, FixturePlate.MovingPlate, FixturePlate.PressurePlate];
+
+    /// <summary>
+    /// Every plate of the fixture with its holes. Probes without pad or without drill diameter are left out. The outline
+    /// of each plate is in build sheet coordinates, as seen from the top.
+    /// </summary>
+    public static List<Plate> Build(Board board, IReadOnlyList<Probe> probes, Func<FixturePlate, OutlineShape> outlineOf,
+        IReadOnlyList<FixturePart>? parts = null, bool isBoardFlipped = false)
     {
         parts ??= [];
-        var sides = probes.Where(p => p.Pad is not null).Select(p => p.Side).Distinct().ToList();
-        if (parts.Any(p => p.PlateSide == BoardSide.Bottom) && !sides.Contains(BoardSide.Bottom))
-            sides.Add(BoardSide.Bottom);
-        if (parts.Any(p => p.PlateSide == BoardSide.Top) && !sides.Contains(BoardSide.Top))
-            sides.Add(BoardSide.Top);
-
-        return sides.Order().Select(side => Build(board, probes, outlineOf(side), parts, side)).ToList();
+        return PlatesOf(probes, isBoardFlipped).Select(kind => Build(board, probes, outlineOf(kind), parts, kind, isBoardFlipped)).ToList();
     }
 
     private static Plate Build(Board board, IReadOnlyList<Probe> probes, OutlineShape outline,
-        IReadOnlyList<FixturePart> parts, BoardSide side)
+        IReadOnlyList<FixturePart> parts, FixturePlate kind, bool isBoardFlipped)
     {
-        // The top plate is mirrored about the middle of the board, as it is seen from below
+        // The plates above the board are mirrored about the middle of the board, as they are seen from below; with the
+        // board upside down (turned over left to right) the plates below it instead
         var centerX = PlateOutlines.BoardCenter(board).X;
-        var mirror = side == BoardSide.Top;
+        var side = kind.Side(isBoardFlipped);
+        var mirror = !kind.IsBelowBoard() != isBoardFlipped;
         (double X, double Y) Flip((double X, double Y) p) => (mirror ? 2 * centerX - p.X : p.X, p.Y);
         (double X, double Y) Map(Point2 boardPoint)
         {
@@ -110,37 +140,74 @@ public sealed class Plate
 
         // Mirroring turns the outline around and its arcs the other way; it stays counterclockwise
         var contour = mirror ? OutlineShape.MirrorX(outline.Vertices, centerX) : outline.Vertices.ToList();
-        var plate = new Plate { Side = side, Contour = contour, Outline = OutlineShape.Flatten(contour) };
+        var plate = new Plate { Kind = kind, IsBoardFlipped = isBoardFlipped, Contour = contour, Outline = OutlineShape.Flatten(contour) };
 
         foreach (var polyline in board.Outline)
             plate.BoardOutline.Add(polyline.Select(Map).ToList());
 
-        foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null).OrderBy(p => p.Number))
+        switch (kind)
         {
-            var drill = probe.Type?.DrillDiameter ?? 0;
-            if (drill <= 0)
-            {
-                plate.Problems.Add(Localizer.Format("Plate_NoDrill", probe.Name));
-                continue;
-            }
+            // The receptacles of the probes of the plate's side
+            case FixturePlate.BottomProbePlate or FixturePlate.TopProbePlate:
+                foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null).OrderBy(p => p.Number))
+                {
+                    var drill = probe.Type?.DrillDiameter ?? 0;
+                    if (drill <= 0)
+                    {
+                        plate.Problems.Add(Localizer.Format("Plate_NoDrill", probe.Name));
+                        continue;
+                    }
 
-            var (x, y) = Map(probe.Pad!.Position);
-            plate.Holes.Add(new PlateHole(PlateHoleKind.Probe, probe.Name, x, y, drill));
+                    var (x, y) = Map(probe.Pad!.Position);
+                    plate.Holes.Add(new PlateHole(PlateHoleKind.Probe, probe.Name, x, y, drill));
+                }
+
+                break;
+
+            // The probes from below come through the moving plate; a probe without any diameter is reported by its probe plate
+            case FixturePlate.MovingPlate:
+                foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null && p.Opening > 0).OrderBy(p => p.Number))
+                {
+                    var (x, y) = Map(probe.Pad!.Position);
+                    plate.Holes.Add(new PlateHole(PlateHoleKind.ProbeOpening, probe.Name, x, y, probe.Opening));
+                }
+
+                break;
         }
 
-        // Locating, pre-centering and support pins in the bottom plate, push rods in the top plate; a part without drill
-        // gets no hole
-        foreach (var part in parts.Where(p => p.PlateSide == side && p.Type is { DrillDiameter: > 0 }).OrderBy(p => p.Kind).ThenBy(p => p.Number))
+        // Locating, pre-centering and support pins in the moving plate, push rods in the pressure plate; a part without
+        // drill gets no hole
+        foreach (var part in parts.Where(p => p.Plate == kind && p.Type is { DrillDiameter: > 0 }).OrderBy(p => p.Kind).ThenBy(p => p.Number))
         {
             var (x, y) = Map(new Point2(part.BoardX, part.BoardY));
-            var kind = part.Kind switch
+            var holeKind = part.Kind switch
             {
                 FixturePartKind.LocatingPin => PlateHoleKind.LocatingPin,
                 FixturePartKind.PreCenteringPin => PlateHoleKind.PreCenteringPin,
                 FixturePartKind.SupportPin => PlateHoleKind.SupportPin,
                 _ => PlateHoleKind.PushRod
             };
-            plate.Holes.Add(new PlateHole(kind, part.Name, x, y, part.Type!.DrillDiameter));
+            plate.Holes.Add(new PlateHole(holeKind, part.Name, x, y, part.Type!.DrillDiameter));
+        }
+
+        // The push rods come through the top probe plate
+        if (kind == FixturePlate.TopProbePlate)
+        {
+            foreach (var rod in parts.Where(p => p.Kind == FixturePartKind.PushRod && p.Opening > 0).OrderBy(p => p.Number))
+            {
+                var (x, y) = Map(new Point2(rod.BoardX, rod.BoardY));
+                plate.Holes.Add(new PlateHole(PlateHoleKind.PushRodOpening, rod.Name, x, y, rod.Opening));
+            }
+        }
+
+        // Openings too close to each other become one opening each
+        var openings = plate.Holes.Where(h => h.Kind is PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening).ToList();
+        if (openings.Count > 1)
+        {
+            var (_, merged) = OpeningMerge.Merge(openings.Select(h => new OpeningCircle(h.Name, h.X, h.Y, h.Diameter)).ToList(), MinimumWall);
+            var names = merged.SelectMany(m => m.Names).ToHashSet();
+            plate.Holes.RemoveAll(h => h.Kind is PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening && names.Contains(h.Name));
+            plate.MergedOpenings.AddRange(merged);
         }
 
         // Cut-outs mirror with the plate and stay counterclockwise
@@ -168,8 +235,10 @@ public sealed class Plate
                 OutlineShape.DistanceToEdge(Outline, a.X, a.Y) < a.Diameter / 2 + MinimumWall)
                 Problems.Add(Localizer.Format("Plate_Edge", a.Name));
 
-            // A hole in a cut-out or too close to its edge has no wall around it
-            if (cutouts.Any(c => OutlineShape.Contains(c, a.X, a.Y) ||
+            // A hole in a cut-out or too close to its edge has no wall around it; an opening may lie in a cut-out, which
+            // is then a larger opening for several probes
+            if (a.Kind is not (PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening) &&
+                cutouts.Any(c => OutlineShape.Contains(c, a.X, a.Y) ||
                                  OutlineShape.DistanceToEdge(c, a.X, a.Y) < a.Diameter / 2 + MinimumWall))
                 Problems.Add(Localizer.Format("Plate_Cutout", a.Name));
 
@@ -181,11 +250,28 @@ public sealed class Plate
                     Problems.Add(Localizer.Format("Plate_Overlap", a.Name, b.Name));
             }
         }
+
+        // A merged opening needs its wall to the edge and to every hole (pins, frame) like a round one
+        var mergedOutlines = MergedOpenings.Select(m => (m.Name, Outline: OutlineShape.Flatten(m.Contour))).ToList();
+        for (var i = 0; i < mergedOutlines.Count; i++)
+        {
+            var (name, outline) = mergedOutlines[i];
+            if (outline.Any(p => !OutlineShape.Contains(Outline, p.X, p.Y) || OutlineShape.DistanceToEdge(Outline, p.X, p.Y) < MinimumWall))
+                Problems.Add(Localizer.Format("Plate_Edge", name));
+
+            foreach (var hole in Holes.Where(h => OutlineShape.Contains(outline, h.X, h.Y) ||
+                                                  OutlineShape.DistanceToEdge(outline, h.X, h.Y) < h.Diameter / 2 + MinimumWall))
+                Problems.Add(Localizer.Format("Plate_Overlap", name, hole.Name));
+
+            foreach (var (other, otherOutline) in mergedOutlines.Skip(i + 1))
+                if (otherOutline.Any(p => OutlineShape.Contains(outline, p.X, p.Y) || OutlineShape.DistanceToEdge(outline, p.X, p.Y) < MinimumWall))
+                    Problems.Add(Localizer.Format("Plate_Overlap", name, other));
+        }
     }
 }
 
 /// <summary>
-/// The outline of the probe plates in build sheet coordinates (seen from the top): the board outline plus the margin,
+/// The outline of a plate in build sheet coordinates (seen from the top): the board outline plus the margin,
 /// a rectangle of a fixed size or an imported outline centered on the board and moved by the offset, or an outline
 /// drawn on a layer of the board.
 /// </summary>

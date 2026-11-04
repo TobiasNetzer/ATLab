@@ -128,8 +128,18 @@
                                     <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
                                     <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
                                     <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
-                                    <CheckBox Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsExportTopPlate}" IsEnabled="{Binding HasTopPlate}"/>
-                                    <CheckBox Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsExportBottomPlate}" IsEnabled="{Binding HasBottomPlate}"/>
+                                    <ItemsControl ItemsSource="{Binding PlateRows}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Spacing="4"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="vm:PlateRow">
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsExported}" IsEnabled="{Binding IsPresent}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                                 <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportFiles}"
                                         Command="{Binding ExportPlatesCommand}"/>
@@ -458,9 +468,9 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_Access}" Binding="{Binding Access}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Probes}" Binding="{Binding Probes}" Width="70" MinWidth="70"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Probes}" Binding="{Binding Probes}" Width="95" MinWidth="95"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Type}" Binding="{Binding Kind}" Width="55" MinWidth="55"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Size}" Binding="{Binding Size}" Width="85" MinWidth="85"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Size}" Binding="{Binding Size}" Width="95" MinWidth="95"/>
                                 <DataGridTemplateColumn Header="{loc:Localize Column_Footprint}" Width="*" MinWidth="160" SortMemberPath="Footprint">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="vm:PadRow">
@@ -579,8 +589,18 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="70" MinWidth="70" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="70" MinWidth="70" IsReadOnly="True"/>
+                                <!-- Own opening in the moving plate; empty shows the type's -->
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Opening}" Width="135" MinWidth="135">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <TextBox Text="{Binding OpeningText, UpdateSourceTrigger=LostFocus}" PlaceholderText="{Binding TypeOpeningText}"
+                                                     IsVisible="{Binding HasOpening}" Margin="4,2" FontSize="12" MinHeight="26" Padding="6,2"
+                                                     ToolTip.Tip="{loc:Localize ToolTip_ProbeOpening}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="80" MinWidth="80" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="80" MinWidth="80" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="140"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -638,12 +658,13 @@
                                   BorderBrush="{DynamicResource OutlineColor}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize}" Width="110" MinWidth="110"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_ProbeDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="85" MinWidth="85"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="120" MinWidth="120"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter}" Width="135" MinWidth="135"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="115" MinWidth="115"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -750,6 +771,16 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
+                                <!-- Push rods: own opening in the top probe plate; empty shows the type's -->
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Opening}" Width="135" MinWidth="135">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:FixturePart">
+                                            <TextBox Text="{Binding OpeningText, UpdateSourceTrigger=LostFocus}" PlaceholderText="{Binding TypeOpeningText}"
+                                                     IsVisible="{Binding HasOpening}" Margin="4,2" FontSize="12" MinHeight="26" Padding="6,2"
+                                                     ToolTip.Tip="{loc:Localize ToolTip_PushRodOpening}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -812,9 +843,23 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="85" MinWidth="85"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="120" MinWidth="120"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter}" Width="135" MinWidth="135"/>
+                                <!-- Only pre-centering pins keep a gap to the board edge -->
+                                <DataGridTemplateColumn Header="{loc:Localize Column_EdgeGap}" Width="140" MinWidth="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="pcbfix:PartType">
+                                            <TextBlock Text="{Binding EdgeGap}" IsVisible="{Binding IsPreCenteringPin}" VerticalAlignment="Center" Margin="12,0"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate DataType="pcbfix:PartType">
+                                            <TextBox Text="{Binding EdgeGap}" IsVisible="{Binding IsPreCenteringPin}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="115" MinWidth="115"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -855,17 +900,63 @@
                 <TabItem Header="{loc:Localize Tab_Plates}" AutomationProperties.Name="{loc:Localize Tab_Plates}">
                     <ScrollViewer Margin="0,8,0,0">
                         <StackPanel Spacing="12" Margin="2,0,8,0">
-                            <!-- Outline of the probe plates, shared by both or one each: automatic, fixed size, DXF/SVG file
+                            <!-- The plates of the fixture from the bottom up: own outline or the shared one, thickness, contents -->
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{loc:Localize Header_Plates}" Classes="h4"/>
+                                <TextBlock Text="{loc:Localize Text_PlatesHint}" Classes="Label" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                <CheckBox Content="{loc:Localize Label_BoardFlipped}" IsChecked="{Binding IsBoardFlipped}"
+                                          ToolTip.Tip="{loc:Localize ToolTip_BoardFlipped}" Margin="0,0,0,6"/>
+                                <Grid ColumnDefinitions="180,130,110,*" ColumnSpacing="8">
+                                    <TextBlock Text="{loc:Localize Column_Plate}" Classes="FormLabel"/>
+                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Outline}" Classes="FormLabel"/>
+                                    <TextBlock Grid.Column="2" Text="{loc:Localize Column_Thickness}" Classes="FormLabel"/>
+                                    <TextBlock Grid.Column="3" Text="{loc:Localize Column_Contents}" Classes="FormLabel"/>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding PlateRows}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:PlateRow">
+                                            <Grid ColumnDefinitions="180,130,110,*" ColumnSpacing="8" Margin="0,3" Classes.Absent="{Binding !IsPresent}">
+                                                <Grid.Styles>
+                                                    <Style Selector="Grid.Absent">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                    </Style>
+                                                </Grid.Styles>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                <CheckBox Grid.Column="1" Content="{loc:Localize Label_OwnOutline}" IsChecked="{Binding HasOwnOutline}"
+                                                          ToolTip.Tip="{loc:Localize ToolTip_OwnOutline}"/>
+                                                <TextBox Grid.Column="2" Classes="Number" Text="{Binding Thickness}" ToolTip.Tip="{loc:Localize ToolTip_PlateThickness}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Summary}" Classes="Label" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding PlateProblems}" IsVisible="{Binding HasPlateProblems}" Margin="0,4,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2">
+                                                <LucideIcon Kind="CircleAlert" Size="14" Foreground="{StaticResource FailBrush}"/>
+                                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <!-- The outline being edited: the shared one or a plate's own. Automatic, fixed size, DXF/SVG file
                                  or a layer of the board; a fixed size or a file is centered on the board and moved by the offset -->
                             <StackPanel Spacing="8">
-                                <CheckBox Content="{loc:Localize Label_SeparateOutlines}" IsChecked="{Binding IsSeparateOutlines}"
-                                          ToolTip.Tip="{loc:Localize ToolTip_SeparateOutlines}"/>
-                                <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsSeparateOutlines}">
+                                <TextBlock Text="{loc:Localize Header_Outline}" Classes="h4"/>
+                                <Grid ColumnDefinitions="170,*" IsVisible="{Binding HasOwnOutlines}">
                                     <TextBlock Text="{loc:Localize Label_EditedOutline}" Classes="FormLabel"/>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
-                                        <RadioButton GroupName="EditedOutline" Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsEditingBottomOutline}"/>
-                                        <RadioButton GroupName="EditedOutline" Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsEditingTopOutline}"/>
-                                    </StackPanel>
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding OutlineTargets}"
+                                              SelectedItem="{Binding SelectedOutlineTarget}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="vm:OutlineTarget">
+                                                <TextBlock Text="{Binding Label}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
                                 <Grid ColumnDefinitions="170,*">
                                     <TextBlock Text="{loc:Localize Label_PlateOutline}" Classes="FormLabel"/>
@@ -922,11 +1013,6 @@
                                     <TextBox Grid.Row="1" Grid.Column="1" Classes="Number" Text="{Binding OutlineOffsetY}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
                                 </Grid>
 
-                                <Grid ColumnDefinitions="170,*">
-                                    <TextBlock Text="{loc:Localize Label_PlateThickness}" Classes="FormLabel"/>
-                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding PlateThickness}" ToolTip.Tip="{loc:Localize ToolTip_PlateThickness}"/>
-                                </Grid>
-
                                 <TextBlock Text="{Binding OutlineStatus}" TextWrapping="Wrap" Classes="Label"
                                            IsVisible="{Binding !IsOutlineAutomatic}"
                                            Classes.Missing="{Binding IsOutlineMissing}">
@@ -936,21 +1022,6 @@
                                         </Style>
                                     </TextBlock.Styles>
                                 </TextBlock>
-                            </StackPanel>
-
-                            <StackPanel Spacing="4">
-                                <TextBlock Text="{loc:Localize Header_Plates}" Classes="h4"/>
-                                <TextBlock Text="{Binding PlateSummary}" TextWrapping="Wrap"/>
-                                <ItemsControl ItemsSource="{Binding PlateProblems}" IsVisible="{Binding HasPlateProblems}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2">
-                                                <LucideIcon Kind="CircleAlert" Size="14" Foreground="{StaticResource FailBrush}"/>
-                                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
                             </StackPanel>
 
                             <!-- Export: which files of which plates -->
@@ -963,8 +1034,18 @@
                                     <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
                                     <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
                                     <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
-                                    <CheckBox Content="{loc:Localize Plate_Top}" IsChecked="{Binding IsExportTopPlate}" IsEnabled="{Binding HasTopPlate}"/>
-                                    <CheckBox Content="{loc:Localize Plate_Bottom}" IsChecked="{Binding IsExportBottomPlate}" IsEnabled="{Binding HasBottomPlate}"/>
+                                    <ItemsControl ItemsSource="{Binding PlateRows}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Spacing="4"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="vm:PlateRow">
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsExported}" IsEnabled="{Binding IsPresent}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                                 <Button Classes="Tool" HorizontalAlignment="Left" Margin="0,4,0,0" Content="{loc:Localize Button_ExportFiles}"
                                         Command="{Binding ExportPlatesCommand}"/>

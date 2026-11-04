@@ -56,8 +56,8 @@ public static class StepWriter
             faces.Add(w.Add($"ADVANCED_FACE('',({Ref(w.Add($"FACE_OUTER_BOUND('',{Ref(wallLoop)},.T.)"))}),{Ref(cylinder)},.F.)"));
         }
 
-        // ----- Cut-outs: a counterclockwise loop each; the material is outside it -----
-        foreach (var cutout in plate.Cutouts.Where(c => OutlineShape.Flatten(c).Count >= 3).Select(OutlineShape.Joined))
+        // ----- Cut-outs and merged openings: a counterclockwise loop each; the material is outside it -----
+        foreach (var cutout in plate.CutContours.Where(c => OutlineShape.Flatten(c).Count >= 3).Select(OutlineShape.Joined))
         {
             var m = cutout.Count;
             var (cTopEdges, cBottomEdges) = Walls(w, cutout, z0, z1, outer: false, faces);

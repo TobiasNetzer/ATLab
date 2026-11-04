@@ -32,13 +32,22 @@ public sealed class BuildSheetData
     /// <summary>Board layers of the drawings as the user chose them; null for the defaults.</summary>
     public ReportLayerSettings? Layers { get; init; }
 
-    /// <summary>Outline of each plate with its frame holes and cut-outs in board coordinates, drawn dashed; null for none.</summary>
-    public IReadOnlyList<IReadOnlyList<Point2>>? TopPlateOutline { get; init; }
+    /// <summary>The plates of the fixture with their outline, frame holes and cut-outs in board coordinates, drawn dashed.</summary>
+    public IReadOnlyDictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>> PlateOutlines { get; init; } =
+        new Dictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>>();
 
-    public IReadOnlyList<IReadOnlyList<Point2>>? BottomPlateOutline { get; init; }
+    /// <summary>
+    /// The plates a drawing shows: for the assembly the plates of the side (the probe plate, then the moving or the
+    /// pressure plate), for the wiring the probe plate, where the wires go.
+    /// </summary>
+    /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
+    public bool IsBoardFlipped { get; init; }
 
-    public IReadOnlyList<IReadOnlyList<Point2>>? PlateOutlineOf(BoardSide side) =>
-        side == BoardSide.Top ? TopPlateOutline : BottomPlateOutline;
+    public IReadOnlyList<PlateOutlineDrawing> PlatesOf(BoardSide side, bool wiring) =>
+        PlateOutlines.Where(p => p.Key.Side(IsBoardFlipped) == side && (!wiring || p.Key == FixturePlates.ProbePlate(side, IsBoardFlipped)))
+            .OrderBy(p => p.Key)
+            .Select(p => new PlateOutlineDrawing(p.Key, p.Value))
+            .ToList();
 }
 
 /// <summary>
@@ -211,9 +220,9 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.Item().PaddingTop(6).Element(ComposeWiringTable);
             });
 
-            // Assembly: every plate with probes or parts, seen from the side where they touch the board, so it shows what
-            // they meet there: the top plate from the top, the bottom plate from below (mirrored); a board without either
-            // gets both plates
+            // Assembly: the plates of every side with probes or parts, seen from the side where they touch the board, so it
+            // shows what they meet there: the plates above from the top, the plates below from below (mirrored); a board
+            // without either gets both sides
             var sides = data.Probes.Select(p => p.Side).Concat(data.Parts.Select(p => p.PlateSide)).Distinct().Order().ToList();
             if (sides.Count == 0)
                 sides = [BoardSide.Top, BoardSide.Bottom];
@@ -221,24 +230,27 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             foreach (var side in sides)
                 ComposeDrawing(col, side, side, wiring: false);
 
-            // Wiring: every plate with probes, seen from its outside where the wires go, the bottom plate from below
+            // Wiring: the probe plate of every side with probes, seen from its outside where the wires go, the bottom one from below
             foreach (var side in data.Probes.Where(p => p.Pad is not null).Select(p => p.Side).Distinct().Order())
                 ComposeDrawing(col, side, side, wiring: true);
         });
     }
 
-    /// <summary>A page with the drawing of a plate: for the assembly with its parts, for the wiring with the probes only.</summary>
+    /// <summary>
+    /// A page with the drawing of a side: for the assembly with its parts, the outlines of the plates of that side and the
+    /// openings, for the wiring with the probes and the probe plate only.
+    /// </summary>
     private void ComposeDrawing(ColumnDescriptor col, BoardSide side, BoardSide view, bool wiring)
     {
         var parts = wiring ? [] : data.Parts;
+        var plates = data.PlatesOf(side, wiring);
         col.Item().PageBreak();
-        col.Item().Element(c => Section(c, BoardSvg.Caption(side, wiring)));
+        col.Item().Element(c => Section(c, BoardSvg.Caption(side, wiring, data.IsBoardFlipped)));
         col.Item().Text(BoardSvg.ViewHint(view)).FontColor(Colors.Grey.Darken2);
-        if (!wiring)
-            col.Item().PaddingTop(4).Element(c => ComposeLegend(c, side));
+        col.Item().PaddingTop(4).Element(c => ComposeLegend(c, side, plates.Select(p => p.Plate).ToList(), withOpenings: !wiring, parts));
         col.Item().ExtendVertical().AlignCenter().AlignMiddle()
             .Svg(BoardSvg.Render(data.Board, data.Probes, side, view, (data.Layers ?? new()).StyleFor(ViewKey(side, wiring), DefaultLayers(ViewKey(side, wiring))),
-                parts, data.PlateOutlineOf(side), withPins: wiring)).FitArea();
+                parts, plates, withPins: wiring, withOpenings: !wiring)).FitArea();
     }
 
     private static void Section(IContainer container, string title)
@@ -268,6 +280,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             Fact(col, L("Report_FixtureName"), data.Name);
             Fact(col, L("Report_FixtureFile"), data.FixtureFile is null ? L("Text_Unsaved") : Path.GetFileName(data.FixtureFile));
             Fact(col, L("Report_Author"), data.Author);
+            if (data.IsBoardFlipped)
+                Fact(col, L("Report_Orientation"), L("Report_BoardFlipped"));
             Fact(col, L("Report_Adapter"), $"{data.Pinout.TestHardware.Name} ({data.Pinout.TestHardware.DeviceId})");
             Fact(col, L("Report_ProbeCount"), Localizer.Format("Text_ProbeCount", data.Probes.Count,
                 data.Probes.Count(p => p.Side == BoardSide.Top), data.Probes.Count(p => p.Side == BoardSide.Bottom)));
@@ -290,13 +304,14 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     }
 
     /// <summary>The symbols of the drawing of one side with their names, in one or more lines.</summary>
-    private void ComposeLegend(IContainer container, BoardSide side)
+    private void ComposeLegend(IContainer container, BoardSide side, IReadOnlyList<FixturePlate> plates, bool withOpenings,
+        IReadOnlyList<FixturePart> parts)
     {
         container.Inlined(inline =>
         {
             inline.HorizontalSpacing(14);
             inline.VerticalSpacing(4);
-            foreach (var (symbol, label) in BoardSvg.Legend(data.Probes, side, data.Parts, data.PlateOutlineOf(side) is { Count: > 0 }))
+            foreach (var (symbol, label) in BoardSvg.Legend(data.Probes, side, parts, plates, withOpenings))
             {
                 inline.Item().Row(row =>
                 {
@@ -413,7 +428,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     /// A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs. The diameter is
     /// written with its unit, mil for probes and mm for pins and rods.
     /// </summary>
-    private sealed record BomLine(string Kind, string Type, int Quantity, string Diameter, double Drill, double Height, string Note);
+    private sealed record BomLine(string Kind, string Type, int Quantity, string Diameter, double Drill, double Opening, double Height, string Note);
 
     /// <summary>
     /// The probe types, then the types of the locating, pre-centering and support pins and push rods, each with the
@@ -425,20 +440,26 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         var probe = L("Report_KindProbe");
         static string Size(double value, string format, string unit) =>
             value > 0 ? value.ToString(format, CultureInfo.CurrentCulture) + " " + unit : "-";
+        // The opening of the type, if a probe of it comes through the moving plate; probes with an opening of their own
+        // have it in the plate files
         foreach (var group in data.Probes.GroupBy(p => p.Type).OrderBy(g => g.Key is null).ThenBy(g => g.Key?.Name, StringComparer.CurrentCulture))
         {
+            var opening = group.Any(p => p.HasOpening) ? Probe.TypeOpening(group.Key) : 0;
             lines.Add(group.Key is { } type
-                ? new BomLine(probe, type.Name, group.Count(), Size(type.Diameter, "0.#", "mil"), type.DrillDiameter, type.Height, type.Note)
-                : new BomLine(probe, L("Report_NoType"), group.Count(), "-", 0, 0, string.Empty));
+                ? new BomLine(probe, type.Name, group.Count(), Size(type.Diameter, "0.#", "mil"), type.DrillDiameter, opening, type.Height, type.Note)
+                : new BomLine(probe, L("Report_NoType"), group.Count(), "-", 0, 0, 0, string.Empty));
         }
 
         foreach (var group in data.Parts.GroupBy(p => (p.Kind, p.Type)).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.Type is null)
                      .ThenBy(g => g.Key.Type?.Name, StringComparer.CurrentCulture))
         {
             var kind = Localizer.Get(FixturePart.KindKey(group.Key.Kind));
+            var opening = group.Key.Kind == FixturePartKind.PushRod && data.PlateOutlines.ContainsKey(FixturePlate.TopProbePlate)
+                ? FixturePart.TypeOpening(group.Key.Type)
+                : 0;
             lines.Add(group.Key.Type is { } type
-                ? new BomLine(kind, type.Name, group.Count(), Size(type.Diameter, "0.00", "mm"), type.DrillDiameter, type.Height, type.Note)
-                : new BomLine(kind, L("Report_NoType"), group.Count(), "-", 0, 0, string.Empty));
+                ? new BomLine(kind, type.Name, group.Count(), Size(type.Diameter, "0.00", "mm"), type.DrillDiameter, opening, type.Height, type.Note)
+                : new BomLine(kind, L("Report_NoType"), group.Count(), "-", 0, 0, 0, string.Empty));
         }
 
         return lines;
@@ -456,8 +477,9 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(130); // Type
                 c.ConstantColumn(50);  // Quantity
                 c.ConstantColumn(65);  // Diameter
-                c.ConstantColumn(75);  // Drill
-                c.ConstantColumn(65);  // Height
+                c.ConstantColumn(70);  // Drill
+                c.ConstantColumn(80);  // Opening
+                c.ConstantColumn(60);  // Height
                 c.RelativeColumn();    // Note
                 c.ConstantColumn(30);  // Tick
             });
@@ -465,7 +487,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             table.Header(h =>
             {
                 foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_Diameter", "Column_Drill",
-                             "Column_PartHeight", "Column_Note" })
+                             "Column_Opening", "Column_PartHeight", "Column_Note" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -477,6 +499,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).AlignRight().Text(line.Quantity.ToString(CultureInfo.CurrentCulture)).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(line.Diameter);
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Drill));
+                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Opening));
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Height));
                 table.Cell().Element(BodyCell).Text(line.Note);
                 table.Cell().Element(TickBox);
@@ -514,7 +537,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(part.Type?.Name ?? "-");
                 table.Cell().Element(BodyCell).AlignRight().Text(Mm(part.X));
                 table.Cell().Element(BodyCell).AlignRight().Text(Mm(part.Y));
-                table.Cell().Element(BodyCell).Text(L(part.PlateSide == BoardSide.Top ? "Plate_Top" : "Plate_Bottom"));
+                table.Cell().Element(BodyCell).Text(ViewModels.PlateRow.NameOf(part.Plate));
                 table.Cell().Element(TickBox);
             }
         });

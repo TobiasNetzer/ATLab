@@ -19,7 +19,7 @@ public interface IDialogs
     Task<string?> SavePdfAsync(string suggestedName);
     Task<string?> OpenFolderAsync(string title);
 
-    /// <summary>A DXF or SVG file with the outline of the probe plates.</summary>
+    /// <summary>A DXF or SVG file with the outline of a plate.</summary>
     Task<string?> OpenOutlineAsync(bool svg);
 }
 

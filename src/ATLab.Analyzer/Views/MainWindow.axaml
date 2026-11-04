@@ -8,7 +8,7 @@
                x:Class="ATLab.Analyzer.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
                Title="ATLab Analyzer"
-               Width="1500" Height="900"
+               Width="1600" Height="900"
                MinWidth="1100" MinHeight="650"
                WindowStartupLocation="CenterScreen"
                ShowTitlebarBackground="False"

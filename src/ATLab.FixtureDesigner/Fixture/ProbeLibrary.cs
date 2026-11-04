@@ -68,8 +68,8 @@ public static class ProbeLibrary
     /// </summary>
     public static List<ProbeType> Examples() =>
     [
-        new() { Id = "example100", Name = "100 mil", MinPadSize = 1.0, DrillDiameter = 1.67, MinSpacing = 2.54, ComponentClearance = 1.0 },
-        new() { Id = "example75", Name = "75 mil", MinPadSize = 0.8, DrillDiameter = 1.37, MinSpacing = 1.91, ComponentClearance = 0.8 },
-        new() { Id = "example50", Name = "50 mil", MinPadSize = 0.6, DrillDiameter = 0.91, MinSpacing = 1.27, ComponentClearance = 0.6 }
+        new() { Id = "example100", Name = "100 mil", MinPadSize = 1.0, DrillDiameter = 1.67, OpeningDiameter = 2.0, MinSpacing = 2.54, ComponentClearance = 1.0 },
+        new() { Id = "example75", Name = "75 mil", MinPadSize = 0.8, DrillDiameter = 1.37, OpeningDiameter = 1.6, MinSpacing = 1.91, ComponentClearance = 0.8 },
+        new() { Id = "example50", Name = "50 mil", MinPadSize = 0.6, DrillDiameter = 0.91, OpeningDiameter = 1.0, MinSpacing = 1.27, ComponentClearance = 0.6 }
     ];
 }

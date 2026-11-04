@@ -6,11 +6,11 @@ namespace ATLab.FixtureDesigner.Fixture;
 
 /// <summary>
 /// The board outline (Edge.Cuts) for the parts: whether a point is on the board, how far it is from the edge, and the
-/// place where a pre-centering pin touches the edge from outside.
+/// place of a pre-centering pin beside the edge.
 /// </summary>
 public static class BoardEdge
 {
-    /// <summary>A pre-centering pin counts as touching the edge within this distance, in mm.</summary>
+    /// <summary>A pre-centering pin counts as at its distance from the edge within this tolerance, in mm.</summary>
     public const double TouchTolerance = 0.05;
 
     /// <summary>Crossing test over all edges, so cut-outs inside the board count as outside.</summary>
@@ -56,8 +56,8 @@ public static class BoardEdge
     }
 
     /// <summary>
-    /// The center of a pin of the given radius that touches the board edge from outside, next to the point: moved from
-    /// the nearest point of the edge outwards by the radius. A point on the board is moved out across the edge.
+    /// The center of a pin at the given distance (radius plus gap) from the board edge, outside it, next to the point: moved from
+    /// the nearest point of the edge outwards by that distance. A point on the board is moved out across the edge.
     /// </summary>
     public static Point2 Snap(Board board, Point2 p, double radius)
     {

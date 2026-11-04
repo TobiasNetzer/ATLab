@@ -724,7 +724,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Neuer Typ</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>Ø der Prüfnadel in mil, alle anderen Maße in mm. Bohrung Ø: Loch für die Hülse in der Platte. Höhe: wie weit die Prüfnadel aus der Platte ragt. Abstand: kleinster Abstand der Mitten zweier Prüfnadeln einer Platte. Freiraum: kleinster Abstand der Prüfnadel zu einem anderen Bauteil ihrer Seite (Bauteilfläche). Die Typen werden im Nadelbett gespeichert; In Bibliothek speichern übernimmt sie für neue Nadelbetten.</value>
+    <value>Nadel-Ø in mil, alle anderen Maße in mm. Durchbruch 0 = Bohrung Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plattenrand (mm)</value>
@@ -732,35 +732,17 @@ Platinendatei am neuen Ort auswählen.</value>
   <data name="ToolTip_PlateMargin" xml:space="preserve">
     <value>Plattenrand</value>
   </data>
-  <data name="Label_PlateThickness" xml:space="preserve">
-    <value>Plattendicke (mm)</value>
-  </data>
   <data name="ToolTip_PlateThickness" xml:space="preserve">
-    <value>Plattendicke</value>
+    <value>Dicke der Platte in der STEP-Datei</value>
   </data>
   <data name="Header_Plates" xml:space="preserve">
-    <value>Nadelplatten</value>
+    <value>Platten</value>
   </data>
   <data name="Text_NoPlates" xml:space="preserve">
-    <value>Noch keine Platte: Prüfnadeln oder Fangstifte hinzufügen.</value>
-  </data>
-  <data name="Text_PlateSummary" xml:space="preserve">
-    <value>{0}: {1} × {2} mm, {3} Nadelbohrungen, {4} Fangstiftbohrungen, {5} Rahmenbohrungen, {6} Bohrungen für Vorzentrierungs-/Stützstifte und Niederhalter, {7} Ausschnitte</value>
+    <value>Keine Platte zu exportieren.</value>
   </data>
   <data name="Text_PlateFilesHint" xml:space="preserve">
-    <value>Jede Platte wird von ihrer der Platine zugewandten Seite gesehen geschrieben: die untere Platte von oben, die obere Platte von unten (gespiegelt). Koordinaten in mm vom Ursprung des Aufbaublatts.</value>
-  </data>
-  <data name="Plate_Top" xml:space="preserve">
-    <value>Obere Platte</value>
-  </data>
-  <data name="Plate_Bottom" xml:space="preserve">
-    <value>Untere Platte</value>
-  </data>
-  <data name="File_TopPlate" xml:space="preserve">
-    <value>obere Platte</value>
-  </data>
-  <data name="File_BottomPlate" xml:space="preserve">
-    <value>untere Platte</value>
+    <value>Jede Platte ist von der Platinenseite gesehen.</value>
   </data>
   <data name="Plate_NoDrill" xml:space="preserve">
     <value>{0} hat keinen Bohrdurchmesser (Nadeltyp)</value>
@@ -824,7 +806,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>{0} ist {1} mm von Bauteil {2} entfernt; der Nadeltyp braucht {3} mm.</value>
   </data>
   <data name="Check_LocatingPinOverlap" xml:space="preserve">
-    <value>Die Bohrung von {0} überschneidet sich mit der Bohrung von Fangstift {1}.</value>
+    <value>Der Durchbruch von {0} in der Andruckplatte überschneidet sich mit der Bohrung von Fangstift {1}.</value>
   </data>
   <data name="Header_Export" xml:space="preserve">
     <value>Export</value>
@@ -965,7 +947,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Entfernen</value>
   </data>
   <data name="Text_PartsHint" xml:space="preserve">
-    <value>Art wählen, dann auf die Platine klicken; ziehen verschiebt, Esc beendet das Setzen. Fangstifte kommen in eine Bohrung der Platine, durchkontaktiert oder nicht; Vorzentrierungsstifte rasten an der Platinenkante ein. Niederhalter kommen in die obere Platte, alle anderen in die untere.</value>
+    <value>Art wählen und auf die Platine klicken. Ziehen verschiebt, Esc beendet das Setzen.</value>
   </data>
   <data name="Column_Part" xml:space="preserve">
     <value>Teil</value>
@@ -989,7 +971,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Typen</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>Alle Maße in mm. Ø: wo es die Platine berührt. Bohrung Ø: Loch in der Platte. Höhe: wie weit es aus der Platte ragt. Freiraum: kleinster Abstand vom Rand zu einem Bauteil seiner Seite.</value>
+    <value>Alle Maße in mm. Durchbruch nur für Niederhalter, 0 = Bohrung Ø. Kantenabstand nur für Vorzentrierungsstifte.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>Neuer Typ</value>
@@ -1013,7 +995,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>{0} überdeckt die Platine; ein Vorzentrierungsstift steht neben ihr.</value>
   </data>
   <data name="Check_PreCenteringGap" xml:space="preserve">
-    <value>{0} berührt die Platinenkante nicht ({1} mm Spalt).</value>
+    <value>{0} ist {1} mm von der Platinenkante entfernt; sein Typ verlangt {2} mm.</value>
   </data>
   <data name="Check_PartOffBoard" xml:space="preserve">
     <value>{0} liegt nicht unter der Platine.</value>
@@ -1079,16 +1061,10 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Anzahl</value>
   </data>
   <data name="Report_AssemblyTop" xml:space="preserve">
-    <value>Obere Platte – Montage</value>
+    <value>Oberseite – Montage</value>
   </data>
   <data name="Report_AssemblyBottom" xml:space="preserve">
-    <value>Untere Platte – Montage</value>
-  </data>
-  <data name="Report_WiringTop" xml:space="preserve">
-    <value>Obere Platte – Verdrahtung</value>
-  </data>
-  <data name="Report_WiringBottom" xml:space="preserve">
-    <value>Untere Platte – Verdrahtung</value>
+    <value>Unterseite – Montage</value>
   </data>
   <data name="Report_ViewFromTop" xml:space="preserve">
     <value>Ansicht von oben</value>
@@ -1181,14 +1157,8 @@ unten</value>
   <data name="Plate_Cutout" xml:space="preserve">
     <value>{0} reicht in einen Ausschnitt der Platte.</value>
   </data>
-  <data name="Label_SeparateOutlines" xml:space="preserve">
-    <value>Eigener Umriss für die obere Platte</value>
-  </data>
-  <data name="ToolTip_SeparateOutlines" xml:space="preserve">
-    <value>Der oberen Platte einen eigenen Umriss geben; sonst haben beide Platten denselben Umriss</value>
-  </data>
   <data name="Label_EditedOutline" xml:space="preserve">
-    <value>Umriss der</value>
+    <value>Umriss bearbeiten von</value>
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Standardfarben</value>
@@ -1198,5 +1168,116 @@ unten</value>
   </data>
   <data name="Column_Diameter" xml:space="preserve">
     <value>Ø</value>
+  </data>
+  <data name="Plate_BottomProbePlate" xml:space="preserve">
+    <value>Kontaktträgerplatte unten</value>
+  </data>
+  <data name="Plate_MovingPlate" xml:space="preserve">
+    <value>Andruckplatte</value>
+  </data>
+  <data name="Plate_TopProbePlate" xml:space="preserve">
+    <value>Kontaktträgerplatte oben</value>
+  </data>
+  <data name="Plate_PressurePlate" xml:space="preserve">
+    <value>Niederhalterplatte</value>
+  </data>
+  <data name="File_BottomProbePlate" xml:space="preserve">
+    <value>Kontaktträgerplatte unten</value>
+  </data>
+  <data name="File_MovingPlate" xml:space="preserve">
+    <value>Andruckplatte</value>
+  </data>
+  <data name="File_TopProbePlate" xml:space="preserve">
+    <value>Kontaktträgerplatte oben</value>
+  </data>
+  <data name="File_PressurePlate" xml:space="preserve">
+    <value>Niederhalterplatte</value>
+  </data>
+  <data name="Header_Outline" xml:space="preserve">
+    <value>Umriss</value>
+  </data>
+  <data name="Text_PlatesHint" xml:space="preserve">
+    <value>Die Kontaktträgerplatte oben gibt es nur mit Prüfnadeln von oben. Platten ohne eigenen Umriss nutzen den gemeinsamen.</value>
+  </data>
+  <data name="Column_Outline" xml:space="preserve">
+    <value>Umriss</value>
+  </data>
+  <data name="Column_Thickness" xml:space="preserve">
+    <value>Dicke (mm)</value>
+  </data>
+  <data name="Column_Contents" xml:space="preserve">
+    <value>Inhalt</value>
+  </data>
+  <data name="Label_OwnOutline" xml:space="preserve">
+    <value>Eigener Umriss</value>
+  </data>
+  <data name="ToolTip_OwnOutline" xml:space="preserve">
+    <value>Dieser Platte statt des gemeinsamen einen eigenen Umriss geben</value>
+  </data>
+  <data name="Outline_Shared" xml:space="preserve">
+    <value>Gemeinsamer Umriss (Platten ohne eigenen)</value>
+  </data>
+  <data name="Text_PlateNotNeeded" xml:space="preserve">
+    <value>Nicht nötig: keine Prüfnadeln von oben.</value>
+  </data>
+  <data name="Column_Opening" xml:space="preserve">
+    <value>Durchbruch Ø (mm)</value>
+  </data>
+  <data name="ToolTip_ProbeOpening" xml:space="preserve">
+    <value>Durchbruch in der Andruckplatte für diese Prüfnadel, in mm; leer für den Durchbruch ihres Nadeltyps</value>
+  </data>
+  <data name="ToolTip_PushRodOpening" xml:space="preserve">
+    <value>Durchbruch in der Kontaktträgerplatte oben für diesen Niederhalter, in mm; leer für den Durchbruch seines Typs</value>
+  </data>
+  <data name="Board_LegendOpenings" xml:space="preserve">
+    <value>{0} (Durchbrüche)</value>
+  </data>
+  <data name="Report_LegendPlateOutline" xml:space="preserve">
+    <value>{0} (Umriss)</value>
+  </data>
+  <data name="Text_PlateSize" xml:space="preserve">
+    <value>{0} × {1} mm</value>
+  </data>
+  <data name="Text_PlateProbeHoles" xml:space="preserve">
+    <value>{0} Nadelbohrungen</value>
+  </data>
+  <data name="Text_PlateOpenings" xml:space="preserve">
+    <value>{0} Durchbrüche</value>
+  </data>
+  <data name="Text_PlatePartHoles" xml:space="preserve">
+    <value>{0} Stift- und Niederhalterbohrungen</value>
+  </data>
+  <data name="Text_PlateFrameHoles" xml:space="preserve">
+    <value>{0} Rahmenbohrungen</value>
+  </data>
+  <data name="Text_PlateCutouts" xml:space="preserve">
+    <value>{0} Ausschnitte</value>
+  </data>
+  <data name="Text_PlateMergedOpenings" xml:space="preserve">
+    <value>{0} zusammengefasste Durchbrüche</value>
+  </data>
+  <data name="Label_BoardFlipped" xml:space="preserve">
+    <value>Platine kopfüber (Oberseite zu den unteren Platten)</value>
+  </data>
+  <data name="ToolTip_BoardFlipped" xml:space="preserve">
+    <value>Die Platine liegt mit der Oberseite nach unten im Nadelbett: Prüfnadeln der Oberseite kommen in die Kontaktträgerplatte unten, die Stifte berühren die Oberseite, die Niederhalter die Unterseite</value>
+  </data>
+  <data name="Report_Orientation" xml:space="preserve">
+    <value>Lage der Platine</value>
+  </data>
+  <data name="Report_BoardFlipped" xml:space="preserve">
+    <value>Kopfüber: Oberseite zu den unteren Platten</value>
+  </data>
+  <data name="Report_WiringOf" xml:space="preserve">
+    <value>{0} – Verdrahtung</value>
+  </data>
+  <data name="Report_WiringTop" xml:space="preserve">
+    <value>Oberseite – Verdrahtung</value>
+  </data>
+  <data name="Report_WiringBottom" xml:space="preserve">
+    <value>Unterseite – Verdrahtung</value>
+  </data>
+  <data name="Column_EdgeGap" xml:space="preserve">
+    <value>Kantenabstand (mm)</value>
   </data>
 </root>

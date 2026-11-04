@@ -724,7 +724,7 @@ Select the board file at its new location.</value>
     <value>New type</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>Ø of the probe in mil, all other sizes in mm. Drill Ø: hole for the receptacle in the plate. Height: how far the probe stands out of the plate. Spacing: smallest distance between the centers of two probes of one plate. Clearance: smallest distance from the probe to another component of its side (courtyard). The types are stored in the fixture; Save to library keeps them for new fixtures.</value>
+    <value>Probe Ø in mil, all other sizes in mm. Opening 0 = drill Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plate margin (mm)</value>
@@ -732,35 +732,17 @@ Select the board file at its new location.</value>
   <data name="ToolTip_PlateMargin" xml:space="preserve">
     <value>Plate margin</value>
   </data>
-  <data name="Label_PlateThickness" xml:space="preserve">
-    <value>Plate thickness (mm)</value>
-  </data>
   <data name="ToolTip_PlateThickness" xml:space="preserve">
-    <value>Plate thickness</value>
+    <value>Thickness of the plate in the STEP file</value>
   </data>
   <data name="Header_Plates" xml:space="preserve">
-    <value>Probe plates</value>
+    <value>Plates</value>
   </data>
   <data name="Text_NoPlates" xml:space="preserve">
-    <value>No plate yet: add probes or locating pins.</value>
-  </data>
-  <data name="Text_PlateSummary" xml:space="preserve">
-    <value>{0}: {1} × {2} mm, {3} probe holes, {4} locating pin holes, {5} frame holes, {6} pin and rod holes, {7} cut-outs</value>
+    <value>No plate to export.</value>
   </data>
   <data name="Text_PlateFilesHint" xml:space="preserve">
-    <value>Each plate is written as seen from its side facing the board: the bottom plate from above, the top plate from below (mirrored). Coordinates in mm from the origin of the build sheet.</value>
-  </data>
-  <data name="Plate_Top" xml:space="preserve">
-    <value>Top plate</value>
-  </data>
-  <data name="Plate_Bottom" xml:space="preserve">
-    <value>Bottom plate</value>
-  </data>
-  <data name="File_TopPlate" xml:space="preserve">
-    <value>top plate</value>
-  </data>
-  <data name="File_BottomPlate" xml:space="preserve">
-    <value>bottom plate</value>
+    <value>Each plate is seen from its board side.</value>
   </data>
   <data name="Plate_NoDrill" xml:space="preserve">
     <value>{0} has no drill diameter (probe type)</value>
@@ -824,7 +806,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>{0} is {1} mm from component {2}; the probe type needs {3} mm.</value>
   </data>
   <data name="Check_LocatingPinOverlap" xml:space="preserve">
-    <value>The hole of {0} overlaps the hole of locating pin {1}.</value>
+    <value>The opening of {0} in the moving plate overlaps the hole of locating pin {1}.</value>
   </data>
   <data name="Header_Export" xml:space="preserve">
     <value>Export</value>
@@ -965,7 +947,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>Remove</value>
   </data>
   <data name="Text_PartsHint" xml:space="preserve">
-    <value>Choose a kind, then click on the board to place; drag to move, Esc ends placing. Locating pins go into a hole of the board, plated or not; pre-centering pins snap to the board edge. Push rods go into the top plate, all others into the bottom plate.</value>
+    <value>Choose a kind and click on the board to place it. Drag to move, Esc to stop placing.</value>
   </data>
   <data name="Column_Part" xml:space="preserve">
     <value>Part</value>
@@ -989,7 +971,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>Types</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>All sizes in mm. Ø: where it touches the board. Drill Ø: hole in the plate. Height: how far it stands out of the plate. Clearance: smallest distance from its edge to a component of its side.</value>
+    <value>All sizes in mm. Opening only for push rods, 0 = drill Ø. Edge gap only for pre-centering pins.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>New type</value>
@@ -1013,7 +995,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>{0} overlaps the board; a pre-centering pin stands beside it.</value>
   </data>
   <data name="Check_PreCenteringGap" xml:space="preserve">
-    <value>{0} does not touch the board edge ({1} mm gap).</value>
+    <value>{0} is {1} mm from the board edge; its type needs {2} mm.</value>
   </data>
   <data name="Check_PartOffBoard" xml:space="preserve">
     <value>{0} is not under the board.</value>
@@ -1079,16 +1061,10 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>Qty</value>
   </data>
   <data name="Report_AssemblyTop" xml:space="preserve">
-    <value>Top plate – assembly</value>
+    <value>Top side – assembly</value>
   </data>
   <data name="Report_AssemblyBottom" xml:space="preserve">
-    <value>Bottom plate – assembly</value>
-  </data>
-  <data name="Report_WiringTop" xml:space="preserve">
-    <value>Top plate – wiring</value>
-  </data>
-  <data name="Report_WiringBottom" xml:space="preserve">
-    <value>Bottom plate – wiring</value>
+    <value>Bottom side – assembly</value>
   </data>
   <data name="Report_ViewFromTop" xml:space="preserve">
     <value>View from top</value>
@@ -1181,14 +1157,8 @@ bottom</value>
   <data name="Plate_Cutout" xml:space="preserve">
     <value>{0} runs into a cut-out of the plate.</value>
   </data>
-  <data name="Label_SeparateOutlines" xml:space="preserve">
-    <value>Own outline for the top plate</value>
-  </data>
-  <data name="ToolTip_SeparateOutlines" xml:space="preserve">
-    <value>Give the top plate an outline of its own; otherwise both plates have the same outline</value>
-  </data>
   <data name="Label_EditedOutline" xml:space="preserve">
-    <value>Outline of</value>
+    <value>Edit outline of</value>
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Default colors</value>
@@ -1198,5 +1168,116 @@ bottom</value>
   </data>
   <data name="Column_Diameter" xml:space="preserve">
     <value>Ø</value>
+  </data>
+  <data name="Plate_BottomProbePlate" xml:space="preserve">
+    <value>Bottom probe plate</value>
+  </data>
+  <data name="Plate_MovingPlate" xml:space="preserve">
+    <value>Moving plate</value>
+  </data>
+  <data name="Plate_TopProbePlate" xml:space="preserve">
+    <value>Top probe plate</value>
+  </data>
+  <data name="Plate_PressurePlate" xml:space="preserve">
+    <value>Pressure plate</value>
+  </data>
+  <data name="File_BottomProbePlate" xml:space="preserve">
+    <value>bottom probe plate</value>
+  </data>
+  <data name="File_MovingPlate" xml:space="preserve">
+    <value>moving plate</value>
+  </data>
+  <data name="File_TopProbePlate" xml:space="preserve">
+    <value>top probe plate</value>
+  </data>
+  <data name="File_PressurePlate" xml:space="preserve">
+    <value>pressure plate</value>
+  </data>
+  <data name="Header_Outline" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="Text_PlatesHint" xml:space="preserve">
+    <value>The top probe plate is only needed with probes from above. Plates without an outline of their own use the shared one.</value>
+  </data>
+  <data name="Column_Outline" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="Column_Thickness" xml:space="preserve">
+    <value>Thickness (mm)</value>
+  </data>
+  <data name="Column_Contents" xml:space="preserve">
+    <value>Contents</value>
+  </data>
+  <data name="Label_OwnOutline" xml:space="preserve">
+    <value>Own outline</value>
+  </data>
+  <data name="ToolTip_OwnOutline" xml:space="preserve">
+    <value>Give this plate an outline of its own instead of the shared one</value>
+  </data>
+  <data name="Outline_Shared" xml:space="preserve">
+    <value>Shared outline (plates without their own)</value>
+  </data>
+  <data name="Text_PlateNotNeeded" xml:space="preserve">
+    <value>Not needed: no probes from above.</value>
+  </data>
+  <data name="Column_Opening" xml:space="preserve">
+    <value>Opening Ø (mm)</value>
+  </data>
+  <data name="ToolTip_ProbeOpening" xml:space="preserve">
+    <value>Opening in the moving plate for this probe, in mm; empty for the opening of its probe type</value>
+  </data>
+  <data name="ToolTip_PushRodOpening" xml:space="preserve">
+    <value>Opening in the top probe plate for this push rod, in mm; empty for the opening of its type</value>
+  </data>
+  <data name="Board_LegendOpenings" xml:space="preserve">
+    <value>{0} (openings)</value>
+  </data>
+  <data name="Report_LegendPlateOutline" xml:space="preserve">
+    <value>{0} (outline)</value>
+  </data>
+  <data name="Text_PlateSize" xml:space="preserve">
+    <value>{0} × {1} mm</value>
+  </data>
+  <data name="Text_PlateProbeHoles" xml:space="preserve">
+    <value>{0} probe holes</value>
+  </data>
+  <data name="Text_PlateOpenings" xml:space="preserve">
+    <value>{0} openings</value>
+  </data>
+  <data name="Text_PlatePartHoles" xml:space="preserve">
+    <value>{0} pin and rod holes</value>
+  </data>
+  <data name="Text_PlateFrameHoles" xml:space="preserve">
+    <value>{0} frame holes</value>
+  </data>
+  <data name="Text_PlateCutouts" xml:space="preserve">
+    <value>{0} cut-outs</value>
+  </data>
+  <data name="Text_PlateMergedOpenings" xml:space="preserve">
+    <value>{0} merged openings</value>
+  </data>
+  <data name="Label_BoardFlipped" xml:space="preserve">
+    <value>Board upside down (top side faces the bottom plates)</value>
+  </data>
+  <data name="ToolTip_BoardFlipped" xml:space="preserve">
+    <value>The board lies in the fixture with its top side down: probes on the top side go into the bottom probe plate, the pins touch the top side, the push rods the bottom side</value>
+  </data>
+  <data name="Report_Orientation" xml:space="preserve">
+    <value>Board position</value>
+  </data>
+  <data name="Report_BoardFlipped" xml:space="preserve">
+    <value>Upside down: top side faces the bottom plates</value>
+  </data>
+  <data name="Report_WiringOf" xml:space="preserve">
+    <value>{0} – wiring</value>
+  </data>
+  <data name="Report_WiringTop" xml:space="preserve">
+    <value>Top side – wiring</value>
+  </data>
+  <data name="Report_WiringBottom" xml:space="preserve">
+    <value>Bottom side – wiring</value>
+  </data>
+  <data name="Column_EdgeGap" xml:space="preserve">
+    <value>Edge gap (mm)</value>
   </data>
 </root>

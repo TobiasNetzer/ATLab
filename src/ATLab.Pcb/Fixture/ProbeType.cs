@@ -22,6 +22,12 @@ public partial class ProbeType : ObservableObject
     /// <summary>Diameter of the hole in the plate for the receptacle, in mm.</summary>
     [ObservableProperty] private double _drillDiameter;
 
+    /// <summary>
+    /// Diameter of the opening in the moving plate the probe comes through, in mm; 0 for the drill diameter. A probe
+    /// can have an opening of its own.
+    /// </summary>
+    [ObservableProperty] private double _openingDiameter;
+
     /// <summary>How far the probe stands out of the plate towards the board, in mm.</summary>
     [ObservableProperty] private double _height;
 
@@ -42,6 +48,7 @@ public partial class ProbeType : ObservableObject
         MinPadSize = MinPadSize,
         Diameter = Diameter,
         DrillDiameter = DrillDiameter,
+        OpeningDiameter = OpeningDiameter,
         Height = Height,
         MinSpacing = MinSpacing,
         ComponentClearance = ComponentClearance,

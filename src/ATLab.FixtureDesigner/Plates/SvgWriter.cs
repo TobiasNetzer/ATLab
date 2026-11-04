@@ -71,16 +71,20 @@ public static class SvgWriter
         foreach (var (kind, color) in new[]
                  {
                      (PlateHoleKind.Probe, "#FF0000"),
+                     (PlateHoleKind.ProbeOpening, "#FF7F7F"),
                      (PlateHoleKind.LocatingPin, "#00A000"),
                      (PlateHoleKind.Frame, "#0000FF"),
                      (PlateHoleKind.PreCenteringPin, "#C026D3"),
                      (PlateHoleKind.SupportPin, "#0D9488"),
-                     (PlateHoleKind.PushRod, "#7C3AED")
+                     (PlateHoleKind.PushRod, "#7C3AED"),
+                     (PlateHoleKind.PushRodOpening, "#A78BFA")
                  })
         {
             var name = DxfWriter.LayerOf(kind);
             var circles = string.Concat(plate.Holes.Where(h => h.Kind == kind)
                 .Select(h => $"    <circle cx=\"{X(h.X)}\" cy=\"{Y(h.Y)}\" r=\"{N(h.Diameter / 2)}\"/>\n"));
+            if (kind == plate.OpeningKind)
+                circles += string.Concat(plate.MergedOpenings.Select(m => $"    <path d=\"{Path(m.Contour)}\"/>\n"));
             if (circles.Length > 0)
                 Group(svg, name, color, circles);
         }

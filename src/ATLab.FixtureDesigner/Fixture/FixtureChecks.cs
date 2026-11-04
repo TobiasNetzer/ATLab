@@ -287,8 +287,8 @@ public static class FixtureChecks
     }
 
     /// <summary>
-    /// Locating pins stand in a hole of the board that they fit, with room to the probes of the bottom plate; pre-centering
-    /// pins stand beside the board and touch its edge; support pins and push rods are under the board and keep their
+    /// Locating pins stand in a hole of the board that they fit, with room to the openings of the bottom probes; pre-centering
+    /// pins stand beside the board, their type's gap away from its edge; support pins and push rods are under the board and keep their
     /// clearance from the components of their side. Every part needs a type with a drill diameter. The worst result
     /// becomes the part's state, which colors it on the board.
     /// </summary>
@@ -334,12 +334,14 @@ public static class FixtureChecks
             var inside = BoardEdge.Contains(board, center);
             var toEdge = BoardEdge.Distance(board, center);
 
+            // A pre-centering pin stands beside the board, its type's gap away from the edge
             if (part.Kind == FixturePartKind.PreCenteringPin)
             {
+                var gap = Math.Max(type.EdgeGap, 0);
                 if (inside || toEdge < r - BoardEdge.TouchTolerance)
                     Add(CheckSeverity.Error, Localizer.Format("Check_PreCenteringOnBoard", part.Name));
-                else if (toEdge > r + BoardEdge.TouchTolerance)
-                    Add(CheckSeverity.Warning, Localizer.Format("Check_PreCenteringGap", part.Name, Mm(toEdge - r)));
+                else if (Math.Abs(toEdge - r - gap) > BoardEdge.TouchTolerance)
+                    Add(CheckSeverity.Warning, Localizer.Format("Check_PreCenteringGap", part.Name, Mm(toEdge - r), Mm(gap)));
             }
             else if (!inside)
             {
@@ -371,8 +373,8 @@ public static class FixtureChecks
     }
 
     /// <summary>
-    /// A locating pin needs a hole of the board at its place that it fits through, and its hole in the bottom plate must
-    /// not run into the hole of a bottom probe. It stands in its own component's hole, so courtyards do not count.
+    /// A locating pin needs a hole of the board at its place that it fits through, and its hole in the moving plate must
+    /// not run into the opening of a bottom probe. It stands in its own component's hole, so courtyards do not count.
     /// </summary>
     private static void CheckLocatingPin(FixturePart part, PartType type, IReadOnlyList<Probe> probes, Board board,
         Action<CheckSeverity, string> add)
@@ -387,9 +389,9 @@ public static class FixtureChecks
         if (type.Diameter > hole.Diameter + 1e-6)
             add(CheckSeverity.Error, Localizer.Format("Check_LocatingTooBig", part.Name, Mm(type.Diameter), hole.Reference, Mm(hole.Diameter)));
 
-        foreach (var probe in probes.Where(p => p.Side == BoardSide.Bottom && p.Pad is not null && p.Type is not null))
+        foreach (var probe in probes.Where(p => p.HasOpening && p.Pad is not null && p.Opening > 0))
         {
-            if (center.DistanceTo(probe.Pad!.Position) < (type.DrillDiameter + probe.Type!.DrillDiameter) / 2)
+            if (center.DistanceTo(probe.Pad!.Position) < (type.DrillDiameter + probe.Opening) / 2)
                 add(CheckSeverity.Error, Localizer.Format("Check_LocatingPinOverlap", probe.Name, part.Name));
         }
     }
