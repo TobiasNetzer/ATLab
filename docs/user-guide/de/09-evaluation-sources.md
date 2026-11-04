@@ -84,11 +84,11 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 - Mit Befehl und **Bytes lesen** = 0: Die Bytes werden geschrieben; das Ergebnis ist `1`, wenn der Slave quittiert hat, sonst `NACK`.
 - Mit **Bytes lesen** > 0: Nach dem optionalen Schreiben wird die angegebene Anzahl Bytes gelesen. Die empfangenen Bytes durchlaufen die Antwortverarbeitung; ein NACK beim Schreiben oder Lesen ergibt `NACK`.
 - Ohne Antwortverarbeitung werden die empfangenen Bytes als ASCII-Text interpretiert. Für binäre Register aktivieren Sie die Antwortverarbeitung, z. B. mit `{byte:2}`.
-- Ein NACK wird in den [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) angezeigt (*I²C write failed: NACK received.*) und nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben. Ein Schritt, der bei Fehlschlag wiederholt wird, bis der Prüfling antwortet, bleibt während der Wiederholungen still und warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
+- Ein NACK wird in den [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) angezeigt (*I²C write failed: NACK received.*) und nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben. Wird ein Schritt bei Fehlschlag wiederholt, bis der Prüfling antwortet, bleiben die Wiederholungen ohne Warnung; gewarnt wird nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 **Verhalten bei UART**
 
-- Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, zeigt der Schritt das in den [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) und protokolliert es nach Abschluss des Schritts als Warnung.
+- Der Befehl wird mit Abschlusszeichen gesendet; danach erwartet der Schritt so viele Bytes, wie unter **Bytes lesen** angegeben. Kommen weniger an, zeigt der Schritt das in den [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) und protokolliert es nach Abschluss des Schritts als Warnung.
 - Bei **Bytes lesen** = 0 ist der Messwert `0`.
 
 Die Schnittstelle muss an der angeschlossenen Test-Hardware vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
@@ -198,7 +198,7 @@ Treibt und prüft Pins von Boundary-Scan-Bausteinen. Kette, BSDL-Dateien und Bez
 
 Ein Schritt nur mit Drive-Aktionen liefert keinen Wert und besteht immer, wie die Quelle *Keine* – außer **Getriebene Pins prüfen** ist aktiviert. Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten.
 
-Bei einem fehlgeschlagenen Schritt zeigen die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails), welche Pins abweichen, z. B. `U3 IO(5) (FAULT_N): expected 0, read 1`. Ist der Schritt abgeschlossen und fehlgeschlagen, werden die Abweichungen einmal ins Ereignisprotokoll geschrieben, z. B. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. Ein Schritt, der wiederholt wird, bis eine Bedingung erfüllt ist – etwa bis der Bediener einen Taster drückt –, protokolliert während der Wiederholungen nichts und gar nichts, wenn er am Ende besteht.
+Bei einem fehlgeschlagenen Schritt zeigen die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails), welche Pins abweichen, z. B. `U3 IO(5) (FAULT_N): expected 0, read 1`. Ist der Schritt endgültig fehlgeschlagen, werden die Abweichungen einmal ins Ereignisprotokoll geschrieben, z. B. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. Wird ein Schritt wiederholt, bis eine Bedingung erfüllt ist – etwa bis der Bediener einen Taster drückt –, protokolliert er während der Wiederholungen nichts. Besteht er am Ende, wird gar nichts protokolliert.
 
 **Getriebene Pins prüfen** liest jeden Pin mit *Drive 0* oder *Drive 1* über seine eigene Eingangszelle zurück. Ein abweichender Pegel wird z. B. als `U1 PB3 (LED_RED): driven 1, read 0` gemeldet. Damit werden Kurzschlüsse nach GND, VCC oder zu einem anderen Treiber sowie defekte Ausgangstreiber gefunden. Eine Unterbrechung weiter im Netz wird nicht erkannt, weil der treibende Pin weiterhin seinen eigenen Pegel liest – dafür den empfangenden Pin mit einer Expect-Aktion prüfen. Pins ohne Eingangszelle und *Drive Z* werden nicht geprüft; eine Expect-Aktion für denselben Pin hat Vorrang vor dem Zurücklesen.
 
@@ -237,7 +237,7 @@ Führt eine Übertragung auf einem über Boundary-Scan-Pins nachgebildeten Bus a
 
 - Mit **Bytes lesen** = 0: `1`, wenn die Übertragung abgeschlossen wurde (I²C: quittiert), `NACK` bei einem I²C-NACK.
 - Mit **Bytes lesen** > 0: Die empfangenen Bytes durchlaufen die [Antwortverarbeitung](11-response-processing.md). Ohne Antwortverarbeitung werden sie als ASCII-Text interpretiert; für Binärdaten daher aktivieren, z. B. `{byte:2}` für ein 16-Bit-Register. Ein NACK ergibt `NACK`.
-- Bei einem NACK erklären die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Die Erklärung wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben. Ein Schritt kann bei Fehlschlag wiederholt werden, bis ein Baustein antwortet, ohne bei jeder Wiederholung eine Warnung anzuzeigen; er warnt nur, wenn auch der letzte Versuch nicht quittiert wurde.
+- Bei einem NACK erklären die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) die Ursache, z. B. *No ACK from 0x51 for address 0x51 (write).* Nach Abschluss des Schritts wird die Erklärung als Warnung ins Ereignisprotokoll geschrieben. Wird ein Schritt bei Fehlschlag wiederholt, bis ein Baustein antwortet, bleiben die Wiederholungen ohne Warnung; gewarnt wird nur, wenn auch der letzte Versuch nicht quittiert wurde.
 
 Beispiele:
 
@@ -252,8 +252,8 @@ Alle Signalwechsel einer Übertragung werden in einem Transfer an die Probe gesc
 
 ## Boundary-Scan-Verbindungstest
 
-Führt den Verbindungstest der Netze aus, die in der [Ansicht Verbindungstest](12-boundary-scan.md#ansicht-verbindungstest) der Registerkarte Boundary Scan eingerichtet sind. Der Schritt hat keine eigenen Einstellungen.
+Führt den Verbindungstest aus. Welche Netze geprüft werden, wird in der [Ansicht Verbindungstest](12-boundary-scan.md#ansicht-verbindungstest) der Registerkarte Boundary Scan festgelegt; der Schritt selbst hat keine Einstellungen.
 
-- **Ergebnis:** die Zahl der Fehler (Unterbrechungen, Kurzschlüsse, festhängende Netze). Beide Grenzen auf `0` setzen. Die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) listen jeden Fehler, z. B. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).*; ein bestandener Test zeigt, wie viele Netze getrieben und geprüft wurden.
-- Der Schritt **schlägt ohne Test fehl**, wenn das Projekt keine Platine hat, kein Netz auf Drive, Expect 1 oder Expect 0 steht oder die Einrichtung ein Problem hat, das die Ansicht Verbindungstest zeigt (z. B. ein Pin, der gegen einen anderen Ausgang treiben würde).
+- **Ergebnis:** die Zahl der gefundenen Fehler (Unterbrechungen, Kurzschlüsse, festhängende Netze). Beide Grenzen auf `0` setzen. Die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) listen jeden Fehler einzeln auf, z. B. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).* Bei einem bestandenen Test zeigen sie, wie viele Netze getrieben und geprüft wurden.
+- Der Schritt **schlägt fehl, ohne zu testen**, wenn das Projekt keine Platine hat, kein Netz auf Drive, Expect 1 oder Expect 0 steht oder die Ansicht Verbindungstest ein Problem in der Einrichtung meldet (z. B. einen Pin, der gegen einen anderen Ausgang treiben würde).
 - Die Platinenansicht hebt die geprüften Netze hervor.

@@ -44,8 +44,8 @@ A test engineer builds a **test sequence** from test steps that measure values a
 - **Project documentation** with notes, images, attachments and information about the device under test.
 - **CSV data files**, **PDF test reports** and **JSON result files** with run metadata, including the instruments used.
 - **ATLab Analyzer**, a separate program installed with ATLab, evaluates the JSON result files of many runs: yield, the steps that fail most often, histograms, trends and process capability (see [ATLab Analyzer](16-analyzer.md)).
-- **ATLab Fixture Designer**, also installed with ATLab, designs bed-of-nails fixtures for the Test Interface Adapter from KiCad boards: probes, wiring to the test hardware, pins and push rods, checks, a build sheet and the manufacturing files of the plates (see [ATLab Fixture Designer](17-fixture-designer.md)).
-- A **board view** that shows on the KiCad board of the device where each test step connects: matrix channels, stimulation, interfaces and boundary scan pins, following a running test and keeping failed steps marked (see [Board view](14-running-tests.md#board-view)).
+- **ATLab Fixture Designer**, also installed with ATLab, designs a bed-of-nails fixture for the Test Interface Adapter from a KiCad board – with probes, wiring to the test hardware, pins and push rods. It checks the design and creates a build sheet and the manufacturing files of the plates (see [ATLab Fixture Designer](17-fixture-designer.md)).
+- A **board view** shows on the KiCad board of the device where a test step connects to it: through matrix channels, stimulation, interfaces or boundary scan pins. During a test it follows the running step, and failed steps stay marked (see [Board view](14-running-tests.md#board-view)).
 - An **event log** with every message of the session.
 
 ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well suited for version control. The user interface is available in English and German with a light and a dark theme. Language and theme are chosen in the settings dialog. This guide opens with `F1`.

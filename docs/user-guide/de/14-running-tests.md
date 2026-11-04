@@ -114,9 +114,9 @@ Die Lupen-Schaltfläche (**Messfenster anzeigen**) blendet zwischen Schrittliste
 
 ## Platinenansicht
 
-Die Platinen-Schaltfläche (**Platinenansicht anzeigen**) in der Werkzeugleiste teilt die Schrittliste: Darunter (wie im Bild am Anfang dieses Kapitels) zeigt die KiCad-Platine des Prüflings, **wo der ausgewählte Schritt die Platine kontaktiert**. Auch Bediener sehen sie. Voraussetzung sind eine Platine im Projekt und die Netze der Pins der Test-Hardware, siehe [Platine und Netze](06-configuration.md#platine-und-netze).
+Die Platinen-Schaltfläche (**Platinenansicht anzeigen**) in der Werkzeugleiste blendet unter der Schrittliste die KiCad-Platine des Prüflings ein (wie im Bild am Anfang dieses Kapitels). Sie zeigt, **wo der ausgewählte Schritt die Platine kontaktiert**, und steht auch Bedienern zur Verfügung. Voraussetzung sind eine Platine im Projekt und die Netze an den Pins der Test-Hardware (siehe [Platine und Netze](06-configuration.md#platine-und-netze)).
 
-Für den ausgewählten Schritt hebt die Ansicht ganze Netze hervor – Pads, Leiterbahnen und Durchkontaktierungen – in der Farbe ihrer Rolle (die Standardfarben stehen unten); der Rest der Platine wird abgedunkelt:
+Für den ausgewählten Schritt hebt die Ansicht ganze Netze hervor – Pads, Leiterbahnen und Durchkontaktierungen – jeweils in der Farbe ihrer Rolle. Der Rest der Platine wird abgedunkelt. Die Standardfarben:
 
 | Farbe | Rolle |
 |-------|-------|
@@ -124,26 +124,28 @@ Für den ausgewählten Schritt hebt die Ansicht ganze Netze hervor – Pads, Lei
 | Blau | **L**-Seite des Messbusses (Matrixkanal von Matrix L) |
 | Grün | Geschlossene Stimulationsrelais (ihr In- und Out-Pin) |
 | Orange | Geschaltete externe Stimuli (H und L) |
-| Lila | Schnittstelle eines Schritts **Interface-Befehl** (Leitungen von I²C, UART oder RS485, einschließlich VREF und GND) |
+| Lila | Schnittstelle eines Schritts **Schnittstellenbefehl** (Leitungen von I²C, UART oder RS485, einschließlich VREF und GND) |
 | Cyan | Pins eines Schritts **Boundary Scan** oder **Boundary-Scan-Bus** am umrandeten Baustein; die geprüften Netze eines Schritts **Boundary-Scan-Verbindungstest** |
 
-Über der Platine zeigt oder verbirgt je eine Schaltfläche pro Rolle (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Schnittstelle**, **Boundary Scan**, **Fehlgeschlagen**) diese: Ein Klick auf den Namen blendet die Rolle auf der Platine, in der Legende und in der Abdeckung aus. Ein Klick auf den farbigen Punkt wählt eine andere Farbe aus der Palette oder als `#RRGGBB`; **Standard** stellt die ursprüngliche Farbe wieder her. Die Farben gelten auch für die Platinenbilder im PDF-Bericht.
+Über der Platine gibt es für jede Rolle eine Schaltfläche (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Schnittstelle**, **Boundary Scan**, **Fehlgeschlagen**). Ein Klick auf den Namen blendet die Rolle aus – auf der Platine, in der Legende und in der Abdeckung. Ein Klick auf den farbigen Punkt ändert die Farbe, entweder aus der Palette oder als `#RRGGBB`; **Standard** stellt die ursprüngliche Farbe wieder her. Dieselben Farben gelten für die Platinenbilder im PDF-Bericht.
 
-Unter den Schaltflächen nennt die Legende jede Verbindung mit Ressource der Test-Hardware und Netz, z. B. `H MEAS 4 +3V3`; *kein Netz zugeordnet* kennzeichnet einen Kanal ohne Netz. Flächen (Zonen, Kupferflächen) der Netze werden standardmäßig weggelassen, da eine Fläche wie GND den Großteil der Platine bedecken würde; **Flächen** zeigt sie umrandet und schwach gefüllt. Prüfnadeln aus einem importierten Nadeladapter erscheinen auf ihren Pads.
+Darunter nennt die Legende jede Verbindung mit Ressource der Test-Hardware und Netz, z. B. `H MEAS 4 +3V3`; *kein Netz zugeordnet* kennzeichnet einen Kanal ohne Netz. Flächen (Zonen, Kupferflächen) werden standardmäßig nicht hervorgehoben, da z. B. eine GND-Fläche den Großteil der Platine bedecken würde. Mit **Flächen** werden sie umrandet und schwach gefüllt angezeigt. Prüfnadeln aus einem importierten Nadeladapter erscheinen auf ihren Pads.
 
-**Während eines Tests** folgt die Ansicht dem laufenden Schritt. **Fehlgeschlagene** Schritte bleiben markiert: Ihre Netze werden rot gestrichelt umrandet, bis der nächste Lauf beginnt, nach dem Lauf zeigt die Platine also, wo die Fehler liegen. Der Titel eines fehlgeschlagenen Schritts erscheint rot.
+**Während eines Tests** folgt die Ansicht dem laufenden Schritt. **Fehlgeschlagene** Schritte bleiben markiert: Ihre Netze werden rot gestrichelt umrandet, bis der nächste Lauf beginnt. Nach dem Lauf sieht man auf der Platine also, wo die Fehler liegen. Der Titel eines fehlgeschlagenen Schritts erscheint rot.
 
 | Bedienelement | Wirkung |
 |---------------|---------|
-| **Oben / Unten** | Platine von oben oder von unten gesehen (gespiegelt, wie die Nadelplatte sie sieht) |
-| **Flächen** | Auch die Flächen der Netze hervorheben (standardmäßig aus, wird für den Benutzer gemerkt; gilt auch für die Platinenbilder im PDF-Bericht) |
-| **Abdeckung** | Statt des ausgewählten Schritts alle Netze, die die Schritte des Projekts erreichen (ignorierte Schritte zählen nicht), mit ihrer Anzahl |
-| Rahmen-Schaltfläche | Ganze Platine anzeigen (auch `F` oder Doppelklick neben die Platine) |
+| **Oben / Unten** | Platine von oben oder von unten gesehen (gespiegelt, so wie die Nadelplatte sie sieht) |
+| **Flächen** | Auch die Flächen der Netze hervorheben. Standardmäßig aus; die Einstellung wird gemerkt und gilt auch für die Platinenbilder im PDF-Bericht. |
+| **Abdeckung** | Statt des ausgewählten Schritts alle Netze zeigen, die die Schritte des Projekts erreichen, mit ihrer Anzahl. Ignorierte Schritte zählen nicht mit. |
+| Rahmen-Schaltfläche | Ganze Platine anzeigen (auch mit `F` oder einem Doppelklick neben die Platine) |
 | Lagen-Schaltfläche | Angezeigte KiCad-Lagen: Kupfer, Bestückungsdruck, Fertigung, Bauteilfläche, Benutzerlagen, Pads oben, Pads unten und Bohrungen. Ein Klick auf das Farbfeld einer Lage ändert ihre Farbe; **Standardfarben** stellt die Farben von KiCad wieder her. |
 | Mausrad / Ziehen | Zoomen / verschieben |
-| Klick auf ein Pad | Pad auswählen; die Pads seines Netzes werden umrandet |
+| Klick auf ein Pad | Pad auswählen; alle Pads seines Netzes werden umrandet |
 
-Der Trenner zwischen Schrittliste und Platine lässt sich ziehen, um die Höhen zu ändern; keine der beiden lässt sich kleiner als ein Mindestmaß ziehen, ebenso wenig die Modulliste daneben. Sichtbarkeit, Höhe, Seite, Flächen, angezeigte Rollen, Farben und Lagen werden für den Benutzer gemerkt. Hat sich die Platinendatei seit der Zuordnung der Netze geändert, weist die Ansicht darauf hin; im Entwicklungsmodus macht **Netze geprüft** die aktuelle Datei zur Referenz.
+Mit dem Trenner zwischen Schrittliste und Platine lässt sich die Aufteilung der Höhe ändern. Schrittliste, Platine und Modulliste haben dabei jeweils eine Mindestgröße. Sichtbarkeit, Höhe, Seite, Flächen, angezeigte Rollen, Farben und Lagen werden für den Benutzer gemerkt.
+
+Hat sich die Platinendatei seit der Zuordnung der Netze geändert, weist die Ansicht darauf hin. Im Entwicklungsmodus macht **Netze geprüft** die aktuelle Datei zur neuen Referenz.
 
 ## Debug-Modus
 

@@ -114,9 +114,9 @@ The magnifier button (**Show measurement panel**) toggles a large display betwee
 
 ## Board view
 
-The board button (**Show board view**) in the toolbar splits the step list: below it (as in the picture at the top of this chapter), the KiCad board of the device under test shows **where the selected step connects to the board**. Operators see it too. It needs a board in the project and the nets of the test hardware pins, see [Board and nets](06-configuration.md#board-and-nets).
+The board button (**Show board view**) in the toolbar shows the KiCad board of the device under test below the step list (as in the picture at the top of this chapter). It shows **where the selected step connects to the board**, and operators see it too. It needs a board in the project and the nets on the test hardware pins (see [Board and nets](06-configuration.md#board-and-nets)).
 
-For the selected step the view highlights whole nets — pads, tracks and vias — in the color of their role (the defaults are listed below); the rest of the board is dimmed:
+For the selected step, the view highlights whole nets – pads, tracks and vias – in the color of their role. The rest of the board is dimmed. The default colors are:
 
 | Color | Role |
 |-------|------|
@@ -127,23 +127,25 @@ For the selected step the view highlights whole nets — pads, tracks and vias �
 | Purple | Interface of an **Interface Command** step (I²C, UART or RS485 lines, including VREF and GND) |
 | Cyan | Pins of a **Boundary Scan** or **Boundary Scan Bus** step on the outlined chip; the tested nets of a **Boundary Scan Interconnect** step |
 
-Above the board, one button per role (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Interface**, **Boundary Scan**, **Failed**) shows or hides it: click the name, and the role disappears from the board, the legend and the coverage. Click the colored dot to choose another color from the palette or as `#RRGGBB`; **Default** brings the original color back. The colors are also used for the board pictures in the PDF report.
+Above the board there is one button per role (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Interface**, **Boundary Scan**, **Failed**). Click the name to hide the role from the board, the legend and the coverage. Click the colored dot to change the color, from the palette or as `#RRGGBB`; **Default** restores the original color. The same colors are used for the board pictures in the PDF report.
 
-Below the buttons, the legend lists every connection with its test hardware resource and net, e.g. `H MEAS 4 +3V3`; *no net assigned* marks a channel without a net. Zones (planes, pours) of the nets are left out by default, since a plane such as GND would cover most of the board; **Planes** shows them, outlined and filled faintly. Probes from an imported fixture are shown on their pads.
+Below the buttons, the legend lists every connection with its test hardware resource and net, e.g. `H MEAS 4 +3V3`; *no net assigned* marks a channel without a net. Zones (planes, pours) are not highlighted by default, since a GND plane, for example, would cover most of the board. **Planes** shows them outlined and faintly filled. Probes from an imported fixture are shown on their pads.
 
-**During a test** the view follows the running step. Steps that **failed** stay marked: their nets are outlined dashed in red until the next run starts, so after the run the board shows where the problems are. A failed step's title is shown in red.
+**During a test** the view follows the running step. Steps that **failed** stay marked: their nets are outlined dashed in red until the next run starts. After the run, the board therefore shows where the problems are. The title of a failed step is shown in red.
 
 | Control | Effect |
 |---------|--------|
 | **Top / Bottom** | Board seen from the top, or from below (mirrored, as the probe plate sees it) |
-| **Planes** | Also highlight the zones of the nets (off by default, remembered for the user; also applies to the board pictures in the PDF report) |
-| **Coverage** | Instead of the selected step, all nets the steps of the project reach (ignored steps do not count), with their number |
+| **Planes** | Also highlight the zones of the nets. Off by default; the setting is remembered and also applies to the board pictures in the PDF report. |
+| **Coverage** | Instead of the selected step, show all nets that the steps of the project reach, with their number. Ignored steps do not count. |
 | Frame button | Show the whole board (also `F` or a double-click beside the board) |
 | Layers button | KiCad layers shown: copper, silkscreen, fab, courtyard, user layers, top pads, bottom pads and holes. Click a layer's color swatch to change its color; **Default colors** restores KiCad's colors. |
 | Mouse wheel / drag | Zoom / pan |
-| Click on a pad | Select the pad; the pads of its net are outlined |
+| Click on a pad | Select the pad; all pads of its net are outlined |
 
-Drag the splitter between step list and board to change their heights; neither can be dragged smaller than a minimum, and neither can the module list beside them. Visibility, height, side, planes, shown roles, colors and layers are remembered for the user. If the board file changed since the nets were assigned, the view says so; in development mode **Nets checked** makes the current file the reference.
+Drag the splitter between step list and board to change how the height is shared. Step list, board and module list each have a minimum size. Visibility, height, side, planes, shown roles, colors and layers are remembered for the user.
+
+If the board file has changed since the nets were assigned, the view says so. In development mode, **Nets checked** makes the current file the new reference.
 
 ## Debug mode
 

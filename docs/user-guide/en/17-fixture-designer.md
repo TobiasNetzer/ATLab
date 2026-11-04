@@ -97,9 +97,9 @@ The probes of the fixture with their pad, net, side, test hardware pin, probe ty
 
 - **Pin**: the pin of J101 the probe is wired to. Every entry shows the pin and the resource behind it, e.g. `c7 · MEAS 7`, and the probes already wired to it.
 - **Type**: the [probe type](#probe-types); new probes get the **Type for new probes**.
-- **Opening Ø**: the hole the probe comes through in the moving plate (probes on the side facing the moving plate only). Leave it empty to use the opening of the probe type; enter a value for a probe that needs a bigger or smaller opening.
+- **Opening Ø**: the hole in the moving plate that the probe passes through (only for probes on the side of the moving plate). Leave it empty to use the opening of the probe type; enter a value for a probe that needs a bigger or smaller opening.
 - **Note**: free text for the build sheet, e.g. "long stroke".
-- **Additional connections**: what the [wires](#wiring-tab) connect to the probe besides its pin, e.g. `R1.1`.
+- **Additional connections**: what else the probe is wired to besides its pin (see [Wiring](#wiring-tab)), e.g. `R1.1`.
 
 | Button | Effect |
 |--------|--------|
@@ -134,7 +134,7 @@ A probe type describes a kind of spring probe with its receptacle. Its dimension
 | **Use for all probes** | Gives every probe of the fixture the selected type |
 | **Remove** | Removes the type; its probes get the default type |
 
-The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Before you save the first type to the library, it contains three examples (100, 75 and 50 mil) whose values are typical, but not those of a particular manufacturer: check them against your data sheet.
+The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Until you save a type of your own to the library, it contains three examples (100, 75 and 50 mil). Their values are typical but do not come from a particular manufacturer – check them against the data sheet of your probes.
 
 ## Wiring tab
 
@@ -142,7 +142,7 @@ Sometimes something sits between the board and the test hardware, e.g. a series 
 
 **Components**: **Add component** adds a line with the designator `?` and the terminals `1, 2`. Enter the designator (R1, K1, U1 …), a description (value or part number, for the bill of materials) and the terminals, separated by commas. Terminals can have any name, e.g. `A1, A2, COM, NC, NO` for a relay or `VIN, VOUT, GND` for a module. **Not wired** shows the terminals without a wire.
 
-**Wires**: every wire besides a probe's own pin. Each end is a probe, a pin of J101 or a component terminal. **Add wire** starts at the selected probe. Examples:
+**Wires**: every wire needed in addition to the wire from a probe to its pin. Each end is a probe, a pin of J101 or a component terminal. **Add wire** adds a wire that starts at the selected probe. Examples:
 
 | From | To | Meaning |
 |------|----|---------|
@@ -151,7 +151,7 @@ Sometimes something sits between the board and the test hardware, e.g. a series 
 | P5 | P6 | Jumper between two probes |
 | P8 | K1.COM | Probe to a relay contact |
 
-A component does **not** connect its terminals. In the example, c7 is therefore not on the net of P3: the pin gets no net of the board, ATLab shows no net for it, and a short check does not look through R1. Only wires, a probe's pin and probe-to-probe jumpers join nets.
+A component does **not** connect its terminals to each other. In the example, c7 is therefore not on the net of P3: the pin gets no net of the board, ATLab shows no net for it, and the short check does not look through R1. A net is only passed on by wires: from a probe to its pin, through wires, and through jumpers between probes.
 
 ## Test Hardware tab
 
@@ -195,7 +195,7 @@ The **Types** list below the parts works like the probe types: **Add type**, **F
 | **Kind** | Locating pin, pre-centering pin, support pin or push rod |
 | **Ø** | Diameter where it touches the board |
 | **Drill Ø** | Hole for it in its plate |
-| **Opening Ø** | Push rods only: hole it comes through in the top probe plate; 0 = the drill diameter |
+| **Opening Ø** | Push rods only: hole in the top probe plate that the push rod passes through; 0 = the drill diameter |
 | **Edge gap** | Pre-centering pins only: gap between pin and board edge |
 | **Height** | How far it stands out of the plate towards the board |
 | **Clearance** | Smallest distance from its edge to a component of its side |
@@ -258,7 +258,7 @@ Problems that prevent making a plate are listed below the plates: a hole without
 
 ### Outline
 
-All plates share one outline, unless a plate has **Own outline** ticked. With own outlines, **Edit outline of** selects which outline the settings below change: the shared one or that of a plate.
+All plates share one outline unless **Own outline** is ticked for a plate. If there are own outlines, **Edit outline of** selects which outline the settings below change: the shared one or that of a particular plate.
 
 | Plate outline | Meaning |
 |---------------|---------|
@@ -267,7 +267,16 @@ All plates share one outline, unless a plate has **Own outline** ticked. With ow
 | **DXF file** / **SVG file** | The outline from a drawing, e.g. of the fixture housing. **Choose…** selects the file, the refresh button reads it again. |
 | **Board layer** | The outline drawn on a layer of the board in KiCad, e.g. `User.1`, `Dwgs.User` or `Margin` |
 
-A fixed size or an outline from a file or layer is centered on the board; **Offset X** / **Offset Y** move it from there. In a drawing, the largest closed contour becomes the outline, closed contours inside it become **cut-outs**, and circles inside it become **frame holes**, e.g. for the screws of the plate. Arcs stay arcs. DXF files may use lines, arcs, circles, polylines, ellipses and splines; the unit comes from the file (millimeters if it has none). SVG files may use paths and all basic shapes. Below the settings, a line shows the size of the plate and the number of frame holes and cut-outs, or what could not be used.
+A fixed size and an outline from a file or layer are centered on the board; **Offset X** / **Offset Y** move them from there.
+
+A drawing is read like this:
+
+- The largest closed contour becomes the plate outline.
+- Other closed contours inside it become **cut-outs**.
+- Circles inside it become **frame holes**, e.g. for the screws of the plate.
+- Arcs stay arcs.
+
+DXF files may use lines, arcs, circles, polylines, ellipses and splines. The unit is read from the file; if it has none, millimeters are used. SVG files may use paths and all basic shapes. Below the settings, a line shows the size of the plate and the number of frame holes and cut-outs – or what could not be used.
 
 ### Export
 
@@ -288,16 +297,21 @@ The fixture refers to pads by footprint reference and pad number (e.g. `TP12.1`)
 - **Reload board** (`F5`) reads the board file again, e.g. after editing it in KiCad.
 - **Change board…** uses another board file, e.g. a new revision of the device.
 
-Positions and nets always come from the current board file. The checks then report probes whose pad moved, changed its net or disappeared, compared with the state when the fixture was last saved.
+Positions and nets always come from the current board file. The checks compare them with the state when the fixture was last saved, and report every probe whose pad has moved, has a different net or no longer exists.
 
 ## Build sheet
 
 **Build sheet (PDF)…** (`Ctrl+P`) creates a PDF (A4 landscape) in the order of the work:
 
-- fixture and board information, including the checksum of the board file, the board position (upside down or not) and the meaning of the coordinates,
-- the **bill of materials**: every probe type and part type with its quantity, diameter, drill, opening and height, and the components of the wiring by description with their note,
-- the **assembly** of every side with probes or parts: the **probes by type** (quantity and probe numbers per type), the **pins and push rods** of that side with kind, type, position and plate, and the **assembly drawing**: the plates of that side with their outlines and openings, the probes and parts, seen from the side where they touch the board (the plates above from the top, the plates below from below, mirrored). Every probe type has its own marker shape (circle, square, diamond, hexagon, then the same hollow: eight types per side; from the ninth the shapes repeat), and the parts have the same symbols as in the board view with their name above; plates are drawn in different colors and line styles, explained in a legend.
-- the **wiring**: every wire to make, with both ends and the note, and the side of its probes if the fixture probes from both sides: first each probe to its pin (sorted by pin), then the wires of the [Wiring tab](#wiring-tab) under their names there (W1, W2 …). Below it the probes that are **not wired**, to check that none was forgotten. Then a **wiring drawing** of every probe plate, seen from its outside where the wires go; unwired probes are drawn hollow.
+1. **Information** about fixture and board, including the checksum of the board file, the board position (upside down or not) and how to read the coordinates.
+2. **Bill of materials**: every probe type and part type with quantity, diameter, drill, opening and height; then the components of the wiring, grouped by description, with their note.
+3. **Assembly**, once for every side with probes or parts:
+   - **Probes by type**: quantity and probe numbers per type,
+   - **Pins and push rods** of that side with kind, type, position and plate,
+   - the **assembly drawing**: the plates of that side with their outlines and openings, and the probes and parts. It is drawn from the side where they touch the board – the plates above from the top, the plates below from below (mirrored).
+
+   Every probe type has its own marker shape in the drawing: circle, square, diamond and hexagon, then the same shapes hollow. This covers eight types per side; from the ninth type on, the shapes repeat. Parts have the same symbols as in the board view, with their name above. The plates are drawn in different colors and line styles, explained in a legend.
+4. **Wiring**: every wire to make, with both ends and the note. If the fixture has probes on both sides, the side is listed too. First comes each probe with its pin (sorted by pin), then the wires of the [Wiring tab](#wiring-tab) under their names there (W1, W2 …). Below that are the probes that are **not wired**, so that none is forgotten. Then follows a **wiring drawing** of every probe plate, seen from its outside where the wires are connected; unwired probes are drawn hollow.
 
 In the drawings every probe number stands inside its marker, so numbers never overlap. Where probes are so close that their numbers would be too small to read, the drawing leaves them out and frames the area; each framed area follows enlarged on a page of its own (**Detail A**, **Detail B** …).
 

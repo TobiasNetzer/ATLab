@@ -36,7 +36,7 @@ Ignorierte Schritte werden abgeblendet dargestellt. Spaltenbreite und -reihenfol
 
 Manche Schritte melden mehr als ihren Messwert: die abweichenden Pins einer Boundary-Scan-Prüfung, ein I²C-NACK, eine fehlgeschlagene Antwortprüfung eines Skripts oder die Fehler eines Verbindungstests. Ein solcher Schritt zeigt ein ⓘ in der Spalte **Ergebnis**.
 
-Ein **Doppelklick** auf den Schritt öffnet **Ergebnisdetails**. Der Dialog listet alle Meldungen des letzten Laufs des Schritts; der Text lässt sich markieren, und **Kopieren** legt ihn vollständig in die Zwischenablage. Im Entwicklungsmodus öffnet der Kontextmenüeintrag **Ergebnisdetails anzeigen** denselben Dialog. Während eines Tests lässt sich der Dialog nicht öffnen.
+Ein **Doppelklick** auf den Schritt öffnet den Dialog **Ergebnisdetails**. Er listet alle Meldungen aus der letzten Ausführung des Schritts. Der Text lässt sich markieren; **Kopieren** legt ihn vollständig in die Zwischenablage. Im Entwicklungsmodus öffnet der Kontextmenüeintrag **Ergebnisdetails anzeigen** denselben Dialog. Während eines Tests lässt sich der Dialog nicht öffnen.
 
 Die Details werden außerdem ins Ereignisprotokoll und in die [Testergebnisse](15-results-and-reports.md) geschrieben.
 

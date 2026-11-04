@@ -26,7 +26,13 @@ Give the relay channels of the test hardware meaningful names, such as `GND`, `V
 
 The number of rows matches the connected test hardware (or the simulator). The names appear in the relay selectors of the step configuration (displayed as `<number> <name>`), which makes sequences far easier to read and review. Leave a field empty if the channel is unused.
 
-**Use net names as channel labels** labels every channel with the net on its test hardware pins instead, as assigned under [Board and Nets](#board-and-nets): MEAS channels get their net, stimulation channels the net of Out (or In), external stimuli the net of H (or L), shortened to the last part of the net path (`/SENSE/VREF` becomes `VREF`). The labels follow when nets change; a channel without net has no label. Meanwhile the label fields cannot be edited. Your own labels stay in the project and come back when the option is turned off.
+With **Use net names as channel labels** turned on, every channel is named after the net on its test hardware pins instead (assigned under [Board and Nets](#board-and-nets)):
+
+- MEAS channels get their net,
+- stimulation channels the net on Out (or, if there is none, on In),
+- external stimuli the net on H (or on L).
+
+Only the last part of the net path is used (`/SENSE/VREF` becomes `VREF`). When the nets change, the labels change with them; a channel without a net has no label. While the option is on, the label fields cannot be edited. Your own labels stay in the project and come back as soon as the option is turned off.
 
 > **Tip:** In the matrix selector you can type the channel number on the keyboard to jump to it.
 
@@ -147,8 +153,8 @@ Details on the exported files: [Test Results & Reports](15-results-and-reports.m
 
 **Board layers…** sets up the board pictures of failed steps in the PDF report:
 
-- **View**: **Automatic** draws every step on the side with most of its copper; **Top** or **Bottom** always uses that side.
-- The layer list: tick a layer under **Top** to draw it when a picture shows the top side, under **Bottom** when it shows the bottom side. The arrows change the order (the top of the list is drawn on top), the swatch the color and the slider the opacity. Layers of the far side of the board are drawn dashed.
+- **View**: with **Automatic**, every step is shown from the side that holds most of the copper of its nets. **Top** or **Bottom** always shows that side.
+- The layer list has two columns: layers ticked under **Top** appear in pictures of the top side, layers under **Bottom** in pictures of the bottom side. The arrows change the order (what is at the top of the list is drawn on top), the swatch changes the color and the slider the opacity. Layers on the far side of the board are drawn dashed.
 - **Show all** / **Hide all**, **Default style** and **Default order** reset the list. **Save as default** uses these layers for new projects and projects without a choice of their own; **Load default** takes over the layers saved as default.
 
 The choice is saved in the project. The nets of the steps are drawn in the colors of the [board view](14-running-tests.md#board-view).
@@ -184,15 +190,15 @@ Checks are case-sensitive.
 
 ## Board and Nets
 
-The KiCad board of the device under test and the net on every pin of the DUT connector of the test hardware. They are used by the [board view](14-running-tests.md#board-view) of the Test Execution tab. Both are optional: a project without board works as before.
+This section holds the KiCad board of the device under test and the net on every pin of the test hardware's DUT connector. Both are used by the [board view](14-running-tests.md#board-view) of the Test Execution tab. Both are optional; a project without a board works as before.
 
 | Element | Effect |
 |---------|--------|
 | **Board** | Folder button: choose the `.kicad_pcb` file (KiCad 6 or newer). Refresh button: read it again, e.g. after a change in KiCad. × button: remove the board from the project; the nets stay. |
 | Status line | The loaded board with its number of footprints and nets, or why it could not be read. |
-| **Import fixture…** | Takes over board, nets and probe positions from a fixture of [ATLab Fixture Designer](17-fixture-designer.md) (`.atlabfix`): every wired probe gives its pin the net of its pad. Afterwards ATLab asks whether the nets should also become the [channel labels](#channel-labels) (not while **Use net names as channel labels** is on): MEAS channels get their net, stimulation channels the net of Out (or In), external stimuli the net of H (or L). |
+| **Import fixture…** | Takes over board, nets and probe positions from a fixture file of [ATLab Fixture Designer](17-fixture-designer.md) (`.atlabfix`). Every pin that a probe is wired to gets the net of the probe's pad. ATLab then asks whether the nets should also become the [channel labels](#channel-labels), following the same rules as **Use net names as channel labels**. While that option is on, ATLab does not ask. |
 | **Clear nets** | Removes the nets and probes of all pins. |
 | **Assigned only** | Lists only pins with a net. |
 | Table | Every pin of J101 with its resource (e.g. pin `c7` is `MEAS 7`) and its net. Type the net or pick it from the suggestions, which list the nets of the board. **Probes** shows the probes of an imported fixture on the pin. |
 
-The board is stored with a path relative to the project file, together with a checksum of the file. If the board file changes later — e.g. a new revision with other nets — the status line and the board view say so. Check the nets of the pins, then click **Nets checked** to make the current file the new reference.
+The board is stored with a path relative to the project file, together with a checksum of the file. If the board file changes later, e.g. a new revision with other nets, the status line and the board view say so. Check the nets of the pins, then click **Nets checked**; this makes the current file the new reference.

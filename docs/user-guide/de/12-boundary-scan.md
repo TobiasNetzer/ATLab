@@ -85,7 +85,7 @@ Bei bestehender Verbindung zeigt die Kettenliste die von der Baugruppe gelesenen
 | **BSDL-Datei** | Ordner-Schaltfläche: BSDL-Datei importieren. ×-Schaltfläche: entfernen. Die Datei wird sofort eingelesen; Warnungen (z. B. fehlende Befehle) erscheinen im Ereignisprotokoll. BSDL-Dateien im Projektordner werden mit relativem Pfad gespeichert. |
 | **Befehlslänge** | Wird aus der BSDL-Datei übernommen. Für Bausteine ohne BSDL-Datei muss sie von Hand eingetragen werden. Ist nur bei einem Baustein der Kette die Länge unbekannt, berechnet ATLab sie aus der Gesamtlänge. |
 | **Gehäuse** | Gehäusevariante aus der BSDL-Datei (z. B. `TQFP144`, `BGA256`). Bestimmt die Pinnamen und die Gehäusedarstellung. |
-| **Footprint auf der Platine** | Referenz des Bausteins auf der KiCad-Platine des Projekts, z. B. `U3`. Damit umrandet die [Platinenansicht](14-running-tests.md#platinenansicht) den Baustein bei Boundary-Scan-Schritten und hebt die verwendeten Pins mit ihren Netzen hervor: Der Gehäusepin jedes Ports ist die Pad-Nummer des Footprints. |
+| **Footprint auf der Platine** | Referenz des Bausteins auf der KiCad-Platine des Projekts, z. B. `U3`. Damit kann die [Platinenansicht](14-running-tests.md#platinenansicht) bei Boundary-Scan-Schritten den Baustein umranden und die verwendeten Pins samt ihren Netzen hervorheben. Die Pinnummern des Gehäuses müssen dazu den Padnummern des Footprints entsprechen. Auch der [Verbindungstest](#ansicht-verbindungstest) braucht dieses Feld. |
 
 Bausteine ohne BSDL-Datei können in der Kette bleiben; sie bleiben immer in BYPASS.
 
@@ -195,80 +195,97 @@ I²C und SPI haben keine Mindesttaktrate; EEPROMs, Sensoren, Port-Expander und F
 
 ## Ansicht Verbindungstest
 
-Der Verbindungstest prüft die Verbindungen zwischen den Boundary-Scan-Pins der Platine: Er findet **Unterbrechungen** (ein Pin sieht sein Netz nicht), **Kurzschlüsse** zwischen Netzen und Netze, die auf 0 oder 1 **festhängen**. Er braucht die KiCad-Platine im Projekt ([Platine und Netze](06-configuration.md#platine-und-netze)) und für jeden Baustein eine BSDL-Datei und seinen **Footprint auf der Platine**. Die Ansicht listet jedes Netz der Platine mit mindestens einem Boundary-Scan-Pin.
+Der Verbindungstest prüft die Leitungen zwischen den Boundary-Scan-Pins der Platine. Er findet **Unterbrechungen** (ein Pin hat keine Verbindung zu seinem Netz), **Kurzschlüsse** zwischen Netzen und Netze, die fest auf 0 oder 1 **hängen**.
+
+Dafür braucht der Test:
+
+- die KiCad-Platine im Projekt (siehe [Platine und Netze](06-configuration.md#platine-und-netze)),
+- für jeden Baustein eine BSDL-Datei,
+- für jeden Baustein den **Footprint auf der Platine**.
+
+Die Ansicht listet jedes Netz der Platine, an dem mindestens ein Boundary-Scan-Pin liegt.
 
 | Spalte | Inhalt |
 |--------|--------|
 | **Netz** | Netzname aus KiCad |
-| **Rolle** | Was der Test mit dem Netz macht, siehe unten |
-| **Verbunden mit** | Ein anderes Netz, mit dem dieses verbunden ist, z. B. über einen Serienwiderstand, siehe [Verbundene Netze](#verbundene-netze) |
-| **Boundary-Scan-Pins** | Die Pins der Kette auf dem Netz, z. B. `U3 pin 12 (PA3)`; mit einem Signalnamen aus der Pin-Tabelle statt des Ports |
-| **Weitere Pads** | Die anderen Pads auf dem Netz, z. B. `R5.1, J1.3`, um zu beurteilen, ob das Netz getrieben werden darf |
-| **Hinweis** | Probleme, die den Test verhindern (rot), und Hinweise |
+| **Rolle** | Was der Test mit dem Netz macht (siehe [Rollen](#rollen)) |
+| **Verbunden mit** | Ein weiteres Netz, das zu diesem gehört, z. B. hinter einem Serienwiderstand (siehe [Verbundene Netze](#verbundene-netze)) |
+| **Boundary-Scan-Pins** | Die Pins der Kette an diesem Netz, z. B. `U3 pin 12 (PA3)`. Hat der Pin in der Pin-Tabelle eine Bezeichnung, steht sie anstelle des Portnamens in der Klammer. |
+| **Weitere Pads** | Alle anderen Pads am Netz, z. B. `R5.1, J1.3`. Daran lässt sich abschätzen, ob das Netz gefahrlos getrieben werden kann. |
+| **Hinweis** | Probleme, die den Test verhindern (rot), und sonstige Hinweise |
 
-**Jedes Netz beginnt als Sicher.** Eine oder mehrere Zeilen auswählen (`Strg`/`Umschalt`+Klick) und eine Rollen-Schaltfläche klicken, um die Rolle aller ausgewählten Zeilen zu setzen:
+### Rollen
+
+**Zu Beginn stehen alle Netze auf Sicher.** Um die Rolle zu ändern, eine oder mehrere Zeilen auswählen (`Strg`/`Umschalt`+Klick) und unter **Auswahl setzen auf** die gewünschte Rolle anklicken.
 
 | Rolle | Wirkung |
 |-------|---------|
-| **Sicher** | Das Netz wird nicht berührt: Seine Pins behalten ihre sicheren Werte aus der BSDL-Datei und werden nicht gelesen. |
-| **Drive** | Jeder Boundary-Scan-Pin auf dem Netz, der einen Ausgang hat, treibt es der Reihe nach, während alle anderen es lesen. So wird auch der Ausgang jedes Pins geprüft. Drive nur für Netze wählen, die sonst nichts treibt: kein Ausgang eines anderen Bausteins, keine Versorgung, kein Oszillator. |
-| **Expect 1** / **Expect 0** | Das Netz wird nur gelesen und muss auf diesem Pegel bleiben, z. B. ein Pull-up, ein fest an die Versorgung gelegtes Enable oder GND. Ein getriebenes Netz, das damit kurzgeschlossen ist, wird ebenfalls gefunden. |
+| **Sicher** | Der Test lässt das Netz in Ruhe. Seine Pins bleiben auf den sicheren Werten der BSDL-Datei und werden nicht gelesen. |
+| **Drive** | Jeder Pin am Netz, der einen Ausgang hat, treibt das Netz einmal, während alle anderen Pins mitlesen. So wird nebenbei auch jeder Ausgang geprüft. Drive nur für Netze wählen, die sonst nichts treibt – also kein Ausgang eines anderen Bausteins, keine Versorgung und kein Oszillator. |
+| **Expect 1** / **Expect 0** | Das Netz wird nur gelesen und muss dauerhaft diesen Pegel haben. Typisch sind ein Pull-up, ein fest auf die Versorgung gelegter Enable-Eingang oder GND. Hat ein getriebenes Netz einen Kurzschluss zu einem solchen Netz, wird auch das erkannt. |
 
-#### Verbundene Netze
+### Verbundene Netze
 
-Ein Serienwiderstand teilt ein Signal in zwei KiCad-Netze, z. B. `/SDA_MCU` und `/SDA`. Um die Verbindung über den Widerstand zu prüfen, das andere Netz bei **Verbunden mit** eintragen; das Feld schlägt die Netze der Liste vor. Beide Netze werden dann als ein Netz geprüft: Jeder Boundary-Scan-Pin beider Netze treibt der Reihe nach, und alle lesen. Ein fehlender oder offener Widerstand zeigt sich als Unterbrechung zwischen den Pins beider Seiten.
+Ein Serienwiderstand teilt ein Signal in KiCad in zwei Netze, z. B. `/SDA_MCU` und `/SDA`. Damit auch die Verbindung über den Widerstand geprüft wird, bei **Verbunden mit** das jeweils andere Netz eintragen; das Feld schlägt dabei die Netze der Liste vor.
 
-- Verbundene Netze haben immer dieselbe Rolle: Die Rolle eines davon zu setzen, setzt sie für alle. Wird ein Netz verbunden, übernimmt es die Rolle des Netzes, mit dem es verbunden wird (oder behält seine eigene, wenn jenes Sicher ist).
-- Mehrere Netze lassen sich verketten: `A` mit `B` und `B` mit `C` verbunden ergibt ein Netz aus dreien. Die Spalte Hinweis nennt die gemeinsam geprüften Netze, Meldungen nennen sie als `/SDA_MCU + /SDA`.
-- Das Feld leeren, um die Verbindung zu entfernen.
+Der Test behandelt beide Netze dann wie ein einziges: Jeder Boundary-Scan-Pin auf beiden Seiten treibt einmal, alle anderen lesen mit. Fehlt der Widerstand oder ist er unterbrochen, erscheint das als Unterbrechung zwischen den Pins der beiden Seiten.
 
-Der Filter findet Netze, Pins und Pads; **Nur geprüfte** blendet die sicheren Netze aus; die Aktualisieren-Schaltfläche liest Platine und BSDL-Dateien erneut. Die Zeile unter der Tabelle zählt die Netze je Rolle und die Netze mit Problemen.
+- Verbundene Netze haben immer dieselbe Rolle. Ändert man die Rolle eines Netzes, ändert sie sich bei allen mit. Beim Verbinden übernimmt ein Netz die Rolle des anderen; steht das andere auf Sicher, behält es seine eigene.
+- Es lassen sich auch mehr als zwei Netze verbinden: Ist `A` mit `B` und `B` mit `C` verbunden, werden alle drei als ein Netz geprüft. Die Spalte **Hinweis** nennt die gemeinsam geprüften Netze; in Meldungen erscheinen sie als `/SDA_MCU + /SDA`.
+- Um eine Verbindung aufzuheben, das Feld leeren.
 
-#### Wann der Test nicht läuft
+Das Filterfeld durchsucht Netze, Pins und Pads. **Nur geprüfte** blendet die Netze auf Sicher aus. Die Aktualisieren-Schaltfläche liest Platine und BSDL-Dateien neu ein. Unter der Tabelle steht, wie viele Netze jede Rolle hat und wie viele ein Problem haben.
 
-Zwei Pins dürfen nie gleichzeitig dasselbe Netz treiben, der eine auf 1 und der andere auf 0. Das würde die Ausgänge gegeneinander kurzschließen. Deshalb schaltet der Test jeden Pin eines geprüften Netzes ab, außer dem, der gerade an der Reihe ist. Abgeschaltet wird ein Pin über seine **Ausgangsfreigabe**, eine Zelle in der BSDL-Datei, die den Ausgangstreiber des Pins ein- und ausschaltet.
+Die Rollen werden im Projekt gespeichert; Netze auf Sicher werden nicht gespeichert, da Sicher der Standard ist. Ausgeführt wird der Test von einem Testschritt mit der Auswertungsquelle [Boundary-Scan-Verbindungstest](09-evaluation-sources.md#boundary-scan-verbindungstest).
 
-Manche Einrichtungen lassen das nicht zu. Der Test läuft dann gar nicht. Die Spalte Hinweis zeigt das Problem rot, und ein Testschritt schlägt mit derselben Meldung fehl.
+### Wann der Test nicht läuft
 
-| Problem | Warum der Test nicht läuft | Abhilfe |
-|---------|----------------------------|---------|
-| Zwei Pins auf einem Drive-Netz **treiben immer** (*… always drive (no output enable)*), oder einer auf einem Expect-Netz. | Diese Pins haben keine Ausgangsfreigabe und lassen sich nicht abschalten. Sie würden gegeneinander treiben oder gegen den Pegel, den das Netz haben soll. | Das Netz auf Sicher setzen. |
-| Ein Pin **teilt seine Ausgangsfreigabe** mit anderen Pins (*… shares its output enable with PA4, PA5*). | Manche Bausteine schalten mehrere Pins mit einer Ausgangsfreigabe. Wenn dieser Pin treibt, würden auch PA4 und PA5 treiben, auf Netzen, die dafür nicht eingerichtet sind. | Die Netze von PA4 und PA5 ebenfalls auf Drive setzen; dann treiben sie in derselben Runde und werden mitgeprüft. Oder dieses Netz auf Sicher setzen. |
-| **Kein Pin kann das Netz treiben** oder **keiner kann es lesen**. | Der Test hat nichts zu treiben oder nichts zu lesen. | Das Netz auf Sicher setzen. |
-| Das Netz ist **nicht mehr auf der Platine**. | Die Platine hat sich geändert, seit die Rolle gesetzt wurde. | Das Netz auf Sicher setzen. |
+Zwei Pins dürfen ein Netz nie gleichzeitig treiben, der eine auf 1 und der andere auf 0 – die Ausgänge würden gegeneinander arbeiten. Deshalb schaltet der Test an einem geprüften Netz alle Ausgänge ab, außer dem einen, der gerade an der Reihe ist. Dazu braucht jeder Pin eine **Ausgangsfreigabe**: eine Zelle im Boundary-Register, die den Ausgangstreiber des Pins ein- und ausschaltet.
 
-Die Rolle eines Netzes wird im Projekt gespeichert; sichere Netze werden nicht gespeichert. Ausgeführt wird der Test mit einem Schritt der Auswertungsquelle [Boundary-Scan-Verbindungstest](09-evaluation-sources.md#boundary-scan-verbindungstest).
+Lässt die Einrichtung das nicht zu, läuft der Test gar nicht. Die Spalte **Hinweis** zeigt das Problem rot an, und ein Testschritt schlägt mit derselben Meldung fehl.
+
+| Problem | Grund | Abhilfe |
+|---------|-------|---------|
+| An einem Drive-Netz **treiben zwei Pins immer** (*… always drive (no output enable)*), oder an einem Expect-Netz einer. | Diese Pins haben keine Ausgangsfreigabe und lassen sich nicht abschalten. Sie würden gegeneinander treiben bzw. gegen den Pegel, den das Netz haben soll. | Das Netz auf Sicher setzen. |
+| Ein Pin **teilt sich seine Ausgangsfreigabe** mit anderen Pins (*… shares its output enable with PA4, PA5*). | Manche Bausteine schalten mehrere Pins über eine gemeinsame Ausgangsfreigabe. Treibt dieser Pin, treiben PA4 und PA5 ebenfalls – auf Netzen, die dafür nicht vorgesehen sind. | Die Netze von PA4 und PA5 ebenfalls auf Drive setzen; sie treiben dann gleichzeitig mit und werden mitgeprüft. Oder dieses Netz auf Sicher setzen. |
+| **Kein Pin kann das Netz treiben** bzw. **kein Pin kann es lesen**. | Der Test hätte nichts zu treiben oder nichts zu lesen. | Das Netz auf Sicher setzen. |
+| Das Netz ist **nicht mehr auf der Platine**. | Die Platine wurde geändert, nachdem die Rolle gesetzt wurde. | Das Netz auf Sicher setzen. |
 
 ### So funktioniert der Test
 
-Jedes Drive-Netz bekommt einen eigenen Code. Eine **Runde** treibt die Bits aller Codes und danach ihre Komplemente, so wird jedes Netz auf 0 und 1 getrieben, und zwei kurzgeschlossene Netze können nicht beide ihren eigenen Code lesen. Für *n* Drive-Netze hat eine Runde 2 × ⌈log₂(*n* + 2)⌉ Muster, z. B. 14 für 100 Netze.
+Jedes Drive-Netz bekommt einen eigenen Code. In einem **Durchgang** werden zuerst die Bits aller Codes getrieben und danach die invertierten Bits. Dadurch liegt jedes Netz einmal auf 0 und einmal auf 1, und zwei kurzgeschlossene Netze können nicht beide ihren eigenen Code zurücklesen. Bei *n* Drive-Netzen besteht ein Durchgang aus 2 × ⌈log₂(*n* + 2)⌉ Mustern, bei 100 Netzen also aus 14.
 
-Es gibt eine Runde je Pin, der treiben kann: Auf einem Netz mit Pins von U1 und U2 treibt U1 in der ersten Runde und U2 in der zweiten, die anderen Pins lesen jedes Mal. Ein Netz mit weniger Treibern nimmt seine Treiber erneut, so wird jedes Netz in jeder Runde getrieben. Ein Pin ohne Ausgangsfreigabe ist der einzige Treiber seines Netzes, da er sich nicht abschalten lässt (der Hinweis sagt das). Alle Runden gehen in einer Übertragung an die Probe.
+Es gibt so viele Durchgänge, wie ein Netz höchstens Pins mit Ausgang hat. Liegen an einem Netz Pins von U1 und U2, treibt im ersten Durchgang U1 und im zweiten U2; die übrigen Pins lesen jedes Mal mit. Netze mit weniger Treibern setzen ihre Treiber erneut ein, sodass jedes Netz in jedem Durchgang getrieben wird. Ein Pin ohne Ausgangsfreigabe lässt sich nicht abschalten und ist deshalb der einzige Treiber seines Netzes (die Spalte **Hinweis** weist darauf hin). Alle Durchgänge gehen in einer einzigen Übertragung an die Probe.
 
-Alle Bausteine mit BSDL-Datei sind in EXTEST. Alle Zellen beginnen auf ihren sicheren Werten; in jedem Muster sind nur die Pins eingeschaltet, die an der Reihe sind, und nach dem letzten Muster kehren alle Zellen auf ihre sicheren Werte zurück.
+Während des Tests sind alle Bausteine mit BSDL-Datei in EXTEST. Alle Zellen beginnen auf ihren sicheren Werten. In jedem Muster sind nur die Pins eingeschaltet, die gerade an der Reihe sind; nach dem letzten Muster kehren alle Zellen auf ihre sicheren Werte zurück.
 
-Der Vergleich der Runden zeigt, wo ein Fehler liegt:
+Aus dem Vergleich der Durchgänge ergibt sich, wo ein Fehler liegt:
 
-| Ergebnis | Bedeutung |
-|----------|-----------|
-| Niemand liest das Netz, in keiner Runde | Das Netz selbst: ein Kurzschluss oder ein festhängendes Netz |
-| Niemand liest das Netz, während ein Pin treibt, sonst ist alles in Ordnung | Der Ausgang dieses Pins ist defekt |
-| Nur ein Pin liest falsch, auch wenn er selbst treibt | Der Eingang dieses Pins ist defekt |
-| Ein Pin sieht die anderen nicht, und sie sehen ihn nicht | Unterbrechung an diesem Pin, z. B. eine schlechte Lötstelle. Mit nur zwei Pins auf dem Netz kann der Test nicht sagen, welches Ende offen ist. |
+| Beobachtung | Ursache |
+|-------------|---------|
+| In keinem Durchgang liest ein Pin den erwarteten Wert. | Das Netz selbst: ein Kurzschluss oder ein festhängender Pegel |
+| Nur wenn ein bestimmter Pin treibt, liest kein Pin den erwarteten Wert; sonst ist alles in Ordnung. | Der Ausgang dieses Pins ist defekt. |
+| Nur ein Pin liest falsch, auch wenn er selbst treibt. | Der Eingang dieses Pins ist defekt. |
+| Ein Pin sieht die anderen nicht, und die anderen sehen ihn nicht. | Unterbrechung an diesem Pin, z. B. eine schlechte Lötstelle. Hat das Netz nur zwei Pins, lässt sich nicht sagen, an welchem Ende die Unterbrechung liegt. |
+
+Die Meldungen des Tests sind englisch:
 
 | Meldung | Bedeutung |
 |---------|-----------|
-| *Short between nets A, B.* | Die Netze lesen eine Kombination ihrer Codes. |
-| *Nets A, B all read 0: shorted to each other or each to GND.* | Mehrere Netze lesen einen festen Pegel; die Daten können die beiden Fälle nicht unterscheiden. |
-| *Net A is stuck at 0: short to GND or to a stronger driver.* | Der Treiber kann das Netz nicht ändern. |
+| *Short between nets A, B.* | Die Netze lesen eine Mischung ihrer Codes: Sie sind miteinander kurzgeschlossen. |
+| *Nets A, B all read 0: shorted to each other or each to GND.* | Mehrere Netze lesen einen festen Pegel. Ob sie untereinander oder jeweils nach GND kurzgeschlossen sind, lässt sich nicht unterscheiden. |
+| *Net A is stuck at 0: short to GND or to a stronger driver.* | Der Treiber kann den Pegel des Netzes nicht ändern. |
 | *Net A: U2 pin 4 (PB1) does not drive the net, the other drivers do: its output is defective.* | Das Netz funktioniert mit jedem Treiber außer diesem. |
-| *Net A: U2 pin 4 (PB1) does not read the net, the others see it drive: its input is defective.* | Der Pin treibt das Netz, kann es aber nicht lesen. |
-| *Open at U3 pin 7 (PA3) on net A: …* | Der Pin ist vom Netz getrennt. |
-| *Open on net A between U1 pin 3 (P3) and U2 pin 3 (P3): …* | Zwei Pins sehen sich nicht; jedes Ende kann offen sein. |
-| *Open on net A: U5 pin 4 (SDA) does not see the net (reads 1); open at the pin or defective input.* | Ein Pin, der nicht treiben kann, folgt dem Netz nicht. |
+| *Net A: U2 pin 4 (PB1) does not read the net, the others see it drive: its input is defective.* | Der Pin treibt das Netz, liest es aber nicht. |
+| *Open at U3 pin 7 (PA3) on net A: …* | Der Pin hat keine Verbindung zum Netz. |
+| *Open on net A between U1 pin 3 (P3) and U2 pin 3 (P3): …* | Die beiden Pins sehen sich nicht; die Unterbrechung kann an jedem der beiden liegen. |
+| *Open on net A: U5 pin 4 (SDA) does not see the net (reads 1); open at the pin or defective input.* | Ein Pin, der selbst nicht treiben kann, folgt dem Netz nicht. |
 | *Short between nets GND and A: U3 pin 7 follows the driven net.* | Ein Expect-Netz liest den Code eines Drive-Netzes. |
 
-Grenzen: Eine Verbindung über einen Serienwiderstand wird nur geprüft, wenn die beiden Netze [verbunden](#verbundene-netze) sind. Ein Netz mit nur einem Boundary-Scan-Pin zeigt Kurzschlüsse und festhängende Pegel, aber keine Unterbrechungen (der Hinweis sagt das).
+Grenzen des Tests:
+
+- Eine Verbindung über einen Serienwiderstand wird nur geprüft, wenn die beiden Netze [verbunden](#verbundene-netze) sind.
+- An einem Netz mit nur einem Boundary-Scan-Pin findet der Test Kurzschlüsse und festhängende Pegel, aber keine Unterbrechungen (die Spalte **Hinweis** weist darauf hin).
 
 ## Boundary Scan während der Testausführung
 
@@ -276,8 +293,8 @@ Testschritte verwenden die auf dieser Registerkarte eingerichtete Kette:
 
 - Die Probe wird beim **ersten** Boundary-Scan-Schritt eines Laufs verbunden, nicht beim Teststart. Anschließend wird die Kette mit dem Projekt verglichen (Anzahl der Bausteine, IDCODEs, Befehlslängen). Passt sie nicht, z. B. weil die falsche Baugruppe eingelegt ist, schlägt der Schritt mit derselben Meldung wie die Statuszeile dieser Registerkarte fehl, z. B. *Boundary scan chain: Found 2 device(s), the project expects 3.*
 - Eine auf dieser Registerkarte geöffnete Verbindung wird vom Test übernommen. Die Registerkarte bleibt gesperrt, bis der Test die Kette freigibt.
-- Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten. Ausnahme ist ein Schritt **Boundary-Scan-Verbindungstest**: Er beginnt mit den sicheren Werten und lässt alle Pins auf ihren sicheren Werten. Ein Baustein, dessen Ausgänge getrieben wurden, bleibt in EXTEST, bis die Kette freigegeben wird.
-- Die Kette wird freigegeben – alle Bausteine kehren in den Normalbetrieb zurück und die Probe wird geschlossen –, wenn der Lauf endet, wenn er gestoppt wird (`Esc`), bei einem Schritt im Modus **Boundary Scan ausschalten** und wenn ein anderes Projekt geöffnet wird.
-- **Einzelschritt ausführen** (`F3`) behält die Kette nach dem Schritt unter Kontrolle des Tests, sodass mehrere Einzelschritte aufeinander aufbauen können. **Stopp** (`Esc`) gibt sie frei. Ein vollständiger Lauf beginnt immer mit den sicheren Werten.
+- Pins, die ein Schritt nicht auflistet, behalten ihren Zustand aus den vorherigen Schritten. Die Ausnahme ist ein Schritt **Boundary-Scan-Verbindungstest**: Er beginnt mit den sicheren Werten und hinterlässt alle Pins auf ihren sicheren Werten. Ein Baustein, dessen Ausgänge getrieben wurden, bleibt in EXTEST, bis die Kette freigegeben wird.
+- Die Kette wird freigegeben, wenn der Lauf endet oder gestoppt wird (`Esc`), bei einem Schritt im Modus **Boundary Scan ausschalten** und wenn ein anderes Projekt geöffnet wird. Dabei kehren alle Bausteine in den Normalbetrieb zurück, und die Probe wird geschlossen.
+- Nach **Einzelschritt ausführen** (`F3`) behält der Test die Kontrolle über die Kette, sodass mehrere Einzelschritte aufeinander aufbauen können. Erst **Stopp** (`Esc`) gibt sie frei. Ein vollständiger Lauf beginnt immer mit den sicheren Werten.
 
 Verwenden Sie **Boundary Scan ausschalten** vor Schritten, die die Bausteine im Normalbetrieb benötigen oder selbst auf die Probe zugreifen, z. B. das Programmieren des Bausteins mit einem externen Programm über denselben J-Link.

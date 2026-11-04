@@ -1,6 +1,10 @@
 # 17. ATLab Fixture Designer
 
-ATLab Fixture Designer entwirft einen Nadeladapter (Nadelbett) für den Test Interface Adapter aus der KiCad-Platine des Prüflings. Sie wählen, welche Pads eine Prüfnadel bekommen, von welcher Seite und mit welchem Nadeltyp, und verdrahten jede Prüfnadel mit einem Pin der Test-Hardware. Außerdem setzen Sie Fangstifte, Vorzentrierungsstifte, Stützstifte und Niederhalter. Der Fixture Designer prüft den Entwurf auf Fehler wie Kurzschlüsse zwischen Netzen, zu eng stehende Prüfnadeln oder Stifte, die auf ein Bauteil treffen. Er erstellt ein Aufbaublatt für den Bau des Nadeladapters und schreibt Zeichnungen und 3D-Modelle der Platten. Er ist ein eigenes Programm, das zusammen mit ATLab installiert wird; er liest KiCad-Platinen und verändert sie nie.
+Mit ATLab Fixture Designer entwerfen Sie aus der KiCad-Platine des Prüflings einen Nadeladapter (Nadelbett) für den Test Interface Adapter. Sie legen fest, welche Pads eine Prüfnadel bekommen, von welcher Seite und mit welchem Nadeltyp, und verdrahten jede Prüfnadel mit einem Pin der Test-Hardware. Dazu kommen Fangstifte, Vorzentrierungsstifte, Stützstifte und Niederhalter.
+
+Der Fixture Designer prüft den Entwurf laufend auf Fehler, etwa Kurzschlüsse zwischen Netzen, zu eng stehende Prüfnadeln oder Stifte, die auf ein Bauteil treffen. Für den Bau erstellt er ein Aufbaublatt, für die Fertigung Zeichnungen und 3D-Modelle der Platten.
+
+Der Fixture Designer ist ein eigenes Programm und wird zusammen mit ATLab installiert. Er liest KiCad-Platinen, verändert sie aber nie.
 
 ![ATLab Fixture Designer](images/Designer_Overview_de.png)
 
@@ -97,9 +101,9 @@ Die Prüfnadeln des Nadeladapters mit Pad, Netz, Seite, Pin der Test-Hardware, N
 
 - **Pin**: der Pin von J101, mit dem die Prüfnadel verdrahtet wird. Jeder Eintrag zeigt den Pin und die Ressource dahinter, z. B. `c7 · MEAS 7`, und die Prüfnadeln, die schon auf ihm liegen.
 - **Typ**: der [Nadeltyp](#nadeltypen); neue Prüfnadeln bekommen den **Typ für neue Prüfnadeln**.
-- **Durchbruch Ø**: das Loch in der Andruckplatte, durch das die Prüfnadel kommt (nur Prüfnadeln auf der Seite zur Andruckplatte). Leer bleibt der Durchbruch des Nadeltyps; ein Wert gilt für eine Prüfnadel, die einen größeren oder kleineren Durchbruch braucht.
+- **Durchbruch Ø**: das Loch in der Andruckplatte, durch das die Prüfnadel ragt (nur bei Prüfnadeln auf der Seite der Andruckplatte). Bleibt das Feld leer, gilt der Durchbruch des Nadeltyps. Ein eigener Wert ist für Prüfnadeln gedacht, die einen größeren oder kleineren Durchbruch brauchen.
 - **Bemerkung**: freier Text für das Aufbaublatt, z. B. „langer Hub“.
-- **Zusätzliche Verbindungen**: was die [Verbindungen](#registerkarte-verdrahtung) außer dem Pin mit der Prüfnadel verbinden, z. B. `R1.1`.
+- **Zusätzliche Verbindungen**: womit die Prüfnadel außer ihrem Pin noch verdrahtet ist (siehe [Verdrahtung](#registerkarte-verdrahtung)), z. B. `R1.1`.
 
 | Schaltfläche | Wirkung |
 |--------------|---------|
@@ -112,7 +116,7 @@ Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden
 
 ### Nadeltypen
 
-Ein Nadeltyp beschreibt eine Art Federkontaktstift mit seiner Hülse. Seine Maße nutzen die Prüfungen, die Plattendateien und die Stückliste; sie stammen aus dem Datenblatt der verwendeten Prüfnadeln. Der Nadeldurchmesser ist in mil angegeben, wie in Datenblättern üblich, alle anderen Maße in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters; die Werte werden direkt in der Tabelle bearbeitet.
+Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; sie werden für die Prüfungen, die Plattendateien und die Stückliste verwendet. Der Nadeldurchmesser ist in mil angegeben, wie in Datenblättern üblich, alle anderen Maße in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters; die Werte werden direkt in der Tabelle bearbeitet.
 
 | Feld | Bedeutung |
 |------|-----------|
@@ -134,15 +138,15 @@ Ein Nadeltyp beschreibt eine Art Federkontaktstift mit seiner Hülse. Seine Maß
 | **Für alle Prüfnadeln** | Gibt allen Prüfnadeln den ausgewählten Typ |
 | **Entfernen** | Entfernt den Typ; seine Prüfnadeln bekommen den Standardtyp |
 
-Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für sich vollständig und ändert sich nicht, wenn sich die Bibliothek ändert. Ein neuer Nadeladapter beginnt mit den Typen der Bibliothek. Bevor der erste Typ in der Bibliothek gespeichert wird, enthält sie drei Beispiele (100, 75 und 50 mil) mit typischen Werten, die aber nicht die eines bestimmten Herstellers sind: mit dem Datenblatt abgleichen.
+Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für sich vollständig und ändert sich nicht, wenn sich die Bibliothek ändert. Ein neuer Nadeladapter beginnt mit den Typen der Bibliothek. Solange Sie noch keinen eigenen Typ in der Bibliothek gespeichert haben, enthält sie drei Beispiele (100, 75 und 50 mil). Deren Werte sind typisch, stammen aber von keinem bestimmten Hersteller – gleichen Sie sie mit dem Datenblatt Ihrer Prüfnadeln ab.
 
 ## Registerkarte Verdrahtung
 
-Manchmal sitzt etwas zwischen Platine und Test-Hardware, z. B. ein Vorwiderstand, ein Relais oder ein Steckverbinder zu einem anderen Gerät. Die Registerkarte **Verdrahtung** beschreibt es. Die Bauteile gehören nur zur Verdrahtung und bekommen keinen Platz auf einer Platte.
+Manchmal sitzt zwischen Platine und Test-Hardware noch etwas, z. B. ein Vorwiderstand, ein Relais oder ein Steckverbinder zu einem anderen Gerät. Solche Bauteile werden auf der Registerkarte **Verdrahtung** beschrieben. Sie gehören nur zur Verdrahtung und haben keinen Platz auf einer Platte.
 
 **Bauteile**: **Bauteil hinzufügen** fügt eine Zeile mit dem Bezeichner `?` und den Anschlüssen `1, 2` hinzu. Tragen Sie den Bezeichner (R1, K1, U1 …), eine Beschreibung (Wert oder Teilenummer, für die Stückliste) und die Anschlüsse ein, mit Komma getrennt. Anschlüsse können beliebig heißen, z. B. `A1, A2, COM, NC, NO` für ein Relais oder `VIN, VOUT, GND` für ein Modul. **Nicht verdrahtet** zeigt die Anschlüsse ohne Verbindung.
 
-**Verbindungen**: jede Verbindung neben dem Pin einer Prüfnadel. Jedes Ende ist eine Prüfnadel, ein Pin von J101 oder ein Bauteilanschluss. **Verbindung hinzufügen** beginnt an der ausgewählten Prüfnadel. Beispiele:
+**Verbindungen**: alle Drähte, die zusätzlich zur Verbindung zwischen Prüfnadel und Pin nötig sind. Jedes Ende ist eine Prüfnadel, ein Pin von J101 oder ein Bauteilanschluss. **Verbindung hinzufügen** legt eine neue Verbindung an, die an der ausgewählten Prüfnadel beginnt. Beispiele:
 
 | Von | Nach | Bedeutung |
 |-----|------|-----------|
@@ -151,7 +155,7 @@ Manchmal sitzt etwas zwischen Platine und Test-Hardware, z. B. ein Vorwiderstand
 | P5 | P6 | Brücke zwischen zwei Prüfnadeln |
 | P8 | K1.COM | Prüfnadel auf einen Relaiskontakt |
 
-Ein Bauteil verbindet seine Anschlüsse **nicht**. Im Beispiel liegt c7 daher nicht auf dem Netz von P3: Der Pin bekommt kein Netz der Platine, ATLab zeigt für ihn kein Netz, und die Kurzschlussprüfung schaut nicht durch R1 hindurch. Netze verbinden nur Verbindungen, der Pin einer Prüfnadel und Brücken zwischen Prüfnadeln.
+Ein Bauteil verbindet seine Anschlüsse **nicht** miteinander. Im Beispiel liegt c7 deshalb nicht auf dem Netz von P3: Der Pin bekommt kein Netz der Platine, ATLab zeigt für ihn kein Netz an, und die Kurzschlussprüfung sieht nicht durch R1 hindurch. Ein Netz wird nur über Drähte weitergegeben: von der Prüfnadel zu ihrem Pin, über Verbindungen und über Brücken zwischen Prüfnadeln.
 
 ## Registerkarte Test-Hardware
 
@@ -195,7 +199,7 @@ Die Liste **Typen** unter den Teilen funktioniert wie die Nadeltypen: **Typ hinz
 | **Art** | Fangstift, Vorzentrierungsstift, Stützstift oder Niederhalter |
 | **Ø** | Durchmesser, wo er die Platine berührt |
 | **Bohrung Ø** | Loch für ihn in seiner Platte |
-| **Durchbruch Ø** | Nur Niederhalter: Loch, durch das er durch die Kontaktträgerplatte oben kommt; 0 = Bohrungsdurchmesser |
+| **Durchbruch Ø** | Nur Niederhalter: Loch in der Kontaktträgerplatte oben, durch das der Niederhalter ragt; 0 = Bohrungsdurchmesser |
 | **Kantenabstand** | Nur Vorzentrierungsstifte: Spalt zwischen Stift und Platinenkante |
 | **Höhe** | Wie weit er aus der Platte zur Platine hin herausragt |
 | **Freiraum** | Kleinster Abstand von seinem Rand zu einem Bauteil seiner Seite |
@@ -258,7 +262,7 @@ Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: e
 
 ### Umriss
 
-Alle Platten teilen sich einen Umriss, außer bei einer Platte ist **Eigener Umriss** angekreuzt. Mit eigenen Umrissen wählt **Umriss bearbeiten von**, welchen Umriss die Einstellungen darunter ändern: den gemeinsamen oder den einer Platte.
+Alle Platten haben denselben Umriss, sofern bei einer Platte nicht **Eigener Umriss** angekreuzt ist. Gibt es eigene Umrisse, wählt **Umriss bearbeiten von**, welcher Umriss mit den Einstellungen darunter bearbeitet wird: der gemeinsame oder der einer bestimmten Platte.
 
 | Plattenumriss | Bedeutung |
 |---------------|-----------|
@@ -267,7 +271,16 @@ Alle Platten teilen sich einen Umriss, außer bei einer Platte ist **Eigener Umr
 | **DXF-Datei** / **SVG-Datei** | Der Umriss aus einer Zeichnung, z. B. des Adaptergehäuses. **Auswählen…** wählt die Datei, die Aktualisieren-Schaltfläche liest sie erneut. |
 | **Platinenlage** | Der Umriss, der in KiCad auf einer Lage der Platine gezeichnet ist, z. B. `User.1`, `Dwgs.User` oder `Margin` |
 
-Eine feste Größe oder ein Umriss aus Datei oder Lage wird auf der Platine zentriert; **Versatz X** / **Versatz Y** verschieben ihn von dort. In einer Zeichnung wird die größte geschlossene Kontur der Umriss, geschlossene Konturen darin werden **Ausschnitte** und Kreise darin **Rahmenbohrungen**, z. B. für die Schrauben der Platte. Bögen bleiben Bögen. DXF-Dateien dürfen Linien, Bögen, Kreise, Polylinien, Ellipsen und Splines enthalten; die Einheit kommt aus der Datei (Millimeter, wenn sie keine angibt). SVG-Dateien dürfen Pfade und alle Grundformen enthalten. Unter den Einstellungen zeigt eine Zeile die Größe der Platte und die Zahl der Rahmenbohrungen und Ausschnitte, oder was nicht verwendet werden konnte.
+Eine feste Größe und ein Umriss aus einer Datei oder Lage werden auf der Platine zentriert; mit **Versatz X** / **Versatz Y** lassen sie sich verschieben.
+
+Aus einer Zeichnung wird so gelesen:
+
+- Die größte geschlossene Kontur wird der Plattenumriss.
+- Weitere geschlossene Konturen innerhalb davon werden **Ausschnitte**.
+- Kreise innerhalb davon werden **Rahmenbohrungen**, z. B. für die Schrauben der Platte.
+- Bögen bleiben Bögen.
+
+DXF-Dateien dürfen Linien, Bögen, Kreise, Polylinien, Ellipsen und Splines enthalten. Die Einheit wird aus der Datei gelesen; gibt sie keine an, gelten Millimeter. SVG-Dateien dürfen Pfade und alle Grundformen enthalten. Unter den Einstellungen zeigt eine Zeile die Größe der Platte und die Anzahl der Rahmenbohrungen und Ausschnitte – oder was nicht verwendet werden konnte.
 
 ### Export
 
@@ -288,20 +301,25 @@ Der Nadeladapter bezieht sich auf Pads über Footprint-Referenz und Padnummer (z
 - **Platine neu laden** (`F5`) liest die Platinendatei erneut, z. B. nach einer Änderung in KiCad.
 - **Platine wechseln…** verwendet eine andere Platinendatei, z. B. eine neue Revision des Prüflings.
 
-Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfungen melden dann Prüfnadeln, deren Pad sich verschoben, sein Netz gewechselt hat oder verschwunden ist, verglichen mit dem Stand beim letzten Speichern des Nadeladapters.
+Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfungen vergleichen sie mit dem Stand beim letzten Speichern des Nadeladapters und melden jede Prüfnadel, deren Pad verschoben wurde, ein anderes Netz hat oder nicht mehr existiert.
 
 ## Aufbaublatt
 
 **Aufbaublatt (PDF)…** (`Strg+P`) erstellt ein PDF (A4 quer) in der Reihenfolge der Arbeit:
 
-- Angaben zu Nadeladapter und Platine, einschließlich der Prüfsumme der Platinendatei, der Lage der Platine (kopfüber oder nicht) und der Bedeutung der Koordinaten,
-- die **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe sowie die Bauteile der Verdrahtung nach Beschreibung mit ihrer Bemerkung,
-- die **Montage** jeder Seite mit Prüfnadeln oder Teilen: die **Prüfnadeln nach Typ** (Anzahl und Nummern der Prüfnadeln je Typ), die **Stifte und Niederhalter** dieser Seite mit Art, Typ, Position und Platte und die **Montagezeichnung**: die Platten dieser Seite mit Umrissen und Durchbrüchen, die Prüfnadeln und Teile, gesehen von der Seite, an der sie die Platine berühren (die Platten oben von oben, die Platten unten von unten, gespiegelt). Jeder Nadeltyp hat eine eigene Markerform (Kreis, Quadrat, Raute, Sechseck, dann dieselben hohl: acht Typen je Seite; ab dem neunten wiederholen sich die Formen), und die Teile haben dieselben Symbole wie in der Platinenansicht mit ihrem Namen darüber; die Platten sind in verschiedenen Farben und Linienarten gezeichnet und in einer Legende erklärt.
-- die **Verdrahtung**: jede herzustellende Verbindung mit beiden Enden und der Bemerkung, bei Prüfnadeln von beiden Seiten auch mit der Seite ihrer Prüfnadeln: zuerst jede Prüfnadel zu ihrem Pin (nach Pin sortiert), dann die Verbindungen der [Registerkarte Verdrahtung](#registerkarte-verdrahtung) unter ihrem Namen dort (W1, W2 …). Darunter die **nicht verdrahteten** Prüfnadeln, um zu prüfen, dass keine vergessen wurde. Danach eine **Verdrahtungszeichnung** jeder Kontaktträgerplatte, von ihrer Außenseite gesehen, wo die Drähte angeschlossen werden; nicht verdrahtete Prüfnadeln sind hohl gezeichnet.
+1. **Angaben** zu Nadeladapter und Platine: unter anderem die Prüfsumme der Platinendatei, die Lage der Platine (kopfüber oder nicht) und wie die Koordinaten zu lesen sind.
+2. **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe; dazu die Bauteile der Verdrahtung, nach Beschreibung zusammengefasst, mit ihrer Bemerkung.
+3. **Montage**, einmal für jede Seite mit Prüfnadeln oder Teilen:
+   - **Prüfnadeln nach Typ**: Anzahl und Nummern der Prüfnadeln je Typ,
+   - **Stifte und Niederhalter** dieser Seite mit Art, Typ, Position und Platte,
+   - die **Montagezeichnung**: die Platten dieser Seite mit Umrissen und Durchbrüchen sowie die Prüfnadeln und Teile. Gezeichnet wird von der Seite, an der sie die Platine berühren – die Platten oben also von oben, die Platten unten von unten (gespiegelt).
+
+   Jeder Nadeltyp hat in der Zeichnung eine eigene Markerform: Kreis, Quadrat, Raute und Sechseck, danach dieselben Formen hohl. Das reicht für acht Typen je Seite; ab dem neunten Typ wiederholen sich die Formen. Die Teile haben dieselben Symbole wie in der Platinenansicht, mit ihrem Namen darüber. Die Platten sind in unterschiedlichen Farben und Linienarten gezeichnet, die eine Legende erklärt.
+4. **Verdrahtung**: jede herzustellende Verbindung mit beiden Enden und Bemerkung. Hat der Nadeladapter Prüfnadeln auf beiden Seiten, steht auch die Seite dabei. Zuerst kommt jede Prüfnadel mit ihrem Pin (nach Pin sortiert), dann die Verbindungen der [Registerkarte Verdrahtung](#registerkarte-verdrahtung) unter ihrem dortigen Namen (W1, W2 …). Darunter stehen die **nicht verdrahteten** Prüfnadeln, damit keine vergessen wird. Danach folgt für jede Kontaktträgerplatte eine **Verdrahtungszeichnung**, von der Außenseite gesehen, an der die Drähte angeschlossen werden; nicht verdrahtete Prüfnadeln sind hohl gezeichnet.
 
 In den Zeichnungen steht jede Prüfnadelnummer in ihrem Marker, sodass sich Nummern nie überlappen. Wo Prüfnadeln so eng stehen, dass ihre Nummern zu klein zum Lesen wären, lässt die Zeichnung sie weg und umrahmt den Bereich; jeder umrahmte Bereich folgt vergrößert auf einer eigenen Seite (**Detail A**, **Detail B** …).
 
-Stückliste, Prüfnadeln nach Typ, Teileliste und Verdrahtung haben ein Feld **Erl.** zum Abhaken beim Bau. Die Platinenlagen der Zeichnungen werden auf der [Registerkarte Nadeladapter](#registerkarte-nadeladapter) gewählt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Export nach.
+Stückliste, Prüfnadeln nach Typ, Teileliste und Verdrahtung haben jeweils eine Spalte **Erl.** zum Abhaken beim Bau. Welche Platinenlagen die Zeichnungen zeigen, wird auf der [Registerkarte Nadeladapter](#registerkarte-nadeladapter) festgelegt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Erstellen nach.
 
 ## Nadeladapter-Datei
 

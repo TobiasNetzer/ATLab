@@ -26,7 +26,13 @@ Geben Sie den Relaiskanälen der Test-Hardware sprechende Namen wie `GND`, `VIN 
 
 Die Zeilenanzahl entspricht der angeschlossenen Test-Hardware (bzw. dem Simulator). Die Namen erscheinen in den Relaisauswahlen der Schrittkonfiguration (als `<Nummer> <Name>`) und machen Sequenzen deutlich leichter lesbar und prüfbar. Lassen Sie ungenutzte Kanäle leer.
 
-**Netznamen als Kanalbezeichnungen verwenden** bezeichnet stattdessen jeden Kanal mit dem Netz an seinen Pins der Test-Hardware, wie unter [Platine und Netze](#platine-und-netze) zugeordnet: MEAS-Kanäle bekommen ihr Netz, Stimulationskanäle das Netz von Out (oder In), externe Stimuli das Netz von H (oder L), gekürzt auf den letzten Teil des Netzpfads (`/SENSE/VREF` wird zu `VREF`). Die Bezeichnungen folgen geänderten Netzen; ein Kanal ohne Netz hat keine Bezeichnung. Währenddessen lassen sich die Bezeichnungsfelder nicht bearbeiten. Eigene Bezeichnungen bleiben im Projekt erhalten und kommen zurück, wenn die Option ausgeschaltet wird.
+Ist **Netznamen als Kanalbezeichnungen verwenden** eingeschaltet, heißt jeder Kanal stattdessen wie das Netz an seinen Pins der Test-Hardware (zugeordnet unter [Platine und Netze](#platine-und-netze)):
+
+- MEAS-Kanäle bekommen ihr Netz,
+- Stimulationskanäle das Netz an Out (oder, falls dort keines ist, an In),
+- externe Stimuli das Netz an H (oder an L).
+
+Vom Netznamen wird nur der letzte Teil des Pfads verwendet (`/SENSE/VREF` wird zu `VREF`). Ändern sich die Netze, ändern sich die Bezeichnungen mit; ein Kanal ohne Netz bleibt ohne Bezeichnung. Solange die Option eingeschaltet ist, lassen sich die Bezeichnungsfelder nicht bearbeiten. Eigene Bezeichnungen bleiben im Projekt erhalten und erscheinen wieder, sobald die Option ausgeschaltet wird.
 
 > **Tipp:** In der Matrix-Auswahl können Sie die Kanalnummer über die Tastatur eingeben, um direkt dorthin zu springen.
 
@@ -147,8 +153,8 @@ Details zu den exportierten Dateien: [Testergebnisse & Berichte](15-results-and-
 
 **Platinenlagen…** richtet die Platinenbilder fehlgeschlagener Schritte im PDF-Bericht ein:
 
-- **Ansicht**: **Automatisch** zeichnet jeden Schritt auf der Seite mit dem meisten Kupfer des Schritts; **Oben** oder **Unten** verwendet immer diese Seite.
-- Die Lagenliste: Eine unter **Oben** angekreuzte Lage wird gezeichnet, wenn ein Bild die Oberseite zeigt, unter **Unten**, wenn es die Unterseite zeigt. Die Pfeile ändern die Reihenfolge (oben in der Liste wird oben gezeichnet), das Farbfeld die Farbe und der Schieberegler die Deckkraft. Lagen der abgewandten Seite der Platine werden gestrichelt gezeichnet.
+- **Ansicht**: Bei **Automatisch** wird jeder Schritt von der Seite gezeigt, auf der das meiste Kupfer seiner Netze liegt. **Oben** oder **Unten** zeigt immer diese Seite.
+- Die Lagenliste hat zwei Spalten: Lagen, die unter **Oben** angekreuzt sind, erscheinen in Bildern der Oberseite, Lagen unter **Unten** in Bildern der Unterseite. Mit den Pfeilen wird die Reihenfolge geändert (was oben in der Liste steht, wird zuoberst gezeichnet), mit dem Farbfeld die Farbe und mit dem Schieberegler die Deckkraft. Lagen der abgewandten Platinenseite werden gestrichelt gezeichnet.
 - **Alle anzeigen** / **Alle ausblenden**, **Standarddarstellung** und **Standardreihenfolge** setzen die Liste zurück. **Als Standard speichern** verwendet diese Lagen für neue Projekte und für Projekte ohne eigene Auswahl; **Standard laden** übernimmt die als Standard gespeicherten Lagen.
 
 Die Auswahl wird im Projekt gespeichert. Die Netze der Schritte werden in den Farben der [Platinenansicht](14-running-tests.md#platinenansicht) gezeichnet.
@@ -184,15 +190,15 @@ Groß-/Kleinschreibung wird beachtet.
 
 ## Platine und Netze
 
-Die KiCad-Platine des Prüflings und das Netz an jedem Pin des prüflingsseitigen Steckers der Test-Hardware. Sie werden von der [Platinenansicht](14-running-tests.md#platinenansicht) der Registerkarte Testausführung verwendet. Beides ist optional: Ein Projekt ohne Platine funktioniert wie bisher.
+Hier werden die KiCad-Platine des Prüflings hinterlegt und das Netz, das an jedem Pin des prüflingsseitigen Steckers der Test-Hardware anliegt. Beides nutzt die [Platinenansicht](14-running-tests.md#platinenansicht) der Registerkarte Testausführung. Beides ist optional; ein Projekt ohne Platine funktioniert wie bisher.
 
 | Element | Wirkung |
 |---------|---------|
 | **Platine** | Ordner-Schaltfläche: `.kicad_pcb`-Datei wählen (ab KiCad 6). Aktualisieren-Schaltfläche: erneut einlesen, z. B. nach einer Änderung in KiCad. ×-Schaltfläche: Platine aus dem Projekt entfernen; die Netze bleiben. |
 | Statuszeile | Die geladene Platine mit Anzahl der Footprints und Netze, oder warum sie nicht gelesen werden konnte. |
-| **Nadeladapter importieren…** | Übernimmt Platine, Netze und Positionen der Prüfnadeln aus einer Nadeladapter-Datei von [ATLab Fixture Designer](17-fixture-designer.md) (`.atlabfix`): Jede verdrahtete Prüfnadel gibt ihrem Pin das Netz ihres Pads. Danach fragt ATLab, ob die Netze auch die [Kanalbezeichnungen](#kanalbezeichnungen) werden sollen (nicht, solange **Netznamen als Kanalbezeichnungen verwenden** eingeschaltet ist): MEAS-Kanäle bekommen ihr Netz, Stimulationskanäle das Netz von Out (oder In), externe Stimuli das Netz von H (oder L). |
+| **Nadeladapter importieren…** | Übernimmt Platine, Netze und Positionen der Prüfnadeln aus einer Nadeladapter-Datei von [ATLab Fixture Designer](17-fixture-designer.md) (`.atlabfix`). Jeder Pin, an den eine Prüfnadel verdrahtet ist, bekommt das Netz ihres Pads. Anschließend fragt ATLab, ob die Netze auch als [Kanalbezeichnungen](#kanalbezeichnungen) übernommen werden sollen, nach denselben Regeln wie bei **Netznamen als Kanalbezeichnungen verwenden**. Ist diese Option eingeschaltet, entfällt die Frage. |
 | **Netze löschen** | Entfernt Netze und Prüfnadeln aller Pins. |
 | **Nur zugeordnete** | Listet nur Pins mit Netz. |
 | Tabelle | Jeder Pin von J101 mit seiner Ressource (z. B. ist Pin `c7` `MEAS 7`) und seinem Netz. Das Netz eintippen oder aus den Vorschlägen wählen, die die Netze der Platine enthalten. **Prüfnadeln** zeigt die Prüfnadeln eines importierten Nadeladapters am Pin. |
 
-Die Platine wird mit einem Pfad relativ zur Projektdatei gespeichert, zusammen mit einer Prüfsumme der Datei. Ändert sich die Platinendatei später – z. B. eine neue Revision mit anderen Netzen –, weisen Statuszeile und Platinenansicht darauf hin. Die Netze der Pins prüfen und dann **Netze geprüft** klicken, um die aktuelle Datei zur neuen Referenz zu machen.
+Die Platine wird mit einem Pfad relativ zur Projektdatei gespeichert, zusammen mit einer Prüfsumme der Datei. Ändert sich die Platinendatei später, etwa durch eine neue Revision mit anderen Netzen, weisen Statuszeile und Platinenansicht darauf hin. Dann die Netze der Pins prüfen und auf **Netze geprüft** klicken; die aktuelle Datei wird damit zur neuen Referenz.
