@@ -1791,7 +1791,7 @@ Devices that are found again keep their settings. All other devices are removed 
     <value>Close project (Ctrl+W)</value>
   </data>
   <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_INTERCONNECT" xml:space="preserve">
-    <value>Boundary Scan Interconnect</value>
+    <value>Boundary Scan Interconnect Test</value>
   </data>
   <data name="Enum_InterconnectNetRole_SAFE" xml:space="preserve">
     <value>Safe</value>

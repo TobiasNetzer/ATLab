@@ -15,7 +15,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [File](#file) | number read from a file | File Path | ✔ |
 | [Boundary Scan](#boundary-scan) | number of pins that do not have the expected level | Boundary Scan | – |
 | [Boundary Scan Bus](#boundary-scan-bus) | data read from an I²C/SPI device or pin group emulated via boundary scan | Boundary Scan Bus | ✔ |
-| [Boundary Scan Interconnect](#boundary-scan-interconnect) | number of faults in the connections between boundary scan pins | – | – |
+| [Boundary Scan Interconnect Test](#boundary-scan-interconnect-test) | number of faults in the connections between boundary scan pins | – | – |
 
 ## Special results
 
@@ -250,7 +250,7 @@ Examples:
 
 All signal changes of a transaction are sent to the probe in one transfer. I²C clock stretching is not supported; see [Speed and limitations](12-boundary-scan.md#speed-and-limitations).
 
-## Boundary Scan Interconnect
+## Boundary Scan Interconnect Test
 
 Runs the interconnect test of the nets set up in the [Interconnect view](12-boundary-scan.md#interconnect-view) of the Boundary Scan tab. The step has no settings of its own.
 

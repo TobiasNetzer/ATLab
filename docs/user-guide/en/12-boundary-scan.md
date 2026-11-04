@@ -236,7 +236,7 @@ The test then treats both nets as one: every boundary scan pin on either side dr
 
 The filter box searches nets, pins and pads. **Tested only** hides the Safe nets. The refresh button reads the board and the BSDL files again. The line below the table shows how many nets have each role and how many have a problem.
 
-Roles are saved in the project; Safe nets are not stored, as Safe is the default. The test is run by a test step with the evaluation source [Boundary Scan Interconnect](09-evaluation-sources.md#boundary-scan-interconnect).
+Roles are saved in the project; Safe nets are not stored, as Safe is the default. The test is run by a test step with the evaluation source [Boundary Scan Interconnect Test](09-evaluation-sources.md#boundary-scan-interconnect-test).
 
 ### When the test does not run
 
@@ -306,7 +306,7 @@ Test steps use the chain configured on this tab:
 
 - The probe is connected at the **first** boundary scan step of a run, not at test start. The chain is then checked against the project (number of chips, IDCODEs, instruction lengths). If it does not match, for example because the wrong board is inserted, the step fails with the same message as the status line on this tab, e.g. *Boundary scan chain: Found 2 device(s), the project expects 3.*
 - A connection opened on this tab is taken over by the test. The tab is locked until the test releases the chain.
-- Pins that are not listed in a step keep their state from the previous steps. A **Boundary Scan Interconnect** step is the exception: it starts from the safe values and leaves all pins at their safe values. A chip whose outputs were driven stays in EXTEST until the chain is released.
+- Pins that are not listed in a step keep their state from the previous steps. A **Boundary Scan Interconnect Test** step is the exception: it starts from the safe values and leaves all pins at their safe values. A chip whose outputs were driven stays in EXTEST until the chain is released.
 - The chain is released — all chips return to normal operation and the probe is closed — when the run ends, when it is stopped (`Esc`), at a step in mode **Turn boundary scan off**, and when another project is opened.
 - **Execute single step** (`F3`) keeps the chain under test control after the step, so several single steps can build on each other. Press **Stop** (`Esc`) to release it. A full run always starts from the safe values.
 

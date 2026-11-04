@@ -125,7 +125,7 @@ For the selected step, the view highlights whole nets – pads, tracks and vias 
 | Green | Closed stimulation relays (their In and Out pin) |
 | Orange | Switched external stimuli (H and L) |
 | Purple | Interface of an **Interface Command** step (I²C, UART or RS485 lines, including VREF and GND) |
-| Cyan | Pins of a **Boundary Scan** or **Boundary Scan Bus** step on the outlined chip; the tested nets of a **Boundary Scan Interconnect** step |
+| Cyan | Pins of a **Boundary Scan** or **Boundary Scan Bus** step on the outlined chip; the tested nets of a **Boundary Scan Interconnect Test** step |
 
 Above the board there is one button per role (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Interface**, **Boundary Scan**, **Failed**). Click the name to hide the role from the board, the legend and the coverage. Click the colored dot to change the color, from the palette or as `#RRGGBB`; **Default** restores the original color. The same colors are used for the board pictures in the PDF report.
 

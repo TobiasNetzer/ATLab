@@ -37,7 +37,7 @@ public partial class BoundaryScanConfiguration : ObservableObject
     /// <summary>Buses emulated through boundary scan pins, used by "Boundary Scan Bus" test steps.</summary>
     public ObservableCollection<BoundaryScanBus> Buses { get; set; } = new();
 
-    /// <summary>Nets of the interconnect test that are not in their safe state, used by "Boundary Scan Interconnect" steps.</summary>
+    /// <summary>Nets of the interconnect test that are not in their safe state, used by "Boundary Scan Interconnect Test" steps.</summary>
     public ObservableCollection<BoundaryScanInterconnectNet> InterconnectNets { get; set; } = new();
 
     public BoundaryScanConfiguration()

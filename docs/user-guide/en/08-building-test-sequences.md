@@ -99,7 +99,7 @@ Wait time between switching the relays and acquiring the value, for settling. Th
 
 ### Evaluate
 
-Selects the [evaluation source](09-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **External Program**, **User Confirmation**, **User Input**, **Expression**, **File**, **Boundary Scan**, **Boundary Scan Bus** or **Boundary Scan Interconnect**. The matching editor panel appears below.
+Selects the [evaluation source](09-evaluation-sources.md): **None**, **Script**, **Device Command**, **Interface Command**, **External Program**, **User Confirmation**, **User Input**, **Expression**, **File**, **Boundary Scan**, **Boundary Scan Bus** or **Boundary Scan Interconnect Test**. The matching editor panel appears below.
 
 ### Comment
 
