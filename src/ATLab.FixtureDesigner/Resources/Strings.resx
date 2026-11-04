@@ -291,9 +291,6 @@
   <data name="Column_Access" xml:space="preserve">
     <value>Reachable</value>
   </data>
-  <data name="Column_Probes" xml:space="preserve">
-    <value>Probes</value>
-  </data>
   <data name="Column_Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -308,9 +305,6 @@
   </data>
   <data name="Column_Signal" xml:space="preserve">
     <value>Signal</value>
-  </data>
-  <data name="Column_PadType" xml:space="preserve">
-    <value>Pad (mm)</value>
   </data>
   <data name="Placeholder_Pin" xml:space="preserve">
     <value>Not wired</value>
@@ -576,17 +570,8 @@ Select the board file at its new location.</value>
   <data name="Report_OriginCorner" xml:space="preserve">
     <value>mm from the bottom left corner of the board, Y up, seen from the top</value>
   </data>
-  <data name="Report_Probes" xml:space="preserve">
-    <value>Probes</value>
-  </data>
   <data name="Report_Wiring" xml:space="preserve">
     <value>Wiring</value>
-  </data>
-  <data name="Report_NotWired" xml:space="preserve">
-    <value>not wired</value>
-  </data>
-  <data name="Report_PadMissing" xml:space="preserve">
-    <value>pad missing</value>
   </data>
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Hole {0} · Ø {1} mm</value>
@@ -1006,9 +991,6 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Column_Plate" xml:space="preserve">
     <value>Plate</value>
   </data>
-  <data name="Board_LegendProbes" xml:space="preserve">
-    <value>Probes</value>
-  </data>
   <data name="Board_LegendLocatingPins" xml:space="preserve">
     <value>Locating pins</value>
   </data>
@@ -1384,5 +1366,32 @@ bottom</value>
   </data>
   <data name="Color_PressurePlate" xml:space="preserve">
     <value>Pressure plate</value>
+  </data>
+  <data name="Report_ProbesByType" xml:space="preserve">
+    <value>Probes by type</value>
+  </data>
+  <data name="Column_Probes" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Report_NotWired" xml:space="preserve">
+    <value>Not wired</value>
+  </data>
+  <data name="Report_NotWiredSide" xml:space="preserve">
+    <value>Not wired ({0})</value>
+  </data>
+  <data name="Report_Detail" xml:space="preserve">
+    <value>Detail {0} – {1}</value>
+  </data>
+  <data name="Report_DetailHint" xml:space="preserve">
+    <value>Framed areas are shown enlarged on the following pages.</value>
+  </data>
+  <data name="Report_LegendProbeType" xml:space="preserve">
+    <value>Probes {0}</value>
+  </data>
+  <data name="Report_LegendWired" xml:space="preserve">
+    <value>Probes, wired</value>
+  </data>
+  <data name="Report_LegendNotWired" xml:space="preserve">
+    <value>Probes, not wired</value>
   </data>
 </root>

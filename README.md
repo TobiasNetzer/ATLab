@@ -231,7 +231,7 @@ from KiCad boards.
 - **Plates:** bottom probe plate, moving plate, top probe plate (only with probes from above) and pressure plate, with
   openings for the probes and push rods (merged when too close), a board that lies upside down, and outlines from the
   board, a fixed size, a DXF/SVG drawing or a KiCad layer, with frame holes and cut-outs.
-- **Build sheet:** PDF with bill of materials, probe list, pins and push rods, wiring table, and assembly and wiring
+- **Build sheet:** PDF with bill of materials, probes by type, pins and push rods, wiring table, and assembly and wiring
   drawings of every side with selectable board layers.
 - **Manufacturing files:** DXF and SVG drawings (one layer per kind of hole) and STEP models of the plates, each
   seen from the side facing the board.

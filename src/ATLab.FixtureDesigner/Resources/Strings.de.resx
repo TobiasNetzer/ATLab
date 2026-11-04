@@ -291,9 +291,6 @@
   <data name="Column_Access" xml:space="preserve">
     <value>Erreichbar</value>
   </data>
-  <data name="Column_Probes" xml:space="preserve">
-    <value>Prüfnadeln</value>
-  </data>
   <data name="Column_Type" xml:space="preserve">
     <value>Typ</value>
   </data>
@@ -308,9 +305,6 @@
   </data>
   <data name="Column_Signal" xml:space="preserve">
     <value>Signal</value>
-  </data>
-  <data name="Column_PadType" xml:space="preserve">
-    <value>Pad (mm)</value>
   </data>
   <data name="Placeholder_Pin" xml:space="preserve">
     <value>Nicht verdrahtet</value>
@@ -576,17 +570,8 @@ Platinendatei am neuen Ort auswählen.</value>
   <data name="Report_OriginCorner" xml:space="preserve">
     <value>mm von der linken unteren Ecke der Platine, Y nach oben, von oben gesehen</value>
   </data>
-  <data name="Report_Probes" xml:space="preserve">
-    <value>Prüfnadeln</value>
-  </data>
   <data name="Report_Wiring" xml:space="preserve">
     <value>Verdrahtung</value>
-  </data>
-  <data name="Report_NotWired" xml:space="preserve">
-    <value>nicht verdrahtet</value>
-  </data>
-  <data name="Report_PadMissing" xml:space="preserve">
-    <value>Pad fehlt</value>
   </data>
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Bohrung {0} · Ø {1} mm</value>
@@ -1006,9 +991,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Column_Plate" xml:space="preserve">
     <value>Platte</value>
   </data>
-  <data name="Board_LegendProbes" xml:space="preserve">
-    <value>Prüfnadeln</value>
-  </data>
   <data name="Board_LegendLocatingPins" xml:space="preserve">
     <value>Fangstifte</value>
   </data>
@@ -1384,5 +1366,32 @@ unten</value>
   </data>
   <data name="Color_PressurePlate" xml:space="preserve">
     <value>Niederhalterplatte</value>
+  </data>
+  <data name="Report_ProbesByType" xml:space="preserve">
+    <value>Prüfnadeln nach Typ</value>
+  </data>
+  <data name="Column_Probes" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Report_NotWired" xml:space="preserve">
+    <value>Nicht verdrahtet</value>
+  </data>
+  <data name="Report_NotWiredSide" xml:space="preserve">
+    <value>Nicht verdrahtet ({0})</value>
+  </data>
+  <data name="Report_Detail" xml:space="preserve">
+    <value>Detail {0} – {1}</value>
+  </data>
+  <data name="Report_DetailHint" xml:space="preserve">
+    <value>Umrahmte Bereiche sind auf den folgenden Seiten vergrößert dargestellt.</value>
+  </data>
+  <data name="Report_LegendProbeType" xml:space="preserve">
+    <value>Prüfnadeln {0}</value>
+  </data>
+  <data name="Report_LegendWired" xml:space="preserve">
+    <value>Prüfnadeln, verdrahtet</value>
+  </data>
+  <data name="Report_LegendNotWired" xml:space="preserve">
+    <value>Prüfnadeln, nicht verdrahtet</value>
   </data>
 </root>

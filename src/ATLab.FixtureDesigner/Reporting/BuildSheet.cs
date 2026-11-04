@@ -57,8 +57,8 @@ public sealed class BuildSheetData
 }
 
 /// <summary>
-/// PDF for whoever builds the fixture: bill of materials, probes and pins to fit, wiring table from adapter pin to probe
-/// and a drawing of every side. A4 landscape, laid out like ATLab's test report.
+/// PDF for whoever builds the fixture: bill of materials, the probes by type and the pins to fit with a drawing of every
+/// side, then the wiring table from probe to adapter pin with a drawing of every probe plate. A4 landscape, laid out like ATLab's test report.
 /// </summary>
 public sealed class BuildSheet(BuildSheetData data) : IDocument
 {
@@ -168,8 +168,9 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     }
 
     /// <summary>
-    /// In the order of the work: what the fixture is, what to get (bill of materials), where every probe and pin goes,
-    /// how to wire it, and the drawings of both sides.
+    /// In the order of the work: what the fixture is and what to get (bill of materials); the mechanical assembly of
+    /// every side, its probes by type, pins and push rods and its drawing; then the wiring, its table, the probes not
+    /// wired and the drawing of every probe plate. A drawing whose probe numbers are too small gets detail pages.
     /// </summary>
     private void ComposeContent(IContainer container)
     {
@@ -203,30 +204,6 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 });
             }
 
-            col.Item().EnsureSpace(90).Column(c =>
-            {
-                c.Item().Element(x => Section(x, L("Report_Probes")));
-                c.Item().PaddingTop(6).Element(ComposeProbeTable);
-            });
-
-            if (data.Parts.Count > 0)
-            {
-                col.Item().EnsureSpace(90).Column(c =>
-                {
-                    c.Item().Element(x => Section(x, L("Report_Parts")));
-                    c.Item().PaddingTop(6).Element(ComposePartTable);
-                });
-            }
-
-            if (data.Probes.Any(p => p.Pin is not null) || data.Wires.Count > 0)
-            {
-                col.Item().EnsureSpace(110).Column(c =>
-                {
-                    c.Item().Element(x => Section(x, L("Report_Wiring")));
-                    c.Item().PaddingTop(6).Element(ComposeWiringTable);
-                });
-            }
-
             // Assembly: the plates of every side with probes or parts, seen from the side where they touch the board, so it
             // shows what they meet there: the plates above from the top, the plates below from below (mirrored); a board
             // without either gets both sides
@@ -235,29 +212,157 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 sides = [BoardSide.Top, BoardSide.Bottom];
 
             foreach (var side in sides)
-                ComposeDrawing(col, side, side, wiring: false);
+            {
+                var probes = data.Probes.Where(p => p.Side == side).ToList();
+                var parts = data.Parts.Where(p => p.PlateSide == side).ToList();
+                if (probes.Count > 0 || parts.Count > 0)
+                {
+                    col.Item().PageBreak();
+                    col.Item().Column(c =>
+                    {
+                        c.Spacing(6);
+                        c.Item().Element(x => Section(x, BoardSvg.Caption(side, false, data.IsBoardFlipped)));
+                        if (probes.Count > 0)
+                        {
+                            c.Item().Element(x => SubSection(x, L("Report_ProbesByType")));
+                            c.Item().Element(x => ComposeTypeTable(x, probes));
+                        }
 
-            // Wiring: the probe plate of every side with probes, seen from its outside where the wires go, the bottom one from below
-            foreach (var side in data.Probes.Where(p => p.Pad is not null).Select(p => p.Side).Distinct().Order())
-                ComposeDrawing(col, side, side, wiring: true);
+                        if (parts.Count > 0)
+                        {
+                            c.Item().PaddingTop(6).Element(x => SubSection(x, L("Report_Parts")));
+                            c.Item().Element(x => ComposePartTable(x, parts));
+                        }
+                    });
+                }
+
+                ComposeDrawings(col, side, side, wiring: false);
+            }
+
+            // Wiring: the table of all wires and the probes not wired, then the probe plate of every side with probes,
+            // seen from its outside where the wires go, the bottom one from below
+            var wiringSides = data.Probes.Where(p => p.Pad is not null).Select(p => p.Side).Distinct().Order().ToList();
+            var rows = WiringRows();
+            if (rows.Count > 0 || data.Probes.Count > 0)
+            {
+                col.Item().PageBreak();
+                col.Item().Column(c =>
+                {
+                    c.Spacing(6);
+                    c.Item().Element(x => Section(x, L("Report_Wiring")));
+                    if (rows.Count > 0)
+                        c.Item().Element(x => ComposeWiringTable(x, rows));
+                    ComposeNotWired(c);
+                });
+            }
+
+            foreach (var side in wiringSides)
+                ComposeDrawings(col, side, side, wiring: true);
+        });
+    }
+
+    /// <summary>Area of the page left to a drawing below its caption, hint and legend (pt), for its scale.</summary>
+    private const float DrawingAreaWidth = 800;
+
+    private const float DrawingAreaHeight = 380;
+
+    /// <summary>
+    /// The pages with the drawing of a side: for the assembly with its parts, the outlines of the plates of that side and
+    /// the openings, for the wiring with the probes and the probe plate only. The whole side first, its detail areas framed,
+    /// then a page for every detail.
+    /// </summary>
+    private void ComposeDrawings(ColumnDescriptor col, BoardSide side, BoardSide view, bool wiring)
+    {
+        var parts = wiring ? [] : data.Parts;
+        var plates = data.PlatesOf(side, wiring);
+        var drawing = BoardSvg.Plan(data.Board, data.Probes, side, view, wiring, parts, plates, DrawingAreaWidth, DrawingAreaHeight);
+        var style = (data.Layers ?? new()).StyleFor(ViewKey(side, wiring), DefaultLayers(ViewKey(side, wiring)));
+        var caption = BoardSvg.Caption(side, wiring, data.IsBoardFlipped);
+
+        foreach (var detail in new DrawingDetail?[] { null }.Concat(drawing.Details))
+        {
+            var hint = BoardSvg.ViewHint(view);
+            if (detail is null && drawing.Details.Count > 0)
+                hint += " " + L("Report_DetailHint");
+
+            col.Item().PageBreak();
+            col.Item().Element(c => Section(c, detail is null ? caption : Localizer.Format("Report_Detail", detail.Letter, caption)));
+            col.Item().Text(hint).FontColor(Colors.Grey.Darken2);
+            col.Item().PaddingTop(4).Element(c => ComposeLegend(c, drawing, plates.Select(p => p.Plate).ToList(), withOpenings: !wiring, parts));
+            col.Item().ExtendVertical().AlignCenter().AlignMiddle()
+                .Svg(BoardSvg.Render(drawing, data.Board, style, parts, plates, withOpenings: !wiring, detail)).FitArea();
+        }
+    }
+
+    /// <summary>
+    /// Probe names as ranges in the order of their numbers, e.g. "P1–P4, P7, P9–P12": runs of consecutive numbers are
+    /// joined.
+    /// </summary>
+    private static string Ranges(IEnumerable<Probe> probes)
+    {
+        var numbers = probes.Select(p => p.Number).Distinct().Order().ToList();
+        var parts = new List<string>();
+        for (var i = 0; i < numbers.Count;)
+        {
+            var j = i;
+            while (j + 1 < numbers.Count && numbers[j + 1] == numbers[j] + 1)
+                j++;
+            parts.Add(j == i ? $"P{numbers[i]}" : j == i + 1 ? $"P{numbers[i]}, P{numbers[j]}" : $"P{numbers[i]}–P{numbers[j]}");
+            i = j + 1;
+        }
+
+        return string.Join(", ", parts);
+    }
+
+    /// <summary>The probe types of a side, in the order of the bill of materials, with how many and which probes get them.</summary>
+    private static void ComposeTypeTable(IContainer container, IReadOnlyList<Probe> probes)
+    {
+        container.Table(table =>
+        {
+            table.ColumnsDefinition(c =>
+            {
+                c.ConstantColumn(130); // Type
+                c.ConstantColumn(50);  // Quantity
+                c.RelativeColumn();    // Probes
+                c.ConstantColumn(30);  // Tick
+            });
+
+            table.Header(h =>
+            {
+                foreach (var key in new[] { "Column_ProbeType", "Column_Quantity", "Column_Probes" })
+                    h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
+                h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
+            });
+
+            foreach (var group in probes.GroupBy(p => p.Type).OrderBy(g => g.Key is null).ThenBy(g => g.Key?.Name, StringComparer.CurrentCulture))
+            {
+                table.Cell().Element(BodyCell).Text(group.Key?.Name ?? L("Report_NoType")).SemiBold();
+                table.Cell().Element(BodyCell).AlignRight().Text(group.Count().ToString(CultureInfo.CurrentCulture)).SemiBold();
+                table.Cell().Element(BodyCell).Text(Ranges(group));
+                table.Cell().Element(TickBox);
+            }
         });
     }
 
     /// <summary>
-    /// A page with the drawing of a side: for the assembly with its parts, the outlines of the plates of that side and the
-    /// openings, for the wiring with the probes and the probe plate only.
+    /// The probes no wire goes to, as ranges, to check that none was forgotten; by side when there are probes on both.
     /// </summary>
-    private void ComposeDrawing(ColumnDescriptor col, BoardSide side, BoardSide view, bool wiring)
+    private void ComposeNotWired(ColumnDescriptor col)
     {
-        var parts = wiring ? [] : data.Parts;
-        var plates = data.PlatesOf(side, wiring);
-        col.Item().PageBreak();
-        col.Item().Element(c => Section(c, BoardSvg.Caption(side, wiring, data.IsBoardFlipped)));
-        col.Item().Text(BoardSvg.ViewHint(view)).FontColor(Colors.Grey.Darken2);
-        col.Item().PaddingTop(4).Element(c => ComposeLegend(c, side, plates.Select(p => p.Plate).ToList(), withOpenings: !wiring, parts));
-        col.Item().ExtendVertical().AlignCenter().AlignMiddle()
-            .Svg(BoardSvg.Render(data.Board, data.Probes, side, view, (data.Layers ?? new()).StyleFor(ViewKey(side, wiring), DefaultLayers(ViewKey(side, wiring))),
-                parts, plates, withPins: wiring, withOpenings: !wiring)).FitArea();
+        var notWired = data.Probes.Where(p => p.Connections.Length == 0).ToList();
+        if (notWired.Count == 0)
+            return;
+
+        var bySide = data.Probes.Select(p => p.Side).Distinct().Count() > 1;
+        foreach (var group in notWired.GroupBy(p => p.Side).OrderBy(g => g.Key))
+        {
+            var label = bySide ? Localizer.Format("Report_NotWiredSide", Localizer.Enum(group.Key)) : L("Report_NotWired");
+            col.Item().PaddingTop(4).Text(text =>
+            {
+                text.Span(label + ": ").SemiBold();
+                text.Span(Ranges(group));
+            });
+        }
     }
 
     private static void Section(IContainer container, string title)
@@ -268,6 +373,9 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             c.Item().PaddingTop(2).BorderBottom(2).BorderColor(Colors.Grey.Darken1);
         });
     }
+
+    private static void SubSection(IContainer container, string title) =>
+        container.Text(title).FontSize(11).SemiBold().FontColor(Colors.Black);
 
     private static void Fact(ColumnDescriptor col, string label, string? value, float labelWidth = 95)
     {
@@ -311,14 +419,14 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     }
 
     /// <summary>The symbols of the drawing of one side with their names, in one or more lines.</summary>
-    private void ComposeLegend(IContainer container, BoardSide side, IReadOnlyList<FixturePlate> plates, bool withOpenings,
+    private static void ComposeLegend(IContainer container, BoardDrawing drawing, IReadOnlyList<FixturePlate> plates, bool withOpenings,
         IReadOnlyList<FixturePart> parts)
     {
         container.Inlined(inline =>
         {
             inline.HorizontalSpacing(14);
             inline.VerticalSpacing(4);
-            foreach (var (symbol, label) in BoardSvg.Legend(data.Probes, side, parts, plates, withOpenings))
+            foreach (var (symbol, label) in BoardSvg.Legend(drawing, parts, plates, withOpenings))
             {
                 inline.Item().Row(row =>
                 {
@@ -335,55 +443,6 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     /// <summary>Empty box for ticking off a probe or wire while building.</summary>
     private static void TickBox(IContainer c) =>
         c.Element(BodyCell).AlignCenter().AlignMiddle().PaddingBottom(3).Width(9).Height(9).Border(0.8f).BorderColor(Colors.Grey.Darken2);
-
-    private void ComposeProbeTable(IContainer container)
-    {
-        container.Table(table =>
-        {
-            table.ColumnsDefinition(c =>
-            {
-                c.ConstantColumn(34);  // Probe
-                c.ConstantColumn(70);  // Pad
-                c.RelativeColumn(2);   // Net
-                c.ConstantColumn(48);  // Side
-                c.ConstantColumn(48);  // X
-                c.ConstantColumn(48);  // Y
-                c.ConstantColumn(80);  // Pad type and size
-                c.ConstantColumn(62);  // Probe type
-                c.ConstantColumn(32);  // Pin
-                c.ConstantColumn(78);  // Resource
-                c.RelativeColumn(2);   // Note
-                c.ConstantColumn(30);  // Tick
-            });
-
-            table.Header(h =>
-            {
-                foreach (var key in new[] { "Column_Probe", "Column_Pad", "Column_Net", "Column_Side", "Column_X", "Column_Y",
-                             "Column_PadType", "Column_ProbeType", "Column_Pin", "Column_Resource", "Column_Note" })
-                    h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
-                h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
-            });
-
-            foreach (var probe in data.Probes)
-            {
-                var pad = probe.Pad;
-                table.Cell().Element(BodyCell).Text(probe.Name).SemiBold();
-                table.Cell().Element(BodyCell).Text(probe.PadDisplay);
-                table.Cell().Element(BodyCell).Text(probe.ShortNet);
-                table.Cell().Element(BodyCell).Text(Localizer.Enum(probe.Side));
-                table.Cell().Element(BodyCell).AlignRight().Text(pad is null ? "-" : Mm(probe.X));
-                table.Cell().Element(BodyCell).AlignRight().Text(pad is null ? "-" : Mm(probe.Y));
-                table.Cell().Element(BodyCell).Text(pad is null ? L("Report_PadMissing")
-                    : $"{(pad.Kind == PadKind.Smd ? "SMD" : "THT")} {pad.Width.ToString("0.##", CultureInfo.CurrentCulture)}×{pad.Height.ToString("0.##", CultureInfo.CurrentCulture)}");
-                table.Cell().Element(BodyCell).Text(probe.TypeName.Length > 0 ? probe.TypeName : "-");
-                table.Cell().Element(BodyCell).Text(probe.Pin?.Pin ?? "-").SemiBold();
-                table.Cell().Element(BodyCell).Text(probe.Pin?.Resource
-                    ?? (probe.WiredTo.Length > 0 ? "→ " + probe.WiredTo : L("Report_NotWired")));
-                table.Cell().Element(BodyCell).Text(probe.Note);
-                table.Cell().Element(TickBox);
-            }
-        });
-    }
 
     /// <summary>A wire to make: its name from the Wiring tab ("-" for a probe's pin) and both ends.</summary>
     private sealed record WiringRow(string Name, WireEndpoint From, WireEndpoint To, string Note);
@@ -412,16 +471,19 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         return sides.Count == 0 ? "-" : string.Join(" / ", sides.Select(s => Localizer.Enum(s)));
     }
 
-    private void ComposeWiringTable(IContainer container)
+    private void ComposeWiringTable(IContainer container, IReadOnlyList<WiringRow> rows)
     {
-        // The side only matters when there are probe plates on both sides
+        // The side only matters when there are probe plates on both sides, the wire names only with wires of the Wiring
+        // tab: a probe's wire to its pin has none
         var withSide = data.Probes.Select(p => p.Side).Distinct().Count() > 1;
+        var withName = data.Wires.Count > 0;
 
         container.Table(table =>
         {
             table.ColumnsDefinition(c =>
             {
-                c.ConstantColumn(40);  // Wire
+                if (withName)
+                    c.ConstantColumn(40);  // Wire
                 if (withSide)
                     c.ConstantColumn(70);  // Side
                 c.RelativeColumn(3);   // From
@@ -432,10 +494,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
             table.Header(h =>
             {
-                var keys = withSide
-                    ? new[] { "Column_Wire", "Column_Side", "Column_From", "Column_To", "Column_Note" }
-                    : new[] { "Column_Wire", "Column_From", "Column_To", "Column_Note" };
-                foreach (var key in keys)
+                var keys = new[] { withName ? "Column_Wire" : null, withSide ? "Column_Side" : null, "Column_From", "Column_To", "Column_Note" };
+                foreach (var key in keys.OfType<string>())
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -446,9 +506,10 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 text.Span("  " + end.Detail).FontColor(Colors.Grey.Darken2);
             });
 
-            foreach (var row in WiringRows())
+            foreach (var row in rows)
             {
-                table.Cell().Element(BodyCell).Text(row.Name).SemiBold();
+                if (withName)
+                    table.Cell().Element(BodyCell).Text(row.Name).SemiBold();
                 if (withSide)
                     table.Cell().Element(BodyCell).Text(SideOf(row));
                 End(table.Cell().Element(BodyCell), row.From);
@@ -552,7 +613,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     }
 
     /// <summary>Locating, pre-centering and support pins and push rods with their place and plate, to fit and tick off.</summary>
-    private void ComposePartTable(IContainer container)
+    private static void ComposePartTable(IContainer container, IReadOnlyList<FixturePart> parts)
     {
         container.Table(table =>
         {
@@ -574,7 +635,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
 
-            foreach (var part in data.Parts.OrderBy(p => p.Kind).ThenBy(p => p.Number))
+            foreach (var part in parts.OrderBy(p => p.Kind).ThenBy(p => p.Number))
             {
                 table.Cell().Element(BodyCell).Text(part.Name).SemiBold();
                 table.Cell().Element(BodyCell).Text(part.KindLabel);

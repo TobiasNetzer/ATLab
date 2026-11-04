@@ -294,13 +294,12 @@ Positions and nets always come from the current board file. The checks then repo
 
 - fixture and board information, including the checksum of the board file, the board position (upside down or not) and the meaning of the coordinates,
 - the **bill of materials**: every probe type and part type with its quantity, diameter, drill, opening and height, and the components of the wiring by description with their note,
-- the **probe list**: probe, pad, net, side, position, pad type and size, probe type, pin, resource and note,
-- the list of **pins and push rods** with kind, type, position and plate,
-- the **wiring**: every wire to make, with both ends and the note, and the side of its probes if the fixture probes from both sides: first each probe to its pin (sorted by pin), then the wires of the [Wiring tab](#wiring-tab) under their names there (W1, W2 …). Left out if the fixture has no wiring.
-- an **assembly drawing** of every side with probes or parts: the plates of that side with their outlines and openings, the probes and parts, seen from the side where they touch the board (the plates above from the top, the plates below from below, mirrored). Different plates are drawn in different colors and line styles, explained in a legend.
-- a **wiring drawing** of every probe plate, seen from its outside where the wires go.
+- the **assembly** of every side with probes or parts: the **probes by type** (quantity and probe numbers per type), the **pins and push rods** of that side with kind, type, position and plate, and the **assembly drawing**: the plates of that side with their outlines and openings, the probes and parts, seen from the side where they touch the board (the plates above from the top, the plates below from below, mirrored). Every probe type has its own marker shape (circle, square, diamond, hexagon, then the same hollow: eight types per side; from the ninth the shapes repeat), and the parts have the same symbols as in the board view with their name above; plates are drawn in different colors and line styles, explained in a legend.
+- the **wiring**: every wire to make, with both ends and the note, and the side of its probes if the fixture probes from both sides: first each probe to its pin (sorted by pin), then the wires of the [Wiring tab](#wiring-tab) under their names there (W1, W2 …). Below it the probes that are **not wired**, to check that none was forgotten. Then a **wiring drawing** of every probe plate, seen from its outside where the wires go; unwired probes are drawn hollow.
 
-Bill of materials, probe list, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [Fixture tab](#fixture-tab). If the checks found errors, the Fixture Designer asks before exporting.
+In the drawings every probe number stands inside its marker, so numbers never overlap. Where probes are so close that their numbers would be too small to read, the drawing leaves them out and frames the area; each framed area follows enlarged on a page of its own (**Detail A**, **Detail B** …).
+
+Bill of materials, probes by type, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [Fixture tab](#fixture-tab). If the checks found errors, the Fixture Designer asks before exporting.
 
 ## Fixture file
 
