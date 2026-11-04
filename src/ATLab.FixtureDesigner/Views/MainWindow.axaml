@@ -1068,7 +1068,9 @@
                                 <TextBlock Text="{loc:Localize Header_Plates}" Classes="h4"/>
                                 <TextBlock Text="{loc:Localize Text_PlatesHint}" Classes="Label" TextWrapping="Wrap" Margin="0,0,0,4"/>
                                 <CheckBox Content="{loc:Localize Label_BoardFlipped}" IsChecked="{Binding IsBoardFlipped}"
-                                          ToolTip.Tip="{loc:Localize ToolTip_BoardFlipped}" Margin="0,0,0,6"/>
+                                          ToolTip.Tip="{loc:Localize ToolTip_BoardFlipped}"/>
+                                <CheckBox Content="{loc:Localize Label_TopPlateCombined}" IsChecked="{Binding IsTopPlateCombined}"
+                                          ToolTip.Tip="{loc:Localize ToolTip_TopPlateCombined}" Margin="0,0,0,6"/>
                                 <Grid ColumnDefinitions="180,130,110,*" ColumnSpacing="8">
                                     <TextBlock Text="{loc:Localize Column_Plate}" Classes="FormLabel"/>
                                     <TextBlock Grid.Column="1" Text="{loc:Localize Column_Outline}" Classes="FormLabel"/>

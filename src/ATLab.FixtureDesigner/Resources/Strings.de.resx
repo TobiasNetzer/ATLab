@@ -1394,4 +1394,13 @@ unten</value>
   <data name="Report_LegendNotWired" xml:space="preserve">
     <value>Prüfnadeln, nicht verdrahtet</value>
   </data>
+  <data name="Label_TopPlateCombined" xml:space="preserve">
+    <value>Prüfnadeln oben und Niederhalter in einer Platte (Niederhalterplatte)</value>
+  </data>
+  <data name="ToolTip_TopPlateCombined" xml:space="preserve">
+    <value>Die Niederhalterplatte trägt auch die Prüfnadeln oben: keine Kontaktträgerplatte oben und keine Durchbrüche für die Niederhalter. Nur bei Prüfnadeln von oben von Bedeutung.</value>
+  </data>
+  <data name="Text_PlateCombined" xml:space="preserve">
+    <value>Nicht nötig: die Niederhalterplatte trägt die Prüfnadeln oben.</value>
+  </data>
 </root>

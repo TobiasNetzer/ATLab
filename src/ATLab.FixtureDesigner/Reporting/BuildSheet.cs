@@ -42,15 +42,21 @@ public sealed class BuildSheetData
     public IReadOnlyDictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>> PlateOutlines { get; init; } =
         new Dictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>>();
 
+    /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
+    public bool IsBoardFlipped { get; init; }
+
+    /// <summary>The pressure plate holds the top probes and the push rods; there is no top probe plate.</summary>
+    public bool IsTopPlateCombined { get; init; }
+
+    /// <summary>The plate that holds the probes of a side, where the wires go.</summary>
+    public FixturePlate ProbePlate(BoardSide side) => FixturePlates.ProbePlate(side, IsBoardFlipped, IsTopPlateCombined);
+
     /// <summary>
     /// The plates a drawing shows: for the assembly the plates of the side (the probe plate, then the moving or the
     /// pressure plate), for the wiring the probe plate, where the wires go.
     /// </summary>
-    /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
-    public bool IsBoardFlipped { get; init; }
-
     public IReadOnlyList<PlateOutlineDrawing> PlatesOf(BoardSide side, bool wiring) =>
-        PlateOutlines.Where(p => p.Key.Side(IsBoardFlipped) == side && (!wiring || p.Key == FixturePlates.ProbePlate(side, IsBoardFlipped)))
+        PlateOutlines.Where(p => p.Key.Side(IsBoardFlipped) == side && (!wiring || p.Key == ProbePlate(side)))
             .OrderBy(p => p.Key)
             .Select(p => new PlateOutlineDrawing(p.Key, p.Value))
             .ToList();
@@ -221,7 +227,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                     col.Item().Column(c =>
                     {
                         c.Spacing(6);
-                        c.Item().Element(x => Section(x, BoardSvg.Caption(side, false, data.IsBoardFlipped)));
+                        c.Item().Element(x => Section(x, BoardSvg.Caption(side, false, data.ProbePlate(side))));
                         if (probes.Count > 0)
                         {
                             c.Item().Element(x => SubSection(x, L("Report_ProbesByType")));
@@ -277,7 +283,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         var plates = data.PlatesOf(side, wiring);
         var drawing = BoardSvg.Plan(data.Board, data.Probes, side, view, wiring, parts, plates, DrawingAreaWidth, DrawingAreaHeight);
         var style = (data.Layers ?? new()).StyleFor(ViewKey(side, wiring), DefaultLayers(ViewKey(side, wiring)));
-        var caption = BoardSvg.Caption(side, wiring, data.IsBoardFlipped);
+        var caption = BoardSvg.Caption(side, wiring, data.ProbePlate(side));
 
         foreach (var detail in new DrawingDetail?[] { null }.Concat(drawing.Details))
         {

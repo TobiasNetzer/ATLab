@@ -938,8 +938,9 @@ public partial class MainWindowViewModel : ObservableObject
             Parts = Parts.ToList(),
             Components = Components.ToList(),
             Wires = Wires.Where(w => w.IsComplete).ToList(),
-            PlateOutlines = Plate.PlatesOf(Probes, IsBoardFlipped).ToDictionary(p => p, p => PlateOverlay(p)!),
+            PlateOutlines = Plate.PlatesOf(Probes, IsBoardFlipped, IsTopPlateCombined).ToDictionary(p => p, p => PlateOverlay(p)!),
             IsBoardFlipped = IsBoardFlipped,
+            IsTopPlateCombined = IsTopPlateCombined,
             Layers = BuildSheetLayers.Effective
         };
 

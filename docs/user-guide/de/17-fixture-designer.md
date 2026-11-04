@@ -246,11 +246,13 @@ Ein Nadeladapter besteht aus mehreren Platten. Von unten nach oben:
 | **Kontaktträgerplatte unten** | Die Hülsen der Prüfnadeln von unten |
 | **Andruckplatte** | Auf ihr liegt die Platine. Bohrungen für Fang-, Vorzentrierungs- und Stützstifte und Durchbrüche, durch die die Prüfnadeln von unten kommen. |
 | **Kontaktträgerplatte oben** | Die Hülsen der Prüfnadeln von oben und Durchbrüche, durch die die Niederhalter kommen. Nur mit Prüfnadeln von oben nötig. |
-| **Niederhalterplatte** | Die Niederhalter |
+| **Niederhalterplatte** | Die Niederhalter, und die Hülsen der Prüfnadeln von oben, wenn beide in einer Platte sitzen |
 
 Die Liste zeigt jede Platte mit Größe und Inhalt (Nadelbohrungen, Durchbrüche, Stift- und Niederhalterbohrungen, Rahmenbohrungen, Ausschnitte). Die **Dicke** jeder Platte wird für die STEP-Dateien eingegeben. Durchbrüche, die sich überschneiden oder weniger als 0,2 mm Material zwischen sich lassen, werden zu einem Durchbruch zusammengefasst; die Liste zeigt, wie viele.
 
 **Platine kopfüber** gilt für eine Platine, die mit der Oberseite nach unten im Nadeladapter liegt. Dann kommen die Prüfnadeln der Oberseite in die Kontaktträgerplatte unten, die Stifte berühren die Oberseite und die Niederhalter die Unterseite.
+
+**Prüfnadeln oben und Niederhalter in einer Platte** gilt für einen Nadeladapter, dessen Niederhalterplatte auch die Prüfnadeln von oben trägt. Er hat dann keine Kontaktträgerplatte oben und keine Durchbrüche für die Niederhalter; die Prüfnadeln von oben bekommen ihre Hülsen in der Niederhalterplatte, und die Verdrahtungszeichnung des Aufbaublatts zeigt die Niederhalterplatte. Ohne Prüfnadeln von oben macht die Einstellung keinen Unterschied.
 
 Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt.
 

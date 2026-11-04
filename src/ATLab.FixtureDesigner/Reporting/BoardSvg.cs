@@ -75,10 +75,13 @@ public static class BoardSvg
     private const string DetailColor = "#374151";
 
     /// <summary>Smallest probe number on paper (pt) that is still read without effort.</summary>
-    public const double MinLabelPt = 5.5;
+    public const double MinLabelPt = 4.6;
 
-    /// <summary>A detail is enlarged at most this much beyond what its numbers need, so it keeps some of the board around it.</summary>
-    private const double MaxDetailZoom = 1.5;
+    /// <summary>A detail is enlarged this much beyond what its smallest number needs, so its numbers read easily.</summary>
+    private const double DetailZoom = 1.75;
+
+    /// <summary>A detail of only a few probes is enlarged at most this much further, so it keeps some of the board around it.</summary>
+    private const double MaxDetailZoom = 1.25;
 
     /// <summary>
     /// Color of each plate's outline and openings: the probe plates gray, the moving plate orange, the pressure plate
@@ -144,7 +147,8 @@ public static class BoardSvg
 
         var minFont = MinLabelPt / scale;
         var mirror = view == BoardSide.Bottom;
-        var details = PlanDetails(markers.Where(m => m.LabelFont < minFont * 0.999).ToList(), areaWidth, areaHeight, font, maxRadius)
+        var extent = new Bounds2(bounds.MinX - margin, bounds.MinY - margin, bounds.MaxX + margin, bounds.MaxY + margin);
+        var details = PlanDetails(markers.Where(m => m.LabelFont < minFont * 0.999).ToList(), areaWidth, areaHeight, font, maxRadius, extent)
             .OrderBy(w => w.MinY).ThenBy(w => mirror ? -w.MaxX : w.MinX)
             .Select((w, i) => new DrawingDetail(Letter(i), w))
             .ToList();
@@ -158,16 +162,17 @@ public static class BoardSvg
 
     /// <summary>
     /// Windows around the probes whose numbers are too small, in board coordinates, all at the zoom the smallest number
-    /// needs: page-sized tiles laid from the top left, each from the topmost probe not yet shown, so they don't overlap.
+    /// needs, enlarged a bit more: page-sized tiles laid from the top left, each from the topmost probe not yet shown, so they don't overlap.
     /// Each tile then shrinks to its probes and grows to the shape of the page.
     /// </summary>
-    private static List<Bounds2> PlanDetails(List<ProbeMarker> small, double areaWidth, double areaHeight, double font, double maxRadius)
+    private static List<Bounds2> PlanDetails(List<ProbeMarker> small, double areaWidth, double areaHeight, double font, double maxRadius,
+        Bounds2 extent)
     {
         var windows = new List<Bounds2>();
         if (small.Count == 0)
             return windows;
 
-        var needed = MinLabelPt / small.Min(m => m.LabelFont);
+        var needed = MinLabelPt / small.Min(m => m.LabelFont) * DetailZoom;
         var pad = maxRadius + font * 0.6;
         var tileWidth = Math.Max(areaWidth / needed - 2 * pad, 0.1);
         var tileHeight = Math.Max(areaHeight / needed - 2 * pad, 0.1);
@@ -188,7 +193,8 @@ public static class BoardSvg
 
         return windows;
 
-        // The window grown to the shape of the page and to at most a little more zoom than the numbers need
+        // The window grown to the shape of the page and to at most a little more zoom than the numbers need, moved back
+        // inside the drawing where it grew beyond it
         Bounds2 Fill(Bounds2 box)
         {
             var width = Math.Max(box.Width, areaWidth / (needed * MaxDetailZoom));
@@ -198,8 +204,12 @@ public static class BoardSvg
             else
                 height = width * areaHeight / areaWidth;
 
-            var c = box.Center;
-            return new Bounds2(c.X - width / 2, c.Y - height / 2, c.X + width / 2, c.Y + height / 2);
+            static double Inside(double center, double size, double min, double max) =>
+                size >= max - min ? (min + max) / 2 : Math.Clamp(center, min + size / 2, max - size / 2);
+
+            var x = Inside(box.Center.X, width, extent.MinX, extent.MaxX);
+            var y = Inside(box.Center.Y, height, extent.MinY, extent.MaxY);
+            return new Bounds2(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
         }
     }
 
@@ -544,8 +554,8 @@ public static class BoardSvg
         text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
 
     /// <summary>Caption of the drawing: the assembly of a side of the board, or the wiring of the probe plate of that side.</summary>
-    public static string Caption(BoardSide side, bool wiring, bool isBoardFlipped) => wiring
-        ? Localizer.Format("Report_WiringOf", PlateRow.NameOf(FixturePlates.ProbePlate(side, isBoardFlipped)))
+    public static string Caption(BoardSide side, bool wiring, FixturePlate probePlate) => wiring
+        ? Localizer.Format("Report_WiringOf", PlateRow.NameOf(probePlate))
         : Localizer.Get(side == BoardSide.Top ? "Report_AssemblyTop" : "Report_AssemblyBottom");
 
     public static string ViewHint(BoardSide view) =>

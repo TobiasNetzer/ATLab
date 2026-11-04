@@ -227,6 +227,18 @@ public partial class MainWindowViewModel
         RunChecks();
     }
 
+    /// <summary>
+    /// One plate above the board holds the top probes and the push rods: the pressure plate, without a top probe plate
+    /// and its openings for the push rods. Only makes a difference when there are probes from above.
+    /// </summary>
+    [ObservableProperty] private bool _isTopPlateCombined;
+
+    partial void OnIsTopPlateCombinedChanged(bool value)
+    {
+        MarkDirty();
+        RunChecks();
+    }
+
     private void ApplyBoardOrientation()
     {
         foreach (var probe in Probes)
@@ -295,7 +307,7 @@ public partial class MainWindowViewModel
         (IsExportDxf || IsExportStep || IsExportSvg) &&
         PlateRows.Any(r => r.IsPresent && r.IsExported);
 
-    private List<Plate> BuildPlates() => Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped);
+    private List<Plate> BuildPlates() => Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped, IsTopPlateCombined);
 
     private void UpdatePlateSummary()
     {
@@ -318,7 +330,10 @@ public partial class MainWindowViewModel
         {
             var plate = plates.FirstOrDefault(p => p.Kind == row.Plate);
             row.IsPresent = plate is not null;
-            row.Summary = plate is null ? Localizer.Get("Text_PlateNotNeeded") : PlateSummaryOf(plate, culture);
+            row.Summary = plate is not null ? PlateSummaryOf(plate, culture)
+                : Localizer.Get(IsTopPlateCombined && Probes.Any(p => p.Side != FixturePlates.DownSide(IsBoardFlipped))
+                    ? "Text_PlateCombined"
+                    : "Text_PlateNotNeeded");
         }
 
         PlateProblems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem}")).ToList();
@@ -431,6 +446,7 @@ public partial class MainWindowViewModel
         DefaultProbeType = ProbeTypes.FirstOrDefault();
         SelectedProbeType = null;
         IsBoardFlipped = false;
+        IsTopPlateCombined = false;
         LoadThicknesses(null);
         ResetOutline();
         ResetParts();
@@ -451,6 +467,7 @@ public partial class MainWindowViewModel
         SelectedProbeType = null;
 
         IsBoardFlipped = file.IsBoardFlipped;
+        IsTopPlateCombined = file.IsTopPlateCombined;
         LoadThicknesses(file.PlateThicknesses);
         LoadOutline(file.PlateOutline, file.OwnPlateOutlines, fixturePath);
         LoadParts(file);
@@ -481,6 +498,7 @@ public partial class MainWindowViewModel
         file.ProbeTypes = ProbeTypes.ToList();
         file.DefaultProbeType = DefaultProbeType?.Id;
         file.IsBoardFlipped = IsBoardFlipped;
+        file.IsTopPlateCombined = IsTopPlateCombined;
         file.PlateThicknesses = PlateRows.ToDictionary(r => r.Plate, r => r.Thickness);
         (file.PlateOutline, file.OwnPlateOutlines) = SaveOutline(fixturePath);
         file.BuildSheetLayers = BuildSheetLayers.Settings.Copy();

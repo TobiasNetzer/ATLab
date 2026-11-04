@@ -105,10 +105,10 @@ public sealed class Plate
 
     /// <summary>
     /// The plates the fixture has: the bottom probe plate, the moving plate and the pressure plate always, the top probe
-    /// plate when there are probes from above.
+    /// plate when there are probes from above, unless the pressure plate holds them together with the push rods.
     /// </summary>
-    public static IReadOnlyList<FixturePlate> PlatesOf(IReadOnlyList<Probe> probes, bool isBoardFlipped) =>
-        probes.Any(p => p.Side != FixturePlates.DownSide(isBoardFlipped))
+    public static IReadOnlyList<FixturePlate> PlatesOf(IReadOnlyList<Probe> probes, bool isBoardFlipped, bool isTopPlateCombined = false) =>
+        !isTopPlateCombined && probes.Any(p => p.Side != FixturePlates.DownSide(isBoardFlipped))
             ? [FixturePlate.BottomProbePlate, FixturePlate.MovingPlate, FixturePlate.TopProbePlate, FixturePlate.PressurePlate]
             : [FixturePlate.BottomProbePlate, FixturePlate.MovingPlate, FixturePlate.PressurePlate];
 
@@ -117,14 +117,15 @@ public sealed class Plate
     /// of each plate is in build sheet coordinates, as seen from the top.
     /// </summary>
     public static List<Plate> Build(Board board, IReadOnlyList<Probe> probes, Func<FixturePlate, OutlineShape> outlineOf,
-        IReadOnlyList<FixturePart>? parts = null, bool isBoardFlipped = false)
+        IReadOnlyList<FixturePart>? parts = null, bool isBoardFlipped = false, bool isTopPlateCombined = false)
     {
         parts ??= [];
-        return PlatesOf(probes, isBoardFlipped).Select(kind => Build(board, probes, outlineOf(kind), parts, kind, isBoardFlipped)).ToList();
+        return PlatesOf(probes, isBoardFlipped, isTopPlateCombined)
+            .Select(kind => Build(board, probes, outlineOf(kind), parts, kind, isBoardFlipped, isTopPlateCombined)).ToList();
     }
 
     private static Plate Build(Board board, IReadOnlyList<Probe> probes, OutlineShape outline,
-        IReadOnlyList<FixturePart> parts, FixturePlate kind, bool isBoardFlipped)
+        IReadOnlyList<FixturePart> parts, FixturePlate kind, bool isBoardFlipped, bool isTopPlateCombined)
     {
         // The plates above the board are mirrored about the middle of the board, as they are seen from below; with the
         // board upside down (turned over left to right) the plates below it instead
@@ -145,34 +146,34 @@ public sealed class Plate
         foreach (var polyline in board.Outline)
             plate.BoardOutline.Add(polyline.Select(Map).ToList());
 
-        switch (kind)
+        // The receptacles of the probes of the plate's side: in the probe plates, and in a pressure plate that holds the
+        // top probes together with the push rods
+        var holdsProbes = kind is FixturePlate.BottomProbePlate or FixturePlate.TopProbePlate ||
+                          (kind == FixturePlate.PressurePlate && isTopPlateCombined);
+        if (holdsProbes)
         {
-            // The receptacles of the probes of the plate's side
-            case FixturePlate.BottomProbePlate or FixturePlate.TopProbePlate:
-                foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null).OrderBy(p => p.Number))
+            foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null).OrderBy(p => p.Number))
+            {
+                var drill = probe.Type?.DrillDiameter ?? 0;
+                if (drill <= 0)
                 {
-                    var drill = probe.Type?.DrillDiameter ?? 0;
-                    if (drill <= 0)
-                    {
-                        plate.Problems.Add(Localizer.Format("Plate_NoDrill", probe.Name));
-                        continue;
-                    }
-
-                    var (x, y) = Map(probe.Pad!.Position);
-                    plate.Holes.Add(new PlateHole(PlateHoleKind.Probe, probe.Name, x, y, drill));
+                    plate.Problems.Add(Localizer.Format("Plate_NoDrill", probe.Name));
+                    continue;
                 }
 
-                break;
+                var (x, y) = Map(probe.Pad!.Position);
+                plate.Holes.Add(new PlateHole(PlateHoleKind.Probe, probe.Name, x, y, drill));
+            }
+        }
 
-            // The probes from below come through the moving plate; a probe without any diameter is reported by its probe plate
-            case FixturePlate.MovingPlate:
-                foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null && p.Opening > 0).OrderBy(p => p.Number))
-                {
-                    var (x, y) = Map(probe.Pad!.Position);
-                    plate.Holes.Add(new PlateHole(PlateHoleKind.ProbeOpening, probe.Name, x, y, probe.Opening));
-                }
-
-                break;
+        // The probes from below come through the moving plate; a probe without any diameter is reported by its probe plate
+        if (kind == FixturePlate.MovingPlate)
+        {
+            foreach (var probe in probes.Where(p => p.Side == side && p.Pad is not null && p.Opening > 0).OrderBy(p => p.Number))
+            {
+                var (x, y) = Map(probe.Pad!.Position);
+                plate.Holes.Add(new PlateHole(PlateHoleKind.ProbeOpening, probe.Name, x, y, probe.Opening));
+            }
         }
 
         // Locating, pre-centering and support pins in the moving plate, push rods in the pressure plate; a part without
@@ -190,7 +191,7 @@ public sealed class Plate
             plate.Holes.Add(new PlateHole(holeKind, part.Name, x, y, part.Type!.DrillDiameter));
         }
 
-        // The push rods come through the top probe plate
+        // The push rods come through a top probe plate of its own; a combined plate holds them
         if (kind == FixturePlate.TopProbePlate)
         {
             foreach (var rod in parts.Where(p => p.Kind == FixturePartKind.PushRod && p.Opening > 0).OrderBy(p => p.Number))

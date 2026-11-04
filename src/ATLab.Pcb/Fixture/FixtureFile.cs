@@ -64,6 +64,9 @@ public sealed class FixtureFile
     /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
     public bool IsBoardFlipped { get; set; }
 
+    /// <summary>One plate above the board holds the top probes and the push rods; else a top probe plate of its own.</summary>
+    public bool IsTopPlateCombined { get; set; }
+
     /// <summary>Thickness of each plate in the STEP files, in mm; a plate not listed has the default.</summary>
     public Dictionary<FixturePlate, double>? PlateThicknesses { get; set; }
 

@@ -246,11 +246,13 @@ A bed-of-nails fixture consists of several plates. From the bottom up:
 | **Bottom probe plate** | The receptacles of the probes from below |
 | **Moving plate** | The board lies on it. Holes for the locating, pre-centering and support pins, and openings the probes from below come through. |
 | **Top probe plate** | The receptacles of the probes from above, and openings the push rods come through. Only needed with probes from above. |
-| **Pressure plate** | The push rods |
+| **Pressure plate** | The push rods, and the receptacles of the probes from above when both share one plate |
 
 The list shows every plate with its size and contents (probe holes, openings, pin and rod holes, frame holes, cut-outs). Enter the **Thickness** of every plate for the STEP files. Openings that overlap or leave less than 0.2 mm of material between them are merged into one opening; the list shows how many.
 
 **Board upside down** is for a board that lies in the fixture with its top side down. Then the probes on the top side go into the bottom probe plate, the pins touch the top side and the push rods the bottom side.
+
+**Top probes and push rods in one plate** is for a fixture whose pressure plate also holds the probes from above. It then has no top probe plate and no openings for the push rods; the probes from above get their receptacles in the pressure plate, and the wiring drawing of the build sheet shows the pressure plate. Without probes from above the setting makes no difference.
 
 Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out.
 

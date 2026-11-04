@@ -99,7 +99,7 @@ public sealed class FixturePartEntry
 /// The plates of a bed-of-nails fixture, from the bottom up: the probe plate with the bottom probes, the moving plate
 /// the board lies on (locating, pre-centering and support pins, openings for the bottom probes), the probe plate with
 /// the top probes (openings for the push rods), only when there are top probes, and the pressure plate with the push
-/// rods.
+/// rods. A fixture with one combined top plate has no top probe plate: its pressure plate holds the top probes too.
 /// </summary>
 public enum FixturePlate
 {
@@ -125,7 +125,12 @@ public static class FixturePlates
     /// <summary>The side of the board that faces down in the fixture, towards the moving plate.</summary>
     public static BoardSide DownSide(bool isBoardFlipped) => isBoardFlipped ? BoardSide.Top : BoardSide.Bottom;
 
-    /// <summary>The plate that holds the probes of a side of the board.</summary>
-    public static FixturePlate ProbePlate(BoardSide side, bool isBoardFlipped) =>
-        side == DownSide(isBoardFlipped) ? FixturePlate.BottomProbePlate : FixturePlate.TopProbePlate;
+    /// <summary>
+    /// The plate that holds the probes of a side of the board: above the board the top probe plate, or the pressure
+    /// plate when it holds the top probes and the push rods together.
+    /// </summary>
+    public static FixturePlate ProbePlate(BoardSide side, bool isBoardFlipped, bool isTopPlateCombined = false) =>
+        side == DownSide(isBoardFlipped) ? FixturePlate.BottomProbePlate
+        : isTopPlateCombined ? FixturePlate.PressurePlate
+        : FixturePlate.TopProbePlate;
 }

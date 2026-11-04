@@ -1394,4 +1394,13 @@ bottom</value>
   <data name="Report_LegendNotWired" xml:space="preserve">
     <value>Probes, not wired</value>
   </data>
+  <data name="Label_TopPlateCombined" xml:space="preserve">
+    <value>Top probes and push rods in one plate (pressure plate)</value>
+  </data>
+  <data name="ToolTip_TopPlateCombined" xml:space="preserve">
+    <value>The pressure plate also holds the top probes: no top probe plate and no openings for the push rods. Only matters with probes from above.</value>
+  </data>
+  <data name="Text_PlateCombined" xml:space="preserve">
+    <value>Not needed: the pressure plate holds the top probes.</value>
+  </data>
 </root>
