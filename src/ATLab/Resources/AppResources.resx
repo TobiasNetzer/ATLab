@@ -1620,7 +1620,7 @@ Devices that are found again keep their settings. All other devices are removed 
     <value>no connection to the board</value>
   </data>
   <data name="Board_NoBoard" xml:space="preserve">
-    <value>The project has no board. Choose the KiCad board in the Configuration tab (Board and nets).</value>
+    <value>The project has no board file.</value>
   </data>
   <data name="Board_Loading" xml:space="preserve">
     <value>Reading the board…</value>
@@ -1818,7 +1818,7 @@ Devices that are found again keep their settings. All other devices are removed 
     <value>Interconnect Test</value>
   </data>
   <data name="Text_InterconnectNoBoard" xml:space="preserve">
-    <value>The project has no board. Choose the KiCad board in the Configuration tab (Board and Nets).</value>
+    <value>The project has no board file.</value>
   </data>
   <data name="Text_InterconnectNoNets" xml:space="preserve">
     <value>No net with boundary scan pins. Give the chain devices a BSDL file and the reference of their footprint.</value>
