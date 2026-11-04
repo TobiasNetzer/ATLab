@@ -653,6 +653,7 @@
 
                         <!-- Interconnect test: every net with boundary scan pins and its role; all start in their safe state -->
                         <Grid DataContext="{Binding Interconnect}"
+                              x:CompileBindings="False"
                               x:DataType="vm:BoundaryScanInterconnectViewModel"
                               IsVisible="{Binding $parent[UserControl].((vm:BoundaryScanTabViewModel)DataContext).IsInterconnectView, FallbackValue=False}"
                               RowDefinitions="Auto,Auto,*,Auto"
