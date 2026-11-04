@@ -26,11 +26,19 @@ To move steps to another module, cut them, select the target module and paste th
 | **No.** | Step number. The coloured stripe on the left shows the step's *Accent Color*. |
 | **Name** | Step name. |
 | **Lower Limit / Nominal Value / Upper Limit** | Limits, formatted with the step's unit and SI prefix (e.g. `10,8V`, `1,3mA`). |
-| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout`, `NACK` or `Overflow`. For some steps, hovering over the value shows details, e.g. the pins that did not match or an I²C NACK. |
+| **Measured Value** | Result of the last run; green when passed, red when failed. Can also show `Timeout`, `NACK` or `Overflow`. Some steps have [result details](#result-details), e.g. the pins that did not match or an I²C NACK. |
 | **Deviation** | Deviation from the nominal value in percent. |
-| **Result** | ✔ or ✘ after the step has been executed. |
+| **Result** | ✔ or ✘ after the step has been executed. An ⓘ next to it marks a step with result details. |
 
 Ignored steps are shown dimmed. Columns can be resized and reordered; the list cannot be sorted. If the columns don't fit, e.g. on small displays, the list scrolls horizontally. Editing is disabled while a test runs.
+
+### Result details
+
+Some steps report more than their measured value: the pins of a boundary scan check that did not match, an I²C NACK, a failed response check of a script or the faults of an interconnect test. Such a step shows an ⓘ in the **Result** column.
+
+**Double-click** the step to open **Result details**. The dialog lists all messages of the step's last run; you can select the text, and **Copy** puts all of it on the clipboard. In development mode the context menu entry **Show result details** opens the same dialog. While a test runs, the dialog cannot be opened.
+
+The details are also written to the event log and to the [test results](15-results-and-reports.md).
 
 ### Selecting several steps
 
@@ -47,6 +55,7 @@ Use `Ctrl`+click and `Shift`+click to select multiple steps. The configuration p
 | **Cut selected test steps** | Cut | `Ctrl+X` | Removes the steps and keeps them for pasting. |
 | **Copy selected test steps** | Copy | `Ctrl+C` | Copies the steps. |
 | **Paste test steps** | Paste | `Ctrl+V` | Inserts the copied/cut steps after the selection. |
+| | Show result details | double-click | Shows the [result details](#result-details) of the selected step. |
 
 Steps are renumbered automatically within their module. Copies get new internal IDs, so *Jump To* targets in copied steps still point to the original steps. When a whole module is duplicated, jumps between steps inside that module are redirected to the copied steps.
 

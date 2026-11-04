@@ -1227,9 +1227,6 @@ Wird dieser Pin auf Z geschaltet, werden diese Ausgänge ebenfalls deaktiviert.<
   <data name="Enum_BoundaryScanPinActionType_EXPECT_HIGH" xml:space="preserve">
     <value>Expect 1</value>
   </data>
-  <data name="Text_MoreResultDetails" xml:space="preserve">
-    <value>… und {0} weitere</value>
-  </data>
   <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
     <value>Boundary-Scan-Bus</value>
   </data>
@@ -1864,5 +1861,17 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   </data>
   <data name="Text_InterconnectTestedTogether" xml:space="preserve">
     <value>Als ein Netz geprüft: {0}.</value>
+  </data>
+  <data name="Header_ResultDetails" xml:space="preserve">
+    <value>Ergebnisdetails</value>
+  </data>
+  <data name="Menu_ShowResultDetails" xml:space="preserve">
+    <value>Ergebnisdetails anzeigen</value>
+  </data>
+  <data name="Button_CopyToClipboard" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Schließen</value>
   </data>
 </root>

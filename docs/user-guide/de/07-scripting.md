@@ -73,7 +73,7 @@ Prüfungen gehören zum Skript, also führt jeder Schritt, der das Skript verwen
 
 - Alle Befehle werden gesendet, auch nach einer fehlgeschlagenen Prüfung.
 - Schlägt eine Prüfung fehl – Ergebnis außerhalb der Grenzen oder Antwort nicht verarbeitbar (z. B. zu kurz, keine Zahl) –, ist der Schritt **fehlgeschlagen**, auch wenn sein Messwert innerhalb der Grenzwerte des Schritts liegt. Der Messwert wird trotzdem angezeigt, und die **Fehlgeschlagen-Aktion** des Schritts greift.
-- Beim Überfahren des Ergebnisses mit der Maus wird angezeigt, welche Prüfung fehlgeschlagen ist und was empfangen wurde, z. B. `Command 2 'SYST:ERR?': received '-113,"Undefined header"', result 0 not within 1 … 1.` Derselbe Text wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben.
+- Die [Ergebnisdetails](08-building-test-sequences.md#ergebnisdetails) zeigen, welche Prüfung fehlgeschlagen ist und was empfangen wurde, z. B. `Command 2 'SYST:ERR?': received '-113,"Undefined header"', result 0 not within 1 … 1.` Derselbe Text wird nach Abschluss des Schritts als Warnung ins Ereignisprotokoll geschrieben.
 - Ein Timeout bei einem geprüften Befehl beendet den Schritt mit `Timeout`, wie bei jedem anderen Befehl.
 
 Typische Masken: `"OK"` mit Grenzen `1 … 1` (Antwort muss `OK` enthalten), `{dec}` mit Grenzen `0 … 0` (ein reiner Statuswert wie `+0` muss 0 sein) oder eine leere Maske mit Grenzen `4.9 … 5.1` (ein zurückgelesener Wert muss im Bereich liegen).

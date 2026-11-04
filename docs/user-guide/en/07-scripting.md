@@ -73,7 +73,7 @@ Checks are part of the script, so every step that uses the script runs them. Dur
 
 - All commands are sent, even after a failed check.
 - If a check fails — result outside the limits, or the answer cannot be processed (e.g. too short, not a number) — the step **fails**, even if its measured value is within the step's limits. The measured value is still shown, and the step's Fail-Action applies.
-- Hovering the result shows which check failed and what was received, e.g. `Command 2 'SYST:ERR?': received '-113,"Undefined header"', result 0 not within 1 … 1.` The same text is written to the event log as a warning when the step has finished.
+- The [result details](08-building-test-sequences.md#result-details) show which check failed and what was received, e.g. `Command 2 'SYST:ERR?': received '-113,"Undefined header"', result 0 not within 1 … 1.` The same text is written to the event log as a warning when the step has finished.
 - A timeout on a checked command ends the step with `Timeout`, like any other command.
 
 Typical masks: `"OK"` with limits `1 … 1` (answer must contain `OK`), `{dec}` with limits `0 … 0` (a bare status value such as `+0` must be 0), or an empty mask with limits `4.9 … 5.1` (a read-back value must be in range).

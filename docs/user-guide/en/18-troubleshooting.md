@@ -59,7 +59,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | *Step … tries to jump to a step that does not exist or belongs to a disabled module* | The *Jump To* target was deleted, or its module is disabled (or not part of the run when only one module is executed, e.g. when starting from the selected step). Choose a new target or enable the module. |
 | A runtime variable has an unexpected start value | Values assigned in a run persist into the next run. Reset the variable in an early step if needed. |
 | External program fails with *The system cannot find the file specified* | The command is not run through a shell. Built-in commands (`dir`, `echo`, …), pipes and batch files need `cmd /c` (Windows) or `bash -c "…"` (Linux) in front. |
-| Script step fails although its measured value is within the limits | A [response check](07-scripting.md#response-checks) of the script failed. Hover the result to see which command failed and what it received; the same text is in the event log. Try the script in the [Script Runner](07-scripting.md#script-runner) to see every response. |
+| Script step fails although its measured value is within the limits | A [response check](07-scripting.md#response-checks) of the script failed. Double-click the step to see in its [result details](08-building-test-sequences.md#result-details) which command failed and what it received; the same text is in the event log. Try the script in the [Script Runner](07-scripting.md#script-runner) to see every response. |
 
 ## Boundary scan
 

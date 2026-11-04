@@ -572,7 +572,6 @@
                             <DataTemplate DataType="vm:TestStepViewModel">
                                 <TextBlock Text="{Binding Result}" 
                                            Foreground="{Binding IsPassed, Converter={StaticResource ResultBrushConverter}}"
-                                           ToolTip.Tip="{Binding ResultDetails}"
                                            VerticalAlignment="Center" Margin="12,0,0,0"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -580,11 +579,20 @@
                     <DataGridTextColumn Header="{helpers:Localize Header_Deviation}" Binding="{Binding Deviation}" MinWidth="110" />
                     <DataGridTemplateColumn Header="{helpers:Localize Header_Result}" MinWidth="70">
                         <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Width="15" Height="15"
-                                       Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}"
-                                       ToolTip.Tip="{ReflectionBinding ResultDetails}"
-                                       IsVisible="{Binding IsExecuted}"/>
+                            <DataTemplate DataType="vm:TestStepViewModel">
+                                <!-- The info icon marks a step with result details, a double-click on the row shows them -->
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Spacing="6"
+                                            IsVisible="{Binding IsExecuted}">
+                                    <Image Width="15" Height="15"
+                                           Source="{Binding IsPassed, Converter={StaticResource PassFailConverter}}"/>
+                                    <ContentControl Content="{LucideIconContent Info, 18}"
+                                                    Foreground="{DynamicResource WarningColor}"
+                                                    VerticalAlignment="Center"
+                                                    IsVisible="{Binding HasResultDetails}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -600,6 +608,8 @@
                         <MenuItem Header="{helpers:Localize Menu_Cut}" Command="{Binding CutTestStepsCommand}"/>
                         <MenuItem Header="{helpers:Localize Menu_Copy}" Command="{Binding CopyTestStepsCommand}"/>
                         <MenuItem Header="{helpers:Localize Menu_Paste}" Command="{Binding PasteTestStepsCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="{helpers:Localize Menu_ShowResultDetails}" Command="{Binding ShowResultDetailsCommand}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 

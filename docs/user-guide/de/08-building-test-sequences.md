@@ -26,11 +26,19 @@ Um Schritte in ein anderes Modul zu verschieben, schneiden Sie sie aus, wählen 
 | **Nr.** | Schrittnummer. Der farbige Streifen links zeigt die *Akzentfarbe* des Schritts. |
 | **Name** | Name des Schritts. |
 | **Untergrenze / Sollwert / Obergrenze** | Grenzwerte, formatiert mit Einheit und SI-Präfix (z. B. `10,8V`, `1,3mA`). |
-| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout`, `NACK` oder `Overflow` zeigen. Bei manchen Schritten zeigt die Maus über dem Wert Details an, z. B. die abweichenden Pins oder ein I²C-NACK. |
+| **Messwert** | Ergebnis des letzten Laufs; grün bei bestanden, rot bei fehlgeschlagen. Kann auch `Timeout`, `NACK` oder `Overflow` zeigen. Manche Schritte haben [Ergebnisdetails](#ergebnisdetails), z. B. die abweichenden Pins oder ein I²C-NACK. |
 | **Abweichung** | Abweichung vom Sollwert in Prozent. |
-| **Ergebnis** | ✔ oder ✘, nachdem der Schritt ausgeführt wurde. |
+| **Ergebnis** | ✔ oder ✘, nachdem der Schritt ausgeführt wurde. Ein ⓘ daneben kennzeichnet einen Schritt mit Ergebnisdetails. |
 
 Ignorierte Schritte werden abgeblendet dargestellt. Spaltenbreite und -reihenfolge sind veränderbar; sortieren lässt sich die Liste nicht. Passen die Spalten nicht in die Breite, z. B. auf kleinen Bildschirmen, lässt sich die Liste horizontal scrollen. Während eines Tests ist die Bearbeitung gesperrt.
+
+### Ergebnisdetails
+
+Manche Schritte melden mehr als ihren Messwert: die abweichenden Pins einer Boundary-Scan-Prüfung, ein I²C-NACK, eine fehlgeschlagene Antwortprüfung eines Skripts oder die Fehler eines Verbindungstests. Ein solcher Schritt zeigt ein ⓘ in der Spalte **Ergebnis**.
+
+Ein **Doppelklick** auf den Schritt öffnet **Ergebnisdetails**. Der Dialog listet alle Meldungen des letzten Laufs des Schritts; der Text lässt sich markieren, und **Kopieren** legt ihn vollständig in die Zwischenablage. Im Entwicklungsmodus öffnet der Kontextmenüeintrag **Ergebnisdetails anzeigen** denselben Dialog. Während eines Tests lässt sich der Dialog nicht öffnen.
+
+Die Details werden außerdem ins Ereignisprotokoll und in die [Testergebnisse](15-results-and-reports.md) geschrieben.
 
 ### Mehrere Schritte auswählen
 
@@ -47,6 +55,7 @@ Mit `Strg`+Klick und `Umschalt`+Klick wählen Sie mehrere Schritte aus. Der Konf
 | **Ausgewählte Testschritte ausschneiden** | Ausschneiden | `Strg+X` | Entfernt die Schritte und hält sie zum Einfügen bereit. |
 | **Ausgewählte Testschritte kopieren** | Kopieren | `Strg+C` | Kopiert die Schritte. |
 | **Testschritte einfügen** | Einfügen | `Strg+V` | Fügt die kopierten/ausgeschnittenen Schritte nach der Auswahl ein. |
+| | Ergebnisdetails anzeigen | Doppelklick | Zeigt die [Ergebnisdetails](#ergebnisdetails) des ausgewählten Schritts. |
 
 Schritte werden innerhalb ihres Moduls automatisch neu nummeriert. Kopien erhalten neue interne IDs; *Springe zu*-Ziele in kopierten Schritten zeigen daher weiterhin auf die Originalschritte. Wird ein ganzes Modul dupliziert, werden Sprünge zwischen Schritten innerhalb dieses Moduls auf die kopierten Schritte umgelenkt.
 

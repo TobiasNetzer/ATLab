@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using ATLab.ViewModels;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 
@@ -21,6 +23,14 @@ public partial class TestingTab : UserControl
         {
             if (grid.SelectedItem != null)
                 grid.ScrollIntoView(grid.SelectedItem, null);
+        };
+
+        // A double-click on a step row shows its result details; headers and empty space are ignored
+        grid.DoubleTapped += (_, e) =>
+        {
+            var row = (e.Source as Visual)?.FindAncestorOfType<DataGridRow>(includeSelf: true);
+            if (row?.DataContext is TestStepViewModel { HasResultDetails: true } step)
+                _viewModel?.ShowResultDetailsOf(step);
         };
 
         // The user's split between step list and board view is kept

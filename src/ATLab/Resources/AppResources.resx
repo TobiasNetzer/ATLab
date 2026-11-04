@@ -1227,9 +1227,6 @@ Switching this pin to Z disables those outputs as well.</value>
   <data name="Enum_BoundaryScanPinActionType_EXPECT_HIGH" xml:space="preserve">
     <value>Expect 1</value>
   </data>
-  <data name="Text_MoreResultDetails" xml:space="preserve">
-    <value>… and {0} more</value>
-  </data>
   <data name="Enum_TestEvaluationSource_BOUNDARY_SCAN_BUS" xml:space="preserve">
     <value>Boundary Scan Bus</value>
   </data>
@@ -1864,5 +1861,17 @@ Devices that are found again keep their settings. All other devices are removed 
   </data>
   <data name="Text_InterconnectTestedTogether" xml:space="preserve">
     <value>Tested as one net: {0}.</value>
+  </data>
+  <data name="Header_ResultDetails" xml:space="preserve">
+    <value>Result details</value>
+  </data>
+  <data name="Menu_ShowResultDetails" xml:space="preserve">
+    <value>Show result details</value>
+  </data>
+  <data name="Button_CopyToClipboard" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Button_Close" xml:space="preserve">
+    <value>Close</value>
   </data>
 </root>

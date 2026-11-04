@@ -84,11 +84,11 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 - With a command and **Read Bytes** = 0: the bytes are written; the result is `1` if the slave acknowledged, `NACK` otherwise.
 - With **Read Bytes** > 0: after the optional write, the given number of bytes is read. The received bytes go through response processing; a NACK on write or read gives `NACK`.
 - Without response processing, the received bytes are interpreted as ASCII text. For binary registers, enable response processing with e.g. `{byte:2}`.
-- A NACK is shown in the result tooltip (*I²C write failed: NACK received.*) and written to the event log as a warning once the step has finished. A step that repeats on fail until the DUT answers stays quiet while it repeats and only warns if the last attempt was still not acknowledged.
+- A NACK is shown in the [result details](08-building-test-sequences.md#result-details) (*I²C write failed: NACK received.*) and written to the event log as a warning once the step has finished. A step that repeats on fail until the DUT answers stays quiet while it repeats and only warns if the last attempt was still not acknowledged.
 
 **UART behaviour**
 
-- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the result tooltip and logs it as a warning once the step has finished.
+- The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the [result details](08-building-test-sequences.md#result-details) and logs it as a warning once the step has finished.
 - With **Read Bytes** = 0, the measured value is `0`.
 
 The interface must be available on the connected test hardware (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
@@ -198,7 +198,7 @@ Drives and checks pins of boundary-scan chips. The chain, the BSDL files and the
 
 A step with drive actions only produces no value and always passes, like the source *None* — unless **Verify driven pins** is enabled. Pins that a step does not list keep their state from the previous steps.
 
-For a failed step, hovering the measured value or the result icon shows which pins did not match (up to 50 lines), e.g. `U3 IO(5) (FAULT_N): expected 0, read 1`. When the step is finished and has failed, the mismatches are written to the event log once, e.g. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. A step that repeats until a condition is met — for example until the operator presses a button — logs nothing while it repeats, and nothing at all if it passes in the end.
+For a failed step, the [result details](08-building-test-sequences.md#result-details) show which pins did not match, e.g. `U3 IO(5) (FAULT_N): expected 0, read 1`. When the step is finished and has failed, the mismatches are written to the event log once, e.g. *Module 'LED', step 3: U3 IO(5) (FAULT_N): expected 0, read 1*. A step that repeats until a condition is met — for example until the operator presses a button — logs nothing while it repeats, and nothing at all if it passes in the end.
 
 **Verify driven pins** reads back each pin with *Drive 0* or *Drive 1* through its own input cell. A different level is reported as e.g. `U1 PB3 (LED_RED): driven 1, read 0`. This finds shorts to GND, VCC or another driver and broken output drivers. It does not find an open connection further along the net, because the driving pin still reads its own level — check the receiving pin with an expect action for that. Pins without input cell and *Drive Z* are not checked; an expect action for the same pin takes precedence over the read-back.
 
@@ -237,7 +237,7 @@ Runs one transaction on a bus emulated through boundary scan pins: an I²C or SP
 
 - With **Read Bytes** = 0: `1` when the transaction completed (I²C: acknowledged), `NACK` on an I²C NACK.
 - With **Read Bytes** > 0: the received bytes go through [response processing](11-response-processing.md). Without response processing they are interpreted as ASCII text, so enable it for binary data, e.g. `{byte:2}` for a 16-bit register. A NACK gives `NACK`.
-- On a NACK, the result tooltip explains it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished. A step can repeat on fail until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
+- On a NACK, the [result details](08-building-test-sequences.md#result-details) explain it, e.g. *No ACK from 0x51 for address 0x51 (write).* The explanation is written to the event log as a warning once the step has finished. A step can repeat on fail until a device answers without a warning on every repetition; it only warns if the last attempt was still not acknowledged.
 
 Examples:
 
@@ -254,6 +254,6 @@ All signal changes of a transaction are sent to the probe in one transfer. I²C 
 
 Runs the interconnect test of the nets set up in the [Interconnect view](12-boundary-scan.md#interconnect-view) of the Boundary Scan tab. The step has no settings of its own.
 
-- **Result:** the number of faults (opens, shorts, stuck nets). Set both limits to `0`. The result tooltip lists every fault, e.g. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).*; a passed test shows how many nets were driven and checked.
+- **Result:** the number of faults (opens, shorts, stuck nets). Set both limits to `0`. The [result details](08-building-test-sequences.md#result-details) list every fault, e.g. *Open on net /SDA: U5 pin 4 (SDA) does not see U3 pin 12 (PA3).*; a passed test shows how many nets were driven and checked.
 - The step **fails without testing** if the project has no board, if no net is set to Drive, Expect 1 or Expect 0, or if the set-up has a problem shown in the Interconnect view (e.g. a pin that would drive against another output).
 - The board view highlights the tested nets.

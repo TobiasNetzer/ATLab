@@ -108,6 +108,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<MessageBoxViewModel>();
         services.AddSingleton<AppSettingsDialogViewModel>();
         services.AddSingleton<ScriptRunnerViewModel>();
+        services.AddSingleton<ResultDetailsDialogViewModel>();
 
         return services;
     }
@@ -126,5 +127,6 @@ public static class ServiceCollectionExtensions
         dialogService.Register<MessageBox, MessageBoxViewModel>();
         dialogService.Register<SerialNumberEntryDialog, SerialNumberEntryDialogViewModel>();
         dialogService.Register<AppSettingsDialog, AppSettingsDialogViewModel>();
+        dialogService.Register<ResultDetailsDialog, ResultDetailsDialogViewModel>();
     }
 }

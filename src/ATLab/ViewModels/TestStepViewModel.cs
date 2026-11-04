@@ -29,8 +29,6 @@ public partial class TestStepViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isExecuted;
 
-    private const int MaxResultDetailLines = 50;
-    
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasResultDetails), nameof(ResultDetails))]
     private IReadOnlyList<string> _resultDetailLines = [];
@@ -40,21 +38,10 @@ public partial class TestStepViewModel : ViewModelBase
     // A response check of the step's script failed: the step fails even if its value is within the limits
     public bool IsResponseCheckFailed { get; set; }
     
-    public string? ResultDetails
-    {
-        get
-        {
-            if (ResultDetailLines.Count == 0)
-                return null;
-
-            var shown = ResultDetailLines.Take(MaxResultDetailLines).ToList();
-
-            if (ResultDetailLines.Count > MaxResultDetailLines)
-                shown.Add(string.Format(LocalizationService.Instance["Text_MoreResultDetails"], ResultDetailLines.Count - MaxResultDetailLines));
-
-            return string.Join(Environment.NewLine, shown);
-        }
-    }
+    // All detail lines, shown in the result details dialog
+    public string? ResultDetails => ResultDetailLines.Count == 0
+        ? null
+        : string.Join(Environment.NewLine, ResultDetailLines);
 
     // The module the step belongs to, used for navigation during execution and in reports
     public TestModule Module { get; }

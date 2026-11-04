@@ -35,6 +35,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private readonly ISerialNumberDialogService _serialNumberDialogService;
     private readonly ITestResultExportService _testResultExportService;
     private readonly IMessageBoxService _messageBoxService;
+    private readonly ResultDetailsDialogViewModel _resultDetailsDialog;
     
     private readonly List<CustomVariable> _runtimeVariables = new();
     private readonly ObservableCollection<TestStepViewModel> _emptySteps = new();
@@ -184,8 +185,10 @@ public partial class TestingTabViewModel : ViewModelBase
         ITestResultExportService testResultExportService,
         IMessageBoxService messageBoxService,
         IStatusService statusService,
-        BoardViewerViewModel boardViewer)
+        BoardViewerViewModel boardViewer,
+        ResultDetailsDialogViewModel resultDetailsDialog)
     {
+        _resultDetailsDialog = resultDetailsDialog;
         BoardViewer = boardViewer;
         _hardwareInfo = hardwareAccessor.Hardware.HardwareInfo;
         _settingsService = settingsService;
@@ -574,6 +577,7 @@ public partial class TestingTabViewModel : ViewModelBase
 
         NotifyMoveStepCommandsChanged();
         NotifyFailedStepCommandsChanged();
+        ShowResultDetailsCommand.NotifyCanExecuteChanged();
 
         _isChangingSelection = true;
         try
@@ -630,6 +634,7 @@ public partial class TestingTabViewModel : ViewModelBase
         MoveStepUpCommand.NotifyCanExecuteChanged();
         MoveStepDownCommand.NotifyCanExecuteChanged();
         NotifyFailedStepCommandsChanged();
+        ShowResultDetailsCommand.NotifyCanExecuteChanged();
         NewFileCommand.NotifyCanExecuteChanged();
         SaveFileCommand.NotifyCanExecuteChanged();
         LoadFileWithDialogCommand.NotifyCanExecuteChanged();
@@ -692,6 +697,7 @@ public partial class TestingTabViewModel : ViewModelBase
     private bool CanMoveModuleDown() => IsModuleSelected() && Modules.IndexOf(SelectedModule!) < Modules.Count - 1;
     private bool CanGoToPreviousFailedStep() => IsNotTestRunning() && FindFailedStep(forward: false) != null;
     private bool CanGoToNextFailedStep() => IsNotTestRunning() && FindFailedStep(forward: true) != null;
+    private bool CanShowResultDetails() => IsNotTestRunning() && SelectedStep?.HasResultDetails == true;
     private bool CanMoveStepUp() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) > 0;
     private bool CanMoveStepDown() => IsModuleSelected() && SelectedStep != null && TestSteps.IndexOf(SelectedStep) is var index && index >= 0 && index < TestSteps.Count - 1;
 
@@ -838,6 +844,20 @@ public partial class TestingTabViewModel : ViewModelBase
         }
     }
     
+    // Context menu of the step list, the double-click on a step row calls ShowResultDetailsOf directly
+    [RelayCommand(CanExecute = nameof(CanShowResultDetails))]
+    private void ShowResultDetails()
+    {
+        if (SelectedStep != null)
+            ShowResultDetailsOf(SelectedStep);
+    }
+
+    public void ShowResultDetailsOf(TestStepViewModel step)
+    {
+        if (IsNotTestRunning())
+            _resultDetailsDialog.Show(step);
+    }
+
     [RelayCommand(CanExecute = nameof(CanGoToPreviousFailedStep))]
     private void GoToPreviousFailedStep() => SelectFailedStep(forward: false);
 
