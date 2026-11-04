@@ -352,7 +352,7 @@
     <value>{0} · {1} footprints · {2} pads · {3}</value>
   </data>
   <data name="Welcome_Text" xml:space="preserve">
-    <value>Design a bed-of-nails fixture for your test hardware: open the KiCad board of the device, choose the pads to probe from the top or bottom, wire every probe to a pin of the test hardware and create the build sheet.</value>
+    <value>Design a bed-of-nails fixture: open a KiCad board file, choose the pads to probe from the top or bottom, wire every probe to a pin of the test hardware and create manufacturing files.</value>
   </data>
   <data name="Welcome_Hint" xml:space="preserve">
     <value>Open a KiCad board (.kicad_pcb, KiCad 6 or newer) to start a new fixture, or an existing fixture file (.atlabfix). You can also drop a file onto the window.</value>

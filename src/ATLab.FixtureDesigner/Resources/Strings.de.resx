@@ -151,16 +151,16 @@
     <value>Platine auswählen…</value>
   </data>
   <data name="ToolTip_New" xml:space="preserve">
-    <value>Neues Nadelbett</value>
+    <value>Neuer Nadeladapter</value>
   </data>
   <data name="ToolTip_Open" xml:space="preserve">
     <value>Datei öffnen</value>
   </data>
   <data name="ToolTip_Save" xml:space="preserve">
-    <value>Nadelbett speichern</value>
+    <value>Nadeladapter speichern</value>
   </data>
   <data name="ToolTip_SaveAs" xml:space="preserve">
-    <value>Nadelbett speichern unter</value>
+    <value>Nadeladapter speichern unter</value>
   </data>
   <data name="ToolTip_ReloadBoard" xml:space="preserve">
     <value>Platine neu laden</value>
@@ -235,7 +235,7 @@
     <value>Test-Hardware</value>
   </data>
   <data name="Label_FixtureFile" xml:space="preserve">
-    <value>Nadelbett-Datei</value>
+    <value>Nadeladapter-Datei</value>
   </data>
   <data name="Label_BoardFile" xml:space="preserve">
     <value>Platinendatei</value>
@@ -256,7 +256,7 @@
     <value>Prüfungen ({0})</value>
   </data>
   <data name="Tab_Fixture" xml:space="preserve">
-    <value>Nadelbett</value>
+    <value>Nadeladapter</value>
   </data>
   <data name="Column_Probe" xml:space="preserve">
     <value>Nadel</value>
@@ -328,7 +328,7 @@
     <value>Noch nicht gespeichert</value>
   </data>
   <data name="Text_NewFixture" xml:space="preserve">
-    <value>Neues Nadelbett</value>
+    <value>Neuer Nadeladapter</value>
   </data>
   <data name="Text_PadCount" xml:space="preserve">
     <value>{0} von {1} Pads</value>
@@ -352,19 +352,19 @@
     <value>{0} · {1} Footprints · {2} Pads · {3}</value>
   </data>
   <data name="Welcome_Text" xml:space="preserve">
-    <value>Nadelbett für die Test-Hardware entwerfen: KiCad-Platine des Prüflings öffnen, die zu kontaktierenden Pads von oben oder unten wählen, jede Prüfnadel einem Pin der Test-Hardware zuordnen und das Aufbaublatt erstellen.</value>
+    <value>Nadeladapter entwerfen: KiCad-Platine des Prüflings öffnen, die zu kontaktierenden Pads von oben oder unten wählen, jede Prüfnadel einem Pin der Test-Hardware zuordnen und Fertigungsdateien erstellen.</value>
   </data>
   <data name="Welcome_Hint" xml:space="preserve">
-    <value>Eine KiCad-Platine (.kicad_pcb, ab KiCad 6) öffnen, um ein neues Nadelbett zu beginnen, oder eine vorhandene Nadelbett-Datei (.atlabfix). Dateien können auch auf das Fenster gezogen werden.</value>
+    <value>Eine KiCad-Platine (.kicad_pcb, ab KiCad 6) öffnen, um einen neuen Nadeladapter zu beginnen, oder eine vorhandene Nadeladapter-Datei (.atlabfix). Dateien können auch auf das Fenster gezogen werden.</value>
   </data>
   <data name="Status_Start" xml:space="preserve">
-    <value>KiCad-Platine oder Nadelbett-Datei öffnen.</value>
+    <value>KiCad-Platine oder Nadeladapter-Datei öffnen.</value>
   </data>
   <data name="Status_BoardOpened" xml:space="preserve">
     <value>Platine {0} geöffnet. Doppelklick auf Pads fügt Prüfnadeln hinzu.</value>
   </data>
   <data name="Status_FixtureOpened" xml:space="preserve">
-    <value>Nadelbett {0} mit {1} Prüfnadeln geöffnet.</value>
+    <value>Nadeladapter {0} mit {1} Prüfnadeln geöffnet.</value>
   </data>
   <data name="Status_BoardReloaded" xml:space="preserve">
     <value>Platine {0} neu eingelesen.</value>
@@ -403,25 +403,25 @@
     <value>Aufbaublatt {0} gespeichert.</value>
   </data>
   <data name="Dialog_Open" xml:space="preserve">
-    <value>Nadelbett oder Platine öffnen</value>
+    <value>Nadeladapter oder Platine öffnen</value>
   </data>
   <data name="Dialog_OpenBoard" xml:space="preserve">
     <value>KiCad-Platine öffnen</value>
   </data>
   <data name="Dialog_SaveFixture" xml:space="preserve">
-    <value>Nadelbett speichern</value>
+    <value>Nadeladapter speichern</value>
   </data>
   <data name="Dialog_SaveBuildSheet" xml:space="preserve">
     <value>Aufbaublatt speichern</value>
   </data>
   <data name="Dialog_FixtureFiles" xml:space="preserve">
-    <value>ATLab-Nadelbett (*.atlabfix)</value>
+    <value>ATLab-Nadeladapter (*.atlabfix)</value>
   </data>
   <data name="Dialog_BoardFiles" xml:space="preserve">
     <value>KiCad-Platine (*.kicad_pcb)</value>
   </data>
   <data name="Dialog_SupportedFiles" xml:space="preserve">
-    <value>Nadelbetten und KiCad-Platinen</value>
+    <value>Nadeladapter und KiCad-Platinen</value>
   </data>
   <data name="Dialog_PdfFiles" xml:space="preserve">
     <value>PDF-Dokument (*.pdf)</value>
@@ -430,13 +430,13 @@
     <value>Nicht gespeicherte Änderungen</value>
   </data>
   <data name="Dialog_Unsaved" xml:space="preserve">
-    <value>Das Nadelbett hat nicht gespeicherte Änderungen. Speichern?</value>
+    <value>Der Nadeladapter hat nicht gespeicherte Änderungen. Speichern?</value>
   </data>
   <data name="Dialog_BoardMissingTitle" xml:space="preserve">
     <value>Platine nicht gefunden</value>
   </data>
   <data name="Dialog_BoardMissing" xml:space="preserve">
-    <value>Die Platinendatei dieses Nadelbetts wurde nicht gefunden:
+    <value>Die Platinendatei dieses Nadeladapters wurde nicht gefunden:
 {0}
 
 Platinendatei am neuen Ort auswählen.</value>
@@ -445,19 +445,19 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Prüfungen haben Fehler gefunden</value>
   </data>
   <data name="Dialog_ExportWithErrors" xml:space="preserve">
-    <value>Die Prüfungen haben {0} Fehler gefunden. Ein nach diesem Aufbaublatt gebautes Nadelbett funktioniert womöglich nicht. Trotzdem exportieren?</value>
+    <value>Die Prüfungen haben {0} Fehler gefunden. Ein nach diesem Aufbaublatt gebauter Nadeladapter funktioniert womöglich nicht. Trotzdem exportieren?</value>
   </data>
   <data name="Error_OpenFixture" xml:space="preserve">
-    <value>Nadelbett konnte nicht geöffnet werden</value>
+    <value>Nadeladapter konnte nicht geöffnet werden</value>
   </data>
   <data name="Error_FixtureInvalid" xml:space="preserve">
-    <value>{0} ist keine ATLab-Nadelbett-Datei oder beschädigt.</value>
+    <value>{0} ist keine ATLab-Nadeladapter-Datei oder beschädigt.</value>
   </data>
   <data name="Error_FixtureNewer" xml:space="preserve">
     <value>{0} wurde mit einer neueren Version des Fixture Designers gespeichert. Den Fixture Designer aktualisieren, um sie zu öffnen.</value>
   </data>
   <data name="Error_UnknownAdapter" xml:space="preserve">
-    <value>Das Nadelbett ist für die Test-Hardware {0} gemacht, die diese Version nicht kennt.</value>
+    <value>Der Nadeladapter ist für die Test-Hardware {0} gemacht, die diese Version nicht kennt.</value>
   </data>
   <data name="Error_OpenBoard" xml:space="preserve">
     <value>Platine konnte nicht geöffnet werden</value>
@@ -472,7 +472,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>{0} konnte nicht gelesen werden: {1}</value>
   </data>
   <data name="Error_SaveFixture" xml:space="preserve">
-    <value>Nadelbett konnte nicht gespeichert werden</value>
+    <value>Nadeladapter konnte nicht gespeichert werden</value>
   </data>
   <data name="Error_BuildSheet" xml:space="preserve">
     <value>Aufbaublatt konnte nicht gespeichert werden</value>
@@ -499,7 +499,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>{0} liegen auf demselben Pad {1} von der {2}.</value>
   </data>
   <data name="Check_Short" xml:space="preserve">
-    <value>Pin {0} verbindet verschiedene Netze: {1}. So verdrahtet schließt das Nadelbett diese Netze kurz.</value>
+    <value>Pin {0} verbindet verschiedene Netze: {1}. So verdrahtet schließt der Nadeladapter diese Netze kurz.</value>
   </data>
   <data name="Check_NotWired" xml:space="preserve">
     <value>{0} ({1}, {2}) ist keinem Pin der Test-Hardware zugeordnet.</value>
@@ -511,16 +511,16 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>{0}: {1} nicht verdrahtet. Die isolierte Schnittstelle braucht alle ihre Leitungen vom Prüfling, auch VREF und GND.</value>
   </data>
   <data name="Check_ExtStimIncomplete" xml:space="preserve">
-    <value>Externer Stimulus {0}: Leitung {1} ist nicht verdrahtet, der Stimulus hat also keinen Rückweg über das Nadelbett.</value>
+    <value>Externer Stimulus {0}: Leitung {1} ist nicht verdrahtet, der Stimulus hat also keinen Rückweg über den Nadeladapter.</value>
   </data>
   <data name="Check_StimOneTerminal" xml:space="preserve">
-    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss im Nadelbett verdrahtet werden.</value>
+    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss imNadeladapter verdrahtet werden.</value>
   </data>
   <data name="Check_BoardChanged" xml:space="preserve">
     <value>Die Platinendatei hat sich seit dem Speichern geändert. Positionen und Netze stammen aus der aktuellen Datei; geänderte Prüfnadeln sind aufgeführt.</value>
   </data>
   <data name="Report_Title" xml:space="preserve">
-    <value>Nadelbett-Aufbaublatt</value>
+    <value>Nadeladapter-Aufbaublatt</value>
   </data>
   <data name="Report_FileSuffix" xml:space="preserve">
     <value>Aufbaublatt</value>
@@ -535,7 +535,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Notizen</value>
   </data>
   <data name="Report_Fixture" xml:space="preserve">
-    <value>Nadelbett</value>
+    <value>Nadeladapter</value>
   </data>
   <data name="Report_FixtureName" xml:space="preserve">
     <value>Name</value>
@@ -1127,10 +1127,10 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Als Standard speichern</value>
   </data>
   <data name="ToolTip_SaveLayersAsDefault" xml:space="preserve">
-    <value>Diese Lagen für neue Nadelbetten und Nadelbetten ohne eigene Auswahl verwenden</value>
+    <value>Diese Lagen für neue Nadeladapter und Nadeladapter ohne eigene Auswahl verwenden</value>
   </data>
   <data name="Status_LayersDefaultSaved" xml:space="preserve">
-    <value>Lagen als Standard für neue Nadelbetten gespeichert.</value>
+    <value>Lagen als Standard für neue Nadeladapter gespeichert.</value>
   </data>
   <data name="LayerView_AssemblyTop" xml:space="preserve">
     <value>Montage
@@ -1260,7 +1260,7 @@ unten</value>
     <value>Platine kopfüber (Oberseite zu den unteren Platten)</value>
   </data>
   <data name="ToolTip_BoardFlipped" xml:space="preserve">
-    <value>Die Platine liegt mit der Oberseite nach unten im Nadelbett: Prüfnadeln der Oberseite kommen in die Kontaktträgerplatte unten, die Stifte berühren die Oberseite, die Niederhalter die Unterseite</value>
+    <value>Die Platine liegt mit der Oberseite nach unten im Nadeladapter: Prüfnadeln der Oberseite kommen in die Kontaktträgerplatte unten, die Stifte berühren die Oberseite, die Niederhalter die Unterseite</value>
   </data>
   <data name="Report_Orientation" xml:space="preserve">
     <value>Lage der Platine</value>
