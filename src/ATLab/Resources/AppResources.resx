@@ -1659,7 +1659,7 @@ Devices that are found again keep their settings. All other devices are removed 
     <value>Board</value>
   </data>
   <data name="BoardLink_NoBoardWatermark" xml:space="preserve">
-    <value>KiCad board (.kicad_pcb), optional</value>
+    <value>KiCad board (.kicad_pcb)</value>
   </data>
   <data name="ToolTip_BoardLinkBrowse" xml:space="preserve">
     <value>Choose board file</value>
@@ -1777,5 +1777,20 @@ Devices that are found again keep their settings. All other devices are removed 
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Default colors</value>
+  </data>
+  <data name="Welcome_Text" xml:space="preserve">
+    <value>Run test sequences on your DUT and remote-control external test instruments.</value>
+  </data>
+  <data name="Welcome_Hint" xml:space="preserve">
+    <value>Create a new project or open an existing one (.atlab).</value>
+  </data>
+  <data name="Button_NewProject" xml:space="preserve">
+    <value>New project</value>
+  </data>
+  <data name="Button_OpenProject" xml:space="preserve">
+    <value>Open project</value>
+  </data>
+  <data name="ToolTip_CloseFile" xml:space="preserve">
+    <value>Close project (Ctrl+W)</value>
   </data>
 </root>

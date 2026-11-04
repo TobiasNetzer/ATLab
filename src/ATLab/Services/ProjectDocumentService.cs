@@ -125,6 +125,20 @@ public class ProjectDocumentService : IProjectDocumentService
     }
 
     /// <summary>
+    /// Asks about unsaved changes, then empties the project. It is no longer the last opened file, so the next start
+    /// shows the welcome screen.
+    /// </summary>
+    public async Task<bool> CloseProjectAsync()
+    {
+        if (!await ConfirmAndContinueIfDirtyAsync())
+            return false;
+
+        _projectModel.Reset();
+        _settingsService.Settings.LastOpenedFile = "";
+        return true;
+    }
+
+    /// <summary>
     /// Unsaved changes: saves them (Save As for a new project) or discards them, as the user chooses. False if the
     /// user canceled, also when the Save As dialog was canceled.
     /// </summary>

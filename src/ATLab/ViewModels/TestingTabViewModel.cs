@@ -191,6 +191,12 @@ public partial class TestingTabViewModel : ViewModelBase
         _settingsService = settingsService;
         _loggingService = loggingService;
         _projectModel = projectModel;
+        _projectModel.PropertyChanged += (_, e) =>
+        {
+            // Without a project only New and Open apply; the other commands come back with the project
+            if (e.PropertyName == nameof(ProjectModel.IsProjectOpen))
+                NotifyCommandStates();
+        };
         WorkspaceEditor = workspaceEditor;
         _projectController = projectController;
         _testStepEditor = testStepEditor;
@@ -607,6 +613,14 @@ public partial class TestingTabViewModel : ViewModelBase
 
     partial void OnTestStatusChanged(TestStatus value)
     {
+        NotifyCommandStates();
+
+        if (_projectModel.Settings.IsControlModuleEnabled)
+            _controlModuleService.SetStatus(value);
+    }
+
+    private void NotifyCommandStates()
+    {
         AddTestStepCommand.NotifyCanExecuteChanged();
         DuplicateTestStepsCommand.NotifyCanExecuteChanged();
         CutTestStepsCommand.NotifyCanExecuteChanged();
@@ -620,6 +634,7 @@ public partial class TestingTabViewModel : ViewModelBase
         SaveFileCommand.NotifyCanExecuteChanged();
         LoadFileWithDialogCommand.NotifyCanExecuteChanged();
         SaveFileAsCommand.NotifyCanExecuteChanged();
+        CloseFileCommand.NotifyCanExecuteChanged();
         StartTestFromSelectionCommand.NotifyCanExecuteChanged();
         StartTestRepeatCommand.NotifyCanExecuteChanged();
         StartTestCommand.NotifyCanExecuteChanged();
@@ -631,9 +646,6 @@ public partial class TestingTabViewModel : ViewModelBase
         ToggleDevelopmentModeCommand.NotifyCanExecuteChanged();
         AddModuleCommand.NotifyCanExecuteChanged();
         NotifyModuleCommandsChanged();
-
-        if (_projectModel.Settings.IsControlModuleEnabled)
-            _controlModuleService.SetStatus(value);
     }
     
     partial void OnIsDevelopmentModeChanged(bool value)
@@ -666,11 +678,12 @@ public partial class TestingTabViewModel : ViewModelBase
     }
     
     private bool IsNotTestRunning() => TestStatus != TestStatus.RUNNING;
+    private bool IsProjectIdle() => _projectModel.IsProjectOpen && IsNotTestRunning();
     private bool IsDialogClosed() => !_messageBoxService.IsDialogOpen && !_serialNumberDialogService.IsDialogOpen;
     private bool CanRequestBreakRepeat() => !_messageBoxService.IsDialogOpen && TestStatus == TestStatus.RUNNING && !_serialNumberDialogService.IsDialogOpen;
     private bool CanRequestSingleStepContinue() => IsDebugMode && TestStatus == TestStatus.RUNNING && !IsSingleStepContinueRequested;
-    private bool IsModuleSelected() => IsNotTestRunning() && SelectedModule != null;
-    private bool IsDevelopmentIdle() => IsDevelopmentMode && IsNotTestRunning();
+    private bool IsModuleSelected() => IsProjectIdle() && SelectedModule != null;
+    private bool IsDevelopmentIdle() => IsDevelopmentMode && IsProjectIdle();
     private bool CanStartModuleTest() => IsDevelopmentMode && IsModuleSelected();
     private bool CanAddTestStep() => IsDevelopmentMode && IsModuleSelected();
     private bool CanPasteTestStep() => IsDevelopmentMode && IsModuleSelected() && _testStepEditor.CanPaste;
@@ -692,10 +705,17 @@ public partial class TestingTabViewModel : ViewModelBase
         ResetTestCounters();
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
+    private async Task CloseFile()
+    {
+        if (await _projectController.CloseProjectAsync())
+            ResetTestCounters();
+    }
+    
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
     private Task SaveFile() => _projectController.SaveFileAsync();
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
     private Task SaveFileAs() => _projectController.SaveFileAsAsync();
     
     [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
@@ -747,7 +767,7 @@ public partial class TestingTabViewModel : ViewModelBase
         Select(inserted);
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
     private void CopyTestSteps()
     {
         if (SelectedModule == null || SelectedSteps.Count == 0)
@@ -848,7 +868,7 @@ public partial class TestingTabViewModel : ViewModelBase
             Select(step);
     }
 
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
     private void AddModule()
     {
         var index = SelectedModule != null
@@ -917,7 +937,7 @@ public partial class TestingTabViewModel : ViewModelBase
             .ToList();
     }
     
-    [RelayCommand(CanExecute = nameof(IsNotTestRunning))]
+    [RelayCommand(CanExecute = nameof(IsProjectIdle))]
     private async Task StartTestAsync()
     {
         using (_projectModel.SuppressDirtyTracking())

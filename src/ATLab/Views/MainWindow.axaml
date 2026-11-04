@@ -30,6 +30,7 @@
         <KeyBinding Gesture="Ctrl+O" Command="{Binding TestingTab.LoadFileWithDialogCommand}" />
         <KeyBinding Gesture="Ctrl+S" Command="{Binding TestingTab.SaveFileCommand}" />
         <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding TestingTab.SaveFileAsCommand}" />
+        <KeyBinding Gesture="Ctrl+W" Command="{Binding TestingTab.CloseFileCommand}" />
         <KeyBinding Gesture="Escape" Command="{Binding TestingTab.CancelTestCommand}" />
         <KeyBinding Gesture="F5" Command="{Binding TestingTab.StartTestCommand}" />
         <KeyBinding Gesture="F12" Command="{Binding FindMatrixChannelCommand}" />
@@ -96,9 +97,49 @@
 
                 <Grid Grid.Row="1">
                     
+                    <!-- Welcome: no project open yet -->
+                    <Border IsVisible="{Binding ShowWelcome}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            MaxWidth="600"
+                            Padding="40,32"
+                            CornerRadius="15"
+                            BorderBrush="{DynamicResource OutlineColor}"
+                            BorderThickness="2">
+                        <StackPanel Spacing="14" HorizontalAlignment="Center">
+                            <Image Source="avares://ATLab/Assets/AppIcon.png"
+                                   Width="120"
+                                   Height="120"
+                                   HorizontalAlignment="Center"/>
+                            <TextBlock Text="ATLab"
+                                       Classes="h2"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{helpers:Localize Welcome_Text}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       Classes="Caption"
+                                       FontSize="14"/>
+                            <TextBlock Text="{helpers:Localize Welcome_Hint}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       Classes="Caption"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="10"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,6,0,0">
+                                <Button Classes="Primary"
+                                        Command="{Binding TestingTab.NewFileCommand}"
+                                        Content="{helpers:Localize Button_NewProject}"/>
+                                <Button Classes="Outline"
+                                        Command="{Binding TestingTab.LoadFileWithDialogCommand}"
+                                        Content="{helpers:Localize Button_OpenProject}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
                     <views:TestingTab
                       DataContext="{Binding TestingTab}"
-                      IsVisible="{ReflectionBinding $parent[shadui:Window].DataContext?.IsTestingTabSelected}" />
+                      IsVisible="{ReflectionBinding $parent[shadui:Window].DataContext?.IsTestingViewVisible}" />
 
                     <views:ConfigTab
                         DataContext="{Binding ConfigTab}"

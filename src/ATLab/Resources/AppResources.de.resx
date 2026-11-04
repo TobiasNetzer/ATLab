@@ -1659,7 +1659,7 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
     <value>Platine</value>
   </data>
   <data name="BoardLink_NoBoardWatermark" xml:space="preserve">
-    <value>KiCad-Platine (.kicad_pcb), optional</value>
+    <value>KiCad-Platine (.kicad_pcb)</value>
   </data>
   <data name="ToolTip_BoardLinkBrowse" xml:space="preserve">
     <value>Platinendatei wählen</value>
@@ -1777,5 +1777,20 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   </data>
   <data name="Button_DefaultLayerColors" xml:space="preserve">
     <value>Standardfarben</value>
+  </data>
+  <data name="Welcome_Text" xml:space="preserve">
+    <value>Prüfsequenzen an Ihrem Prüfling (DUT) ausführen und externe Messgeräte fernsteuern.</value>
+  </data>
+  <data name="Welcome_Hint" xml:space="preserve">
+    <value>Legen Sie ein neues Projekt an oder öffnen Sie ein vorhandenes (.atlab).</value>
+  </data>
+  <data name="Button_NewProject" xml:space="preserve">
+    <value>Neues Projekt</value>
+  </data>
+  <data name="Button_OpenProject" xml:space="preserve">
+    <value>Projekt öffnen</value>
+  </data>
+  <data name="ToolTip_CloseFile" xml:space="preserve">
+    <value>Projekt schließen (Strg+W)</value>
   </data>
 </root>

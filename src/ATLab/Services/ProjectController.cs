@@ -43,6 +43,30 @@ public class ProjectController : IProjectController
 
     public async Task<bool> NewProjectAsync()
     {
+        if (!await ResetProjectAsync())
+            return false;
+
+        _projectModel.IsProjectOpen = true;
+        return true;
+    }
+
+    /// <summary>Closes the project after asking about unsaved changes; the main window returns to the welcome screen.</summary>
+    public async Task<bool> CloseProjectAsync()
+    {
+        if (!await _projectDocumentService.CloseProjectAsync())
+            return false;
+
+        _scriptRepository.SetRepositoryFolder(null);
+        _projectModel.IsProjectOpen = false;
+        return true;
+    }
+
+    /// <summary>
+    /// Replaces the project with an empty one after asking about unsaved changes. Leaves the open state alone, so a
+    /// canceled or failed open from the welcome screen stays there.
+    /// </summary>
+    private async Task<bool> ResetProjectAsync()
+    {
         if (!await _projectDocumentService.NewProjectAsync())
             return false;
         
@@ -63,7 +87,7 @@ public class ProjectController : IProjectController
 
     public async Task LoadFileWithDialogAsync()
     {
-        if (!await NewProjectAsync())
+        if (!await ResetProjectAsync())
             return;
         
         try
@@ -73,6 +97,7 @@ public class ProjectController : IProjectController
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
+                _projectModel.IsProjectOpen = true;
             }
             
         }
@@ -86,7 +111,7 @@ public class ProjectController : IProjectController
     {
         try
         {
-            if (!await NewProjectAsync())
+            if (!await ResetProjectAsync())
                 return;
 
             var dto = await _projectDocumentService.OpenAsync(path);
@@ -94,6 +119,7 @@ public class ProjectController : IProjectController
             {
                 await CheckForHardwareCompatibility(_hardwareInfo, dto);
                 ApplyDto(dto);
+                _projectModel.IsProjectOpen = true;
             }
                 
         }

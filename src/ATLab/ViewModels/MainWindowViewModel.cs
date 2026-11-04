@@ -28,7 +28,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private const string OnlineUserGuideUrl = "https://github.com/TobiasNetzer/ATLab/blob/main/docs/user-guide";
 
-    public string WindowTitle => $"ATLab - {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}";
+    public string WindowTitle => IsProjectOpen
+        ? $"ATLab - {_projectModel.ProjectName}{(_projectModel.IsDirty ? "*" : "")}"
+        : "ATLab";
+
+    public bool IsProjectOpen => _projectModel.IsProjectOpen;
     
     [ObservableProperty]
     private TestHardwareRelayChannelsViewModel _testHardwareRelayChannelsViewModel;
@@ -47,6 +51,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<ViewModelBase> Tabs { get; } = new();
     
     public bool IsTestingTabSelected => ReferenceEquals(SelectedTab, TestingTab);
+    public bool IsTestingViewVisible => IsTestingTabSelected && IsProjectOpen;
+    public bool ShowWelcome => IsTestingTabSelected && !IsProjectOpen;
     public bool IsConfigTabSelected => ReferenceEquals(SelectedTab, ConfigTab);
     public bool IsDocumentationTabSelected => ReferenceEquals(SelectedTab, DocumentationTab);
     public bool IsScriptTabSelected => ReferenceEquals(SelectedTab, ScriptTab);
@@ -124,6 +130,14 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 OnPropertyChanged(nameof(WindowTitle));
             }
+            else if (e.PropertyName is nameof(ProjectModel.IsProjectOpen))
+            {
+                OnPropertyChanged(nameof(WindowTitle));
+                OnPropertyChanged(nameof(IsProjectOpen));
+                OnPropertyChanged(nameof(IsTestingViewVisible));
+                OnPropertyChanged(nameof(ShowWelcome));
+                UpdateTabAccess();
+            }
         };
 
         TestingTab.PropertyChanged += (s, e) =>
@@ -142,19 +156,18 @@ public partial class MainWindowViewModel : ViewModelBase
     
     private void UpdateTabAccess()
     {
-        var isDevelopmentMode = TestingTab.IsDevelopmentMode;
+        // The development tabs need an open project; without one only Test Execution (welcome screen) and Info remain
+        var isEditable = TestingTab.IsDevelopmentMode && IsProjectOpen;
 
         foreach (var tab in Tabs)
         {
-            tab.IsTabEnabled = isDevelopmentMode || ReferenceEquals(tab, TestingTab) || ReferenceEquals(tab, AboutTab);
+            tab.IsTabEnabled = isEditable || ReferenceEquals(tab, TestingTab) || ReferenceEquals(tab, AboutTab);
         }
 
         if (!SelectedTab.IsTabEnabled)
             SelectedTab = TestingTab;
     }
 
-    private async Task NewFile() => await TestingTab.NewFileCommand.ExecuteAsync(null);
-    
     private async Task LoadFile(string fileToLoad) => await TestingTab.LoadFile(fileToLoad);
     
     // Probing talks to the test hardware, which must not happen in the middle of a run
@@ -229,6 +242,8 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnSelectedTabChanged(ViewModelBase value)
     {
         OnPropertyChanged(nameof(IsTestingTabSelected));
+        OnPropertyChanged(nameof(IsTestingViewVisible));
+        OnPropertyChanged(nameof(ShowWelcome));
         OnPropertyChanged(nameof(IsConfigTabSelected));
         OnPropertyChanged(nameof(IsDocumentationTabSelected));
         OnPropertyChanged(nameof(IsScriptTabSelected));
@@ -238,46 +253,35 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     /// <summary>
-    /// Opens the project given on the command line, otherwise the last opened project, otherwise a new one.
+    /// Opens the project given on the command line, otherwise the last opened project. If neither opens, the welcome
+    /// screen stays until the user creates or opens a project.
     /// </summary>
     public async Task OnWindowOpened()
     {
-        
         var args = Environment.GetCommandLineArgs();
         var fileFromArgs = args.Length > 1 ? args[1] : null;
 
         if (!string.IsNullOrWhiteSpace(fileFromArgs) && File.Exists(fileFromArgs))
         {
-            try
-            {
-                await LoadFile(fileFromArgs);
-                return;
-            }
-            catch (Exception ex)
-            {
-                _loggingService.Error(ex.ToString());
-                await NewFile();
-                return;
-            }
+            await TryLoadFile(fileFromArgs);
+            return;
         }
         
         var lastFile = _settingsService.Settings.LastOpenedFile;
 
         if (File.Exists(lastFile))
+            await TryLoadFile(lastFile);
+    }
+
+    private async Task TryLoadFile(string path)
+    {
+        try
         {
-            try
-            {
-                await LoadFile(lastFile);
-            }
-            catch (Exception ex)
-            {
-                _loggingService.Error(ex.ToString());
-                await NewFile();
-            }
+            await LoadFile(path);
         }
-        else
+        catch (Exception ex)
         {
-            await NewFile();
+            _loggingService.Error(ex.ToString());
         }
     }
 }

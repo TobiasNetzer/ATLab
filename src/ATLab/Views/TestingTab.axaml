@@ -75,6 +75,18 @@
                         </shadui:ButtonAssist.Icon>
                     </Button>
 
+                    <Button
+                        Background="{DynamicResource ButtonBackground}"
+                        Classes="Icon"
+                        ToolTip.Tip="{helpers:Localize ToolTip_CloseFile}"
+                        Command="{Binding CloseFileCommand}"
+                        Width="40"
+                        Height="40">
+                        <shadui:ButtonAssist.Icon>
+                            <ContentControl Content="{LucideIconContent FolderX}"/>
+                        </shadui:ButtonAssist.Icon>
+                    </Button>
+
                     <Separator Width="2"
                                Height="25"
                                Margin="5 0 5 0"

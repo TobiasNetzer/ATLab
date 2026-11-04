@@ -24,6 +24,10 @@ public partial class ProjectModel : ObservableObject
     
     [ObservableProperty]
     private bool _isDirty;
+
+    /// <summary>False until a project was created or opened; the main window shows the welcome screen meanwhile.</summary>
+    [ObservableProperty]
+    private bool _isProjectOpen;
     
     [ObservableProperty]
     private string? _filePath;

@@ -11,5 +11,6 @@ public interface IProjectDocumentService
     Task<bool> SaveAsync(AtlabFileDto dto);
     Task<bool> SaveAsAsync(AtlabFileDto dto);
     Task<bool> NewProjectAsync();
+    Task<bool> CloseProjectAsync();
     Task<bool> ConfirmAndContinueIfDirtyAsync();
 }

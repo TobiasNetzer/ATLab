@@ -6,6 +6,7 @@ namespace ATLab.Interfaces;
 public interface IProjectController
 {
     Task<bool> NewProjectAsync();
+    Task<bool> CloseProjectAsync();
     Task SaveFileAsync();
     Task SaveFileAsAsync();
     Task LoadFileWithDialogAsync();
