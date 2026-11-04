@@ -7,7 +7,7 @@ The **Evaluate** field of a step decides where its measured value comes from. Ev
 | [None](#none) | no value, always passes | – | – |
 | [Script](#script) | answer of the script's *Evaluate* command | Script Configuration | ✔ |
 | [Device Command](#device-command) | answer of a single command | Device Command | ✔ |
-| [Interface Command](#interface-command) | data read via the adapter's I²C/UART | Interface Command | ✔ |
+| [Interface Command](#interface-command) | data read via the I²C/UART of the test hardware | Interface Command | ✔ |
 | [External Program](#external-program) | process exit code or program output | External Program | ✔ (output only) |
 | [User Confirmation](#user-confirmation) | `1` (Passed) or `0` (Failed) | – (uses Comment) | – |
 | [User Input](#user-input) | number entered by the operator | – (uses Comment) | ✔ |
@@ -90,7 +90,7 @@ The command is usually written with encoding blocks, e.g. `{hex:0A 1F}` to send 
 - The command (plus termination) is sent and **Read Bytes** bytes are awaited. If fewer arrive, the step shows it in the result tooltip and logs it as a warning once the step has finished.
 - With **Read Bytes** = 0, the measured value is `0`.
 
-The interface must be available on the connected adapter (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
+The interface must be available on the connected test hardware (see the Test Hardware tab); otherwise the step fails with *"Interface not available"*. RS485 is listed but not yet supported for test steps.
 
 ## External Program
 

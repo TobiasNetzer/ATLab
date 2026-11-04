@@ -153,7 +153,7 @@ The bottom three panels set the Test Interface Adapter's relays **for the select
 | Swap button | **Swap channels** — exchanges H and L. |
 | Probe button | **Enable external probe** — routes the external probe instead of a matrix channel. |
 
-Choose **Off** to leave a side unconnected. The list shows channel numbers with their custom names. If a step refers to a channel that the connected adapter does not have, the step fails with *"Matrix Channel is not available."*
+Choose **Off** to leave a side unconnected. The list shows channel numbers with their custom names. If a step refers to a channel that the connected test hardware does not have, the step fails with *"Matrix Channel is not available."*
 
 ### Stimulation Channels / External Stimulation Channels
 

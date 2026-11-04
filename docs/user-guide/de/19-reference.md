@@ -1,4 +1,4 @@
-# 18. Referenz
+# 19. Referenz
 
 ## Tastenkürzel
 
@@ -10,6 +10,7 @@
 | `Strg+O` | Projekt öffnen |
 | `Strg+S` | Projekt speichern |
 | `Strg+Umschalt+S` | Projekt speichern unter |
+| `Strg+W` | Projekt schließen |
 | `F5` | Testausführung starten |
 | `Strg+F5` | Dauertest starten (Entwicklungsmodus) |
 | `F3` | Einzelschritt ausführen (Entwicklungsmodus) |
@@ -47,18 +48,35 @@
 | Mausrad / `Strg` + Mausrad | Diagramm zoomen (siehe [Zoomen](16-analyzer.md#zoomen)) |
 | Doppelklick auf ein Diagramm | Zoom zurücksetzen |
 
+### ATLab Fixture Designer
+
+| Kürzel | Aktion |
+|--------|--------|
+| `Strg+N` | Neuer Nadeladapter aus einer KiCad-Platine |
+| `Strg+O` | Nadeladapter oder KiCad-Platine öffnen |
+| `Strg+S` / `Strg+Umschalt+S` | Speichern / Speichern unter |
+| `F5` | Platinendatei neu laden |
+| `Strg+P` | Aufbaublatt (PDF) erstellen |
+| `Strg+E` | Fertigungsdateien exportieren (DXF, SVG, STEP) |
+| `F` | Ganze Platine anzeigen (Platinenansicht im Fokus) |
+| Doppelklick auf ein Pad | Prüfnadel hinzufügen oder entfernen |
+| Klick auf die Platine beim Setzen | Fangstift, Vorzentrierungsstift, Stützstift oder Niederhalter setzen |
+| `Entf` | Ausgewählte Prüfnadel oder ausgewähltes Teil entfernen |
+| Mausrad / Ziehen | Platinenansicht zoomen / verschieben |
+| `Esc` | Setzen beenden; Meldung oder Info-Feld schließen |
+
 ## Werkzeugleiste der Registerkarte Testausführung
 
 Von links nach rechts:
 
 | Gruppe | Schaltflächen |
 |--------|---------------|
-| Projekt | Neues Projekt · Projekt öffnen · Projekt speichern · Projekt speichern unter |
+| Projekt | Neues Projekt · Projekt öffnen · Projekt speichern · Projekt speichern unter · Projekt schließen |
 | Bearbeiten | Hinzufügen · Entfernen · Nach oben · Nach unten · Duplizieren · Ausschneiden · Kopieren · Einfügen |
 | Ausführung | Einzelschritt ausführen · Ausgewähltes Modul starten · Ab ausgewähltem Schritt starten · Dauertest starten · Testausführung starten · Fortsetzen (während eines Laufs) · Stoppen |
 | Fehlgeschlagene Schritte | Zum vorherigen fehlgeschlagenen Schritt · Zum nächsten fehlgeschlagenen Schritt |
 | Debug (nur Entwicklungsmodus) | Debug-Modus aktivieren · Einzelschritt weiterschalten |
-| Ansicht | Messfenster anzeigen · Entwicklungsmodus aktivieren |
+| Ansicht | Messfenster anzeigen · Platinenansicht anzeigen · Entwicklungsmodus aktivieren |
 
 Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufügen · Entfernen · Nach oben · Nach unten · Duplizieren.
 
@@ -132,8 +150,12 @@ Der Bereich **Module** (Entwicklungsmodus) hat eigene Schaltflächen: Hinzufüge
 | Programm (Installer) | `C:\Program Files\ATLab\` | dort, wo Sie es entpackt haben |
 | ATLab Analyzer | `<Programmordner>\Analyzer\ATLab.Analyzer.exe` | `<Programmordner>/Analyzer/ATLab.Analyzer` |
 | Einstellungen von ATLab Analyzer (Sprache, Farbschema) | `%LOCALAPPDATA%\ATLab\analyzer-settings.json` | `~/.local/share/ATLab/analyzer-settings.json` |
+| ATLab Fixture Designer | `<Programmordner>\FixtureDesigner\ATLab.FixtureDesigner.exe` | `<Programmordner>/FixtureDesigner/ATLab.FixtureDesigner` |
+| Einstellungen von ATLab Fixture Designer (Sprache, Farbschema, Lagen) | `%LOCALAPPDATA%\ATLab\fixture-designer-settings.json` | `~/.local/share/ATLab/fixture-designer-settings.json` |
+| Nadelbibliothek des Fixture Designers | `%LOCALAPPDATA%\ATLab\probe-library.json` | `~/.local/share/ATLab/probe-library.json` |
 | Benutzerhandbuch (PDF) | `<Programmordner>\docs\ATLab-User-Guide-de.pdf` / `-en.pdf` | `<Programmordner>/docs/ATLab-User-Guide-de.pdf` / `-en.pdf` |
 | Projekte | `*.atlab`, beliebig | `*.atlab`, beliebig |
+| Nadeladapter | `*.atlabfix`, beliebig | `*.atlabfix`, beliebig |
 | Skripte | `<Skriptordner>\<id>.json` | `<Skriptordner>/<id>.json` |
 
 ### settings.json
@@ -163,8 +185,8 @@ Sprache, Design, `IsForceSimulation` und das Passwort für den Entwicklungsmodus
 | Serielle Schnittstelle (VCOM/RS232) | Messgeräte, Prüfling, Test Interface Adapter | – |
 | TCP/IP-Raw-Socket | LAN-Messgeräte (SCPI-RAW) | Netzwerkzugang |
 | VISA (USB, GPIB, ASRL, TCPIP) | Messgeräte | NI-VISA, nur Windows |
-| Adapter-I²C | Prüfling | Adapter mit I²C |
-| Adapter-UART | Prüfling | Adapter mit UART |
+| I²C der Test-Hardware | Prüfling | Test-Hardware mit I²C |
+| UART der Test-Hardware | Prüfling | Test-Hardware mit UART |
 | USB-HID | Steuermodul | – |
 | JTAG (SEGGER J-Link) | Boundary Scan | J-Link Software and Documentation Pack |
 | JTAG (FTDI FT2232H/FT232H/FT4232H) | Boundary Scan | FTDI-D2XX-Treiber |
@@ -189,6 +211,6 @@ Sprache, Design, `IsForceSimulation` und das Passwort für den Entwicklungsmodus
 | **Matrix H / L** | High- und Low-Seite des Messbusses, jeweils mit einem Matrix-Kanal verbindbar. |
 | **Overflow** | Ergebnis ≥ 9,9 × 10³⁷, der SCPI-„Überlauf“-Wert. |
 | **SCPI** | Standard Commands for Programmable Instruments, z. B. `MEAS:VOLT:DC?`. |
-| **Simulator** | Virtueller Adapter, der verwendet wird, wenn keine Hardware angeschlossen ist. |
+| **Simulator** | Simulierte Test-Hardware, die verwendet wird, wenn keine Hardware angeschlossen ist. |
 | **Skriptordner** | Ordner mit den JSON-Dateien der Skripte. |
-| **Stimulationskanal** | Relais am Adapter, mit dem ein Signal oder eine Last an den Prüfling angelegt wird. |
+| **Stimulationskanal** | Relais der Test-Hardware, mit dem ein Signal oder eine Last an den Prüfling angelegt wird. |

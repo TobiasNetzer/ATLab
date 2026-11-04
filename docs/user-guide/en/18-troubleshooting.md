@@ -1,4 +1,4 @@
-# 17. Troubleshooting
+# 18. Troubleshooting
 
 ## The event log
 
@@ -13,17 +13,17 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 | Symptom | Cause / solution |
 |---------|------------------|
-| The Test Hardware Selector appears every time | The adapter was not found on the last-used port. Check the USB cable, select the right port and click **Connect**. |
+| The Test Hardware Selector appears every time | The test hardware was not found on the last-used port. Check the USB cable, select the right port and click **Connect**. |
 | `Failed to connect to COMx` | Port is in use by another program, or (Linux) missing permission — add your user to the `dialout` group. |
 | `Initialization failed: …` | A device answered on the port but it is not a Test Interface Adapter, or its firmware does not respond. Check the port and power-cycle the adapter. |
-| ATLab connects automatically, but I want the simulator | Unplug the adapter before starting ATLab, then choose **Simulator**. |
-| Status bar shows *No test hardware connected* | ATLab runs in simulator mode; relays and interfaces are not really switched. Restart with the adapter connected. |
+| ATLab connects automatically, but I want the simulator | Unplug the test hardware before starting ATLab, then choose **Simulator**. |
+| Status bar shows *No test hardware connected* | ATLab runs in simulator mode; relays and interfaces are not really switched. Restart with the test hardware connected. |
 
 ## Opening projects
 
 | Symptom | Cause / solution |
 |---------|------------------|
-| Warning *Connected test hardware is missing required channels* | The project was made for an adapter with more channels. Don't save; open it with the right hardware or the simulator. |
+| Warning *Connected test hardware is missing required channels* | The project was made for test hardware with more channels. Don't save; open it with the right hardware or the simulator. |
 | Scripts are missing in the script selector | The project's script folder does not exist on this computer. ATLab then creates an empty folder at that location (or falls back to the default folder) and logs a message. Point it to the right folder on the Scripting tab (**Change script folder**) and save the project. Keeping the script folder inside the project folder avoids this. |
 | *The project '…' was developed for the test hardware …, but … is connected.* (or *… but … is active.* in simulator mode) | The project targets a different test hardware, identified by its device ID (see [Target test hardware](05-projects.md#target-test-hardware)). Connect that hardware, or use its simulator. |
 | *Image not found* / *File not found* | Referenced files were moved. Keep images and attachments in the project folder so relative paths work. |
@@ -48,8 +48,8 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 | Symptom | Cause / solution |
 |---------|------------------|
-| *Matrix Channel is not available.* | The step uses a matrix channel that the connected adapter does not have. |
-| *Interface not available* | The adapter has no I²C/UART interface, or RS485 was selected (not supported for steps). |
+| *Matrix Channel is not available.* | The step uses a matrix channel that the connected test hardware does not have. |
+| *Interface not available* | The test hardware has no I²C/UART interface, or RS485 was selected (not supported for steps). |
 | Step shows `NACK`, *I²C write failed: NACK received.* | Wrong address (7-bit, 0–127), DUT not powered, missing pull-ups, or wrong speed mode. |
 | *Failed to evaluate expression* | Syntax error (e.g. missing operand or parenthesis), an unsupported character such as `<`, or a variable that holds text instead of a number (e.g. `Timeout` or `NACK`; the message then names the variable). |
 | *Failed to resolve lower limit …* (or upper limit, nominal value, delay) | A limit, nominal value or delay uses a variable that does not give a number, e.g. *Variable 'Reg' holds 'NACK', which is not a number.* Handle the failed step that wrote the variable with its Fail-Action. |
@@ -100,6 +100,21 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | Histogram and trend show *No measured values* | The step produces no numeric value (e.g. a communication check) or only Timeout/NACK results. Its pass/fail counts are still in the table. |
 | Cp and Cpk are empty | The step has fewer than two values, no spread, or equal lower and upper limits (a pass/fail check). |
 
+## ATLab Fixture Designer
+
+| Symptom | Cause / solution |
+|---------|------------------|
+| *… was saved by KiCad 5 or older* | Open the board in a current KiCad version and save it again. |
+| *Board not found* when opening a fixture | The board file was moved or renamed. Select it at its new location; save the fixture to remember the new path. |
+| A probe is reported as *no longer exists on the board* | The footprint was renamed or deleted in KiCad. Remove the probe and add it on the new pad. |
+| *Covered by solder mask* | The pad has no solder mask opening on the side of the probe. Open the mask in KiCad (e.g. add `F.Mask`/`B.Mask` to the pad) or probe from the other side. |
+| Pads appear on the wrong side | In the **Bottom** view the board is mirrored, as seen from below. Switch to **Top** to compare with KiCad. |
+| **Export…** reports that the plates cannot be made | Holes overlap, or are too close to the plate edge or a cut-out. The Manufacturing tab lists the problems below the plates. Fix the spacing of the probes, their types or the pins (see Checks), or enlarge the plate outline. |
+| The plates above the board look mirrored in the CAM software | Intended: every plate file shows its plate from the side facing the board, the top probe plate and the pressure plate therefore from below. Mirror them in the CAM software if they are machined from the other side. |
+| A locating pin does not stay where it is placed | Locating pins snap into the nearest hole of the board. Click on or next to a hole; without a hole nearby the pin is not placed. |
+| The outline from a DXF or SVG file is not used | Only closed contours count. The line below the outline settings names what was left out, e.g. lines that do not form a closed outline. Close the contour in the CAD program. |
+| Many *on or near component* warnings | The clearance of the probe type is larger than the room on the board. Check the value against the probe data sheet, or move the test points in KiCad. |
+
 ## Control module
 
 | Symptom | Cause / solution |
@@ -109,6 +124,6 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 
 ## Resetting personal settings
 
-Window position, theme, language, the *Simulation only* setting, the development mode password, last port and last project are stored in `settings.json` (see [File locations](18-reference.md#file-locations)). Close ATLab and delete the file to return to defaults; this also removes the development mode password. Projects and scripts are not affected.
+Window position, theme, language, the *Simulation only* setting, the development mode password, last port and last project are stored in `settings.json` (see [File locations](19-reference.md#file-locations)). Close ATLab and delete the file to return to defaults; this also removes the development mode password. Projects and scripts are not affected.
 
-If only the development mode password is forgotten, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` instead (see [settings.json](18-reference.md#settingsjson)).
+If only the development mode password is forgotten, set `IsDevelopmentModePasswordEnabled` to `false` in `settings.json` instead (see [settings.json](19-reference.md#settingsjson)).

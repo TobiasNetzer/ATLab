@@ -66,8 +66,9 @@
                             IsVisible="{Binding IsBoardChanged}"/>
                 </Grid>
 
-                <!-- Fixture import and the table filter; the count of assigned pins on the right -->
-                <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <!-- Fixture import and the table filter; the count of assigned pins in a row of its own below, so the
+                     buttons keep one row also with the longer German labels -->
+                <StackPanel Grid.Row="2" Spacing="6">
                     <WrapPanel ItemSpacing="8" LineSpacing="6">
                         <Button Classes="Outline" Height="32" Padding="12,0"
                                 Content="{helpers:Localize BoardLink_Import}"
@@ -79,9 +80,9 @@
                         <CheckBox Content="{helpers:Localize BoardLink_AssignedOnly}" IsChecked="{Binding AssignedOnly}"
                                   VerticalAlignment="Center"/>
                     </WrapPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding AssignedText}" Classes="Small"
-                               HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                </Grid>
+                    <TextBlock Text="{Binding AssignedText}" Classes="Small"
+                               HorizontalAlignment="Left"/>
+                </StackPanel>
 
                 <!-- Pins of the DUT connector with their nets; a plain list, so no row is reused for another pin -->
                 <Grid Grid.Row="3" RowDefinitions="Auto,*">

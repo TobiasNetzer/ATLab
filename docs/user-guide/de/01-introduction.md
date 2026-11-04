@@ -11,7 +11,7 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 ### Prüfsequenzen erstellen
 
 - **Module**: Eine Sequenz lässt sich in Module gliedern, z. B. Spannungsversorgung, Programmierung und LED-Test. Module können einzeln aktiviert oder für sich allein ausgeführt werden.
-- **Signalführung**: Jeder Schritt schaltet die Relais-Matrix des Adapters sowie dessen Stimulations- und externe Stimulationsrelais.
+- **Signalführung**: Jeder Schritt schaltet die Relais-Matrix der Test-Hardware sowie deren Stimulations- und externe Stimulationsrelais.
 - **Grenzwerte**: Messwerte werden mit Grenzwerten verglichen, die auch Einheiten und SI-Präfixe enthalten dürfen, z. B. `500mV` oder `4.7kOhm`.
 - **Ablaufsteuerung**: Je nach Ergebnis wird ein Schritt wiederholt, zu einem anderen Schritt gesprungen, der Test beendet oder dem Bediener eine Meldung angezeigt.
 - **Variablen und Ausdrücke**: Laufzeit- und Systemvariablen (Seriennummer, Benutzer, Datum …) lassen sich in Befehlen, Grenzwerten und Berechnungen verwenden.
@@ -20,7 +20,7 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 
 - **Messgeräte**: ATLab steuert Messgeräte über die serielle Schnittstelle (VCOM/RS232), über TCP/IP-Sockets oder über NI-VISA. Das Befehlssystem ist vor allem auf SCPI ausgelegt.
 - **Skripte**: Häufig benötigte Befehlsfolgen werden als Skripte mit Variablen gespeichert und in mehreren Projekten verwendet. Jeder Befehl kann seine Antwort mit eigener Maske und eigenen Grenzwerten prüfen, etwa ob das Gerät einen Fehler meldet.
-- **Prüfling**: Über die galvanisch isolierten I²C- und UART-Schnittstellen des Adapters kommuniziert ATLab direkt mit dem Prüfling.
+- **Prüfling**: Über die galvanisch isolierten I²C- und UART-Schnittstellen der Test-Hardware kommuniziert ATLab direkt mit dem Prüfling.
 - **Boundary Scan**: Mit einem SEGGER J-Link oder einer FTDI-Probe liest und treibt ATLab über JTAG die Pins von Bausteinen auf der Baugruppe und spricht darüber auch I²C- und SPI-Bausteine an.
 - **Antwortverarbeitung**: Aus Text- oder Binärantworten lassen sich Werte gezielt herauslösen (Überspringen/Länge, Prüfregeln, Zahlenextraktion).
 - **Bediener**: Der Bediener kann eine Sichtprüfung bestätigen (Bestanden / Fehlgeschlagen) oder einen Messwert eingeben, auf Wunsch mit einem Bild als Hilfe.
@@ -44,6 +44,8 @@ Ein Prüfingenieur erstellt eine **Prüfsequenz** aus Testschritten, die Werte m
 - **Projektdokumentation**: Notizen, Bilder, Anhänge und Angaben zum Prüfling werden im Projekt gespeichert.
 - **Berichte**: Die Ergebnisse werden als CSV-Datei, als PDF-Testbericht und als JSON-Datei mit Metadaten gespeichert, einschließlich der verwendeten Messgeräte.
 - **Auswertung**: ATLab Analyzer, ein eigenes Programm, das mit ATLab installiert wird, wertet die JSON-Ergebnisdateien vieler Läufe aus: Ausbeute, häufigste Fehler, Histogramme, Trends und Prozessfähigkeit (siehe [ATLab Analyzer](16-analyzer.md)).
+- **Nadeladapter-Entwurf**: ATLab Fixture Designer, ebenfalls mit ATLab installiert, entwirft Nadeladapter für den Test Interface Adapter aus KiCad-Platinen: Prüfnadeln, Verdrahtung zur Test-Hardware, Stifte und Niederhalter, Prüfungen, ein Aufbaublatt und die Fertigungsdateien der Platten (siehe [ATLab Fixture Designer](17-fixture-designer.md)).
+- Eine **Platinenansicht**, die auf der KiCad-Platine des Prüflings zeigt, wo jeder Testschritt kontaktiert: Matrixkanäle, Stimulation, Schnittstellen und Boundary-Scan-Pins; sie folgt einem laufenden Test und lässt fehlgeschlagene Schritte markiert (siehe [Platinenansicht](14-running-tests.md#platinenansicht)).
 - **Ereignisprotokoll**: Alle Meldungen der Sitzung werden im Ereignisprotokoll gesammelt.
 
 ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Dateien und eignen sich daher gut für die Versionsverwaltung. Die Oberfläche gibt es auf Deutsch und Englisch, jeweils mit hellem und dunklem Design. Sprache und Design werden im Einstellungsdialog gewählt. Dieses Handbuch öffnet sich mit `F1`.
@@ -60,8 +62,8 @@ ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Da
 | **Skript** | Eine wiederverwendbare, benannte Liste von Gerätebefehlen, gespeichert als JSON-Datei in einem *Skriptordner*, damit sie projektübergreifend genutzt werden kann. |
 | **Skriptvariable** | Platzhalter wie `{Range}` in einem Skript, der pro Testschritt einen konkreten Wert erhält. |
 | **Laufzeitvariable** | Projektweite Variable, die in Befehlen, Grenzwerten und Ausdrücken gelesen und von einem Schritt über *Ergebnis einer Variable zuweisen* geschrieben werden kann. |
-| **Relais-Matrix** | Die Messmatrix des Adapters. Jeder Schritt wählt einen Kanal für **Matrix H** und einen für **Matrix L** (oder *Off*). |
-| **Stimulations- / Ext. Stimulationskanäle** | Einzeln schaltbare Relais des Adapters, pro Schritt eingestellt. |
+| **Relais-Matrix** | Die Messmatrix der Test-Hardware. Jeder Schritt wählt einen Kanal für **Matrix H** und einen für **Matrix L** (oder *Off*). |
+| **Stimulations- / Ext. Stimulationskanäle** | Einzeln schaltbare Relais der Test-Hardware, pro Schritt eingestellt. |
 | **Entwicklungsmodus** | Bearbeitungsmodus der Registerkarte Testausführung. Ist er aus, zeigt die Registerkarte nur Sequenz und Ergebnisse. Das ist die Bedieneransicht. |
 | **Simulator** | Virtueller Test Interface Adapter, der verwendet wird, wenn keine Hardware angeschlossen ist. Relais- und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun. |
 | **Boundary-Scan-Kette** | Die Boundary-Scan-fähigen Bausteine der Baugruppe, in Reihe an eine JTAG-Probe angeschlossen. Wird auf der [Registerkarte Boundary Scan](12-boundary-scan.md) eingerichtet. |
@@ -70,4 +72,4 @@ ATLab läuft unter Windows und Linux. Projekte und Skripte sind einfache JSON-Da
 
 - **Prüfingenieure**, die Sequenzen entwerfen: Kapitel 5–13 (Kapitel 12 nur bei Einsatz von Boundary Scan).
 - **Bediener**, die freigegebene Sequenzen ausführen: Kapitel 3, 14 und 15 genügen.
-- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und 4 sowie die [Referenz](18-reference.md).
+- **Administratoren**, die ATLab auf Prüfplätzen installieren: Kapitel 2 und 4 sowie die [Referenz](19-reference.md).

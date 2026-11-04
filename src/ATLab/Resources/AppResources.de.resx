@@ -1680,19 +1680,19 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
     <value>{0} · {1} Footprints · {2} Netze</value>
   </data>
   <data name="BoardLink_Import" xml:space="preserve">
-    <value>Nadelbett importieren…</value>
+    <value>Nadeladapter importieren…</value>
   </data>
   <data name="ToolTip_BoardLinkImport" xml:space="preserve">
-    <value>Nadelbett importieren</value>
+    <value>Nadeladapter importieren</value>
   </data>
   <data name="BoardLink_SelectFixture" xml:space="preserve">
-    <value>Nadelbett auswählen</value>
+    <value>Nadeladapter-Datei auswählen</value>
   </data>
   <data name="BoardLink_ImportFailed" xml:space="preserve">
-    <value>Nadelbett konnte nicht importiert werden</value>
+    <value>Nadeladapter-Datei konnte nicht importiert werden</value>
   </data>
   <data name="BoardLink_NotAFixture" xml:space="preserve">
-    <value>Die Datei ist kein Nadelbett von ATLab Fixture Designer oder wurde mit einer neueren Version gespeichert.</value>
+    <value>Die Datei ist keine Nadeladapter-Datei von ATLab Fixture Designer oder wurde mit einer neueren Version gespeichert.</value>
   </data>
   <data name="BoardLink_LabelsTitle" xml:space="preserve">
     <value>Kanalbezeichnungen</value>
@@ -1701,7 +1701,7 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
     <value>Die Netze auch als Kanalbezeichnungen verwenden? Kanäle ohne Netz behalten ihre Bezeichnung.</value>
   </data>
   <data name="BoardLink_Imported" xml:space="preserve">
-    <value>Nadelbett {0} importiert: {1} Pins mit Netz.</value>
+    <value>Nadeladapter-Datei {0} importiert: {1} Pins mit Netz.</value>
   </data>
   <data name="BoardLink_ClearNets" xml:space="preserve">
     <value>Netze löschen</value>

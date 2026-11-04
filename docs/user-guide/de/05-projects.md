@@ -24,12 +24,19 @@ Die Projektbefehle sind die ersten vier Symbole der Werkzeugleiste auf der Regis
 | **Projekt öffnen** | `Strg+O` | Öffnet eine vorhandene `.atlab`-Projektdatei. |
 | **Projekt speichern** | `Strg+S` | Speichert in die aktuelle Projektdatei. Bei einem unbenannten Projekt wie *Projekt speichern unter*. |
 | **Projekt speichern unter** | `Strg+Umschalt+S` | Speichert unter neuem Namen. Vorschlag ist `Test.atlab`. |
+| **Projekt schließen** | `Strg+W` | Schließt das Projekt und kehrt zum Willkommensbildschirm zurück. Bei ungespeicherten Änderungen wird vorher nachgefragt. Auch der nächste Start zeigt den Willkommensbildschirm. |
 
 Während ein Test läuft, sind die Projektbefehle gesperrt.
 
 ## Ungespeicherte Änderungen
 
-Jede Änderung markiert das Projekt als geändert und fügt der Titelleiste ein `*` hinzu. Wenn Sie bei ungespeicherten Änderungen ein neues Projekt anlegen, ein anderes öffnen oder ATLab schließen, fragt ein Dialog **„Sie haben ungespeicherte Änderungen. Trotzdem fortfahren?“**. Wählen Sie **Weiter**, um die Änderungen zu verwerfen, oder **Abbrechen**, um zurückzukehren.
+Jede Änderung markiert das Projekt als geändert und fügt der Titelleiste ein `*` hinzu. Wenn Sie bei ungespeicherten Änderungen ein neues Projekt anlegen, ein Projekt öffnen oder schließen oder ATLab beenden, fragt ein Dialog **„Das Projekt hat ungespeicherte Änderungen. Speichern?“**:
+
+| Schaltfläche | Wirkung |
+|--------------|---------|
+| **Speichern** | Speichert das Projekt und fährt dann fort. Bei einem unbenannten Projekt wird zuerst nach einem Dateinamen gefragt; wird dieser Dialog abgebrochen, wird die ganze Aktion abgebrochen. |
+| **Nicht speichern** | Verwirft die Änderungen und fährt fort. |
+| **Abbrechen** | Kehrt zum Projekt zurück. |
 
 Das Ausführen eines Tests markiert das Projekt nicht als geändert.
 
@@ -37,7 +44,7 @@ Das Ausführen eines Tests markiert das Projekt nicht als geändert.
 
 1. Wurde ATLab mit einem Dateipfad als erstem Argument gestartet (z. B. per Doppelklick auf eine `.atlab`-Datei unter Windows), wird diese Datei geöffnet.
 2. Andernfalls wird das zuletzt geöffnete oder gespeicherte Projekt erneut geöffnet.
-3. Gibt es keines davon, startet ATLab mit einem leeren Projekt.
+3. Gibt es keines davon oder lässt sich die Datei nicht öffnen, zeigt ATLab einen Willkommensbildschirm mit **Neues Projekt** und **Projekt öffnen**. Solange kein Projekt geöffnet ist, sind nur die Registerkarten *Testausführung* und *Info* sichtbar.
 
 ```bash
 ATLab.exe "D:\Tests\PowerBoard.atlab"
@@ -52,6 +59,7 @@ Beim Speichern werden alle referenzierten Dateien **innerhalb des Projektordners
 - Bilder in Meldungsfenstern von Testschritten,
 - Dateipfade von Schritten mit Auswertung **Datei**,
 - BSDL-Dateien der Boundary-Scan-Kette,
+- die KiCad-Platine und die importierte Nadeladapter-Datei (siehe [Platine und Netze](06-configuration.md#platine-und-netze)),
 - die **Ausgabeordner** der Testergebnis-Exporte.
 
 Pfade außerhalb des Projektordners werden absolut gespeichert.
@@ -80,7 +88,7 @@ Der **Simulator** meldet die Geräte-ID der nachgebildeten Hardware und wird gen
 
 ## Prüfung der Hardware-Kompatibilität
 
-Beim Öffnen eines Projekts prüft ATLab außerdem, ob der angeschlossene Adapter genügend Kanäle hat. Verwendet das Projekt Matrix-, Stimulations- oder externe Stimulationskanäle, die der Adapter nicht besitzt, listet eine Warnung diese auf, z. B.:
+Beim Öffnen eines Projekts prüft ATLab außerdem, ob die angeschlossene Test-Hardware genügend Kanäle hat. Verwendet das Projekt Matrix-, Stimulations- oder externe Stimulationskanäle, die die Test-Hardware nicht besitzt, listet eine Warnung diese auf, z. B.:
 
 ```
 Der angeschlossenen Test-Hardware fehlen benötigte Kanäle:
@@ -98,4 +106,4 @@ Projektdateien sind lesbares, eingerücktes JSON. Damit eignen sie sich gut für
 
 Die Testschritte werden je Modul gespeichert (`Modules` → `TestSteps`). Jedes Modul und jeder Testschritt hat eine dauerhafte interne ID. *Springe zu*-Ziele verweisen auf die Schritt-ID, sodass Sprünge auch nach Verschieben oder Umnummerieren von Schritten funktionieren.
 
-Die Datei enthält eine `FormatId`, die sie als ATLab-Projektdatei kennzeichnet, eine `FormatVersion` und die `TargetTestHardwareId` (die Geräte-ID hexadezimal, z. B. `0xA101`, siehe [Ziel-Test-Hardware](#ziel-test-hardware)). Dateien ohne gültige `FormatId` oder `TargetTestHardwareId` werden abgelehnt.
+Die Datei enthält eine `FormatId`, die sie als ATLab-Projektdatei kennzeichnet, eine `FormatVersion` und die `TargetTestHardwareId` (die Geräte-ID hexadezimal, z. B. `0xA101`, siehe [Ziel-Test-Hardware](#ziel-test-hardware)). Dateien ohne gültige `FormatId` oder `TargetTestHardwareId` werden abgelehnt. Formatversion 4 hat die Platine und die Netze der Pins der Test-Hardware hinzugefügt (`Board`); diese ATLab-Version liest auch Dateien der Version 3 und speichert sie als Version 4. Ältere ATLab-Versionen öffnen Dateien der Version 4 nicht, sodass sie die Platine beim Speichern nicht verlieren können.

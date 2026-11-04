@@ -4,24 +4,24 @@
 
 Beim Start versucht ATLab zuerst, sich über die zuletzt verwendete serielle Schnittstelle mit dem Test Interface Adapter zu verbinden. Gelingt das, öffnet sich direkt das Hauptfenster.
 
-Gibt es keine zuletzt verwendete Schnittstelle oder antwortet der Adapter nicht, erscheint das Fenster **Test-Hardware Auswahl**:
+Gibt es keine zuletzt verwendete Schnittstelle oder antwortet die Test-Hardware nicht, erscheint das Fenster **Test-Hardware Auswahl**:
 
 | Element | Funktion |
 |---------|----------|
-| Schnittstellenliste + Aktualisieren | Listet die seriellen (COM-)Schnittstellen des Rechners. Nach dem Einstecken des Adapters auf Aktualisieren klicken. |
-| **Verbinden** | Öffnet die gewählte Schnittstelle und initialisiert den Adapter. Bei Erfolg wird die Schnittstelle für den nächsten Start gespeichert. |
-| **Simulator** | Ohne Hardware fortfahren, mit einem virtuellen Adapter. |
+| Schnittstellenliste + Aktualisieren | Listet die seriellen (COM-)Schnittstellen des Rechners. Nach dem Einstecken der Test-Hardware auf Aktualisieren klicken. |
+| **Verbinden** | Öffnet die gewählte Schnittstelle und initialisiert die Test-Hardware. Bei Erfolg wird die Schnittstelle für den nächsten Start gespeichert. |
+| **Simulator** | Ohne Hardware fortfahren, mit simulierter Test-Hardware. |
 | **Beenden** | Schließt ATLab. |
 
 Eine Statuszeile zeigt das Ergebnis, z. B. `Connected to COM5` oder `Initialization failed: …`.
 
 ### Simulatormodus
 
-Im Simulatormodus verhält sich ATLab so, als wäre ein Adapter mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), externe Programme, Dateien, Ausdrücke, Benutzerbestätigungen und Benutzereingaben funktionieren normal.
+Im Simulatormodus verhält sich ATLab so, als wäre Test-Hardware mit 32 Matrix-Kanälen, 16 Stimulationskanälen, 4 externen Stimulationskanälen und allen Schnittstellen (I²C, UART, RS485) angeschlossen. Relaisschaltungen und Schnittstellenbefehle werden erfolgreich quittiert, ohne etwas zu tun; Schnittstellen-Lesevorgänge liefern das ASCII-Zeichen `0`. Messgeräte (Seriell/TCP/VISA), externe Programme, Dateien, Ausdrücke, Benutzerbestätigungen und Benutzereingaben funktionieren normal.
 
 Solange der Simulator aktiv ist, zeigt die Statusleiste in Rot **Keine Test-Hardware verbunden**. Der Simulatormodus eignet sich ideal zum Bearbeiten von Sequenzen am Schreibtisch.
 
-> Um mit anderer Hardware neu zu starten, schließen Sie ATLab und starten es erneut. Ist der zuletzt verwendete Adapter noch angeschlossen, verbindet sich ATLab automatisch; ziehen Sie ihn ab, um die Auswahl zu erhalten.
+> Um mit anderer Hardware neu zu starten, schließen Sie ATLab und starten es erneut. Ist die zuletzt verwendete Test-Hardware noch angeschlossen, verbindet sich ATLab automatisch; ziehen Sie sie ab, um die Auswahl zu erhalten.
 
 ## Das Hauptfenster
 
@@ -35,12 +35,14 @@ Das Fenster besteht aus drei Bereichen:
    - **Dokumentation** – Notizen, Bilder, Anhänge, Prüflingsdaten ([Kapitel 13](13-documentation-tab.md))
    - **Skripte** – der Skript-Editor ([Kapitel 7](07-scripting.md))
    - **Boundary Scan** – JTAG-Probe, Scan-Kette, Pins und Busse ([Kapitel 12](12-boundary-scan.md))
-   - **Test-Hardware** – Adapterinformationen und Diagnose ([Kapitel 4](04-test-hardware.md))
+   - **Test-Hardware** – Informationen zur Test-Hardware und Diagnose ([Kapitel 4](04-test-hardware.md))
    - **Info** – Version und Systeminformationen
 2. **Inhalt der Registerkarte** in der Mitte.
 3. **Statusleiste** unten.
 
 Die Titelleiste zeigt den Projektnamen, gefolgt von `*` bei ungespeicherten Änderungen, z. B. `ATLab - MyBoard*`.
+
+ATLab öffnet beim Start das letzte Projekt wieder. Beim ersten Start, oder wenn sich dieses Projekt nicht öffnen lässt, zeigt die Registerkarte Testausführung einen **Willkommensbildschirm** mit **Neues Projekt** und **Projekt öffnen**; bis ein Projekt geöffnet ist, sind nur die Registerkarten Testausführung und Info sichtbar (siehe [Welches Projekt beim Start geöffnet wird](05-projects.md#welches-projekt-beim-start-geöffnet-wird)).
 
 ### Statusleiste
 
@@ -82,7 +84,7 @@ Die Einstellung wird gespeichert, sodass ein Prüfplatz in der Bedieneransicht v
 
 Diese Anleitung funktioniert im Simulatormodus und benötigt keine Messgeräte.
 
-1. **Projekt anlegen.** Auf der Registerkarte Testausführung **Neues Projekt** klicken (oder `Strg+N`). Ein neues Projekt enthält ein Modul, *Modul 1*, das in der Modulliste ausgewählt ist.
+1. **Projekt anlegen.** Auf dem Willkommensbildschirm oder in der Werkzeugleiste der Registerkarte Testausführung **Neues Projekt** klicken (oder `Strg+N`). Ein neues Projekt enthält ein Modul, *Modul 1*, das in der Modulliste ausgewählt ist.
 2. **Entwicklungsmodus aktivieren** mit der Schraubenschlüssel-Schaltfläche.
 3. **Schritt hinzufügen.** **Neuen Testschritt hinzufügen** (`+` oder Taste `Einfg`) klicken. Eine neue Zeile erscheint und ist ausgewählt.
 4. **Konfigurieren** im Bereich **Testschritt-Konfiguration** rechts:

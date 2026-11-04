@@ -26,8 +26,9 @@ This guide explains how to install ATLab, set up a project, write instrument scr
 | 14 | [Running Tests](14-running-tests.md) | Execution controls, failed step navigation, debugging, serial numbers, the control module |
 | 15 | [Test Results & Reports](15-results-and-reports.md) | CSV data files, JSON result files and PDF test reports |
 | 16 | [ATLab Analyzer](16-analyzer.md) | Evaluating result files: yield, failing steps, histograms, trends, capability, exports |
-| 17 | [Troubleshooting](17-troubleshooting.md) | Common problems and the event log |
-| 18 | [Reference](18-reference.md) | Keyboard shortcuts, defaults, file locations, glossary |
+| 17 | [ATLab Fixture Designer](17-fixture-designer.md) | Designing bed-of-nails fixtures from KiCad boards: probes and probe types, wiring to the test hardware, mechanics, checks, plates, build sheet, manufacturing files |
+| 18 | [Troubleshooting](18-troubleshooting.md) | Common problems and the event log |
+| 19 | [Reference](19-reference.md) | Keyboard shortcuts, defaults, file locations, glossary |
 
 ## Conventions
 

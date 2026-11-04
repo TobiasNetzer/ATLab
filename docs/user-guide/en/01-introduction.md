@@ -11,7 +11,7 @@ A test engineer builds a **test sequence** from test steps that measure values a
 ### Build test sequences
 
 - **Organize** a sequence into modules (e.g. power supply, programming, LED test) that can be enabled individually or run on their own.
-- **Route signals** per step through the adapter's relay matrix and switch its stimulation and external stimulation relays.
+- **Route signals** per step through the relay matrix of the test hardware and switch its stimulation and external stimulation relays.
 - **Check values** against limits with units and SI prefixes, e.g. `500mV` or `4.7kOhm`.
 - **Branch** depending on the result: repeat a step, jump to another step, end the test or show a message to the operator.
 - **Calculate** with runtime and system variables (serial number, user, date …) in commands, limits and expressions.
@@ -20,7 +20,7 @@ A test engineer builds a **test sequence** from test steps that measure values a
 
 - **Remote-control instruments** over serial port (VCOM/RS232), raw TCP/IP sockets or NI-VISA. The command system is designed primarily for SCPI.
 - **Reuse instrument scripts**: multi-command scripts with variables, shared across projects. Each command can **check its response** with its own mask and limits, e.g. that the instrument reports no error.
-- **Talk to the DUT** through the adapter's isolated I²C and UART interfaces.
+- **Talk to the DUT** through the isolated I²C and UART interfaces of the test hardware.
 - **Use boundary scan** (JTAG) with a SEGGER J-Link or FTDI probe to read and drive the pins of chips on the board, and to talk to I²C and SPI devices through them.
 - **Extract values** from text or binary answers with response processing (skip/length, match rules, numeric extraction).
 - **Involve the operator**: confirm a visual check (Passed / Failed) or enter a reading, optionally with an image.
@@ -44,6 +44,8 @@ A test engineer builds a **test sequence** from test steps that measure values a
 - **Project documentation** with notes, images, attachments and information about the device under test.
 - **CSV data files**, **PDF test reports** and **JSON result files** with run metadata, including the instruments used.
 - **ATLab Analyzer**, a separate program installed with ATLab, evaluates the JSON result files of many runs: yield, the steps that fail most often, histograms, trends and process capability (see [ATLab Analyzer](16-analyzer.md)).
+- **ATLab Fixture Designer**, also installed with ATLab, designs bed-of-nails fixtures for the Test Interface Adapter from KiCad boards: probes, wiring to the test hardware, pins and push rods, checks, a build sheet and the manufacturing files of the plates (see [ATLab Fixture Designer](17-fixture-designer.md)).
+- A **board view** that shows on the KiCad board of the device where each test step connects: matrix channels, stimulation, interfaces and boundary scan pins, following a running test and keeping failed steps marked (see [Board view](14-running-tests.md#board-view)).
 - An **event log** with every message of the session.
 
 ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well suited for version control. The user interface is available in English and German with a light and a dark theme. Language and theme are chosen in the settings dialog. This guide opens with `F1`.
@@ -60,8 +62,8 @@ ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well
 | **Script** | A reusable, named list of instrument commands stored as a JSON file in a *script folder*, so it can be shared across projects. |
 | **Script variable** | A placeholder such as `{Range}` inside a script, given a concrete value per test step. |
 | **Runtime variable** | A project-wide variable that can be read in commands, limits and expressions, and written by a step via *Assign Result to Variable*. |
-| **Relay matrix** | The adapter's measurement matrix. Each step selects one channel for **Matrix H** and one for **Matrix L** (or *Off*). |
-| **Stimulation / Ext. stimulation channels** | Individually switchable relays on the adapter, set per step. |
+| **Relay matrix** | The measurement matrix of the test hardware. Each step selects one channel for **Matrix H** and one for **Matrix L** (or *Off*). |
+| **Stimulation / Ext. stimulation channels** | Individually switchable relays on the test hardware, set per step. |
 | **Development mode** | The editing mode of the Test Execution tab. When it is off, the tab shows only the sequence and results. This is the operator view. |
 | **Simulator** | A virtual Test Interface Adapter used when no hardware is connected. Relay and interface commands succeed without doing anything. |
 | **Boundary scan chain** | The boundary-scan capable chips on the board, connected in series to a JTAG probe. Set up on the [Boundary Scan tab](12-boundary-scan.md). |
@@ -70,4 +72,4 @@ ATLab runs on Windows and Linux. Projects and scripts are plain JSON files, well
 
 - **Test engineers** who design sequences: read chapters 5–13 (chapter 12 only if you use boundary scan).
 - **Operators** who run released sequences: chapters 3, 14 and 15 are enough.
-- **Administrators** who install ATLab on test stations: chapters 2 and 4 and the [Reference](18-reference.md).
+- **Administrators** who install ATLab on test stations: chapters 2 and 4 and the [Reference](19-reference.md).

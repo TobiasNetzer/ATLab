@@ -7,7 +7,7 @@ Das Feld **Auswertung** eines Schritts legt fest, woher sein Messwert kommt. Jed
 | [Keine](#keine) | keinen Wert, besteht immer | – | – |
 | [Skript](#skript) | Antwort des mit *Auswertung* markierten Skriptbefehls | Skript-Konfiguration | ✔ |
 | [Gerätebefehl](#gerätebefehl) | Antwort eines einzelnen Befehls | Gerätebefehl | ✔ |
-| [Schnittstellenbefehl](#schnittstellenbefehl) | über I²C/UART des Adapters gelesene Daten | Schnittstellenbefehl | ✔ |
+| [Schnittstellenbefehl](#schnittstellenbefehl) | über I²C/UART der Test-Hardware gelesene Daten | Schnittstellenbefehl | ✔ |
 | [Externes Programm](#externes-programm) | Exit-Code oder Ausgabe des Programms | Externes Programm | ✔ (nur Ausgabe) |
 | [Benutzerbestätigung](#benutzerbestätigung) | `1` (Bestanden) oder `0` (Fehlgeschlagen) | – (verwendet den Kommentar) | – |
 | [Benutzereingabe](#benutzereingabe) | vom Bediener eingegebene Zahl | – (verwendet den Kommentar) | ✔ |
@@ -90,7 +90,7 @@ Der Befehl wird meist mit Kodierungsblöcken geschrieben, z. B. `{hex:0A 1F}` zu
 - Der Befehl (plus Abschlusszeichen) wird gesendet und **Bytes lesen** Bytes werden erwartet. Kommen weniger an, zeigt der Schritt das im Ergebnis-Tooltip und protokolliert es nach Abschluss des Schritts als Warnung.
 - Bei **Bytes lesen** = 0 ist der Messwert `0`.
 
-Die Schnittstelle muss am angeschlossenen Adapter vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
+Die Schnittstelle muss an der angeschlossenen Test-Hardware vorhanden sein (siehe Registerkarte Test-Hardware); sonst schlägt der Schritt mit *„Interface not available“* fehl. RS485 ist in der Liste aufgeführt, wird für Testschritte aber noch nicht unterstützt.
 
 ## Externes Programm
 

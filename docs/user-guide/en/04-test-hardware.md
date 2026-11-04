@@ -19,7 +19,7 @@ The pin table (`a1…a32`, `b1…b32`, `c1…c32`) lists the signals on the DUT-
 
 | Section | Information |
 |---------|-------------|
-| **Test Hardware** | Device name, serial number, firmware version, build date and build time of the adapter (in simulator mode: of the simulated adapter). |
+| **Test Hardware** | Device name, serial number, firmware version, build date and build time of the test hardware (in simulator mode: of the simulated test hardware). |
 | **Available Relay Channels** | Number of matrix, stimulation and external stimulation channels. |
 | **Available Interfaces** | Whether isolated I²C, UART and RS485 are available (`True`/`False`). |
 
@@ -29,11 +29,11 @@ The channel counts determine how many rows appear in the [Channel Labels](06-con
 
 ## Test Hardware Diagnostics
 
-The **relay matrix test** checks every matrix relay of the adapter.
+The **relay matrix test** checks every matrix relay of the test hardware.
 
 > **Warning:** Ensure that everything is disconnected from the relay matrix before running the test. Leaving devices connected may cause permanent damage to the test hardware or the connected equipment.
 
-1. Disconnect the fixture and any instruments from the adapter.
+1. Disconnect the fixture and any instruments from the test hardware.
 2. Tick **I have disconnected everything**.
 3. Click **Run Relay Matrix Test**.
 

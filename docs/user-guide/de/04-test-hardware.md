@@ -19,7 +19,7 @@ Die Pintabelle (`a1…a32`, `b1…b32`, `c1…c32`) listet die Signale am prüfl
 
 | Abschnitt | Information |
 |-----------|-------------|
-| **Test-Hardware** | Gerätename, Seriennummer, Firmware-Version, Build-Datum und Build-Zeit des Adapters (im Simulatormodus: des nachgebildeten Adapters). |
+| **Test-Hardware** | Gerätename, Seriennummer, Firmware-Version, Build-Datum und Build-Zeit der Test-Hardware (im Simulatormodus: der simulierten Test-Hardware). |
 | **Verfügbare Relaiskanäle** | Anzahl der Matrix-, Stimulations- und externen Stimulationskanäle. |
 | **Verfügbare Schnittstellen** | Ob galvanisch isolierter I²C-Bus, UART und RS485 verfügbar sind (`True`/`False`). |
 
@@ -29,11 +29,11 @@ Die Kanalanzahlen bestimmen, wie viele Zeilen die [Kanalbezeichnungen](06-config
 
 ## Test-Hardware Diagnose
 
-Der **Relais-Matrix-Test** prüft jedes Matrix-Relais des Adapters.
+Der **Relais-Matrix-Test** prüft jedes Matrix-Relais der Test-Hardware.
 
 > **Warnung:** Stellen Sie sicher, dass vor Durchführung des Tests alle Verbindungen von der Relais-Matrix getrennt sind. Angeschlossene Geräte können dauerhafte Schäden an der Test-Hardware oder den angeschlossenen Geräten verursachen.
 
-1. Prüfvorrichtung und alle Messgeräte vom Adapter trennen.
+1. Prüfvorrichtung und alle Messgeräte von der Test-Hardware trennen.
 2. **Ich habe alles getrennt** anhaken.
 3. **Relais-Matrix-Test starten** klicken.
 

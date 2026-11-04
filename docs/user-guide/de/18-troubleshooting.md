@@ -1,4 +1,4 @@
-# 17. Fehlerbehebung
+# 18. Fehlerbehebung
 
 ## Das Ereignisprotokoll
 
@@ -13,17 +13,17 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 | Symptom | Ursache / Lösung |
 |---------|------------------|
-| Die Test-Hardware Auswahl erscheint bei jedem Start | Der Adapter wurde an der zuletzt verwendeten Schnittstelle nicht gefunden. USB-Kabel prüfen, die richtige Schnittstelle wählen und **Verbinden** klicken. |
+| Die Test-Hardware Auswahl erscheint bei jedem Start | Die Test-Hardware wurde an der zuletzt verwendeten Schnittstelle nicht gefunden. USB-Kabel prüfen, die richtige Schnittstelle wählen und **Verbinden** klicken. |
 | `Failed to connect to COMx` | Die Schnittstelle wird von einem anderen Programm verwendet oder (Linux) die Berechtigung fehlt – Benutzer zur Gruppe `dialout` hinzufügen. |
 | `Initialization failed: …` | An der Schnittstelle antwortet ein Gerät, das kein Test Interface Adapter ist, oder dessen Firmware reagiert nicht. Schnittstelle prüfen und Adapter neu starten. |
-| ATLab verbindet sich automatisch, ich möchte aber den Simulator | Adapter vor dem Start von ATLab abziehen, dann **Simulator** wählen. |
-| Statusleiste zeigt *Keine Test-Hardware verbunden* | ATLab läuft im Simulatormodus; Relais und Schnittstellen werden nicht wirklich geschaltet. Mit angeschlossenem Adapter neu starten. |
+| ATLab verbindet sich automatisch, ich möchte aber den Simulator | Test-Hardware vor dem Start von ATLab abziehen, dann **Simulator** wählen. |
+| Statusleiste zeigt *Keine Test-Hardware verbunden* | ATLab läuft im Simulatormodus; Relais und Schnittstellen werden nicht wirklich geschaltet. Mit angeschlossener Test-Hardware neu starten. |
 
 ## Projekte öffnen
 
 | Symptom | Ursache / Lösung |
 |---------|------------------|
-| Warnung *Der angeschlossenen Test-Hardware fehlen benötigte Kanäle* | Das Projekt wurde für einen Adapter mit mehr Kanälen erstellt. Nicht speichern; mit der richtigen Hardware oder im Simulator öffnen. |
+| Warnung *Der angeschlossenen Test-Hardware fehlen benötigte Kanäle* | Das Projekt wurde für Test-Hardware mit mehr Kanälen erstellt. Nicht speichern; mit der richtigen Hardware oder im Simulator öffnen. |
 | Skripte fehlen in der Skriptauswahl | Der Skriptordner des Projekts existiert auf diesem Rechner nicht. ATLab legt dann an dieser Stelle einen leeren Ordner an (oder verwendet den Standardordner) und protokolliert eine Meldung. Auf der Registerkarte Skripte den richtigen Ordner wählen (**Skriptordner ändern**) und das Projekt speichern. Ein Skriptordner im Projektordner vermeidet das Problem. |
 | *Das Projekt '…' wurde für die Test-Hardware … entwickelt, angeschlossen ist aber ….* (bzw. *… aktiv ist aber ….* im Simulatormodus) | Das Projekt ist für eine andere Test-Hardware bestimmt, erkannt an ihrer Geräte-ID (siehe [Ziel-Test-Hardware](05-projects.md#ziel-test-hardware)). Diese Hardware anschließen oder ihren Simulator verwenden. |
 | *Image not found* / *File not found* | Referenzierte Dateien wurden verschoben. Bilder und Anhänge im Projektordner ablegen, damit relative Pfade funktionieren. |
@@ -48,8 +48,8 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 | Symptom | Ursache / Lösung |
 |---------|------------------|
-| *Matrix Channel is not available.* | Der Schritt verwendet einen Matrix-Kanal, den der angeschlossene Adapter nicht hat. |
-| *Interface not available* | Der Adapter hat keine I²C-/UART-Schnittstelle, oder RS485 wurde gewählt (für Schritte nicht unterstützt). |
+| *Matrix Channel is not available.* | Der Schritt verwendet einen Matrix-Kanal, den die angeschlossene Test-Hardware nicht hat. |
+| *Interface not available* | Die Test-Hardware hat keine I²C-/UART-Schnittstelle, oder RS485 wurde gewählt (für Schritte nicht unterstützt). |
 | Schritt zeigt `NACK`, *I²C write failed: NACK received.* | Falsche Adresse (7 Bit, 0–127), Prüfling nicht versorgt, fehlende Pull-ups oder falsche Frequenz. |
 | *Failed to evaluate expression* | Syntaxfehler (z. B. fehlender Operand oder fehlende Klammer), ein nicht unterstütztes Zeichen wie `<` oder eine Variable mit Text statt Zahl (z. B. `Timeout` oder `NACK`; die Meldung nennt dann die Variable). |
 | *Failed to resolve lower limit …* (oder upper limit, nominal value, delay) | Ein Grenzwert, Sollwert oder eine Verzögerung verwendet eine Variable, die keine Zahl ergibt, z. B. *Variable 'Reg' holds 'NACK', which is not a number.* Den fehlgeschlagenen Schritt, der die Variable geschrieben hat, mit seiner Fehlgeschlagen-Aktion behandeln. |
@@ -100,6 +100,21 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | Histogramm und Trend zeigen *Keine Messwerte* | Der Schritt liefert keinen Zahlenwert (z. B. eine Kommunikationsprüfung) oder nur Timeout/NACK. Seine Bestanden/Fehlgeschlagen-Zahlen stehen trotzdem in der Tabelle. |
 | Cp und Cpk sind leer | Der Schritt hat weniger als zwei Werte, keine Streuung oder gleiche Unter- und Obergrenze (eine Gut/Schlecht-Prüfung). |
 
+## ATLab Fixture Designer
+
+| Symptom | Ursache / Lösung |
+|---------|------------------|
+| *… wurde mit KiCad 5 oder älter gespeichert* | Die Platine in einer aktuellen KiCad-Version öffnen und erneut speichern. |
+| *Platine nicht gefunden* beim Öffnen eines Nadeladapters | Die Platinendatei wurde verschoben oder umbenannt. Sie am neuen Ort auswählen; den Nadeladapter speichern, damit der neue Pfad erhalten bleibt. |
+| Eine Prüfnadel wird als *gibt es auf der Platine nicht mehr* gemeldet | Der Footprint wurde in KiCad umbenannt oder gelöscht. Die Prüfnadel entfernen und auf dem neuen Pad hinzufügen. |
+| *Von Lötstopplack bedeckt* | Das Pad hat auf der Seite der Prüfnadel keine Öffnung im Lötstopplack. Die Öffnung in KiCad anlegen (z. B. `F.Mask`/`B.Mask` beim Pad ergänzen) oder von der anderen Seite kontaktieren. |
+| Pads liegen auf der falschen Seite | In der Ansicht **Unten** ist die Platine gespiegelt, wie von unten gesehen. Zum Vergleich mit KiCad auf **Oben** umschalten. |
+| **Exportieren…** meldet, dass sich die Platten so nicht fertigen lassen | Bohrungen überschneiden sich oder liegen zu nah am Plattenrand oder an einem Ausschnitt. Die Registerkarte Fertigung listet die Probleme unter den Platten. Abstände der Prüfnadeln, ihre Typen oder die Stifte korrigieren (siehe Prüfungen) oder den Plattenumriss vergrößern. |
+| Die Platten über der Platine erscheinen in der CAM-Software gespiegelt | Beabsichtigt: Jede Plattendatei zeigt ihre Platte von der der Platine zugewandten Seite, die Kontaktträgerplatte oben und die Niederhalterplatte also von unten. In der CAM-Software spiegeln, wenn sie von der anderen Seite bearbeitet werden. |
+| Ein Fangstift bleibt nicht, wo er gesetzt wird | Fangstifte springen in die nächste Bohrung der Platine. Auf oder neben eine Bohrung klicken; ohne Bohrung in der Nähe wird kein Stift gesetzt. |
+| Der Umriss aus einer DXF- oder SVG-Datei wird nicht verwendet | Nur geschlossene Konturen zählen. Die Zeile unter den Umriss-Einstellungen nennt, was weggelassen wurde, z. B. Linien, die keinen geschlossenen Umriss ergeben. Die Kontur im CAD-Programm schließen. |
+| Viele Warnungen *auf oder nahe an einem Bauteil* | Der Freiraum des Nadeltyps ist größer als der Platz auf der Platine. Den Wert mit dem Datenblatt der Prüfnadel abgleichen oder die Testpunkte in KiCad verschieben. |
+
 ## Steuermodul
 
 | Symptom | Ursache / Lösung |
@@ -109,6 +124,6 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 ## Persönliche Einstellungen zurücksetzen
 
-Fensterposition, Design, Sprache, die Einstellung *Nur Simulation*, das Passwort für den Entwicklungsmodus, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](18-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren; dabei wird auch das Passwort für den Entwicklungsmodus entfernt. Projekte und Skripte sind davon nicht betroffen.
+Fensterposition, Design, Sprache, die Einstellung *Nur Simulation*, das Passwort für den Entwicklungsmodus, letzte Schnittstelle und letztes Projekt werden in `settings.json` gespeichert (siehe [Dateiablage](19-reference.md#dateiablage)). ATLab schließen und die Datei löschen, um zu den Standardwerten zurückzukehren; dabei wird auch das Passwort für den Entwicklungsmodus entfernt. Projekte und Skripte sind davon nicht betroffen.
 
-Ist nur das Passwort für den Entwicklungsmodus vergessen, stattdessen `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen (siehe [settings.json](18-reference.md#settingsjson)).
+Ist nur das Passwort für den Entwicklungsmodus vergessen, stattdessen `IsDevelopmentModePasswordEnabled` in `settings.json` auf `false` setzen (siehe [settings.json](19-reference.md#settingsjson)).

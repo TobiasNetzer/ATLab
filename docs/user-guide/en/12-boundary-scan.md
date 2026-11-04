@@ -85,6 +85,7 @@ While connected, the chain list shows the IDCODEs read from the board. The statu
 | **BSDL File** | Folder button: import the BSDL file. × button: remove it. The file is parsed immediately; warnings (e.g. missing instructions) appear in the event log. BSDL files inside the project folder are stored with relative paths. |
 | **Instruction Length** | Taken from the BSDL file. For chips without a BSDL file it must be entered by hand. If only one chip in the chain has an unknown length, ATLab calculates it from the total length. |
 | **Package** | Package variant from the BSDL file (e.g. `TQFP144`, `BGA256`). Determines the pin names and the package drawing. |
+| **Footprint on the board** | Reference of the chip on the KiCad board of the project, e.g. `U3`. With it, the [board view](14-running-tests.md#board-view) outlines the chip for boundary scan steps and highlights the pins they use, with their nets: the package pin of every port is the pad number of the footprint. |
 
 Chips without a BSDL file can stay in the chain; they are always kept in BYPASS.
 

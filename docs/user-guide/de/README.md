@@ -26,8 +26,9 @@ Dieses Handbuch beschreibt die Installation von ATLab, das Einrichten eines Proj
 | 14 | [Tests ausführen](14-running-tests.md) | Ausführung, fehlgeschlagene Schritte, Debugging, Seriennummern, Steuermodul |
 | 15 | [Testergebnisse & Berichte](15-results-and-reports.md) | CSV-Datendatei, JSON-Ergebnisdatei und PDF-Testbericht |
 | 16 | [ATLab Analyzer](16-analyzer.md) | Auswertung der Ergebnisdateien: Ausbeute, häufigste Fehler, Histogramme, Trends, Prozessfähigkeit, Exporte |
-| 17 | [Fehlerbehebung](17-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
-| 18 | [Referenz](18-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
+| 17 | [ATLab Fixture Designer](17-fixture-designer.md) | Nadeladapter aus KiCad-Platinen entwerfen: Prüfnadeln und Nadeltypen, Verdrahtung zur Test-Hardware, Mechanik, Prüfungen, Platten, Aufbaublatt, Fertigungsdateien |
+| 18 | [Fehlerbehebung](18-troubleshooting.md) | Häufige Probleme und das Ereignisprotokoll |
+| 19 | [Referenz](19-reference.md) | Tastenkürzel, Standardwerte, Dateiablage, Glossar |
 
 ## Konventionen
 

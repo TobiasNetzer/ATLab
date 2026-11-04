@@ -24,12 +24,19 @@ The project buttons are the first four icons in the Test Execution toolbar.
 | **Open project** | `Ctrl+O` | Opens an existing `.atlab` project file. |
 | **Save project** | `Ctrl+S` | Saves to the current project file. For an untitled project this behaves like *Save project as*. |
 | **Save project as** | `Ctrl+Shift+S` | Saves under a new name. The default suggestion is `Test.atlab`. |
+| **Close project** | `Ctrl+W` | Closes the project and returns to the welcome screen. Unsaved changes are asked about first. The next start also shows the welcome screen. |
 
 Project commands are disabled while a test is running.
 
 ## Unsaved changes
 
-Any edit marks the project as modified and adds `*` to the window title. If you create a new project, open another one or close ATLab while there are unsaved changes, a dialog asks **"You have unsaved changes. Continue without saving?"**. Choose **Continue** to discard the changes or **Cancel** to go back.
+Any edit marks the project as modified and adds `*` to the window title. If you create a new project, open or close a project, or close ATLab while there are unsaved changes, a dialog asks **"The project has unsaved changes. Save them?"**:
+
+| Button | Effect |
+|--------|--------|
+| **Save** | Saves the project, then continues. An untitled project asks for a file name first; canceling that dialog cancels the whole action. |
+| **Don't save** | Discards the changes and continues. |
+| **Cancel** | Goes back to the project. |
 
 Running a test does not mark the project as modified.
 
@@ -37,7 +44,7 @@ Running a test does not mark the project as modified.
 
 1. If ATLab was started with a file path as its first argument (for example by double-clicking an `.atlab` file on Windows), that file is opened.
 2. Otherwise the last opened or saved project is reopened.
-3. If neither exists, ATLab starts with an empty project.
+3. If neither exists or the file cannot be opened, ATLab shows a welcome screen with **New project** and **Open project**. Until a project is open, only the *Test Execution* and *About* tabs are shown.
 
 ```bash
 ATLab.exe "D:\Tests\PowerBoard.atlab"
@@ -52,6 +59,7 @@ When a project is saved, any referenced file **inside the project folder (or a s
 - message-box images of test steps,
 - file paths of **File** evaluation steps,
 - BSDL files of the boundary scan chain,
+- the KiCad board and the imported fixture file (see [Board and Nets](06-configuration.md#board-and-nets)),
 - the **output folders** of the test result exports.
 
 Paths outside the project folder are stored as absolute paths.
@@ -80,7 +88,7 @@ The **simulator** reports the device ID of the hardware it simulates and is chec
 
 ## Hardware compatibility check
 
-When you open a project, ATLab also checks whether the connected adapter has enough channels for it. If the project uses matrix, stimulation or external stimulation channels that the adapter does not have, a warning lists them, for example:
+When you open a project, ATLab also checks whether the connected test hardware has enough channels for it. If the project uses matrix, stimulation or external stimulation channels that the test hardware does not have, a warning lists them, for example:
 
 ```
 Connected test hardware is missing required channels:
@@ -98,4 +106,4 @@ Project files are human-readable, indented JSON. This makes them well suited to 
 
 The test steps are stored per module (`Modules` → `TestSteps`). Each module and each test step has a permanent internal ID. *Jump To* targets refer to the step ID, so jumps keep working when steps are moved or renumbered.
 
-The file contains a `FormatId`, which identifies it as an ATLab project file, a `FormatVersion` and the `TargetTestHardwareId` (the device ID in hexadecimal, e.g. `0xA101`, see [Target test hardware](#target-test-hardware)). Files without a valid `FormatId` or `TargetTestHardwareId` are rejected.
+The file contains a `FormatId`, which identifies it as an ATLab project file, a `FormatVersion` and the `TargetTestHardwareId` (the device ID in hexadecimal, e.g. `0xA101`, see [Target test hardware](#target-test-hardware)). Files without a valid `FormatId` or `TargetTestHardwareId` are rejected. Format version 4 added the board and the nets of the test hardware pins (`Board`); this version of ATLab also reads version 3 files and saves them as version 4. Older ATLab versions do not open version 4 files, so they cannot drop the board when saving.

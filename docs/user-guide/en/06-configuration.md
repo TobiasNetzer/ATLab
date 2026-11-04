@@ -4,18 +4,19 @@ The **Configuration** tab holds the project-wide setup. Everything here is saved
 
 ![Configuration tab](images/Configuration_Tab_en.png)
 
-It is divided into four panels:
+It is divided into five panels:
 
 - [Channel Labels](#channel-labels)
 - [Device Manager](#device-manager)
 - [Runtime Variables](#runtime-variables)
 - [Project Settings](#project-settings)
+- [Board and Nets](#board-and-nets)
 
 ---
 
 ## Channel Labels
 
-Give the adapter's relay channels meaningful names, such as `GND`, `VIN 12V` or `TP12 3V3`. There are three columns:
+Give the relay channels of the test hardware meaningful names, such as `GND`, `VIN 12V` or `TP12 3V3`. There are three columns:
 
 | Column | Channels |
 |--------|----------|
@@ -23,7 +24,9 @@ Give the adapter's relay channels meaningful names, such as `GND`, `VIN 12V` or 
 | **Stimulation Channels** | Stimulation relays |
 | **Ext Stimulation Channels** | External stimulation relays |
 
-The number of rows matches the connected adapter (or the simulator). The names appear in the relay selectors of the step configuration (displayed as `<number> <name>`), which makes sequences far easier to read and review. Leave a field empty if the channel is unused.
+The number of rows matches the connected test hardware (or the simulator). The names appear in the relay selectors of the step configuration (displayed as `<number> <name>`), which makes sequences far easier to read and review. Leave a field empty if the channel is unused.
+
+**Use net names as channel labels** labels every channel with the net on its test hardware pins instead, as assigned under [Board and Nets](#board-and-nets): MEAS channels get their net, stimulation channels the net of Out (or In), external stimuli the net of H (or L), shortened to the last part of the net path (`/SENSE/VREF` becomes `VREF`). The labels follow when nets change; a channel without net has no label. Meanwhile the label fields cannot be edited. Your own labels stay in the project and come back when the option is turned off.
 
 > **Tip:** In the matrix selector you can type the channel number on the keyboard to jump to it.
 
@@ -134,9 +137,21 @@ How to reference variables is explained in [Commands, Variables & Expressions](1
 | **Export Test Data (CSV)** | Writes a tab-separated data file. |
 | **Export Result File for Evaluation (JSON)** | Writes the results together with run, project, DUT and equipment metadata for evaluation tools (see [JSON result file](15-results-and-reports.md#json-result-file)). |
 | **Export Test Report (PDF)** | Writes a formatted test report. |
+| **Show failed steps on the board** | Below *Export Test Report (PDF)*: adds a picture of every failed step on the board to the report (see [Test report](15-results-and-reports.md#pdf-test-report)). Needs a board in the project. |
+| **Board layers…** | What the board pictures in the report show, see [Board pictures in the report](#board-pictures-in-the-report). |
 | **Output folder** | Appears below each enabled export format: the folder for the files of this format, e.g. the PDF reports on a network share and the JSON files in a folder for evaluation. Every enabled format needs a folder; several formats can use the same one. Click **…** to choose. Created if it does not exist. |
 
 Details on the exported files: [Test Results & Reports](15-results-and-reports.md).
+
+#### Board pictures in the report
+
+**Board layers…** sets up the board pictures of failed steps in the PDF report:
+
+- **View**: **Automatic** draws every step on the side with most of its copper; **Top** or **Bottom** always uses that side.
+- The layer list: tick a layer under **Top** to draw it when a picture shows the top side, under **Bottom** when it shows the bottom side. The arrows change the order (the top of the list is drawn on top), the swatch the color and the slider the opacity. Layers of the far side of the board are drawn dashed.
+- **Show all** / **Hide all**, **Default style** and **Default order** reset the list. **Save as default** uses these layers for new projects and projects without a choice of their own; **Load default** takes over the layers saved as default.
+
+The choice is saved in the project. The nets of the steps are drawn in the colors of the [board view](14-running-tests.md#board-view).
 
 ### Control Devices
 
@@ -164,3 +179,20 @@ Checks are case-sensitive.
 | **Default Tolerance (%)** | 10 | When you enter a nominal value, the lower and upper limits are set to nominal −/+ this percentage. |
 | **Displayed Decimal Places** | 3 | Number of decimals shown for measured values. Trailing zeros are omitted. |
 | **Log Level** | Info | Minimum severity for pop-up notifications and for the log file `events.log`: `Info`, `Warning`, `Error`. Success messages always pop up, but count as `Info` for the log file. The event log in the window always lists all messages of the session. |
+
+---
+
+## Board and Nets
+
+The KiCad board of the device under test and the net on every pin of the DUT connector of the test hardware. They are used by the [board view](14-running-tests.md#board-view) of the Test Execution tab. Both are optional: a project without board works as before.
+
+| Element | Effect |
+|---------|--------|
+| **Board** | Folder button: choose the `.kicad_pcb` file (KiCad 6 or newer). Refresh button: read it again, e.g. after a change in KiCad. × button: remove the board from the project; the nets stay. |
+| Status line | The loaded board with its number of footprints and nets, or why it could not be read. |
+| **Import fixture…** | Takes over board, nets and probe positions from a fixture of [ATLab Fixture Designer](17-fixture-designer.md) (`.atlabfix`): every wired probe gives its pin the net of its pad. Afterwards ATLab asks whether the nets should also become the [channel labels](#channel-labels) (not while **Use net names as channel labels** is on): MEAS channels get their net, stimulation channels the net of Out (or In), external stimuli the net of H (or L). |
+| **Clear nets** | Removes the nets and probes of all pins. |
+| **Assigned only** | Lists only pins with a net. |
+| Table | Every pin of J101 with its resource (e.g. pin `c7` is `MEAS 7`) and its net. Type the net or pick it from the suggestions, which list the nets of the board. **Probes** shows the probes of an imported fixture on the pin. |
+
+The board is stored with a path relative to the project file, together with a checksum of the file. If the board file changes later — e.g. a new revision with other nets — the status line and the board view say so. Check the nets of the pins, then click **Nets checked** to make the current file the new reference.

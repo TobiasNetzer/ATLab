@@ -4,24 +4,24 @@
 
 When ATLab starts, it first tries to reconnect to the Test Interface Adapter on the serial port that was used last time. If that succeeds, the main window opens directly.
 
-If there is no previous port, or the adapter does not answer, the **Test Hardware Selector** window appears:
+If there is no previous port, or the test hardware does not answer, the **Test Hardware Selector** window appears:
 
 | Control | Function |
 |---------|----------|
-| Port list + refresh button | Lists the serial (COM) ports present on the computer. Click refresh after plugging in the adapter. |
-| **Connect** | Opens the selected port and initialises the adapter. On success the port is remembered for the next start. |
-| **Simulator** | Continues without hardware, using a virtual adapter. |
+| Port list + refresh button | Lists the serial (COM) ports present on the computer. Click refresh after plugging in the test hardware. |
+| **Connect** | Opens the selected port and initialises the test hardware. On success the port is remembered for the next start. |
+| **Simulator** | Continues without hardware, using simulated test hardware. |
 | **Exit** | Closes ATLab. |
 
 A status line shows the result, for example `Connected to COM5` or `Initialization failed: …`.
 
 ### Simulator mode
 
-In simulator mode ATLab behaves as if an adapter with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), external programs, files, expressions, user confirmations and user inputs work normally.
+In simulator mode ATLab behaves as if test hardware with 32 matrix channels, 16 stimulation channels, 4 external stimulation channels and all interfaces (I²C, UART, RS485) were connected. Relay switching and interface commands succeed without doing anything; interface reads return the ASCII character `0`. Instrument devices (serial/TCP/VISA), external programs, files, expressions, user confirmations and user inputs work normally.
 
 While the simulator is active, the status bar shows **No test hardware connected** in red. Simulator mode is ideal for editing sequences at a desk.
 
-> To restart with different hardware, close ATLab and start it again. If the last adapter is still connected, ATLab reconnects automatically; unplug it to get the selector.
+> To restart with different hardware, close ATLab and start it again. If the last test hardware is still connected, ATLab reconnects automatically; unplug it to get the selector.
 
 ## The main window
 
@@ -35,12 +35,14 @@ The window has three areas:
    - **Documentation** – notes, images, attachments, DUT data ([chapter 13](13-documentation-tab.md))
    - **Scripting** – the instrument script editor ([chapter 7](07-scripting.md))
    - **Boundary Scan** – JTAG probe, scan chain, pins and buses ([chapter 12](12-boundary-scan.md))
-   - **Test Hardware** – adapter information and diagnostics ([chapter 4](04-test-hardware.md))
+   - **Test Hardware** – test hardware information and diagnostics ([chapter 4](04-test-hardware.md))
    - **About** – version and system information
 2. **Tab content** in the middle.
 3. **Status bar** at the bottom.
 
 The window title shows the project name, followed by `*` when there are unsaved changes, e.g. `ATLab - MyBoard*`.
+
+ATLab reopens the last project at start. On the first start, or if that project cannot be opened, the Test Execution tab shows a **welcome screen** with **New project** and **Open project**, and only the Test Execution and About tabs are shown until a project is open (see [Which project opens at start-up](05-projects.md#which-project-opens-at-start-up)).
 
 ### Status bar
 
@@ -82,7 +84,7 @@ The setting is remembered, so a test station can be left in operator view. If a 
 
 This walkthrough works in simulator mode and needs no instruments.
 
-1. **Create a project.** On the Test Execution tab click **New project** (or press `Ctrl+N`). A new project contains one module, *Module 1*, which is selected in the module list.
+1. **Create a project.** Click **New project** on the welcome screen or in the toolbar of the Test Execution tab (or press `Ctrl+N`). A new project contains one module, *Module 1*, which is selected in the module list.
 2. **Enable development mode** with the wrench button.
 3. **Add a step.** Click **Add a new test step** (`+`, or press `Insert`). A new row appears and is selected.
 4. **Configure it** in the **Test Step Configuration** panel on the right:

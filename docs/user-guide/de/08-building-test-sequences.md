@@ -153,7 +153,7 @@ Die unteren drei Bereiche stellen die Relais des Test Interface Adapters **für 
 | Tauschen-Schaltfläche | **Kanäle tauschen** – vertauscht H und L. |
 | Prüfspitzen-Schaltfläche | **Externe Prüfspitze aktivieren** – schaltet die externe Prüfspitze statt eines Matrix-Kanals auf. |
 
-Wählen Sie **Off**, um eine Seite unverbunden zu lassen. Die Liste zeigt Kanalnummern mit ihren benutzerdefinierten Namen. Verweist ein Schritt auf einen Kanal, den der angeschlossene Adapter nicht hat, schlägt der Schritt mit *„Matrix Channel is not available.“* fehl.
+Wählen Sie **Off**, um eine Seite unverbunden zu lassen. Die Liste zeigt Kanalnummern mit ihren benutzerdefinierten Namen. Verweist ein Schritt auf einen Kanal, den die angeschlossene Test-Hardware nicht hat, schlägt der Schritt mit *„Matrix Channel is not available.“* fehl.
 
 ### Stimulationskanäle / Externe Stimulationskanäle
 

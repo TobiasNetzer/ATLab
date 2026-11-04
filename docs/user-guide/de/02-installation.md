@@ -13,7 +13,7 @@ Jedes Release enthält:
 **Voraussetzung:** die **.NET 10 Runtime** (x64), kostenlos unter <https://dotnet.microsoft.com/download/dotnet/10.0>.
 ATLab wird ohne eigenes .NET ausgeliefert; fehlt die Runtime, weist der Installer auf die Download-Seite hin.
 
-Alle Pakete enthalten ATLab Analyzer, das Auswerteprogramm für JSON-Ergebnisdateien, im Unterordner `Analyzer`.
+Alle Pakete enthalten ATLab Analyzer, das Auswerteprogramm für JSON-Ergebnisdateien, im Unterordner `Analyzer` und ATLab Fixture Designer, das Entwurfsprogramm für Nadeladapter, im Unterordner `FixtureDesigner`.
 
 Alle Pakete enthalten dieses Benutzerhandbuch als PDF (Deutsch und Englisch) im Unterordner `docs` des Programmordners, z. B. `C:\Program Files\ATLab\docs\ATLab-User-Guide-de.pdf`. In ATLab öffnen Sie es mit der Buch-Schaltfläche in der Statusleiste oder mit `F1`.
 
@@ -27,17 +27,17 @@ Alle Pakete enthalten dieses Benutzerhandbuch als PDF (Deutsch und Englisch) im 
 
 Der Installer
 
-- legt **ATLab** und **ATLab Analyzer** für alle Benutzer des Computers im Startmenü an,
-- registriert die Endung `.atlab`, sodass ein Doppelklick auf eine Projektdatei sie in ATLab öffnet,
+- legt **ATLab**, **ATLab Analyzer** und **ATLab Fixture Designer** für alle Benutzer des Computers im Startmenü an,
+- registriert die Endung `.atlab`, sodass ein Doppelklick auf eine Projektdatei sie in ATLab öffnet, und die Endung `.atlabfix` für Nadeladapter-Dateien des Fixture Designers,
 - trägt ein Deinstallationsprogramm unter *Einstellungen → Apps* ein.
 
-Zum Aktualisieren den Installer der neuen Version ausführen; ATLab und ATLab Analyzer vorher schließen. Die Dateien
+Zum Aktualisieren den Installer der neuen Version ausführen; ATLab, ATLab Analyzer und ATLab Fixture Designer vorher schließen. Die Dateien
 der alten Version werden ersetzt, selbst in den Programmordner kopierte Dateien (z. B. eine J-Link- oder FTDI-DLL)
 bleiben erhalten.
 
 Bei der Deinstallation werden die installierten Dateien, Verknüpfungen und Dateizuordnung entfernt. Selbst in den
 Programmordner kopierte Dateien bleiben erhalten, ebenso Projekte, Skripte und persönliche Einstellungen (siehe
-[Dateiablage](18-reference.md#dateiablage)).
+[Dateiablage](19-reference.md#dateiablage)).
 
 ### Portables ZIP
 
@@ -87,6 +87,7 @@ dotnet restore
 dotnet build -c Release
 dotnet run --project src/ATLab/ATLab.csproj
 dotnet run --project src/ATLab.Analyzer/ATLab.Analyzer.csproj   # ATLab Analyzer
+dotnet run --project src/ATLab.FixtureDesigner/ATLab.FixtureDesigner.csproj   # ATLab Fixture Designer
 ```
 
 Alternativ `ATLab.sln` in JetBrains Rider, Visual Studio 2022 oder VS Code mit C# Dev Kit öffnen.

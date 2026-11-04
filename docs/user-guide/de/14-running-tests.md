@@ -112,6 +112,39 @@ Die Suche läuft über alle Module in ihrer Reihenfolge und wechselt in der Modu
 
 Die Lupen-Schaltfläche (**Messfenster anzeigen**) blendet zwischen Schrittliste und Ergebnisleiste eine große Anzeige ein. Sie zeigt Untergrenze, Messwert und Obergrenze des ausgewählten Schritts auf einer Skala – aus der Entfernung lesbar und praktisch, um mit einem sich wiederholenden Schritt ein Potentiometer abzugleichen.
 
+## Platinenansicht
+
+Die Platinen-Schaltfläche (**Platinenansicht anzeigen**) in der Werkzeugleiste teilt die Schrittliste: Darunter (wie im Bild am Anfang dieses Kapitels) zeigt die KiCad-Platine des Prüflings, **wo der ausgewählte Schritt die Platine kontaktiert**. Auch Bediener sehen sie. Voraussetzung sind eine Platine im Projekt und die Netze der Pins der Test-Hardware, siehe [Platine und Netze](06-configuration.md#platine-und-netze).
+
+Für den ausgewählten Schritt hebt die Ansicht ganze Netze hervor – Pads, Leiterbahnen und Durchkontaktierungen – in der Farbe ihrer Rolle (die Standardfarben stehen unten); der Rest der Platine wird abgedunkelt:
+
+| Farbe | Rolle |
+|-------|-------|
+| Rot | **H**-Seite des Messbusses (Matrixkanal von Matrix H) |
+| Blau | **L**-Seite des Messbusses (Matrixkanal von Matrix L) |
+| Grün | Geschlossene Stimulationsrelais (ihr In- und Out-Pin) |
+| Orange | Geschaltete externe Stimuli (H und L) |
+| Lila | Schnittstelle eines Schritts **Interface-Befehl** (Leitungen von I²C, UART oder RS485, einschließlich VREF und GND) |
+| Cyan | Pins eines Schritts **Boundary Scan** oder **Boundary-Scan-Bus** am umrandeten Baustein |
+
+Über der Platine zeigt oder verbirgt je eine Schaltfläche pro Rolle (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Schnittstelle**, **Boundary Scan**, **Fehlgeschlagen**) diese: Ein Klick auf den Namen blendet die Rolle auf der Platine, in der Legende und in der Abdeckung aus. Ein Klick auf den farbigen Punkt wählt eine andere Farbe aus der Palette oder als `#RRGGBB`; **Standard** stellt die ursprüngliche Farbe wieder her. Die Farben gelten auch für die Platinenbilder im PDF-Bericht.
+
+Unter den Schaltflächen nennt die Legende jede Verbindung mit Ressource der Test-Hardware und Netz, z. B. `H MEAS 4 +3V3`; *kein Netz zugeordnet* kennzeichnet einen Kanal ohne Netz. Flächen (Zonen, Kupferflächen) der Netze werden standardmäßig weggelassen, da eine Fläche wie GND den Großteil der Platine bedecken würde; **Flächen** zeigt sie umrandet und schwach gefüllt. Prüfnadeln aus einem importierten Nadeladapter erscheinen auf ihren Pads.
+
+**Während eines Tests** folgt die Ansicht dem laufenden Schritt. **Fehlgeschlagene** Schritte bleiben markiert: Ihre Netze werden rot gestrichelt umrandet, bis der nächste Lauf beginnt, nach dem Lauf zeigt die Platine also, wo die Fehler liegen. Der Titel eines fehlgeschlagenen Schritts erscheint rot.
+
+| Bedienelement | Wirkung |
+|---------------|---------|
+| **Oben / Unten** | Platine von oben oder von unten gesehen (gespiegelt, wie die Nadelplatte sie sieht) |
+| **Flächen** | Auch die Flächen der Netze hervorheben (standardmäßig aus, wird für den Benutzer gemerkt; gilt auch für die Platinenbilder im PDF-Bericht) |
+| **Abdeckung** | Statt des ausgewählten Schritts alle Netze, die die Schritte des Projekts erreichen (ignorierte Schritte zählen nicht), mit ihrer Anzahl |
+| Rahmen-Schaltfläche | Ganze Platine anzeigen (auch `F` oder Doppelklick neben die Platine) |
+| Lagen-Schaltfläche | Angezeigte KiCad-Lagen: Kupfer, Bestückungsdruck, Fertigung, Bauteilfläche, Benutzerlagen, Pads oben, Pads unten und Bohrungen. Ein Klick auf das Farbfeld einer Lage ändert ihre Farbe; **Standardfarben** stellt die Farben von KiCad wieder her. |
+| Mausrad / Ziehen | Zoomen / verschieben |
+| Klick auf ein Pad | Pad auswählen; die Pads seines Netzes werden umrandet |
+
+Der Trenner zwischen Schrittliste und Platine lässt sich ziehen, um die Höhen zu ändern; keine der beiden lässt sich kleiner als ein Mindestmaß ziehen, ebenso wenig die Modulliste daneben. Sichtbarkeit, Höhe, Seite, Flächen, angezeigte Rollen, Farben und Lagen werden für den Benutzer gemerkt. Hat sich die Platinendatei seit der Zuordnung der Netze geändert, weist die Ansicht darauf hin; im Entwicklungsmodus macht **Netze geprüft** die aktuelle Datei zur Referenz.
+
 ## Debug-Modus
 
 Im Entwicklungsmodus erscheinen rechts neben den Schaltflächen für fehlgeschlagene Schritte zwei zusätzliche Schaltflächen:

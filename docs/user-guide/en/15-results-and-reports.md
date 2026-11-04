@@ -142,7 +142,8 @@ Contents:
    - *Test Equipment*: every device with **Include in Test Report** enabled, with the answer to its **Identification Query** (e.g. the `*IDN?` string), or `-` if it did not answer.
 6. **Overall verdict** – a large **PASS** (green) or **FAIL** (red). If failed steps are excluded from export, a note below says how many are not shown.
 7. **Results table** – step, name, lower limit, measured value, upper limit and a pass/fail icon, grouped by module with a heading row per module.
-8. **Footer** – ATLab version and page number.
+8. **Failed Steps on the Board** – only with **Show failed steps on the board** enabled (under **Export Test Report (PDF)** in the [project settings](06-configuration.md#project-settings)) and a board in the project: every failed step drawn on the board with its nets in the colors of the [board view](14-running-tests.md#board-view) and the legend, on the side with more of its copper, or on the side chosen under [Board pictures in the report](06-configuration.md#board-pictures-in-the-report), with the layers chosen there. At most 20 steps.
+9. **Footer** – ATLab version and page number.
 
 The overall verdict in the report is the result of the **whole run**, the same as in the Testing tab, the `Pass` / `Fail` subfolders and the JSON file. A failed step marked **Exclude from Export** is not listed in the table, but the report still shows **FAIL** with the note *"1 failed step is excluded from this report."*
 

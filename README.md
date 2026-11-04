@@ -34,7 +34,7 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 | Source | Value |
 |--------|-------|
 | **Script** / **Device Command** | Answer of an external instrument or DUT |
-| **Interface Command** | Data read from the DUT through the adapter's I²C or UART interface |
+| **Interface Command** | Data read from the DUT through the I²C or UART interface of the test hardware |
 | **External Program** | Exit code or output of a local program |
 | **User Confirmation** / **User Input** | The operator's pass/fail judgement or an entered value |
 | **Expression** | A calculation from runtime variables |
@@ -53,6 +53,7 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 
 -   Relay matrix to route signals to instruments, stimulation and external stimulation channels, and isolated I²C/UART interfaces to the DUT.
 -   Built-in relay matrix self-test and an external probe to find the matrix channel of a net.
+-   **ATLab Fixture Designer**: design bed-of-nails fixtures for the test hardware from KiCad boards, with checks, a PDF build sheet and DXF/SVG/STEP files of the plates ([ATLab Fixture Designer](docs/user-guide/en/17-fixture-designer.md)).
 
 **Boundary scan** · [Boundary Scan Tab](docs/user-guide/en/12-boundary-scan.md)
 
@@ -65,6 +66,12 @@ Where a step's value comes from ([Evaluation Sources](docs/user-guide/en/09-eval
 -   **Development mode** for editing and an operator view for production, optionally protected by a password.
 -   **Serial number entry** with validation rules (barcode scanners supported), operator dialogs with images, and an optional USB **control module** with start/stop buttons.
 -   **Simulator**: build and try sequences without the test hardware.
+
+**Board view** · [Board view](docs/user-guide/en/14-running-tests.md#board-view) · [Board and Nets](docs/user-guide/en/06-configuration.md#board-and-nets)
+
+-   Below the step list, the **KiCad board** of the device shows where the selected step connects: H and L of the measurement bus, stimulation relays, external stimuli, interfaces and boundary scan pins, with whole nets highlighted.
+-   Follows a running test and keeps the nets of **failed steps** marked; a **coverage** view shows which nets the project tests at all. Failed steps can also be drawn in the PDF report.
+-   Nets of the test hardware pins are imported from a fixture of ATLab Fixture Designer or assigned by hand.
 
 **Results and documentation** · [Test Results & Reports](docs/user-guide/en/15-results-and-reports.md) · [Documentation Tab](docs/user-guide/en/13-documentation-tab.md)
 
@@ -90,7 +97,8 @@ Download the latest version from the [releases page](https://github.com/TobiasNe
 | `ATLab-win-<version>.zip` | Windows | Portable build, no installation |
 | `ATLab-linux-<version>.tar.gz` | Linux | Portable build |
 
-All packages include ATLab Analyzer in the subfolder `Analyzer`; the installer adds it to the Start menu.
+All packages include ATLab Analyzer in the subfolder `Analyzer` and ATLab Fixture Designer in the subfolder
+`FixtureDesigner`; the installer adds both to the Start menu.
 
 *Required:* the [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (x64); the installer points to
 the download page if it is missing.
@@ -110,6 +118,7 @@ dotnet restore
 dotnet build -c Release
 dotnet run --project src/ATLab/ATLab.csproj
 dotnet run --project src/ATLab.Analyzer/ATLab.Analyzer.csproj   # ATLab Analyzer
+dotnet run --project src/ATLab.FixtureDesigner/ATLab.FixtureDesigner.csproj   # ATLab Fixture Designer
 ```
 
 Alternatively, open `ATLab.sln` in **JetBrains Rider**, **Visual Studio 2022**, or **VS Code** (with C# Dev Kit).
@@ -194,6 +203,41 @@ The generator simulates a production line with two projects over working days, i
 continuous runs on a golden sample, simulator runs, drift, tightened limits, a renamed step, two fixtures with
 different offsets, units with and without braces, and Timeout/NACK failures. The same `--seed` always gives the same
 files; `--help` lists all options.
+
+## ATLab Fixture Designer
+
+`src/ATLab.FixtureDesigner` is a separate desktop app that designs bed-of-nails fixtures for the Test Interface Adapter
+from KiCad boards.
+→ [ATLab Fixture Designer](docs/user-guide/en/17-fixture-designer.md)
+
+![image](docs/user-guide/en/images/Designer_Overview_en.png)
+
+- **KiCad import:** reads `.kicad_pcb` files of KiCad 6 and newer directly (footprints, pads with nets, solder mask
+  openings, courtyards, board outline, unplated holes and all layers), no export step needed. The board view shows
+  copper, silkscreen, fab, courtyard and user layers, each switchable.
+- **Probes:** add probes from the top, the bottom or both sides with a double-click on the board or in the pad list;
+  the bottom view is mirrored, as the plates below the board see it. Filter the pads by test points, net or footprint.
+- **Wiring:** assign every probe to a pin of the DUT connector of the test hardware (MEAS, STIM, EXT STIM, SENSE,
+  programming pass-through, RS485/I²C/UART), or let free MEAS channels be assigned automatically.
+- **Mechanics:** locating pins that snap into board holes, pre-centering pins that snap to the board edge, support pins
+  and push rods, placed with a click and dragged into place.
+- **Types:** your own libraries of probe types (min. pad, diameter, drill, opening, height, spacing, clearance) and part
+  types for the pins and push rods.
+- **Checks:** shorts between nets on one pin, pads without copper or covered by solder mask on the probed side, probe
+  spacing, pad size and component clearance, pins that miss their hole, overlap the board or hit a component, unwired
+  probes, partly wired interfaces and stimulus channels, and pads that moved or changed their net since the last save.
+- **Plates:** bottom probe plate, moving plate, top probe plate (only with probes from above) and pressure plate, with
+  openings for the probes and push rods (merged when too close), a board that lies upside down, and outlines from the
+  board, a fixed size, a DXF/SVG drawing or a KiCad layer, with frame holes and cut-outs.
+- **Build sheet:** PDF with bill of materials, probe list, pins and push rods, wiring table, and assembly and wiring
+  drawings of every side with selectable board layers.
+- **Manufacturing files:** DXF and SVG drawings (one layer per kind of hole) and STEP models of the plates, each
+  seen from the side facing the board.
+- **Fixture file:** `.atlabfix`, plain JSON like ATLab's project files. The board is referenced by path and checksum,
+  probes by footprint reference and pad number, so a new board revision keeps the probes on their pads.
+
+The pinout of the test hardware (`src/ATLab.FixtureDesigner/Fixture/ctia-0xA101.pinout.json`) is generated from the KiCad board of
+the [Test Interface Adapter](https://github.com/TobiasNetzer/TestInterfaceAdapter).
 
 ## License
 

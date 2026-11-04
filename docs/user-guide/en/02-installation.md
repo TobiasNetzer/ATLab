@@ -13,7 +13,7 @@ Each release provides:
 **Requirement:** the **.NET 10 Runtime** (x64), free from <https://dotnet.microsoft.com/download/dotnet/10.0>. ATLab is
 published without its own copy of .NET; if the runtime is missing, the installer points you to the download page.
 
-All packages include ATLab Analyzer, the evaluation tool for JSON result files, in the subfolder `Analyzer`.
+All packages include ATLab Analyzer, the evaluation tool for JSON result files, in the subfolder `Analyzer`, and ATLab Fixture Designer, the planning tool for bed-of-nails fixtures, in the subfolder `FixtureDesigner`.
 
 All packages include this user guide as PDF (English and German) in the `docs` subfolder of the program folder, e.g. `C:\Program Files\ATLab\docs\ATLab-User-Guide-en.pdf`. Open it from within ATLab with the book button in the status bar or `F1`.
 
@@ -27,15 +27,15 @@ All packages include this user guide as PDF (English and German) in the `docs` s
 
 The installer:
 
-- adds **ATLab** and **ATLab Analyzer** to the Start menu for all users of the computer,
-- registers the `.atlab` extension, so double-clicking a project file opens it in ATLab,
+- adds **ATLab**, **ATLab Analyzer** and **ATLab Fixture Designer** to the Start menu for all users of the computer,
+- registers the `.atlab` extension, so double-clicking a project file opens it in ATLab, and the `.atlabfix` extension for fixture files of the Fixture Designer,
 - adds an uninstaller under *Settings → Apps*.
 
-To update, run the installer of the new version; close ATLab and ATLab Analyzer first. The files of the old version
+To update, run the installer of the new version; close ATLab, ATLab Analyzer and ATLab Fixture Designer first. The files of the old version
 are replaced, files you added to the program folder yourself (e.g. a J-Link or FTDI DLL) are kept.
 
 Uninstalling removes the installed files, shortcuts and the file association. Files you added to the program folder
-stay, as do your projects, scripts and personal settings (see [File locations](18-reference.md#file-locations)).
+stay, as do your projects, scripts and personal settings (see [File locations](19-reference.md#file-locations)).
 
 ### Portable ZIP
 
@@ -85,6 +85,7 @@ dotnet restore
 dotnet build -c Release
 dotnet run --project src/ATLab/ATLab.csproj
 dotnet run --project src/ATLab.Analyzer/ATLab.Analyzer.csproj   # ATLab Analyzer
+dotnet run --project src/ATLab.FixtureDesigner/ATLab.FixtureDesigner.csproj   # ATLab Fixture Designer
 ```
 
 You can also open `ATLab.sln` in JetBrains Rider, Visual Studio 2022 or VS Code with the C# Dev Kit.

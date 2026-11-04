@@ -85,6 +85,7 @@ Bei bestehender Verbindung zeigt die Kettenliste die von der Baugruppe gelesenen
 | **BSDL-Datei** | Ordner-Schaltfläche: BSDL-Datei importieren. ×-Schaltfläche: entfernen. Die Datei wird sofort eingelesen; Warnungen (z. B. fehlende Befehle) erscheinen im Ereignisprotokoll. BSDL-Dateien im Projektordner werden mit relativem Pfad gespeichert. |
 | **Befehlslänge** | Wird aus der BSDL-Datei übernommen. Für Bausteine ohne BSDL-Datei muss sie von Hand eingetragen werden. Ist nur bei einem Baustein der Kette die Länge unbekannt, berechnet ATLab sie aus der Gesamtlänge. |
 | **Gehäuse** | Gehäusevariante aus der BSDL-Datei (z. B. `TQFP144`, `BGA256`). Bestimmt die Pinnamen und die Gehäusedarstellung. |
+| **Footprint auf der Platine** | Referenz des Bausteins auf der KiCad-Platine des Projekts, z. B. `U3`. Damit umrandet die [Platinenansicht](14-running-tests.md#platinenansicht) den Baustein bei Boundary-Scan-Schritten und hebt die verwendeten Pins mit ihren Netzen hervor: Der Gehäusepin jedes Ports ist die Pad-Nummer des Footprints. |
 
 Bausteine ohne BSDL-Datei können in der Kette bleiben; sie bleiben immer in BYPASS.
 

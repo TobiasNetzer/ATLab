@@ -1,4 +1,4 @@
-# 18. Reference
+# 19. Reference
 
 ## Keyboard shortcuts
 
@@ -10,6 +10,7 @@
 | `Ctrl+O` | Open project |
 | `Ctrl+S` | Save project |
 | `Ctrl+Shift+S` | Save project as |
+| `Ctrl+W` | Close project |
 | `F5` | Start test execution |
 | `Ctrl+F5` | Start continuous test execution (development mode) |
 | `F3` | Execute single step (development mode) |
@@ -47,18 +48,35 @@
 | Mouse wheel / `Ctrl` + mouse wheel | Zoom a chart (see [Zooming](16-analyzer.md#zooming)) |
 | Double-click on a chart | Reset the zoom |
 
+### ATLab Fixture Designer
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+N` | New fixture from a KiCad board |
+| `Ctrl+O` | Open a fixture or a KiCad board |
+| `Ctrl+S` / `Ctrl+Shift+S` | Save / save as |
+| `F5` | Reload the board file |
+| `Ctrl+P` | Create the build sheet (PDF) |
+| `Ctrl+E` | Export the manufacturing files (DXF, SVG, STEP) |
+| `F` | Show the whole board (board view focused) |
+| Double-click on a pad | Add or remove a probe |
+| Click on the board while placing | Place a locating pin, pre-centering pin, support pin or push rod |
+| `Delete` | Remove the selected probe or part |
+| Mouse wheel / drag | Zoom / pan the board view |
+| `Esc` | End placing; close a message or the About panel |
+
 ## Toolbar of the Test Execution tab
 
 From left to right:
 
 | Group | Buttons |
 |-------|---------|
-| Project | New project · Open project · Save project · Save project as |
+| Project | New project · Open project · Save project · Save project as · Close project |
 | Editing | Add · Remove · Move up · Move down · Duplicate · Cut · Copy · Paste |
 | Execution | Execute single step · Start selected module · Start from selected step · Start continuous execution · Start test execution · Continue (during run) · Stop |
 | Failed steps | Go to previous failed step · Go to next failed step |
 | Debug (development mode only) | Enable debug mode · Advance single step |
-| View | Show measurement panel · Enable development mode |
+| View | Show measurement panel · Show board view · Enable development mode |
 
 The **Modules** panel (development mode) has its own buttons: Add · Remove · Move up · Move down · Duplicate.
 
@@ -132,8 +150,12 @@ The **Modules** panel (development mode) has its own buttons: Add · Remove · M
 | Program (installer) | `C:\Program Files\ATLab\` | wherever you extracted it |
 | ATLab Analyzer | `<program folder>\Analyzer\ATLab.Analyzer.exe` | `<program folder>/Analyzer/ATLab.Analyzer` |
 | ATLab Analyzer settings (language, theme) | `%LOCALAPPDATA%\ATLab\analyzer-settings.json` | `~/.local/share/ATLab/analyzer-settings.json` |
+| ATLab Fixture Designer | `<program folder>\FixtureDesigner\ATLab.FixtureDesigner.exe` | `<program folder>/FixtureDesigner/ATLab.FixtureDesigner` |
+| ATLab Fixture Designer settings (language, theme, layers) | `%LOCALAPPDATA%\ATLab\fixture-designer-settings.json` | `~/.local/share/ATLab/fixture-designer-settings.json` |
+| Probe library of the Fixture Designer | `%LOCALAPPDATA%\ATLab\probe-library.json` | `~/.local/share/ATLab/probe-library.json` |
 | User guide PDFs | `<program folder>\docs\ATLab-User-Guide-en.pdf` / `-de.pdf` | `<program folder>/docs/ATLab-User-Guide-en.pdf` / `-de.pdf` |
 | Projects | `*.atlab`, anywhere | `*.atlab`, anywhere |
+| Fixtures | `*.atlabfix`, anywhere | `*.atlabfix`, anywhere |
 | Scripts | `<script folder>\<id>.json` | `<script folder>/<id>.json` |
 
 ### settings.json
@@ -163,8 +185,8 @@ Language, theme, `IsForceSimulation` and the development mode password are set i
 | Serial port (VCOM/RS232) | Instruments, DUT, Test Interface Adapter | – |
 | TCP/IP raw socket | LAN instruments (SCPI-RAW) | network access |
 | VISA (USB, GPIB, ASRL, TCPIP) | Instruments | NI-VISA, Windows only |
-| Adapter I²C | DUT | adapter with I²C |
-| Adapter UART | DUT | adapter with UART |
+| Test hardware I²C | DUT | test hardware with I²C |
+| Test hardware UART | DUT | test hardware with UART |
 | USB HID | Control module | – |
 | JTAG (SEGGER J-Link) | Boundary scan | J-Link Software and Documentation Pack |
 | JTAG (FTDI FT2232H/FT232H/FT4232H) | Boundary scan | FTDI D2XX driver |
@@ -190,5 +212,5 @@ Language, theme, `IsForceSimulation` and the development mode password are set i
 | **Runtime variable** | Project-wide variable, readable everywhere and writable by steps. |
 | **SCPI** | Standard Commands for Programmable Instruments, e.g. `MEAS:VOLT:DC?`. |
 | **Script folder** | Folder containing script JSON files. |
-| **Simulator** | Virtual adapter used when no hardware is connected. |
-| **Stimulation channel** | Relay on the adapter used to apply a signal or load to the DUT. |
+| **Simulator** | Simulated test hardware used when no hardware is connected. |
+| **Stimulation channel** | Relay on the test hardware used to apply a signal or load to the DUT. |

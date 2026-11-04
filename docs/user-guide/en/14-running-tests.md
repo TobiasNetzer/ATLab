@@ -112,6 +112,39 @@ The search covers all modules in their order and switches the module list to the
 
 The magnifier button (**Show measurement panel**) toggles a large display between the step list and the result bar. It shows the selected step's lower limit, measured value and upper limit on a scale — readable from a distance and handy when adjusting a potentiometer with a repeating step.
 
+## Board view
+
+The board button (**Show board view**) in the toolbar splits the step list: below it (as in the picture at the top of this chapter), the KiCad board of the device under test shows **where the selected step connects to the board**. Operators see it too. It needs a board in the project and the nets of the test hardware pins, see [Board and nets](06-configuration.md#board-and-nets).
+
+For the selected step the view highlights whole nets — pads, tracks and vias — in the color of their role (the defaults are listed below); the rest of the board is dimmed:
+
+| Color | Role |
+|-------|------|
+| Red | **H** side of the measurement bus (matrix channel of Matrix H) |
+| Blue | **L** side of the measurement bus (matrix channel of Matrix L) |
+| Green | Closed stimulation relays (their In and Out pin) |
+| Orange | Switched external stimuli (H and L) |
+| Purple | Interface of an **Interface Command** step (I²C, UART or RS485 lines, including VREF and GND) |
+| Cyan | Pins of a **Boundary Scan** or **Boundary Scan Bus** step on the outlined chip |
+
+Above the board, one button per role (**MEAS H**, **MEAS L**, **STIM**, **EXT STIM**, **Interface**, **Boundary Scan**, **Failed**) shows or hides it: click the name, and the role disappears from the board, the legend and the coverage. Click the colored dot to choose another color from the palette or as `#RRGGBB`; **Default** brings the original color back. The colors are also used for the board pictures in the PDF report.
+
+Below the buttons, the legend lists every connection with its test hardware resource and net, e.g. `H MEAS 4 +3V3`; *no net assigned* marks a channel without a net. Zones (planes, pours) of the nets are left out by default, since a plane such as GND would cover most of the board; **Planes** shows them, outlined and filled faintly. Probes from an imported fixture are shown on their pads.
+
+**During a test** the view follows the running step. Steps that **failed** stay marked: their nets are outlined dashed in red until the next run starts, so after the run the board shows where the problems are. A failed step's title is shown in red.
+
+| Control | Effect |
+|---------|--------|
+| **Top / Bottom** | Board seen from the top, or from below (mirrored, as the probe plate sees it) |
+| **Planes** | Also highlight the zones of the nets (off by default, remembered for the user; also applies to the board pictures in the PDF report) |
+| **Coverage** | Instead of the selected step, all nets the steps of the project reach (ignored steps do not count), with their number |
+| Frame button | Show the whole board (also `F` or a double-click beside the board) |
+| Layers button | KiCad layers shown: copper, silkscreen, fab, courtyard, user layers, top pads, bottom pads and holes. Click a layer's color swatch to change its color; **Default colors** restores KiCad's colors. |
+| Mouse wheel / drag | Zoom / pan |
+| Click on a pad | Select the pad; the pads of its net are outlined |
+
+Drag the splitter between step list and board to change their heights; neither can be dragged smaller than a minimum, and neither can the module list beside them. Visibility, height, side, planes, shown roles, colors and layers are remembered for the user. If the board file changed since the nets were assigned, the view says so; in development mode **Nets checked** makes the current file the reference.
+
 ## Debug mode
 
 In development mode, two extra buttons appear to the right of the failed step buttons:
