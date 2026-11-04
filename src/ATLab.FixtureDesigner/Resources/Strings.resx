@@ -178,7 +178,7 @@
     <value>Renumber probes</value>
   </data>
   <data name="ToolTip_Disconnect" xml:space="preserve">
-    <value>Disconnect probe</value>
+    <value>Removes the pin and the wires of the probe</value>
   </data>
   <data name="ToolTip_RemoveProbe" xml:space="preserve">
     <value>Remove probe</value>
@@ -499,10 +499,10 @@ Select the board file at its new location.</value>
     <value>{0} are on the same pad {1} from the {2}.</value>
   </data>
   <data name="Check_Short" xml:space="preserve">
-    <value>Pin {0} connects different nets: {1}. Wired like this, the fixture shorts these nets.</value>
+    <value>{0} connects different nets: {1}. Wired like this, the fixture shorts these nets.</value>
   </data>
   <data name="Check_NotWired" xml:space="preserve">
-    <value>{0} ({1}, {2}) is not wired to a pin of the test hardware.</value>
+    <value>{0} ({1}, {2}) is not wired.</value>
   </data>
   <data name="Check_NetOnSeveralChannels" xml:space="preserve">
     <value>Net {0} is on several matrix channels: {1}. One channel per net is usually enough.</value>
@@ -514,7 +514,7 @@ Select the board file at its new location.</value>
     <value>External stimulus {0}: line {1} is not wired, so the stimulus has no return path through the fixture.</value>
   </data>
   <data name="Check_StimOneTerminal" xml:space="preserve">
-    <value>STIM {0}: only {1} is on a probe; {2} has to be wired inside the fixture.</value>
+    <value>STIM {0}: only {1} is wired; {2} has to be wired inside the fixture.</value>
   </data>
   <data name="Check_BoardChanged" xml:space="preserve">
     <value>The board file changed since the fixture was saved. Positions and nets are taken from the current file; changed probes are listed.</value>
@@ -581,12 +581,6 @@ Select the board file at its new location.</value>
   </data>
   <data name="Report_Wiring" xml:space="preserve">
     <value>Wiring</value>
-  </data>
-  <data name="Report_WiringHint" xml:space="preserve">
-    <value>Pins of the test hardware and the probes to wire to each of them.</value>
-  </data>
-  <data name="Report_NoWiring" xml:space="preserve">
-    <value>No probe is wired to a pin of the test hardware yet.</value>
   </data>
   <data name="Report_NotWired" xml:space="preserve">
     <value>not wired</value>
@@ -1279,5 +1273,116 @@ bottom</value>
   </data>
   <data name="Column_EdgeGap" xml:space="preserve">
     <value>Edge gap (mm)</value>
+  </data>
+  <data name="Tab_Wiring" xml:space="preserve">
+    <value>Wiring</value>
+  </data>
+  <data name="Header_Wires" xml:space="preserve">
+    <value>Wires</value>
+  </data>
+  <data name="Button_AddComponent" xml:space="preserve">
+    <value>Add component</value>
+  </data>
+  <data name="Button_RemoveComponent" xml:space="preserve">
+    <value>Remove component</value>
+  </data>
+  <data name="Button_AddWire" xml:space="preserve">
+    <value>Add wire</value>
+  </data>
+  <data name="Button_RemoveWire" xml:space="preserve">
+    <value>Remove wire</value>
+  </data>
+  <data name="ToolTip_AddWire" xml:space="preserve">
+    <value>New wire, starting at the selected probe</value>
+  </data>
+  <data name="Text_ComponentsHint" xml:space="preserve">
+    <value>Parts between board and test hardware. Terminals separated by commas.</value>
+  </data>
+  <data name="Column_Designator" xml:space="preserve">
+    <value>Designator</value>
+  </data>
+  <data name="Column_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Column_Terminals" xml:space="preserve">
+    <value>Terminals</value>
+  </data>
+  <data name="Column_OpenTerminals" xml:space="preserve">
+    <value>Not wired</value>
+  </data>
+  <data name="Column_Wire" xml:space="preserve">
+    <value>Wire</value>
+  </data>
+  <data name="Column_From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Column_To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Column_AdditionalConnections" xml:space="preserve">
+    <value>Additional connections</value>
+  </data>
+  <data name="Column_Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Placeholder_Endpoint" xml:space="preserve">
+    <value>Probe, pin or terminal</value>
+  </data>
+  <data name="Check_ComponentNoDesignator" xml:space="preserve">
+    <value>A component ({0}) has no designator.</value>
+  </data>
+  <data name="Check_ComponentNoTerminals" xml:space="preserve">
+    <value>{0} has no terminals, so nothing can be wired to it.</value>
+  </data>
+  <data name="Check_ComponentNotWired" xml:space="preserve">
+    <value>{0} is not wired.</value>
+  </data>
+  <data name="Check_TerminalsOpen" xml:space="preserve">
+    <value>{0}: terminal {1} not wired.</value>
+  </data>
+  <data name="Check_ComponentDuplicate" xml:space="preserve">
+    <value>Designator {0} is used more than once.</value>
+  </data>
+  <data name="Check_WireIncomplete" xml:space="preserve">
+    <value>{0} does not have both ends.</value>
+  </data>
+  <data name="Check_WireToItself" xml:space="preserve">
+    <value>{0} goes from {1} back to {1}.</value>
+  </data>
+  <data name="Check_WireTerminalMissing" xml:space="preserve">
+    <value>{0} goes to {1}, which the component does not have.</value>
+  </data>
+  <data name="Report_KindComponent" xml:space="preserve">
+    <value>Component</value>
+  </data>
+  <data name="ToolTip_Colors" xml:space="preserve">
+    <value>Colors of probes, pins, rods and plates</value>
+  </data>
+  <data name="Header_Colors" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="Color_Probe" xml:space="preserve">
+    <value>Probes</value>
+  </data>
+  <data name="Color_LocatingPin" xml:space="preserve">
+    <value>Locating pins</value>
+  </data>
+  <data name="Color_PreCenteringPin" xml:space="preserve">
+    <value>Pre-centering pins</value>
+  </data>
+  <data name="Color_SupportPin" xml:space="preserve">
+    <value>Support pins</value>
+  </data>
+  <data name="Color_PushRod" xml:space="preserve">
+    <value>Push rods</value>
+  </data>
+  <data name="Color_ProbePlate" xml:space="preserve">
+    <value>Probe plates</value>
+  </data>
+  <data name="Color_MovingPlate" xml:space="preserve">
+    <value>Moving plate</value>
+  </data>
+  <data name="Color_PressurePlate" xml:space="preserve">
+    <value>Pressure plate</value>
   </data>
 </root>

@@ -90,6 +90,24 @@ public partial class MainWindow : ShadUI.Window
             probe.Pin = option.Pin;
     }
 
+    /// <summary>Start of a wire chosen; like the pin, only choices of the user are applied.</summary>
+    private void OnWireFromChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox { DataContext: Wire wire } combo && IsUserChoice(combo) &&
+            combo.SelectedItem is WireEndpoint end && end != wire.From)
+            wire.From = end;
+    }
+
+    /// <summary>End of a wire chosen; like the pin, only choices of the user are applied.</summary>
+    private void OnWireToChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox { DataContext: Wire wire } combo && IsUserChoice(combo) &&
+            combo.SelectedItem is WireEndpoint end && end != wire.To)
+            wire.To = end;
+    }
+
+    private static bool IsUserChoice(ComboBox combo) => combo.IsDropDownOpen || combo.IsKeyboardFocusWithin;
+
     /// <summary>Probe type chosen in the probe list; like the pin, only choices of the user are applied.</summary>
     private void OnTypeSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {

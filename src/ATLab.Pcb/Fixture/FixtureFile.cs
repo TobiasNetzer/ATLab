@@ -19,7 +19,7 @@ public sealed class FixtureFile
     /// <summary>
     /// Version 1: the board, the probes with their types and wiring, the parts (locating, pre-centering and support pins,
     /// push rods) with their types, and the plates (probe plates, moving plate, pressure plate) with their outlines,
-    /// thicknesses and openings.
+    /// thicknesses and openings, the components in the wiring and the wires besides the probes' own pins.
     /// </summary>
     public const int CurrentFormatVersion = 1;
 
@@ -42,6 +42,12 @@ public sealed class FixtureFile
     public string BoardHash { get; set; } = string.Empty;
 
     public List<ProbeEntry> Probes { get; set; } = [];
+
+    /// <summary>Components in the wiring between the board and the test hardware, e.g. series resistors or relays.</summary>
+    public List<ComponentEntry> Components { get; set; } = [];
+
+    /// <summary>Wires besides a probe's own pin: to components, between probes, between pins.</summary>
+    public List<WireEntry> Wires { get; set; } = [];
 
     /// <summary>Probe types of this fixture, copied from the library so the file is complete on its own.</summary>
     public List<ProbeType> ProbeTypes { get; set; } = [];

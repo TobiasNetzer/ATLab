@@ -1,3 +1,4 @@
+using System.Linq;
 using ATLab.Pcb.Kicad;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -34,6 +35,16 @@ public partial class Probe : ObservableObject, IBoardMarker
     private AdapterPin? _pin;
 
     public string PinDisplay => Pin?.Display ?? string.Empty;
+
+    /// <summary>What the wires of the fixture join to the probe besides its pin, e.g. "R1.1"; set by the view model.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Connections))]
+    private string _wiredTo = string.Empty;
+
+    /// <summary>The pin and everything wired to the probe, e.g. "c7" or "R1.1", for the wiring drawing.</summary>
+    public string Connections => string.Join(", ", new[] { Pin?.Pin ?? string.Empty, WiredTo }.Where(s => s.Length > 0));
+
+    partial void OnPinChanged(AdapterPin? value) => OnPropertyChanged(nameof(Connections));
 
     [ObservableProperty] private string _note = string.Empty;
 

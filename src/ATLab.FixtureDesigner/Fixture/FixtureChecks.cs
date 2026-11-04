@@ -35,19 +35,23 @@ public static class FixtureChecks
     private const double MoveTolerance = 0.01;
 
     public static List<CheckResult> Run(IReadOnlyList<Probe> probes, AdapterPinout pinout, Board? board = null,
-        IReadOnlyList<FixturePart>? parts = null)
+        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<FixtureComponent>? components = null, IReadOnlyList<Wire>? wires = null)
     {
         var results = new List<CheckResult>();
         parts ??= [];
+        components ??= [];
+        wires ??= [];
+        var wiring = FixtureWiringModel.Build(probes, wires);
 
         CheckPads(probes, results);
         CheckDuplicates(probes, results);
-        CheckShorts(probes, results);
-        CheckUnwired(probes, results);
-        CheckMeasChannelsPerNet(probes, results);
-        CheckInterfaces(probes, pinout, results);
-        CheckExternalStimulus(probes, results);
-        CheckStimulus(probes, results);
+        CheckShorts(wiring, results);
+        CheckUnwired(probes, wiring, results);
+        CheckMeasChannelsPerNet(pinout, wiring, results);
+        CheckInterfaces(pinout, wiring, results);
+        CheckExternalStimulus(pinout, wiring, results);
+        CheckStimulus(pinout, wiring, results);
+        CheckWiring(components, wires, wiring, results);
         CheckProbeTypes(probes, results);
         CheckSpacing(probes, results);
         CheckPadSize(probes, results);
@@ -115,94 +119,139 @@ public static class FixtureChecks
         }
     }
 
-    /// <summary>Probes on different nets wired to the same pin would short these nets.</summary>
-    private static void CheckShorts(IReadOnlyList<Probe> probes, List<CheckResult> results)
+    /// <summary>Probes on different nets joined by the wiring would short these nets.</summary>
+    private static void CheckShorts(FixtureWiringModel wiring, List<CheckResult> results)
     {
-        foreach (var group in probes.Where(p => p.Pin is not null).GroupBy(p => p.Pin!))
+        foreach (var net in wiring.Nets)
         {
-            var nets = group.Where(p => p.Net.Length > 0).GroupBy(p => p.Net).ToList();
+            var nets = net.Probes.Where(p => p.Net.Length > 0).GroupBy(p => p.Net).ToList();
             if (nets.Count < 2)
                 continue;
 
             var detail = string.Join(", ", nets.Select(n => $"{Probe.ShortNetName(n.Key)} ({Names(n)})"));
-            results.Add(new(CheckSeverity.Error, Localizer.Format("Check_Short", group.Key.Display, detail), group.ToList()));
+            results.Add(new(CheckSeverity.Error, Localizer.Format("Check_Short", net.Label, detail), net.Probes.ToList()));
         }
     }
 
-    private static void CheckUnwired(IReadOnlyList<Probe> probes, List<CheckResult> results)
+    /// <summary>A probe with nothing wired to it, neither a pin nor a wire.</summary>
+    private static void CheckUnwired(IReadOnlyList<Probe> probes, FixtureWiringModel wiring, List<CheckResult> results)
     {
-        foreach (var probe in probes.Where(p => p.Pin is null))
+        foreach (var probe in probes.Where(p => !wiring.IsWired(p)))
             results.Add(new(CheckSeverity.Warning,
                 Localizer.Format("Check_NotWired", probe.Name, probe.PadDisplay, probe.ShortNet), [probe]));
     }
 
     /// <summary>One net on several matrix channels uses up channels, usually by mistake.</summary>
-    private static void CheckMeasChannelsPerNet(IReadOnlyList<Probe> probes, List<CheckResult> results)
+    private static void CheckMeasChannelsPerNet(AdapterPinout pinout, FixtureWiringModel wiring, List<CheckResult> results)
     {
-        var groups = probes
-            .Where(p => p.Pin?.Kind == ResourceKind.Meas && p.Net.Length > 0)
+        var groups = pinout.FixturePins
+            .Where(p => p.Kind == ResourceKind.Meas)
+            .Select(p => (Pin: p, Net: wiring.BoardNetOf(p)))
+            .Where(p => p.Net.Length > 0)
             .GroupBy(p => p.Net);
 
         foreach (var group in groups)
         {
-            var pins = group.Select(p => p.Pin!).Distinct().OrderBy(p => p.Channel).ToList();
+            var pins = group.Select(p => p.Pin).OrderBy(p => p.Channel).ToList();
             if (pins.Count < 2)
                 continue;
 
             results.Add(new(CheckSeverity.Warning,
                 Localizer.Format("Check_NetOnSeveralChannels", Probe.ShortNetName(group.Key), string.Join(", ", pins.Select(p => p.Resource))),
-                group.ToList()));
+                ProbesOn(pins, wiring)));
         }
     }
 
+    /// <summary>The probes on the conductors of the pins, for marking them.</summary>
+    private static List<Probe> ProbesOn(IEnumerable<AdapterPin> pins, FixtureWiringModel wiring) =>
+        pins.Select(wiring.NetOf).OfType<FixtureNet>().Distinct().SelectMany(n => n.Probes).Distinct().ToList();
+
     /// <summary>An isolated interface needs all its lines, including VREF and GND from the DUT.</summary>
-    private static void CheckInterfaces(IReadOnlyList<Probe> probes, AdapterPinout pinout, List<CheckResult> results)
+    private static void CheckInterfaces(AdapterPinout pinout, FixtureWiringModel wiring, List<CheckResult> results)
     {
-        var used = probes.Where(p => p.Pin?.Kind == ResourceKind.Interface).GroupBy(p => p.Pin!.Interface);
+        var used = pinout.FixturePins.Where(p => p.Kind == ResourceKind.Interface && wiring.IsWired(p)).GroupBy(p => p.Interface);
         foreach (var group in used)
         {
             var all = pinout.FixturePins.Where(p => p.Kind == ResourceKind.Interface && p.Interface == group.Key).ToList();
-            var wired = group.Select(p => p.Pin!).Distinct().ToHashSet();
-            var missing = all.Where(p => !wired.Contains(p)).Select(p => p.Role).ToList();
+            var missing = all.Where(p => !wiring.IsWired(p)).Select(p => p.Role).ToList();
             if (missing.Count == 0)
                 continue;
 
             results.Add(new(CheckSeverity.Warning,
-                Localizer.Format("Check_InterfaceIncomplete", all[0].InterfaceName, string.Join(", ", missing)), group.ToList()));
+                Localizer.Format("Check_InterfaceIncomplete", all[0].InterfaceName, string.Join(", ", missing)), ProbesOn(group, wiring)));
         }
     }
 
     /// <summary>An external stimulus is switched with both lines; one without the other has no return path.</summary>
-    private static void CheckExternalStimulus(IReadOnlyList<Probe> probes, List<CheckResult> results)
+    private static void CheckExternalStimulus(AdapterPinout pinout, FixtureWiringModel wiring, List<CheckResult> results)
     {
-        foreach (var group in probes.Where(p => p.Pin?.Kind == ResourceKind.ExtStim).GroupBy(p => p.Pin!.Channel))
+        foreach (var group in pinout.FixturePins.Where(p => p.Kind == ResourceKind.ExtStim && wiring.IsWired(p)).GroupBy(p => p.Channel))
         {
-            var polarities = group.Select(p => p.Pin!.Polarity).Distinct().ToList();
+            var polarities = group.Select(p => p.Polarity).Distinct().ToList();
             if (polarities.Count == 2)
                 continue;
 
             var missing = polarities.Contains("H") ? "L" : "H";
             results.Add(new(CheckSeverity.Warning,
-                Localizer.Format("Check_ExtStimIncomplete", group.Key, missing), group.ToList()));
+                Localizer.Format("Check_ExtStimIncomplete", group.Key, missing), ProbesOn(group, wiring)));
         }
     }
 
     /// <summary>
-    /// A stimulation channel is a relay contact between In and Out. With only one of them on a probe, the other must be
+    /// A stimulation channel is a relay contact between In and Out. With only one of them wired, the other must still be
     /// wired inside the fixture, e.g. to a supply.
     /// </summary>
-    private static void CheckStimulus(IReadOnlyList<Probe> probes, List<CheckResult> results)
+    private static void CheckStimulus(AdapterPinout pinout, FixtureWiringModel wiring, List<CheckResult> results)
     {
-        foreach (var group in probes.Where(p => p.Pin?.Kind == ResourceKind.Stim).GroupBy(p => p.Pin!.Channel))
+        foreach (var group in pinout.FixturePins.Where(p => p.Kind == ResourceKind.Stim && wiring.IsWired(p)).GroupBy(p => p.Channel))
         {
-            var terminals = group.Select(p => p.Pin!.Terminal).Distinct().ToList();
+            var terminals = group.Select(p => p.Terminal).Distinct().ToList();
             if (terminals.Count == 2)
                 continue;
 
             var used = terminals[0] ?? string.Empty;
             var other = used == "In" ? "Out" : "In";
             results.Add(new(CheckSeverity.Info,
-                Localizer.Format("Check_StimOneTerminal", group.Key, used, other), group.ToList()));
+                Localizer.Format("Check_StimOneTerminal", group.Key, used, other), ProbesOn(group, wiring)));
+        }
+    }
+
+    /// <summary>
+    /// Components in the wiring: a designator each, once only, with terminals, every terminal wired; every wire with both
+    /// ends, to terminals the component has.
+    /// </summary>
+    private static void CheckWiring(IReadOnlyList<FixtureComponent> components, IReadOnlyList<Wire> wires,
+        FixtureWiringModel wiring, List<CheckResult> results)
+    {
+        foreach (var component in components)
+        {
+            if (!component.IsNamed)
+                results.Add(new(CheckSeverity.Error, Localizer.Format("Check_ComponentNoDesignator", component.Description), []));
+            if (component.Terminals.Count == 0)
+                results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_ComponentNoTerminals", component.Label), []));
+
+            var open = component.Terminals.Where(t => !wiring.IsWired(new TerminalRef(component, t))).ToList();
+            component.OpenTerminals = string.Join(", ", open);
+            if (open.Count > 0 && open.Count == component.Terminals.Count)
+                results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_ComponentNotWired", component.Label), []));
+            else if (open.Count > 0)
+                results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_TerminalsOpen", component.Label, string.Join(", ", open)), []));
+        }
+
+        foreach (var group in components.Where(c => c.IsNamed)
+                     .GroupBy(c => c.Designator, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
+            results.Add(new(CheckSeverity.Error, Localizer.Format("Check_ComponentDuplicate", group.Key), []));
+
+        foreach (var wire in wires)
+        {
+            if (!wire.IsComplete)
+                results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_WireIncomplete", wire.Name),
+                    wire.Ends.Select(e => e.Probe).OfType<Probe>().ToList()));
+            else if (wire.From == wire.To)
+                results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_WireToItself", wire.Name, wire.From!.Name), []));
+
+            foreach (var end in wire.Ends.Where(e => e.Terminal is { } t && !t.Component.Terminals.Contains(t.Terminal)))
+                results.Add(new(CheckSeverity.Error, Localizer.Format("Check_WireTerminalMissing", wire.Name, end.Name), []));
         }
     }
 

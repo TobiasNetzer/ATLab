@@ -64,20 +64,14 @@ public static class SvgWriter
             return path.Append(" Z").ToString();
         }
 
-        Group(svg, DxfWriter.PlateLayer, "#000000", $"    <path d=\"{Path(plate.Contour)}\"/>\n");
+        Group(svg, DxfWriter.PlateLayer, $"    <path d=\"{Path(plate.Contour)}\"/>\n");
         if (plate.Cutouts.Count > 0)
-            Group(svg, DxfWriter.CutoutLayer, "#D97706", string.Concat(plate.Cutouts.Select(c => $"    <path d=\"{Path(c)}\"/>\n")));
+            Group(svg, DxfWriter.CutoutLayer, string.Concat(plate.Cutouts.Select(c => $"    <path d=\"{Path(c)}\"/>\n")));
 
-        foreach (var (kind, color) in new[]
+        foreach (var kind in new[]
                  {
-                     (PlateHoleKind.Probe, "#FF0000"),
-                     (PlateHoleKind.ProbeOpening, "#FF7F7F"),
-                     (PlateHoleKind.LocatingPin, "#00A000"),
-                     (PlateHoleKind.Frame, "#0000FF"),
-                     (PlateHoleKind.PreCenteringPin, "#C026D3"),
-                     (PlateHoleKind.SupportPin, "#0D9488"),
-                     (PlateHoleKind.PushRod, "#7C3AED"),
-                     (PlateHoleKind.PushRodOpening, "#A78BFA")
+                     PlateHoleKind.Probe, PlateHoleKind.ProbeOpening, PlateHoleKind.LocatingPin, PlateHoleKind.Frame,
+                     PlateHoleKind.PreCenteringPin, PlateHoleKind.SupportPin, PlateHoleKind.PushRod, PlateHoleKind.PushRodOpening
                  })
         {
             var name = DxfWriter.LayerOf(kind);
@@ -86,15 +80,16 @@ public static class SvgWriter
             if (kind == plate.OpeningKind)
                 circles += string.Concat(plate.MergedOpenings.Select(m => $"    <path d=\"{Path(m.Contour)}\"/>\n"));
             if (circles.Length > 0)
-                Group(svg, name, color, circles);
+                Group(svg, name, circles);
         }
 
         svg.Append("</svg>\n");
         return svg.ToString();
     }
 
-    private static void Group(StringBuilder svg, string name, string color, string content) =>
-        svg.Append($"  <g id=\"{name}\" inkscape:groupmode=\"layer\" inkscape:label=\"{name}\" fill=\"none\" stroke=\"{color}\" stroke-width=\"0.01\">\n")
+    /// <summary>A group per kind (an Inkscape layer), all black: the groups tell the kinds apart.</summary>
+    private static void Group(StringBuilder svg, string name, string content) =>
+        svg.Append($"  <g id=\"{name}\" inkscape:groupmode=\"layer\" inkscape:label=\"{name}\" fill=\"none\" stroke=\"#000000\" stroke-width=\"0.01\">\n")
             .Append(content)
             .Append("  </g>\n");
 

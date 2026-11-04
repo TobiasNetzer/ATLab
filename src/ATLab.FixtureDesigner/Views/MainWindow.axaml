@@ -154,6 +154,35 @@
                           VerticalAlignment="Center" ToolTip.Tip="{loc:Localize ToolTip_Language}"/>
                 <Button Classes="Icon" Width="35" Height="35"
                         Background="{DynamicResource ButtonBackground}"
+                        ToolTip.Tip="{loc:Localize ToolTip_Colors}">
+                    <shadui:ButtonAssist.Icon>
+                        <ContentControl Content="{LucideIconContent Palette}"/>
+                    </shadui:ButtonAssist.Icon>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedRight">
+                            <StackPanel Spacing="6" MinWidth="240">
+                                <TextBlock Text="{loc:Localize Header_Colors}" Classes="h4"/>
+                                <ItemsControl ItemsSource="{Binding ColorOptions}">
+                                    <ItemsControl.ItemTemplate>
+                                        <!-- The swatch opens the color picker -->
+                                        <DataTemplate DataType="vm:ColorOption">
+                                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,1">
+                                                <ColorPicker Color="{Binding Color, Mode=TwoWay}" IsAlphaEnabled="False" IsAlphaVisible="False" CornerRadius="6">
+                                                    <Border Width="12" Height="12" CornerRadius="2" Background="{Binding Brush}"/>
+                                                </ColorPicker>
+                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Button Classes="Outline" Height="28" Padding="10,0" HorizontalAlignment="Left"
+                                        Content="{loc:Localize Button_DefaultLayerColors}" Command="{Binding ResetColorsCommand}"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <Button Classes="Icon" Width="35" Height="35"
+                        Background="{DynamicResource ButtonBackground}"
                         Command="{Binding ToggleAboutCommand}" ToolTip.Tip="{loc:Localize ToolTip_About}">
                     <shadui:ButtonAssist.Icon>
                         <ContentControl Content="{LucideIconContent Info}"/>
@@ -265,6 +294,12 @@
                                             SelectedMarker="{Binding SelectedProbe}"
                                             PadActivatedCommand="{Binding TogglePadCommand}"
                                             OverlayOutlines="{Binding OutlineOverlay}"
+                                            OverlayBrush="{Binding OverlayBrush}"
+                                            ProbeBrush="{Binding ProbeBrush}"
+                                            LocatingPinBrush="{Binding LocatingPinBrush}"
+                                            PreCenteringPinBrush="{Binding PreCenteringPinBrush}"
+                                            SupportPinBrush="{Binding SupportPinBrush}"
+                                            PushRodBrush="{Binding PushRodBrush}"
                                             ShowMarkerLegend="True"
                                             PartMarkers="{Binding Parts}"
                                             SelectedPartMarker="{Binding SelectedPartMarker, Mode=TwoWay}"
@@ -589,6 +624,13 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_AdditionalConnections}" Width="200" MinWidth="200" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <TextBlock Text="{Binding WiredTo}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding WiredTo}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <!-- Own opening in the moving plate; empty shows the type's -->
                                 <DataGridTemplateColumn Header="{loc:Localize Column_Opening}" Width="135" MinWidth="135">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -671,6 +713,121 @@
                     </Grid>
                 </TabItem>
 
+                <!-- ========== Wiring: components between the board and the test hardware, and further wires ========== -->
+                <TabItem Header="{loc:Localize Tab_Wiring}" AutomationProperties.Name="{loc:Localize Tab_Wiring}">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,2*" Margin="0,8,0,0">
+                        <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddComponent}" Command="{Binding AddComponentCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveComponent}" Command="{Binding RemoveComponentCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                        </WrapPanel>
+                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_ComponentsHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                        <DataGrid Grid.Row="2"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Components}"
+                                  SelectedItem="{Binding SelectedComponent, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Designator}" Binding="{Binding Designator}" Width="90" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Description}" Binding="{Binding Description}" Width="260" MinWidth="180"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Terminals}" Binding="{Binding TerminalsText}" Width="200" MinWidth="150"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_OpenTerminals}" Width="120" MinWidth="110" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:FixtureComponent">
+                                            <TextBlock Text="{Binding OpenTerminals}" Classes="Cell TrimmedCell" Foreground="{StaticResource MarginalBrush}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="140"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Grid.Row="3" Text="{loc:Localize Header_Wires}" Classes="h4" Margin="2,14,0,6"/>
+                        <WrapPanel Grid.Row="4" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddWire}" Command="{Binding AddWireCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddWire}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Cable, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveWire}" Command="{Binding RemoveWireCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                        </WrapPanel>
+                        <DataGrid Grid.Row="5"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Wires}"
+                                  SelectedItem="{Binding SelectedWire, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Wire}" Binding="{Binding Name}" Width="60" MinWidth="60" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_From}" Width="260" MinWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Wire">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).EndpointOptions}"
+                                                      SelectedItem="{Binding From, Mode=OneWay}"
+                                                      SelectionChanged="OnWireFromChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_Endpoint}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12"
+                                                      MaxDropDownHeight="420">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="fixture:WireEndpoint">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold"/>
+                                                            <TextBlock Text="{Binding Detail}" Classes="Label" FontSize="11" VerticalAlignment="Center"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_To}" Width="260" MinWidth="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Wire">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).EndpointOptions}"
+                                                      SelectedItem="{Binding To, Mode=OneWay}"
+                                                      SelectionChanged="OnWireToChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_Endpoint}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12"
+                                                      MaxDropDownHeight="420">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="fixture:WireEndpoint">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold"/>
+                                                            <TextBlock Text="{Binding Detail}" Classes="Label" FontSize="11" VerticalAlignment="Center"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
                 <!-- ========== Test hardware ========== -->
                 <TabItem Header="{loc:Localize Tab_Adapter}" AutomationProperties.Name="{loc:Localize Tab_Adapter}">
                     <Grid RowDefinitions="Auto,*" Margin="0,8,0,0">
@@ -704,7 +861,13 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_Probes}" Binding="{Binding Probes}" Width="110" MinWidth="110"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Connected}" Width="130" MinWidth="110">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:AdapterRow">
+                                            <TextBlock Text="{Binding Probes}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Probes}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="{loc:Localize Column_Net}" Width="140" MinWidth="140">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="vm:AdapterRow">

@@ -29,6 +29,12 @@ public sealed class BuildSheetData
     public required IReadOnlyList<Probe> Probes { get; init; }
     public IReadOnlyList<FixturePart> Parts { get; init; } = [];
 
+    /// <summary>Components in the wiring, for the bill of materials.</summary>
+    public IReadOnlyList<FixtureComponent> Components { get; init; } = [];
+
+    /// <summary>Wires besides the probes' own pins, with both ends.</summary>
+    public IReadOnlyList<Wire> Wires { get; init; } = [];
+
     /// <summary>Board layers of the drawings as the user chose them; null for the defaults.</summary>
     public ReportLayerSettings? Layers { get; init; }
 
@@ -212,13 +218,14 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 });
             }
 
-            col.Item().EnsureSpace(110).Column(c =>
+            if (data.Probes.Any(p => p.Pin is not null) || data.Wires.Count > 0)
             {
-                c.Item().Element(x => Section(x, L("Report_Wiring")));
-                c.Item().PaddingTop(6).Text(L("Report_WiringHint"))
-                    .FontColor(Colors.Grey.Darken2);
-                c.Item().PaddingTop(6).Element(ComposeWiringTable);
-            });
+                col.Item().EnsureSpace(110).Column(c =>
+                {
+                    c.Item().Element(x => Section(x, L("Report_Wiring")));
+                    c.Item().PaddingTop(6).Element(ComposeWiringTable);
+                });
+            }
 
             // Assembly: the plates of every side with probes or parts, seen from the side where they touch the board, so it
             // shows what they meet there: the plates above from the top, the plates below from below (mirrored); a board
@@ -370,55 +377,83 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                     : $"{(pad.Kind == PadKind.Smd ? "SMD" : "THT")} {pad.Width.ToString("0.##", CultureInfo.CurrentCulture)}×{pad.Height.ToString("0.##", CultureInfo.CurrentCulture)}");
                 table.Cell().Element(BodyCell).Text(probe.TypeName.Length > 0 ? probe.TypeName : "-");
                 table.Cell().Element(BodyCell).Text(probe.Pin?.Pin ?? "-").SemiBold();
-                table.Cell().Element(BodyCell).Text(probe.Pin?.Resource ?? L("Report_NotWired"));
+                table.Cell().Element(BodyCell).Text(probe.Pin?.Resource
+                    ?? (probe.WiredTo.Length > 0 ? "→ " + probe.WiredTo : L("Report_NotWired")));
                 table.Cell().Element(BodyCell).Text(probe.Note);
                 table.Cell().Element(TickBox);
             }
         });
     }
 
-    /// <summary>The used pins of the DUT connector in connector order, with the probes to wire to each.</summary>
+    /// <summary>A wire to make: its name from the Wiring tab ("-" for a probe's pin) and both ends.</summary>
+    private sealed record WiringRow(string Name, WireEndpoint From, WireEndpoint To, string Note);
+
+    /// <summary>
+    /// Every wire of the fixture: first each probe to its pin, sorted by pin so the probes of a pin are together, then the
+    /// wires of the Wiring tab under their names there.
+    /// </summary>
+    private List<WiringRow> WiringRows()
+    {
+        var rows = new List<WiringRow>();
+        foreach (var probe in data.Probes.Where(p => p.Pin is not null)
+                     .OrderBy(p => p.Pin!.SortKey.Row).ThenBy(p => p.Pin!.SortKey.Number).ThenBy(p => p.Number))
+            rows.Add(new WiringRow("-", WireEndpoint.Of(probe), WireEndpoint.Of(probe.Pin!), string.Empty));
+
+        foreach (var wire in data.Wires.OrderBy(w => w.Number))
+            rows.Add(new WiringRow(wire.Name, wire.From!, wire.To!, wire.Note));
+
+        return rows;
+    }
+
+    /// <summary>Side of the probes of a wire, to find their probe plate; "-" for a wire without a probe.</summary>
+    private static string SideOf(WiringRow row)
+    {
+        var sides = new[] { row.From.Probe, row.To.Probe }.OfType<Probe>().Select(p => p.Side).Distinct().Order().ToList();
+        return sides.Count == 0 ? "-" : string.Join(" / ", sides.Select(s => Localizer.Enum(s)));
+    }
+
     private void ComposeWiringTable(IContainer container)
     {
-        var byPin = data.Probes.Where(p => p.Pin is not null).GroupBy(p => p.Pin!).ToDictionary(g => g.Key, g => g.ToList());
-        var pins = data.Pinout.FixturePins.Where(byPin.ContainsKey).OrderBy(p => p.SortKey.Row).ThenBy(p => p.SortKey.Number).ToList();
-
-        if (pins.Count == 0)
-        {
-            container.Text(L("Report_NoWiring")).Italic();
-            return;
-        }
+        // The side only matters when there are probe plates on both sides
+        var withSide = data.Probes.Select(p => p.Side).Distinct().Count() > 1;
 
         container.Table(table =>
         {
             table.ColumnsDefinition(c =>
             {
-                c.ConstantColumn(40);  // Pin
-                c.ConstantColumn(90);  // Resource
-                c.RelativeColumn(2);   // Signal
-                c.RelativeColumn(2);   // Net
-                c.RelativeColumn(3);   // Probes
+                c.ConstantColumn(40);  // Wire
+                if (withSide)
+                    c.ConstantColumn(70);  // Side
+                c.RelativeColumn(3);   // From
+                c.RelativeColumn(3);   // To
+                c.RelativeColumn(2);   // Note
                 c.ConstantColumn(30);  // Tick
             });
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_Pin", "Column_Resource", "Column_Signal", "Column_Net", "Column_Probes" })
+                var keys = withSide
+                    ? new[] { "Column_Wire", "Column_Side", "Column_From", "Column_To", "Column_Note" }
+                    : new[] { "Column_Wire", "Column_From", "Column_To", "Column_Note" };
+                foreach (var key in keys)
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
 
-            foreach (var pin in pins)
+            static void End(IContainer cell, WireEndpoint end) => cell.Text(text =>
             {
-                var probes = byPin[pin];
-                var nets = probes.Select(p => p.ShortNet).Where(n => n.Length > 0).Distinct().ToList();
-                var color = nets.Count > 1 ? Colors.Red.Darken2 : Colors.Black;
+                text.Span(end.Name).SemiBold();
+                text.Span("  " + end.Detail).FontColor(Colors.Grey.Darken2);
+            });
 
-                table.Cell().Element(BodyCell).Text(pin.Pin).SemiBold();
-                table.Cell().Element(BodyCell).Text(pin.Resource);
-                table.Cell().Element(BodyCell).Text(pin.Signal).FontColor(Colors.Grey.Darken2);
-                table.Cell().Element(BodyCell).Text(string.Join(", ", nets)).FontColor(color);
-                table.Cell().Element(BodyCell).Text(string.Join(", ", probes.Select(p => $"{p.Name} ({p.PadDisplay})")));
+            foreach (var row in WiringRows())
+            {
+                table.Cell().Element(BodyCell).Text(row.Name).SemiBold();
+                if (withSide)
+                    table.Cell().Element(BodyCell).Text(SideOf(row));
+                End(table.Cell().Element(BodyCell), row.From);
+                End(table.Cell().Element(BodyCell), row.To);
+                table.Cell().Element(BodyCell).Text(row.Note);
                 table.Cell().Element(TickBox);
             }
         });
@@ -460,6 +495,15 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
             lines.Add(group.Key.Type is { } type
                 ? new BomLine(kind, type.Name, group.Count(), Size(type.Diameter, "0.00", "mm"), type.DrillDiameter, opening, type.Height, type.Note)
                 : new BomLine(kind, L("Report_NoType"), group.Count(), "-", 0, 0, 0, string.Empty));
+        }
+
+        // Components of the wiring, one line per description and note; the designators belong to the wiring tables
+        var component = L("Report_KindComponent");
+        foreach (var group in data.Components.GroupBy(c => (Description: c.Description.Trim(), Note: c.Note.Trim()))
+                     .OrderBy(g => g.Key.Description, StringComparer.CurrentCulture))
+        {
+            var type = group.Key.Description;
+            lines.Add(new BomLine(component, type.Length > 0 ? type : "-", group.Count(), "-", 0, 0, 0, group.Key.Note));
         }
 
         return lines;

@@ -38,11 +38,13 @@ public static class DxfWriter
         _ => PushRodLayer
     };
 
-    // AutoCAD color index of each layer
-    private static readonly (string Name, int Color)[] Layers =
+    // Every layer black (AutoCAD color 7, shown white on a dark background): the layers tell the kinds apart
+    private const int LayerColor = 7;
+
+    private static readonly string[] Layers =
     [
-        (PlateLayer, 7), (ProbeLayer, 1), (LocatingPinLayer, 3), (FrameLayer, 4), (PreCenteringPinLayer, 5), (SupportPinLayer, 6),
-        (PushRodLayer, 30), (CutoutLayer, 2), (ProbeOpeningLayer, 11), (PushRodOpeningLayer, 40)
+        PlateLayer, ProbeLayer, LocatingPinLayer, FrameLayer, PreCenteringPinLayer, SupportPinLayer, PushRodLayer, CutoutLayer,
+        ProbeOpeningLayer, PushRodOpeningLayer
     ];
 
     public static string Write(Plate plate)
@@ -82,12 +84,12 @@ public static class DxfWriter
         Group(0, "TABLE");
         Group(2, "LAYER");
         Group(70, Layers.Length.ToString(CultureInfo.InvariantCulture));
-        foreach (var (name, color) in Layers)
+        foreach (var name in Layers)
         {
             Group(0, "LAYER");
             Group(2, name);
             Group(70, "0");
-            Group(62, color.ToString(CultureInfo.InvariantCulture));
+            Group(62, LayerColor.ToString(CultureInfo.InvariantCulture));
             Group(6, "CONTINUOUS");
         }
 

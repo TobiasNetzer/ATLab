@@ -219,14 +219,13 @@ public partial class BoardLinkEditorViewModel : ObservableObject
             return;
         }
 
-        var pinNets = fixture.Probes
-            .Where(p => !string.IsNullOrEmpty(p.Pin))
-            .GroupBy(p => p.Pin!, StringComparer.OrdinalIgnoreCase)
-            .Select(g => new PinNet
+        // Pins wired to probes get their net; a pin behind a component of the fixture is on another net and gets none
+        var pinNets = FixtureWiring.PinNets(fixture)
+            .Select(p => new PinNet
             {
-                Pin = g.Key,
-                Net = g.Select(p => p.Net).FirstOrDefault(n => n.Length > 0) ?? string.Empty,
-                Probes = g.OrderBy(p => p.Number).Select(p => new ProbePoint($"P{p.Number}", p.Reference, p.Pad, p.Side)).ToList()
+                Pin = p.Pin,
+                Net = p.Net,
+                Probes = p.Probes.Select(e => new ProbePoint($"P{e.Number}", e.Reference, e.Pad, e.Side)).ToList()
             })
             .ToList();
 

@@ -71,6 +71,8 @@ public partial class MainWindowViewModel : ObservableObject
 
         InitializePlates();
         InitializeParts();
+        InitializeWiring();
+        InitializeColors();
         Localizer.Instance.CultureChanged += (_, _) => OnCultureChanged();
     }
 
@@ -81,7 +83,8 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasBoard), nameof(ShowWelcome), nameof(BoardInfo))]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(SaveAsCommand), nameof(ReloadBoardCommand),
-        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand))]
+        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand),
+        nameof(AddComponentCommand), nameof(AddWireCommand))]
     private Board? _board;
 
     public bool HasBoard => Board is not null;
@@ -364,6 +367,7 @@ public partial class MainWindowViewModel : ObservableObject
             return;
 
         var index = Probes.IndexOf(probe);
+        RemoveWiresOf(probe);
         Probes.Remove(probe);
         if (selectNext)
             SelectedProbe = Probes.Count == 0 ? null : Probes[Math.Clamp(index, 0, Probes.Count - 1)];
@@ -376,8 +380,21 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(HasSelectedProbe))]
     private void DisconnectProbe()
     {
-        if (SelectedProbe is { } probe)
+        if (SelectedProbe is not { } probe)
+            return;
+
+        _isBatchChange = true;
+        try
+        {
             probe.Pin = null;
+            RemoveWiresOf(probe);
+        }
+        finally
+        {
+            _isBatchChange = false;
+        }
+
+        AfterWiringChanged();
     }
 
     private bool CanEditProbes() => Board is not null;
@@ -394,14 +411,16 @@ public partial class MainWindowViewModel : ObservableObject
     {
         // MEAS 1 is usually reserved, so it is left for the user to assign by hand
         var meas = Pinout.FixturePins.Where(p => p.Kind == ResourceKind.Meas && p.Channel != ReservedMeasChannel).OrderBy(p => p.Channel).ToList();
-        var used = Probes.Where(p => p.Pin is not null).Select(p => p.Pin!).ToHashSet();
+        // Probes wired some other way, e.g. to a component, are left alone; pins on a wire are taken
+        var wiring = FixtureWiringModel.Build(Probes, Wires);
+        var used = Pinout.FixturePins.Where(wiring.IsWired).ToHashSet();
         var assigned = 0;
         var failed = 0;
 
         _isBatchChange = true;
         try
         {
-            foreach (var probe in Probes.Where(p => p.Pin is null).OrderBy(p => p.Number).ToList())
+            foreach (var probe in Probes.Where(p => p.Pin is null && !wiring.IsWired(p)).OrderBy(p => p.Number).ToList())
             {
                 var sameNet = probe.Net.Length > 0
                     ? Probes.FirstOrDefault(p => p != probe && p.Net == probe.Net && p.Pin?.Kind == ResourceKind.Meas)?.Pin
@@ -456,6 +475,7 @@ public partial class MainWindowViewModel : ObservableObject
             _isBatchChange = false;
         }
 
+        BuildEndpointOptions();
         AfterProbesChanged();
         SetStatus(() => Localizer.Get("Status_Renumbered"));
     }
@@ -476,6 +496,7 @@ public partial class MainWindowViewModel : ObservableObject
         MarkDirty();
         OnPropertyChanged(nameof(HasProbes));
         OnPropertyChanged(nameof(ProbeCountText));
+        BuildEndpointOptions();
         RunChecks();
     }
 
@@ -520,7 +541,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void RunChecks()
     {
-        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts);
+        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts, Components, Wires);
+        _wiring = FixtureWiringModel.Build(Probes, Wires);
         if (Board is not null && _savedBoardHash.Length > 0 && Board.Hash.Length > 0 && _savedBoardHash != Board.Hash)
             results.Add(new CheckResult(CheckSeverity.Info, Localizer.Get("Check_BoardChanged"), []));
 
@@ -531,6 +553,7 @@ public partial class MainWindowViewModel : ObservableObject
                      nameof(IsCheckClean), nameof(ChecksHeader), nameof(CheckSummary) })
             OnPropertyChanged(name);
 
+        UpdateWiredTo();
         UpdateUsage();
         UpdatePlateSummary();
     }
@@ -542,19 +565,20 @@ public partial class MainWindowViewModel : ObservableObject
         foreach (var row in _allPadRows)
             row.Probes = byPad.TryGetValue(row.Pad, out var list) ? string.Join(", ", list.Select(p => p.Name)) : string.Empty;
 
-        var byPin = Probes.Where(p => p.Pin is not null).GroupBy(p => p.Pin!).ToDictionary(g => g.Key, g => g.ToList());
+        // A pin shows what is on its conductor: probes, component terminals, other pins; the net only of probes wired
+        // to it directly, not of those behind a component
         foreach (var row in AdapterRows)
         {
-            var list = byPin.TryGetValue(row.Pin, out var l) ? l : [];
-            row.Probes = string.Join(", ", list.Select(p => p.Name));
-            var nets = list.Select(p => p.ShortNet).Where(n => n.Length > 0).Distinct().ToList();
+            var net = _wiring.NetOf(row.Pin);
+            row.Probes = net?.Describe(row.Pin) ?? string.Empty;
+            var nets = net?.BoardNets.Select(Probe.ShortNetName).ToList() ?? [];
             row.Nets = string.Join(", ", nets);
-            row.IsUsed = list.Count > 0;
+            row.IsUsed = net is not null;
             row.IsShort = nets.Count > 1;
         }
 
         foreach (var option in PinOptions)
-            option.UsedBy = byPin.TryGetValue(option.Pin, out var l) ? string.Join(", ", l.Select(p => p.Name)) : string.Empty;
+            option.UsedBy = _wiring.NetOf(option.Pin)?.Describe(option.Pin) ?? string.Empty;
 
         OnPropertyChanged(nameof(UsedPinCountText));
     }
@@ -608,6 +632,7 @@ public partial class MainWindowViewModel : ObservableObject
             ResetPlates();
             Pinout = AdapterPinout.Default;
             BuildPinLists();
+            ResetWiring();
             Board = board;
             FixturePath = null;
             _savedBoardHash = string.Empty;
@@ -704,6 +729,7 @@ public partial class MainWindowViewModel : ObservableObject
                 Probes.Add(probe);
             }
 
+            LoadWiring(file);
             SelectedPad = null;
             SelectedProbe = null;
             ResolveParts();
@@ -838,6 +864,7 @@ public partial class MainWindowViewModel : ObservableObject
             }).ToList()
         };
         SavePlates(file, path);
+        SaveWiring(file);
 
         try
         {
@@ -909,6 +936,8 @@ public partial class MainWindowViewModel : ObservableObject
             Pinout = Pinout,
             Probes = Probes.OrderBy(p => p.Number).ToList(),
             Parts = Parts.ToList(),
+            Components = Components.ToList(),
+            Wires = Wires.Where(w => w.IsComplete).ToList(),
             PlateOutlines = Plate.PlatesOf(Probes, IsBoardFlipped).ToDictionary(p => p, p => PlateOverlay(p)!),
             IsBoardFlipped = IsBoardFlipped,
             Layers = BuildSheetLayers.Effective
@@ -1076,6 +1105,8 @@ public partial class MainWindowViewModel : ObservableObject
             row.RefreshTexts();
         foreach (var row in PlateRows)
             row.RefreshTexts();
+        foreach (var option in ColorOptions)
+            option.RefreshText();
         RefreshOutlineTargets();
         OnPropertyChanged(nameof(StatusText));
         OnPropertyChanged(nameof(PadCountText));

@@ -178,7 +178,7 @@
     <value>Prüfnadeln neu nummerieren</value>
   </data>
   <data name="ToolTip_Disconnect" xml:space="preserve">
-    <value>Prüfnadel trennen</value>
+    <value>Entfernt Pin und Verbindungen der Prüfnadel</value>
   </data>
   <data name="ToolTip_RemoveProbe" xml:space="preserve">
     <value>Prüfnadel entfernen</value>
@@ -499,10 +499,10 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>{0} liegen auf demselben Pad {1} von der {2}.</value>
   </data>
   <data name="Check_Short" xml:space="preserve">
-    <value>Pin {0} verbindet verschiedene Netze: {1}. So verdrahtet schließt der Nadeladapter diese Netze kurz.</value>
+    <value>{0} verbindet verschiedene Netze: {1}. So verdrahtet schließt der Nadeladapter diese Netze kurz.</value>
   </data>
   <data name="Check_NotWired" xml:space="preserve">
-    <value>{0} ({1}, {2}) ist keinem Pin der Test-Hardware zugeordnet.</value>
+    <value>{0} ({1}, {2}) ist nicht verdrahtet.</value>
   </data>
   <data name="Check_NetOnSeveralChannels" xml:space="preserve">
     <value>Netz {0} liegt auf mehreren Matrixkanälen: {1}. Meist genügt ein Kanal pro Netz.</value>
@@ -514,7 +514,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Externer Stimulus {0}: Leitung {1} ist nicht verdrahtet, der Stimulus hat also keinen Rückweg über den Nadeladapter.</value>
   </data>
   <data name="Check_StimOneTerminal" xml:space="preserve">
-    <value>STIM {0}: Nur {1} liegt auf einer Prüfnadel; {2} muss imNadeladapter verdrahtet werden.</value>
+    <value>STIM {0}: Nur {1} ist verdrahtet; {2} muss im Nadeladapter verdrahtet werden.</value>
   </data>
   <data name="Check_BoardChanged" xml:space="preserve">
     <value>Die Platinendatei hat sich seit dem Speichern geändert. Positionen und Netze stammen aus der aktuellen Datei; geänderte Prüfnadeln sind aufgeführt.</value>
@@ -581,12 +581,6 @@ Platinendatei am neuen Ort auswählen.</value>
   </data>
   <data name="Report_Wiring" xml:space="preserve">
     <value>Verdrahtung</value>
-  </data>
-  <data name="Report_WiringHint" xml:space="preserve">
-    <value>Pins der Test-Hardware und die Prüfnadeln, die mit ihnen zu verdrahten sind.</value>
-  </data>
-  <data name="Report_NoWiring" xml:space="preserve">
-    <value>Noch keine Prüfnadel ist einem Pin der Test-Hardware zugeordnet.</value>
   </data>
   <data name="Report_NotWired" xml:space="preserve">
     <value>nicht verdrahtet</value>
@@ -1279,5 +1273,116 @@ unten</value>
   </data>
   <data name="Column_EdgeGap" xml:space="preserve">
     <value>Kantenabstand (mm)</value>
+  </data>
+  <data name="Tab_Wiring" xml:space="preserve">
+    <value>Verdrahtung</value>
+  </data>
+  <data name="Header_Wires" xml:space="preserve">
+    <value>Verbindungen</value>
+  </data>
+  <data name="Button_AddComponent" xml:space="preserve">
+    <value>Bauteil hinzufügen</value>
+  </data>
+  <data name="Button_RemoveComponent" xml:space="preserve">
+    <value>Bauteil entfernen</value>
+  </data>
+  <data name="Button_AddWire" xml:space="preserve">
+    <value>Verbindung hinzufügen</value>
+  </data>
+  <data name="Button_RemoveWire" xml:space="preserve">
+    <value>Verbindung entfernen</value>
+  </data>
+  <data name="ToolTip_AddWire" xml:space="preserve">
+    <value>Neue Verbindung, beginnend an der gewählten Prüfnadel</value>
+  </data>
+  <data name="Text_ComponentsHint" xml:space="preserve">
+    <value>Bauteile zwischen Platine und Test-Hardware. Anschlüsse mit Komma trennen.</value>
+  </data>
+  <data name="Column_Designator" xml:space="preserve">
+    <value>Bezeichner</value>
+  </data>
+  <data name="Column_Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="Column_Terminals" xml:space="preserve">
+    <value>Anschlüsse</value>
+  </data>
+  <data name="Column_OpenTerminals" xml:space="preserve">
+    <value>Nicht verdrahtet</value>
+  </data>
+  <data name="Column_Wire" xml:space="preserve">
+    <value>Verb.</value>
+  </data>
+  <data name="Column_From" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="Column_To" xml:space="preserve">
+    <value>Nach</value>
+  </data>
+  <data name="Column_AdditionalConnections" xml:space="preserve">
+    <value>Zusätzliche Verbindungen</value>
+  </data>
+  <data name="Column_Connected" xml:space="preserve">
+    <value>Verbunden mit</value>
+  </data>
+  <data name="Placeholder_Endpoint" xml:space="preserve">
+    <value>Prüfnadel, Pin oder Anschluss</value>
+  </data>
+  <data name="Check_ComponentNoDesignator" xml:space="preserve">
+    <value>Ein Bauteil ({0}) hat keinen Bezeichner.</value>
+  </data>
+  <data name="Check_ComponentNoTerminals" xml:space="preserve">
+    <value>{0} hat keine Anschlüsse, es kann also nichts damit verbunden werden.</value>
+  </data>
+  <data name="Check_ComponentNotWired" xml:space="preserve">
+    <value>{0} ist nicht verdrahtet.</value>
+  </data>
+  <data name="Check_TerminalsOpen" xml:space="preserve">
+    <value>{0}: Anschluss {1} nicht verdrahtet.</value>
+  </data>
+  <data name="Check_ComponentDuplicate" xml:space="preserve">
+    <value>Bezeichner {0} ist mehrfach vergeben.</value>
+  </data>
+  <data name="Check_WireIncomplete" xml:space="preserve">
+    <value>{0} hat nicht beide Enden.</value>
+  </data>
+  <data name="Check_WireToItself" xml:space="preserve">
+    <value>{0} führt von {1} zurück zu {1}.</value>
+  </data>
+  <data name="Check_WireTerminalMissing" xml:space="preserve">
+    <value>{0} führt zu {1}, den das Bauteil nicht hat.</value>
+  </data>
+  <data name="Report_KindComponent" xml:space="preserve">
+    <value>Bauteil</value>
+  </data>
+  <data name="ToolTip_Colors" xml:space="preserve">
+    <value>Farben von Prüfnadeln, Stiften, Niederhaltern und Platten</value>
+  </data>
+  <data name="Header_Colors" xml:space="preserve">
+    <value>Farben</value>
+  </data>
+  <data name="Color_Probe" xml:space="preserve">
+    <value>Prüfnadeln</value>
+  </data>
+  <data name="Color_LocatingPin" xml:space="preserve">
+    <value>Fangstifte</value>
+  </data>
+  <data name="Color_PreCenteringPin" xml:space="preserve">
+    <value>Vorzentrierungsstifte</value>
+  </data>
+  <data name="Color_SupportPin" xml:space="preserve">
+    <value>Stützstifte</value>
+  </data>
+  <data name="Color_PushRod" xml:space="preserve">
+    <value>Niederhalter</value>
+  </data>
+  <data name="Color_ProbePlate" xml:space="preserve">
+    <value>Kontaktträgerplatten</value>
+  </data>
+  <data name="Color_MovingPlate" xml:space="preserve">
+    <value>Andruckplatte</value>
+  </data>
+  <data name="Color_PressurePlate" xml:space="preserve">
+    <value>Niederhalterplatte</value>
   </data>
 </root>

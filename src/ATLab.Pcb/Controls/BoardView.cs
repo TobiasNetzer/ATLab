@@ -147,6 +147,10 @@ public sealed class BoardView : Control
     public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayOutlinesProperty =
         AvaloniaProperty.Register<BoardView, IReadOnlyList<IReadOnlyList<Point2>>?>(nameof(OverlayOutlines));
 
+    /// <summary>Color of the overlay outlines; null for the foreground color.</summary>
+    public static readonly StyledProperty<IBrush?> OverlayBrushProperty =
+        AvaloniaProperty.Register<BoardView, IBrush?>(nameof(OverlayBrush));
+
     /// <summary>Rounded corners of the view's background, to follow a rounded border around it.</summary>
     public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
         AvaloniaProperty.Register<BoardView, CornerRadius>(nameof(CornerRadius));
@@ -196,7 +200,7 @@ public sealed class BoardView : Control
         AffectsRender<BoardView>(
             BoardProperty, ViewSideProperty, MarkersProperty, SelectedMarkerProperty,
             PartMarkersProperty, SelectedPartMarkerProperty, IsPlacementActiveProperty, ShowMarkerLegendProperty,
-            PreCenteringPinBrushProperty, SupportPinBrushProperty, PushRodBrushProperty,
+            LocatingPinBrushProperty, PreCenteringPinBrushProperty, SupportPinBrushProperty, PushRodBrushProperty, OverlayBrushProperty,
             NetHighlightsProperty, IsZoneHighlightEnabledProperty, PadHighlightsProperty, FootprintHighlightsProperty, HighlightedPadsProperty,
             SelectedPadProperty, VisibleLayersProperty, HintKeyProperty, BackgroundProperty, OutlineBrushProperty,
             TopPadBrushProperty, BottomPadBrushProperty, ForegroundProperty, MutedBrushProperty, AccentBrushProperty, SelectionBrushProperty, CornerRadiusProperty, OverlayOutlinesProperty,
@@ -250,6 +254,7 @@ public sealed class BoardView : Control
     public CornerRadius CornerRadius { get => GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
     public IReadOnlyList<IReadOnlyList<Point2>>? OverlayOutlines { get => GetValue(OverlayOutlinesProperty); set => SetValue(OverlayOutlinesProperty, value); }
     public IBrush ProbeBrush { get => GetValue(ProbeBrushProperty); set => SetValue(ProbeBrushProperty, value); }
+    public IBrush? OverlayBrush { get => GetValue(OverlayBrushProperty); set => SetValue(OverlayBrushProperty, value); }
     public IBrush ErrorBrush { get => GetValue(ErrorBrushProperty); set => SetValue(ErrorBrushProperty, value); }
     public IBrush WarningBrush { get => GetValue(WarningBrushProperty); set => SetValue(WarningBrushProperty, value); }
 
@@ -727,13 +732,13 @@ public sealed class BoardView : Control
         }
     }
 
-    /// <summary>The overlay outlines, dashed a few pixels wide in the foreground color, whatever the zoom.</summary>
+    /// <summary>The overlay outlines, dashed a few pixels wide in the overlay or foreground color, whatever the zoom.</summary>
     private void DrawOverlayOutlines(DrawingContext context, Matrix view)
     {
         if (OverlayOutlines is not { Count: > 0 } outlines)
             return;
 
-        var pen = new Pen(Foreground, 1.5, new DashStyle([4, 3], 0), PenLineCap.Flat, PenLineJoin.Round);
+        var pen = new Pen(OverlayBrush ?? Foreground, 1.5, new DashStyle([4, 3], 0), PenLineCap.Flat, PenLineJoin.Round);
         using (context.PushOpacity(0.85))
         {
             foreach (var outline in outlines.Where(o => o.Count >= 2))
@@ -1160,7 +1165,7 @@ public sealed class BoardView : Control
             }));
         if (OverlayOutlines is { Count: > 0 })
             kinds.Add(("Board_LegendPlateOutline", c =>
-                context.DrawLine(new Pen(Foreground, 1.5, new DashStyle([3, 2], 0)), new Point(c.X - 6, c.Y), new Point(c.X + 6, c.Y))));
+                context.DrawLine(new Pen(OverlayBrush ?? Foreground, 1.5, new DashStyle([3, 2], 0)), new Point(c.X - 6, c.Y), new Point(c.X + 6, c.Y))));
 
         // From the right: text, then its symbol before it
         var x = Bounds.Width - 10;

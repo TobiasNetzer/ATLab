@@ -23,19 +23,14 @@ public sealed record PlateOutlineDrawing(FixturePlate Plate, IReadOnlyList<IRead
 /// </summary>
 public static class BoardSvg
 {
-    private const string ProbeColor = MarkerColors.Probe;
+    private static string ProbeColor => FixtureColors.Get(ColorItem.Probe);
     private const string OriginColor = "#16A34A";
 
     /// <summary>
     /// Color of each plate's outline and openings: the probe plates gray, the moving plate orange, the pressure plate
     /// blue, apart from the colors of the probes and parts drawn with them.
     /// </summary>
-    public static string PlateColor(FixturePlate plate) => plate switch
-    {
-        FixturePlate.MovingPlate => "#EA580C",
-        FixturePlate.PressurePlate => "#2563EB",
-        _ => "#52525B"
-    };
+    public static string PlateColor(FixturePlate plate) => FixtureColors.Get(FixtureColors.Of(plate));
 
     /// <param name="side">The plate: its probes and parts are drawn.</param>
     /// <param name="view">Where the drawing is seen from; from the bottom it is mirrored.</param>
@@ -170,7 +165,7 @@ public static class BoardSvg
         var taken = markers.Select(m => Box.Around(m.Center, m.Radius)).ToList();
         foreach (var (probe, c, r) in markers)
         {
-            var label = withPins && probe.Pin is { } pin ? $"{probe.Name} - {pin.Pin}" : probe.Name;
+            var label = withPins && probe.Connections.Length > 0 ? $"{probe.Name} - {probe.Connections}" : probe.Name;
             var textWidth = label.Length * font * 0.62;
             var textHeight = font * 0.8;
 
@@ -213,13 +208,7 @@ public static class BoardSvg
         return svg.ToString();
     }
 
-    private static string PartColor(FixturePartKind kind) => kind switch
-    {
-        FixturePartKind.LocatingPin => MarkerColors.LocatingPin,
-        FixturePartKind.PreCenteringPin => MarkerColors.PreCenteringPin,
-        FixturePartKind.SupportPin => MarkerColors.SupportPin,
-        _ => MarkerColors.PushRod
-    };
+    private static string PartColor(FixturePartKind kind) => FixtureColors.Get(FixtureColors.Of(kind));
 
     /// <summary>The plate of a drawing with openings: the moving plate below the board, the top probe plate above it; null for none.</summary>
     private static FixturePlate? OpeningPlate(IEnumerable<FixturePlate> plates)

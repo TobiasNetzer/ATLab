@@ -33,6 +33,7 @@ The tabs on the right follow the order of the work:
 | [Fixture](#fixture-tab) | Name, device, author and notes; the layers of the build sheet drawings |
 | [Pads](#pads-tab) | Find the pads to probe |
 | [Probes](#probes-tab) | Probe type and test hardware pin of every probe; the probe types |
+| [Wiring](#wiring-tab) | Components between board and test hardware, and additional wiring |
 | [Test Hardware](#test-hardware-tab) | The pins of J101 with their probes and nets |
 | [Mechanics](#mechanics-tab) | Locating pins, pre-centering pins, support pins and push rods |
 | [Checks](#checks) | The problems found in the design |
@@ -98,12 +99,13 @@ The probes of the fixture with their pad, net, side, test hardware pin, probe ty
 - **Type**: the [probe type](#probe-types); new probes get the **Type for new probes**.
 - **Opening Ø**: the hole the probe comes through in the moving plate (probes on the side facing the moving plate only). Leave it empty to use the opening of the probe type; enter a value for a probe that needs a bigger or smaller opening.
 - **Note**: free text for the build sheet, e.g. "long stroke".
+- **Additional connections**: what the [wires](#wiring-tab) connect to the probe besides its pin, e.g. `R1.1`.
 
 | Button | Effect |
 |--------|--------|
 | **Assign MEAS channels** | Wires every probe without a pin to a matrix channel: a probe on a net that is already on a MEAS channel gets the same channel, the others the next free channel. MEAS 1 stays free, as it is usually reserved. |
 | **Renumber** | Numbers the probes by side (top first), then row by row from the top left, as they are found on the drawing. |
-| **Disconnect** | Removes the pin of the selected probe. |
+| **Disconnect** | Removes the pin and the wires of the selected probe. |
 | **Remove** | Removes the selected probe. |
 
 Several probes on the same net may share a pin; they are simply wired in parallel.
@@ -134,6 +136,23 @@ A probe type describes a kind of spring probe with its receptacle. Its dimension
 
 The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Before you save the first type to the library, it contains three examples (100, 75 and 50 mil) whose values are typical, but not those of a particular manufacturer: check them against your data sheet.
 
+## Wiring tab
+
+Sometimes something sits between the board and the test hardware, e.g. a series resistor, a relay or a connector to another device. The **Wiring** tab describes it. The components only belong to the wiring and get no place on a plate.
+
+**Components**: **Add component** adds a line with the designator `?` and the terminals `1, 2`. Enter the designator (R1, K1, U1 …), a description (value or part number, for the bill of materials) and the terminals, separated by commas. Terminals can have any name, e.g. `A1, A2, COM, NC, NO` for a relay or `VIN, VOUT, GND` for a module. **Not wired** shows the terminals without a wire.
+
+**Wires**: every wire besides a probe's own pin. Each end is a probe, a pin of J101 or a component terminal. **Add wire** starts at the selected probe. Examples:
+
+| From | To | Meaning |
+|------|----|---------|
+| P3 | R1.1 | Probe to a series resistor … |
+| R1.2 | c7 | … and the resistor to MEAS 7 |
+| P5 | P6 | Jumper between two probes |
+| P8 | K1.COM | Probe to a relay contact |
+
+A component does **not** connect its terminals. In the example, c7 is therefore not on the net of P3: the pin gets no net of the board, ATLab shows no net for it, and a short check does not look through R1. Only wires, a probe's pin and probe-to-probe jumpers join nets.
+
 ## Test Hardware tab
 
 The pins of J101 lead to these resources of the Test Interface Adapter (see [Test Hardware Tab](04-test-hardware.md)):
@@ -147,7 +166,7 @@ The pins of J101 lead to these resources of the Test Interface Adapter (see [Tes
 | **PROG 1 … 10** | a11 … a20 | 1:1 pass-through to the programming connector |
 | **RS485**, **I²C**, **UART** | a21 … a32 | Isolated interfaces with signals, VREF and GND |
 
-The tab lists every pin with its resource, signal, net and probes, and shows how many pins and matrix channels are used.
+The tab lists every pin with its resource, signal, net and what is connected to it (probes, component terminals, other pins), and shows how many pins and matrix channels are used.
 
 ## Mechanics tab
 
@@ -188,7 +207,9 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 
 | Severity | Check |
 |----------|-------|
-| Error | **Short:** probes on different nets are wired to the same pin. |
+| Error | **Short:** the wiring joins probes on different nets, on one pin or through wires. |
+| Error | A component has **no designator**, or two components have the **same designator**. |
+| Error | A wire goes to a **terminal the component does not have** (e.g. after the terminals were edited). |
 | Error | The pad has **no copper** on the side of the probe, or is **covered by solder mask** there. |
 | Error | The pad **no longer exists** on the board, e.g. after a board change. |
 | Error | Two probes on the **same pad** from the same side. |
@@ -198,7 +219,9 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 | Error | A pre-centering pin **overlaps the board**. |
 | Error | A support pin or push rod is **not under the board**, or **touches a component**. |
 | Error | The type of a part has **no drill diameter**. |
-| Warning | A probe is **not wired** to a pin of the test hardware. |
+| Warning | A probe is **not wired**: it has no pin and no wire. |
+| Warning | A component or some of its **terminals are not wired**, or it has no terminals. |
+| Warning | A wire does **not have both ends**, or leads back to where it starts. |
 | Warning | A probe or part has **no type**, or a probe type has no drill diameter. |
 | Warning | The pad is **smaller** than the minimum pad of the probe type. |
 | Warning | A probe lies **on or near another component** of its side: closer to its courtyard than the clearance of the probe type. The footprint of the probed pad itself does not count. |
@@ -209,7 +232,7 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 | Warning | An **interface** is only partly wired: an isolated interface needs all its lines from the device, including VREF and GND. |
 | Warning | An **external stimulus** has only its H or only its L line wired. |
 | Warning | The **net** or the **position** of a pad changed since the fixture was saved. |
-| Note | A **stimulation channel** has only one of its contacts on a probe: the other must be wired inside the fixture, e.g. to a supply. |
+| Note | A **stimulation channel** has only one of its contacts wired: the other must be wired inside the fixture, e.g. to a supply. |
 | Note | The board file changed since the fixture was saved. |
 
 ## Manufacturing tab
@@ -270,14 +293,14 @@ Positions and nets always come from the current board file. The checks then repo
 **Build sheet (PDF)…** (`Ctrl+P`) creates a PDF (A4 landscape) in the order of the work:
 
 - fixture and board information, including the checksum of the board file, the board position (upside down or not) and the meaning of the coordinates,
-- the **bill of materials**: every probe type and part type with its quantity, diameter, drill, opening and height,
+- the **bill of materials**: every probe type and part type with its quantity, diameter, drill, opening and height, and the components of the wiring by description with their note,
 - the **probe list**: probe, pad, net, side, position, pad type and size, probe type, pin, resource and note,
 - the list of **pins and push rods** with kind, type, position and plate,
-- the **wiring table**: every used pin of J101 with its resource, signal, the nets and the probes to wire to it,
+- the **wiring**: every wire to make, with both ends and the note, and the side of its probes if the fixture probes from both sides: first each probe to its pin (sorted by pin), then the wires of the [Wiring tab](#wiring-tab) under their names there (W1, W2 …). Left out if the fixture has no wiring.
 - an **assembly drawing** of every side with probes or parts: the plates of that side with their outlines and openings, the probes and parts, seen from the side where they touch the board (the plates above from the top, the plates below from below, mirrored). Different plates are drawn in different colors and line styles, explained in a legend.
 - a **wiring drawing** of every probe plate, seen from its outside where the wires go.
 
-Bill of materials, probe list, parts list and wiring table have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [Fixture tab](#fixture-tab). If the checks found errors, the Fixture Designer asks before exporting.
+Bill of materials, probe list, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [Fixture tab](#fixture-tab). If the checks found errors, the Fixture Designer asks before exporting.
 
 ## Fixture file
 
@@ -288,6 +311,7 @@ A fixture is saved as an `.atlabfix` file (`Ctrl+S`, **Save as…** `Ctrl+Shift+
 - the probe types and part types,
 - every probe with its number, pad, side, probe type, pin, opening and note, and the net and position the pad had when saved,
 - every part with its kind, type, position and opening,
+- the components of the wiring and the additional wires,
 - the plate outlines (with a copy of imported drawings, so the fixture stays complete when the drawing is moved), the plate thicknesses and the board position,
 - the layers of the build sheet drawings.
 
@@ -295,8 +319,8 @@ If the board file is not found when opening a fixture, the Fixture Designer asks
 
 ## Using the fixture in ATLab
 
-In ATLab, **Import fixture…** in the [Board and Nets](06-configuration.md#board-and-nets) panel takes over the board, the net on every wired test hardware pin and the probe positions of a fixture. The [board view](14-running-tests.md#board-view) of the Test Execution tab then shows for every step where it connects to the board, including the probes. On request the nets also become the channel labels of the project.
+In ATLab, **Import fixture…** in the [Board and Nets](06-configuration.md#board-and-nets) panel takes over the board, the net on every wired test hardware pin and the probe positions of a fixture. A pin wired to the board only through a component of the fixture gets no net. The [board view](14-running-tests.md#board-view) of the Test Execution tab then shows for every step where it connects to the board, including the probes. On request the nets also become the channel labels of the project.
 
-## Language, theme and about
+## Language, theme, colors and about
 
-The language (English, German) and the light or dark theme are switched in the toolbar and remembered. On the first start the Fixture Designer takes over the language and theme of ATLab. The ⓘ button shows version, build and system information.
+The language (English, German) and the light or dark theme are switched in the toolbar and remembered. On the first start the Fixture Designer takes over the language and theme of ATLab. The palette button sets the colors of the probes, locating, pre-centering and support pins, push rods and the outlines of the probe plates, moving plate and pressure plate. They apply to the board view and the build sheet drawings and are remembered; **Default colors** restores them. The plate files (DXF, SVG) are always black. The ⓘ button shows version, build and system information.

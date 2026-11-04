@@ -33,6 +33,7 @@ Die Registerkarten rechts folgen der Reihenfolge der Arbeit:
 | [Nadeladapter](#registerkarte-nadeladapter) | Name, Prüfling, Ersteller und Notizen; die Lagen der Zeichnungen im Aufbaublatt |
 | [Pads](#registerkarte-pads) | Die zu kontaktierenden Pads finden |
 | [Prüfnadeln](#registerkarte-prüfnadeln) | Nadeltyp und Pin der Test-Hardware jeder Prüfnadel; die Nadeltypen |
+| [Verdrahtung](#registerkarte-verdrahtung) | Bauteile zwischen Platine und Test-Hardware sowie zusätzliche Verdrahtung |
 | [Test-Hardware](#registerkarte-test-hardware) | Die Pins von J101 mit ihren Prüfnadeln und Netzen |
 | [Mechanik](#registerkarte-mechanik) | Fangstifte, Vorzentrierungsstifte, Stützstifte und Niederhalter |
 | [Prüfungen](#prüfungen) | Die im Entwurf gefundenen Probleme |
@@ -98,12 +99,13 @@ Die Prüfnadeln des Nadeladapters mit Pad, Netz, Seite, Pin der Test-Hardware, N
 - **Typ**: der [Nadeltyp](#nadeltypen); neue Prüfnadeln bekommen den **Typ für neue Prüfnadeln**.
 - **Durchbruch Ø**: das Loch in der Andruckplatte, durch das die Prüfnadel kommt (nur Prüfnadeln auf der Seite zur Andruckplatte). Leer bleibt der Durchbruch des Nadeltyps; ein Wert gilt für eine Prüfnadel, die einen größeren oder kleineren Durchbruch braucht.
 - **Bemerkung**: freier Text für das Aufbaublatt, z. B. „langer Hub“.
+- **Zusätzliche Verbindungen**: was die [Verbindungen](#registerkarte-verdrahtung) außer dem Pin mit der Prüfnadel verbinden, z. B. `R1.1`.
 
 | Schaltfläche | Wirkung |
 |--------------|---------|
 | **MEAS-Kanäle zuweisen** | Legt jede Prüfnadel ohne Pin auf einen Matrixkanal: Eine Prüfnadel auf einem Netz, das schon auf einem MEAS-Kanal liegt, bekommt denselben Kanal, die anderen den nächsten freien Kanal. MEAS 1 bleibt frei, da er meist reserviert ist. |
 | **Neu nummerieren** | Nummeriert die Prüfnadeln nach Seite (oben zuerst), dann zeilenweise von links oben, wie sie auf der Zeichnung zu finden sind. |
-| **Trennen** | Entfernt den Pin der ausgewählten Prüfnadel. |
+| **Trennen** | Entfernt Pin und Verbindungen der ausgewählten Prüfnadel. |
 | **Entfernen** | Entfernt die ausgewählte Prüfnadel. |
 
 Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden einfach parallel verdrahtet.
@@ -134,6 +136,23 @@ Ein Nadeltyp beschreibt eine Art Federkontaktstift mit seiner Hülse. Seine Maß
 
 Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für sich vollständig und ändert sich nicht, wenn sich die Bibliothek ändert. Ein neuer Nadeladapter beginnt mit den Typen der Bibliothek. Bevor der erste Typ in der Bibliothek gespeichert wird, enthält sie drei Beispiele (100, 75 und 50 mil) mit typischen Werten, die aber nicht die eines bestimmten Herstellers sind: mit dem Datenblatt abgleichen.
 
+## Registerkarte Verdrahtung
+
+Manchmal sitzt etwas zwischen Platine und Test-Hardware, z. B. ein Vorwiderstand, ein Relais oder ein Steckverbinder zu einem anderen Gerät. Die Registerkarte **Verdrahtung** beschreibt es. Die Bauteile gehören nur zur Verdrahtung und bekommen keinen Platz auf einer Platte.
+
+**Bauteile**: **Bauteil hinzufügen** fügt eine Zeile mit dem Bezeichner `?` und den Anschlüssen `1, 2` hinzu. Tragen Sie den Bezeichner (R1, K1, U1 …), eine Beschreibung (Wert oder Teilenummer, für die Stückliste) und die Anschlüsse ein, mit Komma getrennt. Anschlüsse können beliebig heißen, z. B. `A1, A2, COM, NC, NO` für ein Relais oder `VIN, VOUT, GND` für ein Modul. **Nicht verdrahtet** zeigt die Anschlüsse ohne Verbindung.
+
+**Verbindungen**: jede Verbindung neben dem Pin einer Prüfnadel. Jedes Ende ist eine Prüfnadel, ein Pin von J101 oder ein Bauteilanschluss. **Verbindung hinzufügen** beginnt an der ausgewählten Prüfnadel. Beispiele:
+
+| Von | Nach | Bedeutung |
+|-----|------|-----------|
+| P3 | R1.1 | Prüfnadel auf einen Vorwiderstand … |
+| R1.2 | c7 | … und der Widerstand auf MEAS 7 |
+| P5 | P6 | Brücke zwischen zwei Prüfnadeln |
+| P8 | K1.COM | Prüfnadel auf einen Relaiskontakt |
+
+Ein Bauteil verbindet seine Anschlüsse **nicht**. Im Beispiel liegt c7 daher nicht auf dem Netz von P3: Der Pin bekommt kein Netz der Platine, ATLab zeigt für ihn kein Netz, und die Kurzschlussprüfung schaut nicht durch R1 hindurch. Netze verbinden nur Verbindungen, der Pin einer Prüfnadel und Brücken zwischen Prüfnadeln.
+
 ## Registerkarte Test-Hardware
 
 Die Pins von J101 führen zu diesen Ressourcen des Test Interface Adapters (siehe [Registerkarte Test-Hardware](04-test-hardware.md)):
@@ -147,7 +166,7 @@ Die Pins von J101 führen zu diesen Ressourcen des Test Interface Adapters (sieh
 | **PROG 1 … 10** | a11 … a20 | 1:1 zum Programmierstecker durchgeführt |
 | **RS485**, **I²C**, **UART** | a21 … a32 | Isolierte Schnittstellen mit Signalen, VREF und GND |
 
-Die Registerkarte listet jeden Pin mit Ressource, Signal, Netz und Prüfnadeln und zeigt, wie viele Pins und Matrixkanäle belegt sind.
+Die Registerkarte listet jeden Pin mit Ressource, Signal, Netz und dem, was mit ihm verbunden ist (Prüfnadeln, Bauteilanschlüsse, andere Pins), und zeigt, wie viele Pins und Matrixkanäle belegt sind.
 
 ## Registerkarte Mechanik
 
@@ -188,7 +207,9 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 
 | Schwere | Prüfung |
 |---------|---------|
-| Fehler | **Kurzschluss:** Prüfnadeln auf verschiedenen Netzen liegen auf demselben Pin. |
+| Fehler | **Kurzschluss:** Die Verdrahtung verbindet Prüfnadeln auf verschiedenen Netzen, über einen Pin oder über Verbindungen. |
+| Fehler | Ein Bauteil hat **keinen Bezeichner**, oder zwei Bauteile haben **denselben Bezeichner**. |
+| Fehler | Eine Verbindung führt zu einem **Anschluss, den das Bauteil nicht hat** (z. B. nach Ändern der Anschlüsse). |
 | Fehler | Das Pad hat auf der Seite der Prüfnadel **kein Kupfer** oder ist dort **mit Lötstopplack bedeckt**. |
 | Fehler | Das Pad **gibt es nicht mehr** auf der Platine, z. B. nach einer Platinenänderung. |
 | Fehler | Zwei Prüfnadeln auf **demselben Pad** von derselben Seite. |
@@ -198,7 +219,9 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 | Fehler | Ein Vorzentrierungsstift **überdeckt die Platine**. |
 | Fehler | Ein Stützstift oder Niederhalter steht **nicht unter der Platine** oder **berührt ein Bauteil**. |
 | Fehler | Der Typ eines Teils hat **keinen Bohrungsdurchmesser**. |
-| Warnung | Eine Prüfnadel ist **nicht** mit einem Pin der Test-Hardware **verdrahtet**. |
+| Warnung | Eine Prüfnadel ist **nicht verdrahtet**: Sie hat weder Pin noch Verbindung. |
+| Warnung | Ein Bauteil oder einige seiner **Anschlüsse sind nicht verdrahtet**, oder es hat keine Anschlüsse. |
+| Warnung | Eine Verbindung hat **nicht beide Enden** oder führt zu ihrem Anfang zurück. |
 | Warnung | Eine Prüfnadel oder ein Teil hat **keinen Typ**, oder ein Nadeltyp hat keinen Bohrungsdurchmesser. |
 | Warnung | Das Pad ist **kleiner** als das minimale Pad des Nadeltyps. |
 | Warnung | Eine Prüfnadel liegt **auf oder nahe einem anderen Bauteil** ihrer Seite: näher an seiner Bauteilfläche als der Freiraum des Nadeltyps. Der Footprint des kontaktierten Pads selbst zählt nicht. |
@@ -209,7 +232,7 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 | Warnung | Eine **Schnittstelle** ist nur teilweise verdrahtet: Eine isolierte Schnittstelle braucht alle ihre Leitungen vom Prüfling, auch VREF und GND. |
 | Warnung | Bei einer **externen Stimulation** ist nur die H- oder nur die L-Leitung verdrahtet. |
 | Warnung | **Netz** oder **Position** eines Pads haben sich seit dem Speichern des Nadeladapters geändert. |
-| Hinweis | Bei einem **Stimulationskanal** liegt nur einer seiner Kontakte auf einer Prüfnadel: Der andere muss im Nadeladapter verdrahtet werden, z. B. mit einer Versorgung. |
+| Hinweis | Bei einem **Stimulationskanal** ist nur einer seiner Kontakte verdrahtet: Der andere muss im Nadeladapter verdrahtet werden, z. B. mit einer Versorgung. |
 | Hinweis | Die Platinendatei hat sich seit dem Speichern des Nadeladapters geändert. |
 
 ## Registerkarte Fertigung
@@ -270,14 +293,14 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 **Aufbaublatt (PDF)…** (`Strg+P`) erstellt ein PDF (A4 quer) in der Reihenfolge der Arbeit:
 
 - Angaben zu Nadeladapter und Platine, einschließlich der Prüfsumme der Platinendatei, der Lage der Platine (kopfüber oder nicht) und der Bedeutung der Koordinaten,
-- die **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe,
+- die **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe sowie die Bauteile der Verdrahtung nach Beschreibung mit ihrer Bemerkung,
 - die **Prüfnadelliste**: Prüfnadel, Pad, Netz, Seite, Position, Padtyp und -größe, Nadeltyp, Pin, Ressource und Bemerkung,
 - die Liste der **Stifte und Niederhalter** mit Art, Typ, Position und Platte,
-- die **Verdrahtungstabelle**: jeder belegte Pin von J101 mit Ressource, Signal, den Netzen und den Prüfnadeln, die mit ihm zu verdrahten sind,
+- die **Verdrahtung**: jede herzustellende Verbindung mit beiden Enden und der Bemerkung, bei Prüfnadeln von beiden Seiten auch mit der Seite ihrer Prüfnadeln: zuerst jede Prüfnadel zu ihrem Pin (nach Pin sortiert), dann die Verbindungen der [Registerkarte Verdrahtung](#registerkarte-verdrahtung) unter ihrem Namen dort (W1, W2 …). Entfällt, wenn der Nadeladapter keine Verdrahtung hat.
 - eine **Montagezeichnung** jeder Seite mit Prüfnadeln oder Teilen: die Platten dieser Seite mit Umrissen und Durchbrüchen, die Prüfnadeln und Teile, gesehen von der Seite, an der sie die Platine berühren (die Platten oben von oben, die Platten unten von unten, gespiegelt). Verschiedene Platten sind in verschiedenen Farben und Linienarten gezeichnet und in einer Legende erklärt.
 - eine **Verdrahtungszeichnung** jeder Kontaktträgerplatte, von ihrer Außenseite gesehen, wo die Drähte angeschlossen werden.
 
-Stückliste, Prüfnadelliste, Teileliste und Verdrahtungstabelle haben ein Feld **Erl.** zum Abhaken beim Bau. Die Platinenlagen der Zeichnungen werden auf der [Registerkarte Nadeladapter](#registerkarte-nadeladapter) gewählt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Export nach.
+Stückliste, Prüfnadelliste, Teileliste und Verdrahtung haben ein Feld **Erl.** zum Abhaken beim Bau. Die Platinenlagen der Zeichnungen werden auf der [Registerkarte Nadeladapter](#registerkarte-nadeladapter) gewählt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Export nach.
 
 ## Nadeladapter-Datei
 
@@ -287,6 +310,7 @@ Ein Nadeladapter wird als `.atlabfix`-Datei gespeichert (`Strg+S`, **Speichern u
 - den Pfad der Platinendatei (relativ zur Nadeladapter-Datei, wenn beide auf demselben Laufwerk liegen) und ihre Prüfsumme,
 - die Nadeltypen und Teiletypen,
 - jede Prüfnadel mit Nummer, Pad, Seite, Nadeltyp, Pin, Durchbruch und Bemerkung sowie dem Netz und der Position, die das Pad beim Speichern hatte,
+- die Bauteile der Verdrahtung und die zusätzlichen Verbindungen,
 - jedes Teil mit Art, Typ, Position und Durchbruch,
 - die Plattenumrisse (mit einer Kopie importierter Zeichnungen, damit der Nadeladapter vollständig bleibt, wenn die Zeichnung verschoben wird), die Plattendicken und die Lage der Platine,
 - die Lagen der Zeichnungen im Aufbaublatt.
@@ -295,8 +319,8 @@ Wird die Platinendatei beim Öffnen eines Nadeladapters nicht gefunden, fragt de
 
 ## Den Nadeladapter in ATLab verwenden
 
-In ATLab übernimmt **Nadeladapter importieren…** im Bereich [Platine und Netze](06-configuration.md#platine-und-netze) die Platine, das Netz auf jedem verdrahteten Pin der Test-Hardware und die Positionen der Prüfnadeln eines Nadeladapters. Die [Platinenansicht](14-running-tests.md#platinenansicht) der Registerkarte Testausführung zeigt dann für jeden Schritt, wo er mit der Platine verbunden ist, einschließlich der Prüfnadeln. Auf Wunsch werden die Netze auch zu den Kanalbezeichnungen des Projekts.
+In ATLab übernimmt **Nadeladapter importieren…** im Bereich [Platine und Netze](06-configuration.md#platine-und-netze) die Platine, das Netz auf jedem verdrahteten Pin der Test-Hardware und die Positionen der Prüfnadeln eines Nadeladapters. Ein Pin, der nur über ein Bauteil des Nadeladapters mit der Platine verbunden ist, bekommt kein Netz. Die [Platinenansicht](14-running-tests.md#platinenansicht) der Registerkarte Testausführung zeigt dann für jeden Schritt, wo er mit der Platine verbunden ist, einschließlich der Prüfnadeln. Auf Wunsch werden die Netze auch zu den Kanalbezeichnungen des Projekts.
 
-## Sprache, Design und Info
+## Sprache, Design, Farben und Info
 
-Sprache (Deutsch, Englisch) und helles oder dunkles Design werden in der Werkzeugleiste umgeschaltet und gemerkt. Beim ersten Start übernimmt der Fixture Designer Sprache und Design von ATLab. Die Schaltfläche ⓘ zeigt Version, Build und Systeminformationen.
+Sprache (Deutsch, Englisch) und helles oder dunkles Design werden in der Werkzeugleiste umgeschaltet und gemerkt. Beim ersten Start übernimmt der Fixture Designer Sprache und Design von ATLab. Die Palettenschaltfläche legt die Farben der Prüfnadeln, Fang-, Vorzentrierungs- und Stützstifte, Niederhalter und der Umrisse von Kontaktträgerplatten, Andruckplatte und Niederhalterplatte fest. Sie gelten für die Platinenansicht und die Zeichnungen des Aufbaublatts und werden gemerkt; **Standardfarben** stellt sie wieder her. Die Plattendateien (DXF, SVG) sind immer schwarz. Die Schaltfläche ⓘ zeigt Version, Build und Systeminformationen.
