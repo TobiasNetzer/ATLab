@@ -231,4 +231,37 @@ public sealed class PlateOutlineEntry
     public List<double[]>? Points { get; set; }
     public List<double[]>? Circles { get; set; }
     public List<List<double[]>>? Cutouts { get; set; }
+
+    /// <summary>
+    /// Lines of the drawing that are not part of a closed shape inside the outline, kept so the plate drawings have
+    /// everything the file had; a closed one ends at its first point again.
+    /// </summary>
+    public List<List<double[]>>? Loose { get; set; }
+
+    /// <summary>The circles and cut-outs milled only to a depth; every other one goes through the plate.</summary>
+    public List<PlatePocketEntry>? Pockets { get; set; }
+}
+
+/// <summary>The side of a plate a pocket is milled from.</summary>
+public enum PocketSide
+{
+    /// <summary>The side facing the board.</summary>
+    BoardSide,
+
+    /// <summary>The side facing away from the board.</summary>
+    FarSide
+}
+
+/// <summary>A circle or cut-out of an imported outline that is milled only to a depth.</summary>
+public sealed class PlatePocketEntry
+{
+    /// <summary>A circle (index into the circles) or a cut-out (index into the cut-outs).</summary>
+    public bool IsCircle { get; set; }
+
+    public int Index { get; set; }
+
+    /// <summary>Depth in mm.</summary>
+    public double Depth { get; set; }
+
+    public PocketSide Side { get; set; }
 }

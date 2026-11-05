@@ -294,6 +294,9 @@
                                             SelectedMarker="{Binding SelectedProbe}"
                                             PadActivatedCommand="{Binding TogglePadCommand}"
                                             OverlayOutlines="{Binding OutlineOverlay}"
+                                            OverlayFills="{Binding OutlinePockets}"
+                                            OverlayGuides="{Binding OutlineLoose}"
+                                            OverlayHighlight="{Binding OutlineHighlight}"
                                             OverlayBrush="{Binding OverlayBrush}"
                                             ProbeBrush="{Binding ProbeBrush}"
                                             LocatingPinBrush="{Binding LocatingPinBrush}"
@@ -700,13 +703,13 @@
                                   BorderBrush="{DynamicResource OutlineColor}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize}" Width="110" MinWidth="110"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_ProbeDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter}" Width="135" MinWidth="135"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing}" Width="105" MinWidth="105"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="115" MinWidth="115"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize, Converter={x:Static loc:NumberConverter.Instance}}" Width="110" MinWidth="110"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_ProbeDiameter}" Binding="{Binding Diameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="80" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="120" MinWidth="120"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="135" MinWidth="135"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height, Converter={x:Static loc:NumberConverter.Instance}}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing, Converter={x:Static loc:NumberConverter.Instance}}" Width="105" MinWidth="105"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance, Converter={x:Static loc:NumberConverter.Instance}}" Width="115" MinWidth="115"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -1005,24 +1008,24 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter}" Width="135" MinWidth="135"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="80" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="120" MinWidth="120"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="135" MinWidth="135"/>
                                 <!-- Only pre-centering pins keep a gap to the board edge -->
                                 <DataGridTemplateColumn Header="{loc:Localize Column_EdgeGap}" Width="140" MinWidth="140">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="pcbfix:PartType">
-                                            <TextBlock Text="{Binding EdgeGap}" IsVisible="{Binding IsPreCenteringPin}" VerticalAlignment="Center" Margin="12,0"/>
+                                            <TextBlock Text="{Binding EdgeGap, Converter={x:Static loc:NumberConverter.Instance}}" IsVisible="{Binding IsPreCenteringPin}" VerticalAlignment="Center" Margin="12,0"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate DataType="pcbfix:PartType">
-                                            <TextBox Text="{Binding EdgeGap}" IsVisible="{Binding IsPreCenteringPin}"/>
+                                            <TextBox Classes="Numeric" Text="{Binding EdgeGap, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" IsVisible="{Binding IsPreCenteringPin}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance}" Width="115" MinWidth="115"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height, Converter={x:Static loc:NumberConverter.Instance}}" Width="95" MinWidth="95"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance, Converter={x:Static loc:NumberConverter.Instance}}" Width="115" MinWidth="115"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -1089,7 +1092,7 @@
                                                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                                 <CheckBox Grid.Column="1" Content="{loc:Localize Label_OwnOutline}" IsChecked="{Binding HasOwnOutline}"
                                                           ToolTip.Tip="{loc:Localize ToolTip_OwnOutline}"/>
-                                                <TextBox Grid.Column="2" Classes="Number" Text="{Binding Thickness}" ToolTip.Tip="{loc:Localize ToolTip_PlateThickness}"/>
+                                                <TextBox Grid.Column="2" Classes="Number Numeric" Text="{Binding Thickness, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" ToolTip.Tip="{loc:Localize ToolTip_PlateThickness}"/>
                                                 <TextBlock Grid.Column="3" Text="{Binding Summary}" Classes="Label" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                             </Grid>
                                         </DataTemplate>
@@ -1139,14 +1142,14 @@
 
                                 <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsOutlineAutomatic}">
                                     <TextBlock Text="{loc:Localize Label_PlateMargin}" Classes="FormLabel"/>
-                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding PlateMargin}" ToolTip.Tip="{loc:Localize ToolTip_PlateMargin}"/>
+                                    <TextBox Grid.Column="1" Classes="Number Numeric" Text="{Binding PlateMargin, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" ToolTip.Tip="{loc:Localize ToolTip_PlateMargin}"/>
                                 </Grid>
 
                                 <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" RowSpacing="8" IsVisible="{Binding IsOutlineFixedSize}">
                                     <TextBlock Text="{loc:Localize Label_PlateWidth}" Classes="FormLabel"/>
-                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding OutlineWidth}"/>
+                                    <TextBox Grid.Column="1" Classes="Number Numeric" Text="{Binding OutlineWidth, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
                                     <TextBlock Grid.Row="1" Text="{loc:Localize Label_PlateHeight}" Classes="FormLabel"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number" Text="{Binding OutlineHeight}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number Numeric" Text="{Binding OutlineHeight, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
                                 </Grid>
 
                                 <Grid ColumnDefinitions="170,*,Auto,Auto" ColumnSpacing="6" IsVisible="{Binding IsOutlineImported}">
@@ -1173,9 +1176,9 @@
 
                                 <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" RowSpacing="8" IsVisible="{Binding HasOutlineOffset}">
                                     <TextBlock Text="{loc:Localize Label_OffsetX}" Classes="FormLabel"/>
-                                    <TextBox Grid.Column="1" Classes="Number" Text="{Binding OutlineOffsetX}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
+                                    <TextBox Grid.Column="1" Classes="Number Numeric" Text="{Binding OutlineOffsetX, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
                                     <TextBlock Grid.Row="1" Text="{loc:Localize Label_OffsetY}" Classes="FormLabel"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number" Text="{Binding OutlineOffsetY}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Classes="Number Numeric" Text="{Binding OutlineOffsetY, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" ToolTip.Tip="{loc:Localize ToolTip_OutlineOffset}"/>
                                 </Grid>
 
                                 <TextBlock Text="{Binding OutlineStatus}" TextWrapping="Wrap" Classes="Label"
@@ -1187,6 +1190,61 @@
                                         </Style>
                                     </TextBlock.Styles>
                                 </TextBlock>
+
+                                <!-- Circles and cut-outs of an imported outline: through the plate, or a pocket of a depth from one side -->
+                                <StackPanel Spacing="4" IsVisible="{Binding HasOutlineShapes}">
+                                    <TextBlock Text="{loc:Localize Label_OutlineShapes}" Classes="h4"/>
+                                    <TextBlock Text="{loc:Localize Text_OutlineShapesHint}" Classes="Label" TextWrapping="Wrap"/>
+                                    <DataGrid ItemsSource="{Binding OutlineShapes}"
+                                              SelectedItem="{Binding SelectedOutlineShape, Mode=TwoWay}"
+                                              Classes="Compact"
+                                              SelectionMode="Single"
+                                              CanUserSortColumns="False"
+                                              CanUserResizeColumns="True"
+                                              GridLinesVisibility="Horizontal"
+                                              BorderThickness="1"
+                                              BorderBrush="{DynamicResource OutlineColor}"
+                                              MaxHeight="320" Margin="0,4,0,0">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="{loc:Localize Column_Shape}" Width="*" MinWidth="170" IsReadOnly="True">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate DataType="vm:OutlineShapeRow">
+                                                        <TextBlock Text="{Binding Name}" Classes="Cell" TextTrimming="CharacterEllipsis"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Header="{loc:Localize Column_Pocket}" Width="80" MinWidth="80">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate DataType="vm:OutlineShapeRow">
+                                                        <CheckBox IsChecked="{Binding IsPocket}" HorizontalAlignment="Center" Margin="4,0"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Header="{loc:Localize Column_Depth}" Width="105" MinWidth="105">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate DataType="vm:OutlineShapeRow">
+                                                        <TextBox Classes="Numeric" Text="{Binding Depth, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" IsEnabled="{Binding IsPocket}"
+                                                                 Margin="4,2" FontSize="12" MinHeight="26" Padding="6,2"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Header="{loc:Localize Column_PocketSide}" Width="170" MinWidth="170">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate DataType="vm:OutlineShapeRow">
+                                                        <ComboBox ItemsSource="{Binding Sides}" SelectedItem="{Binding Side}" IsEnabled="{Binding IsPocket}"
+                                                                  HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate DataType="vm:PocketSideOption">
+                                                                    <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
                             </StackPanel>
 
                             <!-- Export: which files of which plates -->
@@ -1194,11 +1252,11 @@
                                 <TextBlock Text="{loc:Localize Header_Export}" Classes="h4"/>
                                 <TextBlock Text="{loc:Localize Text_PlateFilesHint}" Classes="Label" TextWrapping="Wrap"/>
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="FormLabel"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="Large"/>
                                     <CheckBox Content="{loc:Localize Export_Dxf}" IsChecked="{Binding IsExportDxf}"/>
                                     <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
                                     <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
-                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="Large" Margin="0,6,0,0"/>
                                     <ItemsControl ItemsSource="{Binding PlateRows}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>

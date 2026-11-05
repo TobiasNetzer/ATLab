@@ -252,13 +252,13 @@ Ein Nadeladapter besteht aus mehreren Platten. Von unten nach oben:
 | **Kontaktträgerplatte oben** | Die Hülsen der Prüfnadeln von oben und Durchbrüche, durch die die Niederhalter kommen. Nur mit Prüfnadeln von oben nötig. |
 | **Niederhalterplatte** | Die Niederhalter, und die Hülsen der Prüfnadeln von oben, wenn beide in einer Platte sitzen |
 
-Die Liste zeigt jede Platte mit Größe und Inhalt (Nadelbohrungen, Durchbrüche, Stift- und Niederhalterbohrungen, Rahmenbohrungen, Ausschnitte). Die **Dicke** jeder Platte wird für die STEP-Dateien eingegeben. Durchbrüche, die sich überschneiden oder weniger als 0,2 mm Material zwischen sich lassen, werden zu einem Durchbruch zusammengefasst; die Liste zeigt, wie viele.
+Die Liste zeigt jede Platte mit Größe und Inhalt (Nadelbohrungen, Durchbrüche, Stift- und Niederhalterbohrungen, Rahmenbohrungen, Ausschnitte, Taschen). Die **Dicke** jeder Platte wird für die STEP-Dateien eingegeben. Durchbrüche, die sich überschneiden oder weniger als 0,2 mm Material zwischen sich lassen, werden zu einem Durchbruch zusammengefasst; die Liste zeigt, wie viele.
 
 **Platine kopfüber** gilt für eine Platine, die mit der Oberseite nach unten im Nadeladapter liegt. Dann kommen die Prüfnadeln der Oberseite in die Kontaktträgerplatte unten, die Stifte berühren die Oberseite und die Niederhalter die Unterseite.
 
 **Prüfnadeln oben und Niederhalter in einer Platte** gilt für einen Nadeladapter, dessen Niederhalterplatte auch die Prüfnadeln von oben trägt. Er hat dann keine Kontaktträgerplatte oben und keine Durchbrüche für die Niederhalter; die Prüfnadeln von oben bekommen ihre Hülsen in der Niederhalterplatte, und die Verdrahtungszeichnung des Aufbaublatts zeigt die Niederhalterplatte. Ohne Prüfnadeln von oben macht die Einstellung keinen Unterschied.
 
-Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt.
+Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche.
 
 ### Umriss
 
@@ -275,12 +275,21 @@ Eine feste Größe und ein Umriss aus einer Datei oder Lage werden auf der Plati
 
 Aus einer Zeichnung wird so gelesen:
 
-- Die größte geschlossene Kontur wird der Plattenumriss.
-- Weitere geschlossene Konturen innerhalb davon werden **Ausschnitte**.
-- Kreise innerhalb davon werden **Rahmenbohrungen**, z. B. für die Schrauben der Platte.
+- Linien dürfen sich an ihren Enden beliebig treffen, auch drei oder mehr in einem Punkt. Doppelt gezeichnete Linien zählen einmal.
+- Der äußere Rand der Zeichnung wird der Plattenumriss.
+- Jede geschlossene Fläche darin wird eine **Form**: runde werden **Rahmenbohrungen** (z. B. für die Schrauben der Platte), die übrigen **Ausschnitte**. Eine Form darf Kanten mit dem Umriss teilen – etwa eine zum Plattenrand offene Tasche, deren Öffnung durch die Randlinie geschlossen ist – und in einer anderen Form liegen.
+- Linien, die zu keiner Form im Umriss gehören (offene Linien, Formen außerhalb), bleiben erhalten und werden auf einer eigenen Lage exportiert.
 - Bögen bleiben Bögen.
 
-DXF-Dateien dürfen Linien, Bögen, Kreise, Polylinien, Ellipsen und Splines enthalten. Die Einheit wird aus der Datei gelesen; gibt sie keine an, gelten Millimeter. SVG-Dateien dürfen Pfade und alle Grundformen enthalten. Unter den Einstellungen zeigt eine Zeile die Größe der Platte und die Anzahl der Rahmenbohrungen und Ausschnitte – oder was nicht verwendet werden konnte.
+Linien, die sich zwischen ihren Enden kreuzen, werden nicht geteilt; die Statuszeile weist darauf hin. Teilen Sie sie im CAD-Programm am Kreuzungspunkt.
+
+DXF-Dateien dürfen Linien, Bögen, Kreise, Polylinien, Ellipsen und Splines enthalten. Die Einheit wird aus der Datei gelesen; gibt sie keine an, gelten Millimeter. SVG-Dateien dürfen Pfade und alle Grundformen enthalten. Unter den Einstellungen zeigt eine Zeile die Größe der Platte und die Anzahl der Kreise und Ausschnitte – oder was nicht verwendet werden konnte.
+
+#### Formen und Taschen
+
+Alle Formen eines importierten Umrisses stehen unter **Formen**. Normalerweise wird eine Form durch die Platte gefräst. Für eine Form, die nur bis zu einer bestimmten **Tiefe** gefräst wird, setzen Sie den Haken bei **Tasche** und wählen die Seite, von der aus gefräst wird: Die **Platinenseite** zeigt zur Platine, die **abgewandte Seite** von ihr weg. In der Platinenansicht sind Taschen schattiert; ein Klick auf eine Form in der Liste hebt sie dort hervor.
+
+Die Tiefe gehört zum Umriss: Platten mit gemeinsamem Umriss haben auch dieselben Taschen. Ist eine Tasche mindestens so tief wie die Platte dick, geht sie durch diese Platte hindurch. Beim erneuten Einlesen der Datei behalten unveränderte Formen ihre Tiefe. Taschen gibt es nur bei einem Umriss aus einer DXF- oder SVG-Datei.
 
 ### Export
 
@@ -288,9 +297,9 @@ DXF-Dateien dürfen Linien, Bögen, Kreise, Polylinien, Ellipsen und Splines ent
 
 | Datei | Inhalt |
 |-------|--------|
-| **Zeichnung (DXF)** | DXF R12 für CAM und CAD, in Millimetern. Nur was gefertigt wird: der Plattenumriss als eine geschlossene Polylinie, die Bohrungen als Kreise auf einer Lage je Art (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), damit jede ihr Werkzeug bekommt. |
+| **Zeichnung (DXF)** | DXF R12 für CAM und CAD, in Millimetern. Nur was gefertigt wird: der Plattenumriss als eine geschlossene Polylinie, die Bohrungen als Kreise auf einer Lage je Art (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), damit jede ihr Werkzeug bekommt. Taschen liegen auf `POCKETS`, ihre Tiefe wird im CAM festgelegt. Linien einer importierten Zeichnung, die zu keiner Form gehören, liegen auf `OTHER_GEOMETRY`. |
 | **Zeichnung (SVG)** | Dasselbe als SVG, z. B. für Laserschneider und Inkscape: eine Gruppe (Inkscape-Ebene) je Art, Haarlinien ohne Füllung |
-| **3D-Modell (STEP)** | Die Platte als Volumenkörper mit Dicke, Bohrungen und Ausschnitten, die Seite zur Platine bei Z = 0 |
+| **3D-Modell (STEP)** | Die Platte als Volumenkörper mit Dicke, Bohrungen, Ausschnitten und Taschen, die Seite zur Platine bei Z = 0 |
 
 Die Dateien heißen `<Nadeladapter> - <Platte>`, z. B. `Netzteil - Andruckplatte.dxf`. Jede Datei zeigt ihre Platte **von der Seite zur Platine gesehen**: die Platten unter der Platine von oben, die Platten über der Platine von unten, also links-rechts gespiegelt. Die Koordinaten sind in Millimetern vom Ursprung des Aufbaublatts. Solange eine Platte Probleme hat, werden die Dateien nicht geschrieben; die Meldung nennt sie. Vorhandene Dateien werden erst nach Rückfrage ersetzt.
 

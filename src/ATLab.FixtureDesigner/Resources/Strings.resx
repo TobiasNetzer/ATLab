@@ -860,7 +860,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>No user layer on the board</value>
   </data>
   <data name="Outline_Status" xml:space="preserve">
-    <value>Plate {0} × {1} mm, {2} frame holes, {3} cut-outs</value>
+    <value>Plate {0} × {1} mm, {2} circles, {3} cut-outs</value>
   </data>
   <data name="Outline_Missing" xml:space="preserve">
     <value>No outline yet: the board outline plus the margin is used.</value>
@@ -868,8 +868,11 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Outline_NoLayerOutline" xml:space="preserve">
     <value>No closed outline on layer {0}: the board outline plus the margin is used.</value>
   </data>
-  <data name="Outline_OpenLines" xml:space="preserve">
-    <value>Some lines do not form a closed outline and were left out.</value>
+  <data name="Outline_Loose" xml:space="preserve">
+    <value>{0} lines belong to no closed shape inside the outline; they are kept and exported on the layer OTHER_GEOMETRY.</value>
+  </data>
+  <data name="Outline_Crossing" xml:space="preserve">
+    <value>Some lines cross each other between their ends; shapes there may be wrong. Split them at the crossing in the drawing.</value>
   </data>
   <data name="Outline_Skipped" xml:space="preserve">
     <value>Not used: {0}</value>
@@ -1402,5 +1405,41 @@ bottom</value>
   </data>
   <data name="Text_PlateCombined" xml:space="preserve">
     <value>Not needed: the pressure plate holds the top probes.</value>
+  </data>
+  <data name="Label_OutlineShapes" xml:space="preserve">
+    <value>Shapes</value>
+  </data>
+  <data name="Text_OutlineShapesHint" xml:space="preserve">
+    <value>Pockets get a depth; all other shapes are milled through.</value>
+  </data>
+  <data name="Column_Shape" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="Column_Pocket" xml:space="preserve">
+    <value>Pocket</value>
+  </data>
+  <data name="Column_Depth" xml:space="preserve">
+    <value>Depth (mm)</value>
+  </data>
+  <data name="Column_PocketSide" xml:space="preserve">
+    <value>Milled from</value>
+  </data>
+  <data name="PocketSide_BoardSide" xml:space="preserve">
+    <value>Board side</value>
+  </data>
+  <data name="PocketSide_FarSide" xml:space="preserve">
+    <value>Far side</value>
+  </data>
+  <data name="Shape_Circle" xml:space="preserve">
+    <value>Circle M{0}, Ø {1} mm</value>
+  </data>
+  <data name="Shape_Cutout" xml:space="preserve">
+    <value>Cut-out {0}</value>
+  </data>
+  <data name="Text_PlatePockets" xml:space="preserve">
+    <value>{0} pockets</value>
+  </data>
+  <data name="Plate_PocketEdge" xml:space="preserve">
+    <value>{0} lies across the edge of a pocket.</value>
   </data>
 </root>

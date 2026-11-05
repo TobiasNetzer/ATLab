@@ -10,7 +10,9 @@ namespace ATLab.FixtureDesigner.Plates;
 /// <summary>
 /// Plate in DXF R12 (millimeters) for CAM and CAD, which every program reads: only what is machined, so nothing else
 /// gets cut or engraved by mistake. The plate outline is one closed polyline, the contour to cut; the holes are
-/// circles, on a layer per kind so each can get its tool. Names of the holes and the board are in the build sheet.
+/// circles, on a layer per kind so each can get its tool. Pockets of an imported outline are on a layer of their own,
+/// their depth is set in CAM; lines of the imported drawing that belong to no shape are kept on another one. Names of the
+/// holes and the board are in the build sheet.
 /// </summary>
 public static class DxfWriter
 {
@@ -24,6 +26,8 @@ public static class DxfWriter
     public const string PushRodLayer = "PUSH_RODS";
     public const string PushRodOpeningLayer = "PUSH_ROD_OPENINGS";
     public const string CutoutLayer = "CUTOUTS";
+    public const string PocketLayer = "POCKETS";
+    public const string OtherLayer = "OTHER_GEOMETRY";
 
     /// <summary>The layer of a kind of hole, the same in the DXF and the SVG.</summary>
     public static string LayerOf(PlateHoleKind kind) => kind switch
@@ -44,8 +48,14 @@ public static class DxfWriter
     private static readonly string[] Layers =
     [
         PlateLayer, ProbeLayer, LocatingPinLayer, FrameLayer, PreCenteringPinLayer, SupportPinLayer, PushRodLayer, CutoutLayer,
-        ProbeOpeningLayer, PushRodOpeningLayer
+        ProbeOpeningLayer, PushRodOpeningLayer, PocketLayer, OtherLayer
     ];
+
+    /// <summary>The layer of a hole: a pocket on the pockets', else that of its kind.</summary>
+    public static string LayerOf(PlateHole hole) => hole.Pocket is null ? LayerOf(hole.Kind) : PocketLayer;
+
+    /// <summary>The layer of a cut-out: through or pocket.</summary>
+    public static string LayerOf(OutlineCutout cutout) => cutout.Pocket is null ? CutoutLayer : PocketLayer;
 
     public static string Write(Plate plate)
     {
@@ -101,7 +111,7 @@ public static class DxfWriter
 
         // The plate outline and every cut-out as one closed polyline each (R12 POLYLINE, flag 1 = closed), so CAM takes
         // each as one contour; arcs stay arcs: the bulge of a vertex (group 42) bends the edge to the next one
-        void Contour(IReadOnlyList<OutlineVertex> vertices, string layer)
+        void Contour(IReadOnlyList<OutlineVertex> vertices, string layer, bool closed = true)
         {
             Group(0, "POLYLINE");
             Group(8, layer);
@@ -109,7 +119,7 @@ public static class DxfWriter
             Number(10, 0);
             Number(20, 0);
             Number(30, 0);
-            Group(70, "1");
+            Group(70, closed ? "1" : "0");
             foreach (var vertex in vertices)
             {
                 Group(0, "VERTEX");
@@ -127,7 +137,11 @@ public static class DxfWriter
 
         Contour(plate.Contour, PlateLayer);
         foreach (var cutout in plate.Cutouts)
-            Contour(cutout, CutoutLayer);
+            Contour(cutout.Vertices, LayerOf(cutout));
+
+        // Loose lines as they were drawn, open; a closed one ends at its first point again
+        foreach (var piece in plate.Loose)
+            Contour(piece, OtherLayer, closed: false);
 
         // Merged openings on the layer of the openings, milled along their outline
         foreach (var opening in plate.MergedOpenings)
@@ -136,7 +150,7 @@ public static class DxfWriter
         foreach (var hole in plate.Holes)
         {
             Group(0, "CIRCLE");
-            Group(8, LayerOf(hole.Kind));
+            Group(8, LayerOf(hole));
             Number(10, hole.X);
             Number(20, hole.Y);
             Number(30, 0);

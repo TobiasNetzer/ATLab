@@ -1,11 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ATLab.Pcb.Fixture;
 
 namespace ATLab.FixtureDesigner.Plates;
 
-/// <summary>A circle of an outline drawing, in mm.</summary>
-public readonly record struct OutlineCircle(double X, double Y, double Diameter);
+/// <summary>A circle or cut-out milled only to a depth (mm) from one side of the plate, instead of through it.</summary>
+public readonly record struct Pocket(double Depth, PocketSide Side);
+
+/// <summary>A circle of an outline drawing, in mm; through the plate unless it is a pocket.</summary>
+public readonly record struct OutlineCircle(double X, double Y, double Diameter, Pocket? Pocket = null);
+
+/// <summary>A closed shape inside the outline, counterclockwise, arcs as arcs; through the plate unless it is a pocket.</summary>
+public sealed record OutlineCutout(IReadOnlyList<OutlineVertex> Vertices, Pocket? Pocket = null)
+{
+    public OutlineCutout Moved(double dx, double dy) => this with { Vertices = Vertices.Select(v => v with { X = v.X + dx, Y = v.Y + dy }).ToList() };
+}
 
 /// <summary>
 /// A point of an outline and how it goes on to the next point: straight (bulge 0) or along a circular arc. The bulge is
@@ -16,9 +26,9 @@ public readonly record struct OutlineVertex(double X, double Y, double Bulge = 0
 /// <summary>
 /// A closed plate outline in mm (Y up), counterclockwise, with the circles inside it, which become holes of the plate
 /// (e.g. the screws of the fixture frame), and the other closed shapes inside it, which are cut out of the plate (e.g. a
-/// window for a connector). Read from a DXF or SVG file or from a layer of the board. Arcs stay arcs in
-/// <see cref="Vertices"/> and the cut-outs, which the drawings are written from; <see cref="Points"/> follows them in
-/// short segments for the checks, the board view and the 3D model.
+/// window for a connector) or milled as pockets. Read from a DXF or SVG file or from a layer of the board. Arcs stay
+/// arcs in <see cref="Vertices"/> and the cut-outs, which the drawings are written from; <see cref="Points"/> follows
+/// them in short segments for the checks, the board view and the 3D model.
 /// </summary>
 public sealed class OutlineShape
 {
@@ -27,10 +37,19 @@ public sealed class OutlineShape
     public required IReadOnlyList<OutlineVertex> Vertices { get; init; }
     public IReadOnlyList<OutlineCircle> Circles { get; init; } = [];
 
-    /// <summary>Cut-outs that are not round: closed loops inside the outline, each counterclockwise, arcs as arcs.</summary>
-    public IReadOnlyList<IReadOnlyList<OutlineVertex>> Cutouts { get; init; } = [];
+    /// <summary>
+    /// The other closed shapes inside the outline, each counterclockwise, arcs as arcs. A shape may share edges with
+    /// the outline (e.g. a pocket open to the edge) or lie in another shape.
+    /// </summary>
+    public IReadOnlyList<OutlineCutout> Cutouts { get; init; } = [];
 
-    /// <summary>What could not be used, e.g. open lines.</summary>
+    /// <summary>
+    /// Lines of the drawing that are no part of the outline or a shape inside it (open lines, shapes outside the
+    /// outline), kept so the drawings of the plate have everything. A closed one ends at its first point again.
+    /// </summary>
+    public IReadOnlyList<IReadOnlyList<OutlineVertex>> Loose { get; init; } = [];
+
+    /// <summary>What could not be used, e.g. lines that cross.</summary>
     public IReadOnlyList<string> Warnings { get; init; } = [];
 
     /// <summary>The outline with its arcs in short segments.</summary>
@@ -56,9 +75,24 @@ public sealed class OutlineShape
     {
         Vertices = Vertices.Select(v => v with { X = v.X + dx, Y = v.Y + dy }).ToList(),
         Circles = Circles.Select(c => c with { X = c.X + dx, Y = c.Y + dy }).ToList(),
-        Cutouts = Cutouts.Select(l => (IReadOnlyList<OutlineVertex>)l.Select(v => v with { X = v.X + dx, Y = v.Y + dy }).ToList()).ToList(),
+        Cutouts = Cutouts.Select(c => c.Moved(dx, dy)).ToList(),
+        Loose = Loose.Select(l => (IReadOnlyList<OutlineVertex>)l.Select(v => v with { X = v.X + dx, Y = v.Y + dy }).ToList()).ToList(),
         Warnings = Warnings
     };
+
+    /// <summary>The same shape with other pockets: by index of the circles and of the cut-outs, null for through.</summary>
+    public OutlineShape WithPockets(Func<int, Pocket?> circlePocket, Func<int, Pocket?> cutoutPocket) => new()
+    {
+        Vertices = Vertices,
+        Circles = Circles.Select((c, i) => c with { Pocket = circlePocket(i) }).ToList(),
+        Cutouts = Cutouts.Select((c, i) => c with { Pocket = cutoutPocket(i) }).ToList(),
+        Loose = Loose,
+        Warnings = Warnings
+    };
+
+    /// <summary>A loose piece mirrored about x = axis: the order stays, the arcs turn the other way.</summary>
+    public static List<OutlineVertex> MirrorPiece(IReadOnlyList<OutlineVertex> piece, double axis) =>
+        piece.Select(v => v with { X = 2 * axis - v.X, Bulge = -v.Bulge }).ToList();
 
     /// <summary>
     /// The outline mirrored about x = axis, still counterclockwise: mirroring turns arcs the other way and the loop
@@ -236,176 +270,5 @@ public sealed class OutlineShape
         }
 
         return best;
-    }
-}
-
-/// <summary>
-/// Makes a plate outline of the pieces of a drawing: open pieces are joined end to end into closed loops, the largest
-/// loop is the outline, circles and round loops inside it become holes, other loops inside it cut-outs. Arcs stay arcs
-/// (their bulges move along when a piece is turned around). Everything that cannot be used is reported as a warning.
-/// </summary>
-public static class OutlineBuilder
-{
-    /// <summary>Ends closer than this are joined, in mm.</summary>
-    private const double JoinTolerance = 0.05;
-
-    /// <summary>Points closer than this along a loop are merged, in mm.</summary>
-    private const double PointTolerance = 0.001;
-
-    /// <summary>
-    /// A piece of a drawing: its vertices in order; the bulge of a vertex belongs to the edge to the next one, the
-    /// last vertex's bulge is not used.
-    /// </summary>
-    public static OutlineShape? Build(IEnumerable<IReadOnlyList<OutlineVertex>> pieces, IEnumerable<OutlineCircle> circles,
-        Func<string, string> text)
-    {
-        var warnings = new List<string>();
-        var loops = new List<List<OutlineVertex>>();
-        var open = new List<List<OutlineVertex>>();
-
-        foreach (var piece in pieces.Where(p => p.Count >= 2))
-        {
-            var vertices = piece.ToList();
-            if (Near(vertices[0], vertices[^1]) && (vertices.Count > 3 || vertices.Any(v => v.Bulge != 0)))
-                loops.Add(Close(vertices));
-            else
-                open.Add(vertices);
-        }
-
-        // Join open pieces into loops: each one is extended by a piece that starts or ends at one of its ends
-        while (open.Count > 0)
-        {
-            var chain = open[0];
-            open.RemoveAt(0);
-            var extended = true;
-            while (extended && !Near(chain[0], chain[^1]))
-            {
-                extended = false;
-                for (var i = 0; i < open.Count; i++)
-                {
-                    var piece = open[i];
-                    if (Near(chain[^1], piece[0])) Append(chain, piece);
-                    else if (Near(chain[^1], piece[^1])) Append(chain, Turned(piece));
-                    else if (Near(chain[0], piece[^1])) chain = Joined(piece, chain);
-                    else if (Near(chain[0], piece[0])) chain = Joined(Turned(piece), chain);
-                    else continue;
-
-                    open.RemoveAt(i);
-                    extended = true;
-                    break;
-                }
-            }
-
-            if (Near(chain[0], chain[^1]) && (chain.Count > 3 || chain.Any(v => v.Bulge != 0)))
-                loops.Add(Close(chain));
-            else
-                warnings.Add(text("Outline_OpenLines"));
-        }
-
-        if (loops.Count == 0)
-            return null;
-
-        var flat = loops.Select(l => (Loop: l, Points: OutlineShape.Flatten(l))).ToList();
-        var outer = flat.OrderByDescending(l => Math.Abs(OutlineShape.SignedArea(l.Points))).First();
-        var outerVertices = OutlineShape.SignedArea(outer.Points) < 0 ? OutlineShape.Reversed(outer.Loop) : outer.Loop;
-        var outerPoints = OutlineShape.Flatten(outerVertices);
-
-        // Holes: circles of the drawing and round loops inside the outline; other loops inside it are cut out
-        var holes = circles.Where(c => OutlineShape.Contains(outerPoints, c.X, c.Y)).ToList();
-        var cutouts = new List<IReadOnlyList<OutlineVertex>>();
-        foreach (var loop in flat.Where(l => !ReferenceEquals(l.Loop, outer.Loop)))
-        {
-            if (!loop.Points.All(p => OutlineShape.Contains(outerPoints, p.X, p.Y)))
-                continue;
-
-            if (AsCircle(loop.Points) is { } circle)
-                holes.Add(circle);
-            else
-                cutouts.Add(OutlineShape.SignedArea(loop.Points) < 0 ? OutlineShape.Reversed(loop.Loop) : loop.Loop);
-        }
-
-        return new OutlineShape { Vertices = outerVertices, Circles = holes, Cutouts = cutouts, Warnings = warnings };
-    }
-
-    /// <summary>A polyline without arcs as a piece.</summary>
-    public static IReadOnlyList<OutlineVertex> Straight(IEnumerable<(double X, double Y)> points) =>
-        points.Select(p => new OutlineVertex(p.X, p.Y)).ToList();
-
-    /// <summary>The piece the other way round: each bulge moves to the other end of its edge and changes sign.</summary>
-    private static List<OutlineVertex> Turned(IReadOnlyList<OutlineVertex> piece)
-    {
-        var result = new List<OutlineVertex>(piece.Count);
-        for (var i = piece.Count - 1; i >= 0; i--)
-            result.Add(piece[i] with { Bulge = i > 0 ? -piece[i - 1].Bulge : 0 });
-        return result;
-    }
-
-    /// <summary>The piece added at the end of the chain; the chain's last vertex takes the piece's first edge.</summary>
-    private static void Append(List<OutlineVertex> chain, IReadOnlyList<OutlineVertex> piece)
-    {
-        chain[^1] = chain[^1] with { Bulge = piece[0].Bulge };
-        chain.AddRange(piece.Skip(1));
-    }
-
-    /// <summary>The first piece followed by the second, which starts where the first ends.</summary>
-    private static List<OutlineVertex> Joined(IReadOnlyList<OutlineVertex> first, List<OutlineVertex> second)
-    {
-        var result = first.ToList();
-        Append(result, second);
-        return result;
-    }
-
-    /// <summary>A loop without its repeated closing point and without points on top of each other.</summary>
-    private static List<OutlineVertex> Close(List<OutlineVertex> loop)
-    {
-        var result = new List<OutlineVertex>();
-        foreach (var v in loop)
-        {
-            if (result.Count > 0 && Math.Abs(v.X - result[^1].X) <= PointTolerance && Math.Abs(v.Y - result[^1].Y) <= PointTolerance)
-            {
-                // A repeated point: the edge leaving it is the later one
-                result[^1] = result[^1] with { Bulge = v.Bulge };
-                continue;
-            }
-
-            result.Add(v);
-        }
-
-        // The closing point is the first one again; its edge is the first vertex's
-        if (result.Count > 1 && Near(result[0], result[^1]))
-            result.RemoveAt(result.Count - 1);
-        return OutlineShape.Joined(result);
-    }
-
-    /// <summary>A loop whose points all lie at the same distance from their center is a circle.</summary>
-    private static OutlineCircle? AsCircle(IReadOnlyList<(double X, double Y)> loop)
-    {
-        if (loop.Count < 8)
-            return null;
-
-        var cx = loop.Average(p => p.X);
-        var cy = loop.Average(p => p.Y);
-        var radii = loop.Select(p => Math.Sqrt((p.X - cx) * (p.X - cx) + (p.Y - cy) * (p.Y - cy))).ToList();
-        var mean = radii.Average();
-        return mean > 0 && radii.All(r => Math.Abs(r - mean) <= Math.Max(0.02, mean * 0.02))
-            ? new OutlineCircle(cx, cy, 2 * mean)
-            : null;
-    }
-
-    private static bool Near(OutlineVertex a, OutlineVertex b) =>
-        Math.Abs(a.X - b.X) <= JoinTolerance && Math.Abs(a.Y - b.Y) <= JoinTolerance;
-
-    /// <summary>Points of a circular arc from start to end angle (radians), counterclockwise for a positive sweep.</summary>
-    public static List<(double X, double Y)> Arc(double cx, double cy, double r, double start, double sweep)
-    {
-        var segments = Math.Max(4, (int)Math.Ceiling(Math.Abs(sweep) / (2 * Math.PI) * 360));
-        var points = new List<(double X, double Y)>(segments + 1);
-        for (var i = 0; i <= segments; i++)
-        {
-            var a = start + sweep * i / segments;
-            points.Add((cx + r * Math.Cos(a), cy + r * Math.Sin(a)));
-        }
-
-        return points;
     }
 }

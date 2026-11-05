@@ -248,13 +248,13 @@ A bed-of-nails fixture consists of several plates. From the bottom up:
 | **Top probe plate** | The receptacles of the probes from above, and openings the push rods come through. Only needed with probes from above. |
 | **Pressure plate** | The push rods, and the receptacles of the probes from above when both share one plate |
 
-The list shows every plate with its size and contents (probe holes, openings, pin and rod holes, frame holes, cut-outs). Enter the **Thickness** of every plate for the STEP files. Openings that overlap or leave less than 0.2 mm of material between them are merged into one opening; the list shows how many.
+The list shows every plate with its size and contents (probe holes, openings, pin and rod holes, frame holes, cut-outs, pockets). Enter the **Thickness** of every plate for the STEP files. Openings that overlap or leave less than 0.2 mm of material between them are merged into one opening; the list shows how many.
 
 **Board upside down** is for a board that lies in the fixture with its top side down. Then the probes on the top side go into the bottom probe plate, the pins touch the top side and the push rods the bottom side.
 
 **Top probes and push rods in one plate** is for a fixture whose pressure plate also holds the probes from above. It then has no top probe plate and no openings for the push rods; the probes from above get their receptacles in the pressure plate, and the wiring drawing of the build sheet shows the pressure plate. Without probes from above the setting makes no difference.
 
-Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out.
+Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out, or across the edge of a pocket.
 
 ### Outline
 
@@ -271,12 +271,21 @@ A fixed size and an outline from a file or layer are centered on the board; **Of
 
 A drawing is read like this:
 
-- The largest closed contour becomes the plate outline.
-- Other closed contours inside it become **cut-outs**.
-- Circles inside it become **frame holes**, e.g. for the screws of the plate.
+- The lines may meet anywhere at their ends, also three or more at one point. Lines drawn twice count once.
+- The outer border of the drawing becomes the plate outline.
+- Every closed area inside it becomes a **shape**: round ones become **frame holes** (e.g. for the screws of the plate), the others **cut-outs**. A shape may share edges with the outline, e.g. a pocket open to the plate edge that is drawn with the edge across its mouth, and it may lie in another shape.
+- Lines that belong to no shape inside the outline (open lines, shapes outside it) are kept and exported on their own layer.
 - Arcs stay arcs.
 
-DXF files may use lines, arcs, circles, polylines, ellipses and splines. The unit is read from the file; if it has none, millimeters are used. SVG files may use paths and all basic shapes. Below the settings, a line shows the size of the plate and the number of frame holes and cut-outs – or what could not be used.
+Lines that cross each other between their ends are not split; the status line warns about them. Split them at the crossing in the CAD program.
+
+DXF files may use lines, arcs, circles, polylines, ellipses and splines. The unit is read from the file; if it has none, millimeters are used. SVG files may use paths and all basic shapes. Below the settings, a line shows the size of the plate and the number of circles and cut-outs – or what could not be used.
+
+#### Shapes and pockets
+
+Every shape of an imported outline is listed under **Shapes**. By default a shape is milled through the plate. Tick **Pocket** for a shape that is milled only to a **Depth**, and choose the side it is milled from: the **Board side** faces the board, the **Far side** faces away from it. The board view shades pockets; clicking a shape in the list highlights it there.
+
+The depth is part of the outline, so plates that share the outline share their pockets. A pocket at least as deep as a plate is thick goes through that plate. Reading the file again keeps the depths of shapes that have not changed. Pockets can be set only for an outline from a DXF or SVG file.
 
 ### Export
 
@@ -284,9 +293,9 @@ DXF files may use lines, arcs, circles, polylines, ellipses and splines. The uni
 
 | File | Content |
 |------|---------|
-| **Drawing (DXF)** | DXF R12 for CAM and CAD, in millimeters. Only what is machined: the plate outline as one closed polyline, the holes as circles on one layer per kind (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), so each can get its tool. |
+| **Drawing (DXF)** | DXF R12 for CAM and CAD, in millimeters. Only what is machined: the plate outline as one closed polyline, the holes as circles on one layer per kind (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), so each can get its tool. Pockets are on `POCKETS`; their depth is set in CAM. Lines of an imported drawing that belong to no shape are on `OTHER_GEOMETRY`. |
 | **Drawing (SVG)** | The same as SVG, e.g. for laser cutters and Inkscape: one group (Inkscape layer) per kind, hairlines without fill |
-| **3D model (STEP)** | The plate as a solid with its thickness, holes and cut-outs, side facing the board at Z = 0 |
+| **3D model (STEP)** | The plate as a solid with its thickness, holes, cut-outs and pockets, side facing the board at Z = 0 |
 
 The files are named `<fixture> - <plate>`, e.g. `Power board - moving plate.dxf`. Every file shows its plate **as seen from the side facing the board**: the plates below the board from above, the plates above the board from below, i.e. mirrored left to right. The coordinates are in millimeters from the origin of the build sheet. The files are not written while a plate has problems; the message lists them. Existing files are only replaced after asking.
 

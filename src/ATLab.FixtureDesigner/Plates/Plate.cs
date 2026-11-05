@@ -34,8 +34,8 @@ public enum PlateHoleKind
     PushRodOpening
 }
 
-/// <summary>Hole of a plate in plate coordinates (mm, Y up).</summary>
-public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double Y, double Diameter);
+/// <summary>Hole of a plate in plate coordinates (mm, Y up); through the plate unless it is a pocket.</summary>
+public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double Y, double Diameter, Pocket? Pocket = null);
 
 /// <summary>
 /// A plate of the fixture as the plate files describe it: seen from its side facing the board. The plates below the
@@ -79,11 +79,18 @@ public sealed class Plate
 
     public List<PlateHole> Holes { get; } = [];
 
-    /// <summary>Cut-outs of the plate that are not round, counterclockwise, arcs as arcs: what the drawings cut.</summary>
-    public List<IReadOnlyList<OutlineVertex>> Cutouts { get; } = [];
+    /// <summary>
+    /// Shapes of the plate that are not round, counterclockwise, arcs as arcs: what the drawings cut, through the plate
+    /// or as a pocket.
+    /// </summary>
+    public List<OutlineCutout> Cutouts { get; } = [];
 
-    /// <summary>The cut-outs in short segments, for the checks and the 3D model.</summary>
-    public IEnumerable<IReadOnlyList<(double X, double Y)>> CutoutOutlines => Cutouts.Select(OutlineShape.Flatten);
+    /// <summary>The cut-outs through the plate in short segments, for the checks.</summary>
+    public IEnumerable<IReadOnlyList<(double X, double Y)>> CutoutOutlines =>
+        Cutouts.Where(c => c.Pocket is null).Select(c => OutlineShape.Flatten(c.Vertices));
+
+    /// <summary>Lines of the imported drawing that belong to no shape, kept for the drawings of the plate.</summary>
+    public List<IReadOnlyList<OutlineVertex>> Loose { get; } = [];
 
     /// <summary>Openings too close to each other, merged into one each; their circles are not in <see cref="Holes"/>.</summary>
     public List<MergedOpening> MergedOpenings { get; } = [];
@@ -91,8 +98,9 @@ public sealed class Plate
     /// <summary>The kind of the plate's openings, for the layer of the merged ones.</summary>
     public PlateHoleKind OpeningKind => Kind == FixturePlate.TopProbePlate ? PlateHoleKind.PushRodOpening : PlateHoleKind.ProbeOpening;
 
-    /// <summary>Everything cut out inside the outline that is not round: the cut-outs and the merged openings.</summary>
-    public IEnumerable<IReadOnlyList<OutlineVertex>> CutContours => Cutouts.Concat(MergedOpenings.Select(m => m.Contour));
+    /// <summary>Everything cut through inside the outline that is not round: the cut-outs and the merged openings.</summary>
+    public IEnumerable<IReadOnlyList<OutlineVertex>> CutContours =>
+        Cutouts.Where(c => c.Pocket is null).Select(c => c.Vertices).Concat(MergedOpenings.Select(m => m.Contour));
 
     /// <summary>Board outline in plate coordinates, as a reference for placing the board.</summary>
     public List<IReadOnlyList<(double X, double Y)>> BoardOutline { get; } = [];
@@ -211,15 +219,17 @@ public sealed class Plate
             plate.MergedOpenings.AddRange(merged);
         }
 
-        // Cut-outs mirror with the plate and stay counterclockwise
-        foreach (var cutout in outline.Cutouts.Where(c => c.Count >= 2))
-            plate.Cutouts.Add(mirror ? OutlineShape.MirrorX(cutout, centerX) : cutout.ToList());
+        // Cut-outs mirror with the plate and stay counterclockwise; a pocket stays on its side of the plate
+        foreach (var cutout in outline.Cutouts.Where(c => c.Vertices.Count >= 2))
+            plate.Cutouts.Add(mirror ? cutout with { Vertices = OutlineShape.MirrorX(cutout.Vertices, centerX) } : cutout);
+        foreach (var piece in outline.Loose.Where(p => p.Count >= 2))
+            plate.Loose.Add(mirror ? OutlineShape.MirrorPiece(piece, centerX) : piece);
 
         var number = 1;
         foreach (var circle in outline.Circles.Where(c => c.Diameter > 0))
         {
             var (x, y) = Flip((circle.X, circle.Y));
-            plate.Holes.Add(new PlateHole(PlateHoleKind.Frame, $"M{number++}", x, y, circle.Diameter));
+            plate.Holes.Add(new PlateHole(PlateHoleKind.Frame, $"M{number++}", x, y, circle.Diameter, circle.Pocket));
         }
 
         plate.FindProblems();
@@ -228,10 +238,12 @@ public sealed class Plate
 
     private void FindProblems()
     {
+        // A pocket leaves material below it: holes may lie in it (e.g. a counterbore) and it may be open to the edge
         var cutouts = CutoutOutlines.ToList();
-        for (var i = 0; i < Holes.Count; i++)
+        var holes = Holes.Where(h => h.Pocket is null).ToList();
+        for (var i = 0; i < holes.Count; i++)
         {
-            var a = Holes[i];
+            var a = holes[i];
             if (!OutlineShape.Contains(Outline, a.X, a.Y) ||
                 OutlineShape.DistanceToEdge(Outline, a.X, a.Y) < a.Diameter / 2 + MinimumWall)
                 Problems.Add(Localizer.Format("Plate_Edge", a.Name));
@@ -243,14 +255,21 @@ public sealed class Plate
                                  OutlineShape.DistanceToEdge(c, a.X, a.Y) < a.Diameter / 2 + MinimumWall))
                 Problems.Add(Localizer.Format("Plate_Cutout", a.Name));
 
-            for (var j = i + 1; j < Holes.Count; j++)
+            for (var j = i + 1; j < holes.Count; j++)
             {
-                var b = Holes[j];
+                var b = holes[j];
                 var distance = Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
                 if (distance < (a.Diameter + b.Diameter) / 2 + MinimumWall)
                     Problems.Add(Localizer.Format("Plate_Overlap", a.Name, b.Name));
             }
         }
+
+        // A hole lies in a pocket or beside it, not across its edge
+        var pockets = Cutouts.Where(c => c.Pocket is not null).Select(c => OutlineShape.Flatten(c.Vertices))
+            .Concat(Holes.Where(h => h.Pocket is not null).Select(h => OutlineBuilder.Arc(h.X, h.Y, h.Diameter / 2, 0, 2 * Math.PI)))
+            .ToList();
+        foreach (var hole in holes.Where(h => pockets.Any(p => OutlineShape.DistanceToEdge(p, h.X, h.Y) < h.Diameter / 2 - 1e-6)))
+            Problems.Add(Localizer.Format("Plate_PocketEdge", hole.Name));
 
         // A merged opening needs its wall to the edge and to every hole (pins, frame) like a round one
         var mergedOutlines = MergedOpenings.Select(m => (m.Name, Outline: OutlineShape.Flatten(m.Contour))).ToList();
@@ -260,7 +279,7 @@ public sealed class Plate
             if (outline.Any(p => !OutlineShape.Contains(Outline, p.X, p.Y) || OutlineShape.DistanceToEdge(Outline, p.X, p.Y) < MinimumWall))
                 Problems.Add(Localizer.Format("Plate_Edge", name));
 
-            foreach (var hole in Holes.Where(h => OutlineShape.Contains(outline, h.X, h.Y) ||
+            foreach (var hole in holes.Where(h => OutlineShape.Contains(outline, h.X, h.Y) ||
                                                   OutlineShape.DistanceToEdge(outline, h.X, h.Y) < h.Diameter / 2 + MinimumWall))
                 Problems.Add(Localizer.Format("Plate_Overlap", name, hole.Name));
 

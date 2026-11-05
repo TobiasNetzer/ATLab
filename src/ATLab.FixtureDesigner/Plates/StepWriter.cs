@@ -4,76 +4,29 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ATLab.Pcb.Fixture;
 
 namespace ATLab.FixtureDesigner.Plates;
 
 /// <summary>
 /// 3D model of a plate as a STEP file (AP214): a block with the plate outline and thickness, a cylindrical hole through
-/// it for every receptacle and pin, and every cut-out through it. The side facing the board is at z = 0, the plate extends to
-/// z = −thickness. Written as an exact B-rep, so CAD programs import it as a solid; arcs of the outline and the cut-outs
-/// stay arcs (circle edges and cylinder walls), not short segments.
+/// it for every receptacle and pin, every cut-out through it and every pocket milled to its depth from its side. The
+/// side facing the board is at z = 0, the plate extends to z = −thickness. Written as an exact B-rep, so CAD programs
+/// import it as a solid; arcs of the outline, the cut-outs and the pockets stay arcs (circle edges and cylinder walls).
 /// </summary>
+/// <remarks>
+/// The outline and the borders of the holes, cut-outs and pockets divide the plate into areas (a
+/// <see cref="PlanarGraph"/>). Over each area the material is one span of z, or none: the block less what the holes,
+/// cut-outs and pockets over it take away. Each area gets a top and a bottom face at the ends of its span, each edge
+/// between two areas a wall where one side has material and the other not, and the vertical edges at a node are split
+/// at every height a wall there ends at, so every edge of the solid joins two faces.
+/// </remarks>
 public static class StepWriter
 {
     public static string Write(Plate plate, double thickness, string name, DateTime timestamp)
     {
         var w = new EntityWriter();
-        var z0 = -thickness;
-        const double z1 = 0;
-
-        var holeTopLoops = new List<int>();
-        var holeBottomLoops = new List<int>();
-        var faces = new List<int>();
-
-        // ----- Block: the outline (counterclockwise) extruded by the thickness, its arcs as cylinder walls -----
-        // Arcs split in the drawing are joined first, so each round edge is one wall without a seam
-        var contour = OutlineShape.Joined(plate.Contour);
-        var (topEdges, bottomEdges) = Walls(w, contour, z0, z1, outer: true, faces);
-        var n = contour.Count;
-
-        // ----- Holes -----
-
-        foreach (var hole in plate.Holes)
-        {
-            var r = hole.Diameter / 2;
-            var vTop = w.Vertex(hole.X + r, hole.Y, z1);
-            var vBottom = w.Vertex(hole.X + r, hole.Y, z0);
-            var circleTop = w.Add($"CIRCLE('',{w.Placement(hole.X, hole.Y, z1, (0, 0, 1), (1, 0, 0))},{R(r)})");
-            var circleBottom = w.Add($"CIRCLE('',{w.Placement(hole.X, hole.Y, z0, (0, 0, 1), (1, 0, 0))},{R(r)})");
-
-            // Circles run counterclockwise about +Z, the seam runs upwards
-            var edgeTop = w.Add($"EDGE_CURVE('',{Ref(vTop)},{Ref(vTop)},{Ref(circleTop)},.T.)");
-            var edgeBottom = w.Add($"EDGE_CURVE('',{Ref(vBottom)},{Ref(vBottom)},{Ref(circleBottom)},.T.)");
-            var seam = w.LineEdge(vBottom, vTop, (hole.X + r, hole.Y), (hole.X + r, hole.Y), z0, z1);
-
-            // Inner loops are clockwise about the face normal: top face normal +Z, bottom face normal −Z
-            holeTopLoops.Add(w.Loop((edgeTop, false)));
-            holeBottomLoops.Add(w.Loop((edgeBottom, true)));
-
-            // The wall of the hole faces the axis, opposite to the normal of the cylinder surface
-            var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(hole.X, hole.Y, z0, (0, 0, 1), (1, 0, 0))},{R(r)})");
-            var wallLoop = w.Loop((seam, true), (edgeTop, true), (seam, false), (edgeBottom, false));
-            faces.Add(w.Add($"ADVANCED_FACE('',({Ref(w.Add($"FACE_OUTER_BOUND('',{Ref(wallLoop)},.T.)"))}),{Ref(cylinder)},.F.)"));
-        }
-
-        // ----- Cut-outs and merged openings: a counterclockwise loop each; the material is outside it -----
-        foreach (var cutout in plate.CutContours.Where(c => OutlineShape.Flatten(c).Count >= 3).Select(OutlineShape.Joined))
-        {
-            var m = cutout.Count;
-            var (cTopEdges, cBottomEdges) = Walls(w, cutout, z0, z1, outer: false, faces);
-
-            // Inner loops run clockwise about the face normal: backwards on the top face (+Z), forwards on the bottom (−Z)
-            holeTopLoops.Add(w.Loop(Enumerable.Range(0, m).Reverse().Select(i => (cTopEdges[i], false)).ToArray()));
-            holeBottomLoops.Add(w.Loop(Enumerable.Range(0, m).Select(i => (cBottomEdges[i], true)).ToArray()));
-        }
-
-        // ----- Faces of the block, normals pointing out of the material -----
-        // Top face counterclockwise about +Z, bottom face the other way round (its normal is −Z)
-        var topLoop = w.Loop(Enumerable.Range(0, n).Select(i => (topEdges[i], true)).ToArray());
-        faces.Add(w.PlaneFace(topLoop, holeTopLoops, (plate.MinX, plate.MinY, z1), (0, 0, 1), (1, 0, 0)));
-
-        var bottomLoop = w.Loop(Enumerable.Range(0, n).Reverse().Select(i => (bottomEdges[i], false)).ToArray());
-        faces.Add(w.PlaneFace(bottomLoop, holeBottomLoops, (plate.MinX, plate.MinY, z0), (0, 0, -1), (1, 0, 0)));
+        var faces = Solid(w, plate, -thickness, 0);
 
         // ----- Solid and product structure -----
         var shell = w.Add($"CLOSED_SHELL('',({string.Join(",", faces.Select(Ref))}))");
@@ -109,59 +62,244 @@ public static class StepWriter
         return file.ToString();
     }
 
-    /// <summary>
-    /// A counterclockwise loop extruded from z0 to z1: its edges at the top and the bottom (edge i runs from vertex i to
-    /// i+1, a line or, with a bulge, an arc) and a wall per edge, added to the faces. A straight edge gets a plane wall,
-    /// an arc a cylinder wall. The walls of the outline face out of the block (the edge direction turned right), the
-    /// walls of a cut-out into the cut-out (turned left).
-    /// </summary>
-    private static (int[] Top, int[] Bottom) Walls(EntityWriter w, IReadOnlyList<OutlineVertex> loop, double z0, double z1,
-        bool outer, List<int> faces)
+    /// <summary>The material over an area, from Lo to Hi; none if they meet.</summary>
+    private readonly record struct Span(double Lo, double Hi)
     {
-        var n = loop.Count;
-        var top = loop.Select(v => w.Vertex(v.X, v.Y, z1)).ToArray();
-        var bottom = loop.Select(v => w.Vertex(v.X, v.Y, z0)).ToArray();
+        public static Span None => new(0, 0);
+        public bool IsEmpty => Hi - Lo < 1e-9;
+    }
 
-        var topEdges = new int[n];
-        var bottomEdges = new int[n];
-        var verticalEdges = new int[n];
-        for (var i = 0; i < n; i++)
+    /// <summary>The faces of the plate's solid, from z0 (the far side) to z1 (the side facing the board).</summary>
+    private static List<int> Solid(EntityWriter w, Plate plate, double z0, double z1)
+    {
+        var thickness = z1 - z0;
+
+        // What a hole, cut-out or pocket takes away: the whole thickness, or its depth from its side
+        (double Lo, double Hi) Removal(Pocket? pocket) => pocket switch
         {
-            var j = (i + 1) % n;
-            topEdges[i] = w.ContourEdge(top[i], top[j], loop[i], loop[j], z1);
-            bottomEdges[i] = w.ContourEdge(bottom[i], bottom[j], loop[i], loop[j], z0);
-            verticalEdges[i] = w.LineEdge(bottom[i], top[i], (loop[i].X, loop[i].Y), (loop[i].X, loop[i].Y), z0, z1);
+            null => (z0, z1),
+            { Depth: var d } when d >= thickness - 1e-9 => (z0, z1),
+            { Side: PocketSide.BoardSide, Depth: var d } => (z1 - Math.Max(d, 0), z1),
+            { Depth: var d } => (z0, z0 + Math.Max(d, 0))
+        };
+
+        var pieces = new List<IReadOnlyList<OutlineVertex>> { PlanarGraph.Closed(plate.Contour) };
+        var removals = new List<(List<(double X, double Y)> Points, double Lo, double Hi)>();
+        void Remove(IReadOnlyList<OutlineVertex> loop, Pocket? pocket)
+        {
+            pieces.Add(PlanarGraph.Closed(loop));
+            var (lo, hi) = Removal(pocket);
+            removals.Add((OutlineShape.Flatten(loop), lo, hi));
         }
 
-        for (var i = 0; i < n; i++)
-        {
-            var j = (i + 1) % n;
-            var (a, b) = (loop[i], loop[j]);
+        foreach (var cutout in plate.Cutouts.Where(c => c.Vertices.Count >= 2))
+            Remove(cutout.Vertices, cutout.Pocket);
+        foreach (var opening in plate.MergedOpenings)
+            Remove(opening.Contour, null);
+        foreach (var hole in plate.Holes.Where(h => h.Diameter > 0))
+            Remove(PlanarGraph.Circle(hole.X, hole.Y, hole.Diameter).Take(2).ToList(), hole.Pocket);
 
-            // Counterclockwise about the wall's normal; a cut-out wall faces the other way, so its loop runs backwards
-            var wallLoop = outer
-                ? w.Loop((bottomEdges[i], true), (verticalEdges[j], true), (topEdges[i], false), (verticalEdges[i], false))
-                : w.Loop((verticalEdges[i], true), (topEdges[i], true), (verticalEdges[j], false), (bottomEdges[i], false));
+        var graph = PlanarGraph.Build(pieces, 1e-4);
+        var loops = graph.Loops();
+
+        // The areas: each counterclockwise loop borders one; a clockwise loop is an inner border of the smallest area
+        // around the points on its left, or of none (outside the plate)
+        var areas = loops.Where(l => l.Area > 0).ToList();
+        var holesOf = areas.Select(_ => new List<PlanarGraph.Loop>()).ToList();
+        foreach (var loop in loops.Where(l => l.Area < 0))
+        {
+            if (PlanarGraph.PointOnLeft(loop.Points, q => !OutlineShape.Contains(loop.Points, q.X, q.Y)) is not { } p)
+                continue;
+
+            var around = -1;
+            for (var i = 0; i < areas.Count; i++)
+            {
+                if (OutlineShape.Contains(areas[i].Points, p.X, p.Y) && (around < 0 || areas[i].Area < areas[around].Area))
+                    around = i;
+            }
+
+            if (around >= 0)
+                holesOf[around].Add(loop);
+        }
+
+        // The material over each area: the block less everything that covers it
+        var spans = new Span[areas.Count];
+        for (var i = 0; i < areas.Count; i++)
+        {
+            var area = areas[i];
+            var holes = holesOf[i];
+            var p = PlanarGraph.PointOnLeft(area.Points, q =>
+                OutlineShape.Contains(area.Points, q.X, q.Y) && !holes.Any(h => OutlineShape.Contains(h.Points, q.X, q.Y)));
+            if (p is not { } point || !OutlineShape.Contains(plate.Outline, point.X, point.Y))
+            {
+                spans[i] = Span.None;
+                continue;
+            }
+
+            var (lo, hi) = (z0, z1);
+            foreach (var removal in removals.Where(r => OutlineShape.Contains(r.Points, point.X, point.Y)))
+            {
+                if (removal.Lo <= z0 + 1e-9 && removal.Hi >= z1 - 1e-9)
+                    (lo, hi) = (z1, z1);
+                else if (removal.Lo <= z0 + 1e-9)
+                    lo = Math.Max(lo, removal.Hi);
+                else
+                    hi = Math.Min(hi, removal.Lo);
+            }
+
+            spans[i] = new Span(lo, hi);
+        }
+
+        // The area on the left of each half edge; none for the outside and for lines with the same area on both sides
+        var areaOf = Enumerable.Repeat(-1, 2 * graph.Edges.Count).ToArray();
+        for (var i = 0; i < areas.Count; i++)
+        {
+            foreach (var h in holesOf[i].Prepend(areas[i]).SelectMany(l => l.HalfEdges))
+                areaOf[h] = i;
+        }
+
+        Span SpanOf(int halfEdge) => areaOf[halfEdge] is var a and >= 0 ? spans[a] : Span.None;
+
+        // ----- Vertices and edges, each made once and used by the two faces it joins -----
+
+        static long Level(double z) => (long)Math.Round(z * 1e6);
+        var vertices = new Dictionary<(int, long), int>();
+        var horizontal = new Dictionary<(int, long), int>();
+        var vertical = new Dictionary<(int, long, long), int>();
+
+        int Vertex(int node, double z)
+        {
+            if (!vertices.TryGetValue((node, Level(z)), out var id))
+                vertices[(node, Level(z))] = id = w.Vertex(graph.Nodes[node].X, graph.Nodes[node].Y, z);
+            return id;
+        }
+
+        // An edge of the graph at height z, from A to B
+        int Horizontal(int edge, double z)
+        {
+            if (horizontal.TryGetValue((edge, Level(z)), out var id))
+                return id;
+
+            var (a, b) = graph.Ends(edge);
+            return horizontal[(edge, Level(z))] = w.ContourEdge(Vertex(graph.Edges[edge].A, z), Vertex(graph.Edges[edge].B, z), a, b, z);
+        }
+
+        // ----- Walls: where one side of an edge has material and the other not -----
+
+        static IEnumerable<(double Lo, double Hi)> Minus(Span a, Span b)
+        {
+            if (a.IsEmpty)
+                yield break;
+            if (b.IsEmpty)
+            {
+                yield return (a.Lo, a.Hi);
+                yield break;
+            }
+
+            if (a.Lo < b.Lo - 1e-9)
+                yield return (a.Lo, Math.Min(a.Hi, b.Lo));
+            if (a.Hi > b.Hi + 1e-9)
+                yield return (Math.Max(a.Lo, b.Hi), a.Hi);
+        }
+
+        var walls = new List<(int Edge, double Lo, double Hi, bool MaterialLeft)>();
+        for (var e = 0; e < graph.Edges.Count; e++)
+        {
+            var (left, right) = (SpanOf(2 * e), SpanOf(2 * e + 1));
+            walls.AddRange(Minus(left, right).Select(s => (e, s.Lo, s.Hi, true)));
+            walls.AddRange(Minus(right, left).Select(s => (e, s.Lo, s.Hi, false)));
+        }
+
+        // The heights the walls at each node end at: their vertical edges there are split at each
+        var levels = new Dictionary<int, SortedSet<double>>();
+        foreach (var (e, lo, hi, _) in walls)
+        {
+            foreach (var node in new[] { graph.Edges[e].A, graph.Edges[e].B })
+            {
+                if (!levels.TryGetValue(node, out var set))
+                    levels[node] = set = [];
+                set.Add(lo);
+                set.Add(hi);
+            }
+        }
+
+        // The vertical edges at a node from lo up to hi, each running upwards
+        List<int> Upwards(int node, double lo, double hi)
+        {
+            var heights = levels[node].Where(z => z >= lo - 1e-9 && z <= hi + 1e-9).ToList();
+            var edges = new List<int>();
+            for (var i = 0; i + 1 < heights.Count; i++)
+            {
+                var key = (node, Level(heights[i]), Level(heights[i + 1]));
+                if (!vertical.TryGetValue(key, out var id))
+                {
+                    var p = graph.Nodes[node];
+                    vertical[key] = id = w.LineEdge(Vertex(node, heights[i]), Vertex(node, heights[i + 1]), p, p, heights[i], heights[i + 1]);
+                }
+
+                edges.Add(id);
+            }
+
+            return edges;
+        }
+
+        var faces = new List<int>();
+        foreach (var (e, lo, hi, materialLeft) in walls)
+        {
+            var edge = graph.Edges[e];
+            var (a, b) = graph.Ends(e);
+            var (atA, atB) = (Upwards(edge.A, lo, hi), Upwards(edge.B, lo, hi));
+
+            // Counterclockwise seen from outside the material: with the material on the left of A→B along the bottom,
+            // up at B, back along the top and down at A; with it on the right the other way round
+            (int, bool)[] sides = materialLeft
+                ?
+                [
+                    (Horizontal(e, lo), true), .. atB.Select(v => (v, true)),
+                    (Horizontal(e, hi), false), .. Enumerable.Reverse(atA).Select(v => (v, false))
+                ]
+                :
+                [
+                    .. atA.Select(v => (v, true)), (Horizontal(e, hi), true),
+                    .. Enumerable.Reverse(atB).Select(v => (v, false)), (Horizontal(e, lo), false)
+                ];
+            var loop = w.Loop(sides);
 
             var (cx, cy, radius, start, sweep) = OutlineShape.ArcGeometry(a, b);
             if (radius > 0)
             {
-                // The cylinder's normal points away from its axis. A counterclockwise arc has its center on the left,
-                // inside the loop: the outline's wall faces away from the axis, a cut-out's wall towards it. A clockwise
-                // arc the other way round. The seam of the cylinder is put opposite the arc, else CAD programs split
-                // the wall where it crosses the seam (e.g. a slot's end into two quarter circles).
-                var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, z0, (0, 0, 1), AwayFrom(start, sweep))},{R(radius)})");
-                faces.Add(w.SurfaceFace(wallLoop, cylinder, sameSense: sweep > 0 == outer));
+                // The cylinder's normal points away from its axis. A counterclockwise arc has its center on the left:
+                // with the material there, the wall faces away from the axis. The seam of the cylinder is put opposite
+                // the arc, else CAD programs split the wall where it crosses the seam.
+                var cylinder = w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, lo, (0, 0, 1), AwayFrom(start, sweep))},{R(radius)})");
+                faces.Add(w.SurfaceFace(loop, cylinder, sameSense: sweep > 0 == materialLeft));
                 continue;
             }
 
             var (dx, dy) = (b.X - a.X, b.Y - a.Y);
             var length = Math.Sqrt(dx * dx + dy * dy);
-            var normal = outer ? (dy / length, -dx / length, 0.0) : (-dy / length, dx / length, 0.0);
-            faces.Add(w.PlaneFace(wallLoop, [], (a.X, a.Y, z0), normal, (dx / length, dy / length, 0)));
+            var normal = materialLeft ? (dy / length, -dx / length, 0.0) : (-dy / length, dx / length, 0.0);
+            faces.Add(w.PlaneFace(loop, [], (a.X, a.Y, lo), normal, (dx / length, dy / length, 0)));
         }
 
-        return (topEdges, bottomEdges);
+        // ----- Top and bottom of each area with material -----
+        // The borders have the area on their left: counterclockwise about +Z for the top face as they are, backwards
+        // for the bottom face (its normal is −Z)
+        for (var i = 0; i < areas.Count; i++)
+        {
+            if (spans[i].IsEmpty)
+                continue;
+
+            var borders = holesOf[i].Prepend(areas[i]).ToList();
+            var (lo, hi) = (spans[i].Lo, spans[i].Hi);
+            var tops = borders.Select(l => w.Loop(l.HalfEdges.Select(h => (Horizontal(h / 2, hi), h % 2 == 0)).ToArray())).ToList();
+            faces.Add(w.PlaneFace(tops[0], tops.Skip(1).ToList(), (plate.MinX, plate.MinY, hi), (0, 0, 1), (1, 0, 0)));
+
+            var bottoms = borders.Select(l => w.Loop(Enumerable.Reverse(l.HalfEdges).Select(h => (Horizontal(h / 2, lo), h % 2 == 1)).ToArray())).ToList();
+            faces.Add(w.PlaneFace(bottoms[0], bottoms.Skip(1).ToList(), (plate.MinX, plate.MinY, lo), (0, 0, -1), (1, 0, 0)));
+        }
+
+        return faces;
     }
 
     /// <summary>

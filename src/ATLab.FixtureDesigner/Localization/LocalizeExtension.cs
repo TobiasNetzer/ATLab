@@ -33,3 +33,29 @@ public sealed class EnumTextConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+/// <summary>
+/// A number in a text box: empty or anything that is no number is 0. Parsed in the current culture, else invariant, so
+/// both 1,5 and 1.5 work. The text boxes take their value when they lose focus (class Numeric), so a number being typed
+/// (e.g. "-") is not taken before it is complete; the window then shows 0 in a box that holds no number.
+/// </summary>
+public sealed class NumberConverter : IValueConverter
+{
+    public static NumberConverter Instance { get; } = new();
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is IFormattable number ? number.ToString(null, culture) : value;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        Parse(value?.ToString(), culture) ?? 0.0;
+
+    /// <summary>The number in a text, or null if it is none.</summary>
+    public static double? Parse(string? text, CultureInfo culture)
+    {
+        text = text?.Trim() ?? string.Empty;
+        return double.TryParse(text, NumberStyles.Float, culture, out var number) ||
+               double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out number)
+            ? number
+            : null;
+    }
+}

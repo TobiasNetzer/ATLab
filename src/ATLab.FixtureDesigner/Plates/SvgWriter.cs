@@ -28,6 +28,19 @@ public static class SvgWriter
             maxY = Math.Max(maxY, hole.Y + hole.Diameter / 2);
         }
 
+        // Loose lines of the imported drawing may lie outside the outline
+        foreach (var piece in plate.Loose)
+        {
+            for (var i = 0; i < piece.Count; i++)
+            {
+                var points = i + 1 < piece.Count && Math.Abs(piece[i].Bulge) > 1e-12
+                    ? OutlineShape.ArcBetween(piece[i], piece[i + 1])
+                    : [(piece[i].X, piece[i].Y)];
+                foreach (var (x, y) in points)
+                    (minX, maxX, minY, maxY) = (Math.Min(minX, x), Math.Max(maxX, x), Math.Min(minY, y), Math.Max(maxY, y));
+            }
+        }
+
         var (width, height) = (maxX - minX, maxY - minY);
         string X(double x) => N(x - minX);
         string Y(double y) => N(maxY - y);
@@ -37,13 +50,17 @@ public static class SvgWriter
         svg.Append($"<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" " +
                    $"width=\"{N(width)}mm\" height=\"{N(height)}mm\" viewBox=\"0 0 {N(width)} {N(height)}\">\n");
 
-        // A closed contour: M to the first point, then L for straight edges and A for arcs, closed with Z
-        string Path(IReadOnlyList<OutlineVertex> contour)
+        // A closed contour: M to the first point, then L for straight edges and A for arcs, closed with Z; an open piece
+        // ends at its last point
+        string Path(IReadOnlyList<OutlineVertex> contour, bool closed = true)
         {
             var path = new StringBuilder();
             path.Append($"M {X(contour[0].X)} {Y(contour[0].Y)}");
             for (var i = 0; i < contour.Count; i++)
             {
+                if (!closed && i + 1 == contour.Count)
+                    break;
+
                 var a = contour[i];
                 var b = contour[(i + 1) % contour.Count];
                 if (Math.Abs(a.Bulge) < 1e-12)
@@ -61,12 +78,13 @@ public static class SvgWriter
                 path.Append($" A {N(radius)} {N(radius)} 0 {large} {sweepFlag} {X(b.X)} {Y(b.Y)}");
             }
 
-            return path.Append(" Z").ToString();
+            return closed ? path.Append(" Z").ToString() : path.ToString();
         }
 
         Group(svg, DxfWriter.PlateLayer, $"    <path d=\"{Path(plate.Contour)}\"/>\n");
-        if (plate.Cutouts.Count > 0)
-            Group(svg, DxfWriter.CutoutLayer, string.Concat(plate.Cutouts.Select(c => $"    <path d=\"{Path(c)}\"/>\n")));
+        var through = plate.Cutouts.Where(c => c.Pocket is null).ToList();
+        if (through.Count > 0)
+            Group(svg, DxfWriter.CutoutLayer, string.Concat(through.Select(c => $"    <path d=\"{Path(c.Vertices)}\"/>\n")));
 
         foreach (var kind in new[]
                  {
@@ -75,13 +93,22 @@ public static class SvgWriter
                  })
         {
             var name = DxfWriter.LayerOf(kind);
-            var circles = string.Concat(plate.Holes.Where(h => h.Kind == kind)
+            var circles = string.Concat(plate.Holes.Where(h => h.Kind == kind && h.Pocket is null)
                 .Select(h => $"    <circle cx=\"{X(h.X)}\" cy=\"{Y(h.Y)}\" r=\"{N(h.Diameter / 2)}\"/>\n"));
             if (kind == plate.OpeningKind)
                 circles += string.Concat(plate.MergedOpenings.Select(m => $"    <path d=\"{Path(m.Contour)}\"/>\n"));
             if (circles.Length > 0)
                 Group(svg, name, circles);
         }
+
+        // Pockets together, their depth is set in CAM; loose lines of the imported drawing as they were drawn
+        var pockets = string.Concat(plate.Cutouts.Where(c => c.Pocket is not null).Select(c => $"    <path d=\"{Path(c.Vertices)}\"/>\n")) +
+                      string.Concat(plate.Holes.Where(h => h.Pocket is not null)
+                          .Select(h => $"    <circle cx=\"{X(h.X)}\" cy=\"{Y(h.Y)}\" r=\"{N(h.Diameter / 2)}\"/>\n"));
+        if (pockets.Length > 0)
+            Group(svg, DxfWriter.PocketLayer, pockets);
+        if (plate.Loose.Count > 0)
+            Group(svg, DxfWriter.OtherLayer, string.Concat(plate.Loose.Select(p => $"    <path d=\"{Path(p, closed: false)}\"/>\n")));
 
         svg.Append("</svg>\n");
         return svg.ToString();

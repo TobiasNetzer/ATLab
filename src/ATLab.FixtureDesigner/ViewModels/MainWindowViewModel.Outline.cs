@@ -38,7 +38,7 @@ public partial class MainWindowViewModel
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SelectedOutlineMode), nameof(IsOutlineAutomatic), nameof(IsOutlineFixedSize),
-        nameof(IsOutlineImported), nameof(IsOutlineBoardLayer), nameof(HasOutlineOffset))]
+        nameof(IsOutlineImported), nameof(IsOutlineBoardLayer), nameof(HasOutlineOffset), nameof(HasOutlineShapes))]
     private PlateOutlineMode _outlineMode;
 
     public OutlineModeOption SelectedOutlineMode
@@ -92,6 +92,85 @@ public partial class MainWindowViewModel
 
     /// <summary>The outline in board coordinates, drawn over the board so its position can be checked.</summary>
     [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlineOverlay;
+
+    /// <summary>The pockets of the outline in board coordinates, shaded in the board view.</summary>
+    [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlinePockets;
+
+    /// <summary>Lines of the imported drawing that belong to no shape, in board coordinates.</summary>
+    [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlineLoose;
+
+    /// <summary>The shape chosen in the list, in board coordinates.</summary>
+    [ObservableProperty] private IReadOnlyList<Point2>? _outlineHighlight;
+
+    // ----- Shapes of an imported outline: through or pockets -----
+
+    /// <summary>The circles and cut-outs of the imported outline being edited.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<OutlineShapeRow> OutlineShapes { get; } = [];
+
+    public bool HasOutlineShapes => IsOutlineImported && OutlineShapes.Count > 0;
+
+    [ObservableProperty] private OutlineShapeRow? _selectedOutlineShape;
+
+    /// <summary>The imported outline the shape rows show.</summary>
+    private OutlineShape? _shapeRowsSource;
+
+    partial void OnSelectedOutlineShapeChanged(OutlineShapeRow? value) => UpdateOutlineState();
+
+    /// <summary>New rows when another imported outline is edited; a change of the rows' own keeps them.</summary>
+    private void SyncShapeRows()
+    {
+        var shape = IsOutlineImported ? _importedOutline : null;
+        if (ReferenceEquals(shape, _shapeRowsSource))
+            return;
+
+        _shapeRowsSource = shape;
+        foreach (var row in OutlineShapes)
+            row.PropertyChanged -= OnShapeRowChanged;
+        SelectedOutlineShape = null;
+        OutlineShapes.Clear();
+
+        if (shape is not null)
+        {
+            var culture = CultureInfo.CurrentCulture;
+            OutlineShapeRow Row(bool circle, int index, string name, Pocket? pocket)
+            {
+                var row = new OutlineShapeRow(circle, index, name);
+                if (pocket is { } p)
+                {
+                    row.IsPocket = true;
+                    row.Depth = p.Depth;
+                    row.Side = PocketSideOption.All.First(o => o.Side == p.Side);
+                }
+
+                row.PropertyChanged += OnShapeRowChanged;
+                return row;
+            }
+
+            // Circles named like the frame holes they become (M1, M2, …)
+            for (var i = 0; i < shape.Circles.Count; i++)
+            {
+                var c = shape.Circles[i];
+                OutlineShapes.Add(Row(true, i, Localizer.Format("Shape_Circle", i + 1, c.Diameter.ToString("0.0#", culture)), c.Pocket));
+            }
+
+            for (var i = 0; i < shape.Cutouts.Count; i++)
+                OutlineShapes.Add(Row(false, i, Localizer.Format("Shape_Cutout", i + 1), shape.Cutouts[i].Pocket));
+        }
+
+        OnPropertyChanged(nameof(HasOutlineShapes));
+    }
+
+    private void OnShapeRowChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is not (nameof(OutlineShapeRow.IsPocket) or nameof(OutlineShapeRow.Depth) or nameof(OutlineShapeRow.Side)) ||
+            _importedOutline is null)
+            return;
+
+        Pocket? PocketOf(bool circle, int index) => OutlineShapes.FirstOrDefault(r => r.IsCircle == circle && r.Index == index)?.Pocket;
+        _importedOutline = _importedOutline.WithPockets(i => PocketOf(true, i), i => PocketOf(false, i));
+        _shapeRowsSource = _importedOutline;
+        OnOutlineChanged();
+    }
 
     // ----- One outline for all plates, and the plates' own -----
 
@@ -329,9 +408,13 @@ public partial class MainWindowViewModel
         {
             OutlineStatus = string.Empty;
             OutlineOverlay = null;
+            OutlinePockets = null;
+            OutlineLoose = null;
+            OutlineHighlight = null;
             return;
         }
 
+        SyncShapeRows();
         var outline = SelectedOutline(board, CaptureOutline());
         IsOutlineMissing = outline is null;
         var shown = outline ?? PlateOutlines.Automatic(board, PlateMargin);
@@ -353,8 +436,44 @@ public partial class MainWindowViewModel
 
         OutlineStatus = string.Join("\n", lines);
 
-        // The board view shows the outline being edited
+        // The board view shows the outline being edited, its pockets shaded
         OutlineOverlay = Overlay(board, shown);
+        OutlinePockets = shown.Circles.Where(c => c.Pocket is not null).Select(c => CirclePoints(board, c))
+            .Concat(shown.Cutouts.Where(c => c.Pocket is not null).Select(c => LoopPoints(board, c.Vertices)))
+            .ToList();
+        OutlineLoose = shown.Loose.Select(piece => PiecePoints(board, piece)).ToList();
+        OutlineHighlight = SelectedOutlineShape is { } selected && ReferenceEquals(outline, shown) && IsOutlineImported
+            ? selected.IsCircle
+                ? selected.Index < shown.Circles.Count ? CirclePoints(board, shown.Circles[selected.Index]) : null
+                : selected.Index < shown.Cutouts.Count ? LoopPoints(board, shown.Cutouts[selected.Index].Vertices) : null
+            : null;
+    }
+
+    /// <summary>Build sheet coordinates back to board coordinates.</summary>
+    private static Point2 ToBoard(Board board, (double X, double Y) p) => new(p.X + board.Origin.X, board.Origin.Y - p.Y);
+
+    private static IReadOnlyList<Point2> CirclePoints(Board board, OutlineCircle c) =>
+        OutlineBuilder.Arc(c.X, c.Y, c.Diameter / 2, 0, 2 * Math.PI).Select(p => ToBoard(board, p)).ToList();
+
+    private static IReadOnlyList<Point2> LoopPoints(Board board, IReadOnlyList<OutlineVertex> loop)
+    {
+        var points = OutlineShape.Flatten(loop).Select(p => ToBoard(board, p)).ToList();
+        points.Add(points[0]);
+        return points;
+    }
+
+    private static IReadOnlyList<Point2> PiecePoints(Board board, IReadOnlyList<OutlineVertex> piece)
+    {
+        var points = new List<Point2>();
+        for (var i = 0; i < piece.Count; i++)
+        {
+            if (i + 1 < piece.Count && Math.Abs(piece[i].Bulge) > 1e-12)
+                points.AddRange(OutlineShape.ArcBetween(piece[i], piece[i + 1]).SkipLast(1).Select(p => ToBoard(board, p)));
+            else
+                points.Add(ToBoard(board, (piece[i].X, piece[i].Y)));
+        }
+
+        return points;
     }
 
     /// <summary>An outline with its frame holes and cut-outs in board coordinates, as the board view and the build sheet draw it.</summary>
@@ -370,7 +489,7 @@ public partial class MainWindowViewModel
             overlay.Add(OutlineBuilder.Arc(circle.X, circle.Y, circle.Diameter / 2, 0, 2 * Math.PI).Select(ToBoard).ToList());
         foreach (var cutout in shape.Cutouts)
         {
-            var points = OutlineShape.Flatten(cutout).Select(ToBoard).ToList();
+            var points = OutlineShape.Flatten(cutout.Vertices).Select(ToBoard).ToList();
             points.Add(points[0]);
             overlay.Add(points);
         }
@@ -422,13 +541,39 @@ public partial class MainWindowViewModel
             return;
         }
 
+        // Shapes that were pockets before stay pockets when the file is read again
+        var before = _importedMode == OutlineMode ? _importedOutline : null;
         _importedOutline = new OutlineShape
         {
-            Vertices = shape.Vertices, Circles = shape.Circles, Cutouts = shape.Cutouts, Warnings = [.. warnings, .. shape.Warnings]
+            Vertices = shape.Vertices, Circles = shape.Circles, Cutouts = shape.Cutouts, Loose = shape.Loose,
+            Warnings = [.. warnings, .. shape.Warnings]
         };
+        if (before is not null)
+            _importedOutline = KeepPockets(_importedOutline, before);
         _importedMode = OutlineMode;
         OutlineFile = path;
         OnOutlineChanged();
+    }
+
+    /// <summary>The pockets of the shapes of an earlier import given to the same shapes (within 0.01 mm) of a new one.</summary>
+    private static OutlineShape KeepPockets(OutlineShape shape, OutlineShape before)
+    {
+        static bool Near(double a, double b) => Math.Abs(a - b) <= 0.01;
+        Pocket? CirclePocket(int i)
+        {
+            var c = shape.Circles[i];
+            return before.Circles.FirstOrDefault(o => o.Pocket is not null && Near(o.X, c.X) && Near(o.Y, c.Y) && Near(o.Diameter, c.Diameter)).Pocket;
+        }
+
+        Pocket? CutoutPocket(int i)
+        {
+            var c = shape.Cutouts[i].Vertices;
+            return before.Cutouts.FirstOrDefault(o => o.Pocket is not null && o.Vertices.Count == c.Count &&
+                                                      o.Vertices.Zip(c).All(p => Near(p.First.X, p.Second.X) && Near(p.First.Y, p.Second.Y) &&
+                                                                                 Math.Abs(p.First.Bulge - p.Second.Bulge) < 1e-6))?.Pocket;
+        }
+
+        return shape.WithPockets(CirclePocket, CutoutPocket);
     }
 
     // ----- File -----
@@ -475,12 +620,18 @@ public partial class MainWindowViewModel
         string? file = null;
         if (entry.Mode is PlateOutlineMode.Dxf or PlateOutlineMode.Svg && entry.Points is { Count: >= 3 } points)
         {
+            var pockets = entry.Pockets ?? [];
+            Pocket? PocketOf(bool circle, int index) =>
+                pockets.FirstOrDefault(p => p.IsCircle == circle && p.Index == index && p.Depth > 0) is { } p ? new Pocket(p.Depth, p.Side) : null;
+
             imported = new OutlineShape
             {
                 Vertices = points.Where(p => p.Length >= 2).Select(Vertex).ToList(),
-                Circles = (entry.Circles ?? []).Where(c => c.Length >= 3).Select(c => new OutlineCircle(c[0], c[1], c[2])).ToList(),
+                Circles = (entry.Circles ?? []).Where(c => c.Length >= 3).Select((c, i) => new OutlineCircle(c[0], c[1], c[2], PocketOf(true, i))).ToList(),
                 Cutouts = (entry.Cutouts ?? []).Where(c => c.Count >= 2)
-                    .Select(c => (IReadOnlyList<OutlineVertex>)c.Where(p => p.Length >= 2).Select(Vertex).ToList()).ToList()
+                    .Select((c, i) => new OutlineCutout(c.Where(p => p.Length >= 2).Select(Vertex).ToList(), PocketOf(false, i))).ToList(),
+                Loose = (entry.Loose ?? []).Where(l => l.Count >= 2)
+                    .Select(l => (IReadOnlyList<OutlineVertex>)l.Where(p => p.Length >= 2).Select(Vertex).ToList()).ToList()
             };
             file = entry.SourceFile is { Length: > 0 } source ? FixtureFile.ResolveStoredPath(source, fixturePath) : null;
         }
@@ -532,8 +683,15 @@ public partial class MainWindowViewModel
         {
             entry.SourceFile = s.File is null ? null : FixtureFile.ToStoredPath(s.File, fixturePath);
             entry.Points = imported.Vertices.Select(Stored).ToList();
-            entry.Cutouts = imported.Cutouts.Count > 0 ? imported.Cutouts.Select(c => c.Select(Stored).ToList()).ToList() : null;
+            entry.Cutouts = imported.Cutouts.Count > 0 ? imported.Cutouts.Select(c => c.Vertices.Select(Stored).ToList()).ToList() : null;
             entry.Circles = imported.Circles.Select(c => new[] { Math.Round(c.X, 4), Math.Round(c.Y, 4), Math.Round(c.Diameter, 4) }).ToList();
+            entry.Loose = imported.Loose.Count > 0 ? imported.Loose.Select(l => l.Select(Stored).ToList()).ToList() : null;
+            var pockets = imported.Circles.Select((c, i) => (c.Pocket, IsCircle: true, Index: i))
+                .Concat(imported.Cutouts.Select((c, i) => (c.Pocket, IsCircle: false, Index: i)))
+                .Where(p => p.Pocket is not null)
+                .Select(p => new PlatePocketEntry { IsCircle = p.IsCircle, Index = p.Index, Depth = Math.Round(p.Pocket!.Value.Depth, 4), Side = p.Pocket.Value.Side })
+                .ToList();
+            entry.Pockets = pockets.Count > 0 ? pockets : null;
         }
 
         return entry;

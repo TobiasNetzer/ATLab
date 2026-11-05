@@ -147,6 +147,18 @@ public sealed class BoardView : Control
     public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayOutlinesProperty =
         AvaloniaProperty.Register<BoardView, IReadOnlyList<IReadOnlyList<Point2>>?>(nameof(OverlayOutlines));
 
+    /// <summary>Areas of the overlay shaded in the overlay color, e.g. the pockets of a plate (closed, board coordinates).</summary>
+    public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayFillsProperty =
+        AvaloniaProperty.Register<BoardView, IReadOnlyList<IReadOnlyList<Point2>>?>(nameof(OverlayFills));
+
+    /// <summary>Lines of the overlay drawn thin and solid, e.g. lines of an imported drawing that belong to no shape.</summary>
+    public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayGuidesProperty =
+        AvaloniaProperty.Register<BoardView, IReadOnlyList<IReadOnlyList<Point2>>?>(nameof(OverlayGuides));
+
+    /// <summary>A line of the overlay drawn wide in the selection color, e.g. the shape chosen in a list.</summary>
+    public static readonly StyledProperty<IReadOnlyList<Point2>?> OverlayHighlightProperty =
+        AvaloniaProperty.Register<BoardView, IReadOnlyList<Point2>?>(nameof(OverlayHighlight));
+
     /// <summary>Color of the overlay outlines; null for the foreground color.</summary>
     public static readonly StyledProperty<IBrush?> OverlayBrushProperty =
         AvaloniaProperty.Register<BoardView, IBrush?>(nameof(OverlayBrush));
@@ -204,7 +216,7 @@ public sealed class BoardView : Control
             NetHighlightsProperty, IsZoneHighlightEnabledProperty, PadHighlightsProperty, FootprintHighlightsProperty, HighlightedPadsProperty,
             SelectedPadProperty, VisibleLayersProperty, HintKeyProperty, BackgroundProperty, OutlineBrushProperty,
             TopPadBrushProperty, BottomPadBrushProperty, ForegroundProperty, MutedBrushProperty, AccentBrushProperty, SelectionBrushProperty, CornerRadiusProperty, OverlayOutlinesProperty,
-            ProbeBrushProperty, ErrorBrushProperty, WarningBrushProperty);
+            OverlayFillsProperty, OverlayGuidesProperty, OverlayHighlightProperty, ProbeBrushProperty, ErrorBrushProperty, WarningBrushProperty);
         FocusableProperty.OverrideDefaultValue<BoardView>(true);
         ClipToBoundsProperty.OverrideDefaultValue<BoardView>(true);
     }
@@ -253,6 +265,9 @@ public sealed class BoardView : Control
     public IBrush? SelectionBrush { get => GetValue(SelectionBrushProperty); set => SetValue(SelectionBrushProperty, value); }
     public CornerRadius CornerRadius { get => GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
     public IReadOnlyList<IReadOnlyList<Point2>>? OverlayOutlines { get => GetValue(OverlayOutlinesProperty); set => SetValue(OverlayOutlinesProperty, value); }
+    public IReadOnlyList<IReadOnlyList<Point2>>? OverlayFills { get => GetValue(OverlayFillsProperty); set => SetValue(OverlayFillsProperty, value); }
+    public IReadOnlyList<IReadOnlyList<Point2>>? OverlayGuides { get => GetValue(OverlayGuidesProperty); set => SetValue(OverlayGuidesProperty, value); }
+    public IReadOnlyList<Point2>? OverlayHighlight { get => GetValue(OverlayHighlightProperty); set => SetValue(OverlayHighlightProperty, value); }
     public IBrush ProbeBrush { get => GetValue(ProbeBrushProperty); set => SetValue(ProbeBrushProperty, value); }
     public IBrush? OverlayBrush { get => GetValue(OverlayBrushProperty); set => SetValue(OverlayBrushProperty, value); }
     public IBrush ErrorBrush { get => GetValue(ErrorBrushProperty); set => SetValue(ErrorBrushProperty, value); }
@@ -732,29 +747,54 @@ public sealed class BoardView : Control
         }
     }
 
-    /// <summary>The overlay outlines, dashed a few pixels wide in the overlay or foreground color, whatever the zoom.</summary>
+    /// <summary>
+    /// The overlay: shaded areas, thin guide lines and the outlines, dashed a few pixels wide in the overlay or foreground
+    /// color, whatever the zoom; the highlighted line on top.
+    /// </summary>
     private void DrawOverlayOutlines(DrawingContext context, Matrix view)
     {
-        if (OverlayOutlines is not { Count: > 0 } outlines)
-            return;
+        var brush = OverlayBrush ?? Foreground;
 
-        var pen = new Pen(OverlayBrush ?? Foreground, 1.5, new DashStyle([4, 3], 0), PenLineCap.Flat, PenLineJoin.Round);
-        using (context.PushOpacity(0.85))
+        static StreamGeometry Polyline(IReadOnlyList<Point2> points, Matrix view, bool filled)
         {
-            foreach (var outline in outlines.Where(o => o.Count >= 2))
-            {
-                var geometry = new StreamGeometry();
-                using (var g = geometry.Open())
-                {
-                    g.BeginFigure(ToScreenPoint(outline[0], view), false);
-                    for (var i = 1; i < outline.Count; i++)
-                        g.LineTo(ToScreenPoint(outline[i], view));
-                    g.EndFigure(false);
-                }
+            var geometry = new StreamGeometry();
+            using var g = geometry.Open();
+            g.BeginFigure(ToScreenPoint(points[0], view), filled);
+            for (var i = 1; i < points.Count; i++)
+                g.LineTo(ToScreenPoint(points[i], view));
+            g.EndFigure(filled);
+            return geometry;
+        }
 
-                context.DrawGeometry(null, pen, geometry);
+        if (OverlayFills is { Count: > 0 } fills)
+        {
+            var fill = WithOpacity(brush, 0.25);
+            foreach (var area in fills.Where(a => a.Count >= 3))
+                context.DrawGeometry(fill, null, Polyline(area, view, true));
+        }
+
+        if (OverlayGuides is { Count: > 0 } guides)
+        {
+            var thin = new Pen(brush, 1);
+            using (context.PushOpacity(0.6))
+            {
+                foreach (var guide in guides.Where(o => o.Count >= 2))
+                    context.DrawGeometry(null, thin, Polyline(guide, view, false));
             }
         }
+
+        if (OverlayOutlines is { Count: > 0 } outlines)
+        {
+            var pen = new Pen(brush, 1.5, new DashStyle([4, 3], 0), PenLineCap.Flat, PenLineJoin.Round);
+            using (context.PushOpacity(0.85))
+            {
+                foreach (var outline in outlines.Where(o => o.Count >= 2))
+                    context.DrawGeometry(null, pen, Polyline(outline, view, false));
+            }
+        }
+
+        if (OverlayHighlight is { Count: >= 2 } highlight)
+            context.DrawGeometry(null, new Pen(SelectionBrush ?? Foreground, 3, lineJoin: PenLineJoin.Round), Polyline(highlight, view, false));
     }
 
     /// <summary>Components outlined: their courtyard, or the area of their pads if they have none, and the reference.</summary>

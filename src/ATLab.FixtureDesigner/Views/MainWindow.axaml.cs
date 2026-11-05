@@ -25,6 +25,14 @@ public partial class MainWindow : ShadUI.Window
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
         AddHandler(DragDrop.DropEvent, OnDrop);
 
+        // A number box left with no number in it shows 0, the value it now has
+        AddHandler(LostFocusEvent, (_, e) =>
+        {
+            if (e.Source is TextBox box && box.Classes.Contains("Numeric") &&
+                Localization.NumberConverter.Parse(box.Text, System.Globalization.CultureInfo.CurrentCulture) is null)
+                box.Text = "0";
+        }, RoutingStrategies.Bubble, handledEventsToo: true);
+
         // A list on a hidden tab cannot take a new selection and keeps its old one; it catches up when shown
         ProbesGrid.AttachedToVisualTree += (_, _) => Resync(ProbesGrid, () => _viewModel?.SelectedProbeItem);
         PadsGrid.AttachedToVisualTree += (_, _) => Resync(PadsGrid, () => _viewModel?.SelectedPadRow);

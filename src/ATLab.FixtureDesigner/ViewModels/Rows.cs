@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using ATLab.FixtureDesigner.Plates;
 using System.Globalization;
 using ATLab.FixtureDesigner.Fixture;
 using ATLab.Pcb.Fixture;
@@ -113,6 +115,39 @@ public partial class PlateRow(FixturePlate plate) : ObservableObject
     [ObservableProperty] private string _summary = string.Empty;
 
     public void RefreshTexts() => OnPropertyChanged(nameof(Name));
+}
+
+/// <summary>A side of the plate a pocket can be milled from, as offered in the list of shapes.</summary>
+public sealed record PocketSideOption(PocketSide Side)
+{
+    public static IReadOnlyList<PocketSideOption> All { get; } = [new(PocketSide.BoardSide), new(PocketSide.FarSide)];
+
+    public string Label => Localizer.Get("PocketSide_" + Side);
+}
+
+/// <summary>
+/// A circle or cut-out of an imported outline in the Manufacturing tab: through the plate, or a pocket milled to a depth
+/// from one side of it.
+/// </summary>
+public partial class OutlineShapeRow(bool isCircle, int index, string name) : ObservableObject
+{
+    public bool IsCircle { get; } = isCircle;
+
+    /// <summary>Index into the circles or the cut-outs of the outline.</summary>
+    public int Index { get; } = index;
+
+    public string Name { get; } = name;
+
+    public IReadOnlyList<PocketSideOption> Sides => PocketSideOption.All;
+
+    [ObservableProperty] private bool _isPocket;
+
+    /// <summary>Depth of the pocket, mm.</summary>
+    [ObservableProperty] private double _depth = 2;
+
+    [ObservableProperty] private PocketSideOption _side = PocketSideOption.All[0];
+
+    public Pocket? Pocket => IsPocket && Depth > 0 ? new Pocket(Depth, Side.Side) : null;
 }
 
 /// <summary>An outline that can be edited: the one the plates share, or a plate's own.</summary>

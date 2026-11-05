@@ -350,8 +350,9 @@ public partial class MainWindowViewModel
                      (plate.MergedOpenings.Count, "Text_PlateMergedOpenings"),
                      (plate.Holes.Count(h => h.Kind is PlateHoleKind.LocatingPin or PlateHoleKind.PreCenteringPin or PlateHoleKind.SupportPin
                          or PlateHoleKind.PushRod), "Text_PlatePartHoles"),
-                     (plate.Holes.Count(h => h.Kind == PlateHoleKind.Frame), "Text_PlateFrameHoles"),
-                     (plate.Cutouts.Count, "Text_PlateCutouts")
+                     (plate.Holes.Count(h => h.Kind == PlateHoleKind.Frame && h.Pocket is null), "Text_PlateFrameHoles"),
+                     (plate.Cutouts.Count(c => c.Pocket is null), "Text_PlateCutouts"),
+                     (plate.Holes.Count(h => h.Pocket is not null) + plate.Cutouts.Count(c => c.Pocket is not null), "Text_PlatePockets")
                  })
         {
             if (count > 0)

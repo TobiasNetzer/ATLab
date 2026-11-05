@@ -860,7 +860,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Keine Benutzerlage auf der Platine</value>
   </data>
   <data name="Outline_Status" xml:space="preserve">
-    <value>Platte {0} × {1} mm, {2} Rahmenbohrungen, {3} Ausschnitte</value>
+    <value>Platte {0} × {1} mm, {2} Kreise, {3} Ausschnitte</value>
   </data>
   <data name="Outline_Missing" xml:space="preserve">
     <value>Noch kein Umriss: Platinenumriss plus Rand wird verwendet.</value>
@@ -868,8 +868,11 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Outline_NoLayerOutline" xml:space="preserve">
     <value>Kein geschlossener Umriss auf Lage {0}: Platinenumriss plus Rand wird verwendet.</value>
   </data>
-  <data name="Outline_OpenLines" xml:space="preserve">
-    <value>Einige Linien ergeben keinen geschlossenen Umriss und wurden weggelassen.</value>
+  <data name="Outline_Loose" xml:space="preserve">
+    <value>{0} Linien gehören zu keiner geschlossenen Form im Umriss; sie bleiben erhalten und werden auf der Lage OTHER_GEOMETRY exportiert.</value>
+  </data>
+  <data name="Outline_Crossing" xml:space="preserve">
+    <value>Einige Linien kreuzen sich zwischen ihren Enden; die Formen dort stimmen eventuell nicht. Teilen Sie die Linien in der Zeichnung am Kreuzungspunkt.</value>
   </data>
   <data name="Outline_Skipped" xml:space="preserve">
     <value>Nicht verwendet: {0}</value>
@@ -1402,5 +1405,41 @@ unten</value>
   </data>
   <data name="Text_PlateCombined" xml:space="preserve">
     <value>Nicht nötig: die Niederhalterplatte trägt die Prüfnadeln oben.</value>
+  </data>
+  <data name="Label_OutlineShapes" xml:space="preserve">
+    <value>Formen</value>
+  </data>
+  <data name="Text_OutlineShapesHint" xml:space="preserve">
+    <value>Taschen bekommen eine Tiefe; alle übrigen Formen werden durchgefräst.</value>
+  </data>
+  <data name="Column_Shape" xml:space="preserve">
+    <value>Form</value>
+  </data>
+  <data name="Column_Pocket" xml:space="preserve">
+    <value>Tasche</value>
+  </data>
+  <data name="Column_Depth" xml:space="preserve">
+    <value>Tiefe (mm)</value>
+  </data>
+  <data name="Column_PocketSide" xml:space="preserve">
+    <value>Gefräst von</value>
+  </data>
+  <data name="PocketSide_BoardSide" xml:space="preserve">
+    <value>Platinenseite</value>
+  </data>
+  <data name="PocketSide_FarSide" xml:space="preserve">
+    <value>Abgewandte Seite</value>
+  </data>
+  <data name="Shape_Circle" xml:space="preserve">
+    <value>Kreis M{0}, Ø {1} mm</value>
+  </data>
+  <data name="Shape_Cutout" xml:space="preserve">
+    <value>Ausschnitt {0}</value>
+  </data>
+  <data name="Text_PlatePockets" xml:space="preserve">
+    <value>{0} Taschen</value>
+  </data>
+  <data name="Plate_PocketEdge" xml:space="preserve">
+    <value>{0} liegt über dem Rand einer Tasche.</value>
   </data>
 </root>
