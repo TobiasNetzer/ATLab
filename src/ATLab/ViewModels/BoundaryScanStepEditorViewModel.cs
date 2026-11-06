@@ -113,7 +113,23 @@ public partial class BoundaryScanStepEditorViewModel : ViewModelBase
         RebuildActions();
     }
 
-    partial void OnNewDeviceChanged(BoundaryScanDeviceViewModel? value) => RefreshNewPins();
+    partial void OnNewDeviceChanged(BoundaryScanDeviceViewModel? oldValue, BoundaryScanDeviceViewModel? newValue)
+    {
+        // The pins are rebuilt when a BSDL file is assigned or the package changes after the device was selected
+        if (oldValue != null)
+            oldValue.PinsRebuilt -= DevicePinsRebuilt;
+
+        if (newValue != null)
+            newValue.PinsRebuilt += DevicePinsRebuilt;
+
+        RefreshNewPins();
+    }
+
+    private void DevicePinsRebuilt(BoundaryScanDeviceViewModel device)
+    {
+        RefreshNewPins();
+        RebuildActions();
+    }
 
     private void RefreshNewPins()
     {

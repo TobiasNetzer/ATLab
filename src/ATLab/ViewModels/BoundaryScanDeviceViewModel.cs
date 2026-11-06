@@ -28,6 +28,9 @@ public partial class BoundaryScanDeviceViewModel : ObservableObject
     /// <summary>Raised after an output cell was changed by the user.</summary>
     public event Action<BoundaryScanDeviceViewModel>? OutputsChanged;
 
+    /// <summary>Raised after the pin list was rebuilt, e.g. when the BSDL file or package changed.</summary>
+    public event Action<BoundaryScanDeviceViewModel>? PinsRebuilt;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplayName))]
     private int _position;
@@ -266,6 +269,7 @@ public partial class BoundaryScanDeviceViewModel : ObservableObject
         UpdateDriveStates();
         ApplyCapture(_captured);
         ApplyPinFilter(_pinFilter, _showLinkagePins);
+        PinsRebuilt?.Invoke(this);
     }
 
     private void DrivePin(BoundaryScanPinViewModel pin, PinDriveState state)
