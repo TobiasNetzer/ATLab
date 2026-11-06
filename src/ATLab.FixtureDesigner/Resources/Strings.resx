@@ -1371,7 +1371,7 @@ bottom</value>
     <value>Pressure plate</value>
   </data>
   <data name="Report_ProbesByType" xml:space="preserve">
-    <value>Probes by type</value>
+    <value>Probes</value>
   </data>
   <data name="Column_Probes" xml:space="preserve">
     <value>Probes</value>

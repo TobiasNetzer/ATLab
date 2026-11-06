@@ -319,8 +319,8 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 1. **Angaben** zu Nadeladapter und Platine: unter anderem die Prüfsumme der Platinendatei, die Lage der Platine (kopfüber oder nicht) und wie die Koordinaten zu lesen sind.
 2. **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe; dazu die Bauteile der Verdrahtung, nach Beschreibung zusammengefasst, mit ihrer Bemerkung.
 3. **Montage**, einmal für jede Seite mit Prüfnadeln oder Teilen:
-   - **Prüfnadeln nach Typ**: Anzahl und Nummern der Prüfnadeln je Typ,
-   - **Stifte und Niederhalter** dieser Seite mit Art, Typ, Position und Platte,
+   - **Prüfnadeln nach Typ**: Anzahl, Nummern und Platte der Prüfnadeln je Typ,
+   - **Stifte und Niederhalter** dieser Seite mit Art, Typ und Platte,
    - die **Montagezeichnung**: die Platten dieser Seite mit Umrissen und Durchbrüchen sowie die Prüfnadeln und Teile. Gezeichnet wird von der Seite, an der sie die Platine berühren – die Platten oben also von oben, die Platten unten von unten (gespiegelt).
 
    Jeder Nadeltyp hat in der Zeichnung eine eigene Markerform: Kreis, Quadrat, Raute und Sechseck, danach dieselben Formen hohl. Das reicht für acht Typen je Seite; ab dem neunten Typ wiederholen sich die Formen. Die Teile haben dieselben Symbole wie in der Platinenansicht, mit ihrem Namen darüber. Die Platten sind in unterschiedlichen Farben und Linienarten gezeichnet, die eine Legende erklärt.

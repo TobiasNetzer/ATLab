@@ -231,7 +231,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                         if (probes.Count > 0)
                         {
                             c.Item().Element(x => SubSection(x, L("Report_ProbesByType")));
-                            c.Item().Element(x => ComposeTypeTable(x, probes));
+                            c.Item().Element(x => ComposeTypeTable(x, probes, data.ProbePlate(side)));
                         }
 
                         if (parts.Count > 0)
@@ -320,8 +320,11 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         return string.Join(", ", parts);
     }
 
-    /// <summary>The probe types of a side, in the order of the bill of materials, with how many and which probes get them.</summary>
-    private static void ComposeTypeTable(IContainer container, IReadOnlyList<Probe> probes)
+    /// <summary>
+    /// The probe types of a side, in the order of the bill of materials, with how many and which probes get them and the
+    /// plate they go into.
+    /// </summary>
+    private static void ComposeTypeTable(IContainer container, IReadOnlyList<Probe> probes, FixturePlate plate)
     {
         container.Table(table =>
         {
@@ -330,12 +333,13 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(130); // Type
                 c.ConstantColumn(50);  // Quantity
                 c.RelativeColumn();    // Probes
+                c.ConstantColumn(120);  // Plate
                 c.ConstantColumn(30);  // Tick
             });
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_ProbeType", "Column_Quantity", "Column_Probes" })
+                foreach (var key in new[] { "Column_ProbeType", "Column_Quantity", "Column_Probes", "Column_Plate" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -345,6 +349,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(group.Key?.Name ?? L("Report_NoType")).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(group.Count().ToString(CultureInfo.CurrentCulture)).SemiBold();
                 table.Cell().Element(BodyCell).Text(Ranges(group));
+                table.Cell().Element(BodyCell).Text(ViewModels.PlateRow.NameOf(plate));
                 table.Cell().Element(TickBox);
             }
         });
@@ -618,7 +623,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         });
     }
 
-    /// <summary>Locating, pre-centering and support pins and push rods with their place and plate, to fit and tick off.</summary>
+    /// <summary>Locating, pre-centering and support pins and push rods with their type and plate, to fit and tick off.</summary>
     private static void ComposePartTable(IContainer container, IReadOnlyList<FixturePart> parts)
     {
         container.Table(table =>
@@ -628,15 +633,13 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(40);  // Part
                 c.ConstantColumn(130); // Kind
                 c.RelativeColumn();    // Type
-                c.ConstantColumn(60);  // X
-                c.ConstantColumn(60);  // Y
-                c.ConstantColumn(80);  // Plate
+                c.ConstantColumn(120);  // Plate
                 c.ConstantColumn(30);  // Tick
             });
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_Part", "Column_PartKind", "Column_PartType", "Column_X", "Column_Y", "Column_Plate" })
+                foreach (var key in new[] { "Column_Part", "Column_PartKind", "Column_PartType", "Column_Plate" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -646,8 +649,6 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(part.Name).SemiBold();
                 table.Cell().Element(BodyCell).Text(part.KindLabel);
                 table.Cell().Element(BodyCell).Text(part.Type?.Name ?? "-");
-                table.Cell().Element(BodyCell).AlignRight().Text(Mm(part.X));
-                table.Cell().Element(BodyCell).AlignRight().Text(Mm(part.Y));
                 table.Cell().Element(BodyCell).Text(ViewModels.PlateRow.NameOf(part.Plate));
                 table.Cell().Element(TickBox);
             }

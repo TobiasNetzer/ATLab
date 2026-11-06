@@ -1371,7 +1371,7 @@ unten</value>
     <value>Niederhalterplatte</value>
   </data>
   <data name="Report_ProbesByType" xml:space="preserve">
-    <value>Prüfnadeln nach Typ</value>
+    <value>Prüfnadeln</value>
   </data>
   <data name="Column_Probes" xml:space="preserve">
     <value>Prüfnadeln</value>

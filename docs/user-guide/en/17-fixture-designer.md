@@ -315,8 +315,8 @@ Positions and nets always come from the current board file. The checks compare t
 1. **Information** about fixture and board, including the checksum of the board file, the board position (upside down or not) and how to read the coordinates.
 2. **Bill of materials**: every probe type and part type with quantity, diameter, drill, opening and height; then the components of the wiring, grouped by description, with their note.
 3. **Assembly**, once for every side with probes or parts:
-   - **Probes by type**: quantity and probe numbers per type,
-   - **Pins and push rods** of that side with kind, type, position and plate,
+   - **Probes by type**: quantity, probe numbers and plate per type,
+   - **Pins and push rods** of that side with kind, type and plate,
    - the **assembly drawing**: the plates of that side with their outlines and openings, and the probes and parts. It is drawn from the side where they touch the board – the plates above from the top, the plates below from below (mirrored).
 
    Every probe type has its own marker shape in the drawing: circle, square, diamond and hexagon, then the same shapes hollow. This covers eight types per side; from the ninth type on, the shapes repeat. Parts have the same symbols as in the board view, with their name above. The plates are drawn in different colors and line styles, explained in a legend.
