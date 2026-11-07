@@ -1442,4 +1442,19 @@ unten</value>
   <data name="Plate_PocketEdge" xml:space="preserve">
     <value>{0} liegt über dem Rand einer Tasche.</value>
   </data>
+  <data name="Button_AddBottomToFiltered" xml:space="preserve">
+    <value>Alle gelisteten von unten</value>
+  </data>
+  <data name="Button_AddTopToFiltered" xml:space="preserve">
+    <value>Alle gelisteten von oben</value>
+  </data>
+  <data name="ToolTip_RemovePadProbes" xml:space="preserve">
+    <value>Prüfnadeln des ausgewählten Pads entfernen</value>
+  </data>
+  <data name="ToolTip_AddToFiltered" xml:space="preserve">
+    <value>Setzt auf jedes Pad der Liste eine Prüfnadel. Pads, die schon eine Prüfnadel haben oder auf dieser Seite kein Kupfer, werden übersprungen.</value>
+  </data>
+  <data name="Status_ProbesAddedToFiltered" xml:space="preserve">
+    <value>{0} Prüfnadeln von der {1} hinzugefügt, {2} Pads übersprungen.</value>
+  </data>
 </root>

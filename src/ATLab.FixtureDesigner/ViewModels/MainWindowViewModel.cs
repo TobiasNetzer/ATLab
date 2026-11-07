@@ -197,7 +197,7 @@ public partial class MainWindowViewModel : ObservableObject
     public string PadCountText => Localizer.Format("Text_PadCount", PadRows.Count, _allPadRows.Count);
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(AddProbeTopCommand), nameof(AddProbeBottomCommand))]
+    [NotifyCanExecuteChangedFor(nameof(AddProbeTopCommand), nameof(AddProbeBottomCommand), nameof(RemovePadProbesCommand))]
     [NotifyPropertyChangedFor(nameof(SelectedPadRow))]
     private Pad? _selectedPad;
 
@@ -294,6 +294,8 @@ public partial class MainWindowViewModel : ObservableObject
         HighlightedPads = string.IsNullOrWhiteSpace(PadSearch) ? null : PadRows.Select(r => r.Pad).ToHashSet();
         OnPropertyChanged(nameof(PadCountText));
         OnPropertyChanged(nameof(SelectedPadRow));
+        AddProbesTopToFilteredCommand.NotifyCanExecuteChanged();
+        AddProbesBottomToFilteredCommand.NotifyCanExecuteChanged();
     }
 
     private static Func<string, bool> Matcher(string term)
@@ -347,12 +349,19 @@ public partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(AdapterRows));
     }
 
-    private bool CanAddProbe() => SelectedPad is not null;
+    /// <summary>
+    /// Same rules as for the filtered list: the pad needs copper on the side and must not have a probe yet, from either
+    /// side.
+    /// </summary>
+    private bool CanProbe(Pad pad, BoardSide side) => pad.HasCopperOn(side) && !Probes.Any(p => p.Pad == pad);
 
-    [RelayCommand(CanExecute = nameof(CanAddProbe))]
+    private bool CanAddProbeTop() => SelectedPad is { } pad && CanProbe(pad, BoardSide.Top);
+    private bool CanAddProbeBottom() => SelectedPad is { } pad && CanProbe(pad, BoardSide.Bottom);
+
+    [RelayCommand(CanExecute = nameof(CanAddProbeTop))]
     private void AddProbeTop() => AddProbe(SelectedPad!, BoardSide.Top);
 
-    [RelayCommand(CanExecute = nameof(CanAddProbe))]
+    [RelayCommand(CanExecute = nameof(CanAddProbeBottom))]
     private void AddProbeBottom() => AddProbe(SelectedPad!, BoardSide.Bottom);
 
     /// <summary>
@@ -368,6 +377,61 @@ public partial class MainWindowViewModel : ObservableObject
             RemoveProbeCore(existing, selectNext: false);
         else
             AddProbe(pad, side);
+    }
+
+    private bool CanRemovePadProbes() => SelectedPad is { } pad && Probes.Any(p => p.Pad == pad);
+
+    /// <summary>Removes the probes of the pad selected in the pad list, from both sides.</summary>
+    [RelayCommand(CanExecute = nameof(CanRemovePadProbes))]
+    private void RemovePadProbes()
+    {
+        if (SelectedPad is not { } pad)
+            return;
+
+        foreach (var probe in Probes.Where(p => p.Pad == pad).ToList())
+            RemoveProbeCore(probe, selectNext: false);
+    }
+
+    private bool CanAddProbesToFiltered() => PadRows.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanAddProbesToFiltered))]
+    private void AddProbesTopToFiltered() => AddProbesToFiltered(BoardSide.Top);
+
+    [RelayCommand(CanExecute = nameof(CanAddProbesToFiltered))]
+    private void AddProbesBottomToFiltered() => AddProbesToFiltered(BoardSide.Bottom);
+
+    /// <summary>
+    /// Adds a probe from the side to every pad of the filtered list. Pads that already have a probe, from either side,
+    /// and pads without copper on that side are skipped.
+    /// </summary>
+    private void AddProbesToFiltered(BoardSide side)
+    {
+        var targets = PadRows.Select(r => r.Pad).Where(p => CanProbe(p, side)).ToList();
+        var skipped = PadRows.Count - targets.Count;
+
+        if (targets.Count > 0)
+        {
+            var number = Probes.Count == 0 ? 1 : Probes.Max(p => p.Number) + 1;
+            _isBatchChange = true;
+            try
+            {
+                foreach (var pad in targets)
+                {
+                    var probe = new Probe(pad.Footprint.Reference, pad.Number, side) { Number = number++, Type = DefaultProbeType };
+                    Resolve(probe);
+                    Probes.Add(probe);
+                }
+            }
+            finally
+            {
+                _isBatchChange = false;
+            }
+
+            AfterProbesChanged();
+        }
+
+        var sideText = side == BoardSide.Top ? "Side_Top" : "Side_Bottom";
+        SetStatus(() => Localizer.Format("Status_ProbesAddedToFiltered", targets.Count, Localizer.Get(sideText), skipped));
     }
 
     private void AddProbe(Pad pad, BoardSide side)
@@ -537,6 +601,9 @@ public partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(ProbeCountText));
         BuildEndpointOptions();
         RunChecks();
+        RemovePadProbesCommand.NotifyCanExecuteChanged();
+        AddProbeTopCommand.NotifyCanExecuteChanged();
+        AddProbeBottomCommand.NotifyCanExecuteChanged();
     }
 
     public string ProbeCountText => Localizer.Format("Text_ProbeCount", Probes.Count,

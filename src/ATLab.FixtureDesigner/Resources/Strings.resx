@@ -1442,4 +1442,19 @@ bottom</value>
   <data name="Plate_PocketEdge" xml:space="preserve">
     <value>{0} lies across the edge of a pocket.</value>
   </data>
+  <data name="Button_AddBottomToFiltered" xml:space="preserve">
+    <value>Probe all listed from bottom</value>
+  </data>
+  <data name="Button_AddTopToFiltered" xml:space="preserve">
+    <value>Probe all listed from top</value>
+  </data>
+  <data name="ToolTip_RemovePadProbes" xml:space="preserve">
+    <value>Remove the probes of the selected pad</value>
+  </data>
+  <data name="ToolTip_AddToFiltered" xml:space="preserve">
+    <value>Adds a probe to every pad in the list. Pads that already have a probe or have no copper on that side are skipped.</value>
+  </data>
+  <data name="Status_ProbesAddedToFiltered" xml:space="preserve">
+    <value>{0} probes added from the {1}, {2} pads skipped.</value>
+  </data>
 </root>

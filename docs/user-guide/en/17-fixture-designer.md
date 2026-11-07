@@ -89,7 +89,9 @@ The list of all pads of the board, to find the pads to probe.
 | **Test points only** | Pads of test point footprints: library name contains *TestPoint*, or the reference is `TP` followed by a number. On by default if the board has test points. |
 | **With net only** | Hides pads without a net |
 
-The column **Reachable** shows from which side a probe can touch the pad: copper on that side that is not covered by solder mask. **Add probe from bottom** / **Add probe from top** add a probe on the selected pad; a double-click on a row does the same as a double-click on the board.
+The column **Reachable** shows from which side a probe can touch the pad: copper on that side that is not covered by solder mask. **Add probe from bottom** / **Add probe from top** add a probe on the selected pad, provided the pad has copper on that side and no probe yet; a double-click on a row does the same as a double-click on the board. **Remove** takes the probes off the selected pad, from both sides.
+
+**Probe all listed from bottom** / **Probe all listed from top** add a probe to every pad the list currently shows, so a search such as `TP*` together with the filters places all test points in one step. The same rules apply: pads that already have a probe, from either side, are skipped, as are pads without copper on that side. The status bar reports how many probes were added and how many pads were skipped.
 
 ## Probes tab
 

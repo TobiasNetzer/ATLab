@@ -478,9 +478,35 @@
                         </WrapPanel>
                         <WrapPanel Grid.Row="1" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Content="{loc:Localize Button_AddBottom}" Command="{Binding AddProbeBottomCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_AddBottom}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddBottom}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_AddTop}" Command="{Binding AddProbeTopCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_AddTop}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddTop}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveProbe}" Command="{Binding RemovePadProbesCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_RemovePadProbes}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddBottomToFiltered}" Command="{Binding AddProbesBottomToFilteredCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddToFiltered}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent ListPlus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddTopToFiltered}" Command="{Binding AddProbesTopToFilteredCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AddToFiltered}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent ListPlus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <TextBlock Text="{Binding PadCountText}" Classes="Label" VerticalAlignment="Center" Margin="4,0,0,0"/>
                         </WrapPanel>
                         <DataGrid Grid.Row="2" x:Name="PadsGrid"

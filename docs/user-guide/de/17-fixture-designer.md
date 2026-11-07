@@ -93,7 +93,9 @@ Die Liste aller Pads der Platine, um die zu kontaktierenden Pads zu finden.
 | **Nur Testpunkte** | Pads von Testpunkt-Footprints: Bibliotheksname enthält *TestPoint* oder die Referenz ist `TP` mit einer Zahl. Standardmäßig an, wenn die Platine Testpunkte hat. |
 | **Nur mit Netz** | Blendet Pads ohne Netz aus |
 
-Die Spalte **Erreichbar** zeigt, von welcher Seite eine Prüfnadel das Pad berühren kann: Kupfer auf dieser Seite, das nicht von Lötstopplack bedeckt ist. **Prüfnadel von unten** / **Prüfnadel von oben** fügen eine Prüfnadel auf dem ausgewählten Pad hinzu; ein Doppelklick auf eine Zeile wirkt wie ein Doppelklick auf der Platine.
+Die Spalte **Erreichbar** zeigt, von welcher Seite eine Prüfnadel das Pad berühren kann: Kupfer auf dieser Seite, das nicht von Lötstopplack bedeckt ist. **Prüfnadel von unten** / **Prüfnadel von oben** fügen eine Prüfnadel auf dem ausgewählten Pad hinzu, sofern das Pad auf dieser Seite Kupfer und noch keine Prüfnadel hat; ein Doppelklick auf eine Zeile wirkt wie ein Doppelklick auf der Platine. **Entfernen** nimmt die Prüfnadeln vom ausgewählten Pad, auf beiden Seiten.
+
+**Alle gelisteten von unten** / **Alle gelisteten von oben** setzen auf jedes Pad, das die Liste gerade zeigt, eine Prüfnadel. Zusammen mit den Filtern und einer Suche wie `TP*` sind so alle Testpunkte in einem Schritt bestückt. Es gelten dieselben Regeln: Pads, die schon eine Prüfnadel haben – egal von welcher Seite –, überspringt der Befehl ebenso wie Pads ohne Kupfer auf dieser Seite. Die Statusleiste meldet, wie viele Prüfnadeln dazugekommen sind und wie viele Pads übersprungen wurden.
 
 ## Registerkarte Prüfnadeln
 
