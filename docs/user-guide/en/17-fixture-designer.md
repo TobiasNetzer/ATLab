@@ -1,6 +1,6 @@
 # 17. ATLab Fixture Designer
 
-ATLab Fixture Designer designs a bed-of-nails fixture for the Test Interface Adapter from the KiCad board of the device under test. You choose which pads get a probe, from which side and with which kind of probe, and wire every probe to a pin of the test hardware. You also place the locating pins, pre-centering pins, support pins and push rods. The Fixture Designer checks the design for mistakes such as shorts between nets, probes that are too close together or pins that hit a component. It creates a build sheet for whoever builds the fixture and writes the drawings and 3D models of the plates. It is a separate program that is installed together with ATLab; it reads KiCad boards and never changes them.
+ATLab Fixture Designer designs a bed-of-nails fixture for the Test Interface Adapter from the KiCad board of the device under test. You choose which pads get a probe, from which side and with which kind of probe, and wire every probe to a pin of the test hardware. You also place the tooling pins, pre-centering pins, support pins and push rods. The Fixture Designer checks the design for mistakes such as shorts between nets, probes that are too close together or pins that hit a component. It creates a build sheet for whoever builds the fixture and writes the drawings and 3D models of the plates. It is a separate program that is installed together with ATLab; it reads KiCad boards and never changes them.
 
 ![ATLab Fixture Designer](images/Designer_Overview_en.png)
 
@@ -35,13 +35,13 @@ The tabs on the right follow the order of the work:
 | [Probes](#probes-tab) | Probe type and test hardware pin of every probe; the probe types |
 | [Wiring](#wiring-tab) | Components between board and test hardware, and additional wiring |
 | [Test Hardware](#test-hardware-tab) | The pins of J101 with their probes and nets |
-| [Mechanics](#mechanics-tab) | Locating pins, pre-centering pins, support pins and push rods |
+| [Mechanics](#mechanics-tab) | Tooling pins, pre-centering pins, support pins and push rods |
 | [Checks](#checks) | The problems found in the design |
 | [Manufacturing](#manufacturing-tab) | Plates, plate outlines and the export of the manufacturing files |
 
 ## The board view
 
-The left side shows the board with its outline, pads and holes. The legend above the board lists what is drawn: probes, locating pins, pre-centering pins, support pins, push rods, the openings in the plates and the plate outline (dashed). Pads of the top side are orange, pads of the bottom side blue; the side that is not viewed is drawn faint.
+The left side shows the board with its outline, pads and holes. The legend above the board lists what is drawn: probes, tooling pins, pre-centering pins, support pins, push rods, the openings in the plates and the plate outline (dashed). Pads of the top side are orange, pads of the bottom side blue; the side that is not viewed is drawn faint.
 
 | Option | Meaning |
 |--------|---------|
@@ -61,7 +61,7 @@ The left side shows the board with its outline, pads and holes. The legend above
 | `Esc` | End place mode |
 | Double-click beside the board, `F` or the frame button | Show the whole board |
 
-Point at a pad to see its reference, net, type and size and the probes on it, or at a hole to see its diameter and the locating pin in it. Probes of the viewed side are filled circles with their number (**P1**, **P2** …); probes from the other side are dashed. Locating pins are numbered **L1**, **L2** …, pre-centering pins **C1** …, support pins **S1** … and push rods **R1** …. A red probe or part has an error, an orange one a warning (see [Checks](#checks)).
+Point at a pad to see its reference, net, type and size and the probes on it, or at a hole to see its diameter and the tooling pin in it. Probes of the viewed side are filled circles with their number (**P1**, **P2** …); probes from the other side are dashed. Tooling pins are numbered **T1**, **T2** …, pre-centering pins **C1** …, support pins **S1** … and push rods **R1** …. A red probe or part has an error, an orange one a warning (see [Checks](#checks)).
 
 ## Fixture tab
 
@@ -97,7 +97,7 @@ The column **Reachable** shows from which side a probe can touch the pad: copper
 
 The probes of the fixture with their pad, net, side, test hardware pin, probe type, opening and position. The position is in millimeters from the **origin**: the drill/place file origin of the board if it is set in KiCad, otherwise the bottom left corner of the board outline. X points right and Y up, **as seen from the top**, also for probes from the bottom.
 
-- **Pin**: the pin of J101 the probe is wired to. Every entry shows the pin and the resource behind it, e.g. `c7 · MEAS 7`, and the probes already wired to it.
+- **Test Hardware Pin**: the pin of J101 the probe is wired to. Every entry shows the pin and the resource behind it, e.g. `c7 · MEAS 7`, and the probes already wired to it.
 - **Type**: the [probe type](#probe-types); new probes get the **Type for new probes**.
 - **Opening Ø**: the hole in the moving plate that the probe passes through (only for probes on the side of the moving plate). Leave it empty to use the opening of the probe type; enter a value for a probe that needs a bigger or smaller opening.
 - **Note**: free text for the build sheet, e.g. "long stroke".
@@ -114,19 +114,19 @@ Several probes on the same net may share a pin; they are simply wired in paralle
 
 ### Probe types
 
-A probe type describes a kind of spring probe with its receptacle. Its dimensions are used by the checks, the plate files and the bill of materials; take them from the data sheet of your probes. The probe diameter is in mil, as data sheets give it; all other sizes are in millimeters. The **Types** list below the probes shows the types of the fixture; edit the values directly in the table.
+A probe type describes a kind of spring probe with its receptacle; take its dimensions from the data sheet of your probes. All sizes are in millimeters. The **Types** list below the probes shows the types of the fixture and their names. Select a type to edit its dimensions on the right. The sketch below the list shows where each dimension is, with the letters beside the fields.
 
-| Field | Meaning |
-|-------|---------|
-| **Name** | E.g. the series or part number |
-| **Min. pad** | Smallest pad the tip hits reliably |
-| **Ø (mil)** | Diameter of the probe |
-| **Drill Ø** | Hole for the receptacle in the probe plate |
-| **Opening Ø** | Hole the probe comes through in the moving plate; 0 = the drill diameter |
-| **Height** | How far the probe stands out of the plate towards the board |
-| **Spacing** | Smallest distance between the centers of two probes of one plate |
-| **Clearance** | Smallest distance from the probe to another component of its side (its courtyard) |
-| **Note** | Free text, e.g. the part numbers of probe and receptacle |
+| Sketch | Field | Meaning |
+|--------|-------|---------|
+| | **Name** | E.g. the series or part number |
+| A | **Ø** | Diameter of the probe. Only for the bill of materials. |
+| B | **Drill Ø** | Hole for the receptacle in the probe plate |
+| C | **Opening Ø** | Hole the probe comes through in the moving plate; 0 = the drill diameter |
+| D | **Height** | How far the probe stands out of the plate towards the board. Only for the bill of materials. |
+| E | **Min. pad** | Smallest pad the tip hits reliably |
+| F | **Spacing** | Smallest distance between the centers of two probes of one plate |
+| G | **Clearance** | Smallest distance from the center of the probe to the courtyard of another component of its side |
+| | **Note** | Free text, e.g. the part numbers of probe and receptacle |
 
 | Button | Effect |
 |--------|--------|
@@ -136,7 +136,7 @@ A probe type describes a kind of spring probe with its receptacle. Its dimension
 | **Use for all probes** | Gives every probe of the fixture the selected type |
 | **Remove** | Removes the type; its probes get the default type |
 
-The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Until you save a type of your own to the library, it contains three examples (100, 75 and 50 mil). Their values are typical but do not come from a particular manufacturer – check them against the data sheet of your probes.
+The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Until you save a type of your own to the library, it contains three examples (100, 75 and 50 mil). These numbers name the probe size by its center-to-center pitch, which is the **Spacing** of the type; they are neither the diameter nor the clearance. The values of the examples are typical but do not come from a particular manufacturer – check them against the data sheet of your probes.
 
 ## Wiring tab
 
@@ -176,14 +176,14 @@ Besides the probes, a fixture needs pins that position and hold the board:
 
 | Part | Plate | Purpose |
 |------|-------|---------|
-| **Locating pin** (L) | Moving plate | Stands in a hole of the board, plated or not, and positions the board exactly |
+| **Tooling pin** (T) | Moving plate | Stands in a hole of the board, plated or not, and positions the board exactly |
 | **Pre-centering pin** (C) | Moving plate | Stands beside the board edge and centers the board roughly while it is put in |
 | **Support pin** (S) | Moving plate | The board rests on it, so it does not bend under the probes |
 | **Push rod** (R) | Pressure plate | Presses the board down onto the probes |
 
-Click the button of a kind (**Locating pin**, **Pre-centering pin**, **Support pin**, **Push rod**) and click on the board to place it; each click places another one until you press `Esc` or click the button again. Drag a part to move it, or type its **X** and **Y** in the list.
+Click the button of a kind (**Tooling pin**, **Pre-centering pin**, **Support pin**, **Push rod**) and click on the board to place it; each click places another one until you press `Esc` or click the button again. Drag a part to move it, or type its **X** and **Y** in the list.
 
-- A **locating pin** goes into a hole: click on or next to a hole of the board, and the pin snaps into it. When dragged, it snaps into the nearest hole, or back into its hole if there is none nearby.
+- A **tooling pin** goes into a hole: click on or next to a hole of the board, and the pin snaps into it. When dragged, it snaps into the nearest hole, or back into its hole if there is none nearby.
 - A **pre-centering pin** snaps beside the board edge, the **Edge gap** of its type away from it, so the board drops in freely.
 - **Support pins** and **push rods** stay where they are placed. A push rod can have an **Opening Ø** of its own in the top probe plate, like a probe in the moving plate.
 
@@ -191,17 +191,31 @@ Click the button of a kind (**Locating pin**, **Pre-centering pin**, **Support p
 
 The **Types** list below the parts works like the probe types: **Add type**, **From library**, **Save to library** and **Remove**. Every type has a **Kind**; a part can only get a type of its kind. All sizes are in millimeters.
 
-| Field | Meaning |
-|-------|---------|
-| **Name** | E.g. the part number |
-| **Kind** | Locating pin, pre-centering pin, support pin or push rod |
-| **Ø** | Diameter where it touches the board |
-| **Drill Ø** | Hole for it in its plate |
-| **Opening Ø** | Push rods only: hole in the top probe plate that the push rod passes through; 0 = the drill diameter |
-| **Edge gap** | Pre-centering pins only: gap between pin and board edge |
-| **Height** | How far it stands out of the plate towards the board |
-| **Clearance** | Smallest distance from its edge to a component of its side |
-| **Note** | Free text |
+Name and kind are set in the list. Select a type to edit the rest on the right, where only the fields that apply to it are shown. The sketch below the list follows the type as you change it and shows where each dimension is, with the letters beside the fields.
+
+| Sketch | Field | For | Meaning |
+|--------|-------|-----|---------|
+| | **Name** | All | E.g. the part number |
+| | **Kind** | All | Tooling pin, pre-centering pin, support pin or push rod |
+| A | **Ø at the board** | All | Diameter where it touches the board |
+| B | **Body Ø** | Push rods | Thicker body behind the thin end, so that only the part close to the board is thin; 0 = none |
+| B | **Shoulder Ø** | Tooling pins | Shoulder the board rests on; 0 = none |
+| E | **Thin end length** | Push rods with a body | From the tip to the body |
+| E | **Pin length above shoulder** | Tooling pins with a shoulder | From the tip to the shoulder |
+| F | **Step chamfer** | Push rods with a body | 45° chamfer in the corner between thin end and body. It is required, as a sharp corner is where a printed rod breaks. |
+| D | **Height** | All | Total height out of the plate towards the board |
+| C | **Drill Ø** | All | Hole for it in its plate. May stay 0 for a type that is 3D printed. |
+| | **Opening Ø** | Push rods | Hole in the top probe plate that the push rod passes through; 0 = the drill diameter |
+| H | **Edge gap** | Pre-centering pins | Gap between pin and board edge |
+| | **Clearance** | All | Smallest distance from its edge to a component of its side |
+| | **Tip** | All | **Flat**, **Chamfered** or **Round** (a half sphere) |
+| G | **Tip chamfer** | Chamfered tips | Size of the 45° chamfer |
+| | **Note** | All | Free text |
+| | **Include in 3D printing** | All | The [export for 3D printing](#export-for-3d-printing) models the part onto its plate |
+
+The shoulder of a tooling pin has no chamfer, so that the board can lie flat on it. On such a pin the board rests at **Height** minus **Pin length above shoulder**, on a support pin at its **Height**.
+
+Body, shoulder, step and tip shape the part in the 3D print export and are used by the checks. The other manufacturing files only need the drill diameter.
 
 ## Checks
 
@@ -216,11 +230,15 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 | Error | The pad **no longer exists** on the board, e.g. after a board change. |
 | Error | Two probes on the **same pad** from the same side. |
 | Error | Two probes of one plate are **closer** than the spacing of their probe types. |
-| Error | A locating pin is **not in a hole**, or **does not fit** into it. |
-| Error | The opening of a probe in the moving plate **overlaps the hole of a locating pin**. |
+| Error | A tooling pin is **not in a hole**, or **does not fit** into it. |
+| Error | The shoulder of a tooling pin is **not wider than the board hole**, so the board cannot rest on it. |
+| Error | The opening of a probe in the moving plate **overlaps the hole of a tooling pin**. |
 | Error | A pre-centering pin **overlaps the board**. |
 | Error | A support pin or push rod is **not under the board**, or **touches a component**. |
-| Error | The type of a part has **no drill diameter**. |
+| Error | The type of a part has **no drill diameter**, unless it is marked for 3D printing. |
+| Error | The **shape of a part type is not possible**: the body or shoulder is not wider than the part at the board, the thin end is not shorter than the height, the step chamfer is missing or too big, or the tip does not fit. |
+| Error | A type marked for 3D printing has **no diameter or height**. |
+| Error | A push rod of a type marked for 3D printing has **no opening** in the top probe plate. |
 | Warning | A probe is **not wired**: it has no pin and no wire. |
 | Warning | A component or some of its **terminals are not wired**, or it has no terminals. |
 | Warning | A wire does **not have both ends**, or leads back to where it starts. |
@@ -228,6 +246,9 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 | Warning | The pad is **smaller** than the minimum pad of the probe type. |
 | Warning | A probe lies **on or near another component** of its side: closer to its courtyard than the clearance of the probe type. The footprint of the probed pad itself does not count. |
 | Warning | A part is **closer to a component** than the clearance of its type. |
+| Warning | The **body or shoulder** of a part reaches over a component. Component heights are not known, so check that the component is lower. |
+| Warning | The opening of a push rod in the top probe plate is **narrower than its body**, so only the thin end fits through. |
+| Warning | The board **would lie crooked**: the shoulders of the tooling pins and the support pins carry it at different heights. Only checked if a tooling pin has a shoulder. |
 | Warning | A pre-centering pin is not the **edge gap** of its type away from the board edge. |
 | Warning | The pad has **no net**. |
 | Warning | One net is on **several MEAS channels**. |
@@ -246,7 +267,7 @@ A bed-of-nails fixture consists of several plates. From the bottom up:
 | Plate | Contents |
 |-------|----------|
 | **Bottom probe plate** | The receptacles of the probes from below |
-| **Moving plate** | The board lies on it. Holes for the locating, pre-centering and support pins, and openings the probes from below come through. |
+| **Moving plate** | The board lies on it. Holes for the tooling, pre-centering and support pins, and openings the probes from below come through. |
 | **Top probe plate** | The receptacles of the probes from above, and openings the push rods come through. Only needed with probes from above. |
 | **Pressure plate** | The push rods, and the receptacles of the probes from above when both share one plate |
 
@@ -256,7 +277,7 @@ The list shows every plate with its size and contents (probe holes, openings, pi
 
 **Top probes and push rods in one plate** is for a fixture whose pressure plate also holds the probes from above. It then has no top probe plate and no openings for the push rods; the probes from above get their receptacles in the pressure plate, and the wiring drawing of the build sheet shows the pressure plate. Without probes from above the setting makes no difference.
 
-Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out, or across the edge of a pocket.
+Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out, or across the edge of a pocket. For the [export for 3D printing](#export-for-3d-printing), a printed part must also not stand in a pocket.
 
 ### Outline
 
@@ -295,11 +316,20 @@ The depth is part of the outline, so plates that share the outline share their p
 
 | File | Content |
 |------|---------|
-| **Drawing (DXF)** | DXF R12 for CAM and CAD, in millimeters. Only what is machined: the plate outline as one closed polyline, the holes as circles on one layer per kind (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), so each can get its tool. Pockets are on `POCKETS`; their depth is set in CAM. Lines of an imported drawing that belong to no shape are on `OTHER_GEOMETRY`. |
+| **Drawing (DXF)** | DXF R12 for CAM and CAD, in millimeters. Only what is machined: the plate outline as one closed polyline, the holes as circles on one layer per kind (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `TOOLING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), so each can get its tool. Pockets are on `POCKETS`; their depth is set in CAM. Lines of an imported drawing that belong to no shape are on `OTHER_GEOMETRY`. |
 | **Drawing (SVG)** | The same as SVG, e.g. for laser cutters and Inkscape: one group (Inkscape layer) per kind, hairlines without fill |
 | **3D model (STEP)** | The plate as a solid with its thickness, holes, cut-outs and pockets, side facing the board at Z = 0 |
 
 The files are named `<fixture> - <plate>`, e.g. `Power board - moving plate.dxf`. Every file shows its plate **as seen from the side facing the board**: the plates below the board from above, the plates above the board from below, i.e. mirrored left to right. The coordinates are in millimeters from the origin of the build sheet. The files are not written while a plate has problems; the message lists them. Existing files are only replaced after asking.
+
+#### Export for 3D printing
+
+**Export for 3D printing…** writes one STEP file for every ticked plate, with the parts whose type is marked **Include in 3D printing** modeled onto the plate as one solid. Instead of a hole, such a part stands on the side of its plate that faces the board, with its body or shoulder, step chamfer and tip.
+
+- Probes, openings and parts whose type is not marked keep their holes.
+- The ticks for the plates apply, the ticks for the file types do not: this export only writes STEP files. They are named `<fixture> - <plate> (3D print).step`.
+- At least one placed part needs a type marked for 3D printing.
+- The parts are modeled exactly as entered. Allowing for the tolerances of your printer, and choosing diameters it can print, is up to you.
 
 ## When the board changes
 
@@ -349,4 +379,4 @@ In ATLab, **Import fixture…** in the [Board and Nets](06-configuration.md#boar
 
 ## Language, theme, colors and about
 
-The language (English, German) and the light or dark theme are switched in the toolbar and remembered. On the first start the Fixture Designer takes over the language and theme of ATLab. The palette button sets the colors of the probes, locating, pre-centering and support pins, push rods and the outlines of the probe plates, moving plate and pressure plate. They apply to the board view and the build sheet drawings and are remembered; **Default colors** restores them. The plate files (DXF, SVG) are always black. The ⓘ button shows version, build and system information.
+The language (English, German) and the light or dark theme are switched in the toolbar and remembered. On the first start the Fixture Designer takes over the language and theme of ATLab. The palette button sets the colors of the probes, tooling, pre-centering and support pins, push rods and the outlines of the probe plates, moving plate and pressure plate. They apply to the board view and the build sheet drawings and are remembered; **Default colors** restores them. The plate files (DXF, SVG) are always black. The ⓘ button shows version, build and system information.

@@ -17,7 +17,7 @@ public sealed class FixtureFile
     public const string ExpectedFormatId = "atlab-fixture";
 
     /// <summary>
-    /// Version 1: the board, the probes with their types and wiring, the parts (locating, pre-centering and support pins,
+    /// Version 1: the board, the probes with their types and wiring, the parts (tooling, pre-centering and support pins,
     /// push rods) with their types, and the plates (probe plates, moving plate, pressure plate) with their outlines,
     /// thicknesses and openings, the components in the wiring and the wires besides the probes' own pins.
     /// </summary>
@@ -55,10 +55,10 @@ public sealed class FixtureFile
     /// <summary>ID of the type new probes get.</summary>
     public string? DefaultProbeType { get; set; }
 
-    /// <summary>Types of the locating, pre-centering and support pins and push rods, copied from the library like the probe types.</summary>
+    /// <summary>Types of the tooling, pre-centering and support pins and push rods, copied from the library like the probe types.</summary>
     public List<PartType> PartTypes { get; set; } = [];
 
-    /// <summary>The placed locating, pre-centering and support pins and push rods.</summary>
+    /// <summary>The placed tooling, pre-centering and support pins and push rods.</summary>
     public List<FixturePartEntry> Parts { get; set; } = [];
 
     /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>

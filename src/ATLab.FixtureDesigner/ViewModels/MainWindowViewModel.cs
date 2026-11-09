@@ -83,7 +83,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasBoard), nameof(ShowWelcome), nameof(BoardInfo))]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(SaveAsCommand), nameof(ReloadBoardCommand),
-        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand),
+        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand), nameof(ExportForPrintingCommand),
         nameof(AddComponentCommand), nameof(AddWireCommand))]
     private Board? _board;
 
@@ -647,7 +647,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void RunChecks()
     {
-        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts, Components, Wires);
+        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts, Components, Wires, IsTopPlateCombined);
         _wiring = FixtureWiringModel.Build(Probes, Wires);
         if (Board is not null && _savedBoardHash.Length > 0 && Board.Hash.Length > 0 && _savedBoardHash != Board.Hash)
             results.Add(new CheckResult(CheckSeverity.Info, Localizer.Get("Check_BoardChanged"), []));

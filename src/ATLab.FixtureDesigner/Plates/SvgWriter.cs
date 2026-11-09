@@ -88,7 +88,7 @@ public static class SvgWriter
 
         foreach (var kind in new[]
                  {
-                     PlateHoleKind.Probe, PlateHoleKind.ProbeOpening, PlateHoleKind.LocatingPin, PlateHoleKind.Frame,
+                     PlateHoleKind.Probe, PlateHoleKind.ProbeOpening, PlateHoleKind.ToolingPin, PlateHoleKind.Frame,
                      PlateHoleKind.PreCenteringPin, PlateHoleKind.SupportPin, PlateHoleKind.PushRod, PlateHoleKind.PushRodOpening
                  })
         {

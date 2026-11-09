@@ -4,6 +4,7 @@ using System.Linq;
 using ATLab.Pcb.Controls;
 using ATLab.Pcb.Kicad;
 using ATLab.FixtureDesigner.Localization;
+using ATLab.FixtureDesigner.Plates;
 
 using ATLab.Pcb.Fixture;
 
@@ -35,7 +36,8 @@ public static class FixtureChecks
     private const double MoveTolerance = 0.01;
 
     public static List<CheckResult> Run(IReadOnlyList<Probe> probes, AdapterPinout pinout, Board? board = null,
-        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<FixtureComponent>? components = null, IReadOnlyList<Wire>? wires = null)
+        IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<FixtureComponent>? components = null, IReadOnlyList<Wire>? wires = null,
+        bool isTopPlateCombined = false)
     {
         var results = new List<CheckResult>();
         parts ??= [];
@@ -57,7 +59,7 @@ public static class FixtureChecks
         CheckPadSize(probes, results);
         if (board is not null)
             CheckComponents(probes, board, results);
-        CheckParts(parts, probes, board, results);
+        CheckParts(parts, probes, board, isTopPlateCombined, results);
 
         // Errors first, then by the first probe concerned
         return results
@@ -336,13 +338,15 @@ public static class FixtureChecks
     }
 
     /// <summary>
-    /// Locating pins stand in a hole of the board that they fit, with room to the openings of the bottom probes; pre-centering
+    /// Tooling pins stand in a hole of the board that they fit, with room to the openings of the bottom probes; pre-centering
     /// pins stand beside the board, their type's gap away from its edge; support pins and push rods are under the board and keep their
     /// clearance from the components of their side. Every part needs a type with a drill diameter. The worst result
     /// becomes the part's state, which colors it on the board.
     /// </summary>
-    private static void CheckParts(IReadOnlyList<FixturePart> parts, IReadOnlyList<Probe> probes, Board? board, List<CheckResult> results)
+    private static void CheckParts(IReadOnlyList<FixturePart> parts, IReadOnlyList<Probe> probes, Board? board, bool isTopPlateCombined,
+        List<CheckResult> results)
     {
+        var reported = new HashSet<string>();
         foreach (var part in parts)
         {
             var state = BoardMarkerState.Normal;
@@ -362,12 +366,29 @@ public static class FixtureChecks
                 continue;
             }
 
-            if (type.DrillDiameter <= 0)
+            // A printed part is modeled onto its plate and needs no hole
+            if (type.DrillDiameter <= 0 && !type.IsPrinted)
                 Add(CheckSeverity.Error, Localizer.Format("Check_PartNoDrill", part.Name, type.Name));
 
-            if (board is not null && part.Kind == FixturePartKind.LocatingPin)
+            // What is wrong with a type is said once, however many parts use it
+            foreach (var problem in PinProfile.Problems(type))
             {
-                CheckLocatingPin(part, type, probes, board, Add);
+                if (reported.Add(problem))
+                    results.Add(new(CheckSeverity.Error, problem, []));
+                state = BoardMarkerState.Error;
+            }
+
+            if (part.HasOpening && Plate.PlatesOf(probes, part.IsBoardFlipped, isTopPlateCombined).Contains(FixturePlate.TopProbePlate))
+            {
+                if (type.IsPrinted && part.Opening <= 0)
+                    Add(CheckSeverity.Error, Localizer.Format("Check_RodNoOpening", part.Name));
+                else if (type.HasBody && part.Opening < type.BodyDiameter - 1e-6)
+                    Add(CheckSeverity.Warning, Localizer.Format("Check_RodOpeningBody", part.Name, Mm(part.Opening), Mm(type.BodyDiameter)));
+            }
+
+            if (board is not null && part.Kind == FixturePartKind.ToolingPin)
+            {
+                CheckToolingPin(part, type, probes, board, Add);
                 part.State = state;
                 continue;
             }
@@ -414,34 +435,73 @@ public static class FixtureChecks
                     else if (nearest.Distance < type.ComponentClearance - 1e-6)
                         Add(CheckSeverity.Warning, Localizer.Format("Check_PartNearComponent", part.Name, Mm(nearest.Distance),
                             hit.Reference, Mm(type.ComponentClearance)));
+
+                    // The thin end reaches past the components; the body behind it may still run into a tall one
+                    if (nearest.Distance > 0 && type.HasBody)
+                        WarnAboutBody(part, type, board, center, null, Add);
                 }
             }
 
             part.State = state;
         }
+
+        CheckBoardRest(parts, results);
+    }
+
+    /// <summary>A body or shoulder over the courtyard of a component; component heights are not known, so the user has to judge it.</summary>
+    private static void WarnAboutBody(FixturePart part, PartType type, Board board, Point2 center, string? ownReference,
+        Action<CheckSeverity, string> add)
+    {
+        var hit = board.Footprints.FirstOrDefault(f => f.Side == part.PlateSide && f.HasCourtyard && f.Reference != ownReference &&
+                                                       f.DistanceToCourtyard(center) < type.BodyDiameter / 2);
+        if (hit is not null)
+            add(CheckSeverity.Warning, Localizer.Format("Check_BodyOverComponent", part.Name, Mm(type.BodyDiameter), hit.Reference));
+    }
+
+    /// <summary>The shoulders of the tooling pins and the support pins carry the board: at different heights it lies crooked.</summary>
+    private static void CheckBoardRest(IReadOnlyList<FixturePart> parts, List<CheckResult> results)
+    {
+        var used = parts.Select(p => p.Type).OfType<PartType>().Distinct().ToList();
+        var shoulders = used.Where(t => t is { IsToolingPin: true, HasBody: true, Height: > 0 }).ToList();
+        if (shoulders.Count == 0)
+            return;
+
+        var rests = shoulders.Select(t => (t.Name, Height: t.Height - t.ThinLength))
+            .Concat(used.Where(t => t is { Kind: FixturePartKind.SupportPin, Height: > 0 }).Select(t => (t.Name, t.Height)))
+            .ToList();
+
+        foreach (var rest in rests.Skip(1).Where(r => Math.Abs(r.Height - rests[0].Height) > 0.01))
+            results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_BoardRestHeight", rests[0].Name, Mm(rests[0].Height), rest.Name, Mm(rest.Height)), []));
     }
 
     /// <summary>
-    /// A locating pin needs a hole of the board at its place that it fits through, and its hole in the moving plate must
+    /// A tooling pin needs a hole of the board at its place that it fits through, and its hole in the moving plate must
     /// not run into the opening of a bottom probe. It stands in its own component's hole, so courtyards do not count.
     /// </summary>
-    private static void CheckLocatingPin(FixturePart part, PartType type, IReadOnlyList<Probe> probes, Board board,
+    private static void CheckToolingPin(FixturePart part, PartType type, IReadOnlyList<Probe> probes, Board board,
         Action<CheckSeverity, string> add)
     {
         var center = new Point2(part.BoardX, part.BoardY);
         if (BoardHoles.At(board, center) is not { } hole)
         {
-            add(CheckSeverity.Error, Localizer.Format("Check_LocatingNoHole", part.Name));
+            add(CheckSeverity.Error, Localizer.Format("Check_ToolingNoHole", part.Name));
             return;
         }
 
         if (type.Diameter > hole.Diameter + 1e-6)
-            add(CheckSeverity.Error, Localizer.Format("Check_LocatingTooBig", part.Name, Mm(type.Diameter), hole.Reference, Mm(hole.Diameter)));
+            add(CheckSeverity.Error, Localizer.Format("Check_ToolingTooBig", part.Name, Mm(type.Diameter), hole.Reference, Mm(hole.Diameter)));
+
+        if (type.HasBody)
+        {
+            if (type.BodyDiameter <= hole.Diameter + 1e-6)
+                add(CheckSeverity.Error, Localizer.Format("Check_ShoulderTooSmall", part.Name, Mm(type.BodyDiameter), hole.Reference, Mm(hole.Diameter)));
+            WarnAboutBody(part, type, board, center, hole.Reference, add);
+        }
 
         foreach (var probe in probes.Where(p => p.HasOpening && p.Pad is not null && p.Opening > 0))
         {
             if (center.DistanceTo(probe.Pad!.Position) < (type.DrillDiameter + probe.Opening) / 2)
-                add(CheckSeverity.Error, Localizer.Format("Check_LocatingPinOverlap", probe.Name, part.Name));
+                add(CheckSeverity.Error, Localizer.Format("Check_ToolingPinOverlap", probe.Name, part.Name));
         }
     }
 

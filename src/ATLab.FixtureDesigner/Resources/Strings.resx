@@ -232,7 +232,7 @@
     <value>Notes</value>
   </data>
   <data name="Label_Adapter" xml:space="preserve">
-    <value>Test hardware</value>
+    <value>Test Hardware</value>
   </data>
   <data name="Label_FixtureFile" xml:space="preserve">
     <value>Fixture file</value>
@@ -272,6 +272,9 @@
   </data>
   <data name="Column_Pin" xml:space="preserve">
     <value>Pin</value>
+  </data>
+  <data name="Column_TestHardwarePin" xml:space="preserve">
+    <value>Test Hardware Pin</value>
   </data>
   <data name="Column_X" xml:space="preserve">
     <value>X (mm)</value>
@@ -541,7 +544,7 @@ Select the board file at its new location.</value>
     <value>Author</value>
   </data>
   <data name="Report_Adapter" xml:space="preserve">
-    <value>Test hardware</value>
+    <value>Test Hardware</value>
   </data>
   <data name="Report_ProbeCount" xml:space="preserve">
     <value>Probes</value>
@@ -576,8 +579,8 @@ Select the board file at its new location.</value>
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Hole {0} · Ø {1} mm</value>
   </data>
-  <data name="Board_LocatingPinInfo" xml:space="preserve">
-    <value>Hole {0} · Ø {1} mm · locating pin {2}</value>
+  <data name="Board_ToolingPinInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm · tooling pin {2}</value>
   </data>
   <data name="Button_Layers" xml:space="preserve">
     <value>Layers</value>
@@ -703,7 +706,7 @@ Select the board file at its new location.</value>
     <value>New type</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>Probe Ø in mil, all other sizes in mm. Opening 0 = drill Ø.</value>
+    <value>The letters show where each dimension is on the sketch. Opening 0 = drill Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plate margin (mm)</value>
@@ -752,7 +755,7 @@ Select the board file at its new location.</value>
     <value>The plates cannot be made as planned:
 {0}
 
-Fix the spacing, probe types or locating pins, see Checks.</value>
+Fix the spacing, probe types or tooling pins, see Checks.</value>
   </data>
   <data name="Error_Library" xml:space="preserve">
     <value>Probe library could not be saved</value>
@@ -784,8 +787,8 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Check_NearComponent" xml:space="preserve">
     <value>{0} is {1} mm from component {2}; the probe type needs {3} mm.</value>
   </data>
-  <data name="Check_LocatingPinOverlap" xml:space="preserve">
-    <value>The opening of {0} in the moving plate overlaps the hole of locating pin {1}.</value>
+  <data name="Check_ToolingPinOverlap" xml:space="preserve">
+    <value>The opening of {0} in the moving plate overlaps the hole of tooling pin {1}.</value>
   </data>
   <data name="Header_Export" xml:space="preserve">
     <value>Export</value>
@@ -953,7 +956,7 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
     <value>Types</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>All sizes in mm. Opening only for push rods, 0 = drill Ø. Edge gap only for pre-centering pins.</value>
+    <value>Edit the dimensions of the selected type on the right. The letters show where each one is on the sketch.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>New type</value>
@@ -994,8 +997,8 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Column_Plate" xml:space="preserve">
     <value>Plate</value>
   </data>
-  <data name="Board_LegendLocatingPins" xml:space="preserve">
-    <value>Locating pins</value>
+  <data name="Board_LegendToolingPins" xml:space="preserve">
+    <value>Tooling pins</value>
   </data>
   <data name="Board_LegendPreCenteringPins" xml:space="preserve">
     <value>Pre-centering pins</value>
@@ -1009,22 +1012,22 @@ Fix the spacing, probe types or locating pins, see Checks.</value>
   <data name="Board_LegendPlateOutline" xml:space="preserve">
     <value>Plate outline</value>
   </data>
-  <data name="Part_LocatingPin" xml:space="preserve">
-    <value>Locating pin</value>
+  <data name="Part_ToolingPin" xml:space="preserve">
+    <value>Tooling pin</value>
   </data>
-  <data name="Button_PlaceLocatingPin" xml:space="preserve">
-    <value>Locating pin</value>
+  <data name="Button_PlaceToolingPin" xml:space="preserve">
+    <value>Tooling pin</value>
   </data>
-  <data name="ToolTip_PlaceLocatingPin" xml:space="preserve">
-    <value>Place locating pins</value>
+  <data name="ToolTip_PlaceToolingPin" xml:space="preserve">
+    <value>Place tooling pins</value>
   </data>
-  <data name="Status_LocatingNeedsHole" xml:space="preserve">
-    <value>A locating pin goes into a hole of the board: click on or next to a hole.</value>
+  <data name="Status_ToolingNeedsHole" xml:space="preserve">
+    <value>A tooling pin goes into a hole of the board: click on or next to a hole.</value>
   </data>
-  <data name="Check_LocatingNoHole" xml:space="preserve">
+  <data name="Check_ToolingNoHole" xml:space="preserve">
     <value>{0} is not in a hole of the board.</value>
   </data>
-  <data name="Check_LocatingTooBig" xml:space="preserve">
+  <data name="Check_ToolingTooBig" xml:space="preserve">
     <value>{0}: the pin (Ø {1} mm) does not fit into the hole of {2} (Ø {3} mm).</value>
   </data>
   <data name="Report_Bom" xml:space="preserve">
@@ -1143,10 +1146,7 @@ bottom</value>
     <value>Default colors</value>
   </data>
   <data name="Column_ProbeDiameter" xml:space="preserve">
-    <value>Ø (mil)</value>
-  </data>
-  <data name="Column_Diameter" xml:space="preserve">
-    <value>Ø</value>
+    <value>Ø (mm)</value>
   </data>
   <data name="Plate_BottomProbePlate" xml:space="preserve">
     <value>Bottom probe plate</value>
@@ -1349,8 +1349,8 @@ bottom</value>
   <data name="Color_Probe" xml:space="preserve">
     <value>Probes</value>
   </data>
-  <data name="Color_LocatingPin" xml:space="preserve">
-    <value>Locating pins</value>
+  <data name="Color_ToolingPin" xml:space="preserve">
+    <value>Tooling pins</value>
   </data>
   <data name="Color_PreCenteringPin" xml:space="preserve">
     <value>Pre-centering pins</value>
@@ -1456,5 +1456,92 @@ bottom</value>
   </data>
   <data name="Status_ProbesAddedToFiltered" xml:space="preserve">
     <value>{0} probes added from the {1}, {2} pads skipped.</value>
+  </data>
+  <data name="Field_Diameter" xml:space="preserve">
+    <value>Ø at the board (mm)</value>
+  </data>
+  <data name="Field_BodyRod" xml:space="preserve">
+    <value>Body Ø (mm)</value>
+  </data>
+  <data name="Field_BodyTooling" xml:space="preserve">
+    <value>Shoulder Ø (mm)</value>
+  </data>
+  <data name="Field_ThinRod" xml:space="preserve">
+    <value>Thin end length (mm)</value>
+  </data>
+  <data name="Field_ThinTooling" xml:space="preserve">
+    <value>Pin length above shoulder (mm)</value>
+  </data>
+  <data name="Field_StepChamfer" xml:space="preserve">
+    <value>Step chamfer (mm)</value>
+  </data>
+  <data name="Field_Tip" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Field_TipSize" xml:space="preserve">
+    <value>Tip chamfer (mm)</value>
+  </data>
+  <data name="Field_IsPrinted" xml:space="preserve">
+    <value>Include in 3D printing</value>
+  </data>
+  <data name="Tip_Flat" xml:space="preserve">
+    <value>Flat</value>
+  </data>
+  <data name="Tip_Chamfer" xml:space="preserve">
+    <value>Chamfered</value>
+  </data>
+  <data name="Tip_Round" xml:space="preserve">
+    <value>Round</value>
+  </data>
+  <data name="Text_SelectPartType" xml:space="preserve">
+    <value>Select a type to edit its dimensions.</value>
+  </data>
+  <data name="Button_ExportPrint" xml:space="preserve">
+    <value>Export for 3D printing…</value>
+  </data>
+  <data name="File_PrintSuffix" xml:space="preserve">
+    <value> (3D print)</value>
+  </data>
+  <data name="Text_NoPrintedParts" xml:space="preserve">
+    <value>No placed pin or rod has a type marked for 3D printing.</value>
+  </data>
+  <data name="Plate_PinInPocket" xml:space="preserve">
+    <value>{0} stands in a pocket; printed parts need the full plate under them.</value>
+  </data>
+  <data name="Check_PrintNeedsSize" xml:space="preserve">
+    <value>{0}: 3D printing needs a diameter and a height.</value>
+  </data>
+  <data name="Check_BodyNotWider" xml:space="preserve">
+    <value>{0}: the body or shoulder (Ø {1} mm) must be wider than the part at the board (Ø {2} mm).</value>
+  </data>
+  <data name="Check_ThinLength" xml:space="preserve">
+    <value>{0}: the thin end must be longer than 0 and shorter than the height ({1} mm).</value>
+  </data>
+  <data name="Check_StepChamferMissing" xml:space="preserve">
+    <value>{0}: the step between thin end and body needs a chamfer.</value>
+  </data>
+  <data name="Check_StepChamferTooBig" xml:space="preserve">
+    <value>{0}: the step chamfer can be at most {1} mm.</value>
+  </data>
+  <data name="Check_TipChamfer" xml:space="preserve">
+    <value>{0}: the tip chamfer must be larger than 0 and smaller than {1} mm.</value>
+  </data>
+  <data name="Check_TipTooLong" xml:space="preserve">
+    <value>{0}: the tip is longer than the straight part it sits on.</value>
+  </data>
+  <data name="Check_RodNoOpening" xml:space="preserve">
+    <value>{0}: the top probe plate needs an opening for this rod, enter its Ø.</value>
+  </data>
+  <data name="Check_RodOpeningBody" xml:space="preserve">
+    <value>{0}: the opening (Ø {1} mm) is narrower than the body (Ø {2} mm); only the thin end fits through it.</value>
+  </data>
+  <data name="Check_BodyOverComponent" xml:space="preserve">
+    <value>{0}: the body or shoulder (Ø {1} mm) reaches over {2}; check that the component is lower than it.</value>
+  </data>
+  <data name="Check_ShoulderTooSmall" xml:space="preserve">
+    <value>{0}: the shoulder (Ø {1} mm) is not wider than the hole of {2} (Ø {3} mm), so the board cannot rest on it.</value>
+  </data>
+  <data name="Check_BoardRestHeight" xml:space="preserve">
+    <value>The board rests at {1} mm on {0} but at {3} mm on {2}, so it would lie crooked.</value>
   </data>
 </root>

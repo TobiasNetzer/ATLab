@@ -273,6 +273,9 @@
   <data name="Column_Pin" xml:space="preserve">
     <value>Pin</value>
   </data>
+  <data name="Column_TestHardwarePin" xml:space="preserve">
+    <value>Test-Hardware-Pin</value>
+  </data>
   <data name="Column_X" xml:space="preserve">
     <value>X (mm)</value>
   </data>
@@ -576,7 +579,7 @@ Platinendatei am neuen Ort auswählen.</value>
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Bohrung {0} · Ø {1} mm</value>
   </data>
-  <data name="Board_LocatingPinInfo" xml:space="preserve">
+  <data name="Board_ToolingPinInfo" xml:space="preserve">
     <value>Bohrung {0} · Ø {1} mm · Fangstift {2}</value>
   </data>
   <data name="Button_Layers" xml:space="preserve">
@@ -703,7 +706,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Neuer Typ</value>
   </data>
   <data name="Text_ProbeTypesHint" xml:space="preserve">
-    <value>Nadel-Ø in mil, alle anderen Maße in mm. Durchbruch 0 = Bohrung Ø.</value>
+    <value>Die Buchstaben zeigen, wo jedes Maß in der Skizze liegt. Durchbruch 0 = Bohrungs-Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plattenrand (mm)</value>
@@ -784,7 +787,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Check_NearComponent" xml:space="preserve">
     <value>{0} ist {1} mm von Bauteil {2} entfernt; der Nadeltyp braucht {3} mm.</value>
   </data>
-  <data name="Check_LocatingPinOverlap" xml:space="preserve">
+  <data name="Check_ToolingPinOverlap" xml:space="preserve">
     <value>Der Durchbruch von {0} in der Andruckplatte überschneidet sich mit der Bohrung von Fangstift {1}.</value>
   </data>
   <data name="Header_Export" xml:space="preserve">
@@ -953,7 +956,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Typen</value>
   </data>
   <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>Alle Maße in mm. Durchbruch nur für Niederhalter, 0 = Bohrung Ø. Kantenabstand nur für Vorzentrierungsstifte.</value>
+    <value>Die Maße des gewählten Typs bearbeitest du rechts. Die Buchstaben zeigen, wo sie in der Skizze liegen.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>Neuer Typ</value>
@@ -994,7 +997,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Column_Plate" xml:space="preserve">
     <value>Platte</value>
   </data>
-  <data name="Board_LegendLocatingPins" xml:space="preserve">
+  <data name="Board_LegendToolingPins" xml:space="preserve">
     <value>Fangstifte</value>
   </data>
   <data name="Board_LegendPreCenteringPins" xml:space="preserve">
@@ -1009,22 +1012,22 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Board_LegendPlateOutline" xml:space="preserve">
     <value>Plattenumriss</value>
   </data>
-  <data name="Part_LocatingPin" xml:space="preserve">
+  <data name="Part_ToolingPin" xml:space="preserve">
     <value>Fangstift</value>
   </data>
-  <data name="Button_PlaceLocatingPin" xml:space="preserve">
+  <data name="Button_PlaceToolingPin" xml:space="preserve">
     <value>Fangstift</value>
   </data>
-  <data name="ToolTip_PlaceLocatingPin" xml:space="preserve">
+  <data name="ToolTip_PlaceToolingPin" xml:space="preserve">
     <value>Fangstifte setzen</value>
   </data>
-  <data name="Status_LocatingNeedsHole" xml:space="preserve">
+  <data name="Status_ToolingNeedsHole" xml:space="preserve">
     <value>Ein Fangstift kommt in eine Bohrung der Platine: auf oder neben eine Bohrung klicken.</value>
   </data>
-  <data name="Check_LocatingNoHole" xml:space="preserve">
+  <data name="Check_ToolingNoHole" xml:space="preserve">
     <value>{0} steht in keiner Bohrung der Platine.</value>
   </data>
-  <data name="Check_LocatingTooBig" xml:space="preserve">
+  <data name="Check_ToolingTooBig" xml:space="preserve">
     <value>{0}: Der Stift (Ø {1} mm) passt nicht in die Bohrung von {2} (Ø {3} mm).</value>
   </data>
   <data name="Report_Bom" xml:space="preserve">
@@ -1143,10 +1146,7 @@ unten</value>
     <value>Standardfarben</value>
   </data>
   <data name="Column_ProbeDiameter" xml:space="preserve">
-    <value>Ø (mil)</value>
-  </data>
-  <data name="Column_Diameter" xml:space="preserve">
-    <value>Ø</value>
+    <value>Ø (mm)</value>
   </data>
   <data name="Plate_BottomProbePlate" xml:space="preserve">
     <value>Kontaktträgerplatte unten</value>
@@ -1349,7 +1349,7 @@ unten</value>
   <data name="Color_Probe" xml:space="preserve">
     <value>Prüfnadeln</value>
   </data>
-  <data name="Color_LocatingPin" xml:space="preserve">
+  <data name="Color_ToolingPin" xml:space="preserve">
     <value>Fangstifte</value>
   </data>
   <data name="Color_PreCenteringPin" xml:space="preserve">
@@ -1456,5 +1456,92 @@ unten</value>
   </data>
   <data name="Status_ProbesAddedToFiltered" xml:space="preserve">
     <value>{0} Prüfnadeln von der {1} hinzugefügt, {2} Pads übersprungen.</value>
+  </data>
+  <data name="Field_Diameter" xml:space="preserve">
+    <value>Ø an der Platine (mm)</value>
+  </data>
+  <data name="Field_BodyRod" xml:space="preserve">
+    <value>Ø Schaft (mm)</value>
+  </data>
+  <data name="Field_BodyTooling" xml:space="preserve">
+    <value>Ø Schulter (mm)</value>
+  </data>
+  <data name="Field_ThinRod" xml:space="preserve">
+    <value>Länge dünnes Ende (mm)</value>
+  </data>
+  <data name="Field_ThinTooling" xml:space="preserve">
+    <value>Stiftlänge über der Schulter (mm)</value>
+  </data>
+  <data name="Field_StepChamfer" xml:space="preserve">
+    <value>Fase am Absatz (mm)</value>
+  </data>
+  <data name="Field_Tip" xml:space="preserve">
+    <value>Spitze</value>
+  </data>
+  <data name="Field_TipSize" xml:space="preserve">
+    <value>Fase an der Spitze (mm)</value>
+  </data>
+  <data name="Field_IsPrinted" xml:space="preserve">
+    <value>In 3D-Druck aufnehmen</value>
+  </data>
+  <data name="Tip_Flat" xml:space="preserve">
+    <value>Flach</value>
+  </data>
+  <data name="Tip_Chamfer" xml:space="preserve">
+    <value>Angefast</value>
+  </data>
+  <data name="Tip_Round" xml:space="preserve">
+    <value>Gerundet</value>
+  </data>
+  <data name="Text_SelectPartType" xml:space="preserve">
+    <value>Wähle einen Typ aus, um seine Maße zu bearbeiten.</value>
+  </data>
+  <data name="Button_ExportPrint" xml:space="preserve">
+    <value>Für 3D-Druck exportieren…</value>
+  </data>
+  <data name="File_PrintSuffix" xml:space="preserve">
+    <value> (3D-Druck)</value>
+  </data>
+  <data name="Text_NoPrintedParts" xml:space="preserve">
+    <value>Kein gesetzter Stift oder Niederhalter hat einen Typ, der für den 3D-Druck markiert ist.</value>
+  </data>
+  <data name="Plate_PinInPocket" xml:space="preserve">
+    <value>{0} steht in einer Tasche; gedruckte Teile brauchen darunter die volle Platte.</value>
+  </data>
+  <data name="Check_PrintNeedsSize" xml:space="preserve">
+    <value>{0}: Für den 3D-Druck werden Durchmesser und Höhe gebraucht.</value>
+  </data>
+  <data name="Check_BodyNotWider" xml:space="preserve">
+    <value>{0}: Schaft oder Schulter (Ø {1} mm) müssen breiter sein als das Teil an der Platine (Ø {2} mm).</value>
+  </data>
+  <data name="Check_ThinLength" xml:space="preserve">
+    <value>{0}: Das dünne Ende muss länger als 0 und kürzer als die Höhe ({1} mm) sein.</value>
+  </data>
+  <data name="Check_StepChamferMissing" xml:space="preserve">
+    <value>{0}: Der Absatz zwischen dünnem Ende und Schaft braucht eine Fase.</value>
+  </data>
+  <data name="Check_StepChamferTooBig" xml:space="preserve">
+    <value>{0}: Die Fase am Absatz darf höchstens {1} mm groß sein.</value>
+  </data>
+  <data name="Check_TipChamfer" xml:space="preserve">
+    <value>{0}: Die Fase an der Spitze muss größer als 0 und kleiner als {1} mm sein.</value>
+  </data>
+  <data name="Check_TipTooLong" xml:space="preserve">
+    <value>{0}: Die Spitze ist länger als der gerade Abschnitt, auf dem sie sitzt.</value>
+  </data>
+  <data name="Check_RodNoOpening" xml:space="preserve">
+    <value>{0}: Die obere Nadelplatte braucht einen Durchbruch für diesen Niederhalter, bitte seinen Ø eintragen.</value>
+  </data>
+  <data name="Check_RodOpeningBody" xml:space="preserve">
+    <value>{0}: Der Durchbruch (Ø {1} mm) ist enger als der Schaft (Ø {2} mm); nur das dünne Ende passt hindurch.</value>
+  </data>
+  <data name="Check_BodyOverComponent" xml:space="preserve">
+    <value>{0}: Schaft oder Schulter (Ø {1} mm) ragen über {2}; prüfe, ob das Bauteil niedriger ist.</value>
+  </data>
+  <data name="Check_ShoulderTooSmall" xml:space="preserve">
+    <value>{0}: Die Schulter (Ø {1} mm) ist nicht breiter als die Bohrung von {2} (Ø {3} mm), die Platine kann also nicht aufliegen.</value>
+  </data>
+  <data name="Check_BoardRestHeight" xml:space="preserve">
+    <value>Die Platine liegt auf {0} bei {1} mm, auf {2} aber bei {3} mm, und läge damit schief.</value>
   </data>
 </root>

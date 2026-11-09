@@ -262,6 +262,7 @@ public partial class MainWindowViewModel
                 break;
             case nameof(PlateRow.IsExported) or nameof(PlateRow.IsPresent):
                 ExportPlatesCommand.NotifyCanExecuteChanged();
+                ExportForPrintingCommand.NotifyCanExecuteChanged();
                 break;
         }
     }
@@ -307,7 +308,10 @@ public partial class MainWindowViewModel
         (IsExportDxf || IsExportStep || IsExportSvg) &&
         PlateRows.Any(r => r.IsPresent && r.IsExported);
 
-    private List<Plate> BuildPlates() => Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped, IsTopPlateCombined);
+    private bool CanExportForPrinting() => Board is not null && PlateRows.Any(r => r.IsPresent && r.IsExported);
+
+    private List<Plate> BuildPlates(bool forPrinting = false) =>
+        Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped, IsTopPlateCombined, forPrinting);
 
     private void UpdatePlateSummary()
     {
@@ -348,7 +352,7 @@ public partial class MainWindowViewModel
                      (plate.Holes.Count(h => h.Kind == PlateHoleKind.Probe), "Text_PlateProbeHoles"),
                      (plate.Holes.Count(h => h.Kind is PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening), "Text_PlateOpenings"),
                      (plate.MergedOpenings.Count, "Text_PlateMergedOpenings"),
-                     (plate.Holes.Count(h => h.Kind is PlateHoleKind.LocatingPin or PlateHoleKind.PreCenteringPin or PlateHoleKind.SupportPin
+                     (plate.Holes.Count(h => h.Kind is PlateHoleKind.ToolingPin or PlateHoleKind.PreCenteringPin or PlateHoleKind.SupportPin
                          or PlateHoleKind.PushRod), "Text_PlatePartHoles"),
                      (plate.Holes.Count(h => h.Kind == PlateHoleKind.Frame && h.Pocket is null), "Text_PlateFrameHoles"),
                      (plate.Cutouts.Count(c => c.Pocket is null), "Text_PlateCutouts"),
@@ -368,12 +372,37 @@ public partial class MainWindowViewModel
     /// made as drawn.
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanExportPlates))]
-    private async Task ExportPlates()
+    private Task ExportPlates()
+    {
+        var extensions = new List<string>();
+        if (IsExportDxf) extensions.Add(".dxf");
+        if (IsExportStep) extensions.Add(".step");
+        if (IsExportSvg) extensions.Add(".svg");
+        return WritePlatesAsync(forPrinting: false, extensions, string.Empty);
+    }
+
+    /// <summary>
+    /// The chosen plates as STEP files for a 3D printer: the parts whose type is marked for it stand on their plate as
+    /// one solid, instead of having a hole.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanExportForPrinting))]
+    private async Task ExportForPrinting()
+    {
+        if (!Parts.Any(p => p.Type is { IsPrinted: true }))
+        {
+            await ShowErrorAsync(Localizer.Get("Error_Plates"), Localizer.Get("Text_NoPrintedParts"));
+            return;
+        }
+
+        await WritePlatesAsync(forPrinting: true, [".step"], Localizer.Get("File_PrintSuffix"));
+    }
+
+    private async Task WritePlatesAsync(bool forPrinting, IReadOnlyList<string> extensions, string nameSuffix)
     {
         if (Dialogs is null || Board is null)
             return;
 
-        var plates = BuildPlates().Where(p => RowOf(p.Kind).IsExported).ToList();
+        var plates = BuildPlates(forPrinting).Where(p => RowOf(p.Kind).IsExported).ToList();
         if (plates.Count == 0)
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"), Localizer.Get("Text_NoPlates"));
@@ -394,11 +423,7 @@ public partial class MainWindowViewModel
         var baseName = SafeFileName(FixturePath is not null ? Path.GetFileNameWithoutExtension(FixturePath) : Name.Length > 0 ? Name : "Fixture");
         var files = plates.SelectMany(p =>
         {
-            var name = $"{baseName} - {Localizer.Get("File_" + p.Kind)}";
-            var extensions = new List<string>();
-            if (IsExportDxf) extensions.Add(".dxf");
-            if (IsExportStep) extensions.Add(".step");
-            if (IsExportSvg) extensions.Add(".svg");
+            var name = $"{baseName} - {Localizer.Get("File_" + p.Kind)}{nameSuffix}";
             return extensions.Select(extension => (Plate: p, Name: name, Path: Path.Combine(folder, name + extension)));
         }).ToList();
 

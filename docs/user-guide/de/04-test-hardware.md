@@ -4,7 +4,7 @@ Die Registerkarte **Test-Hardware** zeigt, was angeschlossen ist, und ermöglich
 
 ![Registerkarte Test-Hardware](images/Hardware_Tab_de.png)
 
-## Test-Hardware Schnittstelle
+## Test-Hardware-Schnittstelle
 
 Eine Abbildung des Test Interface Adapters mit der Pinbelegung seiner Steckverbinder:
 
@@ -15,7 +15,7 @@ Eine Abbildung des Test Interface Adapters mit der Pinbelegung seiner Steckverbi
 
 Die Pintabelle (`a1…a32`, `b1…b32`, `c1…c32`) listet die Signale am prüflingsseitigen Steckverbinder: externe Stimulationsausgänge, externe Programmierleitungen, RS485-, I²C- und UART-Leitungen, Stimulationsein- und -ausgänge sowie die Matrix-Messkanäle (`MEAS 1…32`). Verwenden Sie sie beim Verdrahten einer Prüfvorrichtung.
 
-## Test-Hardware Informationen
+## Test-Hardware-Informationen
 
 | Abschnitt | Information |
 |-----------|-------------|
@@ -27,7 +27,7 @@ Im Simulatormodus wird das Gerät als `cTIA Simulator` angezeigt, mit der Gerät
 
 Die Kanalanzahlen bestimmen, wie viele Zeilen die [Kanalbezeichnungen](06-configuration.md#kanalbezeichnungen) und die Relaisauswahlen haben, und werden beim Öffnen eines Projekts geprüft (siehe [Prüfung der Hardware-Kompatibilität](05-projects.md#prüfung-der-hardware-kompatibilität)).
 
-## Test-Hardware Diagnose
+## Test-Hardware-Diagnose
 
 Der **Relais-Matrix-Test** prüft jedes Matrix-Relais der Test-Hardware.
 

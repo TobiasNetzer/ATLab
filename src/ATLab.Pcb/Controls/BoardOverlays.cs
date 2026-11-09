@@ -11,8 +11,8 @@ public enum BoardMarkerKind
     /// <summary>A probe: filled circle with a label, dashed when it comes from the other side.</summary>
     Probe,
 
-    /// <summary>A locating pin: ring with a cross, through all sides.</summary>
-    LocatingPin,
+    /// <summary>A tooling pin: ring with a cross, through all sides.</summary>
+    ToolingPin,
 
     /// <summary>A pre-centering pin against the board edge.</summary>
     PreCenteringPin,
@@ -38,7 +38,7 @@ public enum BoardMarkerState
     Error
 }
 
-/// <summary>Something drawn on the board at a position, e.g. a probe of the fixture or a locating pin.</summary>
+/// <summary>Something drawn on the board at a position, e.g. a probe of the fixture or a tooling pin.</summary>
 public interface IBoardMarker : INotifyPropertyChanged
 {
     BoardMarkerKind MarkerKind { get; }

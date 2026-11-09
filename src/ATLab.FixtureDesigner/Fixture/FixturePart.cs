@@ -13,7 +13,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace ATLab.FixtureDesigner.Fixture;
 
 /// <summary>
-/// A locating pin, pre-centering pin, support pin or push rod placed by the user. Its position is kept in board coordinates; X and Y are
+/// A tooling pin, pre-centering pin, support pin or push rod placed by the user. Its position is kept in board coordinates; X and Y are
 /// the same point in build sheet coordinates, which the user can type.
 /// </summary>
 public partial class FixturePart : ObservableObject, IMovableBoardMarker
@@ -24,12 +24,12 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
     [NotifyPropertyChangedFor(nameof(Name))]
     private int _number;
 
-    /// <summary>L1 for locating pins, C1 for pre-centering pins, S1 for support pins, R1 for push rods.</summary>
+    /// <summary>T1 for tooling pins, C1 for pre-centering pins, S1 for support pins, R1 for push rods.</summary>
     public string Name => Prefix(Kind) + Number;
 
     public static string Prefix(FixturePartKind kind) => kind switch
     {
-        FixturePartKind.LocatingPin => "L",
+        FixturePartKind.ToolingPin => "T",
         FixturePartKind.PreCenteringPin => "C",
         FixturePartKind.SupportPin => "S",
         _ => "R"
@@ -39,7 +39,7 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
 
     public static string KindKey(FixturePartKind kind) => kind switch
     {
-        FixturePartKind.LocatingPin => "Part_LocatingPin",
+        FixturePartKind.ToolingPin => "Part_ToolingPin",
         FixturePartKind.PreCenteringPin => "Part_PreCenteringPin",
         FixturePartKind.SupportPin => "Part_SupportPin",
         _ => "Part_PushRod"
@@ -63,7 +63,7 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
     /// <summary>Worst result of the checks for this part.</summary>
     [ObservableProperty] private BoardMarkerState _state;
 
-    /// <summary>Plate the part goes into: locating, pre-centering and support pins the moving plate, push rods the pressure plate.</summary>
+    /// <summary>Plate the part goes into: tooling, pre-centering and support pins the moving plate, push rods the pressure plate.</summary>
     public FixturePlate Plate => Kind == FixturePartKind.PushRod ? FixturePlate.PressurePlate : FixturePlate.MovingPlate;
 
     /// <summary>The board lies upside down in the fixture: the pins are at its top side, the push rods at its bottom side.</summary>
@@ -74,7 +74,7 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
     /// <summary>The side of the board the part is on.</summary>
     public BoardSide PlateSide => Plate.Side(IsBoardFlipped);
 
-    /// <summary>The last hole a locating pin stood in, where it goes back to when dropped beside any hole.</summary>
+    /// <summary>The last hole a tooling pin stood in, where it goes back to when dropped beside any hole.</summary>
     public Point2? Anchor { get; set; }
 
     public void MoveTo(Point2 boardPoint)
@@ -126,7 +126,7 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
 
     BoardMarkerKind IBoardMarker.MarkerKind => Kind switch
     {
-        FixturePartKind.LocatingPin => BoardMarkerKind.LocatingPin,
+        FixturePartKind.ToolingPin => BoardMarkerKind.ToolingPin,
         FixturePartKind.PreCenteringPin => BoardMarkerKind.PreCenteringPin,
         FixturePartKind.SupportPin => BoardMarkerKind.SupportPin,
         _ => BoardMarkerKind.PushRod
@@ -135,15 +135,15 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
     Point2? IBoardMarker.MarkerPosition => new Point2(BoardX, BoardY);
     double IBoardMarker.MarkerSize => Type?.Diameter is > 0 and var d ? d : 2;
 
-    // A pre-centering pin stands beside the board, a locating pin goes through it: both show from both sides
-    BoardSide? IBoardMarker.MarkerSide => Kind is FixturePartKind.PreCenteringPin or FixturePartKind.LocatingPin ? null : PlateSide;
+    // A pre-centering pin stands beside the board, a tooling pin goes through it: both show from both sides
+    BoardSide? IBoardMarker.MarkerSide => Kind is FixturePartKind.PreCenteringPin or FixturePartKind.ToolingPin ? null : PlateSide;
     string IBoardMarker.MarkerLabel => Name;
     BoardMarkerState IBoardMarker.MarkerState => State;
     Pad? IBoardMarker.MarkerPad => null;
 }
 
 /// <summary>
-/// The user's types of locating, pre-centering and support pins and push rods, saved as part-library.json next to
+/// The user's types of tooling, pre-centering and support pins and push rods, saved as part-library.json next to
 /// ATLab's settings, like the probe library: a new fixture starts with a copy, every fixture keeps its own.
 /// </summary>
 public static class PartLibrary
@@ -203,8 +203,8 @@ public static class PartLibrary
     /// <summary>Usual sizes as a start; marked as examples to replace with the parts in use.</summary>
     public static List<PartType> Examples() =>
     [
-        new() { Id = "exampleLocatingPin3", Kind = FixturePartKind.LocatingPin, Name = "Locating pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 12, ComponentClearance = 0},
-        new() { Id = "exampleLocating3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, EdgeGap = 0.3, Height = 8, ComponentClearance = 0.5},
+        new() { Id = "exampleToolingPin3", Kind = FixturePartKind.ToolingPin, Name = "Tooling pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 12, ComponentClearance = 0},
+        new() { Id = "exampleTooling3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, EdgeGap = 0.3, Height = 8, ComponentClearance = 0.5},
         new() { Id = "exampleSupport4", Kind = FixturePartKind.SupportPin, Name = "Support pin 4 mm", Diameter = 4, DrillDiameter = 4, Height = 10, ComponentClearance = 1},
         new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, OpeningDiameter = 6, Height = 15, ComponentClearance = 1}
     ];

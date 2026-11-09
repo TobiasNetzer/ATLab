@@ -13,6 +13,7 @@ namespace ATLab.FixtureDesigner.Plates;
 /// it for every receptacle and pin, every cut-out through it and every pocket milled to its depth from its side. The
 /// side facing the board is at z = 0, the plate extends to z = −thickness. Written as an exact B-rep, so CAD programs
 /// import it as a solid; arcs of the outline, the cut-outs and the pockets stay arcs (circle edges and cylinder walls).
+/// A printed pin is part of that solid: it stands on the side facing the board, from z = 0 up.
 /// </summary>
 /// <remarks>
 /// The outline and the borders of the holes, cut-outs and pockets divide the plate into areas (a
@@ -96,8 +97,13 @@ public static class StepWriter
             Remove(cutout.Vertices, cutout.Pocket);
         foreach (var opening in plate.MergedOpenings)
             Remove(opening.Contour, null);
-        foreach (var hole in plate.Holes.Where(h => h.Diameter > 0))
+        foreach (var hole in plate.Holes.Where(h => h.Diameter > 0 && h.Pin is null))
             Remove(PlanarGraph.Circle(hole.X, hole.Y, hole.Diameter).Take(2).ToList(), hole.Pocket);
+
+        // A printed pin takes nothing away: its foot is only a border on the plate's face
+        var pins = plate.Holes.Where(h => h.Pin is not null).ToList();
+        foreach (var pin in pins)
+            pieces.Add(PlanarGraph.Closed(PlanarGraph.Circle(pin.X, pin.Y, pin.Diameter).Take(2).ToList()));
 
         var graph = PlanarGraph.Build(pieces, 1e-4);
         var loops = graph.Loops();
@@ -121,6 +127,23 @@ public static class StepWriter
             if (around >= 0)
                 holesOf[around].Add(loop);
         }
+
+        // The foot of each pin, an area of its own
+        var pinOf = new PlateHole?[areas.Count];
+        foreach (var pin in pins)
+        {
+            var foot = areas.FindIndex(a => a.HalfEdges.Count == 2 && a.HalfEdges.All(h =>
+            {
+                var (x, y) = graph.Nodes[graph.Origin(h)];
+                return Math.Abs(Math.Sqrt((x - pin.X) * (x - pin.X) + (y - pin.Y) * (y - pin.Y)) - pin.Diameter / 2) < 1e-3;
+            }));
+            if (foot < 0)
+                throw new InvalidOperationException($"The foot of {pin.Name} is cut by another shape of the plate.");
+            pinOf[foot] = pin;
+        }
+
+        var footEdges = Enumerable.Range(0, areas.Count).Where(i => pinOf[i] is not null)
+            .SelectMany(i => areas[i].HalfEdges.Select(h => h / 2)).ToHashSet();
 
         // The material over each area: the block less everything that covers it
         var spans = new Span[areas.Count];
@@ -290,17 +313,105 @@ public static class StepWriter
             if (spans[i].IsEmpty)
                 continue;
 
+            if (pinOf[i] is { } pin)
+            {
+                AddPin(areas[i], pin);
+                continue;
+            }
+
             var borders = holesOf[i].Prepend(areas[i]).ToList();
             var (lo, hi) = (spans[i].Lo, spans[i].Hi);
             var tops = borders.Select(l => w.Loop(l.HalfEdges.Select(h => (Horizontal(h / 2, hi), h % 2 == 0)).ToArray())).ToList();
             faces.Add(w.PlaneFace(tops[0], tops.Skip(1).ToList(), (plate.MinX, plate.MinY, hi), (0, 0, 1), (1, 0, 0)));
 
-            var bottoms = borders.Select(l => w.Loop(Enumerable.Reverse(l.HalfEdges).Select(h => (Horizontal(h / 2, lo), h % 2 == 1)).ToArray())).ToList();
+            // The far side runs on under the pins: their feet are no border there
+            var bottoms = borders.Where(l => !l.HalfEdges.All(h => footEdges.Contains(h / 2)))
+                .Select(l => w.Loop(Enumerable.Reverse(l.HalfEdges).Select(h => (Horizontal(h / 2, lo), h % 2 == 1)).ToArray())).ToList();
             faces.Add(w.PlaneFace(bottoms[0], bottoms.Skip(1).ToList(), (plate.MinX, plate.MinY, lo), (0, 0, -1), (1, 0, 0)));
         }
 
         return faces;
+
+        // ----- Printed pins -----
+
+        // The faces of a pin on its foot, each round face in two halves like the walls of a round hole. Every station of
+        // its profile is a ring of two half circles between two points opposite each other; the foot's ring is the border
+        // on the plate's face.
+        void AddPin(PlanarGraph.Loop foot, PlateHole hole)
+        {
+            var profile = hole.Pin!;
+            var (cx, cy) = (hole.X, hole.Y);
+            var (h0, h1) = (foot.HalfEdges[0], foot.HalfEdges[1]);
+            var (n0, n1) = (graph.Origin(h0), graph.Origin(h1));
+            var angle = Math.Atan2(graph.Nodes[n0].Y - cy, graph.Nodes[n0].X - cx);
+            var (ux, uy) = (Math.Cos(angle), Math.Sin(angle));
+            (double X, double Y) Side(double radius, int sign) => (cx + sign * radius * ux, cy + sign * radius * uy);
+            static (int, bool) Back((int Edge, bool Forward) e) => (e.Edge, !e.Forward);
+
+            var rings = new List<PinRing> { new(Vertex(n0, z1), Vertex(n1, z1), (Horizontal(h0 / 2, z1), h0 % 2 == 0), (Horizontal(h1 / 2, z1), h1 % 2 == 0)) };
+            foreach (var station in profile.Stations.Skip(1))
+            {
+                var z = z1 + station.Z;
+                var (a, b) = (Side(station.Radius, 1), Side(station.Radius, -1));
+                var (va, vb) = (w.Vertex(a.X, a.Y, z), w.Vertex(b.X, b.Y, z));
+                rings.Add(new PinRing(va, vb,
+                    (w.ContourEdge(va, vb, new OutlineVertex(a.X, a.Y, 1), new OutlineVertex(b.X, b.Y, 0), z), true),
+                    (w.ContourEdge(vb, va, new OutlineVertex(b.X, b.Y, 1), new OutlineVertex(a.X, a.Y, 0), z), true)));
+            }
+
+            // The seam of a round surface is put opposite the half it carries, as for the walls
+            var away = new[] { (uy, -ux, 0.0), (-uy, ux, 0.0) };
+            for (var i = 0; i + 1 < rings.Count; i++)
+            {
+                var (s, t) = (profile.Stations[i], profile.Stations[i + 1]);
+                var (lower, upper) = (rings[i], rings[i + 1]);
+                var (zs, zt) = (z1 + s.Z, z1 + t.Z);
+                if (Math.Abs(zs - zt) < 1e-9)
+                {
+                    faces.Add(w.PlaneFace(w.Loop(lower.Arc0, lower.Arc1), [w.Loop(Back(upper.Arc1), Back(upper.Arc0))], (cx, cy, zs), (0, 0, 1), (1, 0, 0)));
+                    continue;
+                }
+
+                var m0 = w.LineEdge(lower.V0, upper.V0, Side(s.Radius, 1), Side(t.Radius, 1), zs, zt);
+                var m1 = w.LineEdge(lower.V1, upper.V1, Side(s.Radius, -1), Side(t.Radius, -1), zs, zt);
+                int Surface(int half) => Math.Abs(s.Radius - t.Radius) < 1e-9
+                    ? w.Add($"CYLINDRICAL_SURFACE('',{w.Placement(cx, cy, zs, (0, 0, 1), away[half])},{R(s.Radius)})")
+                    // A cone opens along its axis: from the narrow end down, so its normal points out and up
+                    : w.Add($"CONICAL_SURFACE('',{w.Placement(cx, cy, zt, (0, 0, -1), away[half])},{R(t.Radius)},{R(Math.Atan2(s.Radius - t.Radius, zt - zs))})");
+
+                faces.Add(w.SurfaceFace(w.Loop(lower.Arc0, (m1, true), Back(upper.Arc0), (m0, false)), Surface(0), sameSense: true));
+                faces.Add(w.SurfaceFace(w.Loop(lower.Arc1, (m0, true), Back(upper.Arc1), (m1, false)), Surface(1), sameSense: true));
+            }
+
+            var last = rings[^1];
+            var end = profile.Stations[^1];
+            var endZ = z1 + end.Z;
+            if (!profile.HasRoundTip)
+            {
+                faces.Add(w.PlaneFace(w.Loop(last.Arc0, last.Arc1), [], (cx, cy, endZ), (0, 0, 1), (1, 0, 0)));
+                return;
+            }
+
+            // A half sphere in two quarters, parted by a half circle over the top. The sphere's axis is tilted so that
+            // neither its poles nor its seam fall on the quarter it carries, which readers would have to split there.
+            var (ex, ey) = ((ux, uy, 0.0), (-uy, ux, 0.0));
+            var parting = w.Add($"CIRCLE('',{w.Placement(cx, cy, endZ, (uy, -ux, 0.0), ex)},{R(end.Radius)})");
+            var over = w.Add($"EDGE_CURVE('',{Ref(last.V0)},{Ref(last.V1)},{Ref(parting)},.T.)");
+            var (rt2, rt3) = (Math.Sqrt(2), Math.Sqrt(3));
+            int Quarter(int sign)
+            {
+                var axis = (sign * (ex.Item1 + ey.Item1) / rt3, sign * (ex.Item2 + ey.Item2) / rt3, -1 / rt3);
+                var reference = (-sign * ey.Item1 / rt2, -sign * ey.Item2 / rt2, -1 / rt2);
+                return w.Add($"SPHERICAL_SURFACE('',{w.Placement(cx, cy, endZ, axis, reference)},{R(end.Radius)})");
+            }
+
+            faces.Add(w.SurfaceFace(w.Loop(last.Arc0, (over, false)), Quarter(1), sameSense: true));
+            faces.Add(w.SurfaceFace(w.Loop(last.Arc1, (over, true)), Quarter(-1), sameSense: true));
+        }
     }
+
+    /// <summary>A circle of a pin: two points opposite each other and the half circles V0 to V1 and V1 to V0, both counterclockwise.</summary>
+    private readonly record struct PinRing(int V0, int V1, (int Edge, bool Forward) Arc0, (int Edge, bool Forward) Arc1);
 
     /// <summary>
     /// Reference direction of an arc's circle and cylinder: from the center away from the middle of the arc, so the

@@ -271,7 +271,7 @@ public static class BoardSvg
 
         AppendOrigin(svg, board, p => Map(p), mirror, font);
 
-        // Parts of this side's plate at their real size with the symbol of their kind as in the board view: locating,
+        // Parts of this side's plate at their real size with the symbol of their kind as in the board view: tooling,
         // pre-centering and support pins in the bottom drawing, push rods in the top one. The name centered above, so the
         // symbol stays free
         foreach (var part in (parts ?? []).Where(p => p.PlateSide == side))
@@ -403,25 +403,25 @@ public static class BoardSvg
     }
 
     /// <summary>
-    /// The symbol of a part as in the board view: a ring with its kind's fill, a cross for a locating pin (with a heavier
+    /// The symbol of a part as in the board view: a ring with its kind's fill, a cross for a tooling pin (with a heavier
     /// ring), a dot for a support pin and an × for a push rod.
     /// </summary>
     private static string PartSymbol(FixturePartKind kind, double x, double y, double r, string color, double stroke, double thin)
     {
         var fill = kind switch
         {
-            FixturePartKind.LocatingPin => 0.25,
+            FixturePartKind.ToolingPin => 0.25,
             FixturePartKind.PreCenteringPin => 0.45,
             _ => 0.2
         };
-        var ringWidth = kind == FixturePartKind.LocatingPin ? stroke * 1.6 : stroke;
+        var ringWidth = kind == FixturePartKind.ToolingPin ? stroke * 1.6 : stroke;
         var svg = new StringBuilder(Invariant(
             $"<circle cx=\"{x:0.###}\" cy=\"{y:0.###}\" r=\"{r:0.###}\" fill=\"{color}\" fill-opacity=\"{fill:0.##}\" stroke=\"{color}\" stroke-width=\"{ringWidth:0.###}\"/>"));
         string Line(double x1, double y1, double x2, double y2) =>
             Invariant($"<line x1=\"{x1:0.###}\" y1=\"{y1:0.###}\" x2=\"{x2:0.###}\" y2=\"{y2:0.###}\" stroke=\"{color}\" stroke-width=\"{thin:0.###}\"/>");
         switch (kind)
         {
-            case FixturePartKind.LocatingPin:
+            case FixturePartKind.ToolingPin:
                 svg.Append(Line(x - r * 0.6, y, x + r * 0.6, y)).Append(Line(x, y - r * 0.6, x, y + r * 0.6));
                 break;
             case FixturePartKind.SupportPin:
@@ -498,7 +498,7 @@ public static class BoardSvg
         var sideParts = (parts ?? []).Where(p => p.PlateSide == side).ToList();
         foreach (var (kind, key) in new[]
                  {
-                     (FixturePartKind.LocatingPin, "Board_LegendLocatingPins"),
+                     (FixturePartKind.ToolingPin, "Board_LegendToolingPins"),
                      (FixturePartKind.PreCenteringPin, "Board_LegendPreCenteringPins"),
                      (FixturePartKind.SupportPin, "Board_LegendSupportPins"),
                      (FixturePartKind.PushRod, "Board_LegendPushRods")

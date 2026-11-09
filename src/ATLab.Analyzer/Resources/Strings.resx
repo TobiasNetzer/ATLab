@@ -367,7 +367,7 @@
     <value>Part number</value>
   </data>
   <data name="Fact_TestHardware" xml:space="preserve">
-    <value>Test hardware</value>
+    <value>Test Hardware</value>
   </data>
   <data name="Fact_Simulator" xml:space="preserve">
     <value>Simulator</value>

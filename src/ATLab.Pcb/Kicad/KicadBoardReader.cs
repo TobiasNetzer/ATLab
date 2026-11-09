@@ -92,7 +92,7 @@ public static class KicadBoardReader
             var drill = padNode.Child("drill");
             var drillSize = DrillDiameter(drill);
 
-            // Unplated holes take locating pins, they are no probe targets
+            // Unplated holes take tooling pins, they are no probe targets
             if (type == "np_thru_hole")
             {
                 if (drillSize > 0)
@@ -135,7 +135,7 @@ public static class KicadBoardReader
 
             footprint.Pads.Add(pad);
 
-            // Plated mounting holes without net are holes for locating pins as well
+            // Plated mounting holes without net are holes for tooling pins as well
             if (kind == PadKind.ThroughHole && !pad.HasNet &&
                 footprint.Library.Contains("MountingHole", StringComparison.OrdinalIgnoreCase) && drillSize > 0)
                 board.Holes.Add(new Hole(padPosition, drillSize, footprint.Reference));

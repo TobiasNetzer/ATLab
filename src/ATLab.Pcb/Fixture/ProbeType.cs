@@ -16,7 +16,7 @@ public partial class ProbeType : ObservableObject
     /// <summary>Smallest pad the tip can hit reliably, in mm.</summary>
     [ObservableProperty] private double _minPadSize;
 
-    /// <summary>Diameter of the probe, in mil, as probe data sheets give it.</summary>
+    /// <summary>Diameter of the probe, in mm.</summary>
     [ObservableProperty] private double _diameter;
 
     /// <summary>Diameter of the hole in the plate for the receptacle, in mm.</summary>

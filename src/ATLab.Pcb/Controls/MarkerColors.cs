@@ -8,7 +8,7 @@ public static class MarkerColors
 {
     /// <summary>Probes; the Designer's board view gets it as its probe brush (PassBrush).</summary>
     public const string Probe = "#00C853";
-    public const string LocatingPin = "#3B82F6";
+    public const string ToolingPin = "#3B82F6";
     public const string PreCenteringPin = "#D946EF";
     public const string SupportPin = "#14B8A6";
     public const string PushRod = "#8B5CF6";

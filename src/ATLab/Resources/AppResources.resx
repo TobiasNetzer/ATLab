@@ -1320,7 +1320,7 @@ Devices that are found again keep their settings. All other devices are removed 
     <value>Light</value>
   </data>
   <data name="Header_TestHardware" xml:space="preserve">
-    <value>Test hardware</value>
+    <value>Test Hardware</value>
   </data>
   <data name="Label_ForceSimulation" xml:space="preserve">
     <value>Simulation only (start without test hardware)</value>
@@ -1478,8 +1478,8 @@ Devices that are found again keep their settings. All other devices are removed 
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Hole {0} · Ø {1} mm</value>
   </data>
-  <data name="Board_LocatingPinInfo" xml:space="preserve">
-    <value>Hole {0} · Ø {1} mm · locating pin {2}</value>
+  <data name="Board_ToolingPinInfo" xml:space="preserve">
+    <value>Hole {0} · Ø {1} mm · tooling pin {2}</value>
   </data>
   <data name="Board_Hint" xml:space="preserve">
     <value>Wheel: zoom · Drag: pan · Double-click or F: whole board</value>

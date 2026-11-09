@@ -65,7 +65,7 @@ Links ist die Platine mit Umriss, Pads und Bohrungen zu sehen. Die Legende über
 | `Esc` | Setzen beenden |
 | Doppelklick neben die Platine, `F` oder die Rahmen-Schaltfläche | Ganze Platine anzeigen |
 
-Steht der Mauszeiger auf einem Pad, werden Referenz, Netz, Typ, Größe und die Prüfnadeln darauf angezeigt, auf einer Bohrung ihr Durchmesser und der Fangstift darin. Prüfnadeln der betrachteten Seite sind gefüllte Kreise mit ihrer Nummer (**P1**, **P2** …); Prüfnadeln von der anderen Seite sind gestrichelt. Fangstifte heißen **L1**, **L2** …, Vorzentrierungsstifte **C1** …, Stützstifte **S1** … und Niederhalter **R1** …. Eine rote Prüfnadel oder ein rotes Teil hat einen Fehler, eine orange eine Warnung (siehe [Prüfungen](#prüfungen)).
+Steht der Mauszeiger auf einem Pad, werden Referenz, Netz, Typ, Größe und die Prüfnadeln darauf angezeigt, auf einer Bohrung ihr Durchmesser und der Fangstift darin. Prüfnadeln der betrachteten Seite sind gefüllte Kreise mit ihrer Nummer (**P1**, **P2** …); Prüfnadeln von der anderen Seite sind gestrichelt. Fangstifte heißen **T1**, **T2** …, Vorzentrierungsstifte **C1** …, Stützstifte **S1** … und Niederhalter **R1** …. Eine rote Prüfnadel oder ein rotes Teil hat einen Fehler, eine orange eine Warnung (siehe [Prüfungen](#prüfungen)).
 
 ## Registerkarte Nadeladapter
 
@@ -101,7 +101,7 @@ Die Spalte **Erreichbar** zeigt, von welcher Seite eine Prüfnadel das Pad berü
 
 Die Prüfnadeln des Nadeladapters mit Pad, Netz, Seite, Pin der Test-Hardware, Nadeltyp, Durchbruch und Position. Die Position ist in Millimetern vom **Ursprung** angegeben: dem Bohr-/Bestückungsursprung der Platine, wenn er in KiCad gesetzt ist, sonst der linken unteren Ecke des Platinenumrisses. X zeigt nach rechts und Y nach oben, **von oben gesehen**, auch für Prüfnadeln von unten.
 
-- **Pin**: der Pin von J101, mit dem die Prüfnadel verdrahtet wird. Jeder Eintrag zeigt den Pin und die Ressource dahinter, z. B. `c7 · MEAS 7`, und die Prüfnadeln, die schon auf ihm liegen.
+- **Test-Hardware-Pin**: der Pin von J101, mit dem die Prüfnadel verdrahtet wird. Jeder Eintrag zeigt den Pin und die Ressource dahinter, z. B. `c7 · MEAS 7`, und die Prüfnadeln, die schon auf ihm liegen.
 - **Typ**: der [Nadeltyp](#nadeltypen); neue Prüfnadeln bekommen den **Typ für neue Prüfnadeln**.
 - **Durchbruch Ø**: das Loch in der Andruckplatte, durch das die Prüfnadel ragt (nur bei Prüfnadeln auf der Seite der Andruckplatte). Bleibt das Feld leer, gilt der Durchbruch des Nadeltyps. Ein eigener Wert ist für Prüfnadeln gedacht, die einen größeren oder kleineren Durchbruch brauchen.
 - **Bemerkung**: freier Text für das Aufbaublatt, z. B. „langer Hub“.
@@ -118,19 +118,19 @@ Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden
 
 ### Nadeltypen
 
-Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; sie werden für die Prüfungen, die Plattendateien und die Stückliste verwendet. Der Nadeldurchmesser ist in mil angegeben, wie in Datenblättern üblich, alle anderen Maße in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters; die Werte werden direkt in der Tabelle bearbeitet.
+Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; alle Angaben sind in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters mit ihren Namen. Wählen Sie einen Typ aus, um rechts seine Maße zu bearbeiten. Die Skizze unter der Liste zeigt, wo jedes Maß liegt; ihre Buchstaben stehen auch neben den Feldern.
 
-| Feld | Bedeutung |
-|------|-----------|
-| **Name** | Z. B. die Baureihe oder Bestellnummer |
-| **Min. Pad** | Kleinstes Pad, das die Spitze sicher trifft |
-| **Ø (mil)** | Durchmesser der Prüfnadel |
-| **Bohrung Ø** | Loch für die Hülse in der Kontaktträgerplatte |
-| **Durchbruch Ø** | Loch in der Andruckplatte, durch das die Prüfnadel kommt; 0 = Bohrungsdurchmesser |
-| **Höhe** | Wie weit die Prüfnadel aus der Platte zur Platine hin herausragt |
-| **Abstand** | Kleinster Abstand zwischen den Mitten zweier Prüfnadeln einer Platte |
-| **Freiraum** | Kleinster Abstand der Prüfnadel zu einem anderen Bauteil ihrer Seite (seiner Bauteilfläche) |
-| **Bemerkung** | Freier Text, z. B. die Bestellnummern von Nadel und Hülse |
+| Skizze | Feld | Bedeutung |
+|--------|------|-----------|
+| | **Name** | Z. B. die Baureihe oder Bestellnummer |
+| A | **Ø** | Durchmesser der Prüfnadel. Dient nur der Stückliste. |
+| B | **Bohrung Ø** | Loch für die Hülse in der Kontaktträgerplatte |
+| C | **Durchbruch Ø** | Loch in der Andruckplatte, durch das die Prüfnadel kommt; 0 = Bohrungsdurchmesser |
+| D | **Höhe** | Wie weit die Prüfnadel aus der Platte zur Platine hin herausragt. Dient nur der Stückliste. |
+| E | **Min. Pad** | Kleinstes Pad, das die Spitze sicher trifft |
+| F | **Abstand** | Kleinster Abstand zwischen den Mitten zweier Prüfnadeln einer Platte |
+| G | **Freiraum** | Kleinster Abstand von der Mitte der Prüfnadel zur Bauteilfläche eines anderen Bauteils ihrer Seite |
+| | **Bemerkung** | Freier Text, z. B. die Bestellnummern von Nadel und Hülse |
 
 | Schaltfläche | Wirkung |
 |--------------|---------|
@@ -140,7 +140,7 @@ Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hüls
 | **Für alle Prüfnadeln** | Gibt allen Prüfnadeln den ausgewählten Typ |
 | **Entfernen** | Entfernt den Typ; seine Prüfnadeln bekommen den Standardtyp |
 
-Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für sich vollständig und ändert sich nicht, wenn sich die Bibliothek ändert. Ein neuer Nadeladapter beginnt mit den Typen der Bibliothek. Solange Sie noch keinen eigenen Typ in der Bibliothek gespeichert haben, enthält sie drei Beispiele (100, 75 und 50 mil). Deren Werte sind typisch, stammen aber von keinem bestimmten Hersteller – gleichen Sie sie mit dem Datenblatt Ihrer Prüfnadeln ab.
+Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für sich vollständig und ändert sich nicht, wenn sich die Bibliothek ändert. Ein neuer Nadeladapter beginnt mit den Typen der Bibliothek. Solange Sie noch keinen eigenen Typ in der Bibliothek gespeichert haben, enthält sie drei Beispiele (100, 75 und 50 mil). Diese Zahlen benennen die Nadelgröße nach ihrem Rastermaß von Mitte zu Mitte, also dem **Abstand** des Typs; sie sind weder der Durchmesser noch der Freiraum. Die Werte der Beispiele sind typisch, stammen aber von keinem bestimmten Hersteller – gleichen Sie sie mit dem Datenblatt Ihrer Prüfnadeln ab.
 
 ## Registerkarte Verdrahtung
 
@@ -180,7 +180,7 @@ Neben den Prüfnadeln braucht ein Nadeladapter Stifte, die die Platine ausrichte
 
 | Teil | Platte | Zweck |
 |------|--------|-------|
-| **Fangstift** (L) | Andruckplatte | Steht in einer Bohrung der Platine, durchkontaktiert oder nicht, und richtet sie genau aus |
+| **Fangstift** (T) | Andruckplatte | Steht in einer Bohrung der Platine, durchkontaktiert oder nicht, und richtet sie genau aus |
 | **Vorzentrierungsstift** (C) | Andruckplatte | Steht neben der Platinenkante und zentriert die Platine grob beim Einlegen |
 | **Stützstift** (S) | Andruckplatte | Die Platine liegt auf ihm auf, damit sie sich unter den Prüfnadeln nicht durchbiegt |
 | **Niederhalter** (R) | Niederhalterplatte | Drückt die Platine auf die Prüfnadeln |
@@ -193,19 +193,33 @@ Die Schaltfläche einer Art (**Fangstift**, **Vorzentrierungsstift**, **Stützst
 
 ### Teiletypen
 
-Die Liste **Typen** unter den Teilen funktioniert wie die Nadeltypen: **Typ hinzufügen**, **Aus Bibliothek**, **In Bibliothek speichern** und **Entfernen**. Jeder Typ hat eine **Art**; ein Teil kann nur einen Typ seiner Art bekommen. Alle Maße in Millimetern.
+Die Liste **Typen** unter den Teilen funktioniert wie die Nadeltypen: **Typ hinzufügen**, **Aus Bibliothek**, **In Bibliothek speichern** und **Entfernen**. Jeder Typ hat eine **Art**; ein Teil kann nur einen Typ seiner Art bekommen. Alle Maße sind in Millimetern angegeben.
 
-| Feld | Bedeutung |
-|------|-----------|
-| **Name** | Z. B. die Bestellnummer |
-| **Art** | Fangstift, Vorzentrierungsstift, Stützstift oder Niederhalter |
-| **Ø** | Durchmesser, wo er die Platine berührt |
-| **Bohrung Ø** | Loch für ihn in seiner Platte |
-| **Durchbruch Ø** | Nur Niederhalter: Loch in der Kontaktträgerplatte oben, durch das der Niederhalter ragt; 0 = Bohrungsdurchmesser |
-| **Kantenabstand** | Nur Vorzentrierungsstifte: Spalt zwischen Stift und Platinenkante |
-| **Höhe** | Wie weit er aus der Platte zur Platine hin herausragt |
-| **Freiraum** | Kleinster Abstand von seinem Rand zu einem Bauteil seiner Seite |
-| **Bemerkung** | Freier Text |
+Name und Art werden in der Liste festgelegt. Alles Weitere bearbeiten Sie rechts, sobald ein Typ ausgewählt ist; dort erscheinen nur die Felder, die für ihn gelten. Die Skizze unter der Liste passt sich jeder Änderung an und zeigt, wo jedes Maß liegt. Ihre Buchstaben stehen auch neben den Feldern.
+
+| Skizze | Feld | Gilt für | Bedeutung |
+|--------|------|----------|-----------|
+| | **Name** | Alle | Z. B. die Bestellnummer |
+| | **Art** | Alle | Fangstift, Vorzentrierungsstift, Stützstift oder Niederhalter |
+| A | **Ø an der Platine** | Alle | Durchmesser, wo das Teil die Platine berührt |
+| B | **Ø Schaft** | Niederhalter | Dickerer Schaft hinter dem dünnen Ende, damit nur der Teil nahe der Platine dünn ist; 0 = kein Schaft |
+| B | **Ø Schulter** | Fangstifte | Schulter, auf der die Platine aufliegt; 0 = keine Schulter |
+| E | **Länge dünnes Ende** | Niederhalter mit Schaft | Von der Spitze bis zum Schaft |
+| E | **Stiftlänge über der Schulter** | Fangstifte mit Schulter | Von der Spitze bis zur Schulter |
+| F | **Fase am Absatz** | Niederhalter mit Schaft | 45°-Fase in der Ecke zwischen dünnem Ende und Schaft. Sie ist Pflicht, denn an einer scharfen Ecke bricht ein gedruckter Niederhalter. |
+| D | **Höhe** | Alle | Gesamthöhe aus der Platte zur Platine hin |
+| C | **Bohrung Ø** | Alle | Loch für das Teil in seiner Platte. Kann bei einem Typ für den 3D-Druck 0 bleiben. |
+| | **Durchbruch Ø** | Niederhalter | Loch in der Kontaktträgerplatte oben, durch das der Niederhalter ragt; 0 = Bohrungsdurchmesser |
+| H | **Kantenabstand** | Vorzentrierungsstifte | Spalt zwischen Stift und Platinenkante |
+| | **Freiraum** | Alle | Kleinster Abstand von seinem Rand zu einem Bauteil seiner Seite |
+| | **Spitze** | Alle | **Flach**, **Angefast** oder **Gerundet** (eine Halbkugel) |
+| G | **Fase an der Spitze** | Angefaste Spitzen | Größe der 45°-Fase |
+| | **Bemerkung** | Alle | Freier Text |
+| | **In 3D-Druck aufnehmen** | Alle | Der [Export für den 3D-Druck](#export-für-den-3d-druck) formt das Teil fest an seine Platte an |
+
+Die Schulter eines Fangstifts hat keine Fase, damit die Platine plan aufliegen kann. Auf einem solchen Stift liegt die Platine in der Höhe **Höhe** minus **Stiftlänge über der Schulter**, auf einem Stützstift in seiner **Höhe**.
+
+Schaft, Schulter, Absatz und Spitze bestimmen die Form des Teils im 3D-Druck-Export und fließen in die Prüfungen ein. Die übrigen Fertigungsdateien brauchen nur den Bohrungsdurchmesser.
 
 ## Prüfungen
 
@@ -221,10 +235,14 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 | Fehler | Zwei Prüfnadeln auf **demselben Pad** von derselben Seite. |
 | Fehler | Zwei Prüfnadeln einer Platte stehen **enger** als der Abstand ihrer Nadeltypen. |
 | Fehler | Ein Fangstift steht **in keiner Bohrung** oder **passt nicht** hinein. |
+| Fehler | Die Schulter eines Fangstifts ist **nicht breiter als die Bohrung der Platine**. Die Platine kann also nicht aufliegen. |
 | Fehler | Der Durchbruch einer Prüfnadel in der Andruckplatte **überschneidet die Bohrung eines Fangstifts**. |
 | Fehler | Ein Vorzentrierungsstift **überdeckt die Platine**. |
 | Fehler | Ein Stützstift oder Niederhalter steht **nicht unter der Platine** oder **berührt ein Bauteil**. |
-| Fehler | Der Typ eines Teils hat **keinen Bohrungsdurchmesser**. |
+| Fehler | Der Typ eines Teils hat **keinen Bohrungsdurchmesser**, sofern er nicht für den 3D-Druck markiert ist. |
+| Fehler | Die **Form eines Teiletyps ist nicht möglich**: Schaft oder Schulter sind nicht breiter als das Teil an der Platine, das dünne Ende ist nicht kürzer als die Höhe, die Fase am Absatz fehlt oder ist zu groß, oder die Spitze passt nicht. |
+| Fehler | Ein für den 3D-Druck markierter Typ hat **keinen Durchmesser oder keine Höhe**. |
+| Fehler | Ein Niederhalter mit einem für den 3D-Druck markierten Typ hat **keinen Durchbruch** in der Kontaktträgerplatte oben. |
 | Warnung | Eine Prüfnadel ist **nicht verdrahtet**: Sie hat weder Pin noch Verbindung. |
 | Warnung | Ein Bauteil oder einige seiner **Anschlüsse sind nicht verdrahtet**, oder es hat keine Anschlüsse. |
 | Warnung | Eine Verbindung hat **nicht beide Enden** oder führt zu ihrem Anfang zurück. |
@@ -232,6 +250,9 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 | Warnung | Das Pad ist **kleiner** als das minimale Pad des Nadeltyps. |
 | Warnung | Eine Prüfnadel liegt **auf oder nahe einem anderen Bauteil** ihrer Seite: näher an seiner Bauteilfläche als der Freiraum des Nadeltyps. Der Footprint des kontaktierten Pads selbst zählt nicht. |
 | Warnung | Ein Teil liegt **näher an einem Bauteil** als der Freiraum seines Typs. |
+| Warnung | **Schaft oder Schulter** eines Teils ragen über ein Bauteil. Die Bauteilhöhen sind nicht bekannt; prüfen Sie daher, ob das Bauteil niedriger ist. |
+| Warnung | Der Durchbruch eines Niederhalters in der Kontaktträgerplatte oben ist **enger als sein Schaft**, nur das dünne Ende passt hindurch. |
+| Warnung | Die Platine **läge schief**: Die Schultern der Fangstifte und die Stützstifte tragen sie in unterschiedlicher Höhe. Das wird nur geprüft, wenn ein Fangstift eine Schulter hat. |
 | Warnung | Ein Vorzentrierungsstift steht nicht im **Kantenabstand** seines Typs zur Platinenkante. |
 | Warnung | Das Pad hat **kein Netz**. |
 | Warnung | Ein Netz liegt auf **mehreren MEAS-Kanälen**. |
@@ -260,7 +281,7 @@ Die Liste zeigt jede Platte mit Größe und Inhalt (Nadelbohrungen, Durchbrüche
 
 **Prüfnadeln oben und Niederhalter in einer Platte** gilt für einen Nadeladapter, dessen Niederhalterplatte auch die Prüfnadeln von oben trägt. Er hat dann keine Kontaktträgerplatte oben und keine Durchbrüche für die Niederhalter; die Prüfnadeln von oben bekommen ihre Hülsen in der Niederhalterplatte, und die Verdrahtungszeichnung des Aufbaublatts zeigt die Niederhalterplatte. Ohne Prüfnadeln von oben macht die Einstellung keinen Unterschied.
 
-Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche.
+Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche. Beim [Export für den 3D-Druck](#export-für-den-3d-druck) darf ein gedrucktes Teil außerdem nicht in einer Tasche stehen.
 
 ### Umriss
 
@@ -299,11 +320,20 @@ Die Tiefe gehört zum Umriss: Platten mit gemeinsamem Umriss haben auch dieselbe
 
 | Datei | Inhalt |
 |-------|--------|
-| **Zeichnung (DXF)** | DXF R12 für CAM und CAD, in Millimetern. Nur was gefertigt wird: der Plattenumriss als eine geschlossene Polylinie, die Bohrungen als Kreise auf einer Lage je Art (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `LOCATING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), damit jede ihr Werkzeug bekommt. Taschen liegen auf `POCKETS`, ihre Tiefe wird im CAM festgelegt. Linien einer importierten Zeichnung, die zu keiner Form gehören, liegen auf `OTHER_GEOMETRY`. |
+| **Zeichnung (DXF)** | DXF R12 für CAM und CAD, in Millimetern. Nur was gefertigt wird: der Plattenumriss als eine geschlossene Polylinie, die Bohrungen als Kreise auf einer Lage je Art (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `TOOLING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), damit jede ihr Werkzeug bekommt. Taschen liegen auf `POCKETS`, ihre Tiefe wird im CAM festgelegt. Linien einer importierten Zeichnung, die zu keiner Form gehören, liegen auf `OTHER_GEOMETRY`. |
 | **Zeichnung (SVG)** | Dasselbe als SVG, z. B. für Laserschneider und Inkscape: eine Gruppe (Inkscape-Ebene) je Art, Haarlinien ohne Füllung |
 | **3D-Modell (STEP)** | Die Platte als Volumenkörper mit Dicke, Bohrungen, Ausschnitten und Taschen, die Seite zur Platine bei Z = 0 |
 
 Die Dateien heißen `<Nadeladapter> - <Platte>`, z. B. `Netzteil - Andruckplatte.dxf`. Jede Datei zeigt ihre Platte **von der Seite zur Platine gesehen**: die Platten unter der Platine von oben, die Platten über der Platine von unten, also links-rechts gespiegelt. Die Koordinaten sind in Millimetern vom Ursprung des Aufbaublatts. Solange eine Platte Probleme hat, werden die Dateien nicht geschrieben; die Meldung nennt sie. Vorhandene Dateien werden erst nach Rückfrage ersetzt.
+
+#### Export für den 3D-Druck
+
+**Für 3D-Druck exportieren…** schreibt für jede angekreuzte Platte eine STEP-Datei. Teile, deren Typ mit **In 3D-Druck aufnehmen** markiert ist, sind darin fest an die Platte angeformt, beide bilden also einen einzigen Körper. Statt einer Bohrung steht ein solches Teil auf der Seite seiner Platte, die zur Platine zeigt, und zwar mit Schaft oder Schulter, Fase am Absatz und Spitze.
+
+- Prüfnadeln, Durchbrüche und Teile, deren Typ nicht markiert ist, behalten ihre Bohrungen.
+- Die Auswahl der Platten gilt, die Auswahl der Dateiarten nicht: Dieser Export schreibt nur STEP-Dateien. Sie heißen `<Nadeladapter> - <Platte> (3D-Druck).step`.
+- Mindestens ein gesetztes Teil muss einen für den 3D-Druck markierten Typ haben.
+- Die Teile werden genau mit den eingegebenen Maßen modelliert. Die Toleranzen Ihres Druckers zu berücksichtigen und druckbare Durchmesser zu wählen, liegt bei Ihnen.
 
 ## Wenn sich die Platine ändert
 

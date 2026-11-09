@@ -19,7 +19,7 @@ public static class DxfWriter
     public const string PlateLayer = "PLATE_OUTLINE";
     public const string ProbeLayer = "PROBE_HOLES";
     public const string ProbeOpeningLayer = "PROBE_OPENINGS";
-    public const string LocatingPinLayer = "LOCATING_PIN_HOLES";
+    public const string ToolingPinLayer = "TOOLING_PIN_HOLES";
     public const string FrameLayer = "FRAME_HOLES";
     public const string PreCenteringPinLayer = "PRE_CENTERING_PINS";
     public const string SupportPinLayer = "SUPPORT_PINS";
@@ -34,7 +34,7 @@ public static class DxfWriter
     {
         PlateHoleKind.Probe => ProbeLayer,
         PlateHoleKind.ProbeOpening => ProbeOpeningLayer,
-        PlateHoleKind.LocatingPin => LocatingPinLayer,
+        PlateHoleKind.ToolingPin => ToolingPinLayer,
         PlateHoleKind.Frame => FrameLayer,
         PlateHoleKind.PreCenteringPin => PreCenteringPinLayer,
         PlateHoleKind.SupportPin => SupportPinLayer,
@@ -47,7 +47,7 @@ public static class DxfWriter
 
     private static readonly string[] Layers =
     [
-        PlateLayer, ProbeLayer, LocatingPinLayer, FrameLayer, PreCenteringPinLayer, SupportPinLayer, PushRodLayer, CutoutLayer,
+        PlateLayer, ProbeLayer, ToolingPinLayer, FrameLayer, PreCenteringPinLayer, SupportPinLayer, PushRodLayer, CutoutLayer,
         ProbeOpeningLayer, PushRodOpeningLayer, PocketLayer, OtherLayer
     ];
 

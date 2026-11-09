@@ -16,7 +16,7 @@ public enum PlateHoleKind
     /// <summary>An opening a bottom probe comes through (moving plate).</summary>
     ProbeOpening,
 
-    LocatingPin,
+    ToolingPin,
 
     /// <summary>A circle of the plate outline, e.g. a screw of the fixture frame.</summary>
     Frame,
@@ -34,8 +34,11 @@ public enum PlateHoleKind
     PushRodOpening
 }
 
-/// <summary>Hole of a plate in plate coordinates (mm, Y up); through the plate unless it is a pocket.</summary>
-public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double Y, double Diameter, Pocket? Pocket = null);
+/// <summary>
+/// Hole of a plate in plate coordinates (mm, Y up); through the plate unless it is a pocket. With a pin it is no hole
+/// but the place a printed pin stands on, the diameter that of its foot.
+/// </summary>
+public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double Y, double Diameter, Pocket? Pocket = null, PinProfile? Pin = null);
 
 /// <summary>
 /// A plate of the fixture as the plate files describe it: seen from its side facing the board. The plates below the
@@ -125,15 +128,15 @@ public sealed class Plate
     /// of each plate is in build sheet coordinates, as seen from the top.
     /// </summary>
     public static List<Plate> Build(Board board, IReadOnlyList<Probe> probes, Func<FixturePlate, OutlineShape> outlineOf,
-        IReadOnlyList<FixturePart>? parts = null, bool isBoardFlipped = false, bool isTopPlateCombined = false)
+        IReadOnlyList<FixturePart>? parts = null, bool isBoardFlipped = false, bool isTopPlateCombined = false, bool forPrinting = false)
     {
         parts ??= [];
         return PlatesOf(probes, isBoardFlipped, isTopPlateCombined)
-            .Select(kind => Build(board, probes, outlineOf(kind), parts, kind, isBoardFlipped, isTopPlateCombined)).ToList();
+            .Select(kind => Build(board, probes, outlineOf(kind), parts, kind, isBoardFlipped, isTopPlateCombined, forPrinting)).ToList();
     }
 
     private static Plate Build(Board board, IReadOnlyList<Probe> probes, OutlineShape outline,
-        IReadOnlyList<FixturePart> parts, FixturePlate kind, bool isBoardFlipped, bool isTopPlateCombined)
+        IReadOnlyList<FixturePart> parts, FixturePlate kind, bool isBoardFlipped, bool isTopPlateCombined, bool forPrinting)
     {
         // The plates above the board are mirrored about the middle of the board, as they are seen from below; with the
         // board upside down (turned over left to right) the plates below it instead
@@ -184,19 +187,32 @@ public sealed class Plate
             }
         }
 
-        // Locating, pre-centering and support pins in the moving plate, push rods in the pressure plate; a part without
-        // drill gets no hole
-        foreach (var part in parts.Where(p => p.Plate == kind && p.Type is { DrillDiameter: > 0 }).OrderBy(p => p.Kind).ThenBy(p => p.Number))
+        // Tooling, pre-centering and support pins in the moving plate, push rods in the pressure plate; a part without
+        // drill gets no hole. For printing, the parts marked for it are modeled onto the plate instead
+        bool IsPrinted(FixturePart p) => forPrinting && p.Type is { IsPrinted: true };
+        foreach (var part in parts.Where(p => p.Plate == kind && (p.Type is { DrillDiameter: > 0 } || IsPrinted(p))).OrderBy(p => p.Kind).ThenBy(p => p.Number))
         {
             var (x, y) = Map(new Point2(part.BoardX, part.BoardY));
             var holeKind = part.Kind switch
             {
-                FixturePartKind.LocatingPin => PlateHoleKind.LocatingPin,
+                FixturePartKind.ToolingPin => PlateHoleKind.ToolingPin,
                 FixturePartKind.PreCenteringPin => PlateHoleKind.PreCenteringPin,
                 FixturePartKind.SupportPin => PlateHoleKind.SupportPin,
                 _ => PlateHoleKind.PushRod
             };
-            plate.Holes.Add(new PlateHole(holeKind, part.Name, x, y, part.Type!.DrillDiameter));
+            if (!IsPrinted(part))
+            {
+                plate.Holes.Add(new PlateHole(holeKind, part.Name, x, y, part.Type!.DrillDiameter));
+                continue;
+            }
+
+            var problems = PinProfile.Problems(part.Type!);
+            plate.Problems.AddRange(problems.Except(plate.Problems));
+            if (problems.Count > 0)
+                continue;
+
+            var pin = PinProfile.Of(part.Type!);
+            plate.Holes.Add(new PlateHole(holeKind, part.Name, x, y, pin.BaseDiameter, Pin: pin));
         }
 
         // The push rods come through a top probe plate of its own; a combined plate holds them
@@ -270,6 +286,10 @@ public sealed class Plate
             .ToList();
         foreach (var hole in holes.Where(h => pockets.Any(p => OutlineShape.DistanceToEdge(p, h.X, h.Y) < h.Diameter / 2 - 1e-6)))
             Problems.Add(Localizer.Format("Plate_PocketEdge", hole.Name));
+
+        // A printed pin stands on the full plate; a pocket under or around it, on either side, is not modeled
+        foreach (var pin in holes.Where(h => h.Pin is not null && pockets.Any(p => OutlineShape.Contains(p, h.X, h.Y))))
+            Problems.Add(Localizer.Format("Plate_PinInPocket", pin.Name));
 
         // A merged opening needs its wall to the edge and to every hole (pins, frame) like a round one
         var mergedOutlines = MergedOpenings.Select(m => (m.Name, Outline: OutlineShape.Flatten(m.Contour))).ToList();

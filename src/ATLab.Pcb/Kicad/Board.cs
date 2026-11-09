@@ -177,7 +177,7 @@ public sealed class Footprint
         (Reference.StartsWith("TP", StringComparison.OrdinalIgnoreCase) && Reference.Length > 2 && char.IsDigit(Reference[2]));
 }
 
-/// <summary>Unplated hole, e.g. a mounting or tooling hole that can take a locating pin.</summary>
+/// <summary>Unplated hole, e.g. a mounting or tooling hole that can take a tooling pin.</summary>
 public sealed record Hole(Point2 Position, double Diameter, string FootprintReference)
 {
     /// <summary>Key of the hole in a fixture file: footprint reference and position, holes have no number.</summary>

@@ -532,29 +532,26 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     }
 
     /// <summary>
-    /// A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs. The diameter is
-    /// written with its unit, mil for probes and mm for pins and rods.
+    /// A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs.
     /// </summary>
-    private sealed record BomLine(string Kind, string Type, int Quantity, string Diameter, double Drill, double Opening, double Height, string Note);
+    private sealed record BomLine(string Kind, string Type, int Quantity, double Diameter, double Drill, double Opening, double Height, string Note);
 
     /// <summary>
-    /// The probe types, then the types of the locating, pre-centering and support pins and push rods, each with the
+    /// The probe types, then the types of the tooling, pre-centering and support pins and push rods, each with the
     /// number in use; probes or parts without a type are counted in a line of their own.
     /// </summary>
     private List<BomLine> BillOfMaterials()
     {
         var lines = new List<BomLine>();
         var probe = L("Report_KindProbe");
-        static string Size(double value, string format, string unit) =>
-            value > 0 ? value.ToString(format, CultureInfo.CurrentCulture) + " " + unit : "-";
         // The opening of the type, if a probe of it comes through the moving plate; probes with an opening of their own
         // have it in the plate files
         foreach (var group in data.Probes.GroupBy(p => p.Type).OrderBy(g => g.Key is null).ThenBy(g => g.Key?.Name, StringComparer.CurrentCulture))
         {
             var opening = group.Any(p => p.HasOpening) ? Probe.TypeOpening(group.Key) : 0;
             lines.Add(group.Key is { } type
-                ? new BomLine(probe, type.Name, group.Count(), Size(type.Diameter, "0.#", "mil"), type.DrillDiameter, opening, type.Height, type.Note)
-                : new BomLine(probe, L("Report_NoType"), group.Count(), "-", 0, 0, 0, string.Empty));
+                ? new BomLine(probe, type.Name, group.Count(), type.Diameter, type.DrillDiameter, opening, type.Height, type.Note)
+                : new BomLine(probe, L("Report_NoType"), group.Count(), 0, 0, 0, 0, string.Empty));
         }
 
         foreach (var group in data.Parts.GroupBy(p => (p.Kind, p.Type)).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.Type is null)
@@ -565,8 +562,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 ? FixturePart.TypeOpening(group.Key.Type)
                 : 0;
             lines.Add(group.Key.Type is { } type
-                ? new BomLine(kind, type.Name, group.Count(), Size(type.Diameter, "0.00", "mm"), type.DrillDiameter, opening, type.Height, type.Note)
-                : new BomLine(kind, L("Report_NoType"), group.Count(), "-", 0, 0, 0, string.Empty));
+                ? new BomLine(kind, type.Name, group.Count(), type.Diameter, type.DrillDiameter, opening, type.Height, type.Note)
+                : new BomLine(kind, L("Report_NoType"), group.Count(), 0, 0, 0, 0, string.Empty));
         }
 
         // Components of the wiring, one line per description and note; the designators belong to the wiring tables
@@ -575,7 +572,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                      .OrderBy(g => g.Key.Description, StringComparer.CurrentCulture))
         {
             var type = group.Key.Description;
-            lines.Add(new BomLine(component, type.Length > 0 ? type : "-", group.Count(), "-", 0, 0, 0, group.Key.Note));
+            lines.Add(new BomLine(component, type.Length > 0 ? type : "-", group.Count(), 0, 0, 0, 0, group.Key.Note));
         }
 
         return lines;
@@ -602,7 +599,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_Diameter", "Column_Drill",
+                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_PartDiameter", "Column_Drill",
                              "Column_Opening", "Column_PartHeight", "Column_Note" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
@@ -613,7 +610,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(line.Kind);
                 table.Cell().Element(BodyCell).Text(line.Type).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(line.Quantity.ToString(CultureInfo.CurrentCulture)).SemiBold();
-                table.Cell().Element(BodyCell).AlignRight().Text(line.Diameter);
+                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Diameter));
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Drill));
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Opening));
                 table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Height));
@@ -623,7 +620,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         });
     }
 
-    /// <summary>Locating, pre-centering and support pins and push rods with their type and plate, to fit and tick off.</summary>
+    /// <summary>Tooling, pre-centering and support pins and push rods with their type and plate, to fit and tick off.</summary>
     private static void ComposePartTable(IContainer container, IReadOnlyList<FixturePart> parts)
     {
         container.Table(table =>

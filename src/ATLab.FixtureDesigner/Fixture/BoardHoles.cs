@@ -4,16 +4,16 @@ using ATLab.Pcb.Kicad;
 
 namespace ATLab.FixtureDesigner.Fixture;
 
-/// <summary>A hole of the board a locating pin can stand in: an unplated hole or a plated through-hole pad.</summary>
+/// <summary>A hole of the board a tooling pin can stand in: an unplated hole or a plated through-hole pad.</summary>
 public sealed record BoardHole(Point2 Position, double Diameter, string Reference, bool IsPlated);
 
-/// <summary>The holes of a board for locating pins, and the one at or near a point.</summary>
+/// <summary>The holes of a board for tooling pins, and the one at or near a point.</summary>
 public static class BoardHoles
 {
     /// <summary>How far beside a hole a click may be and still mean it, in mm.</summary>
     public const double SnapDistance = 3;
 
-    /// <summary>A locating pin counts as standing in a hole within this distance of its center, in mm.</summary>
+    /// <summary>A tooling pin counts as standing in a hole within this distance of its center, in mm.</summary>
     private const double Tolerance = 0.01;
 
     public static List<BoardHole> All(Board board)
@@ -40,7 +40,7 @@ public static class BoardHoles
             .OrderBy(h => h.Position.DistanceTo(point))
             .FirstOrDefault();
 
-    /// <summary>The hole a locating pin at this point stands in, or null.</summary>
+    /// <summary>The hole a tooling pin at this point stands in, or null.</summary>
     public static BoardHole? At(Board board, Point2 point) =>
         All(board)
             .Where(h => h.Position.DistanceTo(point) < Tolerance)

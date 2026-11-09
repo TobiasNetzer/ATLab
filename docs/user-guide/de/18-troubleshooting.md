@@ -13,7 +13,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 
 | Symptom | Ursache / Lösung |
 |---------|------------------|
-| Die Test-Hardware Auswahl erscheint bei jedem Start | Die Test-Hardware wurde an der zuletzt verwendeten Schnittstelle nicht gefunden. USB-Kabel prüfen, die richtige Schnittstelle wählen und **Verbinden** klicken. |
+| Die Test-Hardware-Auswahl erscheint bei jedem Start | Die Test-Hardware wurde an der zuletzt verwendeten Schnittstelle nicht gefunden. USB-Kabel prüfen, die richtige Schnittstelle wählen und **Verbinden** klicken. |
 | `Failed to connect to COMx` | Die Schnittstelle wird von einem anderen Programm verwendet oder (Linux) die Berechtigung fehlt – Benutzer zur Gruppe `dialout` hinzufügen. |
 | `Initialization failed: …` | An der Schnittstelle antwortet ein Gerät, das kein Test Interface Adapter ist, oder dessen Firmware reagiert nicht. Schnittstelle prüfen und Adapter neu starten. |
 | ATLab verbindet sich automatisch, ich möchte aber den Simulator | Test-Hardware vor dem Start von ATLab abziehen, dann **Simulator** wählen. |
@@ -112,6 +112,7 @@ Die Datei wächst mit der Zeit; Sie können sie löschen, während ATLab geschlo
 | **Exportieren…** meldet, dass sich die Platten so nicht fertigen lassen | Bohrungen überschneiden sich, liegen zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche. Die Registerkarte Fertigung listet die Probleme unter den Platten. Abstände der Prüfnadeln, ihre Typen oder die Stifte korrigieren (siehe Prüfungen) oder den Plattenumriss vergrößern. |
 | Die Platten über der Platine erscheinen in der CAM-Software gespiegelt | Beabsichtigt: Jede Plattendatei zeigt ihre Platte von der der Platine zugewandten Seite, die Kontaktträgerplatte oben und die Niederhalterplatte also von unten. In der CAM-Software spiegeln, wenn sie von der anderen Seite bearbeitet werden. |
 | Ein Fangstift bleibt nicht, wo er gesetzt wird | Fangstifte springen in die nächste Bohrung der Platine. Auf oder neben eine Bohrung klicken; ohne Bohrung in der Nähe wird kein Stift gesetzt. |
+| **Für 3D-Druck exportieren…** meldet, dass kein Teil dafür markiert ist | Auf der Registerkarte Mechanik beim Typ mindestens eines gesetzten Stifts oder Niederhalters **In 3D-Druck aufnehmen** ankreuzen. |
 | Der Umriss aus einer DXF- oder SVG-Datei wird nicht verwendet | Nur geschlossene Konturen zählen. Die Zeile unter den Umriss-Einstellungen nennt, was nicht verwendet wurde, z. B. Linien, die zu keiner geschlossenen Form gehören, oder Linien, die sich kreuzen. Die Kontur im CAD-Programm schließen und sich kreuzende Linien am Kreuzungspunkt teilen. |
 | Viele Warnungen *auf oder nahe an einem Bauteil* | Der Freiraum des Nadeltyps ist größer als der Platz auf der Platine. Den Wert mit dem Datenblatt der Prüfnadel abgleichen oder die Testpunkte in KiCad verschieben. |
 

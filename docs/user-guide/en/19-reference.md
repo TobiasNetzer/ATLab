@@ -60,7 +60,7 @@
 | `Ctrl+E` | Export the manufacturing files (DXF, SVG, STEP) |
 | `F` | Show the whole board (board view focused) |
 | Double-click on a pad | Add or remove a probe |
-| Click on the board while placing | Place a locating pin, pre-centering pin, support pin or push rod |
+| Click on the board while placing | Place a tooling pin, pre-centering pin, support pin or push rod |
 | `Delete` | Remove the selected probe or part |
 | Mouse wheel / drag | Zoom / pan the board view |
 | `Esc` | End placing; close a message or the About panel |

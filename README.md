@@ -221,10 +221,10 @@ from KiCad boards.
   the bottom view is mirrored, as the plates below the board see it. Filter the pads by test points, net or footprint.
 - **Wiring:** assign every probe to a pin of the DUT connector of the test hardware (MEAS, STIM, EXT STIM, SENSE,
   programming pass-through, RS485/I²C/UART), or let free MEAS channels be assigned automatically.
-- **Mechanics:** locating pins that snap into board holes, pre-centering pins that snap to the board edge, support pins
+- **Mechanics:** tooling pins that snap into board holes, pre-centering pins that snap to the board edge, support pins
   and push rods, placed with a click and dragged into place.
 - **Types:** your own libraries of probe types (min. pad, diameter, drill, opening, height, spacing, clearance) and part
-  types for the pins and push rods.
+  types for the pins and push rods, edited next to a sketch of their dimensions.
 - **Checks:** shorts between nets on one pin, pads without copper or covered by solder mask on the probed side, probe
   spacing, pad size and component clearance, pins that miss their hole, overlap the board or hit a component, unwired
   probes, partly wired interfaces and stimulus channels, and pads that moved or changed their net since the last save.
@@ -234,7 +234,8 @@ from KiCad boards.
 - **Build sheet:** PDF with bill of materials, probes by type, pins and push rods, wiring table, and assembly and wiring
   drawings of every side with selectable board layers.
 - **Manufacturing files:** DXF and SVG drawings (one layer per kind of hole) and STEP models of the plates, each
-  seen from the side facing the board.
+  seen from the side facing the board, plus STEP models for 3D printing with the pins and push rods modeled onto their
+  plates.
 - **Fixture file:** `.atlabfix`, plain JSON like ATLab's project files. The board is referenced by path and checksum,
   probes by footprint reference and pad number, so a new board revision keeps the probes on their pads.
 

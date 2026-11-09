@@ -21,9 +21,15 @@ public sealed record PartKindOption(FixturePartKind Kind)
     public string Label => Localizer.Get(FixturePart.KindKey(Kind));
 }
 
+/// <summary>A tip of a pin or rod for the type's selection.</summary>
+public sealed record PartTipOption(PartTipStyle Style)
+{
+    public string Label => Localizer.Get("Tip_" + Style);
+}
+
 /// <summary>
-/// Locating, pre-centering and support pins and push rods: placed with a click on the board, moved by dragging or by
-/// typing X and Y, with types like the probe types. Locating pins snap into a hole of the board, pre-centering pins to the
+/// Tooling, pre-centering and support pins and push rods: placed with a click on the board, moved by dragging or by
+/// typing X and Y, with types like the probe types. Tooling pins snap into a hole of the board, pre-centering pins to the
 /// board edge.
 /// </summary>
 public partial class MainWindowViewModel
@@ -39,6 +45,9 @@ public partial class MainWindowViewModel
 
     public IReadOnlyList<PartKindOption> PartKinds { get; } =
         Enum.GetValues<FixturePartKind>().Select(k => new PartKindOption(k)).ToList();
+
+    public IReadOnlyList<PartTipOption> TipOptions { get; } =
+        Enum.GetValues<PartTipStyle>().Select(s => new PartTipOption(s)).ToList();
 
     /// <summary>Types of the user's library, offered by "Add from library".</summary>
     [ObservableProperty] private IReadOnlyList<PartType> _libraryPartTypes = [];
@@ -67,12 +76,12 @@ public partial class MainWindowViewModel
 
     /// <summary>The kind of part a click on the board places; null when not placing.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsPlacing), nameof(IsPlacingLocatingPin), nameof(IsPlacingPreCenteringPin), nameof(IsPlacingSupportPin),
+    [NotifyPropertyChangedFor(nameof(IsPlacing), nameof(IsPlacingToolingPin), nameof(IsPlacingPreCenteringPin), nameof(IsPlacingSupportPin),
         nameof(IsPlacingPushRod))]
     private FixturePartKind? _placingKind;
 
     public bool IsPlacing => PlacingKind is not null;
-    public bool IsPlacingLocatingPin => PlacingKind == FixturePartKind.LocatingPin;
+    public bool IsPlacingToolingPin => PlacingKind == FixturePartKind.ToolingPin;
     public bool IsPlacingPreCenteringPin => PlacingKind == FixturePartKind.PreCenteringPin;
     public bool IsPlacingSupportPin => PlacingKind == FixturePartKind.SupportPin;
     public bool IsPlacingPushRod => PlacingKind == FixturePartKind.PushRod;
@@ -101,7 +110,7 @@ public partial class MainWindowViewModel
     // ----- Placing -----
 
     [RelayCommand]
-    private void PlaceLocatingPin() => TogglePlacing(FixturePartKind.LocatingPin);
+    private void PlaceToolingPin() => TogglePlacing(FixturePartKind.ToolingPin);
 
     [RelayCommand]
     private void PlacePreCenteringPin() => TogglePlacing(FixturePartKind.PreCenteringPin);
@@ -120,7 +129,7 @@ public partial class MainWindowViewModel
     }
 
     /// <summary>
-    /// A click on the board in place mode: a new part of the chosen kind, with the first type of that kind. A locating pin
+    /// A click on the board in place mode: a new part of the chosen kind, with the first type of that kind. A tooling pin
     /// needs a hole near the click.
     /// </summary>
     [RelayCommand]
@@ -129,9 +138,9 @@ public partial class MainWindowViewModel
         if (PlacingKind is not { } kind || Board is null)
             return;
 
-        if (kind == FixturePartKind.LocatingPin && BoardHoles.Near(Board, boardPoint) is null)
+        if (kind == FixturePartKind.ToolingPin && BoardHoles.Near(Board, boardPoint) is null)
         {
-            SetStatus(() => Localizer.Get("Status_LocatingNeedsHole"));
+            SetStatus(() => Localizer.Get("Status_ToolingNeedsHole"));
             return;
         }
 
@@ -155,7 +164,7 @@ public partial class MainWindowViewModel
         SetStatus(() => Localizer.Format("Status_PartPlaced", part.Name, Localizer.Get(FixturePart.KindKey(kind))));
     }
 
-    /// <summary>A part was dragged: a locating pin snaps into a hole, a pre-centering pin to the board edge again.</summary>
+    /// <summary>A part was dragged: a tooling pin snaps into a hole, a pre-centering pin to the board edge again.</summary>
     [RelayCommand]
     private void PartMoved(IBoardMarker? marker)
     {
@@ -202,7 +211,7 @@ public partial class MainWindowViewModel
     // ----- Position -----
 
     /// <summary>
-    /// A locating pin moves into the nearest hole, or back into its last one if there is none nearby; a pre-centering pin
+    /// A tooling pin moves into the nearest hole, or back into its last one if there is none nearby; a pre-centering pin
     /// moves beside the board edge, its type's gap away from it; other parts stay where they are.
     /// </summary>
     private void Snap(FixturePart part)
@@ -213,7 +222,7 @@ public partial class MainWindowViewModel
         var position = new Point2(part.BoardX, part.BoardY);
         switch (part.Kind)
         {
-            case FixturePartKind.LocatingPin:
+            case FixturePartKind.ToolingPin:
                 if (BoardHoles.Near(Board, position) is { } hole)
                 {
                     part.MoveTo(hole.Position);
@@ -222,7 +231,7 @@ public partial class MainWindowViewModel
                 else if (part.Anchor is { } anchor)
                 {
                     part.MoveTo(anchor);
-                    SetStatus(() => Localizer.Get("Status_LocatingNeedsHole"));
+                    SetStatus(() => Localizer.Get("Status_ToolingNeedsHole"));
                 }
 
                 break;
@@ -283,8 +292,8 @@ public partial class MainWindowViewModel
                 AfterPartsChanged();
                 break;
 
-            // The hole of a locating pin does not depend on its type
-            case nameof(FixturePart.Type) when part.Kind == FixturePartKind.LocatingPin:
+            // The hole of a tooling pin does not depend on its type
+            case nameof(FixturePart.Type) when part.Kind == FixturePartKind.ToolingPin:
                 AfterPartsChanged();
                 break;
 
@@ -303,14 +312,14 @@ public partial class MainWindowViewModel
     }
 
     /// <summary>
-    /// After a new board: the build sheet positions of the parts from their board positions; a locating pin keeps its
+    /// After a new board: the build sheet positions of the parts from their board positions; a tooling pin keeps its
     /// hole as the place to go back to, if the board still has it.
     /// </summary>
     private void ResolveParts()
     {
         foreach (var part in Parts)
         {
-            if (part.Kind == FixturePartKind.LocatingPin && Board is not null)
+            if (part.Kind == FixturePartKind.ToolingPin && Board is not null)
                 part.Anchor = BoardHoles.At(Board, new Point2(part.BoardX, part.BoardY))?.Position;
             SyncFromBoard(part);
         }
@@ -415,6 +424,12 @@ public partial class MainWindowViewModel
             existing.OpeningDiameter = libraryType.OpeningDiameter;
             existing.EdgeGap = libraryType.EdgeGap;
             existing.Height = libraryType.Height;
+            existing.BodyDiameter = libraryType.BodyDiameter;
+            existing.ThinLength = libraryType.ThinLength;
+            existing.StepChamfer = libraryType.StepChamfer;
+            existing.TipStyle = libraryType.TipStyle;
+            existing.TipSize = libraryType.TipSize;
+            existing.IsPrinted = libraryType.IsPrinted;
             existing.ComponentClearance = libraryType.ComponentClearance;
             existing.Note = libraryType.Note;
             SelectedPartType = existing;
@@ -469,7 +484,7 @@ public partial class MainWindowViewModel
                 OpeningOverride = entry.Kind == FixturePartKind.PushRod && entry.Opening is > 0 ? entry.Opening : null
             };
             part.AvailableTypes = TypesOf(entry.Kind);
-            if (entry.Kind == FixturePartKind.LocatingPin)
+            if (entry.Kind == FixturePartKind.ToolingPin)
                 part.Anchor = new Point2(entry.X, entry.Y);
             Parts.Add(part);
         }

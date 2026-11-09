@@ -53,6 +53,22 @@
             <Setter Property="Margin" Value="0,0,12,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <!-- The letter of a dimension, as on the part type sketch -->
+        <Style Selector="Border.DimLetter">
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="CornerRadius" Value="9"/>
+            <Setter Property="Background" Value="{DynamicResource InfoColor}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Border.DimLetter > TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
         <Style Selector="TextBlock.FormLabel">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{DynamicResource ChartMuted}"/>
@@ -130,7 +146,17 @@
                                     </ItemsControl>
                                 </StackPanel>
                                 <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportFiles}"
-                                        Command="{Binding ExportPlatesCommand}"/>
+                                        Command="{Binding ExportPlatesCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                                <Button HorizontalAlignment="Right" Content="{loc:Localize Button_ExportPrint}"
+                                        Command="{Binding ExportForPrintingCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <controls:FixtureIcon Kind="Print3D" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -287,7 +313,7 @@
                                             OverlayHighlight="{Binding OutlineHighlight}"
                                             OverlayBrush="{Binding OverlayBrush}"
                                             ProbeBrush="{Binding ProbeBrush}"
-                                            LocatingPinBrush="{Binding LocatingPinBrush}"
+                                            ToolingPinBrush="{Binding ToolingPinBrush}"
                                             PreCenteringPinBrush="{Binding PreCenteringPinBrush}"
                                             SupportPinBrush="{Binding SupportPinBrush}"
                                             PushRodBrush="{Binding PushRodBrush}"
@@ -306,6 +332,10 @@
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent"/>
 
             <TabControl Grid.Column="2" SelectedIndex="{Binding SelectedTabIndex}">
+                <TabControl.Resources>
+                    <SolidColorBrush x:Key="TabItemSelectedColor" Color="{DynamicResource InfoColor}"/>
+                </TabControl.Resources>
+
                 <!-- The steps wrap onto a second row instead of being cut off when the panel is narrow -->
                 <TabControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -339,6 +369,9 @@
                             <Button Grid.Row="8" Grid.Column="1" Classes="Outline" Height="28" Padding="10,0" HorizontalAlignment="Left"
                                     Content="{loc:Localize Button_BuildSheetLayers}" ToolTip.Tip="{loc:Localize ToolTip_BuildSheetLayers}"
                                     IsEnabled="{Binding BuildSheetLayers.HasOptions}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Layers, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
                                 <Button.Flyout>
                                     <Flyout Placement="BottomEdgeAlignedLeft">
                                         <StackPanel Spacing="6" MinWidth="220">
@@ -537,7 +570,7 @@
 
                 <!-- ========== Probes ========== -->
                 <TabItem Header="{loc:Localize Tab_Probes}" AutomationProperties.Name="{loc:Localize Tab_Probes}">
-                    <Grid RowDefinitions="Auto,2*,Auto,Auto,Auto,*" Margin="0,8,0,0">
+                    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,1.4*" Margin="0,8,0,0">
                         <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Content="{loc:Localize Button_AutoAssign}" Command="{Binding AutoAssignCommand}"
                                     ToolTip.Tip="{loc:Localize ToolTip_AutoAssign}">
@@ -602,7 +635,7 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_Side}" Binding="{Binding Side, Converter={x:Static loc:EnumTextConverter.Instance}}"
                                                     Width="70" MinWidth="70" IsReadOnly="True"/>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_Pin}" Width="210" MinWidth="210">
+                                <DataGridTemplateColumn Header="{loc:Localize Column_TestHardwarePin}" Width="210" MinWidth="210">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="fixture:Probe">
                                             <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PinOptions}"
@@ -667,8 +700,15 @@
                         <!-- Probe types, like the part types in the Mechanics tab -->
                         <TextBlock Grid.Row="2" Text="{loc:Localize Header_Types}" Classes="h4" Margin="2,14,0,6"/>
                         <WrapPanel Grid.Row="3" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
-                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddProbeTypeCommand}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddProbeTypeCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_FromLibrary}" ToolTip.Tip="{loc:Localize ToolTip_FromLibrary}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Library, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
                                 <Button.Flyout>
                                     <Flyout Placement="BottomEdgeAlignedLeft">
                                         <ItemsControl ItemsSource="{Binding LibraryTypes}">
@@ -689,10 +729,22 @@
                                 </Button.Flyout>
                             </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_SaveToLibrary}" Command="{Binding SaveTypeToLibraryCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent BookPlus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_ApplyToAll}" Command="{Binding ApplyTypeToAllCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_ApplyToAll}"/>
-                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemoveProbeTypeCommand}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_ApplyToAll}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent ListChecks, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemoveProbeTypeCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <StackPanel Orientation="Horizontal" Spacing="10" Margin="8,0,0,0">
                                 <TextBlock Text="{loc:Localize Label_DefaultType}" Classes="FormLabel"/>
                                 <ComboBox ItemsSource="{Binding ProbeTypes}" SelectedItem="{Binding DefaultProbeType}" MinWidth="180">
@@ -705,28 +757,76 @@
                             </StackPanel>
                         </WrapPanel>
                         <TextBlock Grid.Row="4" Text="{loc:Localize Text_ProbeTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
-                        <DataGrid Grid.Row="5"
-                                  Classes="HorizontalScroll Compact"
-                                  ItemsSource="{Binding ProbeTypes}"
-                                  SelectedItem="{Binding SelectedProbeType, Mode=TwoWay}"
-                                  SelectionMode="Single"
-                                  CanUserSortColumns="False"
-                                  CanUserResizeColumns="True"
-                                  GridLinesVisibility="Horizontal"
-                                  BorderThickness="1"
-                                  BorderBrush="{DynamicResource OutlineColor}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinPad}" Binding="{Binding MinPadSize, Converter={x:Static loc:NumberConverter.Instance}}" Width="110" MinWidth="110"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_ProbeDiameter}" Binding="{Binding Diameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="135" MinWidth="135"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height, Converter={x:Static loc:NumberConverter.Instance}}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_MinSpacing}" Binding="{Binding MinSpacing, Converter={x:Static loc:NumberConverter.Instance}}" Width="105" MinWidth="105"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance, Converter={x:Static loc:NumberConverter.Instance}}" Width="115" MinWidth="115"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid Grid.Row="5" ColumnDefinitions="*,290" RowDefinitions="*,Auto" ColumnSpacing="10">
+                            <DataGrid
+                                      Classes="HorizontalScroll Compact"
+                                      ItemsSource="{Binding ProbeTypes}"
+                                      SelectedItem="{Binding SelectedProbeType, Mode=TwoWay}"
+                                      SelectionMode="Single"
+                                      CanUserSortColumns="False"
+                                      CanUserResizeColumns="True"
+                                      GridLinesVisibility="Horizontal"
+                                      BorderThickness="1"
+                                      BorderBrush="{DynamicResource OutlineColor}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="*" MinWidth="130"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Sketch of a probe; its letters are the ones beside the fields -->
+                            <controls:ProbeTypeDrawing Grid.Row="1" Height="225" Margin="0,8,0,0"
+                                                       IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                            <!-- Dimensions of the selected type -->
+                            <TextBlock Grid.Column="1" Grid.RowSpan="2" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
+                                       IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNull}}"/>
+                            <ScrollViewer Grid.Column="1" Grid.RowSpan="2">
+                                <ContentControl Content="{Binding SelectedProbeType}" HorizontalContentAlignment="Stretch">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate DataType="pcbfix:ProbeType">
+                                            <StackPanel Spacing="6" Margin="0,0,12,0">
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_ProbeDiameter}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="C"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinPad}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinPadSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinSpacing}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinSpacing, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <TextBox Text="{Binding Note}" PlaceholderText="{loc:Localize Column_Note}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
                 </TabItem>
 
@@ -899,24 +999,44 @@
                     </Grid>
                 </TabItem>
 
-                <!-- ========== Mechanics: locating pins, pre-centering pins, support pins, push rods ========== -->
+                <!-- ========== Mechanics: tooling pins, pre-centering pins, support pins, push rods ========== -->
                 <TabItem Header="{loc:Localize Tab_Mechanics}" AutomationProperties.Name="{loc:Localize Tab_Mechanics}">
-                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,*" Margin="0,8,0,0">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,2*" Margin="0,8,0,0">
                         <!-- Place mode: a click on the board places a part of the chosen kind; Escape ends it -->
                         <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
-                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingLocatingPin}" Content="{loc:Localize Button_PlaceLocatingPin}"
-                                    Command="{Binding PlaceLocatingPinCommand}" IsEnabled="{Binding HasBoard}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceLocatingPin}"/>
+                            <Button Classes="Tool" Classes.Active="{Binding IsPlacingToolingPin}" Content="{loc:Localize Button_PlaceToolingPin}"
+                                    Command="{Binding PlaceToolingPinCommand}" IsEnabled="{Binding HasBoard}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceToolingPin}">
+                                <shadui:ButtonAssist.Icon>
+                                    <controls:FixtureIcon Kind="ToolingPin" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Classes.Active="{Binding IsPlacingPreCenteringPin}" Content="{loc:Localize Button_PlacePreCenteringPin}"
                                     Command="{Binding PlacePreCenteringPinCommand}" IsEnabled="{Binding HasBoard}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePreCenteringPin}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePreCenteringPin}">
+                                <shadui:ButtonAssist.Icon>
+                                    <controls:FixtureIcon Kind="PreCenteringPin" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Classes.Active="{Binding IsPlacingSupportPin}" Content="{loc:Localize Button_PlaceSupportPin}"
                                     Command="{Binding PlaceSupportPinCommand}" IsEnabled="{Binding HasBoard}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceSupportPin}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlaceSupportPin}">
+                                <shadui:ButtonAssist.Icon>
+                                    <controls:FixtureIcon Kind="SupportPin" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Classes.Active="{Binding IsPlacingPushRod}" Content="{loc:Localize Button_PlacePushRod}"
                                     Command="{Binding PlacePushRodCommand}" IsEnabled="{Binding HasBoard}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePushRod}"/>
-                            <Button Classes="Tool" Content="{loc:Localize Button_RemovePart}" Command="{Binding RemovePartCommand}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_PlacePushRod}">
+                                <shadui:ButtonAssist.Icon>
+                                    <controls:FixtureIcon Kind="PushRod" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemovePart}" Command="{Binding RemovePartCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                         </WrapPanel>
                         <TextBlock Grid.Row="1" Text="{loc:Localize Text_PartsHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
                         <DataGrid Grid.Row="2"
@@ -967,8 +1087,15 @@
                         <!-- Types of the parts, like the probe types -->
                         <TextBlock Grid.Row="3" Text="{loc:Localize Header_Types}" Classes="h4" Margin="2,14,0,6"/>
                         <WrapPanel Grid.Row="4" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
-                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddPartTypeCommand}"/>
+                            <Button Classes="Tool" Content="{loc:Localize Button_AddType}" Command="{Binding AddPartTypeCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_FromLibrary}" ToolTip.Tip="{loc:Localize ToolTip_FromLibrary}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Library, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
                                 <Button.Flyout>
                                     <Flyout Placement="BottomEdgeAlignedLeft">
                                         <ItemsControl ItemsSource="{Binding LibraryPartTypes}">
@@ -989,60 +1116,134 @@
                                 </Button.Flyout>
                             </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_SaveToLibrary}" Command="{Binding SavePartTypeToLibraryCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}"/>
-                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemovePartTypeCommand}"/>
+                                    ToolTip.Tip="{loc:Localize ToolTip_SaveToLibrary}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent BookPlus, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_RemoveType}" Command="{Binding RemovePartTypeCommand}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Trash, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
                         </WrapPanel>
                         <TextBlock Grid.Row="5" Text="{loc:Localize Text_PartTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
-                        <DataGrid Grid.Row="6"
-                                  Classes="HorizontalScroll Compact"
-                                  ItemsSource="{Binding PartTypes}"
-                                  SelectedItem="{Binding SelectedPartType, Mode=TwoWay}"
-                                  SelectionMode="Single"
-                                  CanUserSortColumns="False"
-                                  CanUserResizeColumns="True"
-                                  GridLinesVisibility="Horizontal"
-                                  BorderThickness="1"
-                                  BorderBrush="{DynamicResource OutlineColor}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="200" MinWidth="170"/>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="210" MinWidth="200">
-                                    <DataGridTemplateColumn.CellTemplate>
+                        <Grid Grid.Row="6" ColumnDefinitions="*,290" RowDefinitions="*,Auto" ColumnSpacing="10">
+                            <DataGrid
+                                      Classes="HorizontalScroll Compact"
+                                      ItemsSource="{Binding PartTypes}"
+                                      SelectedItem="{Binding SelectedPartType, Mode=TwoWay}"
+                                      SelectionMode="Single"
+                                      CanUserSortColumns="False"
+                                      CanUserResizeColumns="True"
+                                      GridLinesVisibility="Horizontal"
+                                      BorderThickness="1"
+                                      BorderBrush="{DynamicResource OutlineColor}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="*" MinWidth="130"/>
+                                    <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="180" MinWidth="170">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="pcbfix:PartType">
+                                                <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PartKinds}"
+                                                          SelectedValueBinding="{Binding Kind, x:DataType=vm:PartKindOption}"
+                                                          SelectedValue="{Binding Kind, Mode=OneWay}"
+                                                          SelectionChanged="OnPartKindSelectionChanged"
+                                                          HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate DataType="vm:PartKindOption">
+                                                            <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Sketch of the selected type; its letters are the ones beside the fields -->
+                            <controls:PartTypeDrawing Grid.Row="1" Type="{Binding SelectedPartType}" Height="225" Margin="0,8,0,0"
+                                                      IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                            <!-- Dimensions of the selected type: only what applies to its kind -->
+                            <TextBlock Grid.Column="1" Grid.RowSpan="2" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
+                                       IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNull}}"/>
+                            <ScrollViewer Grid.Column="1" Grid.RowSpan="2">
+                                <ContentControl Content="{Binding SelectedPartType}" HorizontalContentAlignment="Stretch">
+                                    <ContentControl.ContentTemplate>
                                         <DataTemplate DataType="pcbfix:PartType">
-                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PartKinds}"
-                                                      SelectedValueBinding="{Binding Kind, x:DataType=vm:PartKindOption}"
-                                                      SelectedValue="{Binding Kind, Mode=OneWay}"
-                                                      SelectionChanged="OnPartKindSelectionChanged"
-                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate DataType="vm:PartKindOption">
-                                                        <TextBlock Text="{Binding Label}" FontSize="12"/>
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
+                                            <StackPanel Spacing="6" Margin="0,0,12,0">
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_Diameter}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding CanHaveBody}">
+                                                <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding BodyDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasBody}">
+                                                <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ThinLength, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasStepChamfer}">
+                                                <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_StepChamfer}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding StepChamfer, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <Border Classes="DimLetter" IsVisible="{Binding !IsPrinted}"><TextBlock Text="C"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPushRod}">
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPreCenteringPin}">
+                                                <Border Classes="DimLetter"><TextBlock Text="H"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_EdgeGap}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding EdgeGap, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112">
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_Tip}" Classes="FormLabel"/>
+                                                <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" FontSize="12"
+                                                          ItemsSource="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).TipOptions}"
+                                                          SelectedValueBinding="{Binding Style, x:DataType=vm:PartTipOption}"
+                                                          SelectedValue="{Binding TipStyle}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate DataType="vm:PartTipOption">
+                                                            <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasTipChamfer}">
+                                                <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
+                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_TipSize}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding TipSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                            </Grid>
+                                            <TextBox Text="{Binding Note}" PlaceholderText="{loc:Localize Column_Note}"/>
+                                            <CheckBox Content="{loc:Localize Field_IsPrinted}" IsChecked="{Binding IsPrinted}"/>
+                                            </StackPanel>
                                         </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartDiameter}" Binding="{Binding Diameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="80" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Drill}" Binding="{Binding DrillDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="120" MinWidth="120"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Opening}" Binding="{Binding OpeningDiameter, Converter={x:Static loc:NumberConverter.Instance}}" Width="135" MinWidth="135"/>
-                                <!-- Only pre-centering pins keep a gap to the board edge -->
-                                <DataGridTemplateColumn Header="{loc:Localize Column_EdgeGap}" Width="140" MinWidth="140">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="pcbfix:PartType">
-                                            <TextBlock Text="{Binding EdgeGap, Converter={x:Static loc:NumberConverter.Instance}}" IsVisible="{Binding IsPreCenteringPin}" VerticalAlignment="Center" Margin="12,0"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate DataType="pcbfix:PartType">
-                                            <TextBox Classes="Numeric" Text="{Binding EdgeGap, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}" IsVisible="{Binding IsPreCenteringPin}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_PartHeight}" Binding="{Binding Height, Converter={x:Static loc:NumberConverter.Instance}}" Width="95" MinWidth="95"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Clearance}" Binding="{Binding ComponentClearance, Converter={x:Static loc:NumberConverter.Instance}}" Width="115" MinWidth="115"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
                 </TabItem>
 
@@ -1171,7 +1372,11 @@
                                     <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding OutlineFileName, Mode=OneWay}"
                                              ToolTip.Tip="{Binding OutlineFile}"/>
                                     <Button Grid.Column="2" Classes="Tool" Content="{loc:Localize Button_ChooseOutline}"
-                                            Command="{Binding ChooseOutlineFileCommand}" ToolTip.Tip="{loc:Localize ToolTip_ChooseOutline}"/>
+                                            Command="{Binding ChooseOutlineFileCommand}" ToolTip.Tip="{loc:Localize ToolTip_ChooseOutline}">
+                                        <shadui:ButtonAssist.Icon>
+                                            <ContentControl Content="{LucideIconContent FolderOpen, 16}" Margin="0,0,8,0"/>
+                                        </shadui:ButtonAssist.Icon>
+                                    </Button>
                                     <Button Grid.Column="3" Classes="Tool" Command="{Binding ReloadOutlineFileCommand}"
                                             ToolTip.Tip="{loc:Localize ToolTip_ReloadOutline}">
                                         <shadui:ButtonAssist.Icon>
@@ -1285,7 +1490,17 @@
                                     </ItemsControl>
                                 </StackPanel>
                                 <Button Classes="Tool" HorizontalAlignment="Left" Margin="0,4,0,0" Content="{loc:Localize Button_ExportFiles}"
-                                        Command="{Binding ExportPlatesCommand}"/>
+                                        Command="{Binding ExportPlatesCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
+                                <Button Classes="Tool" HorizontalAlignment="Left" Content="{loc:Localize Button_ExportPrint}"
+                                        Command="{Binding ExportForPrintingCommand}">
+                                    <shadui:ButtonAssist.Icon>
+                                        <controls:FixtureIcon Kind="Print3D" Margin="0,0,8,0"/>
+                                    </shadui:ButtonAssist.Icon>
+                                </Button>
                             </StackPanel>
 
                         </StackPanel>

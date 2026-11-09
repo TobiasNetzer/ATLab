@@ -9,7 +9,7 @@ namespace ATLab.FixtureDesigner.Fixture;
 public enum ColorItem
 {
     Probe,
-    LocatingPin,
+    ToolingPin,
     PreCenteringPin,
     SupportPin,
     PushRod,
@@ -27,7 +27,7 @@ public static class FixtureColors
     private static readonly Dictionary<ColorItem, string> Defaults = new()
     {
         [ColorItem.Probe] = MarkerColors.Probe,
-        [ColorItem.LocatingPin] = MarkerColors.LocatingPin,
+        [ColorItem.ToolingPin] = MarkerColors.ToolingPin,
         [ColorItem.PreCenteringPin] = MarkerColors.PreCenteringPin,
         [ColorItem.SupportPin] = MarkerColors.SupportPin,
         [ColorItem.PushRod] = MarkerColors.PushRod,
@@ -74,7 +74,7 @@ public static class FixtureColors
 
     public static ColorItem Of(FixturePartKind kind) => kind switch
     {
-        FixturePartKind.LocatingPin => ColorItem.LocatingPin,
+        FixturePartKind.ToolingPin => ColorItem.ToolingPin,
         FixturePartKind.PreCenteringPin => ColorItem.PreCenteringPin,
         FixturePartKind.SupportPin => ColorItem.SupportPin,
         _ => ColorItem.PushRod

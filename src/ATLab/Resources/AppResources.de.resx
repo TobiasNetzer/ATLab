@@ -356,7 +356,7 @@
     <value>Lizenz</value>
   </data>
   <data name="Window_TestHardwareSelector" xml:space="preserve">
-    <value>Test-Hardware Auswahl</value>
+    <value>Test-Hardware-Auswahl</value>
   </data>
   <data name="Header_SelectTestHardware" xml:space="preserve">
     <value>Test-Hardware auswählen</value>
@@ -530,7 +530,7 @@
     <value>Zusätzliche Notizen</value>
   </data>
   <data name="Header_TestHardwareInfo" xml:space="preserve">
-    <value>Test-Hardware Informationen</value>
+    <value>Test-Hardware-Informationen</value>
   </data>
   <data name="Header_HardwareDevice" xml:space="preserve">
     <value>Test-Hardware</value>
@@ -542,7 +542,7 @@
     <value>Verfügbare Schnittstellen</value>
   </data>
   <data name="Header_TestHardwareDiagnostics" xml:space="preserve">
-    <value>Test-Hardware Diagnose</value>
+    <value>Test-Hardware-Diagnose</value>
   </data>
   <data name="Label_Warning" xml:space="preserve">
     <value>Warnung:</value>
@@ -563,7 +563,7 @@
     <value>Matrix L</value>
   </data>
   <data name="Header_TestHardwareInterface" xml:space="preserve">
-    <value>Test-Hardware Schnittstelle</value>
+    <value>Test-Hardware-Schnittstelle</value>
   </data>
   <data name="Header_ScriptEditor" xml:space="preserve">
     <value>Skript-Editor</value>
@@ -1320,10 +1320,10 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
     <value>Hell</value>
   </data>
   <data name="Header_TestHardware" xml:space="preserve">
-    <value>Test Hardware</value>
+    <value>Test-Hardware</value>
   </data>
   <data name="Label_ForceSimulation" xml:space="preserve">
-    <value>Nur Simulation (ohne Test Hardware starten)</value>
+    <value>Nur Simulation (ohne Test-Hardware starten)</value>
   </data>
   <data name="Text_ForceSimulationRestart" xml:space="preserve">
     <value>Wird beim nächsten Start von ATLab wirksam.</value>
@@ -1478,7 +1478,7 @@ Wiedererkannte Bausteine behalten ihre Einstellungen. Alle anderen Bausteine wer
   <data name="Board_HoleInfo" xml:space="preserve">
     <value>Bohrung {0} · Ø {1} mm</value>
   </data>
-  <data name="Board_LocatingPinInfo" xml:space="preserve">
+  <data name="Board_ToolingPinInfo" xml:space="preserve">
     <value>Bohrung {0} · Ø {1} mm · Fangstift {2}</value>
   </data>
   <data name="Board_Hint" xml:space="preserve">

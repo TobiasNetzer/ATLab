@@ -4,7 +4,7 @@
 
 Beim Start versucht ATLab zuerst, sich über die zuletzt verwendete serielle Schnittstelle mit dem Test Interface Adapter zu verbinden. Gelingt das, öffnet sich direkt das Hauptfenster.
 
-Gibt es keine zuletzt verwendete Schnittstelle oder antwortet die Test-Hardware nicht, erscheint das Fenster **Test-Hardware Auswahl**:
+Gibt es keine zuletzt verwendete Schnittstelle oder antwortet die Test-Hardware nicht, erscheint das Fenster **Test-Hardware-Auswahl**:
 
 | Element | Funktion |
 |---------|----------|

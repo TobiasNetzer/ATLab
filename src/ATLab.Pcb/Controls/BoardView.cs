@@ -15,7 +15,7 @@ namespace ATLab.Pcb.Controls;
 
 /// <summary>
 /// Drawing of a KiCad board with its layers, pads and holes, seen from the top or from the bottom (mirrored). On top
-/// of it: highlighted nets, pads and components, and markers such as probes and locating pins. Mouse wheel zooms,
+/// of it: highlighted nets, pads and components, and markers such as probes and tooling pins. Mouse wheel zooms,
 /// dragging pans, a click selects a pad, a double-click on a pad or hole runs a command, a double-click on the
 /// background fits the board into the view.
 /// </summary>
@@ -31,7 +31,7 @@ public sealed class BoardView : Control
     public static readonly StyledProperty<IReadOnlyList<IBoardMarker>?> MarkersProperty =
         AvaloniaProperty.Register<BoardView, IReadOnlyList<IBoardMarker>?>(nameof(Markers));
 
-    /// <summary>Further markers, e.g. locating pins, kept in their own list by the owner.</summary>
+    /// <summary>Further markers, e.g. tooling pins, kept in their own list by the owner.</summary>
     /// <summary>Parts the user places freely (pre-centering pins, support pins, push rods); they can be dragged.</summary>
     public static readonly StyledProperty<IReadOnlyList<IBoardMarker>?> PartMarkersProperty =
         AvaloniaProperty.Register<BoardView, IReadOnlyList<IBoardMarker>?>(nameof(PartMarkers));
@@ -43,8 +43,8 @@ public sealed class BoardView : Control
     /// Colors of the kinds of parts, the same as in the build sheet; warning orange and error red stay for the results
     /// of the checks.
     /// </summary>
-    public static readonly StyledProperty<IBrush> LocatingPinBrushProperty =
-        AvaloniaProperty.Register<BoardView, IBrush>(nameof(LocatingPinBrush), new SolidColorBrush(Color.Parse(MarkerColors.LocatingPin)));
+    public static readonly StyledProperty<IBrush> ToolingPinBrushProperty =
+        AvaloniaProperty.Register<BoardView, IBrush>(nameof(ToolingPinBrush), new SolidColorBrush(Color.Parse(MarkerColors.ToolingPin)));
 
     public static readonly StyledProperty<IBrush> PreCenteringPinBrushProperty =
         AvaloniaProperty.Register<BoardView, IBrush>(nameof(PreCenteringPinBrush), new SolidColorBrush(Color.Parse(MarkerColors.PreCenteringPin)));
@@ -56,7 +56,7 @@ public sealed class BoardView : Control
         AvaloniaProperty.Register<BoardView, IBrush>(nameof(PushRodBrush), new SolidColorBrush(Color.Parse(MarkerColors.PushRod)));
 
     /// <summary>
-    /// A second legend line with the kinds of markers on the board (probes, locating pins, parts, plate outline), each
+    /// A second legend line with the kinds of markers on the board (probes, tooling pins, parts, plate outline), each
     /// with its symbol and color. For views whose markers have fixed colors, like the Fixture Designer's.
     /// </summary>
     public static readonly StyledProperty<bool> ShowMarkerLegendProperty =
@@ -212,7 +212,7 @@ public sealed class BoardView : Control
         AffectsRender<BoardView>(
             BoardProperty, ViewSideProperty, MarkersProperty, SelectedMarkerProperty,
             PartMarkersProperty, SelectedPartMarkerProperty, IsPlacementActiveProperty, ShowMarkerLegendProperty,
-            LocatingPinBrushProperty, PreCenteringPinBrushProperty, SupportPinBrushProperty, PushRodBrushProperty, OverlayBrushProperty,
+            ToolingPinBrushProperty, PreCenteringPinBrushProperty, SupportPinBrushProperty, PushRodBrushProperty, OverlayBrushProperty,
             NetHighlightsProperty, IsZoneHighlightEnabledProperty, PadHighlightsProperty, FootprintHighlightsProperty, HighlightedPadsProperty,
             SelectedPadProperty, VisibleLayersProperty, HintKeyProperty, BackgroundProperty, OutlineBrushProperty,
             TopPadBrushProperty, BottomPadBrushProperty, ForegroundProperty, MutedBrushProperty, AccentBrushProperty, SelectionBrushProperty, CornerRadiusProperty, OverlayOutlinesProperty,
@@ -237,7 +237,7 @@ public sealed class BoardView : Control
     public IReadOnlyList<IBoardMarker>? PartMarkers { get => GetValue(PartMarkersProperty); set => SetValue(PartMarkersProperty, value); }
     public IBoardMarker? SelectedPartMarker { get => GetValue(SelectedPartMarkerProperty); set => SetValue(SelectedPartMarkerProperty, value); }
     public bool IsPlacementActive { get => GetValue(IsPlacementActiveProperty); set => SetValue(IsPlacementActiveProperty, value); }
-    public IBrush LocatingPinBrush { get => GetValue(LocatingPinBrushProperty); set => SetValue(LocatingPinBrushProperty, value); }
+    public IBrush ToolingPinBrush { get => GetValue(ToolingPinBrushProperty); set => SetValue(ToolingPinBrushProperty, value); }
     public IBrush PreCenteringPinBrush { get => GetValue(PreCenteringPinBrushProperty); set => SetValue(PreCenteringPinBrushProperty, value); }
     public IBrush SupportPinBrush { get => GetValue(SupportPinBrushProperty); set => SetValue(SupportPinBrushProperty, value); }
     public IBrush PushRodBrush { get => GetValue(PushRodBrushProperty); set => SetValue(PushRodBrushProperty, value); }
@@ -997,7 +997,7 @@ public sealed class BoardView : Control
             };
 
     /// <summary>
-    /// Locating pins (ring with a plus), pre-centering pins (filled disc), support pins (ring with a dot) and push rods (ring
+    /// Tooling pins (ring with a plus), pre-centering pins (filled disc), support pins (ring with a dot) and push rods (ring
     /// with a cross), at their real size
     /// but at least a few pixels; dashed when they are on the far side of the view. The selected one has a ring around.
     /// </summary>
@@ -1027,7 +1027,7 @@ public sealed class BoardView : Control
 
             switch (marker.MarkerKind)
             {
-                case BoardMarkerKind.LocatingPin:
+                case BoardMarkerKind.ToolingPin:
                     context.DrawEllipse(WithOpacity(brush, 0.25), new Pen(brush, 2.5), center, r, r);
                     context.DrawLine(thin, new Point(center.X - r * 0.6, center.Y), new Point(center.X + r * 0.6, center.Y));
                     context.DrawLine(thin, new Point(center.X, center.Y - r * 0.6), new Point(center.X, center.Y + r * 0.6));
@@ -1057,7 +1057,7 @@ public sealed class BoardView : Control
 
     private IBrush PartBrush(BoardMarkerKind kind) => kind switch
     {
-        BoardMarkerKind.LocatingPin => LocatingPinBrush,
+        BoardMarkerKind.ToolingPin => ToolingPinBrush,
         BoardMarkerKind.PreCenteringPin => PreCenteringPinBrush,
         BoardMarkerKind.SupportPin => SupportPinBrush,
         _ => PushRodBrush
@@ -1181,12 +1181,12 @@ public sealed class BoardView : Control
 
         if (Markers is { Count: > 0 })
             kinds.Add(("Board_LegendProbes", c => context.DrawEllipse(ProbeBrush, null, c, 5, 5)));
-        if (parts.Any(m => m.MarkerKind == BoardMarkerKind.LocatingPin))
-            kinds.Add(("Board_LegendLocatingPins", c =>
+        if (parts.Any(m => m.MarkerKind == BoardMarkerKind.ToolingPin))
+            kinds.Add(("Board_LegendToolingPins", c =>
             {
-                context.DrawEllipse(WithOpacity(LocatingPinBrush, 0.25), new Pen(LocatingPinBrush, 1.5), c, 5, 5);
-                context.DrawLine(new Pen(LocatingPinBrush, 1), new Point(c.X - 3, c.Y), new Point(c.X + 3, c.Y));
-                context.DrawLine(new Pen(LocatingPinBrush, 1), new Point(c.X, c.Y - 3), new Point(c.X, c.Y + 3));
+                context.DrawEllipse(WithOpacity(ToolingPinBrush, 0.25), new Pen(ToolingPinBrush, 1.5), c, 5, 5);
+                context.DrawLine(new Pen(ToolingPinBrush, 1), new Point(c.X - 3, c.Y), new Point(c.X + 3, c.Y));
+                context.DrawLine(new Pen(ToolingPinBrush, 1), new Point(c.X, c.Y - 3), new Point(c.X, c.Y + 3));
             }));
         if (parts.Any(m => m.MarkerKind == BoardMarkerKind.PreCenteringPin))
             kinds.Add(("Board_LegendPreCenteringPins", c => context.DrawEllipse(WithOpacity(PreCenteringPinBrush, 0.45), new Pen(PreCenteringPinBrush, 1.5), c, 5, 5)));
@@ -1219,18 +1219,18 @@ public sealed class BoardView : Control
         }
     }
 
-    /// <summary>The locating pin standing in the hole at this point of the board, if any.</summary>
-    private IBoardMarker? LocatingPinAt(Point2 position) =>
-        PartMarkers?.FirstOrDefault(m => m.MarkerKind == BoardMarkerKind.LocatingPin &&
+    /// <summary>The tooling pin standing in the hole at this point of the board, if any.</summary>
+    private IBoardMarker? ToolingPinAt(Point2 position) =>
+        PartMarkers?.FirstOrDefault(m => m.MarkerKind == BoardMarkerKind.ToolingPin &&
                                          m.MarkerPosition is { } p && p.DistanceTo(position) < 1e-3);
 
     private void DrawHoverInfo(DrawingContext context)
     {
         if (_hoveredPad is null && _hoveredHole is { } hole)
         {
-            var locating = LocatingPinAt(hole.Position);
-            var holeInfo = BoardTexts.Format(locating is null ? "Board_HoleInfo" : "Board_LocatingPinInfo", hole.FootprintReference,
-                hole.Diameter.ToString("0.##", CultureInfo.CurrentCulture), locating?.MarkerLabel ?? string.Empty);
+            var tooling = ToolingPinAt(hole.Position);
+            var holeInfo = BoardTexts.Format(tooling is null ? "Board_HoleInfo" : "Board_ToolingPinInfo", hole.FootprintReference,
+                hole.Diameter.ToString("0.##", CultureInfo.CurrentCulture), tooling?.MarkerLabel ?? string.Empty);
             context.DrawText(Text(holeInfo, Foreground, 12, FontWeight.SemiBold), new Point(10, 8));
             return;
         }
@@ -1248,7 +1248,7 @@ public sealed class BoardView : Control
                 ? $"{m.MarkerLabel} ({BoardTexts.Get(s == BoardSide.Top ? "Board_SideTop" : "Board_SideBottom")})"
                 : m.MarkerLabel)
             .ToList();
-        if (LocatingPinAt(pad.Position) is { } pin)
+        if (ToolingPinAt(pad.Position) is { } pin)
             (markers ??= []).Add(pin.MarkerLabel);
         if (markers is { Count: > 0 })
             info += "  ·  " + string.Join(", ", markers);

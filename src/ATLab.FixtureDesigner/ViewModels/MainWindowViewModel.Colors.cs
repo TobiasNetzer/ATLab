@@ -58,7 +58,7 @@ public partial class MainWindowViewModel
     public IReadOnlyList<ColorOption> ColorOptions { get; private set; } = [];
 
     public IBrush ProbeBrush => BrushOf(ColorItem.Probe);
-    public IBrush LocatingPinBrush => BrushOf(ColorItem.LocatingPin);
+    public IBrush ToolingPinBrush => BrushOf(ColorItem.ToolingPin);
     public IBrush PreCenteringPinBrush => BrushOf(ColorItem.PreCenteringPin);
     public IBrush SupportPinBrush => BrushOf(ColorItem.SupportPin);
     public IBrush PushRodBrush => BrushOf(ColorItem.PushRod);
@@ -99,7 +99,7 @@ public partial class MainWindowViewModel
 
     private void AfterColorsChanged()
     {
-        foreach (var name in new[] { nameof(ProbeBrush), nameof(LocatingPinBrush), nameof(PreCenteringPinBrush), nameof(SupportPinBrush),
+        foreach (var name in new[] { nameof(ProbeBrush), nameof(ToolingPinBrush), nameof(PreCenteringPinBrush), nameof(SupportPinBrush),
                      nameof(PushRodBrush), nameof(OverlayBrush) })
             OnPropertyChanged(name);
 
