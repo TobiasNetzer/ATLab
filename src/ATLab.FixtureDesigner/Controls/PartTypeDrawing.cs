@@ -87,8 +87,11 @@ public sealed class PartTypeDrawing : DimensionSketch
         Rect Box(double x0, double z0, double x1, double z1) => new(At(x0, z0), At(x1, z1));
 
         // ----- Plate and board -----
-        var plate = Box(centerX - plateHalf, -plateThickness, centerX + plateHalf, 0).Normalize();
-        context.DrawRectangle(Brush("ChartMuted", Brushes.Gray, 0.25), linePen, plate);
+        var plateBrush = Brush("ChartMuted", Brushes.Gray, 0.25);
+        // Clearly narrower than the part, to show that the drill is a dimension of its own
+        var holeRadius = baseRadius * 0.55;
+        context.DrawRectangle(plateBrush, linePen, Box(centerX - plateHalf, -plateThickness, centerX - holeRadius, 0).Normalize());
+        context.DrawRectangle(plateBrush, linePen, Box(centerX + holeRadius, -plateThickness, centerX + plateHalf, 0).Normalize());
 
         void Board(double x0, double z0, double x1) => context.DrawRectangle(BoardBrush, null, Box(x0, z0, x1, z0 + boardThickness).Normalize());
 
@@ -109,8 +112,7 @@ public sealed class PartTypeDrawing : DimensionSketch
             tipLane += boardThickness;
         }
 
-        // ----- The part: printed it is one with the plate, else it stands in the plate's hole -----
-        var printed = type.IsPrinted;
+        // ----- The part, from the face of its plate to its tip -----
         var right = profile.Stations.Select(s => At(centerX + s.Radius, s.Z)).ToList();
         var left = profile.Stations.Reverse().Select(s => At(centerX - s.Radius, s.Z)).ToList();
         var top = Enumerable.Empty<Point>();
@@ -122,10 +124,7 @@ public sealed class PartTypeDrawing : DimensionSketch
         }
 
         var outline = right.Concat(top).Concat(left).ToList();
-        var below = printed ? -1 : -plateThickness;
-        var closed = outline.Prepend(At(centerX + baseRadius, below)).Append(At(centerX - baseRadius, below)).ToList();
-        context.DrawGeometry(Brush("InfoColor", Brushes.SteelBlue, 0.45), null, Polygon(closed, true));
-        context.DrawGeometry(null, linePen, Polygon(printed ? outline : closed, !printed));
+        context.DrawGeometry(Brush("InfoColor", Brushes.SteelBlue, 0.45), linePen, Polygon(outline, true));
 
         // ----- Dimensions -----
         void Line(IPen pen, Point a, Point b) => context.DrawLine(pen, a, b);
@@ -164,8 +163,7 @@ public sealed class PartTypeDrawing : DimensionSketch
             farLane -= 20;
         }
 
-        if (!printed)
-            Across(farLane, -plateThickness, baseRadius, "C");
+        Across(farLane, -plateThickness, holeRadius, "C");
 
         Line(extensionPen, At(centerX + r, total), At(centerX + baseRadius + 54, total));
         Along(centerX + baseRadius + 54, 0, total, centerX + baseRadius, "D");

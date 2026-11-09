@@ -11,8 +11,8 @@
                x:Class="ATLab.FixtureDesigner.Views.MainWindow"
                x:DataType="vm:MainWindowViewModel"
                Title="{Binding WindowTitle}"
-               Width="1600" Height="950"
-               MinWidth="1150" MinHeight="680"
+               Width="1750" Height="900"
+               MinWidth="1200" MinHeight="700"
                WindowStartupLocation="CenterScreen"
                ShowTitlebarBackground="False"
                DragDrop.AllowDrop="True"
@@ -36,6 +36,16 @@
         <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
             <Setter Property="Fill" Value="{DynamicResource InfoColor}"/>
             <Setter Property="Opacity" Value="0.35"/>
+        </Style>
+        <!-- The fields of a type: as compact as the cells of the tables, so that they fit beside the sketch -->
+        <Style Selector="StackPanel.TypeFields TextBox">
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style Selector="StackPanel.TypeFields ComboBox">
+            <Setter Property="FontSize" Value="12"/>
         </Style>
         <Style Selector="TabControl > TabItem">
             <Setter Property="FontSize" Value="14"/>
@@ -151,7 +161,7 @@
                                         <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
                                     </shadui:ButtonAssist.Icon>
                                 </Button>
-                                <Button HorizontalAlignment="Right" Content="{loc:Localize Button_ExportPrint}"
+                                <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportPrint}"
                                         Command="{Binding ExportForPrintingCommand}">
                                     <shadui:ButtonAssist.Icon>
                                         <controls:FixtureIcon Kind="Print3D" Margin="0,0,8,0"/>
@@ -343,7 +353,7 @@
                     </ItemsPanelTemplate>
                 </TabControl.ItemsPanel>
 
-                <!-- ========== Fixture ========== -->
+                <!-- ========== General ========== -->
                 <TabItem Header="{loc:Localize Tab_Fixture}" AutomationProperties.Name="{loc:Localize Tab_Fixture}">
                     <ScrollViewer Margin="0,8,0,0">
                         <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" Margin="2,0,8,0">
@@ -570,7 +580,14 @@
 
                 <!-- ========== Probes ========== -->
                 <TabItem Header="{loc:Localize Tab_Probes}" AutomationProperties.Name="{loc:Localize Tab_Probes}">
-                    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,1.4*" Margin="0,8,0,0">
+                    <Grid Margin="0,8,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" MinHeight="80"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="2*" MinHeight="85"/>
+                        </Grid.RowDefinitions>
                         <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Content="{loc:Localize Button_AutoAssign}" Command="{Binding AutoAssignCommand}"
                                     ToolTip.Tip="{loc:Localize ToolTip_AutoAssign}">
@@ -756,77 +773,80 @@
                                 </ComboBox>
                             </StackPanel>
                         </WrapPanel>
-                        <TextBlock Grid.Row="4" Text="{loc:Localize Text_ProbeTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
-                        <Grid Grid.Row="5" ColumnDefinitions="*,290" RowDefinitions="*,Auto" ColumnSpacing="10">
-                            <DataGrid
-                                      Classes="HorizontalScroll Compact"
-                                      ItemsSource="{Binding ProbeTypes}"
-                                      SelectedItem="{Binding SelectedProbeType, Mode=TwoWay}"
-                                      SelectionMode="Single"
-                                      CanUserSortColumns="False"
-                                      CanUserResizeColumns="True"
-                                      GridLinesVisibility="Horizontal"
-                                      BorderThickness="1"
-                                      BorderBrush="{DynamicResource OutlineColor}">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="*" MinWidth="130"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
 
-                            <!-- Sketch of a probe; its letters are the ones beside the fields -->
-                            <controls:ProbeTypeDrawing Grid.Row="1" Height="225" Margin="0,8,0,0"
-                                                       IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                        <!-- Scrolls when the window is too short for it; the lists outside keep their own scrolling -->
+                        <ScrollViewer Grid.Row="4">
+                            <Grid RowDefinitions="Auto,Auto,Auto" Margin="0,0,8,0">
+                                <TextBlock Grid.Row="0" Text="{loc:Localize Text_TypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                                <!-- Sketch and fields of the selected type, centered; the fields set the height -->
+                                <Grid Grid.Row="1" MaxWidth="720" ColumnDefinitions="*,*" ColumnSpacing="16"
+                                      IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <controls:ProbeTypeDrawing MinHeight="225"/>
+                                    <ContentControl Grid.Column="1" Content="{Binding SelectedProbeType}" HorizontalContentAlignment="Stretch">
+                                        <ContentControl.ContentTemplate>
+                                            <DataTemplate DataType="pcbfix:ProbeType">
+                                                <StackPanel Classes="TypeFields" Spacing="3">
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_ProbeDiameter}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="C"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinPad}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinPadSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinSpacing}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinSpacing, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ContentControl.ContentTemplate>
+                                    </ContentControl>
+                                </Grid>
+                                    <TextBlock Grid.Row="1" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
+                                               IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNull}}"/>
 
-                            <!-- Dimensions of the selected type -->
-                            <TextBlock Grid.Column="1" Grid.RowSpan="2" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
-                                       IsVisible="{Binding SelectedProbeType, Converter={x:Static ObjectConverters.IsNull}}"/>
-                            <ScrollViewer Grid.Column="1" Grid.RowSpan="2">
-                                <ContentControl Content="{Binding SelectedProbeType}" HorizontalContentAlignment="Stretch">
-                                    <ContentControl.ContentTemplate>
-                                        <DataTemplate DataType="pcbfix:ProbeType">
-                                            <StackPanel Spacing="6" Margin="0,0,12,0">
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_ProbeDiameter}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="C"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinPad}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinPadSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_MinSpacing}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding MinSpacing, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <TextBox Text="{Binding Note}" PlaceholderText="{loc:Localize Column_Note}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ContentControl.ContentTemplate>
-                                </ContentControl>
-                            </ScrollViewer>
-                        </Grid>
+                                <!-- The types, over the full width -->
+                                <DataGrid Grid.Row="2" Margin="0,8,0,0"
+                                          Classes="HorizontalScroll Compact"
+                                          ItemsSource="{Binding ProbeTypes}"
+                                          SelectedItem="{Binding SelectedProbeType, Mode=TwoWay}"
+                                          SelectionMode="Single"
+                                          CanUserSortColumns="False"
+                                          CanUserResizeColumns="True"
+                                          GridLinesVisibility="Horizontal"
+                                          BorderThickness="1"
+                                          BorderBrush="{DynamicResource OutlineColor}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="220" MinWidth="130"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
 
@@ -1001,7 +1021,15 @@
 
                 <!-- ========== Mechanics: tooling pins, pre-centering pins, support pins, push rods ========== -->
                 <TabItem Header="{loc:Localize Tab_Mechanics}" AutomationProperties.Name="{loc:Localize Tab_Mechanics}">
-                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto,2*" Margin="0,8,0,0">
+                    <Grid Margin="0,8,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" MinHeight="80"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="3*" MinHeight="85"/>
+                        </Grid.RowDefinitions>
                         <!-- Place mode: a click on the board places a part of the chosen kind; Escape ends it -->
                         <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Classes.Active="{Binding IsPlacingToolingPin}" Content="{loc:Localize Button_PlaceToolingPin}"
@@ -1127,123 +1155,126 @@
                                 </shadui:ButtonAssist.Icon>
                             </Button>
                         </WrapPanel>
-                        <TextBlock Grid.Row="5" Text="{loc:Localize Text_PartTypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
-                        <Grid Grid.Row="6" ColumnDefinitions="*,290" RowDefinitions="*,Auto" ColumnSpacing="10">
-                            <DataGrid
-                                      Classes="HorizontalScroll Compact"
-                                      ItemsSource="{Binding PartTypes}"
-                                      SelectedItem="{Binding SelectedPartType, Mode=TwoWay}"
-                                      SelectionMode="Single"
-                                      CanUserSortColumns="False"
-                                      CanUserResizeColumns="True"
-                                      GridLinesVisibility="Horizontal"
-                                      BorderThickness="1"
-                                      BorderBrush="{DynamicResource OutlineColor}">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="*" MinWidth="130"/>
-                                    <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="180" MinWidth="170">
-                                        <DataGridTemplateColumn.CellTemplate>
+
+                        <!-- Scrolls when the window is too short for it; the lists outside keep their own scrolling -->
+                        <ScrollViewer Grid.Row="5">
+                            <Grid RowDefinitions="Auto,Auto,Auto" Margin="0,0,8,0">
+                                <TextBlock Grid.Row="0" Text="{loc:Localize Text_TypesHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
+                                <!-- Sketch and fields of the selected type, centered; the fields set the height -->
+                                <Grid Grid.Row="1" MaxWidth="720" ColumnDefinitions="*,*" ColumnSpacing="16"
+                                      IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <controls:PartTypeDrawing Type="{Binding SelectedPartType}" MinHeight="225"/>
+                                    <ContentControl Grid.Column="1" Content="{Binding SelectedPartType}" HorizontalContentAlignment="Stretch">
+                                        <ContentControl.ContentTemplate>
                                             <DataTemplate DataType="pcbfix:PartType">
-                                                <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PartKinds}"
-                                                          SelectedValueBinding="{Binding Kind, x:DataType=vm:PartKindOption}"
-                                                          SelectedValue="{Binding Kind, Mode=OneWay}"
-                                                          SelectionChanged="OnPartKindSelectionChanged"
-                                                          HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
-                                                    <ComboBox.ItemTemplate>
-                                                        <DataTemplate DataType="vm:PartKindOption">
-                                                            <TextBlock Text="{Binding Label}" FontSize="12"/>
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>
-                                                </ComboBox>
+                                                <StackPanel Classes="TypeFields" Spacing="3">
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_Diameter}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding CanHaveBody}">
+                                                    <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding BodyDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasBody}">
+                                                    <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ThinLength, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasStepChamfer}">
+                                                    <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_StepChamfer}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding StepChamfer, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <Border Classes="DimLetter"><TextBlock Text="C"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPushRod}">
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPreCenteringPin}">
+                                                    <Border Classes="DimLetter"><TextBlock Text="H"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_EdgeGap}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding EdgeGap, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112">
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_Tip}" Classes="FormLabel"/>
+                                                    <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" FontSize="12"
+                                                              ItemsSource="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).TipOptions}"
+                                                              SelectedValueBinding="{Binding Style, x:DataType=vm:PartTipOption}"
+                                                              SelectedValue="{Binding TipStyle}">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate DataType="vm:PartTipOption">
+                                                                <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasTipChamfer}">
+                                                    <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
+                                                    <TextBlock Grid.Column="1" Text="{loc:Localize Field_TipSize}" Classes="FormLabel" TextWrapping="Wrap"/>
+                                                    <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding TipSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
+                                                </Grid>
+                                                <CheckBox Content="{loc:Localize Field_IsPrinted}" IsChecked="{Binding IsPrinted}"/>
+                                                </StackPanel>
                                             </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                        </ContentControl.ContentTemplate>
+                                    </ContentControl>
+                                </Grid>
+                                    <TextBlock Grid.Row="1" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
+                                               IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNull}}"/>
 
-                            <!-- Sketch of the selected type; its letters are the ones beside the fields -->
-                            <controls:PartTypeDrawing Grid.Row="1" Type="{Binding SelectedPartType}" Height="225" Margin="0,8,0,0"
-                                                      IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-
-                            <!-- Dimensions of the selected type: only what applies to its kind -->
-                            <TextBlock Grid.Column="1" Grid.RowSpan="2" Text="{loc:Localize Text_SelectPartType}" Classes="Label" TextWrapping="Wrap"
-                                       IsVisible="{Binding SelectedPartType, Converter={x:Static ObjectConverters.IsNull}}"/>
-                            <ScrollViewer Grid.Column="1" Grid.RowSpan="2">
-                                <ContentControl Content="{Binding SelectedPartType}" HorizontalContentAlignment="Stretch">
-                                    <ContentControl.ContentTemplate>
-                                        <DataTemplate DataType="pcbfix:PartType">
-                                            <StackPanel Spacing="6" Margin="0,0,12,0">
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="A"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_Diameter}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Diameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding CanHaveBody}">
-                                                <Border Classes="DimLetter"><TextBlock Text="B"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_BodyTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding BodyDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasBody}">
-                                                <Border Classes="DimLetter"><TextBlock Text="E"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinRod}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsPushRod}"/>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_ThinTooling}" Classes="FormLabel" TextWrapping="Wrap" IsVisible="{Binding IsToolingPin}"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ThinLength, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasStepChamfer}">
-                                                <Border Classes="DimLetter"><TextBlock Text="F"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_StepChamfer}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding StepChamfer, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter"><TextBlock Text="D"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_PartHeight}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding Height, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <Border Classes="DimLetter" IsVisible="{Binding !IsPrinted}"><TextBlock Text="C"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Drill}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding DrillDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPushRod}">
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Opening}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding OpeningDiameter, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding IsPreCenteringPin}">
-                                                <Border Classes="DimLetter"><TextBlock Text="H"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_EdgeGap}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding EdgeGap, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Column_Clearance}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding ComponentClearance, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112">
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_Tip}" Classes="FormLabel"/>
-                                                <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" FontSize="12"
-                                                          ItemsSource="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).TipOptions}"
-                                                          SelectedValueBinding="{Binding Style, x:DataType=vm:PartTipOption}"
-                                                          SelectedValue="{Binding TipStyle}">
-                                                    <ComboBox.ItemTemplate>
-                                                        <DataTemplate DataType="vm:PartTipOption">
-                                                            <TextBlock Text="{Binding Label}" FontSize="12"/>
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>
-                                                </ComboBox>
-                                            </Grid>
-                                            <Grid ColumnDefinitions="24,*,112" IsVisible="{Binding HasTipChamfer}">
-                                                <Border Classes="DimLetter"><TextBlock Text="G"/></Border>
-                                                <TextBlock Grid.Column="1" Text="{loc:Localize Field_TipSize}" Classes="FormLabel" TextWrapping="Wrap"/>
-                                                <TextBox Grid.Column="2" Classes="Numeric" Text="{Binding TipSize, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
-                                            </Grid>
-                                            <TextBox Text="{Binding Note}" PlaceholderText="{loc:Localize Column_Note}"/>
-                                            <CheckBox Content="{loc:Localize Field_IsPrinted}" IsChecked="{Binding IsPrinted}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ContentControl.ContentTemplate>
-                                </ContentControl>
-                            </ScrollViewer>
-                        </Grid>
+                                <!-- The types, over the full width -->
+                                <DataGrid Grid.Row="2" Margin="0,8,0,0"
+                                          Classes="HorizontalScroll Compact"
+                                          ItemsSource="{Binding PartTypes}"
+                                          SelectedItem="{Binding SelectedPartType, Mode=TwoWay}"
+                                          SelectionMode="Single"
+                                          CanUserSortColumns="False"
+                                          CanUserResizeColumns="True"
+                                          GridLinesVisibility="Horizontal"
+                                          BorderThickness="1"
+                                          BorderBrush="{DynamicResource OutlineColor}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="220" MinWidth="130"/>
+                                        <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="180" MinWidth="170">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate DataType="pcbfix:PartType">
+                                                    <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PartKinds}"
+                                                              SelectedValueBinding="{Binding Kind, x:DataType=vm:PartKindOption}"
+                                                              SelectedValue="{Binding Kind, Mode=OneWay}"
+                                                              SelectionChanged="OnPartKindSelectionChanged"
+                                                              HorizontalAlignment="Stretch" Margin="4,2" FontSize="12">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate DataType="vm:PartKindOption">
+                                                                <TextBlock Text="{Binding Label}" FontSize="12"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
 

@@ -26,7 +26,7 @@ Ohne geöffneten Nadeladapter zeigt der Fixture Designer einen Willkommensbildsc
 | Drag & Drop | Nadeladapter- oder Platinendatei auf das Fenster ziehen |
 | Kommandozeile | `ATLab.FixtureDesigner.exe <Datei>` öffnet den Nadeladapter oder die Platine beim Start |
 
-Ein neuer Nadeladapter übernimmt Name, Prüflingsname und Revision aus dem Schriftfeld der Platine. Sie lassen sich auf der Registerkarte **Nadeladapter** ändern.
+Ein neuer Nadeladapter übernimmt Name, Prüflingsname und Revision aus dem Schriftfeld der Platine. Sie lassen sich auf der Registerkarte **Allgemein** ändern.
 
 ## Arbeitsablauf
 
@@ -34,7 +34,7 @@ Die Registerkarten rechts folgen der Reihenfolge der Arbeit:
 
 | Registerkarte | Was dort geschieht |
 |---------------|--------------------|
-| [Nadeladapter](#registerkarte-nadeladapter) | Name, Prüfling, Ersteller und Notizen; die Lagen der Zeichnungen im Aufbaublatt |
+| [Allgemein](#registerkarte-allgemein) | Name, Prüfling, Ersteller und Notizen; die Lagen der Zeichnungen im Aufbaublatt |
 | [Pads](#registerkarte-pads) | Die zu kontaktierenden Pads finden |
 | [Prüfnadeln](#registerkarte-prüfnadeln) | Nadeltyp und Pin der Test-Hardware jeder Prüfnadel; die Nadeltypen |
 | [Verdrahtung](#registerkarte-verdrahtung) | Bauteile zwischen Platine und Test-Hardware sowie zusätzliche Verdrahtung |
@@ -67,7 +67,7 @@ Links ist die Platine mit Umriss, Pads und Bohrungen zu sehen. Die Legende über
 
 Steht der Mauszeiger auf einem Pad, werden Referenz, Netz, Typ, Größe und die Prüfnadeln darauf angezeigt, auf einer Bohrung ihr Durchmesser und der Fangstift darin. Prüfnadeln der betrachteten Seite sind gefüllte Kreise mit ihrer Nummer (**P1**, **P2** …); Prüfnadeln von der anderen Seite sind gestrichelt. Fangstifte heißen **T1**, **T2** …, Vorzentrierungsstifte **C1** …, Stützstifte **S1** … und Niederhalter **R1** …. Eine rote Prüfnadel oder ein rotes Teil hat einen Fehler, eine orange eine Warnung (siehe [Prüfungen](#prüfungen)).
 
-## Registerkarte Nadeladapter
+## Registerkarte Allgemein
 
 Name, Prüfling, Revision, Ersteller und Notizen des Nadeladapters, wie sie auf dem Aufbaublatt stehen, dazu die Test-Hardware, die Nadeladapter-Datei und die Platinendatei.
 
@@ -118,7 +118,7 @@ Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden
 
 ### Nadeltypen
 
-Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; alle Angaben sind in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters mit ihren Namen. Wählen Sie einen Typ aus, um rechts seine Maße zu bearbeiten. Die Skizze unter der Liste zeigt, wo jedes Maß liegt; ihre Buchstaben stehen auch neben den Feldern.
+Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; alle Angaben sind in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters mit Name und Bemerkung. Wählen Sie einen Typ aus, um über der Liste seine Maße zu bearbeiten. Die Skizze neben den Feldern zeigt, wo jedes Maß liegt; ihre Buchstaben stehen auch neben den Feldern.
 
 | Skizze | Feld | Bedeutung |
 |--------|------|-----------|
@@ -195,7 +195,7 @@ Die Schaltfläche einer Art (**Fangstift**, **Vorzentrierungsstift**, **Stützst
 
 Die Liste **Typen** unter den Teilen funktioniert wie die Nadeltypen: **Typ hinzufügen**, **Aus Bibliothek**, **In Bibliothek speichern** und **Entfernen**. Jeder Typ hat eine **Art**; ein Teil kann nur einen Typ seiner Art bekommen. Alle Maße sind in Millimetern angegeben.
 
-Name und Art werden in der Liste festgelegt. Alles Weitere bearbeiten Sie rechts, sobald ein Typ ausgewählt ist; dort erscheinen nur die Felder, die für ihn gelten. Die Skizze unter der Liste passt sich jeder Änderung an und zeigt, wo jedes Maß liegt. Ihre Buchstaben stehen auch neben den Feldern.
+Name, Art und Bemerkung werden in der Liste festgelegt. Alles Weitere bearbeiten Sie über der Liste, sobald ein Typ ausgewählt ist; dort erscheinen nur die Felder, die für ihn gelten. Die Skizze neben den Feldern passt sich jeder Änderung an und zeigt, wo jedes Maß liegt. Ihre Buchstaben stehen auch neben den Feldern.
 
 | Skizze | Feld | Gilt für | Bedeutung |
 |--------|------|----------|-----------|
@@ -360,7 +360,7 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 
 In den Zeichnungen steht jede Prüfnadelnummer in ihrem Marker, sodass sich Nummern nie überlappen. Wo Prüfnadeln so eng stehen, dass ihre Nummern zu klein zum Lesen wären, lässt die Zeichnung sie weg und umrahmt den Bereich; jeder umrahmte Bereich folgt vergrößert auf einer eigenen Seite (**Detail A**, **Detail B** …).
 
-Stückliste, Prüfnadeln nach Typ, Teileliste und Verdrahtung haben jeweils eine Spalte **Erl.** zum Abhaken beim Bau. Welche Platinenlagen die Zeichnungen zeigen, wird auf der [Registerkarte Nadeladapter](#registerkarte-nadeladapter) festgelegt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Erstellen nach.
+Stückliste, Prüfnadeln nach Typ, Teileliste und Verdrahtung haben jeweils eine Spalte **Erl.** zum Abhaken beim Bau. Welche Platinenlagen die Zeichnungen zeigen, wird auf der [Registerkarte Allgemein](#registerkarte-allgemein) festgelegt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Erstellen nach.
 
 ## Nadeladapter-Datei
 

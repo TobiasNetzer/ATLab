@@ -256,7 +256,7 @@
     <value>Checks ({0})</value>
   </data>
   <data name="Tab_Fixture" xml:space="preserve">
-    <value>Fixture</value>
+    <value>General</value>
   </data>
   <data name="Column_Probe" xml:space="preserve">
     <value>Probe</value>
@@ -705,7 +705,7 @@ Select the board file at its new location.</value>
   <data name="Text_NewProbeType" xml:space="preserve">
     <value>New type</value>
   </data>
-  <data name="Text_ProbeTypesHint" xml:space="preserve">
+  <data name="Text_TypesHint" xml:space="preserve">
     <value>The letters show where each dimension is on the sketch. Opening 0 = drill Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
@@ -954,9 +954,6 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   </data>
   <data name="Header_Types" xml:space="preserve">
     <value>Types</value>
-  </data>
-  <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>Edit the dimensions of the selected type on the right. The letters show where each one is on the sketch.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>New type</value>

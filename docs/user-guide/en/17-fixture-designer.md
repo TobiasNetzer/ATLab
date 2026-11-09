@@ -22,7 +22,7 @@ Without an open fixture, the Fixture Designer shows a welcome screen with **New 
 | Drag & drop | Drop a fixture or board file onto the window |
 | Command line | `ATLab.FixtureDesigner.exe <file>` opens the fixture or board at start |
 
-A new fixture takes its name, device name and revision from the title block of the board. They can be changed on the **Fixture** tab.
+A new fixture takes its name, device name and revision from the title block of the board. They can be changed on the **General** tab.
 
 ## Working order
 
@@ -30,7 +30,7 @@ The tabs on the right follow the order of the work:
 
 | Tab | What you do there |
 |-----|-------------------|
-| [Fixture](#fixture-tab) | Name, device, author and notes; the layers of the build sheet drawings |
+| [General](#general-tab) | Name, device, author and notes; the layers of the build sheet drawings |
 | [Pads](#pads-tab) | Find the pads to probe |
 | [Probes](#probes-tab) | Probe type and test hardware pin of every probe; the probe types |
 | [Wiring](#wiring-tab) | Components between board and test hardware, and additional wiring |
@@ -63,7 +63,7 @@ The left side shows the board with its outline, pads and holes. The legend above
 
 Point at a pad to see its reference, net, type and size and the probes on it, or at a hole to see its diameter and the tooling pin in it. Probes of the viewed side are filled circles with their number (**P1**, **P2** …); probes from the other side are dashed. Tooling pins are numbered **T1**, **T2** …, pre-centering pins **C1** …, support pins **S1** … and push rods **R1** …. A red probe or part has an error, an orange one a warning (see [Checks](#checks)).
 
-## Fixture tab
+## General tab
 
 Name, device, revision, author and notes of the fixture, as printed on the build sheet, plus the test hardware, the fixture file and the board file.
 
@@ -114,7 +114,7 @@ Several probes on the same net may share a pin; they are simply wired in paralle
 
 ### Probe types
 
-A probe type describes a kind of spring probe with its receptacle; take its dimensions from the data sheet of your probes. All sizes are in millimeters. The **Types** list below the probes shows the types of the fixture and their names. Select a type to edit its dimensions on the right. The sketch below the list shows where each dimension is, with the letters beside the fields.
+A probe type describes a kind of spring probe with its receptacle; take its dimensions from the data sheet of your probes. All sizes are in millimeters. The **Types** list below the probes shows the types of the fixture with their names and notes. Select a type to edit its dimensions above the list. The sketch beside the fields shows where each dimension is, with the letters beside the fields.
 
 | Sketch | Field | Meaning |
 |--------|-------|---------|
@@ -191,7 +191,7 @@ Click the button of a kind (**Tooling pin**, **Pre-centering pin**, **Support pi
 
 The **Types** list below the parts works like the probe types: **Add type**, **From library**, **Save to library** and **Remove**. Every type has a **Kind**; a part can only get a type of its kind. All sizes are in millimeters.
 
-Name and kind are set in the list. Select a type to edit the rest on the right, where only the fields that apply to it are shown. The sketch below the list follows the type as you change it and shows where each dimension is, with the letters beside the fields.
+Name, kind and note are set in the list. Select a type to edit the rest above the list, where only the fields that apply to it are shown. The sketch beside the fields follows the type as you change it and shows where each dimension is, with the letters beside the fields.
 
 | Sketch | Field | For | Meaning |
 |--------|-------|-----|---------|
@@ -356,7 +356,7 @@ Positions and nets always come from the current board file. The checks compare t
 
 In the drawings every probe number stands inside its marker, so numbers never overlap. Where probes are so close that their numbers would be too small to read, the drawing leaves them out and frames the area; each framed area follows enlarged on a page of its own (**Detail A**, **Detail B** …).
 
-Bill of materials, probes by type, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [Fixture tab](#fixture-tab). If the checks found errors, the Fixture Designer asks before exporting.
+Bill of materials, probes by type, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [General tab](#general-tab). If the checks found errors, the Fixture Designer asks before exporting.
 
 ## Fixture file
 

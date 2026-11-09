@@ -256,7 +256,7 @@
     <value>Prüfungen ({0})</value>
   </data>
   <data name="Tab_Fixture" xml:space="preserve">
-    <value>Nadeladapter</value>
+    <value>Allgemein</value>
   </data>
   <data name="Column_Probe" xml:space="preserve">
     <value>Nadel</value>
@@ -705,7 +705,7 @@ Platinendatei am neuen Ort auswählen.</value>
   <data name="Text_NewProbeType" xml:space="preserve">
     <value>Neuer Typ</value>
   </data>
-  <data name="Text_ProbeTypesHint" xml:space="preserve">
+  <data name="Text_TypesHint" xml:space="preserve">
     <value>Die Buchstaben zeigen, wo jedes Maß in der Skizze liegt. Durchbruch 0 = Bohrungs-Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
@@ -954,9 +954,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   </data>
   <data name="Header_Types" xml:space="preserve">
     <value>Typen</value>
-  </data>
-  <data name="Text_PartTypesHint" xml:space="preserve">
-    <value>Die Maße des gewählten Typs bearbeitest du rechts. Die Buchstaben zeigen, wo sie in der Skizze liegen.</value>
   </data>
   <data name="Text_NewPartType" xml:space="preserve">
     <value>Neuer Typ</value>
@@ -1494,7 +1491,7 @@ unten</value>
     <value>Gerundet</value>
   </data>
   <data name="Text_SelectPartType" xml:space="preserve">
-    <value>Wähle einen Typ aus, um seine Maße zu bearbeiten.</value>
+    <value>Typ auswählen, um seine Maße zu bearbeiten.</value>
   </data>
   <data name="Button_ExportPrint" xml:space="preserve">
     <value>Für 3D-Druck exportieren…</value>
@@ -1536,7 +1533,7 @@ unten</value>
     <value>{0}: Der Durchbruch (Ø {1} mm) ist enger als der Schaft (Ø {2} mm); nur das dünne Ende passt hindurch.</value>
   </data>
   <data name="Check_BodyOverComponent" xml:space="preserve">
-    <value>{0}: Schaft oder Schulter (Ø {1} mm) ragen über {2}; prüfe, ob das Bauteil niedriger ist.</value>
+    <value>{0}: Schaft oder Schulter (Ø {1} mm) ragen über {2}; bitte prüfen, ob das Bauteil niedriger ist.</value>
   </data>
   <data name="Check_ShoulderTooSmall" xml:space="preserve">
     <value>{0}: Die Schulter (Ø {1} mm) ist nicht breiter als die Bohrung von {2} (Ø {3} mm), die Platine kann also nicht aufliegen.</value>
