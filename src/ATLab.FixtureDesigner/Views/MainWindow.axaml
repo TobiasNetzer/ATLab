@@ -23,18 +23,6 @@
                Width="20" Height="20" Margin="8,8,0,8" Stretch="Uniform"/>
     </shadui:Window.LogoContent>
 
-    <shadui:Window.KeyBindings>
-        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewCommand}"/>
-        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenCommand}"/>
-        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}"/>
-        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
-        <KeyBinding Gesture="F5" Command="{Binding ReloadBoardCommand}"/>
-        <KeyBinding Gesture="Ctrl+P" Command="{Binding ExportBuildSheetCommand}"/>
-        <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportPlatesCommand}"/>
-        <KeyBinding Gesture="Escape" Command="{Binding EscapeCommand}"/>
-        <KeyBinding Gesture="Delete" Command="{Binding DeleteSelectedCommand}"/>
-    </shadui:Window.KeyBindings>
-
     <shadui:Window.Styles>
         <Style Selector="Button.Tool">
             <Setter Property="Height" Value="34"/>

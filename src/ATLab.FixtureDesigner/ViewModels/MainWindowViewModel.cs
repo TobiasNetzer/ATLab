@@ -1143,9 +1143,11 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void CloseAbout() => IsAboutOpen = false;
 
-    /// <summary>Escape: ends place mode, closes the dialog or the About box; with nothing of these open, clears the selection.</summary>
-    [RelayCommand]
-    private void Escape()
+    /// <summary>
+    /// Escape: ends place mode, closes the dialog or the About box; with nothing of these open, clears the selection
+    /// unless <paramref name="keepSelection"/> is set, as it is while typing in a field of the selected item.
+    /// </summary>
+    public void Escape(bool keepSelection)
     {
         if (CancelPlacing())
             return;
@@ -1161,6 +1163,9 @@ public partial class MainWindowViewModel : ObservableObject
             IsAboutOpen = false;
             return;
         }
+
+        if (keepSelection)
+            return;
 
         SelectedPart = null;
         SelectedProbe = null;

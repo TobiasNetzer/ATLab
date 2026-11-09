@@ -1,13 +1,16 @@
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using ATLab.FixtureDesigner.Fixture;
 using ATLab.Pcb.Fixture;
 using ATLab.FixtureDesigner.ViewModels;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace ATLab.FixtureDesigner.Views;
 
@@ -84,6 +87,56 @@ public partial class MainWindow : ShadUI.Window
             if (grid.IsVisible)
                 grid.ScrollIntoView(item, null);
         }, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// The hotkeys. Not window key bindings: those run before the focused control sees the key, so a text box, an open
+    /// list or a cell being edited could not use Delete or Escape themselves.
+    /// </summary>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (e.Handled || _viewModel is not { } vm)
+            return;
+
+        var textBox = e.Source as TextBox;
+        if (e is { Key: Key.Escape, KeyModifiers: KeyModifiers.None })
+        {
+            vm.Escape(keepSelection: textBox is not null);
+            e.Handled = true;
+            return;
+        }
+
+        ICommand? command = (e.Key, e.KeyModifiers) switch
+        {
+            (Key.N, KeyModifiers.Control) => vm.NewCommand,
+            (Key.O, KeyModifiers.Control) => vm.OpenCommand,
+            (Key.S, KeyModifiers.Control) => vm.SaveCommand,
+            (Key.S, KeyModifiers.Control | KeyModifiers.Shift) => vm.SaveAsCommand,
+            (Key.F5, KeyModifiers.None) => vm.ReloadBoardCommand,
+            (Key.P, KeyModifiers.Control) => vm.ExportBuildSheetCommand,
+            (Key.E, KeyModifiers.Control) => vm.ExportPlatesCommand,
+            (Key.Delete, KeyModifiers.None) when textBox is null => vm.DeleteSelectedCommand,
+            _ => null
+        };
+
+        if (command is null || vm.Dialog is not null || vm.IsAboutOpen)
+            return;
+
+        // A hotkey leaves the focus in the box, so what was typed there has to be applied first
+        CommitEdit(textBox);
+        if (command.CanExecute(null))
+            command.Execute(null);
+        e.Handled = true;
+    }
+
+    private static void CommitEdit(TextBox? box)
+    {
+        if (box is null)
+            return;
+
+        BindingOperations.GetBindingExpressionBase(box, TextBox.TextProperty)?.UpdateSource();
+        box.FindAncestorOfType<DataGrid>()?.CommitEdit();
     }
 
     /// <summary>Unsaved changes: ask before the window closes.</summary>
