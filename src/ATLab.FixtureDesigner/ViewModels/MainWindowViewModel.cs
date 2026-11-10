@@ -418,7 +418,7 @@ public partial class MainWindowViewModel : ObservableObject
                 foreach (var pad in targets)
                 {
                     var probe = new Probe(pad.Footprint.Reference, pad.Number, side) { Number = number++, Type = DefaultProbeType };
-                    Resolve(probe);
+                    Resolve(probe, pad);
                     Probes.Add(probe);
                 }
             }
@@ -447,7 +447,7 @@ public partial class MainWindowViewModel : ObservableObject
             Number = Probes.Count == 0 ? 1 : Probes.Max(p => p.Number) + 1,
             Type = DefaultProbeType
         };
-        Resolve(probe);
+        Resolve(probe, pad);
         Probes.Add(probe);
         SelectedProbe = probe;
         AfterProbesChanged();
@@ -586,10 +586,10 @@ public partial class MainWindowViewModel : ObservableObject
     private void OnProbeChanged(object? sender, PropertyChangedEventArgs e)
     {
         // The type sets the clearances and spacings the checks use
-        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Type) or nameof(Probe.Note) or nameof(Probe.Number) or nameof(Probe.OpeningOverride))
+        if (e.PropertyName is nameof(Probe.Pin) or nameof(Probe.Type) or nameof(Probe.Note) or nameof(Probe.WiringNote) or nameof(Probe.Number))
         {
             MarkDirty();
-            if (e.PropertyName != nameof(Probe.Note) && !_isBatchChange)
+            if (e.PropertyName is not (nameof(Probe.Note) or nameof(Probe.WiringNote)) && !_isBatchChange)
                 RunChecks();
         }
     }
@@ -609,10 +609,13 @@ public partial class MainWindowViewModel : ObservableObject
     public string ProbeCountText => Localizer.Format("Text_ProbeCount", Probes.Count,
         Probes.Count(p => p.Side == BoardSide.Top), Probes.Count(p => p.Side == BoardSide.Bottom));
 
-    /// <summary>Connects the probe to the pad of the loaded board and computes its build sheet position.</summary>
-    private void Resolve(Probe probe)
+    /// <summary>
+    /// Connects the probe to a pad of the loaded board and computes its build sheet position. Without a given pad it is
+    /// the pad with its reference and number, of several such pads the one where the probe has been so far.
+    /// </summary>
+    private void Resolve(Probe probe, Pad? knownPad = null)
     {
-        probe.Pad = Board?.FindPad(probe.Key);
+        probe.Pad = knownPad ?? Board?.FindPad(probe.Key, probe.Pad?.Position ?? probe.SavedPosition);
         if (Board is not null && probe.Pad is { } pad)
         {
             var p = Board.ToFixture(pad.Position);
@@ -631,6 +634,8 @@ public partial class MainWindowViewModel : ObservableObject
     {
         if (value?.Probes.Count > 0)
             SelectedProbe = value.Probes[0];
+        else if (value?.Parts?.Count > 0)
+            SelectedPart = value.Parts[0];
     }
 
     public int ErrorCount => Checks.Count(c => c.IsError);
@@ -647,7 +652,9 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void RunChecks()
     {
-        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts, Components, Wires, IsTopPlateCombined);
+        var plates = Board is null ? null : BuildPlates();
+        var printPlates = plates is not null && Parts.Any(p => p.Type is { IsPrinted: true }) ? BuildPlates(forPrinting: true) : null;
+        var results = FixtureChecks.Run(Probes, Pinout, Board, Parts, Components, Wires, IsTopPlateCombined, plates, printPlates);
         _wiring = FixtureWiringModel.Build(Probes, Wires);
         if (Board is not null && _savedBoardHash.Length > 0 && Board.Hash.Length > 0 && _savedBoardHash != Board.Hash)
             results.Add(new CheckResult(CheckSeverity.Info, Localizer.Get("Check_BoardChanged"), []));
@@ -661,7 +668,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         UpdateWiredTo();
         UpdateUsage();
-        UpdatePlateSummary();
+        UpdatePlateSummary(plates);
     }
 
     /// <summary>Which probes are on which pad and pin, for the pad list, the adapter list and the pin selection.</summary>
@@ -826,8 +833,8 @@ public partial class MainWindowViewModel : ObservableObject
                     Number = entry.Number,
                     Pin = pinout.FindFixturePin(entry.Pin),
                     Note = entry.Note,
+                    WiringNote = entry.WiringNote,
                     Type = TypeOf(entry.ProbeType),
-                    OpeningOverride = entry.Opening is > 0 ? entry.Opening : null,
                     SavedNet = entry.Net,
                     SavedPosition = entry.Net.Length > 0 || entry.X != 0 || entry.Y != 0 ? new Point2(entry.X, entry.Y) : null
                 };
@@ -905,13 +912,13 @@ public partial class MainWindowViewModel : ObservableObject
         if (ReadBoard(path) is not { } board)
             return;
 
-        var selectedKey = SelectedPad?.Key;
+        var selected = SelectedPad;
         Board = board;
         foreach (var probe in Probes)
             Resolve(probe);
         ResolveParts();
         BuildPadRows();
-        SelectedPad = selectedKey is null ? null : board.FindPad(selectedKey);
+        SelectedPad = selected is null ? null : board.FindPad(selected.Key, selected.Position);
         RunChecks();
         var missing = Probes.Count(p => p.IsMissing);
         SetStatus(() => missing == 0
@@ -961,8 +968,8 @@ public partial class MainWindowViewModel : ObservableObject
                 Side = p.Side,
                 Pin = p.Pin?.Pin,
                 Note = p.Note,
+                WiringNote = p.WiringNote,
                 ProbeType = p.Type?.Id,
-                Opening = p.OpeningOverride,
                 // A probe whose pad disappeared keeps what was known about it
                 Net = p.Pad?.Net ?? p.SavedNet,
                 X = p.Pad?.Position.X ?? p.SavedPosition?.X ?? 0,
@@ -1047,6 +1054,7 @@ public partial class MainWindowViewModel : ObservableObject
             PlateOutlines = Plate.PlatesOf(Probes, IsBoardFlipped, IsTopPlateCombined).ToDictionary(p => p, p => PlateOverlay(p)!),
             IsBoardFlipped = IsBoardFlipped,
             IsTopPlateCombined = IsTopPlateCombined,
+            Plates = BuildPlates().Select(p => new BuildSheetPlate(p.Kind, p.Width, p.Height, RowOf(p.Kind).Thickness)).ToList(),
             Layers = BuildSheetLayers.Effective
         };
 

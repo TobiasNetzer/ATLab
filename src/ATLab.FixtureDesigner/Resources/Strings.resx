@@ -943,9 +943,6 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   <data name="Column_PartType" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="Column_PartDiameter" xml:space="preserve">
-    <value>Ø (mm)</value>
-  </data>
   <data name="Column_PartHeight" xml:space="preserve">
     <value>Height (mm)</value>
   </data>
@@ -993,6 +990,9 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   </data>
   <data name="Column_Plate" xml:space="preserve">
     <value>Plate</value>
+  </data>
+  <data name="Board_LegendProbes" xml:space="preserve">
+    <value>Probes</value>
   </data>
   <data name="Board_LegendToolingPins" xml:space="preserve">
     <value>Tooling pins</value>
@@ -1198,12 +1198,6 @@ bottom</value>
   </data>
   <data name="Column_Opening" xml:space="preserve">
     <value>Opening Ø (mm)</value>
-  </data>
-  <data name="ToolTip_ProbeOpening" xml:space="preserve">
-    <value>Opening in the moving plate for this probe, in mm; empty for the opening of its probe type</value>
-  </data>
-  <data name="ToolTip_PushRodOpening" xml:space="preserve">
-    <value>Opening in the top probe plate for this push rod, in mm; empty for the opening of its type</value>
   </data>
   <data name="Board_LegendOpenings" xml:space="preserve">
     <value>{0} (openings)</value>
@@ -1540,5 +1534,29 @@ bottom</value>
   </data>
   <data name="Check_BoardRestHeight" xml:space="preserve">
     <value>The board rests at {1} mm on {0} but at {3} mm on {2}, so it would lie crooked.</value>
+  </data>
+  <data name="Column_Manufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="Column_PartNumber" xml:space="preserve">
+    <value>Part number</value>
+  </data>
+  <data name="Column_ReceptacleManufacturer" xml:space="preserve">
+    <value>Receptacle mfr.</value>
+  </data>
+  <data name="Column_ReceptaclePartNumber" xml:space="preserve">
+    <value>Receptacle part no.</value>
+  </data>
+  <data name="Report_KindReceptacle" xml:space="preserve">
+    <value>Receptacle</value>
+  </data>
+  <data name="Report_KindPlate" xml:space="preserve">
+    <value>Plate</value>
+  </data>
+  <data name="Header_Components" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="Check_PlateForPrinting" xml:space="preserve">
+    <value>{0} (3D print): {1}</value>
   </data>
 </root>

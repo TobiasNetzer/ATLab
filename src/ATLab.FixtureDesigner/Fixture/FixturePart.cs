@@ -89,38 +89,17 @@ public partial class FixturePart : ObservableObject, IMovableBoardMarker
         RefreshOpening();
     }
 
-    /// <summary>Push rods: Ø of the opening in the top probe plate if not the type's, in mm.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Opening), nameof(OpeningText))]
-    private double? _openingOverride;
-
     /// <summary>Push rods come through an opening of the top probe plate; the pins have none.</summary>
     public bool HasOpening => Kind == FixturePartKind.PushRod;
 
-    /// <summary>Ø of the opening in the top probe plate: the rod's own, else the type's, else the type's drill Ø; 0 for none.</summary>
-    public double Opening => !HasOpening ? 0 : OpeningOverride ?? TypeOpening(Type);
+    /// <summary>Ø of the opening in the top probe plate: the type's, else the type's drill Ø; 0 for none.</summary>
+    public double Opening => !HasOpening ? 0 : TypeOpening(Type);
 
     public static double TypeOpening(PartType? type) =>
         type is null ? 0 : type.OpeningDiameter > 0 ? type.OpeningDiameter : type.DrillDiameter;
 
-    /// <summary>The rod's own opening as typed in the list; empty for the type's.</summary>
-    public string OpeningText
-    {
-        get => OpeningOverride?.ToString("0.###", System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
-        set => OpeningOverride = Probe.ParseOverride(value, OpeningOverride);
-    }
-
-    /// <summary>The type's opening, shown in the empty cell.</summary>
-    public string TypeOpeningText => HasOpening && TypeOpening(Type) > 0
-        ? TypeOpening(Type).ToString("0.###", System.Globalization.CultureInfo.CurrentCulture)
-        : string.Empty;
-
     /// <summary>The type's sizes changed: the opening may follow them.</summary>
-    public void RefreshOpening()
-    {
-        OnPropertyChanged(nameof(Opening));
-        OnPropertyChanged(nameof(TypeOpeningText));
-    }
+    public void RefreshOpening() => OnPropertyChanged(nameof(Opening));
 
     // ----- Drawing on the board -----
 
@@ -203,9 +182,9 @@ public static class PartLibrary
     /// <summary>Usual sizes as a start; marked as examples to replace with the parts in use.</summary>
     public static List<PartType> Examples() =>
     [
-        new() { Id = "exampleToolingPin3", Kind = FixturePartKind.ToolingPin, Name = "Tooling pin 3 mm", Diameter = 3, DrillDiameter = 3, Height = 12, ComponentClearance = 0},
-        new() { Id = "exampleTooling3", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 3 mm", Diameter = 3, DrillDiameter = 3, EdgeGap = 0.3, Height = 8, ComponentClearance = 0.5},
-        new() { Id = "exampleSupport4", Kind = FixturePartKind.SupportPin, Name = "Support pin 4 mm", Diameter = 4, DrillDiameter = 4, Height = 10, ComponentClearance = 1},
-        new() { Id = "examplePushRod5", Kind = FixturePartKind.PushRod, Name = "Push rod 5 mm", Diameter = 5, DrillDiameter = 5, OpeningDiameter = 6, Height = 15, ComponentClearance = 1}
+        new() { Id = "exampleToolingPin", Kind = FixturePartKind.ToolingPin, Name = "Tooling pin 4 mm", Diameter = 4, DrillDiameter = 2, Height = 6, ComponentClearance = 0},
+        new() { Id = "examplePreCenteringPin", Kind = FixturePartKind.PreCenteringPin, Name = "Pre-centering pin 12 mm", Diameter = 12, DrillDiameter = 4, EdgeGap = 0.3, Height = 22, ComponentClearance = 0.5},
+        new() { Id = "exampleSupport", Kind = FixturePartKind.SupportPin, Name = "Support pin 5 mm", Diameter = 5, DrillDiameter = 3, Height = 2.8, ComponentClearance = 1},
+        new() { Id = "examplePushRod", Kind = FixturePartKind.PushRod, Name = "Push rod 2.5 mm", Diameter = 2.5, DrillDiameter = 4, OpeningDiameter = 5, Height = 50, ComponentClearance = 1}
     ];
 }

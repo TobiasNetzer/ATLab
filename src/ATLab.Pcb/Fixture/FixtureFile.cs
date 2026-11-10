@@ -155,11 +155,11 @@ public sealed class ProbeEntry
 
     public string Note { get; set; } = string.Empty;
 
+    /// <summary>Note on the wire to its pin, for the wiring table of the build sheet.</summary>
+    public string WiringNote { get; set; } = string.Empty;
+
     /// <summary>ID of the probe type; a probe without one, or with an unknown one, gets the default type.</summary>
     public string? ProbeType { get; set; }
-
-    /// <summary>Bottom probes: Ø of its opening in the moving plate if not the type's, in mm.</summary>
-    public double? Opening { get; set; }
 
     /// <summary>Net and position (mm, board coordinates) when saved, to notice changes of the board.</summary>
     public string Net { get; set; } = string.Empty;

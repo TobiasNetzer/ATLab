@@ -36,8 +36,8 @@ Die Registerkarten rechts folgen der Reihenfolge der Arbeit:
 |---------------|--------------------|
 | [Allgemein](#registerkarte-allgemein) | Name, Prüfling, Ersteller und Notizen; die Lagen der Zeichnungen im Aufbaublatt |
 | [Pads](#registerkarte-pads) | Die zu kontaktierenden Pads finden |
-| [Prüfnadeln](#registerkarte-prüfnadeln) | Nadeltyp und Pin der Test-Hardware jeder Prüfnadel; die Nadeltypen |
-| [Verdrahtung](#registerkarte-verdrahtung) | Bauteile zwischen Platine und Test-Hardware sowie zusätzliche Verdrahtung |
+| [Prüfnadeln](#registerkarte-prüfnadeln) | Die Prüfnadeln mit Nadeltyp und Position; die Nadeltypen |
+| [Verdrahtung](#registerkarte-verdrahtung) | Pin der Test-Hardware jeder Prüfnadel, Bauteile zwischen Platine und Test-Hardware sowie zusätzliche Verdrahtung |
 | [Test-Hardware](#registerkarte-test-hardware) | Die Pins von J101 mit ihren Prüfnadeln und Netzen |
 | [Mechanik](#registerkarte-mechanik) | Fangstifte, Vorzentrierungsstifte, Stützstifte und Niederhalter |
 | [Prüfungen](#prüfungen) | Die im Entwurf gefundenen Probleme |
@@ -99,38 +99,33 @@ Die Spalte **Erreichbar** zeigt, von welcher Seite eine Prüfnadel das Pad berü
 
 ## Registerkarte Prüfnadeln
 
-Die Prüfnadeln des Nadeladapters mit Pad, Netz, Seite, Pin der Test-Hardware, Nadeltyp, Durchbruch und Position. Die Position ist in Millimetern vom **Ursprung** angegeben: dem Bohr-/Bestückungsursprung der Platine, wenn er in KiCad gesetzt ist, sonst der linken unteren Ecke des Platinenumrisses. X zeigt nach rechts und Y nach oben, **von oben gesehen**, auch für Prüfnadeln von unten.
+Die Prüfnadeln des Nadeladapters mit Pad, Netz, Seite, Nadeltyp und Position. Die Position ist in Millimetern vom **Ursprung** angegeben: dem Bohr-/Bestückungsursprung der Platine, wenn er in KiCad gesetzt ist, sonst der linken unteren Ecke des Platinenumrisses. X zeigt nach rechts und Y nach oben, **von oben gesehen**, auch für Prüfnadeln von unten.
 
-- **Test-Hardware-Pin**: der Pin von J101, mit dem die Prüfnadel verdrahtet wird. Jeder Eintrag zeigt den Pin und die Ressource dahinter, z. B. `c7 · MEAS 7`, und die Prüfnadeln, die schon auf ihm liegen.
 - **Typ**: der [Nadeltyp](#nadeltypen); neue Prüfnadeln bekommen den **Typ für neue Prüfnadeln**.
-- **Durchbruch Ø**: das Loch in der Andruckplatte, durch das die Prüfnadel ragt (nur bei Prüfnadeln auf der Seite der Andruckplatte). Bleibt das Feld leer, gilt der Durchbruch des Nadeltyps. Ein eigener Wert ist für Prüfnadeln gedacht, die einen größeren oder kleineren Durchbruch brauchen.
 - **Bemerkung**: freier Text für das Aufbaublatt, z. B. „langer Hub“.
-- **Zusätzliche Verbindungen**: womit die Prüfnadel außer ihrem Pin noch verdrahtet ist (siehe [Verdrahtung](#registerkarte-verdrahtung)), z. B. `R1.1`.
 
 | Schaltfläche | Wirkung |
 |--------------|---------|
-| **MEAS-Kanäle zuweisen** | Legt jede Prüfnadel ohne Pin auf einen Matrixkanal: Eine Prüfnadel auf einem Netz, das schon auf einem MEAS-Kanal liegt, bekommt denselben Kanal, die anderen den nächsten freien Kanal. MEAS 1 bleibt frei, da er meist reserviert ist. |
 | **Neu nummerieren** | Nummeriert die Prüfnadeln nach Seite (oben zuerst), dann zeilenweise von links oben, wie sie auf der Zeichnung zu finden sind. |
-| **Trennen** | Entfernt Pin und Verbindungen der ausgewählten Prüfnadel. |
 | **Entfernen** | Entfernt die ausgewählte Prüfnadel. |
-
-Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden einfach parallel verdrahtet.
 
 ### Nadeltypen
 
-Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; alle Angaben sind in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters mit Name und Bemerkung. Wählen Sie einen Typ aus, um über der Liste seine Maße zu bearbeiten. Die Skizze neben den Feldern zeigt, wo jedes Maß liegt; ihre Buchstaben stehen auch neben den Feldern.
+Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hülse. Die Maße entnehmen Sie dem Datenblatt der verwendeten Prüfnadeln; alle Angaben sind in Millimetern. Die Liste **Typen** unter den Prüfnadeln zeigt die Typen des Nadeladapters mit Name, Hersteller, Teilenummer und Bemerkung. Wählen Sie einen Typ aus, um über der Liste seine Maße zu bearbeiten. Die Skizze neben den Feldern zeigt, wo jedes Maß liegt; ihre Buchstaben stehen auch neben den Feldern.
 
 | Skizze | Feld | Bedeutung |
 |--------|------|-----------|
-| | **Name** | Z. B. die Baureihe oder Bestellnummer |
-| A | **Ø** | Durchmesser der Prüfnadel. Dient nur der Stückliste. |
+| | **Name** | Z. B. die Baureihe |
+| | **Hersteller**, **Teilenummer** | Der Prüfnadel, für die Stückliste |
+| | **Hülse Hersteller**, **Hülse Teilenr.** | Der Hülse, die in der Stückliste eine eigene Zeile bekommt |
+| A | **Ø** | Durchmesser der Prüfnadel. Nur zur Information. |
 | B | **Bohrung Ø** | Loch für die Hülse in der Kontaktträgerplatte |
 | C | **Durchbruch Ø** | Loch in der Andruckplatte, durch das die Prüfnadel kommt; 0 = Bohrungsdurchmesser |
-| D | **Höhe** | Wie weit die Prüfnadel aus der Platte zur Platine hin herausragt. Dient nur der Stückliste. |
+| D | **Höhe** | Wie weit die Prüfnadel aus der Platte zur Platine hin herausragt. Nur zur Information. |
 | E | **Min. Pad** | Kleinstes Pad, das die Spitze sicher trifft |
 | F | **Abstand** | Kleinster Abstand zwischen den Mitten zweier Prüfnadeln einer Platte |
 | G | **Freiraum** | Kleinster Abstand von der Mitte der Prüfnadel zur Bauteilfläche eines anderen Bauteils ihrer Seite |
-| | **Bemerkung** | Freier Text, z. B. die Bestellnummern von Nadel und Hülse |
+| | **Bemerkung** | Freier Text |
 
 | Schaltfläche | Wirkung |
 |--------------|---------|
@@ -144,9 +139,22 @@ Die Nadeladapter-Datei enthält eine eigene Kopie der Typen; sie ist also für s
 
 ## Registerkarte Verdrahtung
 
+In der Liste oben wird jede Prüfnadel mit der Test-Hardware verdrahtet. Eine hier ausgewählte Prüfnadel ist auch auf der Platine und auf der Registerkarte Prüfnadeln ausgewählt.
+
+- **Test-Hardware-Pin**: der Pin von J101, mit dem die Prüfnadel verdrahtet wird. Jeder Eintrag zeigt den Pin und die Ressource dahinter, z. B. `c7 · MEAS 7`, und die Prüfnadeln, die schon auf ihm liegen.
+- **Zusätzliche Verbindungen**: womit die Prüfnadel außer ihrem Pin über die Verbindungen unten noch verdrahtet ist, z. B. `R1.1`.
+- **Bemerkung**: freier Text zur Verbindung von der Prüfnadel zu ihrem Pin; er steht in der Verdrahtungstabelle des Aufbaublatts.
+
+| Schaltfläche | Wirkung |
+|--------------|---------|
+| **MEAS-Kanäle zuweisen** | Legt jede Prüfnadel ohne Pin auf einen Matrixkanal: Eine Prüfnadel auf einem Netz, das schon auf einem MEAS-Kanal liegt, bekommt denselben Kanal, die anderen den nächsten freien Kanal. MEAS 1 bleibt frei, da er meist reserviert ist. |
+| **Trennen** | Entfernt Pin und Verbindungen der ausgewählten Prüfnadel. |
+
+Mehrere Prüfnadeln auf demselben Netz dürfen sich einen Pin teilen; sie werden einfach parallel verdrahtet.
+
 Manchmal sitzt zwischen Platine und Test-Hardware noch etwas, z. B. ein Vorwiderstand, ein Relais oder ein Steckverbinder zu einem anderen Gerät. Solche Bauteile werden auf der Registerkarte **Verdrahtung** beschrieben. Sie gehören nur zur Verdrahtung und haben keinen Platz auf einer Platte.
 
-**Bauteile**: **Bauteil hinzufügen** fügt eine Zeile mit dem Bezeichner `?` und den Anschlüssen `1, 2` hinzu. Tragen Sie den Bezeichner (R1, K1, U1 …), eine Beschreibung (Wert oder Teilenummer, für die Stückliste) und die Anschlüsse ein, mit Komma getrennt. Anschlüsse können beliebig heißen, z. B. `A1, A2, COM, NC, NO` für ein Relais oder `VIN, VOUT, GND` für ein Modul. **Nicht verdrahtet** zeigt die Anschlüsse ohne Verbindung.
+**Bauteile**: **Bauteil hinzufügen** fügt eine Zeile mit dem Bezeichner `?` und den Anschlüssen `1, 2` hinzu. Tragen Sie den Bezeichner (R1, K1, U1 …), eine Beschreibung (Wert oder Teilenummer, für die Stückliste) und die Anschlüsse ein, mit Komma getrennt. Anschlüsse können beliebig heißen, z. B. `A1, A2, COM, NC, NO` für ein Relais oder `VIN, VOUT, GND` für ein Modul. **Offen** zeigt die Anschlüsse ohne Verbindung.
 
 **Verbindungen**: alle Drähte, die zusätzlich zur Verbindung zwischen Prüfnadel und Pin nötig sind. Jedes Ende ist eine Prüfnadel, ein Pin von J101 oder ein Bauteilanschluss. **Verbindung hinzufügen** legt eine neue Verbindung an, die an der ausgewählten Prüfnadel beginnt. Beispiele:
 
@@ -189,17 +197,18 @@ Die Schaltfläche einer Art (**Fangstift**, **Vorzentrierungsstift**, **Stützst
 
 - Ein **Fangstift** gehört in eine Bohrung: auf oder neben eine Bohrung der Platine klicken, der Stift springt hinein. Beim Ziehen springt er in die nächste Bohrung oder, wenn keine in der Nähe ist, zurück in seine.
 - Ein **Vorzentrierungsstift** springt neben die Platinenkante, mit dem **Kantenabstand** seines Typs, damit die Platine frei hineinfällt.
-- **Stützstifte** und **Niederhalter** bleiben, wo sie gesetzt werden. Ein Niederhalter kann einen eigenen **Durchbruch Ø** in der Kontaktträgerplatte oben haben, wie eine Prüfnadel in der Andruckplatte.
+- **Stützstifte** und **Niederhalter** bleiben, wo sie gesetzt werden.
 
 ### Teiletypen
 
 Die Liste **Typen** unter den Teilen funktioniert wie die Nadeltypen: **Typ hinzufügen**, **Aus Bibliothek**, **In Bibliothek speichern** und **Entfernen**. Jeder Typ hat eine **Art**; ein Teil kann nur einen Typ seiner Art bekommen. Alle Maße sind in Millimetern angegeben.
 
-Name, Art und Bemerkung werden in der Liste festgelegt. Alles Weitere bearbeiten Sie über der Liste, sobald ein Typ ausgewählt ist; dort erscheinen nur die Felder, die für ihn gelten. Die Skizze neben den Feldern passt sich jeder Änderung an und zeigt, wo jedes Maß liegt. Ihre Buchstaben stehen auch neben den Feldern.
+Name, Art, Hersteller, Teilenummer und Bemerkung werden in der Liste festgelegt. Alles Weitere bearbeiten Sie über der Liste, sobald ein Typ ausgewählt ist; dort erscheinen nur die Felder, die für ihn gelten. Die Skizze neben den Feldern passt sich jeder Änderung an und zeigt, wo jedes Maß liegt. Ihre Buchstaben stehen auch neben den Feldern.
 
 | Skizze | Feld | Gilt für | Bedeutung |
 |--------|------|----------|-----------|
-| | **Name** | Alle | Z. B. die Bestellnummer |
+| | **Name** | Alle | Z. B. die Größe |
+| | **Hersteller**, **Teilenummer** | Alle | Für die Stückliste |
 | | **Art** | Alle | Fangstift, Vorzentrierungsstift, Stützstift oder Niederhalter |
 | A | **Ø an der Platine** | Alle | Durchmesser, wo das Teil die Platine berührt |
 | B | **Ø Schaft** | Niederhalter | Dickerer Schaft hinter dem dünnen Ende, damit nur der Teil nahe der Platine dünn ist; 0 = kein Schaft |
@@ -239,18 +248,21 @@ Die Prüfungen laufen nach jeder Änderung. Die Registerkarte **Prüfungen** lis
 | Fehler | Der Durchbruch einer Prüfnadel in der Andruckplatte **überschneidet die Bohrung eines Fangstifts**. |
 | Fehler | Ein Vorzentrierungsstift **überdeckt die Platine**. |
 | Fehler | Ein Stützstift oder Niederhalter steht **nicht unter der Platine** oder **berührt ein Bauteil**. |
+| Fehler | Ein Nadeltyp hat **keinen Bohrungsdurchmesser**. |
 | Fehler | Der Typ eines Teils hat **keinen Bohrungsdurchmesser**, sofern er nicht für den 3D-Druck markiert ist. |
+| Fehler | Eine **Platte lässt sich nicht fertigen**: Bohrungen überschneiden sich, eine Bohrung liegt zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche. Das Ergebnis nennt die Platte. |
 | Fehler | Die **Form eines Teiletyps ist nicht möglich**: Schaft oder Schulter sind nicht breiter als das Teil an der Platine, das dünne Ende ist nicht kürzer als die Höhe, die Fase am Absatz fehlt oder ist zu groß, oder die Spitze passt nicht. |
 | Fehler | Ein für den 3D-Druck markierter Typ hat **keinen Durchmesser oder keine Höhe**. |
 | Fehler | Ein Niederhalter mit einem für den 3D-Druck markierten Typ hat **keinen Durchbruch** in der Kontaktträgerplatte oben. |
 | Warnung | Eine Prüfnadel ist **nicht verdrahtet**: Sie hat weder Pin noch Verbindung. |
 | Warnung | Ein Bauteil oder einige seiner **Anschlüsse sind nicht verdrahtet**, oder es hat keine Anschlüsse. |
 | Warnung | Eine Verbindung hat **nicht beide Enden** oder führt zu ihrem Anfang zurück. |
-| Warnung | Eine Prüfnadel oder ein Teil hat **keinen Typ**, oder ein Nadeltyp hat keinen Bohrungsdurchmesser. |
+| Warnung | Eine Prüfnadel oder ein Teil hat **keinen Typ**. |
 | Warnung | Das Pad ist **kleiner** als das minimale Pad des Nadeltyps. |
 | Warnung | Eine Prüfnadel liegt **auf oder nahe einem anderen Bauteil** ihrer Seite: näher an seiner Bauteilfläche als der Freiraum des Nadeltyps. Der Footprint des kontaktierten Pads selbst zählt nicht. |
 | Warnung | Ein Teil liegt **näher an einem Bauteil** als der Freiraum seines Typs. |
 | Warnung | **Schaft oder Schulter** eines Teils ragen über ein Bauteil. Die Bauteilhöhen sind nicht bekannt; prüfen Sie daher, ob das Bauteil niedriger ist. |
+| Warnung | Eine **Platte lässt sich nicht für den 3D-Druck fertigen**, z. B. weil ein gedrucktes Teil in einer Tasche steht. Die normalen Plattendateien sind davon nicht betroffen. |
 | Warnung | Der Durchbruch eines Niederhalters in der Kontaktträgerplatte oben ist **enger als sein Schaft**, nur das dünne Ende passt hindurch. |
 | Warnung | Die Platine **läge schief**: Die Schultern der Fangstifte und die Stützstifte tragen sie in unterschiedlicher Höhe. Das wird nur geprüft, wenn ein Fangstift eine Schulter hat. |
 | Warnung | Ein Vorzentrierungsstift steht nicht im **Kantenabstand** seines Typs zur Platinenkante. |
@@ -281,7 +293,7 @@ Die Liste zeigt jede Platte mit Größe und Inhalt (Nadelbohrungen, Durchbrüche
 
 **Prüfnadeln oben und Niederhalter in einer Platte** gilt für einen Nadeladapter, dessen Niederhalterplatte auch die Prüfnadeln von oben trägt. Er hat dann keine Kontaktträgerplatte oben und keine Durchbrüche für die Niederhalter; die Prüfnadeln von oben bekommen ihre Hülsen in der Niederhalterplatte, und die Verdrahtungszeichnung des Aufbaublatts zeigt die Niederhalterplatte. Ohne Prüfnadeln von oben macht die Einstellung keinen Unterschied.
 
-Probleme, die die Fertigung einer Platte verhindern, stehen unter den Platten: eine Bohrung ohne Durchmesser, sich überschneidende Bohrungen oder Bohrungen zu nah am Plattenrand oder an einem Ausschnitt oder über dem Rand einer Tasche. Beim [Export für den 3D-Druck](#export-für-den-3d-druck) darf ein gedrucktes Teil außerdem nicht in einer Tasche stehen.
+Probleme, die die Fertigung einer Platte verhindern, stehen auf der Registerkarte [Prüfungen](#prüfungen). Solange sie bestehen, werden die Plattendateien nicht geschrieben.
 
 ### Umriss
 
@@ -349,9 +361,9 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 **Aufbaublatt (PDF)…** (`Strg+P`) erstellt ein PDF (A4 quer) in der Reihenfolge der Arbeit:
 
 1. **Angaben** zu Nadeladapter und Platine: unter anderem die Prüfsumme der Platinendatei, die Lage der Platine (kopfüber oder nicht) und wie die Koordinaten zu lesen sind.
-2. **Stückliste**: jeder Nadeltyp und Teiletyp mit Anzahl, Durchmesser, Bohrung, Durchbruch und Höhe; dazu die Bauteile der Verdrahtung, nach Beschreibung zusammengefasst, mit ihrer Bemerkung.
+2. **Stückliste**: jeder Nadeltyp mit seiner Hülse in einer eigenen Zeile, jeder Teiletyp, die Platten mit Größe und Dicke sowie die Bauteile der Verdrahtung, nach Beschreibung zusammengefasst. Bei Prüfnadeln und Teilen stehen Anzahl, Hersteller und Teilenummer dabei.
 3. **Montage**, einmal für jede Seite mit Prüfnadeln oder Teilen:
-   - **Prüfnadeln nach Typ**: Anzahl, Nummern und Platte der Prüfnadeln je Typ,
+   - **Prüfnadeln nach Typ**: Anzahl, Nummern und Platte der Prüfnadeln je Typ sowie die Bemerkungen einzelner Prüfnadeln,
    - **Stifte und Niederhalter** dieser Seite mit Art, Typ und Platte,
    - die **Montagezeichnung**: die Platten dieser Seite mit Umrissen und Durchbrüchen sowie die Prüfnadeln und Teile. Gezeichnet wird von der Seite, an der sie die Platine berühren – die Platten oben also von oben, die Platten unten von unten (gespiegelt).
 
@@ -369,9 +381,9 @@ Ein Nadeladapter wird als `.atlabfix`-Datei gespeichert (`Strg+S`, **Speichern u
 - die Angaben zum Nadeladapter und die Test-Hardware,
 - den Pfad der Platinendatei (relativ zur Nadeladapter-Datei, wenn beide auf demselben Laufwerk liegen) und ihre Prüfsumme,
 - die Nadeltypen und Teiletypen,
-- jede Prüfnadel mit Nummer, Pad, Seite, Nadeltyp, Pin, Durchbruch und Bemerkung sowie dem Netz und der Position, die das Pad beim Speichern hatte,
+- jede Prüfnadel mit Nummer, Pad, Seite, Nadeltyp, Pin, Bemerkung und Verdrahtungsbemerkung sowie dem Netz und der Position, die das Pad beim Speichern hatte,
 - die Bauteile der Verdrahtung und die zusätzlichen Verbindungen,
-- jedes Teil mit Art, Typ, Position und Durchbruch,
+- jedes Teil mit Art, Typ und Position,
 - die Plattenumrisse (mit einer Kopie importierter Zeichnungen, damit der Nadeladapter vollständig bleibt, wenn die Zeichnung verschoben wird), die Plattendicken und die Lage der Platine,
 - die Lagen der Zeichnungen im Aufbaublatt.
 

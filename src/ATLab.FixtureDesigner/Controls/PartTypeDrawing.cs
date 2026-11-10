@@ -157,13 +157,9 @@ public sealed class PartTypeDrawing : DimensionSketch
         Across(tipLane, straightTop, r, "A", letterBeside: true);
 
         var farLane = -plateThickness - 14;
-        if (hasBody)
-        {
-            Across(farLane, 0, bodyRadius, "B");
-            farLane -= 20;
-        }
-
         Across(farLane, -plateThickness, holeRadius, "C");
+        if (hasBody)
+            Across(farLane - 20, 0, bodyRadius, "B");
 
         Line(extensionPen, At(centerX + r, total), At(centerX + baseRadius + 54, total));
         Along(centerX + baseRadius + 54, 0, total, centerX + baseRadius, "D");

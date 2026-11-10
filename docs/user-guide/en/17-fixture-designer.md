@@ -32,8 +32,8 @@ The tabs on the right follow the order of the work:
 |-----|-------------------|
 | [General](#general-tab) | Name, device, author and notes; the layers of the build sheet drawings |
 | [Pads](#pads-tab) | Find the pads to probe |
-| [Probes](#probes-tab) | Probe type and test hardware pin of every probe; the probe types |
-| [Wiring](#wiring-tab) | Components between board and test hardware, and additional wiring |
+| [Probes](#probes-tab) | The probes with their probe type and position; the probe types |
+| [Wiring](#wiring-tab) | Test hardware pin of every probe, components between board and test hardware, and additional wiring |
 | [Test Hardware](#test-hardware-tab) | The pins of J101 with their probes and nets |
 | [Mechanics](#mechanics-tab) | Tooling pins, pre-centering pins, support pins and push rods |
 | [Checks](#checks) | The problems found in the design |
@@ -95,38 +95,33 @@ The column **Reachable** shows from which side a probe can touch the pad: copper
 
 ## Probes tab
 
-The probes of the fixture with their pad, net, side, test hardware pin, probe type, opening and position. The position is in millimeters from the **origin**: the drill/place file origin of the board if it is set in KiCad, otherwise the bottom left corner of the board outline. X points right and Y up, **as seen from the top**, also for probes from the bottom.
+The probes of the fixture with their pad, net, side, probe type and position. The position is in millimeters from the **origin**: the drill/place file origin of the board if it is set in KiCad, otherwise the bottom left corner of the board outline. X points right and Y up, **as seen from the top**, also for probes from the bottom.
 
-- **Test Hardware Pin**: the pin of J101 the probe is wired to. Every entry shows the pin and the resource behind it, e.g. `c7 · MEAS 7`, and the probes already wired to it.
 - **Type**: the [probe type](#probe-types); new probes get the **Type for new probes**.
-- **Opening Ø**: the hole in the moving plate that the probe passes through (only for probes on the side of the moving plate). Leave it empty to use the opening of the probe type; enter a value for a probe that needs a bigger or smaller opening.
 - **Note**: free text for the build sheet, e.g. "long stroke".
-- **Additional connections**: what else the probe is wired to besides its pin (see [Wiring](#wiring-tab)), e.g. `R1.1`.
 
 | Button | Effect |
 |--------|--------|
-| **Assign MEAS channels** | Wires every probe without a pin to a matrix channel: a probe on a net that is already on a MEAS channel gets the same channel, the others the next free channel. MEAS 1 stays free, as it is usually reserved. |
 | **Renumber** | Numbers the probes by side (top first), then row by row from the top left, as they are found on the drawing. |
-| **Disconnect** | Removes the pin and the wires of the selected probe. |
 | **Remove** | Removes the selected probe. |
-
-Several probes on the same net may share a pin; they are simply wired in parallel.
 
 ### Probe types
 
-A probe type describes a kind of spring probe with its receptacle; take its dimensions from the data sheet of your probes. All sizes are in millimeters. The **Types** list below the probes shows the types of the fixture with their names and notes. Select a type to edit its dimensions above the list. The sketch beside the fields shows where each dimension is, with the letters beside the fields.
+A probe type describes a kind of spring probe with its receptacle; take its dimensions from the data sheet of your probes. All sizes are in millimeters. The **Types** list below the probes shows the types of the fixture with their names, manufacturers, part numbers and notes. Select a type to edit its dimensions above the list. The sketch beside the fields shows where each dimension is, with the letters beside the fields.
 
 | Sketch | Field | Meaning |
 |--------|-------|---------|
-| | **Name** | E.g. the series or part number |
-| A | **Ø** | Diameter of the probe. Only for the bill of materials. |
+| | **Name** | E.g. the series |
+| | **Manufacturer**, **Part number** | Of the probe, for the bill of materials |
+| | **Receptacle mfr.**, **Receptacle part no.** | Of its receptacle, which has its own line in the bill of materials |
+| A | **Ø** | Diameter of the probe. For reference only. |
 | B | **Drill Ø** | Hole for the receptacle in the probe plate |
 | C | **Opening Ø** | Hole the probe comes through in the moving plate; 0 = the drill diameter |
-| D | **Height** | How far the probe stands out of the plate towards the board. Only for the bill of materials. |
+| D | **Height** | How far the probe stands out of the plate towards the board. For reference only. |
 | E | **Min. pad** | Smallest pad the tip hits reliably |
 | F | **Spacing** | Smallest distance between the centers of two probes of one plate |
 | G | **Clearance** | Smallest distance from the center of the probe to the courtyard of another component of its side |
-| | **Note** | Free text, e.g. the part numbers of probe and receptacle |
+| | **Note** | Free text |
 
 | Button | Effect |
 |--------|--------|
@@ -139,6 +134,19 @@ A probe type describes a kind of spring probe with its receptacle; take its dime
 The fixture file contains its own copy of the types, so it is complete on its own and does not change when the library changes. A new fixture starts with the types of the library. Until you save a type of your own to the library, it contains three examples (100, 75 and 50 mil). These numbers name the probe size by its center-to-center pitch, which is the **Spacing** of the type; they are neither the diameter nor the clearance. The values of the examples are typical but do not come from a particular manufacturer – check them against the data sheet of your probes.
 
 ## Wiring tab
+
+The list at the top wires every probe to the test hardware; selecting a probe here also selects it on the board and on the Probes tab.
+
+- **Test Hardware Pin**: the pin of J101 the probe is wired to. Every entry shows the pin and the resource behind it, e.g. `c7 · MEAS 7`, and the probes already wired to it.
+- **Additional connections**: what else the probe is wired to besides its pin, through the wires below, e.g. `R1.1`.
+- **Note**: free text on the wire from the probe to its pin, printed in the wiring table of the build sheet.
+
+| Button | Effect |
+|--------|--------|
+| **Assign MEAS channels** | Wires every probe without a pin to a matrix channel: a probe on a net that is already on a MEAS channel gets the same channel, the others the next free channel. MEAS 1 stays free, as it is usually reserved. |
+| **Disconnect** | Removes the pin and the wires of the selected probe. |
+
+Several probes on the same net may share a pin; they are simply wired in parallel.
 
 Sometimes something sits between the board and the test hardware, e.g. a series resistor, a relay or a connector to another device. The **Wiring** tab describes it. The components only belong to the wiring and get no place on a plate.
 
@@ -185,17 +193,18 @@ Click the button of a kind (**Tooling pin**, **Pre-centering pin**, **Support pi
 
 - A **tooling pin** goes into a hole: click on or next to a hole of the board, and the pin snaps into it. When dragged, it snaps into the nearest hole, or back into its hole if there is none nearby.
 - A **pre-centering pin** snaps beside the board edge, the **Edge gap** of its type away from it, so the board drops in freely.
-- **Support pins** and **push rods** stay where they are placed. A push rod can have an **Opening Ø** of its own in the top probe plate, like a probe in the moving plate.
+- **Support pins** and **push rods** stay where they are placed.
 
 ### Part types
 
 The **Types** list below the parts works like the probe types: **Add type**, **From library**, **Save to library** and **Remove**. Every type has a **Kind**; a part can only get a type of its kind. All sizes are in millimeters.
 
-Name, kind and note are set in the list. Select a type to edit the rest above the list, where only the fields that apply to it are shown. The sketch beside the fields follows the type as you change it and shows where each dimension is, with the letters beside the fields.
+Name, kind, manufacturer, part number and note are set in the list. Select a type to edit the rest above the list, where only the fields that apply to it are shown. The sketch beside the fields follows the type as you change it and shows where each dimension is, with the letters beside the fields.
 
 | Sketch | Field | For | Meaning |
 |--------|-------|-----|---------|
-| | **Name** | All | E.g. the part number |
+| | **Name** | All | E.g. the size |
+| | **Manufacturer**, **Part number** | All | For the bill of materials |
 | | **Kind** | All | Tooling pin, pre-centering pin, support pin or push rod |
 | A | **Ø at the board** | All | Diameter where it touches the board |
 | B | **Body Ø** | Push rods | Thicker body behind the thin end, so that only the part close to the board is thin; 0 = none |
@@ -235,18 +244,21 @@ The checks run after every change. The **Checks** tab lists the results, the sta
 | Error | The opening of a probe in the moving plate **overlaps the hole of a tooling pin**. |
 | Error | A pre-centering pin **overlaps the board**. |
 | Error | A support pin or push rod is **not under the board**, or **touches a component**. |
+| Error | A probe type has **no drill diameter**. |
 | Error | The type of a part has **no drill diameter**, unless it is marked for 3D printing. |
+| Error | A **plate cannot be made**: holes overlap, or a hole is too close to the plate edge or a cut-out, or lies across the edge of a pocket. The result names the plate. |
 | Error | The **shape of a part type is not possible**: the body or shoulder is not wider than the part at the board, the thin end is not shorter than the height, the step chamfer is missing or too big, or the tip does not fit. |
 | Error | A type marked for 3D printing has **no diameter or height**. |
 | Error | A push rod of a type marked for 3D printing has **no opening** in the top probe plate. |
 | Warning | A probe is **not wired**: it has no pin and no wire. |
 | Warning | A component or some of its **terminals are not wired**, or it has no terminals. |
 | Warning | A wire does **not have both ends**, or leads back to where it starts. |
-| Warning | A probe or part has **no type**, or a probe type has no drill diameter. |
+| Warning | A probe or part has **no type**. |
 | Warning | The pad is **smaller** than the minimum pad of the probe type. |
 | Warning | A probe lies **on or near another component** of its side: closer to its courtyard than the clearance of the probe type. The footprint of the probed pad itself does not count. |
 | Warning | A part is **closer to a component** than the clearance of its type. |
 | Warning | The **body or shoulder** of a part reaches over a component. Component heights are not known, so check that the component is lower. |
+| Warning | A **plate cannot be made for 3D printing**, e.g. a printed part stands in a pocket. The regular plate files are not affected. |
 | Warning | The opening of a push rod in the top probe plate is **narrower than its body**, so only the thin end fits through. |
 | Warning | The board **would lie crooked**: the shoulders of the tooling pins and the support pins carry it at different heights. Only checked if a tooling pin has a shoulder. |
 | Warning | A pre-centering pin is not the **edge gap** of its type away from the board edge. |
@@ -277,7 +289,7 @@ The list shows every plate with its size and contents (probe holes, openings, pi
 
 **Top probes and push rods in one plate** is for a fixture whose pressure plate also holds the probes from above. It then has no top probe plate and no openings for the push rods; the probes from above get their receptacles in the pressure plate, and the wiring drawing of the build sheet shows the pressure plate. Without probes from above the setting makes no difference.
 
-Problems that prevent making a plate are listed below the plates: a hole without drill diameter, holes that overlap, or holes too close to the plate edge or to a cut-out, or across the edge of a pocket. For the [export for 3D printing](#export-for-3d-printing), a printed part must also not stand in a pocket.
+Problems that prevent making a plate are listed on the [Checks](#checks) tab. The plate files are not written until they are fixed.
 
 ### Outline
 
@@ -345,9 +357,9 @@ Positions and nets always come from the current board file. The checks compare t
 **Build sheet (PDF)…** (`Ctrl+P`) creates a PDF (A4 landscape) in the order of the work:
 
 1. **Information** about fixture and board, including the checksum of the board file, the board position (upside down or not) and how to read the coordinates.
-2. **Bill of materials**: every probe type and part type with quantity, diameter, drill, opening and height; then the components of the wiring, grouped by description, with their note.
+2. **Bill of materials**: every probe type with its receptacle on a line of its own, every part type, the plates with their size and thickness, and the components of the wiring, grouped by description. Probes and parts show quantity, manufacturer and part number.
 3. **Assembly**, once for every side with probes or parts:
-   - **Probes by type**: quantity, probe numbers and plate per type,
+   - **Probes by type**: quantity, probe numbers and plate per type, and the notes of individual probes,
    - **Pins and push rods** of that side with kind, type and plate,
    - the **assembly drawing**: the plates of that side with their outlines and openings, and the probes and parts. It is drawn from the side where they touch the board – the plates above from the top, the plates below from below (mirrored).
 
@@ -365,8 +377,8 @@ A fixture is saved as an `.atlabfix` file (`Ctrl+S`, **Save as…** `Ctrl+Shift+
 - the fixture information and the test hardware,
 - the path of the board file (relative to the fixture file if both are on the same drive) and its checksum,
 - the probe types and part types,
-- every probe with its number, pad, side, probe type, pin, opening and note, and the net and position the pad had when saved,
-- every part with its kind, type, position and opening,
+- every probe with its number, pad, side, probe type, pin, note and wiring note, and the net and position the pad had when saved,
+- every part with its kind, type and position,
 - the components of the wiring and the additional wires,
 - the plate outlines (with a copy of imported drawings, so the fixture stays complete when the drawing is moved), the plate thicknesses and the board position,
 - the layers of the build sheet drawings.

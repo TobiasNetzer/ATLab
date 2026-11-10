@@ -254,7 +254,7 @@ public partial class BoardService : ObservableObject
                 nets.Add(new NetHighlight(net, color));
 
             foreach (var probe in pinNet?.Probes ?? [])
-                if (Board?.FindPad(Pad.PadKeyOf(probe.Reference, probe.Pad)) is { } pad)
+                if (Board?.FindPad(Pad.PadKeyOf(probe.Reference, probe.Pad), probe.X is { } x && probe.Y is { } y ? new Point2(x, y) : null) is { } pad)
                     probes.Add(new StepProbeMarker(probe, pad, color));
         }
 

@@ -193,6 +193,10 @@ public partial class MainWindowViewModel
             existing.Height = libraryType.Height;
             existing.MinSpacing = libraryType.MinSpacing;
             existing.ComponentClearance = libraryType.ComponentClearance;
+            existing.Manufacturer = libraryType.Manufacturer;
+            existing.PartNumber = libraryType.PartNumber;
+            existing.ReceptacleManufacturer = libraryType.ReceptacleManufacturer;
+            existing.ReceptaclePartNumber = libraryType.ReceptaclePartNumber;
             existing.Note = libraryType.Note;
             SelectedProbeType = existing;
         }
@@ -267,12 +271,6 @@ public partial class MainWindowViewModel
         }
     }
 
-    [ObservableProperty] private IReadOnlyList<string> _plateProblems = [];
-
-    public bool HasPlateProblems => PlateProblems.Count > 0;
-
-    partial void OnPlateProblemsChanged(IReadOnlyList<string> value) => OnPropertyChanged(nameof(HasPlateProblems));
-
     // ----- What the export writes -----
 
     [ObservableProperty]
@@ -313,11 +311,10 @@ public partial class MainWindowViewModel
     private List<Plate> BuildPlates(bool forPrinting = false) =>
         Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped, IsTopPlateCombined, forPrinting);
 
-    private void UpdatePlateSummary()
+    private void UpdatePlateSummary(IReadOnlyList<Plate>? plates = null)
     {
         if (Board is null)
         {
-            PlateProblems = [];
             foreach (var row in PlateRows)
             {
                 row.IsPresent = false;
@@ -327,7 +324,7 @@ public partial class MainWindowViewModel
             return;
         }
 
-        var plates = BuildPlates();
+        plates ??= BuildPlates();
         UpdateOutlineState();
         var culture = System.Globalization.CultureInfo.CurrentCulture;
         foreach (var row in PlateRows)
@@ -339,8 +336,6 @@ public partial class MainWindowViewModel
                     ? "Text_PlateCombined"
                     : "Text_PlateNotNeeded");
         }
-
-        PlateProblems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem}")).ToList();
     }
 
     /// <summary>Size of the plate and what it has, e.g. "169.0 × 119.6 mm, 12 probe holes, 2 frame holes".</summary>
@@ -409,7 +404,7 @@ public partial class MainWindowViewModel
             return;
         }
 
-        var problems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem}")).ToList();
+        var problems = plates.SelectMany(p => p.Problems.Select(problem => $"{PlateRow.NameOf(p.Kind)}: {problem.Message}")).ToList();
         if (problems.Count > 0)
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"),

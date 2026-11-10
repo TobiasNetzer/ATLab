@@ -169,5 +169,8 @@ public partial class PinNet : ObservableObject
     };
 }
 
-/// <summary>A probe of the fixture: its name and the pad it touches from which side.</summary>
-public sealed record ProbePoint(string Name, string Reference, string Pad, BoardSide Side);
+/// <summary>
+/// A probe of the fixture: its name and the pad it touches from which side. X and Y are the position of the pad on the
+/// board, which tells apart several pads with one number; null in projects imported before they were kept.
+/// </summary>
+public sealed record ProbePoint(string Name, string Reference, string Pad, BoardSide Side, double? X = null, double? Y = null);

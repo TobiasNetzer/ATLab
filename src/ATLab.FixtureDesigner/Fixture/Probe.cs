@@ -48,60 +48,32 @@ public partial class Probe : ObservableObject, IBoardMarker
 
     [ObservableProperty] private string _note = string.Empty;
 
+    /// <summary>Note on the wire from the probe to its pin, for the wiring table of the build sheet.</summary>
+    [ObservableProperty] private string _wiringNote = string.Empty;
+
     /// <summary>Kind of probe: its dimensions are used by the spacing checks and the plate files.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TypeName), nameof(Opening), nameof(TypeOpeningText))]
+    [NotifyPropertyChangedFor(nameof(TypeName), nameof(Opening))]
     private ProbeType? _type;
 
     public string TypeName => Type?.Name ?? string.Empty;
 
-    /// <summary>Ø of the opening in the moving plate if not the type's, in mm; only bottom probes come through it.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Opening), nameof(OpeningText))]
-    private double? _openingOverride;
-
     /// <summary>The board lies upside down in the fixture, so its top side faces the moving plate.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasOpening), nameof(Opening), nameof(TypeOpeningText))]
+    [NotifyPropertyChangedFor(nameof(HasOpening), nameof(Opening))]
     private bool _isBoardFlipped;
 
     /// <summary>The probes from below come through an opening of the moving plate; those from above have none.</summary>
     public bool HasOpening => Side == FixturePlates.DownSide(IsBoardFlipped);
 
-    /// <summary>Ø of the opening in the moving plate: the probe's own, else the type's, else the type's drill Ø; 0 for none.</summary>
-    public double Opening => !HasOpening ? 0 : OpeningOverride ?? TypeOpening(Type);
+    /// <summary>Ø of the opening in the moving plate: the type's, else the type's drill Ø; 0 for none.</summary>
+    public double Opening => !HasOpening ? 0 : TypeOpening(Type);
 
     public static double TypeOpening(ProbeType? type) =>
         type is null ? 0 : type.OpeningDiameter > 0 ? type.OpeningDiameter : type.DrillDiameter;
 
-    /// <summary>The probe's own opening as typed in the list; empty for the type's.</summary>
-    public string OpeningText
-    {
-        get => OpeningOverride?.ToString("0.###", System.Globalization.CultureInfo.CurrentCulture) ?? string.Empty;
-        set => OpeningOverride = ParseOverride(value, OpeningOverride);
-    }
-
-    /// <summary>The type's opening, shown in the empty cell.</summary>
-    public string TypeOpeningText => HasOpening && TypeOpening(Type) > 0
-        ? TypeOpening(Type).ToString("0.###", System.Globalization.CultureInfo.CurrentCulture)
-        : string.Empty;
-
-    /// <summary>Empty for none, a positive number for a value of its own; anything else keeps the old value.</summary>
-    public static double? ParseOverride(string? text, double? old)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return null;
-        return double.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.CurrentCulture, out var value) && value > 0
-            ? value
-            : old;
-    }
-
     /// <summary>The type's sizes changed: the opening may follow them.</summary>
-    public void RefreshOpening()
-    {
-        OnPropertyChanged(nameof(Opening));
-        OnPropertyChanged(nameof(TypeOpeningText));
-    }
+    public void RefreshOpening() => OnPropertyChanged(nameof(Opening));
 
     /// <summary>Pad on the loaded board; null if the board no longer has it.</summary>
     [ObservableProperty]

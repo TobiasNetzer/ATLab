@@ -277,7 +277,7 @@ public partial class MainWindowViewModel
         var target = OutlineTargets.FirstOrDefault(t => t.Plate == key);
         if (SelectedOutlineTarget != target)
             SelectedOutlineTarget = target;
-        UpdatePlateSummary();
+        RunChecks();
     }
 
     partial void OnSelectedOutlineTargetChanged(OutlineTarget? value)
@@ -313,7 +313,7 @@ public partial class MainWindowViewModel
 
         OnPropertyChanged(nameof(HasOwnOutlines));
         MarkDirty();
-        UpdatePlateSummary();
+        RunChecks();
     }
 
     /// <summary>The shared outline first, then the plates from the bottom up.</summary>
@@ -375,7 +375,7 @@ public partial class MainWindowViewModel
             return;
 
         MarkDirty();
-        UpdatePlateSummary();
+        RunChecks();
     }
 
     /// <summary>

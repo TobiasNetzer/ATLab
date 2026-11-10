@@ -16,6 +16,9 @@ using QuestPDF.Infrastructure;
 namespace ATLab.FixtureDesigner.Reporting;
 
 /// <summary>Everything the build sheet shows, collected by the view model.</summary>
+/// <summary>A plate of the fixture with its outer size and thickness in mm, for the bill of materials.</summary>
+public sealed record BuildSheetPlate(FixturePlate Kind, double Width, double Height, double Thickness);
+
 public sealed class BuildSheetData
 {
     public string Name { get; init; } = string.Empty;
@@ -41,6 +44,9 @@ public sealed class BuildSheetData
     /// <summary>The plates of the fixture with their outline, frame holes and cut-outs in board coordinates, drawn dashed.</summary>
     public IReadOnlyDictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>> PlateOutlines { get; init; } =
         new Dictionary<FixturePlate, IReadOnlyList<IReadOnlyList<Point2>>>();
+
+    /// <summary>The plates to make, for the bill of materials.</summary>
+    public IReadOnlyList<BuildSheetPlate> Plates { get; init; } = [];
 
     /// <summary>The board lies upside down in the fixture: its top side faces the bottom plates.</summary>
     public bool IsBoardFlipped { get; init; }
@@ -333,13 +339,14 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(130); // Type
                 c.ConstantColumn(50);  // Quantity
                 c.RelativeColumn();    // Probes
+                c.RelativeColumn();    // Notes of single probes
                 c.ConstantColumn(120);  // Plate
                 c.ConstantColumn(30);  // Tick
             });
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_ProbeType", "Column_Quantity", "Column_Probes", "Column_Plate" })
+                foreach (var key in new[] { "Column_ProbeType", "Column_Quantity", "Column_Probes", "Column_Note", "Column_Plate" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -349,6 +356,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(group.Key?.Name ?? L("Report_NoType")).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(group.Count().ToString(CultureInfo.CurrentCulture)).SemiBold();
                 table.Cell().Element(BodyCell).Text(Ranges(group));
+                table.Cell().Element(BodyCell).Text(string.Join(", ", group.Where(p => !string.IsNullOrWhiteSpace(p.Note))
+                    .OrderBy(p => p.Number).Select(p => $"{p.Name}: {p.Note.Trim()}")));
                 table.Cell().Element(BodyCell).Text(ViewModels.PlateRow.NameOf(plate));
                 table.Cell().Element(TickBox);
             }
@@ -467,7 +476,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
         var rows = new List<WiringRow>();
         foreach (var probe in data.Probes.Where(p => p.Pin is not null)
                      .OrderBy(p => p.Pin!.SortKey.Row).ThenBy(p => p.Pin!.SortKey.Number).ThenBy(p => p.Number))
-            rows.Add(new WiringRow("-", WireEndpoint.Of(probe), WireEndpoint.Of(probe.Pin!), string.Empty));
+            rows.Add(new WiringRow("-", WireEndpoint.Of(probe), WireEndpoint.Of(probe.Pin!), probe.WiringNote));
 
         foreach (var wire in data.Wires.OrderBy(w => w.Number))
             rows.Add(new WiringRow(wire.Name, wire.From!, wire.To!, wire.Note));
@@ -534,7 +543,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     /// <summary>
     /// A line of the bill of materials: a type of probe, pin or rod and how many of it the fixture needs.
     /// </summary>
-    private sealed record BomLine(string Kind, string Type, int Quantity, double Diameter, double Drill, double Opening, double Height, string Note);
+    private sealed record BomLine(string Kind, string Type, int Quantity, string Manufacturer, string PartNumber, string Note);
 
     /// <summary>
     /// The probe types, then the types of the tooling, pre-centering and support pins and push rods, each with the
@@ -544,26 +553,35 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
     {
         var lines = new List<BomLine>();
         var probe = L("Report_KindProbe");
-        // The opening of the type, if a probe of it comes through the moving plate; probes with an opening of their own
-        // have it in the plate files
+        var receptacle = L("Report_KindReceptacle");
         foreach (var group in data.Probes.GroupBy(p => p.Type).OrderBy(g => g.Key is null).ThenBy(g => g.Key?.Name, StringComparer.CurrentCulture))
         {
-            var opening = group.Any(p => p.HasOpening) ? Probe.TypeOpening(group.Key) : 0;
-            lines.Add(group.Key is { } type
-                ? new BomLine(probe, type.Name, group.Count(), type.Diameter, type.DrillDiameter, opening, type.Height, type.Note)
-                : new BomLine(probe, L("Report_NoType"), group.Count(), 0, 0, 0, 0, string.Empty));
+            if (group.Key is not { } type)
+            {
+                lines.Add(new BomLine(probe, L("Report_NoType"), group.Count(), "", "", string.Empty));
+                continue;
+            }
+
+            lines.Add(new BomLine(probe, type.Name, group.Count(), type.Manufacturer, type.PartNumber, type.Note));
+            lines.Add(new BomLine(receptacle, type.Name, group.Count(), type.ReceptacleManufacturer, type.ReceptaclePartNumber, string.Empty));
         }
 
         foreach (var group in data.Parts.GroupBy(p => (p.Kind, p.Type)).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.Type is null)
                      .ThenBy(g => g.Key.Type?.Name, StringComparer.CurrentCulture))
         {
             var kind = Localizer.Get(FixturePart.KindKey(group.Key.Kind));
-            var opening = group.Key.Kind == FixturePartKind.PushRod && data.PlateOutlines.ContainsKey(FixturePlate.TopProbePlate)
-                ? FixturePart.TypeOpening(group.Key.Type)
-                : 0;
             lines.Add(group.Key.Type is { } type
-                ? new BomLine(kind, type.Name, group.Count(), type.Diameter, type.DrillDiameter, opening, type.Height, type.Note)
-                : new BomLine(kind, L("Report_NoType"), group.Count(), 0, 0, 0, 0, string.Empty));
+                ? new BomLine(kind, type.Name, group.Count(), type.Manufacturer, type.PartNumber, type.Note)
+                : new BomLine(kind, L("Report_NoType"), group.Count(), "", "", string.Empty));
+        }
+
+        // The plates, with their size where the other lines have their note
+        var plate = L("Report_KindPlate");
+        foreach (var p in data.Plates)
+        {
+            var culture = CultureInfo.CurrentCulture;
+            var size = $"{p.Width.ToString("0.0", culture)} × {p.Height.ToString("0.0", culture)} × {p.Thickness.ToString("0.#", culture)} mm";
+            lines.Add(new BomLine(plate, Localizer.Get("Plate_" + p.Kind), 1, "", "", size));
         }
 
         // Components of the wiring, one line per description and note; the designators belong to the wiring tables
@@ -572,7 +590,7 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                      .OrderBy(g => g.Key.Description, StringComparer.CurrentCulture))
         {
             var type = group.Key.Description;
-            lines.Add(new BomLine(component, type.Length > 0 ? type : "-", group.Count(), 0, 0, 0, 0, group.Key.Note));
+            lines.Add(new BomLine(component, type.Length > 0 ? type : "-", group.Count(), "", "", group.Key.Note));
         }
 
         return lines;
@@ -580,8 +598,6 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
 
     private void ComposeBomTable(IContainer container)
     {
-        static string Size(double value) => value > 0 ? Mm(value) : "-";
-
         container.Table(table =>
         {
             table.ColumnsDefinition(c =>
@@ -589,18 +605,15 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 c.ConstantColumn(110); // Kind
                 c.ConstantColumn(130); // Type
                 c.ConstantColumn(50);  // Quantity
-                c.ConstantColumn(65);  // Diameter
-                c.ConstantColumn(70);  // Drill
-                c.ConstantColumn(80);  // Opening
-                c.ConstantColumn(60);  // Height
+                c.ConstantColumn(120); // Manufacturer
+                c.ConstantColumn(140); // Part number
                 c.RelativeColumn();    // Note
                 c.ConstantColumn(30);  // Tick
             });
 
             table.Header(h =>
             {
-                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_PartDiameter", "Column_Drill",
-                             "Column_Opening", "Column_PartHeight", "Column_Note" })
+                foreach (var key in new[] { "Column_PartKind", "Column_PartType", "Column_Quantity", "Column_Manufacturer", "Column_PartNumber", "Column_Note" })
                     h.Cell().Element(HeaderCell).Text(L(key)).SemiBold();
                 h.Cell().Element(HeaderCell).AlignCenter().Text(L("Column_Done")).SemiBold();
             });
@@ -610,10 +623,8 @@ public sealed class BuildSheet(BuildSheetData data) : IDocument
                 table.Cell().Element(BodyCell).Text(line.Kind);
                 table.Cell().Element(BodyCell).Text(line.Type).SemiBold();
                 table.Cell().Element(BodyCell).AlignRight().Text(line.Quantity.ToString(CultureInfo.CurrentCulture)).SemiBold();
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Diameter));
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Drill));
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Opening));
-                table.Cell().Element(BodyCell).AlignRight().Text(Size(line.Height));
+                table.Cell().Element(BodyCell).Text(line.Manufacturer);
+                table.Cell().Element(BodyCell).Text(line.PartNumber);
                 table.Cell().Element(BodyCell).Text(line.Note);
                 table.Cell().Element(TickBox);
             }

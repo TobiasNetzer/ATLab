@@ -38,7 +38,25 @@ public partial class MainWindow : ShadUI.Window
 
         // A list on a hidden tab cannot take a new selection and keeps its old one; it catches up when shown
         ProbesGrid.AttachedToVisualTree += (_, _) => Resync(ProbesGrid, () => _viewModel?.SelectedProbeItem);
+        WiringProbesGrid.AttachedToVisualTree += (_, _) => Resync(WiringProbesGrid, () => _viewModel?.SelectedProbeItem);
         PadsGrid.AttachedToVisualTree += (_, _) => Resync(PadsGrid, () => _viewModel?.SelectedPadRow);
+    }
+
+    /// <summary>
+    /// The probe chosen in a list. The Probes and the Wiring tab share the selection, and a list on a closed tab cannot
+    /// select anything: it would report "nothing selected", so only the list on screen may change the selection.
+    /// </summary>
+    private void OnProbeGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_viewModel is { } viewModel && sender is DataGrid { IsEffectivelyVisible: true } grid && TopLevel.GetTopLevel(grid) is not null)
+            viewModel.SelectedProbeItem = grid.SelectedItem as Probe;
+    }
+
+    /// <summary>The part chosen in its list; as with the probes, only the list on screen may change the selection.</summary>
+    private void OnPartGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_viewModel is { } viewModel && sender is DataGrid { IsEffectivelyVisible: true } grid && TopLevel.GetTopLevel(grid) is not null)
+            viewModel.SelectedPart = grid.SelectedItem as FixturePart;
     }
 
     private static void Resync(DataGrid grid, System.Func<object?> selected)
@@ -72,7 +90,10 @@ public partial class MainWindow : ShadUI.Window
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainWindowViewModel.SelectedProbeItem))
+        {
             Reveal(ProbesGrid, _viewModel?.SelectedProbeItem);
+            Reveal(WiringProbesGrid, _viewModel?.SelectedProbeItem);
+        }
         else if (e.PropertyName == nameof(MainWindowViewModel.SelectedPadRow))
             Reveal(PadsGrid, _viewModel?.SelectedPadRow);
     }

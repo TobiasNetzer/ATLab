@@ -317,4 +317,12 @@ public sealed class Board
     public Point2 ToFixture(Point2 boardPoint) => new(boardPoint.X - Origin.X, Origin.Y - boardPoint.Y);
 
     public Pad? FindPad(string key) => Pads.FirstOrDefault(p => p.Key == key);
+
+    /// <summary>
+    /// The pad with the key nearest to a position. A footprint can have several pads with one number, e.g. the two
+    /// halves of a solder jumper or a pad split in two, and only the position tells them apart.
+    /// </summary>
+    public Pad? FindPad(string key, Point2? near) => near is { } point
+        ? Pads.Where(p => p.Key == key).OrderBy(p => p.Position.DistanceTo(point)).FirstOrDefault()
+        : FindPad(key);
 }

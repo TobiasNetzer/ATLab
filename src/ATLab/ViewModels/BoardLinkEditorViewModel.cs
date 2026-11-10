@@ -225,7 +225,7 @@ public partial class BoardLinkEditorViewModel : ObservableObject
             {
                 Pin = p.Pin,
                 Net = p.Net,
-                Probes = p.Probes.Select(e => new ProbePoint($"P{e.Number}", e.Reference, e.Pad, e.Side)).ToList()
+                Probes = p.Probes.Select(e => new ProbePoint($"P{e.Number}", e.Reference, e.Pad, e.Side, e.X, e.Y)).ToList()
             })
             .ToList();
 

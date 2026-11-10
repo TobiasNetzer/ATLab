@@ -943,9 +943,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Column_PartType" xml:space="preserve">
     <value>Typ</value>
   </data>
-  <data name="Column_PartDiameter" xml:space="preserve">
-    <value>Ø (mm)</value>
-  </data>
   <data name="Column_PartHeight" xml:space="preserve">
     <value>Höhe (mm)</value>
   </data>
@@ -993,6 +990,9 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   </data>
   <data name="Column_Plate" xml:space="preserve">
     <value>Platte</value>
+  </data>
+  <data name="Board_LegendProbes" xml:space="preserve">
+    <value>Prüfnadeln</value>
   </data>
   <data name="Board_LegendToolingPins" xml:space="preserve">
     <value>Fangstifte</value>
@@ -1199,12 +1199,6 @@ unten</value>
   <data name="Column_Opening" xml:space="preserve">
     <value>Durchbruch Ø (mm)</value>
   </data>
-  <data name="ToolTip_ProbeOpening" xml:space="preserve">
-    <value>Durchbruch in der Andruckplatte für diese Prüfnadel, in mm; leer für den Durchbruch ihres Nadeltyps</value>
-  </data>
-  <data name="ToolTip_PushRodOpening" xml:space="preserve">
-    <value>Durchbruch in der Kontaktträgerplatte oben für diesen Niederhalter, in mm; leer für den Durchbruch seines Typs</value>
-  </data>
   <data name="Board_LegendOpenings" xml:space="preserve">
     <value>{0} (Durchbrüche)</value>
   </data>
@@ -1290,7 +1284,7 @@ unten</value>
     <value>Anschlüsse</value>
   </data>
   <data name="Column_OpenTerminals" xml:space="preserve">
-    <value>Nicht verdrahtet</value>
+    <value>Offen</value>
   </data>
   <data name="Column_Wire" xml:space="preserve">
     <value>Verb.</value>
@@ -1540,5 +1534,29 @@ unten</value>
   </data>
   <data name="Check_BoardRestHeight" xml:space="preserve">
     <value>Die Platine liegt auf {0} bei {1} mm, auf {2} aber bei {3} mm, und läge damit schief.</value>
+  </data>
+  <data name="Column_Manufacturer" xml:space="preserve">
+    <value>Hersteller</value>
+  </data>
+  <data name="Column_PartNumber" xml:space="preserve">
+    <value>Teilenummer</value>
+  </data>
+  <data name="Column_ReceptacleManufacturer" xml:space="preserve">
+    <value>Hülse Hersteller</value>
+  </data>
+  <data name="Column_ReceptaclePartNumber" xml:space="preserve">
+    <value>Hülse Teilenr.</value>
+  </data>
+  <data name="Report_KindReceptacle" xml:space="preserve">
+    <value>Hülse</value>
+  </data>
+  <data name="Report_KindPlate" xml:space="preserve">
+    <value>Platte</value>
+  </data>
+  <data name="Header_Components" xml:space="preserve">
+    <value>Bauteile</value>
+  </data>
+  <data name="Check_PlateForPrinting" xml:space="preserve">
+    <value>{0} (3D-Druck): {1}</value>
   </data>
 </root>

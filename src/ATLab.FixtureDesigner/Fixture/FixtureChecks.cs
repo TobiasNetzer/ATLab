@@ -17,8 +17,8 @@ public enum CheckSeverity
     Info
 }
 
-/// <summary>Result of a check, with the probes it is about.</summary>
-public sealed record CheckResult(CheckSeverity Severity, string Message, IReadOnlyList<Probe> Probes)
+/// <summary>Result of a check, with the probes or parts it is about.</summary>
+public sealed record CheckResult(CheckSeverity Severity, string Message, IReadOnlyList<Probe> Probes, IReadOnlyList<FixturePart>? Parts = null)
 {
     public bool IsError => Severity == CheckSeverity.Error;
     public bool IsWarning => Severity == CheckSeverity.Warning;
@@ -37,7 +37,7 @@ public static class FixtureChecks
 
     public static List<CheckResult> Run(IReadOnlyList<Probe> probes, AdapterPinout pinout, Board? board = null,
         IReadOnlyList<FixturePart>? parts = null, IReadOnlyList<FixtureComponent>? components = null, IReadOnlyList<Wire>? wires = null,
-        bool isTopPlateCombined = false)
+        bool isTopPlateCombined = false, IReadOnlyList<Plate>? plates = null, IReadOnlyList<Plate>? printPlates = null)
     {
         var results = new List<CheckResult>();
         parts ??= [];
@@ -60,6 +60,7 @@ public static class FixtureChecks
         if (board is not null)
             CheckComponents(probes, board, results);
         CheckParts(parts, probes, board, isTopPlateCombined, results);
+        CheckPlates(plates, printPlates, probes, parts, results);
 
         // Errors first, then by the first probe concerned
         return results
@@ -113,7 +114,7 @@ public static class FixtureChecks
 
     private static void CheckDuplicates(IReadOnlyList<Probe> probes, List<CheckResult> results)
     {
-        foreach (var group in probes.GroupBy(p => (p.Key, p.Side)).Where(g => g.Count() > 1))
+        foreach (var group in probes.GroupBy(p => ((object?)p.Pad ?? p.Key, p.Side)).Where(g => g.Count() > 1))
         {
             var list = group.ToList();
             results.Add(new(CheckSeverity.Error,
@@ -267,7 +268,7 @@ public static class FixtureChecks
             results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_NoProbeType", Names(untyped)), untyped));
 
         foreach (var group in probes.Where(p => p.Type is { DrillDiameter: <= 0 }).GroupBy(p => p.Type!))
-            results.Add(new(CheckSeverity.Warning, Localizer.Format("Check_NoDrill", group.Key.Name), group.ToList()));
+            results.Add(new(CheckSeverity.Error, Localizer.Format("Check_NoDrill", group.Key.Name), group.ToList()));
     }
 
     /// <summary>Probes of one plate closer than their types allow: the receptacles do not fit next to each other.</summary>
@@ -352,7 +353,7 @@ public static class FixtureChecks
             var state = BoardMarkerState.Normal;
             void Add(CheckSeverity severity, string message)
             {
-                results.Add(new(severity, message, []));
+                results.Add(new(severity, message, [], [part]));
                 if (severity == CheckSeverity.Error)
                     state = BoardMarkerState.Error;
                 else if (severity == CheckSeverity.Warning && state == BoardMarkerState.Normal)
@@ -446,6 +447,46 @@ public static class FixtureChecks
         }
 
         CheckBoardRest(parts, results);
+    }
+
+    /// <summary>
+    /// What prevents making the plates: an error for the plate files, a warning if only the 3D print export is affected,
+    /// where a printed part stands on its plate in place of its hole.
+    /// </summary>
+    private static void CheckPlates(IReadOnlyList<Plate>? plates, IReadOnlyList<Plate>? printPlates, IReadOnlyList<Probe> probes,
+        IReadOnlyList<FixturePart> parts, List<CheckResult> results)
+    {
+        if (plates is null)
+            return;
+
+        void Report(CheckSeverity severity, string message, PlateProblem problem)
+        {
+            // A merged opening is named after its probes, "P1+P2"
+            var names = problem.HoleNames.SelectMany(n => n.Split('+')).ToHashSet();
+            var ownParts = parts.Where(p => names.Contains(p.Name)).ToList();
+            foreach (var part in ownParts)
+            {
+                if (severity == CheckSeverity.Error)
+                    part.State = BoardMarkerState.Error;
+                else if (part.State == BoardMarkerState.Normal)
+                    part.State = BoardMarkerState.Warning;
+            }
+
+            results.Add(new(severity, message, probes.Where(p => names.Contains(p.Name)).ToList(), ownParts));
+        }
+
+        static string NameOf(Plate plate) => Localizer.Get("Plate_" + plate.Kind);
+
+        foreach (var plate in plates)
+            foreach (var problem in plate.Problems.Where(p => !p.IsReportedByChecks))
+                Report(CheckSeverity.Error, $"{NameOf(plate)}: {problem.Message}", problem);
+
+        foreach (var plate in printPlates ?? [])
+        {
+            var regular = plates.FirstOrDefault(p => p.Kind == plate.Kind)?.Problems.Select(p => p.Message).ToHashSet() ?? [];
+            foreach (var problem in plate.Problems.Where(p => !p.IsReportedByChecks && !regular.Contains(p.Message)))
+                Report(CheckSeverity.Warning, Localizer.Format("Check_PlateForPrinting", NameOf(plate), problem.Message), problem);
+        }
     }
 
     /// <summary>A body or shoulder over the courtyard of a component; component heights are not known, so the user has to judge it.</summary>

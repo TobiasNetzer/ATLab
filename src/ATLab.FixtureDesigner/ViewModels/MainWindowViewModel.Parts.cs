@@ -288,10 +288,6 @@ public partial class MainWindowViewModel
                 SyncFromBoard(part);
                 break;
 
-            case nameof(FixturePart.OpeningOverride):
-                AfterPartsChanged();
-                break;
-
             // The hole of a tooling pin does not depend on its type
             case nameof(FixturePart.Type) when part.Kind == FixturePartKind.ToolingPin:
                 AfterPartsChanged();
@@ -431,6 +427,8 @@ public partial class MainWindowViewModel
             existing.TipSize = libraryType.TipSize;
             existing.IsPrinted = libraryType.IsPrinted;
             existing.ComponentClearance = libraryType.ComponentClearance;
+            existing.Manufacturer = libraryType.Manufacturer;
+            existing.PartNumber = libraryType.PartNumber;
             existing.Note = libraryType.Note;
             SelectedPartType = existing;
         }
@@ -480,8 +478,7 @@ public partial class MainWindowViewModel
                 Type = PartTypes.FirstOrDefault(t => t.Id == entry.Type && t.Kind == entry.Kind)
                        ?? PartTypes.FirstOrDefault(t => t.Kind == entry.Kind),
                 BoardX = entry.X,
-                BoardY = entry.Y,
-                OpeningOverride = entry.Kind == FixturePartKind.PushRod && entry.Opening is > 0 ? entry.Opening : null
+                BoardY = entry.Y
             };
             part.AvailableTypes = TypesOf(entry.Kind);
             if (entry.Kind == FixturePartKind.ToolingPin)
@@ -499,8 +496,7 @@ public partial class MainWindowViewModel
             Kind = p.Kind,
             Type = p.Type?.Id,
             X = Math.Round(p.BoardX, 4),
-            Y = Math.Round(p.BoardY, 4),
-            Opening = p.HasOpening ? p.OpeningOverride : null
+            Y = Math.Round(p.BoardY, 4)
         }).ToList();
     }
 }

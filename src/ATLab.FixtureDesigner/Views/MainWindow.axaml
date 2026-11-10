@@ -589,22 +589,10 @@
                             <RowDefinition Height="2*" MinHeight="85"/>
                         </Grid.RowDefinitions>
                         <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
-                            <Button Classes="Tool" Content="{loc:Localize Button_AutoAssign}" Command="{Binding AutoAssignCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_AutoAssign}">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Wand, 16}" Margin="0,0,8,0"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_Renumber}" Command="{Binding RenumberCommand}"
                                     ToolTip.Tip="{loc:Localize ToolTip_Renumber}">
                                 <shadui:ButtonAssist.Icon>
                                     <ContentControl Content="{LucideIconContent ListOrdered, 16}" Margin="0,0,8,0"/>
-                                </shadui:ButtonAssist.Icon>
-                            </Button>
-                            <Button Classes="Tool" Content="{loc:Localize Button_Disconnect}" Command="{Binding DisconnectProbeCommand}"
-                                    ToolTip.Tip="{loc:Localize ToolTip_Disconnect}">
-                                <shadui:ButtonAssist.Icon>
-                                    <ContentControl Content="{LucideIconContent Unplug, 16}" Margin="0,0,8,0"/>
                                 </shadui:ButtonAssist.Icon>
                             </Button>
                             <Button Classes="Tool" Content="{loc:Localize Button_RemoveProbe}" Command="{Binding RemoveProbeCommand}"
@@ -623,7 +611,7 @@
                                   IsVisible="{Binding HasProbes}"
                                   Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding Probes}"
-                                  SelectedItem="{Binding SelectedProbeItem, Mode=TwoWay}"
+                                  SelectedItem="{Binding SelectedProbeItem, Mode=OneWay}" SelectionChanged="OnProbeGridSelectionChanged"
                                   SelectionMode="Single"
                                   CanUserSortColumns="False"
                                   CanUserResizeColumns="True"
@@ -652,28 +640,6 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_Side}" Binding="{Binding Side, Converter={x:Static loc:EnumTextConverter.Instance}}"
                                                     Width="70" MinWidth="70" IsReadOnly="True"/>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_TestHardwarePin}" Width="210" MinWidth="210">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="fixture:Probe">
-                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PinOptions}"
-                                                      SelectedValueBinding="{ReflectionBinding Pin}"
-                                                      SelectedValue="{Binding Pin, Mode=OneWay}"
-                                                      SelectionChanged="OnPinSelectionChanged"
-                                                      PlaceholderText="{loc:Localize Placeholder_Pin}"
-                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12"
-                                                      MaxDropDownHeight="420">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate DataType="vm:PinOption">
-                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                                            <TextBlock Text="{Binding Display}" FontSize="12"/>
-                                                            <TextBlock Grid.Column="1" Text="{Binding UsedBy}" Classes="Label" FontSize="11"/>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="{loc:Localize Column_ProbeType}" Width="130" MinWidth="130">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="fixture:Probe">
@@ -688,23 +654,6 @@
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
                                             </ComboBox>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_AdditionalConnections}" Width="200" MinWidth="200" IsReadOnly="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="fixture:Probe">
-                                            <TextBlock Text="{Binding WiredTo}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding WiredTo}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <!-- Own opening in the moving plate; empty shows the type's -->
-                                <DataGridTemplateColumn Header="{loc:Localize Column_Opening}" Width="135" MinWidth="135">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="fixture:Probe">
-                                            <TextBox Text="{Binding OpeningText, UpdateSourceTrigger=LostFocus}" PlaceholderText="{Binding TypeOpeningText}"
-                                                     IsVisible="{Binding HasOpening}" Margin="4,2" FontSize="12" MinHeight="26" Padding="6,2"
-                                                     ToolTip.Tip="{loc:Localize ToolTip_ProbeOpening}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -841,8 +790,12 @@
                                           BorderThickness="1"
                                           BorderBrush="{DynamicResource OutlineColor}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="220" MinWidth="130"/>
-                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="150" MinWidth="130"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Manufacturer}" Binding="{Binding Manufacturer}" Width="110" MinWidth="110"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_PartNumber}" Binding="{Binding PartNumber}" Width="120" MinWidth="120"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_ReceptacleManufacturer}" Binding="{Binding ReceptacleManufacturer}" Width="130" MinWidth="130"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_ReceptaclePartNumber}" Binding="{Binding ReceptaclePartNumber}" Width="140" MinWidth="140"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -850,10 +803,105 @@
                     </Grid>
                 </TabItem>
 
-                <!-- ========== Wiring: components between the board and the test hardware, and further wires ========== -->
+                <!-- ========== Wiring: every probe to the test hardware, components and further wires ========== -->
                 <TabItem Header="{loc:Localize Tab_Wiring}" AutomationProperties.Name="{loc:Localize Tab_Wiring}">
-                    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,2*" Margin="0,8,0,0">
-                        <WrapPanel ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,2,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="3*" MinHeight="80"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="2*" MinHeight="85"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Every probe to its pin of the test hardware -->
+                        <WrapPanel Grid.ColumnSpan="2" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                            <Button Classes="Tool" Content="{loc:Localize Button_AutoAssign}" Command="{Binding AutoAssignCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_AutoAssign}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Wand, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                            <Button Classes="Tool" Content="{loc:Localize Button_Disconnect}" Command="{Binding DisconnectProbeCommand}"
+                                    ToolTip.Tip="{loc:Localize ToolTip_Disconnect}">
+                                <shadui:ButtonAssist.Icon>
+                                    <ContentControl Content="{LucideIconContent Unplug, 16}" Margin="0,0,8,0"/>
+                                </shadui:ButtonAssist.Icon>
+                            </Button>
+                        </WrapPanel>
+
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{loc:Localize Text_NoProbes}" Classes="Label" TextWrapping="Wrap"
+                                   IsVisible="{Binding !HasProbes}" Margin="4,8"/>
+
+                        <DataGrid Grid.Row="1" Grid.ColumnSpan="2" x:Name="WiringProbesGrid"
+                                  IsVisible="{Binding HasProbes}"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Probes}"
+                                  SelectedItem="{Binding SelectedProbeItem, Mode=OneWay}" SelectionChanged="OnProbeGridSelectionChanged"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Probe}" Width="70" MinWidth="70" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <StackPanel Orientation="Horizontal" Spacing="5" Margin="8,0" VerticalAlignment="Center">
+                                                <LucideIcon Kind="CircleAlert" Size="13" Foreground="{StaticResource FailBrush}" IsVisible="{Binding HasError}"/>
+                                                <LucideIcon Kind="TriangleAlert" Size="13" Foreground="{StaticResource MarginalBrush}" IsVisible="{Binding HasWarning}"/>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Pad}" Binding="{Binding PadDisplay}" Width="80" MinWidth="80" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_Net}" Width="120" MinWidth="120" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <TextBlock Text="{Binding ShortNet}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding Net}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_TestHardwarePin}" Width="210" MinWidth="210">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PinOptions}"
+                                                      SelectedValueBinding="{ReflectionBinding Pin}"
+                                                      SelectedValue="{Binding Pin, Mode=OneWay}"
+                                                      SelectionChanged="OnPinSelectionChanged"
+                                                      PlaceholderText="{loc:Localize Placeholder_Pin}"
+                                                      HorizontalAlignment="Stretch" Margin="4,2" FontSize="12"
+                                                      MaxDropDownHeight="420">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="vm:PinOption">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                            <TextBlock Text="{Binding Display}" FontSize="12"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding UsedBy}" Classes="Label" FontSize="11"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_AdditionalConnections}" Width="180" MinWidth="140" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:Probe">
+                                            <TextBlock Text="{Binding WiredTo}" Classes="Cell TrimmedCell" ToolTip.Tip="{Binding WiredTo}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding WiringNote}" Width="*" MinWidth="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Components between the board and the test hardware, beside the further wires -->
+                        <TextBlock Grid.Row="2" Text="{loc:Localize Header_Components}" Classes="h4" Margin="2,14,0,6"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{loc:Localize Header_Wires}" Classes="h4" Margin="2,14,0,6"/>
+                        <WrapPanel Grid.Row="3" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Content="{loc:Localize Button_AddComponent}" Command="{Binding AddComponentCommand}">
                                 <shadui:ButtonAssist.Icon>
                                     <ContentControl Content="{LucideIconContent Plus, 16}" Margin="0,0,8,0"/>
@@ -865,34 +913,7 @@
                                 </shadui:ButtonAssist.Icon>
                             </Button>
                         </WrapPanel>
-                        <TextBlock Grid.Row="1" Text="{loc:Localize Text_ComponentsHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
-                        <DataGrid Grid.Row="2"
-                                  Classes="HorizontalScroll Compact"
-                                  ItemsSource="{Binding Components}"
-                                  SelectedItem="{Binding SelectedComponent, Mode=TwoWay}"
-                                  SelectionMode="Single"
-                                  CanUserSortColumns="False"
-                                  CanUserResizeColumns="True"
-                                  GridLinesVisibility="Horizontal"
-                                  BorderThickness="1"
-                                  BorderBrush="{DynamicResource OutlineColor}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Localize Column_Designator}" Binding="{Binding Designator}" Width="90" MinWidth="80"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Description}" Binding="{Binding Description}" Width="260" MinWidth="180"/>
-                                <DataGridTextColumn Header="{loc:Localize Column_Terminals}" Binding="{Binding TerminalsText}" Width="200" MinWidth="150"/>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_OpenTerminals}" Width="120" MinWidth="110" IsReadOnly="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="fixture:FixtureComponent">
-                                            <TextBlock Text="{Binding OpenTerminals}" Classes="Cell TrimmedCell" Foreground="{StaticResource MarginalBrush}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="140"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <TextBlock Grid.Row="3" Text="{loc:Localize Header_Wires}" Classes="h4" Margin="2,14,0,6"/>
-                        <WrapPanel Grid.Row="4" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
+                        <WrapPanel Grid.Row="3" Grid.Column="1" ItemSpacing="8" LineSpacing="6" Margin="0,0,0,8">
                             <Button Classes="Tool" Content="{loc:Localize Button_AddWire}" Command="{Binding AddWireCommand}"
                                     ToolTip.Tip="{loc:Localize ToolTip_AddWire}">
                                 <shadui:ButtonAssist.Icon>
@@ -905,7 +926,33 @@
                                 </shadui:ButtonAssist.Icon>
                             </Button>
                         </WrapPanel>
+                        <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="{loc:Localize Text_ComponentsHint}" Classes="Label" TextWrapping="Wrap" Margin="2,0,0,8"/>
                         <DataGrid Grid.Row="5"
+                                  Classes="HorizontalScroll Compact"
+                                  ItemsSource="{Binding Components}"
+                                  SelectedItem="{Binding SelectedComponent, Mode=TwoWay}"
+                                  SelectionMode="Single"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="True"
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="1"
+                                  BorderBrush="{DynamicResource OutlineColor}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{loc:Localize Column_Designator}" Binding="{Binding Designator}" Width="90" MinWidth="80"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Description}" Binding="{Binding Description}" Width="140" MinWidth="100"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Terminals}" Binding="{Binding TerminalsText}" Width="110" MinWidth="90"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_OpenTerminals}" Width="90" MinWidth="80" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="fixture:FixtureComponent">
+                                            <TextBlock Text="{Binding OpenTerminals}" Classes="Cell TrimmedCell" Foreground="{StaticResource MarginalBrush}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <DataGrid Grid.Row="5" Grid.Column="1"
                                   Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding Wires}"
                                   SelectedItem="{Binding SelectedWire, Mode=TwoWay}"
@@ -916,8 +963,8 @@
                                   BorderThickness="1"
                                   BorderBrush="{DynamicResource OutlineColor}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Localize Column_Wire}" Binding="{Binding Name}" Width="60" MinWidth="60" IsReadOnly="True"/>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_From}" Width="260" MinWidth="200">
+                                <DataGridTextColumn Header="{loc:Localize Column_Wire}" Binding="{Binding Name}" Width="50" MinWidth="50" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="{loc:Localize Column_From}" Width="150" MinWidth="120">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="fixture:Wire">
                                             <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).EndpointOptions}"
@@ -938,7 +985,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_To}" Width="260" MinWidth="200">
+                                <DataGridTemplateColumn Header="{loc:Localize Column_To}" Width="150" MinWidth="120">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="fixture:Wire">
                                             <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).EndpointOptions}"
@@ -959,7 +1006,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                                <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="100"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1070,7 +1117,7 @@
                         <DataGrid Grid.Row="2"
                                   Classes="HorizontalScroll Compact"
                                   ItemsSource="{Binding Parts}"
-                                  SelectedItem="{Binding SelectedPart, Mode=TwoWay}"
+                                  SelectedItem="{Binding SelectedPart, Mode=OneWay}" SelectionChanged="OnPartGridSelectionChanged"
                                   SelectionMode="Single"
                                   CanUserSortColumns="False"
                                   CanUserResizeColumns="True"
@@ -1099,16 +1146,6 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="{loc:Localize Column_X}" Binding="{Binding X, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
                                 <DataGridTextColumn Header="{loc:Localize Column_Y}" Binding="{Binding Y, StringFormat={}{0:0.00}}" Width="80" MinWidth="80"/>
-                                <!-- Push rods: own opening in the top probe plate; empty shows the type's -->
-                                <DataGridTemplateColumn Header="{loc:Localize Column_Opening}" Width="135" MinWidth="135">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="fixture:FixturePart">
-                                            <TextBox Text="{Binding OpeningText, UpdateSourceTrigger=LostFocus}" PlaceholderText="{Binding TypeOpeningText}"
-                                                     IsVisible="{Binding HasOpening}" Margin="4,2" FontSize="12" MinHeight="26" Padding="6,2"
-                                                     ToolTip.Tip="{loc:Localize ToolTip_PushRodOpening}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -1252,7 +1289,7 @@
                                           BorderThickness="1"
                                           BorderBrush="{DynamicResource OutlineColor}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="220" MinWidth="130"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_TypeName}" Binding="{Binding Name}" Width="150" MinWidth="130"/>
                                         <DataGridTemplateColumn Header="{loc:Localize Column_PartKind}" Width="180" MinWidth="170">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate DataType="pcbfix:PartType">
@@ -1270,7 +1307,9 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="160"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Manufacturer}" Binding="{Binding Manufacturer}" Width="110" MinWidth="110"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_PartNumber}" Binding="{Binding PartNumber}" Width="120" MinWidth="120"/>
+                                        <DataGridTextColumn Header="{loc:Localize Column_Note}" Binding="{Binding Note}" Width="*" MinWidth="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -1344,16 +1383,6 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <ItemsControl ItemsSource="{Binding PlateProblems}" IsVisible="{Binding HasPlateProblems}" Margin="0,4,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2">
-                                                <LucideIcon Kind="CircleAlert" Size="14" Foreground="{StaticResource FailBrush}"/>
-                                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
                             </StackPanel>
 
                             <!-- The outline being edited: the shared one or a plate's own. Automatic, fixed size, DXF/SVG file
@@ -1374,7 +1403,7 @@
                                 </Grid>
                                 <Grid ColumnDefinitions="170,*">
                                     <TextBlock Text="{loc:Localize Label_PlateOutline}" Classes="FormLabel"/>
-                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" MinWidth="230"
                                               ItemsSource="{Binding OutlineModes}"
                                               SelectedItem="{Binding SelectedOutlineMode}"
                                               ToolTip.Tip="{loc:Localize ToolTip_PlateOutline}">

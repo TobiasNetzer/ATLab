@@ -45,6 +45,12 @@ public sealed record PlateHole(PlateHoleKind Kind, string Name, double X, double
 /// board are seen from above and have the coordinates of the build sheet; the plates above it are seen from below and
 /// are therefore mirrored left to right. The origin is the origin of the build sheet.
 /// </summary>
+/// <summary>
+/// What prevents making a plate and the holes it is about. The checks already report some of it in their own words;
+/// the export is refused for those as well.
+/// </summary>
+public sealed record PlateProblem(string Message, IReadOnlyList<string> HoleNames, bool IsReportedByChecks = false);
+
 public sealed class Plate
 {
     public required FixturePlate Kind { get; init; }
@@ -109,7 +115,7 @@ public sealed class Plate
     public List<IReadOnlyList<(double X, double Y)>> BoardOutline { get; } = [];
 
     /// <summary>Holes that overlap or leave the plate; such a plate cannot be made as drawn.</summary>
-    public List<string> Problems { get; } = [];
+    public List<PlateProblem> Problems { get; } = [];
 
     /// <summary>Smallest wall left between two holes or a hole and the edge, in mm.</summary>
     public const double MinimumWall = 0.2;
@@ -168,7 +174,7 @@ public sealed class Plate
                 var drill = probe.Type?.DrillDiameter ?? 0;
                 if (drill <= 0)
                 {
-                    plate.Problems.Add(Localizer.Format("Plate_NoDrill", probe.Name));
+                    plate.Problems.Add(new PlateProblem(Localizer.Format("Plate_NoDrill", probe.Name), [probe.Name], probe.Type is not null));
                     continue;
                 }
 
@@ -207,7 +213,7 @@ public sealed class Plate
             }
 
             var problems = PinProfile.Problems(part.Type!);
-            plate.Problems.AddRange(problems.Except(plate.Problems));
+            plate.Problems.AddRange(problems.Where(text => plate.Problems.All(o => o.Message != text)).Select(text => new PlateProblem(text, [part.Name], true)));
             if (problems.Count > 0)
                 continue;
 
@@ -252,6 +258,9 @@ public sealed class Plate
         return plate;
     }
 
+    private void Problem(string key, params string[] holes) =>
+        Problems.Add(new PlateProblem(Localizer.Format(key, holes.Cast<object>().ToArray()), holes));
+
     private void FindProblems()
     {
         // A pocket leaves material below it: holes may lie in it (e.g. a counterbore) and it may be open to the edge
@@ -262,21 +271,21 @@ public sealed class Plate
             var a = holes[i];
             if (!OutlineShape.Contains(Outline, a.X, a.Y) ||
                 OutlineShape.DistanceToEdge(Outline, a.X, a.Y) < a.Diameter / 2 + MinimumWall)
-                Problems.Add(Localizer.Format("Plate_Edge", a.Name));
+                Problem("Plate_Edge", a.Name);
 
             // A hole in a cut-out or too close to its edge has no wall around it; an opening may lie in a cut-out, which
             // is then a larger opening for several probes
             if (a.Kind is not (PlateHoleKind.ProbeOpening or PlateHoleKind.PushRodOpening) &&
                 cutouts.Any(c => OutlineShape.Contains(c, a.X, a.Y) ||
                                  OutlineShape.DistanceToEdge(c, a.X, a.Y) < a.Diameter / 2 + MinimumWall))
-                Problems.Add(Localizer.Format("Plate_Cutout", a.Name));
+                Problem("Plate_Cutout", a.Name);
 
             for (var j = i + 1; j < holes.Count; j++)
             {
                 var b = holes[j];
                 var distance = Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
                 if (distance < (a.Diameter + b.Diameter) / 2 + MinimumWall)
-                    Problems.Add(Localizer.Format("Plate_Overlap", a.Name, b.Name));
+                    Problem("Plate_Overlap", a.Name, b.Name);
             }
         }
 
@@ -285,11 +294,11 @@ public sealed class Plate
             .Concat(Holes.Where(h => h.Pocket is not null).Select(h => OutlineBuilder.Arc(h.X, h.Y, h.Diameter / 2, 0, 2 * Math.PI)))
             .ToList();
         foreach (var hole in holes.Where(h => pockets.Any(p => OutlineShape.DistanceToEdge(p, h.X, h.Y) < h.Diameter / 2 - 1e-6)))
-            Problems.Add(Localizer.Format("Plate_PocketEdge", hole.Name));
+            Problem("Plate_PocketEdge", hole.Name);
 
         // A printed pin stands on the full plate; a pocket under or around it, on either side, is not modeled
         foreach (var pin in holes.Where(h => h.Pin is not null && pockets.Any(p => OutlineShape.Contains(p, h.X, h.Y))))
-            Problems.Add(Localizer.Format("Plate_PinInPocket", pin.Name));
+            Problem("Plate_PinInPocket", pin.Name);
 
         // A merged opening needs its wall to the edge and to every hole (pins, frame) like a round one
         var mergedOutlines = MergedOpenings.Select(m => (m.Name, Outline: OutlineShape.Flatten(m.Contour))).ToList();
@@ -297,15 +306,15 @@ public sealed class Plate
         {
             var (name, outline) = mergedOutlines[i];
             if (outline.Any(p => !OutlineShape.Contains(Outline, p.X, p.Y) || OutlineShape.DistanceToEdge(Outline, p.X, p.Y) < MinimumWall))
-                Problems.Add(Localizer.Format("Plate_Edge", name));
+                Problem("Plate_Edge", name);
 
             foreach (var hole in holes.Where(h => OutlineShape.Contains(outline, h.X, h.Y) ||
                                                   OutlineShape.DistanceToEdge(outline, h.X, h.Y) < h.Diameter / 2 + MinimumWall))
-                Problems.Add(Localizer.Format("Plate_Overlap", name, hole.Name));
+                Problem("Plate_Overlap", name, hole.Name);
 
             foreach (var (other, otherOutline) in mergedOutlines.Skip(i + 1))
                 if (otherOutline.Any(p => OutlineShape.Contains(outline, p.X, p.Y) || OutlineShape.DistanceToEdge(outline, p.X, p.Y) < MinimumWall))
-                    Problems.Add(Localizer.Format("Plate_Overlap", name, other));
+                    Problem("Plate_Overlap", name, other);
         }
     }
 }

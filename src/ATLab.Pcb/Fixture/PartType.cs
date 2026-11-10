@@ -68,7 +68,7 @@ public partial class PartType : ObservableObject
 
     /// <summary>
     /// Push rods: diameter of the opening in the top probe plate the rod comes through, in mm; 0 for the drill
-    /// diameter. A push rod can have an opening of its own.
+    /// diameter.
     /// </summary>
     [ObservableProperty] private double _openingDiameter;
 
@@ -104,6 +104,12 @@ public partial class PartType : ObservableObject
     /// <summary>Smallest distance from its edge to the courtyard of a component on its side of the board, in mm.</summary>
     [ObservableProperty] private double _componentClearance;
 
+    /// <summary>Manufacturer of the part, for the bill of materials.</summary>
+    [ObservableProperty] private string _manufacturer = string.Empty;
+
+    /// <summary>Part number of the part, for the bill of materials.</summary>
+    [ObservableProperty] private string _partNumber = string.Empty;
+
     [ObservableProperty] private string _note = string.Empty;
 
     public PartType Copy(bool newId = false) => new()
@@ -123,6 +129,8 @@ public partial class PartType : ObservableObject
         TipSize = TipSize,
         IsPrinted = IsPrinted,
         ComponentClearance = ComponentClearance,
+        Manufacturer = Manufacturer,
+        PartNumber = PartNumber,
         Note = Note
     };
 
@@ -141,9 +149,6 @@ public sealed class FixturePartEntry
     /// <summary>Position in board coordinates (KiCad, mm).</summary>
     public double X { get; set; }
     public double Y { get; set; }
-
-    /// <summary>Push rods: Ø of its opening in the top probe plate if not the type's, in mm.</summary>
-    public double? Opening { get; set; }
 }
 /// <summary>
 /// The plates of a bed-of-nails fixture, from the bottom up: the probe plate with the bottom probes, the moving plate
