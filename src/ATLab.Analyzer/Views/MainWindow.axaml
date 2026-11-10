@@ -160,6 +160,10 @@
 
         <!-- Evaluation -->
         <TabControl Grid.Row="2" IsVisible="{Binding HasRuns}" SelectedIndex="{Binding SelectedTabIndex}">
+            <TabControl.Resources>
+                <SolidColorBrush x:Key="TabItemSelectedColor" Color="{DynamicResource InfoColor}"/>
+            </TabControl.Resources>
+
 
             <!-- ========== Overview ========== -->
             <TabItem Header="{loc:Localize Tab_Overview}">
