@@ -313,7 +313,7 @@
     <value>Not wired</value>
   </data>
   <data name="Placeholder_PadSearch" xml:space="preserve">
-    <value>Search reference, net, footprint… (e.g. TP*)</value>
+    <value>Search reference, net, footprint…</value>
   </data>
   <data name="Filter_TestPoints" xml:space="preserve">
     <value>Test points only</value>
@@ -790,9 +790,6 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   <data name="Check_ToolingPinOverlap" xml:space="preserve">
     <value>The opening of {0} in the moving plate overlaps the hole of tooling pin {1}.</value>
   </data>
-  <data name="Header_Export" xml:space="preserve">
-    <value>Export</value>
-  </data>
   <data name="Label_ExportFormat" xml:space="preserve">
     <value>Format</value>
   </data>
@@ -932,7 +929,7 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
     <value>Remove</value>
   </data>
   <data name="Text_PartsHint" xml:space="preserve">
-    <value>Choose a kind and click on the board to place it. Drag to move, Esc to stop placing.</value>
+    <value>Choose a pin and click on the board to place it. Drag to move, Esc to stop placing.</value>
   </data>
   <data name="Column_Part" xml:space="preserve">
     <value>Part</value>
@@ -1170,7 +1167,7 @@ bottom</value>
     <value>Outline</value>
   </data>
   <data name="Text_PlatesHint" xml:space="preserve">
-    <value>The top probe plate is only needed with probes from above. Plates without an outline of their own use the shared one.</value>
+    <value>The top probe plate is only needed when probes from above are used. Plates without an outline of their own use the shared one.</value>
   </data>
   <data name="Column_Outline" xml:space="preserve">
     <value>Outline</value>

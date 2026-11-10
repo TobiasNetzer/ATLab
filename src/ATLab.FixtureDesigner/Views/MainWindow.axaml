@@ -136,6 +136,7 @@
                     <Button.Flyout>
                         <Flyout Placement="BottomEdgeAlignedLeft">
                             <StackPanel Spacing="10" MinWidth="230">
+                                <TextBlock Text="{loc:Localize Text_PlateFilesHint}" Classes="Small" TextWrapping="Wrap" MaxWidth="230" HorizontalAlignment="Left"/>
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel"/>
                                     <ItemsControl ItemsSource="{Binding PlateRows}">
@@ -860,7 +861,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="{loc:Localize Column_TestHardwarePin}" Width="210" MinWidth="210">
+                                <DataGridTemplateColumn Header="{loc:Localize Column_TestHardwarePin}" Width="250" MinWidth="250">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="fixture:Probe">
                                             <ComboBox ItemsSource="{Binding $parent[DataGrid].((vm:MainWindowViewModel)DataContext).PinOptions}"
@@ -1011,7 +1012,7 @@
                 <TabItem Header="{loc:Localize Tab_Adapter}" AutomationProperties.Name="{loc:Localize Tab_Adapter}">
                     <Grid RowDefinitions="Auto,*" Margin="0,8,0,0">
                         <StackPanel Spacing="2" Margin="2,0,0,8">
-                            <TextBlock Text="{Binding AdapterName}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding AdapterName}" Classes="Large"/>
                             <TextBlock Text="{Binding UsedPinCountText}" Classes="Label"/>
                         </StackPanel>
                         <DataGrid Grid.Row="1"
@@ -1519,41 +1520,6 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
-                            </StackPanel>
-
-                            <!-- Export: which plates in which format -->
-                            <StackPanel Spacing="6">
-                                <TextBlock Text="{loc:Localize Header_Export}" Classes="h4"/>
-                                <TextBlock Text="{loc:Localize Text_PlateFilesHint}" Classes="Label" TextWrapping="Wrap"/>
-                                <StackPanel Spacing="4">
-                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="Large"/>
-                                    <ItemsControl ItemsSource="{Binding PlateRows}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Spacing="4"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="vm:PlateRow">
-                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsExported}" IsEnabled="{Binding IsPresent}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <TextBlock Text="{loc:Localize Label_ExportFormat}" Classes="Large" Margin="0,6,0,0"/>
-                                    <ComboBox ItemsSource="{Binding ExportFormats}" SelectedItem="{Binding SelectedExportFormat}" HorizontalAlignment="Left" MinWidth="220">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate DataType="vm:ExportFormatOption">
-                                                <TextBlock Text="{Binding Label}"/>
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
-                                <Button Classes="Tool" HorizontalAlignment="Left" Margin="0,4,0,0" Content="{loc:Localize Button_ExportFiles}"
-                                        Command="{Binding ExportPlatesCommand}">
-                                    <shadui:ButtonAssist.Icon>
-                                        <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
-                                    </shadui:ButtonAssist.Icon>
-                                </Button>
                             </StackPanel>
 
                         </StackPanel>

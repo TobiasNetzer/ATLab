@@ -41,7 +41,7 @@ Die Registerkarten rechts folgen der Reihenfolge der Arbeit:
 | [Test-Hardware](#registerkarte-test-hardware) | Die Pins von J101 mit ihren Prüfnadeln und Netzen |
 | [Mechanik](#registerkarte-mechanik) | Fangstifte, Vorzentrierungsstifte, Stützstifte und Niederhalter |
 | [Prüfungen](#prüfungen) | Die im Entwurf gefundenen Probleme |
-| [Fertigung](#registerkarte-fertigung) | Platten, Plattenumrisse und der Export der Fertigungsdateien |
+| [Fertigung](#registerkarte-fertigung) | Platten und Plattenumrisse. Die Fertigungsdateien schreibt der [Export](#export) in der oberen Leiste. |
 
 ## Die Platinenansicht
 
@@ -326,9 +326,9 @@ Alle Formen eines importierten Umrisses stehen unter **Formen**. Normalerweise w
 
 Die Tiefe gehört zum Umriss: Platten mit gemeinsamem Umriss haben auch dieselben Taschen. Ist eine Tasche mindestens so tief wie die Platte dick, geht sie durch diese Platte hindurch. Beim erneuten Einlesen der Datei behalten unveränderte Formen ihre Tiefe. Taschen gibt es nur bei einem Umriss aus einer DXF- oder SVG-Datei.
 
-### Export
+## Export
 
-**Exportieren…** (`Strg+E`) schreibt die Fertigungsdateien in einen Ordner. Kreuzen Sie die gewünschten Platten an und wählen Sie das **Format**. Das Format bleibt auch beim nächsten Start erhalten.
+**Exportieren…** (`Strg+E`) in der oberen Leiste schreibt die Fertigungsdateien in einen Ordner. Kreuzen Sie die gewünschten Platten an und wählen Sie das **Format**. Das Format bleibt auch beim nächsten Start erhalten.
 
 | Format | Inhalt |
 |--------|--------|
@@ -339,7 +339,7 @@ Die Tiefe gehört zum Umriss: Platten mit gemeinsamem Umriss haben auch dieselbe
 
 Die Dateien heißen `<Nadeladapter> - <Platte>`, z. B. `Netzteil - Andruckplatte.dxf`. Jede Datei zeigt ihre Platte **von der Seite zur Platine gesehen**: die Platten unter der Platine von oben, die Platten über der Platine von unten, also links-rechts gespiegelt. Die Koordinaten sind in Millimetern vom Ursprung des Aufbaublatts. Solange eine Platte Probleme hat, werden die Dateien nicht geschrieben; die Meldung nennt sie. Vorhandene Dateien werden erst nach Rückfrage ersetzt.
 
-#### Export für den 3D-Druck
+### Export für den 3D-Druck
 
 Das Format **3D-Druck (STEP)** schreibt für jede angekreuzte Platte eine STEP-Datei. Teile, deren Typ mit **In 3D-Druck aufnehmen** markiert ist, sind darin fest an die Platte angeformt, beide bilden also einen einzigen Körper. Statt einer Bohrung steht ein solches Teil auf der Seite seiner Platte, die zur Platine zeigt, und zwar mit Schaft oder Schulter, Fase am Absatz und Spitze.
 

@@ -37,7 +37,7 @@ The tabs on the right follow the order of the work:
 | [Test Hardware](#test-hardware-tab) | The pins of J101 with their probes and nets |
 | [Mechanics](#mechanics-tab) | Tooling pins, pre-centering pins, support pins and push rods |
 | [Checks](#checks) | The problems found in the design |
-| [Manufacturing](#manufacturing-tab) | Plates, plate outlines and the export of the manufacturing files |
+| [Manufacturing](#manufacturing-tab) | Plates and plate outlines. The manufacturing files are written with [Export](#export) in the top bar. |
 
 ## The board view
 
@@ -322,9 +322,9 @@ Every shape of an imported outline is listed under **Shapes**. By default a shap
 
 The depth is part of the outline, so plates that share the outline share their pockets. A pocket at least as deep as a plate is thick goes through that plate. Reading the file again keeps the depths of shapes that have not changed. Pockets can be set only for an outline from a DXF or SVG file.
 
-### Export
+## Export
 
-**Export…** (`Ctrl+E`) writes the manufacturing files into a folder. Tick the plates to write and choose the **Format**; the format is remembered for the next start.
+**Export…** (`Ctrl+E`) in the top bar writes the manufacturing files into a folder. Tick the plates to write and choose the **Format**; the format is remembered for the next start.
 
 | Format | Content |
 |--------|---------|
@@ -335,7 +335,7 @@ The depth is part of the outline, so plates that share the outline share their p
 
 The files are named `<fixture> - <plate>`, e.g. `Power board - moving plate.dxf`. Every file shows its plate **as seen from the side facing the board**: the plates below the board from above, the plates above the board from below, i.e. mirrored left to right. The coordinates are in millimeters from the origin of the build sheet. The files are not written while a plate has problems; the message lists them. Existing files are only replaced after asking.
 
-#### Export for 3D printing
+### Export for 3D printing
 
 The format **3D print (STEP)** writes one STEP file for every ticked plate, with the parts whose type is marked **Include in 3D printing** modeled onto the plate as one solid. Instead of a hole, such a part stands on the side of its plate that faces the board, with its body or shoulder, step chamfer and tip.
 

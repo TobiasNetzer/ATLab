@@ -313,7 +313,7 @@
     <value>Nicht verdrahtet</value>
   </data>
   <data name="Placeholder_PadSearch" xml:space="preserve">
-    <value>Referenz, Netz, Footprint suchen… (z. B. TP*)</value>
+    <value>Referenz, Netz, Footprint suchen…</value>
   </data>
   <data name="Filter_TestPoints" xml:space="preserve">
     <value>Nur Testpunkte</value>
@@ -790,9 +790,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Check_ToolingPinOverlap" xml:space="preserve">
     <value>Der Durchbruch von {0} in der Andruckplatte überschneidet sich mit der Bohrung von Fangstift {1}.</value>
   </data>
-  <data name="Header_Export" xml:space="preserve">
-    <value>Export</value>
-  </data>
   <data name="Label_ExportFormat" xml:space="preserve">
     <value>Format</value>
   </data>
@@ -932,7 +929,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Entfernen</value>
   </data>
   <data name="Text_PartsHint" xml:space="preserve">
-    <value>Art wählen und auf die Platine klicken. Ziehen verschiebt, Esc beendet das Setzen.</value>
+    <value>Stift wählen und auf die Platine klicken. Ziehen verschiebt, Esc beendet das Setzen.</value>
   </data>
   <data name="Column_Part" xml:space="preserve">
     <value>Teil</value>
@@ -1170,7 +1167,7 @@ unten</value>
     <value>Umriss</value>
   </data>
   <data name="Text_PlatesHint" xml:space="preserve">
-    <value>Die Kontaktträgerplatte oben gibt es nur mit Prüfnadeln von oben. Platten ohne eigenen Umriss nutzen den gemeinsamen.</value>
+    <value>Die Kontaktträgerplatte oben wird nur benötigt, wenn Prüfnadeln von oben genutzt werden. Platten ohne eigenen Umriss nutzen den gemeinsamen.</value>
   </data>
   <data name="Column_Outline" xml:space="preserve">
     <value>Umriss</value>
