@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using ATLab.Pcb.Kicad;
@@ -79,6 +80,13 @@ public sealed record PadHighlight(Pad Pad, Color Color, string? Label = null);
 
 /// <summary>A component outlined in a color, e.g. the chip of a boundary scan step.</summary>
 public sealed record FootprintHighlight(string Reference, Color Color);
+
+/// <summary>
+/// An outline drawn dashed over the board (board coordinates, mm), e.g. that of a plate. Outlines lying on top of each
+/// other share the dashes by turns: this one has the dash at <paramref name="DashIndex"/> of <paramref name="DashCount"/>.
+/// Without a label it is not in the legend.
+/// </summary>
+public sealed record BoardOverlayOutline(string? Label, Color Color, IReadOnlyList<IReadOnlyList<Point2>> Lines, int DashIndex = 0, int DashCount = 1);
 
 /// <summary>
 /// Texts of the board view in the language of the application. Each application sets <see cref="Lookup"/> to its

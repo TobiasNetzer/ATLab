@@ -1006,9 +1006,6 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   <data name="Board_LegendPushRods" xml:space="preserve">
     <value>Push rods</value>
   </data>
-  <data name="Board_LegendPlateOutline" xml:space="preserve">
-    <value>Plate outline</value>
-  </data>
   <data name="Part_ToolingPin" xml:space="preserve">
     <value>Tooling pin</value>
   </data>

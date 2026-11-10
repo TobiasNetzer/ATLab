@@ -45,7 +45,7 @@ Die Registerkarten rechts folgen der Reihenfolge der Arbeit:
 
 ## Die Platinenansicht
 
-Links ist die Platine mit Umriss, Pads und Bohrungen zu sehen. Die Legende über der Platine nennt, was gezeichnet ist: Prüfnadeln, Fangstifte, Vorzentrierungsstifte, Stützstifte, Niederhalter, die Durchbrüche in den Platten und den Plattenumriss (gestrichelt). Pads der Oberseite sind orange, Pads der Unterseite blau; die nicht betrachtete Seite ist blass dargestellt.
+Links ist die Platine mit Umriss, Pads und Bohrungen zu sehen. Die Legende über der Platine nennt, was gezeichnet ist: Prüfnadeln, Fangstifte, Vorzentrierungsstifte, Stützstifte, Niederhalter, die Durchbrüche in den Platten und in einer eigenen Zeile die Umrisse aller Platten. Sie sind gestrichelt und haben dieselben Farben wie im Aufbaublatt; wo sich Platten einen Umriss teilen, wechseln sich ihre Farben ab. Pads der Oberseite sind orange, Pads der Unterseite blau; die nicht betrachtete Seite ist blass dargestellt.
 
 | Option | Bedeutung |
 |--------|-----------|

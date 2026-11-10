@@ -5,9 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ATLab.FixtureDesigner.Localization;
+using ATLab.FixtureDesigner.Fixture;
 using ATLab.FixtureDesigner.Plates;
+using ATLab.FixtureDesigner.Reporting;
+using ATLab.Pcb.Controls;
 using ATLab.Pcb.Fixture;
 using ATLab.Pcb.Kicad;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -90,8 +94,8 @@ public partial class MainWindowViewModel
 
     [ObservableProperty] private bool _isOutlineMissing;
 
-    /// <summary>The outline in board coordinates, drawn over the board so its position can be checked.</summary>
-    [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlineOverlay;
+    /// <summary>The outlines of the plates, drawn over the board so their position can be checked.</summary>
+    [ObservableProperty] private IReadOnlyList<BoardOverlayOutline>? _outlineOverlay;
 
     /// <summary>The pockets of the outline in board coordinates, shaded in the board view.</summary>
     [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlinePockets;
@@ -345,6 +349,9 @@ public partial class MainWindowViewModel
         {
             _isApplyingOutline = false;
         }
+
+        // The names of the plates in the legend of the board view
+        UpdateOutlineState();
     }
 
     partial void OnOutlineModeChanged(PlateOutlineMode value)
@@ -436,8 +443,8 @@ public partial class MainWindowViewModel
 
         OutlineStatus = string.Join("\n", lines);
 
-        // The board view shows the outline being edited, its pockets shaded
-        OutlineOverlay = Overlay(board, shown);
+        // The board view shows the outlines of all plates, and shades the pockets of the outline being edited
+        OutlineOverlay = PlateOverlays(board, shown);
         OutlinePockets = shown.Circles.Where(c => c.Pocket is not null).Select(c => CirclePoints(board, c))
             .Concat(shown.Cutouts.Where(c => c.Pocket is not null).Select(c => LoopPoints(board, c.Vertices)))
             .ToList();
@@ -447,6 +454,29 @@ public partial class MainWindowViewModel
                 ? selected.Index < shown.Circles.Count ? CirclePoints(board, shown.Circles[selected.Index]) : null
                 : selected.Index < shown.Cutouts.Count ? LoopPoints(board, shown.Cutouts[selected.Index].Vertices) : null
             : null;
+    }
+
+    /// <summary>
+    /// The outlines of the plates of the fixture for the board view, drawn as in the build sheet: each plate in its color,
+    /// an outline that several plates share with its dashes in their colors by turns. An outline being edited that no
+    /// plate of the fixture has is shown as well.
+    /// </summary>
+    private List<BoardOverlayOutline> PlateOverlays(Board board, OutlineShape edited)
+    {
+        var plates = Plate.PlatesOf(Probes, IsBoardFlipped, IsTopPlateCombined);
+        var overlays = BoardSvg.GroupByOutline(plates.Select(p => new PlateOutlineDrawing(p, PlateOverlay(p)!)).ToList())
+            .SelectMany(group => group.Select((drawing, index) => (drawing, index, group.Count)))
+            .OrderBy(o => o.drawing.Plate)
+            .Select(o => new BoardOverlayOutline(PlateRow.NameOf(o.drawing.Plate), Color.Parse(BoardSvg.PlateColor(o.drawing.Plate)),
+                o.drawing.Outline, o.index, o.Count))
+            .ToList();
+
+        var isUsed = _editedOutline is { } plate ? plates.Contains(plate) : plates.Any(p => !_ownOutlines.ContainsKey(p));
+        if (!isUsed)
+            overlays.Add(new BoardOverlayOutline(null, Color.Parse(FixtureColors.Get(_editedOutline is { } own ? FixtureColors.Of(own) : ColorItem.ProbePlate)),
+                Overlay(board, edited)));
+
+        return overlays;
     }
 
     /// <summary>Build sheet coordinates back to board coordinates.</summary>

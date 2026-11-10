@@ -448,7 +448,7 @@ public static class BoardSvg
     }
 
     /// <summary>Plates with the same outline together, in the order they come.</summary>
-    private static List<List<PlateOutlineDrawing>> GroupByOutline(IReadOnlyList<PlateOutlineDrawing> plates)
+    public static List<List<PlateOutlineDrawing>> GroupByOutline(IReadOnlyList<PlateOutlineDrawing> plates)
     {
         static bool Same(IReadOnlyList<IReadOnlyList<Point2>> a, IReadOnlyList<IReadOnlyList<Point2>> b) =>
             a.Count == b.Count && a.Zip(b).All(l => l.First.Count == l.Second.Count &&

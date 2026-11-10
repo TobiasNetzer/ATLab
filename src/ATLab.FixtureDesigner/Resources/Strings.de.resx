@@ -1006,9 +1006,6 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Board_LegendPushRods" xml:space="preserve">
     <value>Niederhalter</value>
   </data>
-  <data name="Board_LegendPlateOutline" xml:space="preserve">
-    <value>Plattenumriss</value>
-  </data>
   <data name="Part_ToolingPin" xml:space="preserve">
     <value>Fangstift</value>
   </data>

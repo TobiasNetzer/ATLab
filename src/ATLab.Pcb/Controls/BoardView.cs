@@ -141,11 +141,11 @@ public sealed class BoardView : Control
     /// one), which no role or pad color comes close to.
     /// </summary>
     /// <summary>
-    /// Outlines drawn over the board (board coordinates, mm), dashed, e.g. the outline of a probe plate, so its
+    /// Outlines drawn over the board, dashed, each in its color, e.g. those of the plates of a fixture, so their
     /// position against the board can be seen.
     /// </summary>
-    public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayOutlinesProperty =
-        AvaloniaProperty.Register<BoardView, IReadOnlyList<IReadOnlyList<Point2>>?>(nameof(OverlayOutlines));
+    public static readonly StyledProperty<IReadOnlyList<BoardOverlayOutline>?> OverlayOutlinesProperty =
+        AvaloniaProperty.Register<BoardView, IReadOnlyList<BoardOverlayOutline>?>(nameof(OverlayOutlines));
 
     /// <summary>Areas of the overlay shaded in the overlay color, e.g. the pockets of a plate (closed, board coordinates).</summary>
     public static readonly StyledProperty<IReadOnlyList<IReadOnlyList<Point2>>?> OverlayFillsProperty =
@@ -159,7 +159,7 @@ public sealed class BoardView : Control
     public static readonly StyledProperty<IReadOnlyList<Point2>?> OverlayHighlightProperty =
         AvaloniaProperty.Register<BoardView, IReadOnlyList<Point2>?>(nameof(OverlayHighlight));
 
-    /// <summary>Color of the overlay outlines; null for the foreground color.</summary>
+    /// <summary>Color of the overlay's shaded areas and guide lines; null for the foreground color.</summary>
     public static readonly StyledProperty<IBrush?> OverlayBrushProperty =
         AvaloniaProperty.Register<BoardView, IBrush?>(nameof(OverlayBrush));
 
@@ -264,7 +264,7 @@ public sealed class BoardView : Control
     public IBrush AccentBrush { get => GetValue(AccentBrushProperty); set => SetValue(AccentBrushProperty, value); }
     public IBrush? SelectionBrush { get => GetValue(SelectionBrushProperty); set => SetValue(SelectionBrushProperty, value); }
     public CornerRadius CornerRadius { get => GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
-    public IReadOnlyList<IReadOnlyList<Point2>>? OverlayOutlines { get => GetValue(OverlayOutlinesProperty); set => SetValue(OverlayOutlinesProperty, value); }
+    public IReadOnlyList<BoardOverlayOutline>? OverlayOutlines { get => GetValue(OverlayOutlinesProperty); set => SetValue(OverlayOutlinesProperty, value); }
     public IReadOnlyList<IReadOnlyList<Point2>>? OverlayFills { get => GetValue(OverlayFillsProperty); set => SetValue(OverlayFillsProperty, value); }
     public IReadOnlyList<IReadOnlyList<Point2>>? OverlayGuides { get => GetValue(OverlayGuidesProperty); set => SetValue(OverlayGuidesProperty, value); }
     public IReadOnlyList<Point2>? OverlayHighlight { get => GetValue(OverlayHighlightProperty); set => SetValue(OverlayHighlightProperty, value); }
@@ -390,7 +390,7 @@ public sealed class BoardView : Control
         if (OverlayOutlines is not { Count: > 0 } outlines)
             return area;
 
-        var points = outlines.SelectMany(o => o).ToList();
+        var points = outlines.SelectMany(o => o.Lines).SelectMany(l => l).ToList();
         return points.Count == 0
             ? area
             : new Bounds2(Math.Min(area.MinX, points.Min(p => p.X)), Math.Min(area.MinY, points.Min(p => p.Y)),
@@ -748,8 +748,8 @@ public sealed class BoardView : Control
     }
 
     /// <summary>
-    /// The overlay: shaded areas, thin guide lines and the outlines, dashed a few pixels wide in the overlay or foreground
-    /// color, whatever the zoom; the highlighted line on top.
+    /// The overlay: shaded areas and thin guide lines in the overlay or foreground color, the outlines dashed a few pixels
+    /// wide in their colors, whatever the zoom; the highlighted line on top.
     /// </summary>
     private void DrawOverlayOutlines(DrawingContext context, Matrix view)
     {
@@ -785,11 +785,18 @@ public sealed class BoardView : Control
 
         if (OverlayOutlines is { Count: > 0 } outlines)
         {
-            var pen = new Pen(brush, 1.5, new DashStyle([4, 3], 0), PenLineCap.Flat, PenLineJoin.Round);
+            // In units of the pen's width; outlines on top of each other leave the gaps for each other's dashes
+            const double dash = 4, gap = 3;
             using (context.PushOpacity(0.85))
             {
-                foreach (var outline in outlines.Where(o => o.Count >= 2))
-                    context.DrawGeometry(null, pen, Polyline(outline, view, false));
+                foreach (var outline in outlines)
+                {
+                    var (index, count) = (outline.DashIndex, outline.DashCount);
+                    var style = new DashStyle([dash, (count - 1) * (dash + gap) + gap], (count - index) % count * (dash + gap));
+                    var pen = new Pen(new SolidColorBrush(outline.Color), 1.5, style, PenLineCap.Flat, PenLineJoin.Round);
+                    foreach (var line in outline.Lines.Where(l => l.Count >= 2))
+                        context.DrawGeometry(null, pen, Polyline(line, view, false));
+                }
             }
         }
 
@@ -1172,7 +1179,7 @@ public sealed class BoardView : Control
 
     /// <summary>
     /// The kinds of markers on the board, right aligned in one line: each with the symbol it has on the board, so the
-    /// colors can be told apart.
+    /// colors can be told apart. The overlay outlines in a line of their own, their names being long.
     /// </summary>
     private void DrawMarkerLegend(DrawingContext context, double y)
     {
@@ -1203,20 +1210,26 @@ public sealed class BoardView : Control
                 context.DrawLine(new Pen(PushRodBrush, 1), new Point(c.X - 3, c.Y - 3), new Point(c.X + 3, c.Y + 3));
                 context.DrawLine(new Pen(PushRodBrush, 1), new Point(c.X - 3, c.Y + 3), new Point(c.X + 3, c.Y - 3));
             }));
-        if (OverlayOutlines is { Count: > 0 })
-            kinds.Add(("Board_LegendPlateOutline", c =>
-                context.DrawLine(new Pen(OverlayBrush ?? Foreground, 1.5, new DashStyle([3, 2], 0)), new Point(c.X - 6, c.Y), new Point(c.X + 6, c.Y))));
 
         // From the right: text, then its symbol before it
-        var x = Bounds.Width - 10;
-        foreach (var (key, symbol) in Enumerable.Reverse(kinds))
+        void DrawRow(IEnumerable<(string Label, Action<Point> Symbol)> items, double rowY)
         {
-            var text = Text(BoardTexts.Get(key), MutedBrush, FontSize);
-            x -= text.Width;
-            context.DrawText(text, new Point(x, y));
-            symbol(new Point(x - 10, y + text.Height / 2));
-            x -= 26;
+            var x = Bounds.Width - 10;
+            foreach (var (label, symbol) in items.Reverse())
+            {
+                var text = Text(label, MutedBrush, FontSize);
+                x -= text.Width;
+                context.DrawText(text, new Point(x, rowY));
+                symbol(new Point(x - 10, rowY + text.Height / 2));
+                x -= 26;
+            }
         }
+
+        DrawRow(kinds.Select(k => (BoardTexts.Get(k.Key), k.Symbol)), y);
+
+        var outlines = (OverlayOutlines ?? []).Where(o => o.Label is not null).Select(o => (o.Label!, (Action<Point>)(c =>
+            context.DrawLine(new Pen(new SolidColorBrush(o.Color), 1.5, new DashStyle([3, 2], 0)), new Point(c.X - 6, c.Y), new Point(c.X + 6, c.Y)))));
+        DrawRow(outlines, kinds.Count > 0 ? y + 18 : y);
     }
 
     /// <summary>The tooling pin standing in the hole at this point of the board, if any.</summary>

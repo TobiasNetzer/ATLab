@@ -41,7 +41,7 @@ The tabs on the right follow the order of the work:
 
 ## The board view
 
-The left side shows the board with its outline, pads and holes. The legend above the board lists what is drawn: probes, tooling pins, pre-centering pins, support pins, push rods, the openings in the plates and the plate outline (dashed). Pads of the top side are orange, pads of the bottom side blue; the side that is not viewed is drawn faint.
+The left side shows the board with its outline, pads and holes. The legend above the board lists what is drawn: probes, tooling pins, pre-centering pins, support pins, push rods, the openings in the plates and, on a line of their own, the outlines of all plates (dashed, each plate in its color as in the build sheet; where plates share an outline, their colors alternate). Pads of the top side are orange, pads of the bottom side blue; the side that is not viewed is drawn faint.
 
 | Option | Meaning |
 |--------|---------|

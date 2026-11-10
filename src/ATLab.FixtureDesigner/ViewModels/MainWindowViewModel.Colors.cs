@@ -63,7 +63,7 @@ public partial class MainWindowViewModel
     public IBrush SupportPinBrush => BrushOf(ColorItem.SupportPin);
     public IBrush PushRodBrush => BrushOf(ColorItem.PushRod);
 
-    /// <summary>The outline in the board view has the color of the plate it belongs to; the shared one that of the probe plates.</summary>
+    /// <summary>The pockets of the outline being edited have the color of the plate it belongs to; those of the shared one that of the probe plates.</summary>
     public IBrush OverlayBrush => BrushOf(SelectedOutlineTarget?.Plate is { } plate ? FixtureColors.Of(plate) : ColorItem.ProbePlate);
 
     private static IBrush BrushOf(ColorItem item) => new SolidColorBrush(Color.Parse(FixtureColors.Get(item)));
@@ -102,6 +102,8 @@ public partial class MainWindowViewModel
         foreach (var name in new[] { nameof(ProbeBrush), nameof(ToolingPinBrush), nameof(PreCenteringPinBrush), nameof(SupportPinBrush),
                      nameof(PushRodBrush), nameof(OverlayBrush) })
             OnPropertyChanged(name);
+
+        UpdateOutlineState();
 
         if (_settings is null)
             return;
