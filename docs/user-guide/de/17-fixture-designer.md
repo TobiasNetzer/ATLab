@@ -118,7 +118,7 @@ Ein Nadeltyp beschreibt eine bestimmte Prüfnadel (Federkontaktstift) samt Hüls
 | | **Name** | Z. B. die Baureihe |
 | | **Hersteller**, **Teilenummer** | Der Prüfnadel, für die Stückliste |
 | | **Hülse Hersteller**, **Hülse Teilenr.** | Der Hülse, die in der Stückliste eine eigene Zeile bekommt |
-| A | **Ø** | Durchmesser der Prüfnadel. Nur zur Information. |
+| A | **Ø Prüfnadel** | Durchmesser der Prüfnadel. Nur zur Information. |
 | B | **Bohrung Ø** | Loch für die Hülse in der Kontaktträgerplatte |
 | C | **Durchbruch Ø** | Loch in der Andruckplatte, durch das die Prüfnadel kommt; 0 = Bohrungsdurchmesser |
 | D | **Höhe** | Wie weit die Prüfnadel aus der Platte zur Platine hin herausragt. Nur zur Information. |
@@ -363,7 +363,7 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 1. **Angaben** zu Nadeladapter und Platine: unter anderem die Prüfsumme der Platinendatei, die Lage der Platine (kopfüber oder nicht) und wie die Koordinaten zu lesen sind.
 2. **Stückliste**: jeder Nadeltyp mit seiner Hülse in einer eigenen Zeile, jeder Teiletyp, die Platten mit Größe und Dicke sowie die Bauteile der Verdrahtung, nach Beschreibung zusammengefasst. Bei Prüfnadeln und Teilen stehen Anzahl, Hersteller und Teilenummer dabei.
 3. **Montage**, einmal für jede Seite mit Prüfnadeln oder Teilen:
-   - **Prüfnadeln nach Typ**: Anzahl, Nummern und Platte der Prüfnadeln je Typ sowie die Bemerkungen einzelner Prüfnadeln,
+   - **Prüfnadeln**: Anzahl, Nummern und Platte der Prüfnadeln je Typ sowie die Bemerkungen einzelner Prüfnadeln,
    - **Stifte und Niederhalter** dieser Seite mit Art, Typ und Platte,
    - die **Montagezeichnung**: die Platten dieser Seite mit Umrissen und Durchbrüchen sowie die Prüfnadeln und Teile. Gezeichnet wird von der Seite, an der sie die Platine berühren – die Platten oben also von oben, die Platten unten von unten (gespiegelt).
 
@@ -372,7 +372,7 @@ Positionen und Netze kommen immer aus der aktuellen Platinendatei. Die Prüfunge
 
 In den Zeichnungen steht jede Prüfnadelnummer in ihrem Marker, sodass sich Nummern nie überlappen. Wo Prüfnadeln so eng stehen, dass ihre Nummern zu klein zum Lesen wären, lässt die Zeichnung sie weg und umrahmt den Bereich; jeder umrahmte Bereich folgt vergrößert auf einer eigenen Seite (**Detail A**, **Detail B** …).
 
-Stückliste, Prüfnadeln nach Typ, Teileliste und Verdrahtung haben jeweils eine Spalte **Erl.** zum Abhaken beim Bau. Welche Platinenlagen die Zeichnungen zeigen, wird auf der [Registerkarte Allgemein](#registerkarte-allgemein) festgelegt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Erstellen nach.
+Stückliste, Prüfnadeln, Teileliste und Verdrahtung haben jeweils eine Spalte **Erl.** zum Abhaken beim Bau. Welche Platinenlagen die Zeichnungen zeigen, wird auf der [Registerkarte Allgemein](#registerkarte-allgemein) festgelegt. Haben die Prüfungen Fehler gefunden, fragt der Fixture Designer vor dem Erstellen nach.
 
 ## Nadeladapter-Datei
 

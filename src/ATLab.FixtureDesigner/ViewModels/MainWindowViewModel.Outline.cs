@@ -97,12 +97,6 @@ public partial class MainWindowViewModel
     /// <summary>The outlines of the plates, drawn over the board so their position can be checked.</summary>
     [ObservableProperty] private IReadOnlyList<BoardOverlayOutline>? _outlineOverlay;
 
-    /// <summary>The pockets of the outline in board coordinates, shaded in the board view.</summary>
-    [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlinePockets;
-
-    /// <summary>Lines of the imported drawing that belong to no shape, in board coordinates.</summary>
-    [ObservableProperty] private IReadOnlyList<IReadOnlyList<Point2>>? _outlineLoose;
-
     /// <summary>The shape chosen in the list, in board coordinates.</summary>
     [ObservableProperty] private IReadOnlyList<Point2>? _outlineHighlight;
 
@@ -415,8 +409,6 @@ public partial class MainWindowViewModel
         {
             OutlineStatus = string.Empty;
             OutlineOverlay = null;
-            OutlinePockets = null;
-            OutlineLoose = null;
             OutlineHighlight = null;
             return;
         }
@@ -443,12 +435,8 @@ public partial class MainWindowViewModel
 
         OutlineStatus = string.Join("\n", lines);
 
-        // The board view shows the outlines of all plates, and shades the pockets of the outline being edited
+        // The board view shows the outlines of all plates with their pockets shaded and their loose lines
         OutlineOverlay = PlateOverlays(board, shown);
-        OutlinePockets = shown.Circles.Where(c => c.Pocket is not null).Select(c => CirclePoints(board, c))
-            .Concat(shown.Cutouts.Where(c => c.Pocket is not null).Select(c => LoopPoints(board, c.Vertices)))
-            .ToList();
-        OutlineLoose = shown.Loose.Select(piece => PiecePoints(board, piece)).ToList();
         OutlineHighlight = SelectedOutlineShape is { } selected && ReferenceEquals(outline, shown) && IsOutlineImported
             ? selected.IsCircle
                 ? selected.Index < shown.Circles.Count ? CirclePoints(board, shown.Circles[selected.Index]) : null
@@ -458,26 +446,51 @@ public partial class MainWindowViewModel
 
     /// <summary>
     /// The outlines of the plates of the fixture for the board view, drawn as in the build sheet: each plate in its color,
-    /// an outline that several plates share with its dashes in their colors by turns. An outline being edited that no
-    /// plate of the fixture has is shown as well.
+    /// an outline that several plates share with its dashes in their colors by turns. A pocket or loose line is drawn
+    /// once, in the color of the first plate that has it, as the shading would otherwise add up. An outline being edited
+    /// that no plate of the fixture has is shown as well.
     /// </summary>
     private List<BoardOverlayOutline> PlateOverlays(Board board, OutlineShape edited)
     {
         var plates = Plate.PlatesOf(Probes, IsBoardFlipped, IsTopPlateCombined);
-        var overlays = BoardSvg.GroupByOutline(plates.Select(p => new PlateOutlineDrawing(p, PlateOverlay(p)!)).ToList())
+        var shapes = plates.ToDictionary(p => p, p => CurrentOutline(p));
+        var drawings = BoardSvg.GroupByOutline(plates.Select(p => new PlateOutlineDrawing(p, Overlay(board, shapes[p]))).ToList())
             .SelectMany(group => group.Select((drawing, index) => (drawing, index, group.Count)))
-            .OrderBy(o => o.drawing.Plate)
-            .Select(o => new BoardOverlayOutline(PlateRow.NameOf(o.drawing.Plate), Color.Parse(BoardSvg.PlateColor(o.drawing.Plate)),
-                o.drawing.Outline, o.index, o.Count))
-            .ToList();
+            .OrderBy(o => o.drawing.Plate);
+
+        var drawn = new List<IReadOnlyList<Point2>>();
+        List<IReadOnlyList<Point2>> NotDrawnYet(List<IReadOnlyList<Point2>> lines)
+        {
+            var fresh = lines.Where(l => !drawn.Any(d => d.SequenceEqual(l))).ToList();
+            drawn.AddRange(fresh);
+            return fresh;
+        }
+
+        var overlays = new List<BoardOverlayOutline>();
+        foreach (var (drawing, index, count) in drawings)
+        {
+            var shape = shapes[drawing.Plate];
+            overlays.Add(new BoardOverlayOutline(PlateRow.NameOf(drawing.Plate), Color.Parse(BoardSvg.PlateColor(drawing.Plate)),
+                drawing.Outline, index, count, NotDrawnYet(PocketsOf(board, shape)), NotDrawnYet(LooseOf(board, shape))));
+        }
 
         var isUsed = _editedOutline is { } plate ? plates.Contains(plate) : plates.Any(p => !_ownOutlines.ContainsKey(p));
         if (!isUsed)
             overlays.Add(new BoardOverlayOutline(null, Color.Parse(FixtureColors.Get(_editedOutline is { } own ? FixtureColors.Of(own) : ColorItem.ProbePlate)),
-                Overlay(board, edited)));
+                Overlay(board, edited), Fills: PocketsOf(board, edited), Guides: LooseOf(board, edited)));
 
         return overlays;
     }
+
+    /// <summary>The lines of an outline that belong to no shape, in board coordinates.</summary>
+    private static List<IReadOnlyList<Point2>> LooseOf(Board board, OutlineShape shape) =>
+        shape.Loose.Select(piece => PiecePoints(board, piece)).ToList();
+
+    /// <summary>The pockets of an outline in board coordinates.</summary>
+    private static List<IReadOnlyList<Point2>> PocketsOf(Board board, OutlineShape shape) =>
+        shape.Circles.Where(c => c.Pocket is not null).Select(c => CirclePoints(board, c))
+            .Concat(shape.Cutouts.Where(c => c.Pocket is not null).Select(c => LoopPoints(board, c.Vertices)))
+            .ToList();
 
     /// <summary>Build sheet coordinates back to board coordinates.</summary>
     private static Point2 ToBoard(Board board, (double X, double Y) p) => new(p.X + board.Origin.X, board.Origin.Y - p.Y);

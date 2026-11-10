@@ -664,16 +664,16 @@ Select the board file at its new location.</value>
     <value>Name</value>
   </data>
   <data name="Column_MinPad" xml:space="preserve">
-    <value>Min. pad (mm)</value>
+    <value>Min. pad</value>
   </data>
   <data name="Column_Drill" xml:space="preserve">
-    <value>Drill Ø (mm)</value>
+    <value>Drill Ø</value>
   </data>
   <data name="Column_MinSpacing" xml:space="preserve">
-    <value>Spacing (mm)</value>
+    <value>Spacing</value>
   </data>
   <data name="Column_Clearance" xml:space="preserve">
-    <value>Clearance (mm)</value>
+    <value>Clearance</value>
   </data>
   <data name="Button_AddType" xml:space="preserve">
     <value>Add type</value>
@@ -706,7 +706,7 @@ Select the board file at its new location.</value>
     <value>New type</value>
   </data>
   <data name="Text_TypesHint" xml:space="preserve">
-    <value>The letters show where each dimension is on the sketch. Opening 0 = drill Ø.</value>
+    <value>All dimensions in mm; the letters show where each one is on the sketch. Opening 0 = drill Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plate margin (mm)</value>
@@ -944,7 +944,7 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
     <value>Type</value>
   </data>
   <data name="Column_PartHeight" xml:space="preserve">
-    <value>Height (mm)</value>
+    <value>Height</value>
   </data>
   <data name="Placeholder_PartType" xml:space="preserve">
     <value>No type</value>
@@ -1140,7 +1140,7 @@ bottom</value>
     <value>Default colors</value>
   </data>
   <data name="Column_ProbeDiameter" xml:space="preserve">
-    <value>Ø (mm)</value>
+    <value>Probe Ø</value>
   </data>
   <data name="Plate_BottomProbePlate" xml:space="preserve">
     <value>Bottom probe plate</value>
@@ -1194,7 +1194,7 @@ bottom</value>
     <value>Not needed: no probes from above.</value>
   </data>
   <data name="Column_Opening" xml:space="preserve">
-    <value>Opening Ø (mm)</value>
+    <value>Opening Ø</value>
   </data>
   <data name="Board_LegendOpenings" xml:space="preserve">
     <value>{0} (openings)</value>
@@ -1245,7 +1245,7 @@ bottom</value>
     <value>Bottom side – wiring</value>
   </data>
   <data name="Column_EdgeGap" xml:space="preserve">
-    <value>Edge gap (mm)</value>
+    <value>Edge gap</value>
   </data>
   <data name="Tab_Wiring" xml:space="preserve">
     <value>Wiring</value>
@@ -1446,28 +1446,28 @@ bottom</value>
     <value>{0} probes added from the {1}, {2} pads skipped.</value>
   </data>
   <data name="Field_Diameter" xml:space="preserve">
-    <value>Ø at the board (mm)</value>
+    <value>Ø at the board</value>
   </data>
   <data name="Field_BodyRod" xml:space="preserve">
-    <value>Body Ø (mm)</value>
+    <value>Body Ø</value>
   </data>
   <data name="Field_BodyTooling" xml:space="preserve">
-    <value>Shoulder Ø (mm)</value>
+    <value>Shoulder Ø</value>
   </data>
   <data name="Field_ThinRod" xml:space="preserve">
-    <value>Thin end length (mm)</value>
+    <value>Thin end length</value>
   </data>
   <data name="Field_ThinTooling" xml:space="preserve">
-    <value>Pin length above shoulder (mm)</value>
+    <value>Pin length above shoulder</value>
   </data>
   <data name="Field_StepChamfer" xml:space="preserve">
-    <value>Step chamfer (mm)</value>
+    <value>Step chamfer</value>
   </data>
   <data name="Field_Tip" xml:space="preserve">
     <value>Tip</value>
   </data>
   <data name="Field_TipSize" xml:space="preserve">
-    <value>Tip chamfer (mm)</value>
+    <value>Tip chamfer</value>
   </data>
   <data name="Field_IsPrinted" xml:space="preserve">
     <value>Include in 3D printing</value>

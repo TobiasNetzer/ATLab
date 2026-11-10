@@ -84,9 +84,11 @@ public sealed record FootprintHighlight(string Reference, Color Color);
 /// <summary>
 /// An outline drawn dashed over the board (board coordinates, mm), e.g. that of a plate. Outlines lying on top of each
 /// other share the dashes by turns: this one has the dash at <paramref name="DashIndex"/> of <paramref name="DashCount"/>.
-/// Without a label it is not in the legend.
+/// Without a label it is not in the legend. <paramref name="Fills"/> are closed areas shaded in its color, e.g. pockets,
+/// <paramref name="Guides"/> lines drawn thin and solid in it, e.g. lines of an imported drawing that belong to no shape.
 /// </summary>
-public sealed record BoardOverlayOutline(string? Label, Color Color, IReadOnlyList<IReadOnlyList<Point2>> Lines, int DashIndex = 0, int DashCount = 1);
+public sealed record BoardOverlayOutline(string? Label, Color Color, IReadOnlyList<IReadOnlyList<Point2>> Lines, int DashIndex = 0, int DashCount = 1,
+    IReadOnlyList<IReadOnlyList<Point2>>? Fills = null, IReadOnlyList<IReadOnlyList<Point2>>? Guides = null);
 
 /// <summary>
 /// Texts of the board view in the language of the application. Each application sets <see cref="Lookup"/> to its

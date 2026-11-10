@@ -664,16 +664,16 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Name</value>
   </data>
   <data name="Column_MinPad" xml:space="preserve">
-    <value>Min. Pad (mm)</value>
+    <value>Min. Pad</value>
   </data>
   <data name="Column_Drill" xml:space="preserve">
-    <value>Bohrung Ø (mm)</value>
+    <value>Bohrung Ø</value>
   </data>
   <data name="Column_MinSpacing" xml:space="preserve">
-    <value>Abstand (mm)</value>
+    <value>Abstand</value>
   </data>
   <data name="Column_Clearance" xml:space="preserve">
-    <value>Freiraum (mm)</value>
+    <value>Freiraum</value>
   </data>
   <data name="Button_AddType" xml:space="preserve">
     <value>Typ hinzufügen</value>
@@ -706,7 +706,7 @@ Platinendatei am neuen Ort auswählen.</value>
     <value>Neuer Typ</value>
   </data>
   <data name="Text_TypesHint" xml:space="preserve">
-    <value>Die Buchstaben zeigen, wo jedes Maß in der Skizze liegt. Durchbruch 0 = Bohrungs-Ø.</value>
+    <value>Alle Maße in mm; die Buchstaben zeigen ihre Lage in der Skizze. Durchbruch 0 = Bohrungs-Ø.</value>
   </data>
   <data name="Label_PlateMargin" xml:space="preserve">
     <value>Plattenrand (mm)</value>
@@ -944,7 +944,7 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
     <value>Typ</value>
   </data>
   <data name="Column_PartHeight" xml:space="preserve">
-    <value>Höhe (mm)</value>
+    <value>Höhe</value>
   </data>
   <data name="Placeholder_PartType" xml:space="preserve">
     <value>Kein Typ</value>
@@ -1140,7 +1140,7 @@ unten</value>
     <value>Standardfarben</value>
   </data>
   <data name="Column_ProbeDiameter" xml:space="preserve">
-    <value>Ø (mm)</value>
+    <value>Ø Prüfnadel</value>
   </data>
   <data name="Plate_BottomProbePlate" xml:space="preserve">
     <value>Kontaktträgerplatte unten</value>
@@ -1194,7 +1194,7 @@ unten</value>
     <value>Nicht nötig: keine Prüfnadeln von oben.</value>
   </data>
   <data name="Column_Opening" xml:space="preserve">
-    <value>Durchbruch Ø (mm)</value>
+    <value>Durchbruch Ø</value>
   </data>
   <data name="Board_LegendOpenings" xml:space="preserve">
     <value>{0} (Durchbrüche)</value>
@@ -1245,7 +1245,7 @@ unten</value>
     <value>Unterseite – Verdrahtung</value>
   </data>
   <data name="Column_EdgeGap" xml:space="preserve">
-    <value>Kantenabstand (mm)</value>
+    <value>Kantenabstand</value>
   </data>
   <data name="Tab_Wiring" xml:space="preserve">
     <value>Verdrahtung</value>
@@ -1446,28 +1446,28 @@ unten</value>
     <value>{0} Prüfnadeln von der {1} hinzugefügt, {2} Pads übersprungen.</value>
   </data>
   <data name="Field_Diameter" xml:space="preserve">
-    <value>Ø an der Platine (mm)</value>
+    <value>Ø an der Platine</value>
   </data>
   <data name="Field_BodyRod" xml:space="preserve">
-    <value>Ø Schaft (mm)</value>
+    <value>Ø Schaft</value>
   </data>
   <data name="Field_BodyTooling" xml:space="preserve">
-    <value>Ø Schulter (mm)</value>
+    <value>Ø Schulter</value>
   </data>
   <data name="Field_ThinRod" xml:space="preserve">
-    <value>Länge dünnes Ende (mm)</value>
+    <value>Länge dünnes Ende</value>
   </data>
   <data name="Field_ThinTooling" xml:space="preserve">
-    <value>Stiftlänge über der Schulter (mm)</value>
+    <value>Stiftlänge über der Schulter</value>
   </data>
   <data name="Field_StepChamfer" xml:space="preserve">
-    <value>Fase am Absatz (mm)</value>
+    <value>Fase am Absatz</value>
   </data>
   <data name="Field_Tip" xml:space="preserve">
     <value>Spitze</value>
   </data>
   <data name="Field_TipSize" xml:space="preserve">
-    <value>Fase an der Spitze (mm)</value>
+    <value>Fase an der Spitze</value>
   </data>
   <data name="Field_IsPrinted" xml:space="preserve">
     <value>In 3D-Druck aufnehmen</value>

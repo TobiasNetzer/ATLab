@@ -114,7 +114,7 @@ A probe type describes a kind of spring probe with its receptacle; take its dime
 | | **Name** | E.g. the series |
 | | **Manufacturer**, **Part number** | Of the probe, for the bill of materials |
 | | **Receptacle mfr.**, **Receptacle part no.** | Of its receptacle, which has its own line in the bill of materials |
-| A | **Ø** | Diameter of the probe. For reference only. |
+| A | **Probe Ø** | Diameter of the probe. For reference only. |
 | B | **Drill Ø** | Hole for the receptacle in the probe plate |
 | C | **Opening Ø** | Hole the probe comes through in the moving plate; 0 = the drill diameter |
 | D | **Height** | How far the probe stands out of the plate towards the board. For reference only. |
@@ -359,7 +359,7 @@ Positions and nets always come from the current board file. The checks compare t
 1. **Information** about fixture and board, including the checksum of the board file, the board position (upside down or not) and how to read the coordinates.
 2. **Bill of materials**: every probe type with its receptacle on a line of its own, every part type, the plates with their size and thickness, and the components of the wiring, grouped by description. Probes and parts show quantity, manufacturer and part number.
 3. **Assembly**, once for every side with probes or parts:
-   - **Probes by type**: quantity, probe numbers and plate per type, and the notes of individual probes,
+   - **Probes**: quantity, probe numbers and plate per type, and the notes of individual probes,
    - **Pins and push rods** of that side with kind, type and plate,
    - the **assembly drawing**: the plates of that side with their outlines and openings, and the probes and parts. It is drawn from the side where they touch the board – the plates above from the top, the plates below from below (mirrored).
 
@@ -368,7 +368,7 @@ Positions and nets always come from the current board file. The checks compare t
 
 In the drawings every probe number stands inside its marker, so numbers never overlap. Where probes are so close that their numbers would be too small to read, the drawing leaves them out and frames the area; each framed area follows enlarged on a page of its own (**Detail A**, **Detail B** …).
 
-Bill of materials, probes by type, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [General tab](#general-tab). If the checks found errors, the Fixture Designer asks before exporting.
+Bill of materials, probes, parts list and wiring have a **Done** box to tick off while building. The board layers of the drawings are chosen on the [General tab](#general-tab). If the checks found errors, the Fixture Designer asks before exporting.
 
 ## Fixture file
 
