@@ -793,8 +793,8 @@ Fix the spacing, probe types or tooling pins, see Checks.</value>
   <data name="Header_Export" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="Label_ExportFiles" xml:space="preserve">
-    <value>Files</value>
+  <data name="Label_ExportFormat" xml:space="preserve">
+    <value>Format</value>
   </data>
   <data name="Label_ExportPlates" xml:space="preserve">
     <value>Plates</value>
@@ -1484,8 +1484,8 @@ bottom</value>
   <data name="Text_SelectPartType" xml:space="preserve">
     <value>Select a type to edit its dimensions.</value>
   </data>
-  <data name="Button_ExportPrint" xml:space="preserve">
-    <value>Export for 3D printing…</value>
+  <data name="Export_Print" xml:space="preserve">
+    <value>3D print (STEP)</value>
   </data>
   <data name="File_PrintSuffix" xml:space="preserve">
     <value> (3D print)</value>

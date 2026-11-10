@@ -11,12 +11,11 @@ public enum FixtureIconKind
     ToolingPin,
     PreCenteringPin,
     SupportPin,
-    PushRod,
-    Print3D
+    PushRod
 }
 
 /// <summary>
-/// The icons Lucide has no match for: the parts of a fixture, seen from the side, and 3D printing. Each is an SVG path
+/// The icons Lucide has no match for: the parts of a fixture, seen from the side. Each is an SVG path
 /// on a 24 x 24 grid drawn with the same round 2-unit stroke as Lucide, in the color of the surrounding text.
 /// </summary>
 public sealed class FixtureIcon : Control
@@ -32,9 +31,7 @@ public sealed class FixtureIcon : Control
         // Short, right under the board
         [FixtureIconKind.SupportPin] = "M3 8h18M3 21h18M7 21v-6l2-2h6l2 2v6",
         // Comes down from its plate: a thick body, a chamfer and the thin end
-        [FixtureIconKind.PushRod] = "M3 3h18M7 3v9l3 3v6h4v-6l3-3V3",
-        // A nozzle over the printed layers
-        [FixtureIconKind.Print3D] = "M8 3h8v4l-4 4-4-4zM4 15h16M4 20h16"
+        [FixtureIconKind.PushRod] = "M3 3h18M7 3v9l3 3v6h4v-6l3-3V3"
     };
 
     private static readonly Dictionary<FixtureIconKind, Geometry> Geometries = new();

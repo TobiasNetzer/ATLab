@@ -328,22 +328,23 @@ Die Tiefe gehört zum Umriss: Platten mit gemeinsamem Umriss haben auch dieselbe
 
 ### Export
 
-**Exportieren…** (`Strg+E`) schreibt die Fertigungsdateien in einen Ordner. Die zu schreibenden Dateien und Platten ankreuzen; die Auswahl wird gemerkt.
+**Exportieren…** (`Strg+E`) schreibt die Fertigungsdateien in einen Ordner. Kreuzen Sie die gewünschten Platten an und wählen Sie das **Format**. Das Format bleibt auch beim nächsten Start erhalten.
 
-| Datei | Inhalt |
-|-------|--------|
+| Format | Inhalt |
+|--------|--------|
 | **Zeichnung (DXF)** | DXF R12 für CAM und CAD, in Millimetern. Nur was gefertigt wird: der Plattenumriss als eine geschlossene Polylinie, die Bohrungen als Kreise auf einer Lage je Art (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `TOOLING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), damit jede ihr Werkzeug bekommt. Taschen liegen auf `POCKETS`, ihre Tiefe wird im CAM festgelegt. Linien einer importierten Zeichnung, die zu keiner Form gehören, liegen auf `OTHER_GEOMETRY`. |
 | **Zeichnung (SVG)** | Dasselbe als SVG, z. B. für Laserschneider und Inkscape: eine Gruppe (Inkscape-Ebene) je Art, Haarlinien ohne Füllung |
 | **3D-Modell (STEP)** | Die Platte als Volumenkörper mit Dicke, Bohrungen, Ausschnitten und Taschen, die Seite zur Platine bei Z = 0 |
+| **3D-Druck (STEP)** | Die Platte als Volumenkörper mit den daran angeformten markierten Teilen, siehe [Export für den 3D-Druck](#export-für-den-3d-druck) |
 
 Die Dateien heißen `<Nadeladapter> - <Platte>`, z. B. `Netzteil - Andruckplatte.dxf`. Jede Datei zeigt ihre Platte **von der Seite zur Platine gesehen**: die Platten unter der Platine von oben, die Platten über der Platine von unten, also links-rechts gespiegelt. Die Koordinaten sind in Millimetern vom Ursprung des Aufbaublatts. Solange eine Platte Probleme hat, werden die Dateien nicht geschrieben; die Meldung nennt sie. Vorhandene Dateien werden erst nach Rückfrage ersetzt.
 
 #### Export für den 3D-Druck
 
-**Für 3D-Druck exportieren…** schreibt für jede angekreuzte Platte eine STEP-Datei. Teile, deren Typ mit **In 3D-Druck aufnehmen** markiert ist, sind darin fest an die Platte angeformt, beide bilden also einen einzigen Körper. Statt einer Bohrung steht ein solches Teil auf der Seite seiner Platte, die zur Platine zeigt, und zwar mit Schaft oder Schulter, Fase am Absatz und Spitze.
+Das Format **3D-Druck (STEP)** schreibt für jede angekreuzte Platte eine STEP-Datei. Teile, deren Typ mit **In 3D-Druck aufnehmen** markiert ist, sind darin fest an die Platte angeformt, beide bilden also einen einzigen Körper. Statt einer Bohrung steht ein solches Teil auf der Seite seiner Platte, die zur Platine zeigt, und zwar mit Schaft oder Schulter, Fase am Absatz und Spitze.
 
 - Prüfnadeln, Durchbrüche und Teile, deren Typ nicht markiert ist, behalten ihre Bohrungen.
-- Die Auswahl der Platten gilt, die Auswahl der Dateiarten nicht: Dieser Export schreibt nur STEP-Dateien. Sie heißen `<Nadeladapter> - <Platte> (3D-Druck).step`.
+- Die Dateien heißen `<Nadeladapter> - <Platte> (3D-Druck).step`.
 - Mindestens ein gesetztes Teil muss einen für den 3D-Druck markierten Typ haben.
 - Die Teile werden genau mit den eingegebenen Maßen modelliert. Die Toleranzen Ihres Druckers zu berücksichtigen und druckbare Durchmesser zu wählen, liegt bei Ihnen.
 

@@ -34,12 +34,8 @@ public sealed class DesignerSettings
     /// <summary>Colors ("#RRGGBB") the user chose for probes, pins, rods and plates, by ColorItem name; the others keep their default.</summary>
     public Dictionary<string, string>? MarkerColors { get; set; }
 
-    /// <summary>File types the manufacturing export writes.</summary>
-    public bool IsExportDxf { get; set; } = true;
-    public bool IsExportStep { get; set; } = true;
-
-    /// <summary>SVG drawings are new and off unless chosen, so existing users get the files they had.</summary>
-    public bool IsExportSvg { get; set; }
+    /// <summary>Key of the format the manufacturing export writes; null for the first one.</summary>
+    public string? ExportFormat { get; set; }
 
     public static DesignerSettings Load()
     {

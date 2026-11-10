@@ -314,10 +314,10 @@ public partial class MainWindowViewModel
         RunChecks();
     }
 
-    /// <summary>The shared outline first, then the plates from the bottom up.</summary>
+    /// <summary>The plates from the bottom up, then the shared outline.</summary>
     private void SortOutlineTargets()
     {
-        var sorted = OutlineTargets.OrderBy(t => t.Plate is null ? -1 : (int)t.Plate).ToList();
+        var sorted = OutlineTargets.OrderBy(t => t.Plate is null ? int.MaxValue : (int)t.Plate).ToList();
         for (var i = 0; i < sorted.Count; i++)
         {
             var index = OutlineTargets.IndexOf(sorted[i]);
@@ -623,9 +623,13 @@ public partial class MainWindowViewModel
 
     private void ResetOutline() => LoadOutline(null, null, string.Empty);
 
-    /// <summary>The outlines of a file: the shared one, which is edited first, and the plates' own.</summary>
+    /// <summary>
+    /// The outlines of a file: the plates' own, the lowest of which is edited first, and the shared one, which may be used
+    /// by no plate and is therefore only edited first when no plate has its own.
+    /// </summary>
     private void LoadOutline(PlateOutlineEntry? shared, IReadOnlyDictionary<FixturePlate, PlateOutlineEntry>? own, string fixturePath)
     {
+        var sharedState = StateOf(shared, fixturePath);
         _isApplyingOutline = true;
         try
         {
@@ -634,14 +638,14 @@ public partial class MainWindowViewModel
                 _ownOutlines[plate] = StateOf(entry, fixturePath);
 
             OutlineTargets.Clear();
-            OutlineTargets.Add(new OutlineTarget(null));
             foreach (var plate in _ownOutlines.Keys.Order())
                 OutlineTargets.Add(new OutlineTarget(plate));
+            OutlineTargets.Add(new OutlineTarget(null));
             foreach (var row in PlateRows)
                 row.HasOwnOutline = _ownOutlines.ContainsKey(row.Plate);
 
-            _editedOutline = null;
-            _sharedOutline = new OutlineState();
+            _editedOutline = OutlineTargets[0].Plate;
+            _sharedOutline = sharedState;
             SelectedOutlineTarget = OutlineTargets[0];
         }
         finally
@@ -650,7 +654,7 @@ public partial class MainWindowViewModel
         }
 
         OnPropertyChanged(nameof(HasOwnOutlines));
-        ApplyOutline(StateOf(shared, fixturePath));
+        ApplyOutline(_editedOutline is { } edited ? _ownOutlines[edited] : sharedState);
     }
 
     private static OutlineState StateOf(PlateOutlineEntry? entry, string fixturePath)

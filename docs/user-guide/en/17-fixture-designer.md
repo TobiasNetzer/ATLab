@@ -324,22 +324,23 @@ The depth is part of the outline, so plates that share the outline share their p
 
 ### Export
 
-**Export…** (`Ctrl+E`) writes the manufacturing files into a folder. Tick the files and plates to write; the choice is remembered.
+**Export…** (`Ctrl+E`) writes the manufacturing files into a folder. Tick the plates to write and choose the **Format**; the format is remembered for the next start.
 
-| File | Content |
-|------|---------|
+| Format | Content |
+|--------|---------|
 | **Drawing (DXF)** | DXF R12 for CAM and CAD, in millimeters. Only what is machined: the plate outline as one closed polyline, the holes as circles on one layer per kind (`PLATE_OUTLINE`, `PROBE_HOLES`, `PROBE_OPENINGS`, `TOOLING_PIN_HOLES`, `PRE_CENTERING_PINS`, `SUPPORT_PINS`, `PUSH_RODS`, `PUSH_ROD_OPENINGS`, `FRAME_HOLES`, `CUTOUTS`), so each can get its tool. Pockets are on `POCKETS`; their depth is set in CAM. Lines of an imported drawing that belong to no shape are on `OTHER_GEOMETRY`. |
 | **Drawing (SVG)** | The same as SVG, e.g. for laser cutters and Inkscape: one group (Inkscape layer) per kind, hairlines without fill |
 | **3D model (STEP)** | The plate as a solid with its thickness, holes, cut-outs and pockets, side facing the board at Z = 0 |
+| **3D print (STEP)** | The plate as a solid with the marked parts modeled onto it, see [Export for 3D printing](#export-for-3d-printing) |
 
 The files are named `<fixture> - <plate>`, e.g. `Power board - moving plate.dxf`. Every file shows its plate **as seen from the side facing the board**: the plates below the board from above, the plates above the board from below, i.e. mirrored left to right. The coordinates are in millimeters from the origin of the build sheet. The files are not written while a plate has problems; the message lists them. Existing files are only replaced after asking.
 
 #### Export for 3D printing
 
-**Export for 3D printing…** writes one STEP file for every ticked plate, with the parts whose type is marked **Include in 3D printing** modeled onto the plate as one solid. Instead of a hole, such a part stands on the side of its plate that faces the board, with its body or shoulder, step chamfer and tip.
+The format **3D print (STEP)** writes one STEP file for every ticked plate, with the parts whose type is marked **Include in 3D printing** modeled onto the plate as one solid. Instead of a hole, such a part stands on the side of its plate that faces the board, with its body or shoulder, step chamfer and tip.
 
 - Probes, openings and parts whose type is not marked keep their holes.
-- The ticks for the plates apply, the ticks for the file types do not: this export only writes STEP files. They are named `<fixture> - <plate> (3D print).step`.
+- The files are named `<fixture> - <plate> (3D print).step`.
 - At least one placed part needs a type marked for 3D printing.
 - The parts are modeled exactly as entered. Allowing for the tolerances of your printer, and choosing diameters it can print, is up to you.
 

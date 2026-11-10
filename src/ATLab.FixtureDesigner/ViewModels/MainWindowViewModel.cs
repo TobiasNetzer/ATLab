@@ -49,9 +49,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         _isDarkMode = settings?.IsDarkMode ?? true;
         _settings = settings;
-        _isExportDxf = settings?.IsExportDxf ?? true;
-        _isExportStep = settings?.IsExportStep ?? true;
-        _isExportSvg = settings?.IsExportSvg ?? false;
+        _selectedExportFormat = ExportFormats.FirstOrDefault(f => f.Key == settings?.ExportFormat);
 
         _pinout = AdapterPinout.Default;
         BuildPinLists();
@@ -83,7 +81,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasBoard), nameof(ShowWelcome), nameof(BoardInfo))]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(SaveAsCommand), nameof(ReloadBoardCommand),
-        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand), nameof(ExportForPrintingCommand),
+        nameof(ExportBuildSheetCommand), nameof(AutoAssignCommand), nameof(RenumberCommand), nameof(ExportPlatesCommand),
         nameof(AddComponentCommand), nameof(AddWireCommand))]
     private Board? _board;
 
@@ -1227,6 +1225,8 @@ public partial class MainWindowViewModel : ObservableObject
             row.RefreshTexts();
         foreach (var option in ColorOptions)
             option.RefreshText();
+        foreach (var format in ExportFormats)
+            format.RefreshText();
         RefreshOutlineTargets();
         OnPropertyChanged(nameof(StatusText));
         OnPropertyChanged(nameof(PadCountText));

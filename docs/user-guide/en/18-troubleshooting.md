@@ -112,7 +112,7 @@ The file grows over time; you can delete it while ATLab is closed. Error message
 | **Export…** reports that the plates cannot be made | Holes overlap, are too close to the plate edge or a cut-out, or lie across the edge of a pocket. The Checks tab lists the problems. Fix the spacing of the probes, their types or the pins (see Checks), or enlarge the plate outline. |
 | The plates above the board look mirrored in the CAM software | Intended: every plate file shows its plate from the side facing the board, the top probe plate and the pressure plate therefore from below. Mirror them in the CAM software if they are machined from the other side. |
 | A tooling pin does not stay where it is placed | Tooling pins snap into the nearest hole of the board. Click on or next to a hole; without a hole nearby the pin is not placed. |
-| **Export for 3D printing…** reports that no part is marked for it | On the Mechanics tab, tick **Include in 3D printing** for the type of at least one placed pin or push rod. |
+| Exporting as **3D print (STEP)** reports that no part is marked for it | On the Mechanics tab, tick **Include in 3D printing** for the type of at least one placed pin or push rod. |
 | The outline from a DXF or SVG file is not used | Only closed contours count. The line below the outline settings names what was not used, e.g. lines that belong to no closed shape or lines that cross each other. Close the contour in the CAD program and split crossing lines at the crossing. |
 | Many *on or near component* warnings | The clearance of the probe type is larger than the room on the board. Check the value against the probe data sheet, or move the test points in KiCad. |
 

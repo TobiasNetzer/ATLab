@@ -128,7 +128,7 @@
                         <ContentControl Content="{LucideIconContent FileText, 18}" Margin="0,0,8,0"/>
                     </shadui:ButtonAssist.Icon>
                 </Button>
-                <!-- The manufacturing export: the choice of files and plates first, then the folder -->
+                <!-- The manufacturing export: the choice of plates and format first, then the folder -->
                 <Button Classes="Tool" Content="{loc:Localize Button_PlateFiles}" IsEnabled="{Binding HasBoard}" ToolTip.Tip="{loc:Localize ToolTip_PlateFiles}">
                     <shadui:ButtonAssist.Icon>
                         <ContentControl Content="{LucideIconContent FileDown, 18}" Margin="0,0,8,0"/>
@@ -137,11 +137,7 @@
                         <Flyout Placement="BottomEdgeAlignedLeft">
                             <StackPanel Spacing="10" MinWidth="230">
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="FormLabel"/>
-                                    <CheckBox Content="{loc:Localize Export_Dxf}" IsChecked="{Binding IsExportDxf}"/>
-                                    <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
-                                    <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
-                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel" Margin="0,6,0,0"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="FormLabel"/>
                                     <ItemsControl ItemsSource="{Binding PlateRows}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -154,17 +150,19 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                    <TextBlock Text="{loc:Localize Label_ExportFormat}" Classes="FormLabel" Margin="0,6,0,0"/>
+                                    <ComboBox ItemsSource="{Binding ExportFormats}" SelectedItem="{Binding SelectedExportFormat}" HorizontalAlignment="Stretch">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="vm:ExportFormatOption">
+                                                <TextBlock Text="{Binding Label}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </StackPanel>
                                 <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportFiles}"
                                         Command="{Binding ExportPlatesCommand}">
                                     <shadui:ButtonAssist.Icon>
                                         <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
-                                    </shadui:ButtonAssist.Icon>
-                                </Button>
-                                <Button Classes="Primary" HorizontalAlignment="Right" Content="{loc:Localize Button_ExportPrint}"
-                                        Command="{Binding ExportForPrintingCommand}">
-                                    <shadui:ButtonAssist.Icon>
-                                        <controls:FixtureIcon Kind="Print3D" Margin="0,0,8,0"/>
                                     </shadui:ButtonAssist.Icon>
                                 </Button>
                             </StackPanel>
@@ -1388,7 +1386,7 @@
                                 <TextBlock Text="{loc:Localize Header_Outline}" Classes="h4"/>
                                 <Grid ColumnDefinitions="170,*" IsVisible="{Binding HasOwnOutlines}">
                                     <TextBlock Text="{loc:Localize Label_EditedOutline}" Classes="FormLabel"/>
-                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" MinWidth="230"
                                               ItemsSource="{Binding OutlineTargets}"
                                               SelectedItem="{Binding SelectedOutlineTarget}">
                                         <ComboBox.ItemTemplate>
@@ -1424,17 +1422,17 @@
                                     <TextBox Grid.Row="1" Grid.Column="1" Classes="Number Numeric" Text="{Binding OutlineHeight, UpdateSourceTrigger=LostFocus, Converter={x:Static loc:NumberConverter.Instance}}"/>
                                 </Grid>
 
-                                <Grid ColumnDefinitions="170,*,Auto,Auto" ColumnSpacing="6" IsVisible="{Binding IsOutlineImported}">
+                                <Grid ColumnDefinitions="170,230,Auto,Auto" IsVisible="{Binding IsOutlineImported}">
                                     <TextBlock Text="{loc:Localize Label_OutlineFile}" Classes="FormLabel"/>
                                     <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding OutlineFileName, Mode=OneWay}"
                                              ToolTip.Tip="{Binding OutlineFile}"/>
-                                    <Button Grid.Column="2" Classes="Tool" Content="{loc:Localize Button_ChooseOutline}"
+                                    <Button Grid.Column="2" Classes="Tool" Margin="6,0,0,0" Content="{loc:Localize Button_ChooseOutline}"
                                             Command="{Binding ChooseOutlineFileCommand}" ToolTip.Tip="{loc:Localize ToolTip_ChooseOutline}">
                                         <shadui:ButtonAssist.Icon>
                                             <ContentControl Content="{LucideIconContent FolderOpen, 16}" Margin="0,0,8,0"/>
                                         </shadui:ButtonAssist.Icon>
                                     </Button>
-                                    <Button Grid.Column="3" Classes="Tool" Command="{Binding ReloadOutlineFileCommand}"
+                                    <Button Grid.Column="3" Classes="Tool" Margin="6,0,0,0" Command="{Binding ReloadOutlineFileCommand}"
                                             ToolTip.Tip="{loc:Localize ToolTip_ReloadOutline}">
                                         <shadui:ButtonAssist.Icon>
                                             <ContentControl Content="{LucideIconContent RefreshCw, 16}"/>
@@ -1444,7 +1442,7 @@
 
                                 <Grid ColumnDefinitions="170,*" IsVisible="{Binding IsOutlineBoardLayer}">
                                     <TextBlock Text="{loc:Localize Label_OutlineLayer}" Classes="FormLabel"/>
-                                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"
+                                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" MinWidth="230"
                                               ItemsSource="{Binding OutlineLayerNames}"
                                               SelectedItem="{Binding OutlineLayer}"
                                               PlaceholderText="{loc:Localize Placeholder_OutlineLayer}"/>
@@ -1523,16 +1521,12 @@
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- Export: which files of which plates -->
+                            <!-- Export: which plates in which format -->
                             <StackPanel Spacing="6">
                                 <TextBlock Text="{loc:Localize Header_Export}" Classes="h4"/>
                                 <TextBlock Text="{loc:Localize Text_PlateFilesHint}" Classes="Label" TextWrapping="Wrap"/>
                                 <StackPanel Spacing="4">
-                                    <TextBlock Text="{loc:Localize Label_ExportFiles}" Classes="Large"/>
-                                    <CheckBox Content="{loc:Localize Export_Dxf}" IsChecked="{Binding IsExportDxf}"/>
-                                    <CheckBox Content="{loc:Localize Export_Svg}" IsChecked="{Binding IsExportSvg}"/>
-                                    <CheckBox Content="{loc:Localize Export_Step}" IsChecked="{Binding IsExportStep}"/>
-                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="Large" Margin="0,6,0,0"/>
+                                    <TextBlock Text="{loc:Localize Label_ExportPlates}" Classes="Large"/>
                                     <ItemsControl ItemsSource="{Binding PlateRows}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -1545,17 +1539,19 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                    <TextBlock Text="{loc:Localize Label_ExportFormat}" Classes="Large" Margin="0,6,0,0"/>
+                                    <ComboBox ItemsSource="{Binding ExportFormats}" SelectedItem="{Binding SelectedExportFormat}" HorizontalAlignment="Left" MinWidth="220">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="vm:ExportFormatOption">
+                                                <TextBlock Text="{Binding Label}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </StackPanel>
                                 <Button Classes="Tool" HorizontalAlignment="Left" Margin="0,4,0,0" Content="{loc:Localize Button_ExportFiles}"
                                         Command="{Binding ExportPlatesCommand}">
                                     <shadui:ButtonAssist.Icon>
                                         <ContentControl Content="{LucideIconContent FileDown, 16}" Margin="0,0,8,0"/>
-                                    </shadui:ButtonAssist.Icon>
-                                </Button>
-                                <Button Classes="Tool" HorizontalAlignment="Left" Content="{loc:Localize Button_ExportPrint}"
-                                        Command="{Binding ExportForPrintingCommand}">
-                                    <shadui:ButtonAssist.Icon>
-                                        <controls:FixtureIcon Kind="Print3D" Margin="0,0,8,0"/>
                                     </shadui:ButtonAssist.Icon>
                                 </Button>
                             </StackPanel>

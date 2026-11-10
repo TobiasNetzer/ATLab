@@ -17,6 +17,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ATLab.FixtureDesigner.ViewModels;
 
+/// <summary>A format of the manufacturing export, as offered in its dropdown.</summary>
+public sealed class ExportFormatOption(string labelKey, string extension, bool forPrinting = false) : ObservableObject
+{
+    /// <summary>Names the format in the settings.</summary>
+    public string Key { get; } = labelKey;
+
+    public string Extension { get; } = extension;
+
+    /// <summary>The parts marked for printing stand on their plate as one solid, instead of having a hole.</summary>
+    public bool ForPrinting { get; } = forPrinting;
+
+    public string Label => Localizer.Get(Key);
+
+    public void RefreshText() => OnPropertyChanged(nameof(Label));
+}
+
 /// <summary>Probe types, plate files and the layers of the board view.</summary>
 public partial class MainWindowViewModel
 {
@@ -266,47 +282,40 @@ public partial class MainWindowViewModel
                 break;
             case nameof(PlateRow.IsExported) or nameof(PlateRow.IsPresent):
                 ExportPlatesCommand.NotifyCanExecuteChanged();
-                ExportForPrintingCommand.NotifyCanExecuteChanged();
                 break;
         }
     }
 
     // ----- What the export writes -----
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _isExportDxf = true;
+    public IReadOnlyList<ExportFormatOption> ExportFormats { get; } =
+    [
+        new("Export_Dxf", ".dxf"),
+        new("Export_Svg", ".svg"),
+        new("Export_Step", ".step"),
+        new("Export_Print", ".step", forPrinting: true)
+    ];
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _isExportStep = true;
+    private ExportFormatOption? _selectedExportFormat;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ExportPlatesCommand))]
-    private bool _isExportSvg;
-
-    partial void OnIsExportDxfChanged(bool value) => SaveExportChoice();
-    partial void OnIsExportStepChanged(bool value) => SaveExportChoice();
-    partial void OnIsExportSvgChanged(bool value) => SaveExportChoice();
-
-    /// <summary>The file types are kept for the next fixture; the plates depend on the fixture.</summary>
-    private void SaveExportChoice()
+    /// <summary>
+    /// The format the export writes, kept in the settings for the next start. A dropdown clears its selection when its
+    /// flyout closes, which is ignored.
+    /// </summary>
+    public ExportFormatOption SelectedExportFormat
     {
-        if (_settings is null)
-            return;
+        get => _selectedExportFormat ?? ExportFormats[0];
+        set
+        {
+            if (value is null || !SetProperty(ref _selectedExportFormat, value) || _settings is null)
+                return;
 
-        _settings.IsExportDxf = IsExportDxf;
-        _settings.IsExportStep = IsExportStep;
-        _settings.IsExportSvg = IsExportSvg;
-        _settings.Save();
+            _settings.ExportFormat = value.Key;
+            _settings.Save();
+        }
     }
 
-    private bool CanExportPlates() =>
-        Board is not null &&
-        (IsExportDxf || IsExportStep || IsExportSvg) &&
-        PlateRows.Any(r => r.IsPresent && r.IsExported);
-
-    private bool CanExportForPrinting() => Board is not null && PlateRows.Any(r => r.IsPresent && r.IsExported);
+    private bool CanExportPlates() => Board is not null && PlateRows.Any(r => r.IsPresent && r.IsExported);
 
     private List<Plate> BuildPlates(bool forPrinting = false) =>
         Plate.Build(Board!, Probes, CurrentOutline, Parts, IsBoardFlipped, IsTopPlateCombined, forPrinting);
@@ -362,42 +371,23 @@ public partial class MainWindowViewModel
     }
 
     /// <summary>
-    /// Writes the chosen manufacturing files of the chosen plates into a folder: drawing (DXF and SVG)
-    /// and 3D model (STEP). Plates with overlapping holes or holes at the edge are not written, since they cannot be
-    /// made as drawn.
+    /// Writes the chosen plates in the chosen format into a folder: drawing (DXF or SVG), 3D model (STEP), or STEP for a
+    /// 3D printer. Plates with overlapping holes or holes at the edge are not written, since they cannot be made as drawn.
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanExportPlates))]
-    private Task ExportPlates()
+    private async Task ExportPlates()
     {
-        var extensions = new List<string>();
-        if (IsExportDxf) extensions.Add(".dxf");
-        if (IsExportStep) extensions.Add(".step");
-        if (IsExportSvg) extensions.Add(".svg");
-        return WritePlatesAsync(forPrinting: false, extensions, string.Empty);
-    }
+        if (Dialogs is null || Board is null)
+            return;
 
-    /// <summary>
-    /// The chosen plates as STEP files for a 3D printer: the parts whose type is marked for it stand on their plate as
-    /// one solid, instead of having a hole.
-    /// </summary>
-    [RelayCommand(CanExecute = nameof(CanExportForPrinting))]
-    private async Task ExportForPrinting()
-    {
-        if (!Parts.Any(p => p.Type is { IsPrinted: true }))
+        var format = SelectedExportFormat;
+        if (format.ForPrinting && !Parts.Any(p => p.Type is { IsPrinted: true }))
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"), Localizer.Get("Text_NoPrintedParts"));
             return;
         }
 
-        await WritePlatesAsync(forPrinting: true, [".step"], Localizer.Get("File_PrintSuffix"));
-    }
-
-    private async Task WritePlatesAsync(bool forPrinting, IReadOnlyList<string> extensions, string nameSuffix)
-    {
-        if (Dialogs is null || Board is null)
-            return;
-
-        var plates = BuildPlates(forPrinting).Where(p => RowOf(p.Kind).IsExported).ToList();
+        var plates = BuildPlates(format.ForPrinting).Where(p => RowOf(p.Kind).IsExported).ToList();
         if (plates.Count == 0)
         {
             await ShowErrorAsync(Localizer.Get("Error_Plates"), Localizer.Get("Text_NoPlates"));
@@ -416,10 +406,11 @@ public partial class MainWindowViewModel
             return;
 
         var baseName = SafeFileName(FixturePath is not null ? Path.GetFileNameWithoutExtension(FixturePath) : Name.Length > 0 ? Name : "Fixture");
-        var files = plates.SelectMany(p =>
+        var nameSuffix = format.ForPrinting ? Localizer.Get("File_PrintSuffix") : string.Empty;
+        var files = plates.Select(p =>
         {
             var name = $"{baseName} - {Localizer.Get("File_" + p.Kind)}{nameSuffix}";
-            return extensions.Select(extension => (Plate: p, Name: name, Path: Path.Combine(folder, name + extension)));
+            return (Plate: p, Name: name, Path: Path.Combine(folder, name + format.Extension));
         }).ToList();
 
         var existing = files.Where(f => File.Exists(f.Path)).ToList();

@@ -793,8 +793,8 @@ Abstände, Nadeltypen oder Fangstifte korrigieren, siehe Prüfungen.</value>
   <data name="Header_Export" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="Label_ExportFiles" xml:space="preserve">
-    <value>Dateien</value>
+  <data name="Label_ExportFormat" xml:space="preserve">
+    <value>Format</value>
   </data>
   <data name="Label_ExportPlates" xml:space="preserve">
     <value>Platten</value>
@@ -1484,8 +1484,8 @@ unten</value>
   <data name="Text_SelectPartType" xml:space="preserve">
     <value>Typ auswählen, um seine Maße zu bearbeiten.</value>
   </data>
-  <data name="Button_ExportPrint" xml:space="preserve">
-    <value>Für 3D-Druck exportieren…</value>
+  <data name="Export_Print" xml:space="preserve">
+    <value>3D-Druck (STEP)</value>
   </data>
   <data name="File_PrintSuffix" xml:space="preserve">
     <value> (3D-Druck)</value>
